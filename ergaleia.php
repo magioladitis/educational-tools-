@@ -402,12 +402,13 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
       <div class="hero-meta">
-        <span>12 διαθέσιμα εργαλεία</span>
+        <span>13 διαθέσιμα εργαλεία</span>
         <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
         <span>Αναπληρωτές</span>
         <span>Αποσπάσεις</span>
         <span>Ειδική Αγωγή</span>
         <span>Ωνάσεια</span>
+        <span>Ψηφιακό Φροντιστήριο</span>
       </div>
     </section>
 
@@ -431,7 +432,7 @@
         <button class="filter-btn" type="button" data-filter="onaseia">Ωνάσεια</button>
       </div>
 
-      <div class="results-line" id="resultsLine">Εμφανίζονται 12 εργαλεία.</div>
+      <div class="results-line" id="resultsLine">Εμφανίζονται 13 εργαλεία.</div>
     </section>
 
     <section class="tools-grid" id="toolsGrid">
@@ -630,6 +631,23 @@
         <p>
           Ενδεικτικός οδηγός για τα κοινωνικά κριτήρια: μοριοδοτούμενα τέκνα,
           αναπηρία ιδίου, τέκνου ή συζύγου και τα σχετικά δικαιολογητικά.
+        </p>
+        <span class="button-like">Άνοιγμα εργαλείου →</span>
+      </a>
+
+      <a class="tool-card"
+         href="ypologismos-morion-apospasis-psifiako-frontistirio.php"
+         data-category="apospaseis"
+         data-search="ψηφιακό φροντιστήριο απόσπαση αποσπάσεις μόρια μοριοδότηση μόνιμοι εκπαιδευτικοί βιντεοσκοπημένο μάθημα συνέντευξη πανελλαδικές ΤΠΕ">
+        <span class="new-badge">ΝΕΟ</span>
+        <div class="card-top">
+          <span class="tool-number">13</span>
+          <span class="category-tag orange">Αποσπάσεις</span>
+        </div>
+        <h2>Μόρια Απόσπασης στο Ψηφιακό Φροντιστήριο</h2>
+        <p>
+          Υπολόγισε τη μοριοδότηση έως 100 μονάδες για απόσπαση στο Ψηφιακό Φροντιστήριο:
+          γενική παρουσία, επιστημονική κατάρτιση–εμπειρία και βιντεοσκοπημένο μάθημα.
         </p>
         <span class="button-like">Άνοιγμα εργαλείου →</span>
       </a>
