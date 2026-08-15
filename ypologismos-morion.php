@@ -395,27 +395,27 @@
 
       <div class="question">
         <label for="difficultMonths">Μήνες σε δυσπρόσιτα / καταστήματα κράτησης από 2020-2021 και μετά</label>
-        <input type="number" id="difficultMonths" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
+        <input type="number" id="difficultMonths" min="0" max="60" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
       </div>
 
       <div class="question">
-        <label for="threeMonthMonths2020">Μήνες τρίμηνων συμβάσεων 2020-2021</label>
-        <input type="number" id="threeMonthMonths2020" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
+        <label for="threeMonthMonths2020">Μήνες τρίμηνων συμβάσεων 2020-2021 <small>(έως 8 μήνες)</small></label>
+        <input type="number" id="threeMonthMonths2020" min="0" max="8" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
       </div>
 
       <div class="question">
-        <label for="threeMonthMonths2021">Μήνες τρίμηνων συμβάσεων 2021-2022</label>
-        <input type="number" id="threeMonthMonths2021" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
+        <label for="threeMonthMonths2021">Μήνες τρίμηνων συμβάσεων 2021-2022 <small>(έως 7 μήνες)</small></label>
+        <input type="number" id="threeMonthMonths2021" min="0" max="7" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
       </div>
 
       <div class="question">
-        <label for="threeMonthDifficultMonths2020">Μήνες τρίμηνων συμβάσεων σε δυσπρόσιτα 2020-2021</label>
-        <input type="number" id="threeMonthDifficultMonths2020" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
+        <label for="threeMonthDifficultMonths2020">Μήνες τρίμηνων συμβάσεων σε δυσπρόσιτα 2020-2021 <small>(έως 8 μήνες)</small></label>
+        <input type="number" id="threeMonthDifficultMonths2020" min="0" max="8" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
       </div>
 
       <div class="question">
-        <label for="threeMonthDifficultMonths2021">Μήνες τρίμηνων συμβάσεων σε δυσπρόσιτα 2021-2022</label>
-        <input type="number" id="threeMonthDifficultMonths2021" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
+        <label for="threeMonthDifficultMonths2021">Μήνες τρίμηνων συμβάσεων σε δυσπρόσιτα 2021-2022 <small>(έως 7 μήνες)</small></label>
+        <input type="number" id="threeMonthDifficultMonths2021" min="0" max="7" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
       </div>
 
       <div class="question">
@@ -425,7 +425,7 @@
 
       <div class="question">
         <label for="digitalMonths">Μήνες στο Ψηφιακό Φροντιστήριο</label>
-        <input type="number" id="digitalMonths" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
+        <input type="number" id="digitalMonths" min="0" max="10" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)">
       </div>
     </div>
 
@@ -486,6 +486,7 @@
 
 </div>
 
+<script src="includes/service-calculations.js"></script>
 <script>
   function valueOf(id) {
     return document.getElementById(id).value;
@@ -682,86 +683,63 @@
       trainingDetails.push("Επιμόρφωση τουλάχιστον 300 ωρών και 7 μηνών: 2 μόρια");
     }
 
-    const normalMonths = Math.floor(numberOf("normalMonths"));
-    const difficultMonths = Math.floor(numberOf("difficultMonths"));
-    const threeMonthMonths2020 = Math.floor(numberOf("threeMonthMonths2020"));
-    const threeMonthMonths2021 = Math.floor(numberOf("threeMonthMonths2021"));
-    const threeMonthDifficultMonths2020 = Math.floor(numberOf("threeMonthDifficultMonths2020"));
-    const threeMonthDifficultMonths2021 = Math.floor(numberOf("threeMonthDifficultMonths2021"));
-    const privateMonths = Math.floor(numberOf("privateMonths"));
-    const digitalMonths = Math.floor(numberOf("digitalMonths"));
+    const normalMonths = EducationService.regularPublic(numberOf("normalMonths"));
+    const difficultMonths = EducationService.difficult(numberOf("difficultMonths"));
+    const threeMonthMonths2020 = EducationService.threeMonthRegular2020(numberOf("threeMonthMonths2020"));
+    const threeMonthMonths2021 = EducationService.threeMonthRegular2021(numberOf("threeMonthMonths2021"));
+    const threeMonthDifficultMonths2020 = EducationService.threeMonthDifficult2020(numberOf("threeMonthDifficultMonths2020"));
+    const threeMonthDifficultMonths2021 = EducationService.threeMonthDifficult2021(numberOf("threeMonthDifficultMonths2021"));
+    const privateMonths = EducationService.privateSchool(numberOf("privateMonths"));
+    const digitalMonths = EducationService.digitalPerSchoolYear(numberOf("digitalMonths"));
 
-    let serviceRaw = 0;
     const serviceDetails = [];
+    const serviceParts = [];
 
-    if (normalMonths > 0) {
-      const points = normalMonths * 1;
-      serviceRaw += points;
-      serviceDetails.push("Δημόσια εκπαιδευτική προϋπηρεσία: " + formatPoints(points) + " μόρια");
+    if (normalMonths.months > 0) {
+      serviceParts.push(normalMonths.points);
+      serviceDetails.push("Δημόσια εκπαιδευτική προϋπηρεσία: " + formatPoints(normalMonths.points) + " μόρια");
     }
 
-    if (difficultMonths > 0) {
-      const points = difficultMonths * 2;
-      serviceRaw += points;
-      serviceDetails.push("Δυσπρόσιτα / καταστήματα κράτησης: " + formatPoints(points) + " μόρια");
+    if (difficultMonths.months > 0) {
+      serviceParts.push(difficultMonths.points);
+      serviceDetails.push("Δυσπρόσιτα / καταστήματα κράτησης: " + formatPoints(difficultMonths.points) + " μόρια");
     }
 
-    if (threeMonthMonths2020 > 0) {
-      const rawPoints = threeMonthMonths2020 * 1.5;
-      const points = Math.min(rawPoints, 10);
-      serviceRaw += points;
-      serviceDetails.push("Τρίμηνες συμβάσεις 2020-2021: " + formatPoints(points) + " μόρια");
-      if (rawPoints > 10) {
-        warnings.push("Στις τρίμηνες συμβάσεις 2020-2021 εφαρμόστηκε το ανώτατο όριο των 10 μορίων.");
-      }
+    if (threeMonthMonths2020.months > 0) {
+      serviceParts.push(threeMonthMonths2020.points);
+      serviceDetails.push("Τρίμηνες συμβάσεις 2020-2021: " + formatPoints(threeMonthMonths2020.points) + " μόρια");
     }
 
-    if (threeMonthMonths2021 > 0) {
-      const rawPoints = threeMonthMonths2021 * 1.5;
-      const points = Math.min(rawPoints, 10);
-      serviceRaw += points;
-      serviceDetails.push("Τρίμηνες συμβάσεις 2021-2022: " + formatPoints(points) + " μόρια");
-      if (rawPoints > 10) {
-        warnings.push("Στις τρίμηνες συμβάσεις 2021-2022 εφαρμόστηκε το ανώτατο όριο των 10 μορίων.");
-      }
+    if (threeMonthMonths2021.months > 0) {
+      serviceParts.push(threeMonthMonths2021.points);
+      serviceDetails.push("Τρίμηνες συμβάσεις 2021-2022: " + formatPoints(threeMonthMonths2021.points) + " μόρια");
     }
 
-    if (threeMonthDifficultMonths2020 > 0) {
-      const rawPoints = threeMonthDifficultMonths2020 * 3;
-      const points = Math.min(rawPoints, 20);
-      serviceRaw += points;
-      serviceDetails.push("Τρίμηνες συμβάσεις σε δυσπρόσιτα 2020-2021: " + formatPoints(points) + " μόρια");
-      if (rawPoints > 20) {
-        warnings.push("Στις τρίμηνες συμβάσεις σε δυσπρόσιτα 2020-2021 εφαρμόστηκε το ανώτατο όριο των 20 μορίων.");
-      }
+    if (threeMonthDifficultMonths2020.months > 0) {
+      serviceParts.push(threeMonthDifficultMonths2020.points);
+      serviceDetails.push("Τρίμηνες συμβάσεις σε δυσπρόσιτα 2020-2021: " + formatPoints(threeMonthDifficultMonths2020.points) + " μόρια");
     }
 
-    if (threeMonthDifficultMonths2021 > 0) {
-      const rawPoints = threeMonthDifficultMonths2021 * 3;
-      const points = Math.min(rawPoints, 20);
-      serviceRaw += points;
-      serviceDetails.push("Τρίμηνες συμβάσεις σε δυσπρόσιτα 2021-2022: " + formatPoints(points) + " μόρια");
-      if (rawPoints > 20) {
-        warnings.push("Στις τρίμηνες συμβάσεις σε δυσπρόσιτα 2021-2022 εφαρμόστηκε το ανώτατο όριο των 20 μορίων.");
-      }
+    if (threeMonthDifficultMonths2021.months > 0) {
+      serviceParts.push(threeMonthDifficultMonths2021.points);
+      serviceDetails.push("Τρίμηνες συμβάσεις σε δυσπρόσιτα 2021-2022: " + formatPoints(threeMonthDifficultMonths2021.points) + " μόρια");
     }
 
-    if (privateMonths > 0) {
-      const points = privateMonths * 0.9;
-      serviceRaw += points;
-      serviceDetails.push("Ιδιωτική εκπαίδευση: " + formatPoints(points) + " μόρια");
+    if (privateMonths.months > 0) {
+      serviceParts.push(privateMonths.points);
+      serviceDetails.push("Ιδιωτική εκπαίδευση: " + formatPoints(privateMonths.points) + " μόρια");
     }
 
-    if (digitalMonths > 0) {
-      const points = digitalMonths * 1.5;
-      serviceRaw += points;
-      serviceDetails.push("Ψηφιακό Φροντιστήριο: " + formatPoints(points) + " μόρια");
-      warnings.push("Για το Ψηφιακό Φροντιστήριο υπάρχει ανώτατο όριο μοριοδότησης ανά σχολικό έτος. Ο υπολογισμός εδώ είναι ενδεικτικός.");
+    if (digitalMonths.months > 0) {
+      serviceParts.push(digitalMonths.points);
+      serviceDetails.push("Ψηφιακό Φροντιστήριο: " + formatPoints(digitalMonths.points) + " μόρια");
     }
 
-    const serviceTotal = Math.min(serviceRaw, 120);
+    const serviceResult = EducationService.cappedTotal(serviceParts);
+    const serviceRaw = serviceResult.raw;
+    const serviceTotal = serviceResult.points;
 
-    if (serviceRaw > 120) {
+    if (serviceRaw > EducationService.RULES.totalMaxPoints) {
       warnings.push("Στην εκπαιδευτική προϋπηρεσία εφαρμόστηκε ανώτατο όριο 120 μορίων.");
     }
 

@@ -65,12 +65,12 @@
 <div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια ανά μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" type="number" min="0" max="60" step="1" inputmode="numeric" value="0"></div>
 
 <h3>Τρίμηνες συμβάσεις — κανονική προϋπηρεσία</h3>
-<div class="field"><label for="covid2020Months">Τρίμηνες συμβάσεις 2020–2021<small>1,5 μόριο ανά μήνα · έως 10 μόρια για το σχολικό έτος.</small></label><input id="covid2020Months" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
-<div class="field"><label for="covid2021Months">Τρίμηνες συμβάσεις 2021–2022<small>1,5 μόριο ανά μήνα · έως 10 μόρια για το σχολικό έτος.</small></label><input id="covid2021Months" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="covid2020Months">Τρίμηνες συμβάσεις 2020–2021<small>1,5 μόριο ανά μήνα · έως 8 μήνες · έως 10 μόρια για το σχολικό έτος.</small></label><input id="covid2020Months" class="service-months" type="number" min="0" max="8" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="covid2021Months">Τρίμηνες συμβάσεις 2021–2022<small>1,5 μόριο ανά μήνα · έως 7 μήνες · έως 10 μόρια για το σχολικό έτος.</small></label><input id="covid2021Months" class="service-months" type="number" min="0" max="7" step="1" inputmode="numeric" value="0"></div>
 
 <h3>Τρίμηνες συμβάσεις σε δυσπρόσιτα / καταστήματα κράτησης</h3>
-<div class="field"><label for="covidHard2020Months">Τρίμηνες σε δυσπρόσιτα 2020–2021<small>3 μόρια ανά μήνα · έως 20 μόρια για το σχολικό έτος.</small></label><input id="covidHard2020Months" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
-<div class="field"><label for="covidHard2021Months">Τρίμηνες σε δυσπρόσιτα 2021–2022<small>3 μόρια ανά μήνα · έως 20 μόρια για το σχολικό έτος.</small></label><input id="covidHard2021Months" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="covidHard2020Months">Τρίμηνες σε δυσπρόσιτα 2020–2021<small>3 μόρια ανά μήνα · έως 8 μήνες · έως 20 μόρια για το σχολικό έτος.</small></label><input id="covidHard2020Months" class="service-months" type="number" min="0" max="8" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="covidHard2021Months">Τρίμηνες σε δυσπρόσιτα 2021–2022<small>3 μόρια ανά μήνα · έως 7 μήνες · έως 20 μόρια για το σχολικό έτος.</small></label><input id="covidHard2021Months" class="service-months" type="number" min="0" max="7" step="1" inputmode="numeric" value="0"></div>
 
 <div class="field"><label for="privateMonths">Ιδιωτική εκπαιδευτική προϋπηρεσία<small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι νόμιμες προϋποθέσεις.</small></label><input id="privateMonths" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
 <div class="field"><label for="digitalMonths">Ψηφιακό Φροντιστήριο<small>1,5 μόριο ανά μήνα · έως 15 μόρια ανά σχολικό έτος.</small></label><input id="digitalMonths" class="service-months" type="number" min="0" max="10" step="1" inputmode="numeric" value="0"></div>
@@ -106,6 +106,7 @@
 </div>
 <div class="footer">Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)</div>
 </div>
+<script src="includes/service-calculations.js"></script>
 <script>
 (function(){
  const $=id=>document.getElementById(id); const num=id=>Math.max(0,Number($(id)?.value||0)); const cap=(v,m)=>Math.min(v,m); const fmt=v=>(Math.round((v+Number.EPSILON)*100)/100).toFixed(2);
@@ -137,14 +138,14 @@
  }
  function calcService(){
    let raw=0;
-   raw += num('publicMonths');
-   raw += cap(num('hardMonths'),60)*2;
-   raw += cap(num('covid2020Months')*1.5,10);
-   raw += cap(num('covid2021Months')*1.5,10);
-   raw += cap(num('covidHard2020Months')*3,20);
-   raw += cap(num('covidHard2021Months')*3,20);
-   raw += num('privateMonths')*.9;
-   raw += cap(num('digitalMonths')*1.5,15);
+   raw += EducationService.regularPublic(num('publicMonths')).points;
+   raw += EducationService.difficult(num('hardMonths')).points;
+   raw += EducationService.threeMonthRegular2020(num('covid2020Months')).points;
+   raw += EducationService.threeMonthRegular2021(num('covid2021Months')).points;
+   raw += EducationService.threeMonthDifficult2020(num('covidHard2020Months')).points;
+   raw += EducationService.threeMonthDifficult2021(num('covidHard2021Months')).points;
+   raw += EducationService.privateSchool(num('privateMonths')).points;
+   raw += EducationService.digitalPerSchoolYear(num('digitalMonths')).points;
    return cap(raw,120);
  }
  function calcSocial(){

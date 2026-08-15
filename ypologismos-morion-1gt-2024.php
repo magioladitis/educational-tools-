@@ -312,24 +312,24 @@
         <h3>Τρίμηνες συμβάσεις 2020–2021</h3>
         <div class="field-grid">
           <div class="field">
-            <label for="covid20Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 10 μόρια στο έτος</small></label>
-            <input type="number" id="covid20Regular" min="0" step="1" value="0">
+            <label for="covid20Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 8 μήνες · έως 10 μόρια στο έτος</small></label>
+            <input type="number" id="covid20Regular" min="0" max="8" step="1" value="0">
           </div>
           <div class="field">
-            <label for="covid20Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 20 μόρια στο έτος</small></label>
-            <input type="number" id="covid20Difficult" min="0" step="1" value="0">
+            <label for="covid20Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 8 μήνες · έως 20 μόρια στο έτος</small></label>
+            <input type="number" id="covid20Difficult" min="0" max="8" step="1" value="0">
           </div>
         </div>
 
         <h3>Τρίμηνες συμβάσεις 2021–2022</h3>
         <div class="field-grid">
           <div class="field">
-            <label for="covid21Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 10 μόρια στο έτος</small></label>
-            <input type="number" id="covid21Regular" min="0" step="1" value="0">
+            <label for="covid21Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 7 μήνες · έως 10 μόρια στο έτος</small></label>
+            <input type="number" id="covid21Regular" min="0" max="7" step="1" value="0">
           </div>
           <div class="field">
-            <label for="covid21Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 20 μόρια στο έτος</small></label>
-            <input type="number" id="covid21Difficult" min="0" step="1" value="0">
+            <label for="covid21Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 7 μήνες · έως 20 μόρια στο έτος</small></label>
+            <input type="number" id="covid21Difficult" min="0" max="7" step="1" value="0">
           </div>
         </div>
 
@@ -404,6 +404,7 @@
   <div class="credits">Υλοποίηση / επεξεργασία: Μάριος Μαγιολαδίτης</div>
 </div>
 
+<script src="includes/service-calculations.js"></script>
 <script>
 (function(){
   const $ = id => document.getElementById(id);
@@ -455,11 +456,11 @@
     const academic = cap(degreePoints + secondTitle + language + computer + training, 120);
 
     const regular = intNum('regularMonths') * 1;
-    const difficult = cap(intNum('difficultMonths'),60) * 2;
-    const c20reg = cap(intNum('covid20Regular') * 1.5, 10);
-    const c20dif = cap(intNum('covid20Difficult') * 3, 20);
-    const c21reg = cap(intNum('covid21Regular') * 1.5, 10);
-    const c21dif = cap(intNum('covid21Difficult') * 3, 20);
+    const difficult = EducationService.difficult(intNum('difficultMonths')).points;
+    const c20reg = EducationService.threeMonthRegular2020(intNum('covid20Regular')).points;
+    const c20dif = EducationService.threeMonthDifficult2020(intNum('covid20Difficult')).points;
+    const c21reg = EducationService.threeMonthRegular2021(intNum('covid21Regular')).points;
+    const c21dif = EducationService.threeMonthDifficult2021(intNum('covid21Difficult')).points;
     const service = cap(regular + difficult + c20reg + c20dif + c21reg + c21dif, 120);
 
     const childrenPts = Math.floor(num('children')) * 3;
