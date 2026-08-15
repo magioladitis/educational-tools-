@@ -488,6 +488,7 @@
   </div>
 </div>
 
+<script src="includes/academic-calculations.js"></script>
 <script>
   const schoolYears = [];
   for (let y = 2025; y >= 1990; y--) {
@@ -560,134 +561,23 @@
 
   document.getElementById("specialty").addEventListener("change", updateAcademicMode);
 
-  function calculateLanguagePoints(specialty, warnings, details) {
-    const languageNames = {
-      en: "Αγγλική",
-      fr: "Γαλλική",
-      de: "Γερμανική",
-      it: "Ιταλική",
-      es: "Ισπανική",
-      other: "Άλλη ξένη γλώσσα",
-      other2: "Άλλη ξένη γλώσσα"
-    };
-
-    const levelPoints = {
-      none: 0,
-      good: 3,
-      very_good: 5,
-      excellent: 7
-    };
-
-    const levelNames = {
-      none: "Καμία",
-      good: "Καλή",
-      very_good: "Πολύ καλή",
-      excellent: "Άριστη"
-    };
-
-    const excludedLanguageBySpecialty = {
-      "ΠΕ05": "fr",
-      "ΠΕ06": "en",
-      "ΠΕ07": "de"
-    };
-
-    const entries = [
-      { language: valueOf("language1"), level: valueOf("level1") },
-      { language: valueOf("language2"), level: valueOf("level2") }
-    ];
-
-    const bestByLanguage = {};
-
-    entries.forEach(entry => {
-      if (!entry.language || entry.level === "none") return;
-
-      const points = levelPoints[entry.level] || 0;
-
-      if (excludedLanguageBySpecialty[specialty] === entry.language) {
-        warnings.push(`${languageNames[entry.language]}: δεν μοριοδοτείται για τον κλάδο ${specialty}.`);
-        return;
-      }
-
-      const key = entry.language === "other2" ? "other2" : entry.language;
-      const existing = bestByLanguage[key];
-
-      if (!existing || points > existing.points) {
-        bestByLanguage[key] = {
-          points,
-          label: `${languageNames[entry.language]} - ${levelNames[entry.level]}`
-        };
-      }
+  function calculateDetailedAcademic(specialty, warnings) {
+    const academic = EducationAcademic.calculate({
+      specialty: specialty,
+      degreeGrade: valueOf("degreeGrade"),
+      secondDegree: yes("secondDegree"),
+      phd: yes("phd"),
+      mscCount: parseInt(valueOf("mscCount"), 10) || 0,
+      languages: [
+        { language: valueOf("language1"), level: valueOf("level1") },
+        { language: valueOf("language2"), level: valueOf("level2") }
+      ],
+      computer: yes("computer"),
+      training: yes("training")
     });
 
-    const counted = Object.values(bestByLanguage)
-      .sort((a, b) => b.points - a.points)
-      .slice(0, 2);
-
-    counted.forEach(item => details.push(`${item.label}: ${formatPoints(item.points)} μόρια`));
-    return counted.reduce((sum, item) => sum + item.points, 0);
-  }
-
-  function calculateDetailedAcademic(specialty, warnings) {
-    const degreeGrade = greekNumber(valueOf("degreeGrade"));
-
-    if (!degreeGrade || degreeGrade < 5 || degreeGrade > 10) {
-      throw new Error("Παρακαλώ συμπλήρωσε έγκυρο βαθμό βασικού τίτλου σπουδών από 5 έως 10.");
-    }
-
-    const details = [];
-    let total = 0;
-
-    const degreePoints = degreeGrade * 2.5;
-    total += degreePoints;
-    details.push(`Βασικός τίτλος (${formatPoints(degreeGrade)} × 2,5): ${formatPoints(degreePoints)} μόρια`);
-
-    if (yes("secondDegree")) {
-      total += 7;
-      details.push("Δεύτερο πτυχίο Α.Ε.Ι.: 7 μόρια");
-    }
-
-    if (yes("phd")) {
-      total += 40;
-      details.push("Διδακτορικό δίπλωμα: 40 μόρια");
-    }
-
-    const mscCount = parseInt(valueOf("mscCount"), 10) || 0;
-    if (mscCount >= 1) {
-      total += 20;
-      details.push("1ος μεταπτυχιακός / integrated master: 20 μόρια");
-    }
-    if (mscCount >= 2) {
-      total += 8;
-      details.push("2ος μεταπτυχιακός / integrated master: 8 μόρια");
-    }
-
-    const languageDetails = [];
-    const languagePoints = calculateLanguagePoints(specialty, warnings, languageDetails);
-    total += languagePoints;
-    details.push(...languageDetails);
-
-    if (yes("computer")) {
-      if (specialty === "ΠΕ86") {
-        warnings.push("Η γνώση Η/Υ δεν μοριοδοτείται για τον κλάδο ΠΕ86.");
-      } else {
-        total += 4;
-        details.push("Γνώση Η/Υ / ΤΠΕ Α' επιπέδου: 4 μόρια");
-      }
-    }
-
-    if (yes("training")) {
-      total += 2;
-      details.push("Επιμόρφωση 300 ωρών / 7 μηνών: 2 μόρια");
-    }
-
-    if (total > 120) {
-      warnings.push("Εφαρμόστηκε το ανώτατο όριο των 120 μονάδων στα Ακαδημαϊκά Προσόντα.");
-    }
-
-    return {
-      points: Math.min(total, 120),
-      details
-    };
+    warnings.push(...academic.warnings);
+    return academic;
   }
 
   function serviceYearOptions(selectedYear = "") {

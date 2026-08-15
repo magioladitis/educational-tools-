@@ -486,6 +486,7 @@
 
 </div>
 
+<script src="includes/academic-calculations.js"></script>
 <script src="includes/service-calculations.js"></script>
 <script>
   function valueOf(id) {
@@ -533,81 +534,6 @@
     return valueOf(id) === "yes";
   }
 
-  function calculateLanguagePoints(specialty, warnings, details) {
-    const languageNames = {
-      en: "Αγγλική",
-      fr: "Γαλλική",
-      de: "Γερμανική",
-      it: "Ιταλική",
-      es: "Ισπανική",
-      other: "Άλλη ξένη γλώσσα",
-      other2: "Άλλη ξένη γλώσσα"
-    };
-
-    const levelPoints = {
-      none: 0,
-      good: 3,
-      very_good: 5,
-      excellent: 7
-    };
-
-    const levelNames = {
-      none: "Καμία",
-      good: "Καλή",
-      very_good: "Πολύ καλή",
-      excellent: "Άριστη"
-    };
-
-    const excludedLanguageBySpecialty = {
-      "ΠΕ05": "fr",
-      "ΠΕ06": "en",
-      "ΠΕ07": "de",
-      "ΠΕ34": "it",
-      "ΠΕ40": "es"
-    };
-
-    const entries = [
-      { language: valueOf("language1"), level: valueOf("level1") },
-      { language: valueOf("language2"), level: valueOf("level2") }
-    ];
-
-    const bestByLanguage = {};
-
-    entries.forEach(entry => {
-      if (!entry.language || entry.level === "none") {
-        return;
-      }
-
-      const points = levelPoints[entry.level] || 0;
-
-      if (excludedLanguageBySpecialty[specialty] === entry.language) {
-        warnings.push(
-          "Η " + languageNames[entry.language] + " δεν μοριοδοτείται για τον κλάδο " + specialty + "."
-        );
-        return;
-      }
-
-      const existing = bestByLanguage[entry.language];
-
-      if (!existing || points > existing.points) {
-        bestByLanguage[entry.language] = {
-          points: points,
-          label: languageNames[entry.language] + " - " + levelNames[entry.level]
-        };
-      }
-    });
-
-    const countedLanguages = Object.values(bestByLanguage)
-      .sort((a, b) => b.points - a.points)
-      .slice(0, 2);
-
-    countedLanguages.forEach(item => {
-      details.push(item.label + ": " + item.points + " μόρια");
-    });
-
-    return countedLanguages.reduce((sum, item) => sum + item.points, 0);
-  }
-
   function calculatePoints() {
     const warnings = [];
     const specialty = valueOf("specialty");
@@ -624,64 +550,27 @@
       return;
     }
 
-    const academicDetails = [];
-    let academicRaw = 0;
-
-    const degreePoints = degreeGrade * 2.5;
-    academicRaw += degreePoints;
-    academicDetails.push("Βασικός τίτλος: " + formatPoints(degreePoints) + " μόρια");
-
-    if (yes("secondDegree")) {
-      academicRaw += 7;
-      academicDetails.push("Δεύτερο πτυχίο Α.Ε.Ι.: 7 μόρια");
+    let academic;
+    try {
+      academic = EducationAcademic.calculate({
+        specialty: specialty,
+        degreeGrade: degreeGrade,
+        secondDegree: yes("secondDegree"),
+        phd: yes("phd"),
+        mscCount: parseInt(valueOf("mscCount"), 10) || 0,
+        languages: [
+          { language: valueOf("language1"), level: valueOf("level1") },
+          { language: valueOf("language2"), level: valueOf("level2") }
+        ],
+        computer: yes("computer"),
+        training: yes("training")
+      });
+    } catch (error) {
+      showError(error.message);
+      return;
     }
 
-    if (yes("phd")) {
-      academicRaw += 40;
-      academicDetails.push("Διδακτορικό δίπλωμα: 40 μόρια");
-    }
-
-    const mscCount = parseInt(valueOf("mscCount"), 10);
-
-    if (mscCount === 1) {
-      academicRaw += 20;
-      academicDetails.push("Μεταπτυχιακός τίτλος / integrated master: 20 μόρια");
-    }
-
-    if (mscCount === 2) {
-      academicRaw += 28;
-      academicDetails.push("Πρώτος μεταπτυχιακός / integrated master: 20 μόρια");
-      academicDetails.push("Δεύτερος μεταπτυχιακός / integrated master: 8 μόρια");
-    }
-
-    const academicTotal = Math.min(academicRaw, 120);
-
-    if (academicRaw > 120) {
-      warnings.push("Στα ακαδημαϊκά προσόντα εφαρμόστηκε ανώτατο όριο 120 μορίων.");
-    }
-
-    const languageDetails = [];
-    const languageTotal = calculateLanguagePoints(specialty, warnings, languageDetails);
-
-    let computerPoints = 0;
-    const computerDetails = [];
-
-    if (yes("computer")) {
-      if (specialty === "ΠΕ86") {
-        warnings.push("Η γνώση Η/Υ δεν μοριοδοτείται για τον κλάδο ΠΕ86.");
-      } else {
-        computerPoints = 4;
-        computerDetails.push("Πιστοποιημένη γνώση Η/Υ / ΤΠΕ Α’ επιπέδου: 4 μόρια");
-      }
-    }
-
-    let trainingPoints = 0;
-    const trainingDetails = [];
-
-    if (yes("training")) {
-      trainingPoints = 2;
-      trainingDetails.push("Επιμόρφωση τουλάχιστον 300 ωρών και 7 μηνών: 2 μόρια");
-    }
+    warnings.push(...academic.warnings);
 
     const normalMonths = EducationService.regularPublic(numberOf("normalMonths"));
     const difficultMonths = EducationService.difficult(numberOf("difficultMonths"));
@@ -764,10 +653,7 @@
     }
 
     const total =
-      academicTotal +
-      languageTotal +
-      computerPoints +
-      trainingPoints +
+      academic.points +
       serviceTotal +
       socialTotal;
 
@@ -786,27 +672,33 @@
         </tr>
 
         <tr>
-          <td>Ακαδημαϊκά προσόντα</td>
-          <td>${formatPoints(academicTotal)}</td>
-          <td>${detailText(academicDetails)}</td>
+          <td>Τίτλοι σπουδών</td>
+          <td>${formatPoints(academic.corePoints)}</td>
+          <td>${detailText(academic.coreDetails)}</td>
         </tr>
 
         <tr>
           <td>Ξένες γλώσσες</td>
-          <td>${formatPoints(languageTotal)}</td>
-          <td>${detailText(languageDetails)}</td>
+          <td>${formatPoints(academic.languagePoints)}</td>
+          <td>${detailText(academic.languageDetails)}</td>
         </tr>
 
         <tr>
           <td>Γνώση Η/Υ</td>
-          <td>${formatPoints(computerPoints)}</td>
-          <td>${detailText(computerDetails)}</td>
+          <td>${formatPoints(academic.computerPoints)}</td>
+          <td>${detailText(academic.computerDetails)}</td>
         </tr>
 
         <tr>
           <td>Επιμόρφωση</td>
-          <td>${formatPoints(trainingPoints)}</td>
-          <td>${detailText(trainingDetails)}</td>
+          <td>${formatPoints(academic.trainingPoints)}</td>
+          <td>${detailText(academic.trainingDetails)}</td>
+        </tr>
+
+        <tr>
+          <td><strong>Σύνολο ακαδημαϊκών κριτηρίων</strong></td>
+          <td><strong>${formatPoints(academic.points)}</strong></td>
+          <td>${academic.rawPoints > academic.points ? "Εφαρμόστηκε το ανώτατο όριο των 120 μορίων." : "—"}</td>
         </tr>
 
         <tr>
