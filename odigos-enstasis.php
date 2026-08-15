@@ -46,10 +46,9 @@ button:disabled{background:#aaa;cursor:not-allowed}
 </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app-box">
-  <a class="back-tools" href="asep-tools.php">← Επιστροφή στα εργαλεία ΑΣΕΠ</a>
-
-  <h1>Οδηγός ένστασης ΑΣΕΠ</h1>
+<h1>Οδηγός ένστασης ΑΣΕΠ</h1>
   <p class="intro">Γρήγορος οδηγός για την υποβολή ένστασης κατά των προσωρινών πινάκων.</p>
 
   <div class="deadline-card">

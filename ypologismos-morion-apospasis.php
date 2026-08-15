@@ -411,12 +411,10 @@
 </head>
 
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
 
 <div class="app-box">
-
-  <a class="back-tools" href="ergaleia.php">← Επιστροφή στην Εργαλειοθήκη</a>
-
-  <h1>Υπολογισμός μορίων απόσπασης εκπαιδευτικών</h1>
+<h1>Υπολογισμός μορίων απόσπασης εκπαιδευτικών</h1>
 
   <p class="intro">
     Υπολόγισε <strong>ενδεικτικά</strong> τα μόριά σου για απόσπαση

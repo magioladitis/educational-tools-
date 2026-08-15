@@ -265,6 +265,7 @@
   </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
 
 <div class="app-box">
   <h1>Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία</h1>

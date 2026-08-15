@@ -200,12 +200,10 @@
 </head>
 
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
 
 <div class="app-box">
-
-  <a class="back-tools" href="asep-tools.php">← Επιστροφή στα εργαλεία ΑΣΕΠ</a>
-
-  <h1>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</h1>
+<h1>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</h1>
 
   <p class="intro">
     Συμπλήρωσε τα στοιχεία σου για έναν <strong>ενδεικτικό</strong> υπολογισμό μορίων

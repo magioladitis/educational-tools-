@@ -163,12 +163,10 @@
 </head>
 
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
 
 <div class="app-box">
-
-  <a class="back-tools" href="asep-tools.php">← Επιστροφή στα εργαλεία ΑΣΕΠ</a>
-
-  <h1>Τι δικαιολογητικά χρειάζομαι για τίτλους σπουδών;</h1>
+<h1>Τι δικαιολογητικά χρειάζομαι για τίτλους σπουδών;</h1>
 
   <p class="intro">
     Το εργαλείο παρέχει <strong>ενδεικτική</strong> καθοδήγηση για μεταπτυχιακούς τίτλους,

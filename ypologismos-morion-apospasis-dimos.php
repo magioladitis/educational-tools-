@@ -261,6 +261,7 @@
   </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
   <main class="dimos-calc" id="dimosCalc">
     <section class="hero">
       <h1>Υπολογισμός Μορίων ΔΗΜ.Ω.Σ. 2026–2027</h1>

@@ -158,6 +158,7 @@
 </head>
 
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
 
   <div class="page-box">
 

@@ -30,8 +30,8 @@ button:hover{background:#1558c0}
 </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app-box">
-<a class="back-tools" href="asep-tools.php">← Επιστροφή στα εργαλεία ΑΣΕΠ</a>
 <h1>Οδηγός δικαιολογητικών τέκνων και αναπηρίας</h1>
 <p class="intro">Ενδεικτικός οδηγός για τα κοινωνικά κριτήρια, διαμορφωμένος σύμφωνα με τα τέσσερα σχετικά πεδία της πλατφόρμας: <strong>Μοριοδοτούμενα Τέκνα</strong>, <strong>Αναπηρία Ιδίου</strong>, <strong>Αναπηρία Τέκνου</strong> και <strong>Αναπηρία Συζύγου</strong>.</p>
 

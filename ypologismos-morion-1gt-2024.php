@@ -192,10 +192,9 @@
   </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app">
-  <a class="back-tools" href="ergaleia.php">← Επιστροφή στην Εργαλειοθήκη Εκπαιδευτικού</a>
-
-  <section class="hero">
+<section class="hero">
     <h1>Υπολογισμός μορίων 1ΓΤ/2024</h1>
     <p>Ενδεικτικός υπολογισμός για τους αξιολογικούς πίνακες Γενικής Εκπαίδευσης κατηγορίας Τ.Ε.</p>
     <div class="meta">

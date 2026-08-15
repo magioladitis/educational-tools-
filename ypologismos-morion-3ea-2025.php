@@ -11,8 +11,8 @@
 </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="page">
-<a class="back" href="ergaleia.php">← Επιστροφή στην Εργαλειοθήκη</a>
 <section class="hero">
 <h1>Υπολογισμός μορίων 3ΕΑ/2025</h1>
 <p>Ενδεικτικός υπολογισμός μορίων για εκπαιδευτικούς ΠΕ Ειδικής Αγωγής και ταυτόχρονος έλεγχος ένταξης στον <strong>ΚΥΡΙΟ – Αξιολογικό Πίνακα Β΄</strong> ή στον <strong>ΕΠΙΚΟΥΡΙΚΟ Πίνακα</strong>.</p>

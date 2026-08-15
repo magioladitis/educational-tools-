@@ -169,12 +169,10 @@
 </head>
 
 <body>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
 
 <div class="app-box">
-
-  <a class="back-tools" href="asep-tools.php">← Επιστροφή στα εργαλεία ΑΣΕΠ</a>
-
-  <h1>Έχω Παιδαγωγική και Διδακτική Επάρκεια;</h1>
+<h1>Έχω Παιδαγωγική και Διδακτική Επάρκεια;</h1>
 
   <p class="intro">
     Το εργαλείο παρέχει <strong>ενδεικτικό</strong> έλεγχο με βάση τις κατηγορίες
