@@ -403,13 +403,13 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
       <div class="hero-meta">
-        <span>15 διαθέσιμα εργαλεία</span>
+        <span>16 διαθέσιμα εργαλεία</span>
         <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
         <span>Αναπληρωτές</span>
         <span>Αποσπάσεις</span>
         <span>Ειδική Αγωγή</span>
         <span>Ωνάσεια</span>
-        <span>Ψηφιακό Φροντιστήριο</span>
+        <span>Ψηφιακό Φροντιστήριο</span><span>Εξωτερικό</span>
         <span>ΣΔΕ</span>
       </div>
     </section>
@@ -435,7 +435,7 @@
         <button class="filter-btn" type="button" data-filter="onaseia" aria-pressed="false">Ωνάσεια</button>
       </div>
 
-      <div class="results-line" id="resultsLine" role="status" aria-live="polite">Εμφανίζονται 15 εργαλεία.</div>
+      <div class="results-line" id="resultsLine" role="status" aria-live="polite">Εμφανίζονται 16 εργαλεία.</div>
     </section>
 
     <section class="tools-grid" id="toolsGrid">
@@ -686,6 +686,23 @@
         <p>
           Έλεγξε αν η ειδικότητά σου είναι αποδεκτή και υπολόγισε τη μοριοδότηση έως 40 μόρια
           για απόσπαση στα Σχολεία Δεύτερης Ευκαιρίας.
+        </p>
+        <span class="button-like">Άνοιγμα εργαλείου →</span>
+      </a>
+
+      <a class="tool-card"
+         href="ypologismos-morion-apospasis-exoteriko.php"
+         data-category="apospaseis"
+         data-search="εξωτερικό απόσπαση αποσπάσεις εκπαιδευτικών μόρια μοριοδότηση γλωσσομάθεια βασικός πίνακας εναλλακτικός πίνακας ΔΙΠΟΔΕ ελληνόγλωσση εκπαίδευση">
+        <span class="new-badge">ΝΕΟ</span>
+        <div class="card-top">
+          <span class="tool-number">16</span>
+          <span class="category-tag orange">Αποσπάσεις</span>
+        </div>
+        <h2>Μόρια Απόσπασης στο Εξωτερικό</h2>
+        <p>
+          Υπολόγισε τα μόρια τίτλων και γλωσσομάθειας και κάνε βασικό έλεγχο
+          δικαιώματος για Βασικό ή Εναλλακτικό Πίνακα απόσπασης στο εξωτερικό.
         </p>
         <span class="button-like">Άνοιγμα εργαλείου →</span>
       </a>

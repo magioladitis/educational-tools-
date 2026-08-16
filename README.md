@@ -23,6 +23,7 @@
 13. `dikaiologitika-tekna-anapiria.php` — Δικαιολογητικά τέκνων & αναπηρίας
 14. `ypologismos-morion-apospasis-psifiako-frontistirio.php` — Μόρια απόσπασης στο Ψηφιακό Φροντιστήριο
 15. `ypologismos-morion-apospasis-sde.php` — Μόρια απόσπασης στα Σχολεία Δεύτερης Ευκαιρίας (ΣΔΕ) και έλεγχος αποδεκτών ειδικοτήτων
+16. `ypologismos-morion-apospasis-exoteriko.php` — Μόρια απόσπασης στο εξωτερικό και βασικός έλεγχος δικαιώματος
 
 Η σελίδα `asep-tools.php` λειτουργεί ως επιπλέον θεματικός κόμβος για εργαλεία ΑΣΕΠ.
 
@@ -63,3 +64,4 @@ php -l <αρχείο.php>
 - `includes/te-academic-calculations.js` — κοινή ακαδημαϊκή μοριοδότηση για 1ΓΤ/2024 και 4ΕΑ/2025.
 
 - `includes/social-calculations.js` — κοινή μοριοδότηση κοινωνικών κριτηρίων για 1ΓΕ/2ΓΕ, 1ΓΤ, 3ΕΑ και 4ΕΑ.
+- `includes/abroad-calculations.js` — μοριοδότηση και βασικός έλεγχος απόσπασης στο εξωτερικό.
