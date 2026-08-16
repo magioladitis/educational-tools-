@@ -1,0 +1,274 @@
+/*
+ * Μοριοδότηση και αντιστοίχιση ειδικοτήτων για αποσπάσεις στα ΣΔΕ.
+ * Βάση: Υ.Α. 88422/Κ1, ΦΕΚ Β' 4088/03.07.2026.
+ */
+(function (global) {
+  'use strict';
+
+  const MAX = Object.freeze({
+    formalQualifications: 19,
+    training: 4,
+    education: 23,
+    teachingExperience: 13,
+    otherQualifications: 4,
+    total: 40
+  });
+
+  const SPECIALTIES = Object.freeze({
+    'PE01': 'ΠΕ01 Θεολόγων',
+    'PE02': 'ΠΕ02 Φιλολόγων',
+    'PE03': 'ΠΕ03 Μαθηματικών',
+    'PE04.01': 'ΠΕ04.01 Φυσικών',
+    'PE04.02': 'ΠΕ04.02 Χημικών',
+    'PE04.03': 'ΠΕ04.03 Φυσιογνωστών',
+    'PE04.04': 'ΠΕ04.04 Βιολόγων',
+    'PE04.05': 'ΠΕ04.05 Γεωλόγων',
+    'PE06': 'ΠΕ06 Αγγλικής',
+    'PE70': 'ΠΕ70 Δασκάλων',
+    'PE78': 'ΠΕ78 Κοινωνικών Επιστημών',
+    'PE80': 'ΠΕ80 Οικονομίας',
+    'PE85': 'ΠΕ85 Χημικών Μηχανικών',
+    'PE86': 'ΠΕ86 Πληροφορικής',
+    'PE87.01': 'ΠΕ87.01 Ιατρικής',
+    'PE88.01': 'ΠΕ88.01 Γεωπονίας',
+    'PE88.05': 'ΠΕ88.05 Φυσικού Περιβάλλοντος',
+    'OTHER': 'Άλλη ειδικότητα'
+  });
+
+  const LITERACIES = Object.freeze([
+    'Ελληνική Γλώσσα',
+    'Μαθηματικά',
+    'Πληροφορική',
+    'Αγγλική Γλώσσα',
+    'Κοινωνική Εκπαίδευση',
+    'Επιστημονικός Γραμματισμός',
+    'Περιβαλλοντική Εκπαίδευση',
+    'Τμήματα προετοιμασίας για απολυτήριο Δημοτικού'
+  ]);
+
+  function num(value) {
+    const n = Number(value);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  }
+
+  function cap(value, max) {
+    return Math.min(Math.max(num(value), 0), max);
+  }
+
+  function phdPoints(value) {
+    return value === 'adult' ? 10 : value === 'other' ? 9 : 0;
+  }
+
+  function masterPoints(value) {
+    return value === 'adult' ? 7 : value === 'other' ? 6 : 0;
+  }
+
+  function secondPhdPoints(value) {
+    return value === 'adult' ? 3 : value === 'other' ? 2 : 0;
+  }
+
+  function secondMasterPoints(value) {
+    return value === 'adult' ? 2 : value === 'other' ? 1 : 0;
+  }
+
+  function calculateEducation(data) {
+    const details = [];
+    const warnings = [];
+
+    const phd = phdPoints(data.phd);
+    const masterRaw = masterPoints(data.master);
+    const master = phd > 0 ? 0 : masterRaw;
+    const secondDegree = data.secondDegree ? 4 : 0;
+    const secondPhd = secondPhdPoints(data.secondPhd);
+    const secondMaster = secondMasterPoints(data.secondMaster);
+
+    if (phd) details.push({ label: 'Διδακτορικό', points: phd });
+    if (master) details.push({ label: 'Μεταπτυχιακό', points: master });
+    if (phd && masterRaw) warnings.push('Το μεταπτυχιακό δεν προσμετρήθηκε επειδή δηλώθηκε και διδακτορικό.');
+    if (secondDegree) details.push({ label: 'Δεύτερο πτυχίο', points: 4 });
+    if (secondPhd) details.push({ label: 'Δεύτερο διδακτορικό', points: secondPhd });
+    if (secondMaster) details.push({ label: 'Δεύτερο μεταπτυχιακό', points: secondMaster });
+
+    if (secondPhd && !phd) warnings.push('Δήλωσες δεύτερο διδακτορικό χωρίς πρώτο διδακτορικό. Έλεγξε την καταχώριση.');
+    if (secondMaster && !masterRaw) warnings.push('Δήλωσες δεύτερο μεταπτυχιακό χωρίς πρώτο μεταπτυχιακό. Έλεγξε την καταχώριση.');
+
+    const formalRaw = phd + master + secondDegree + secondPhd + secondMaster;
+    const formal = Math.min(formalRaw, MAX.formalQualifications);
+
+    const sdeTraining = Math.min(num(data.sdeTrainingHours) / 100 * 0.25, 2);
+    const adultTraining = Math.min(num(data.adultTrainingHours) / 100 * 0.25, 2);
+    if (sdeTraining > 0) details.push({ label: 'Επιμόρφωση σε θέματα ΣΔΕ', points: sdeTraining });
+    if (adultTraining > 0) details.push({ label: 'Επιμόρφωση στις αρχές Εκπαίδευσης Ενηλίκων', points: adultTraining });
+
+    const training = Math.min(sdeTraining + adultTraining, MAX.training);
+    const total = Math.min(formal + training, MAX.education);
+
+    return { formal, training, total, details, warnings };
+  }
+
+  function calculateExperience(data) {
+    const details = [];
+
+    const sdeYears = num(data.sdeYears);
+    const sdeHourlyHours = num(data.sdeHourlyHours);
+    const sdePoints = Math.min(sdeYears + sdeHourlyHours / 650, 5);
+    if (sdePoints > 0) details.push({ label: 'Διδακτική εμπειρία σε ΣΔΕ', points: sdePoints });
+
+    const adultHours = num(data.adultEducationHours);
+    const adultPoints = Math.min(adultHours / 100 * 0.5, 4);
+    if (adultPoints > 0) details.push({ label: 'Εκπαίδευση Ενηλίκων εκτός ΣΔΕ', points: adultPoints });
+
+    const formalYearsTotal = Math.floor(num(data.formalEducationYears));
+    const beyondRequired = Math.max(0, formalYearsTotal - 2);
+    const formalPoints = Math.min(beyondRequired, 4);
+    if (formalPoints > 0) details.push({ label: 'Τυπική εκπαίδευση πέραν των 2 προαπαιτούμενων ετών', points: formalPoints });
+
+    const raw = sdePoints + adultPoints + formalPoints;
+    return {
+      sdePoints,
+      adultPoints,
+      formalPoints,
+      formalYearsTotal,
+      total: Math.min(raw, MAX.teachingExperience),
+      details
+    };
+  }
+
+  const LANGUAGE_LEVEL = Object.freeze({ none: 0, B2: 1, C1: 2, C2: 3 });
+  const FIRST_LANGUAGE_POINTS = Object.freeze({ 1: 1, 2: 1.5, 3: 2 });
+  const SECOND_LANGUAGE_POINTS = Object.freeze({ 1: 0.5, 2: 0.75, 3: 1 });
+
+  function calculateLanguages(data) {
+    const entries = [
+      { language: data.language1 || '', level: data.languageLevel1 || 'none' },
+      { language: data.language2 || '', level: data.languageLevel2 || 'none' }
+    ];
+    const warnings = [];
+    const byLanguage = new Map();
+
+    entries.forEach(entry => {
+      const levelRank = LANGUAGE_LEVEL[entry.level] || 0;
+      if (!entry.language || !levelRank) return;
+
+      if (data.specialty === 'PE06' && entry.language === 'english') {
+        warnings.push('Για τον κλάδο ΠΕ06 δεν μοριοδοτείται η Αγγλική, επειδή είναι η γλώσσα που διδάσκει.');
+        return;
+      }
+
+      const existing = byLanguage.get(entry.language);
+      if (!existing || levelRank > existing.levelRank) {
+        byLanguage.set(entry.language, { language: entry.language, levelRank, level: entry.level });
+      }
+    });
+
+    const ordered = Array.from(byLanguage.values()).sort((a, b) => b.levelRank - a.levelRank).slice(0, 2);
+    let points = 0;
+    const details = [];
+    if (ordered[0]) {
+      const p = FIRST_LANGUAGE_POINTS[ordered[0].levelRank] || 0;
+      points += p;
+      details.push({ label: '1η ξένη γλώσσα (' + ordered[0].level + ')', points: p });
+    }
+    if (ordered[1]) {
+      const p = SECOND_LANGUAGE_POINTS[ordered[1].levelRank] || 0;
+      points += p;
+      details.push({ label: '2η ξένη γλώσσα (' + ordered[1].level + ')', points: p });
+    }
+
+    return { points, details, warnings };
+  }
+
+  function calculateOther(data) {
+    const language = calculateLanguages(data);
+    const computer = data.computer ? 1 : 0;
+    const details = language.details.slice();
+    if (computer) details.push({ label: 'Γνώσεις χειρισμού Η/Υ / ΤΠΕ Α΄ επιπέδου', points: 1 });
+    return {
+      languagePoints: language.points,
+      computerPoints: computer,
+      total: Math.min(language.points + computer, MAX.otherQualifications),
+      details,
+      warnings: language.warnings
+    };
+  }
+
+  function assignmentsFor(specialty, flags) {
+    flags = flags || {};
+    const result = [];
+    const add = (literacy, assignment, note) => result.push({ literacy, assignment, note: note || '' });
+
+    if (specialty === 'PE02') {
+      add('Ελληνική Γλώσσα', 'Α΄ ανάθεση');
+      add('Κοινωνική Εκπαίδευση', 'Β΄ ανάθεση');
+    }
+    if (specialty === 'PE03') {
+      add('Μαθηματικά', 'Α΄ ανάθεση');
+      add('Επιστημονικός Γραμματισμός', 'Β΄ ανάθεση');
+    }
+    if (['PE04.01','PE04.02','PE04.03','PE04.04','PE04.05'].includes(specialty)) {
+      if (flags.mathOrInformaticsDegree) {
+        add('Μαθηματικά', 'Β΄ ανάθεση', 'Το ΦΕΚ αναφέρει την προϋπόθεση «με πτυχίο Μαθηματικών ή Πληροφορικής».');
+      } else {
+        add('Μαθηματικά', 'Β΄ ανάθεση υπό προϋπόθεση', 'Απαιτείται η προϋπόθεση πτυχίου που αναγράφεται στο ΦΕΚ.');
+      }
+      add('Επιστημονικός Γραμματισμός', 'Α΄ ανάθεση');
+      if (specialty === 'PE04.05') add('Περιβαλλοντική Εκπαίδευση', 'Α΄ ανάθεση');
+      if (['PE04.01','PE04.02','PE04.03','PE04.04'].includes(specialty)) add('Περιβαλλοντική Εκπαίδευση', 'Β΄ ανάθεση');
+    }
+    if (specialty === 'PE86') {
+      add('Πληροφορική', 'Α΄ ανάθεση');
+      if (flags.mathOrInformaticsDegree) {
+        add('Μαθηματικά', 'Β΄ ανάθεση', 'Το ΦΕΚ αναφέρει την προϋπόθεση «με πτυχίο Μαθηματικών ή Πληροφορικής».');
+      } else {
+        add('Μαθηματικά', 'Β΄ ανάθεση υπό προϋπόθεση', 'Απαιτείται η προϋπόθεση πτυχίου που αναγράφεται στο ΦΕΚ.');
+      }
+    }
+    if (specialty === 'PE06') add('Αγγλική Γλώσσα', 'Α΄ ανάθεση');
+    if (specialty === 'PE78') add('Κοινωνική Εκπαίδευση', 'Α΄ ανάθεση');
+    if (specialty === 'PE01') add('Κοινωνική Εκπαίδευση', 'Β΄ ανάθεση');
+    if (specialty === 'PE80') {
+      add('Κοινωνική Εκπαίδευση', 'Β΄ ανάθεση', flags.formerPE09or15 ? 'Προτεραιότητα λόγω πτυχίου που αντιστοιχεί σε πρώην ΠΕ09/ΠΕ15.' : 'Προτεραιότητα δίνεται σε πτυχία που αντιστοιχούν σε πρώην ΠΕ09/ΠΕ15.');
+    }
+    if (specialty === 'PE85') {
+      add('Επιστημονικός Γραμματισμός', 'Α΄ ανάθεση', flags.formerPE1208 ? 'Προτεραιότητα λόγω πτυχίου πρώην ΠΕ12.08.' : 'Προτεραιότητα δίνεται σε πτυχία που αντιστοιχούν σε πρώην ΠΕ12.08.');
+      add('Περιβαλλοντική Εκπαίδευση', 'Β΄ ανάθεση', flags.formerPE1208 ? 'Προτεραιότητα λόγω πτυχίου πρώην ΠΕ12.08.' : 'Προτεραιότητα δίνεται σε πτυχία που αντιστοιχούν σε πρώην ΠΕ12.08.');
+    }
+    if (specialty === 'PE87.01') add('Επιστημονικός Γραμματισμός', 'Β΄ ανάθεση');
+    if (specialty === 'PE88.01') {
+      add('Επιστημονικός Γραμματισμός', 'Β΄ ανάθεση');
+      add('Περιβαλλοντική Εκπαίδευση', 'Α΄ ανάθεση');
+    }
+    if (specialty === 'PE88.05') add('Περιβαλλοντική Εκπαίδευση', 'Α΄ ανάθεση');
+    if (specialty === 'PE70') add('Τμήματα προετοιμασίας για απολυτήριο Δημοτικού', 'Ειδική πρόβλεψη άρθρου 5');
+
+    return result;
+  }
+
+  function calculateAll(data) {
+    const education = calculateEducation(data);
+    const experience = calculateExperience(data);
+    const other = calculateOther(data);
+    const raw = education.total + experience.total + other.total;
+    return {
+      education,
+      experience,
+      other,
+      total: Math.min(raw, MAX.total),
+      assignments: assignmentsFor(data.specialty, data.flags || {}),
+      eligibleByTwoYears: experience.formalYearsTotal >= 2,
+      max: MAX
+    };
+  }
+
+  global.SDECalculator = Object.freeze({
+    MAX,
+    SPECIALTIES,
+    LITERACIES,
+    calculateEducation,
+    calculateExperience,
+    calculateOther,
+    calculateLanguages,
+    assignmentsFor,
+    calculateAll
+  });
+})(typeof window !== 'undefined' ? window : globalThis);
