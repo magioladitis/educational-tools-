@@ -1,0 +1,26 @@
+# Temporary/cache test versions
+*-v1.php
+*-v2.php
+*-v3.php
+*-v4.php
+*-v5.php
+*-v6.php
+*-v7.php
+*-v8.php
+*-v9.php
+*-v*.php
+
+# Archives / backups
+*.zip
+*.bak
+*.tmp
+*~
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log

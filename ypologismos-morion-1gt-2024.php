@@ -190,6 +190,7 @@
       .actions{grid-template-columns:1fr}
     }
   </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 <body>
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -400,8 +401,6 @@
     <strong>Πηγή:</strong> Προκήρυξη ΑΣΕΠ 1ΓΤ/2024, ΦΕΚ Α.Σ.Ε.Π. 25/10.07.2024, Κεφάλαιο Γ΄ «Κριτήρια Κατάταξης».<br>
     Το εργαλείο είναι ενημερωτικό. Η τελική μοριοδότηση προκύπτει από τον έλεγχο της αίτησης και των δικαιολογητικών από τα αρμόδια όργανα.
   </section>
-
-  <div class="credits">Υλοποίηση / επεξεργασία: Μάριος Μαγιολαδίτης</div>
 </div>
 
 <script src="includes/service-calculations.js"></script>
@@ -553,5 +552,6 @@
   calc();
 })();
 </script>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

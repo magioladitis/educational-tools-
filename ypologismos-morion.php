@@ -197,6 +197,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 
 <body>
@@ -479,11 +480,6 @@
     Το αποτέλεσμα είναι ενδεικτικό και δεν αντικαθιστά την επίσημη προκήρυξη,
     τον έλεγχο του Α.Σ.Ε.Π., τον Ο.Π.ΣΥ.Δ. ή τον επίσημο πίνακα κατάταξης.
   </p>
-
-  <div class="credits">
-    Υλοποίηση/σχεδιασμός: Μάριος Μαγιολαδίτης, 2026
-  </div>
-
 </div>
 
 <script src="includes/academic-calculations.js"></script>
@@ -734,5 +730,6 @@
   }
 </script>
 
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

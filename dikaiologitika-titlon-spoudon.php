@@ -160,6 +160,7 @@
       display: none;
     }
   </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 
 <body>
@@ -328,11 +329,6 @@
     διδακτορικούς και integrated master τίτλους. Δεν αντικαθιστά την επίσημη προκήρυξη,
     τις οδηγίες του Α.Σ.Ε.Π., τον έλεγχο του Ο.Π.ΣΥ.Δ. ή τον έλεγχο των αρμόδιων υπηρεσιών.
   </p>
-
-  <div class="credits">
-    Υλοποίηση/σχεδιασμός: Μάριος Μαγιολαδίτης, 2026
-  </div>
-
 </div>
 
 <script>
@@ -723,5 +719,6 @@
   }
 </script>
 
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

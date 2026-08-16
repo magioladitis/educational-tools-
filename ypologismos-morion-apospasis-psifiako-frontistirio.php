@@ -103,6 +103,7 @@
     @media(max-width:900px){.layout{grid-template-columns:1fr}.results{position:static}}
     @media(max-width:650px){.page-shell{padding:16px 12px 34px}.hero{padding:24px 19px}.field-grid{grid-template-columns:1fr}.score-row{grid-template-columns:1fr}.field.full{grid-column:auto}.actions{grid-template-columns:1fr}}
   </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 <body>
   <main class="page-shell">
@@ -287,8 +288,7 @@
     </div>
 
     <p class="source-note"><strong>Πηγή:</strong> Πρόσκληση 86300/Δ7/29.06.2026 για αποσπάσεις μονίμων εκπαιδευτικών στο Ψηφιακό Φροντιστήριο για το σχολικό έτος 2026–2027. Το εργαλείο παρέχει ενδεικτικό υπολογισμό και δεν αντικαθιστά την επίσημη πρόσκληση, τα δικαιολογητικά και την κρίση της αρμόδιας επιτροπής.</p>
-    <div class="credits">Υλοποίηση / σχεδιασμός: Μάριος Μαγιολαδίτης, 2026</div>
-  </main>
+</main>
 
 <script>
   function n(id){
@@ -399,5 +399,6 @@
   toggleEae();
   calculate();
 </script>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

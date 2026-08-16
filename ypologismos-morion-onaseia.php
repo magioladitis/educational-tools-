@@ -263,6 +263,7 @@
       h1 { font-size: 24px; }
     }
   </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 <body>
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -481,11 +482,6 @@
   </div>
 
   <div id="result" class="result"></div>
-
-  <div class="credits">
-    Υλοποίηση/σχεδιασμός: Μάριος Μαγιολαδίτης, 2026<br>
-    Ενδεικτικός υπολογισμός βάσει της πρόσκλησης ΔΗΜ.Ω.Σ. 2026-2027 και των οικείων πινάκων Α.Σ.Ε.Π.
-  </div>
 </div>
 
 <script src="includes/academic-calculations.js"></script>
@@ -751,5 +747,6 @@
   updateAcademicMode();
 </script>
 
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

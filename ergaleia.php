@@ -390,6 +390,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 
 <body>
@@ -673,12 +674,7 @@
         <a href="asep-tools.php">Χρήσιμα εργαλεία 1ΓΕ/2026 &amp; 2ΓΕ/2026</a>.
       </div>
     </section>
-
-    <div class="credits">
-      Υλοποίηση / σχεδιασμός: Μάριος Μαγιολαδίτης, 2026
-    </div>
-
-  </main>
+</main>
 
   <script>
     (function () {
@@ -741,5 +737,6 @@
       updateCards();
     })();
   </script>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

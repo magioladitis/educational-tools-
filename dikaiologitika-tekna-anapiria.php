@@ -28,6 +28,7 @@ button:hover{background:#1558c0}
 .hidden{display:none}
 @media(max-width:760px){body{padding:18px}h1{font-size:23px}}
 </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 <body>
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -143,7 +144,6 @@ button:hover{background:#1558c0}
 <div id="result" class="result"></div>
 
 <p class="small-note">Το εργαλείο παρέχει ενδεικτική καθοδήγηση και δεν αντικαθιστά την επίσημη προκήρυξη, τις οδηγίες του Α.Σ.Ε.Π., τον έλεγχο του Ο.Π.ΣΥ.Δ. ή τον έλεγχο των αρμόδιων υπηρεσιών.</p>
-<div class="credits">Υλοποίηση/σχεδιασμός: Μάριος Μαγιολαδίτης, 2026</div>
 </div>
 
 <script>
@@ -356,7 +356,7 @@ function showDocuments(){
     if(!addChildrenDocuments(documents,warnings,info)){showResult("<h2>Λείπουν στοιχεία</h2><p>Παρακαλώ απάντησε στις ερωτήσεις για τα τέκνα, το όριο των 23 ετών και τις σπουδές/στρατιωτική θητεία όπου υπάρχουν.</p>");return}
   }
   if(["candidate_disability","child_disability","spouse_disability","multiple"].includes(c)){
-    if(!addDisabilityDocuments(documents,warnings,info)){showResult("<h2>Λείπουν στοιχεία</h2><p>Παρακαλώ απάντησε στις ερωτήσεις για την αναπηρία. Αν το ποσοστό είναι 50% και άνω, συμπλήρωσε και το πεδίο για το πιστοποιητικό αναπηρίας. Αν το ποσοστό είναι 50% και άνω, συμπλήρωσε και το πεδίο για το πιστοποιητικό αναπηρίας.</p>");return}
+    if(!addDisabilityDocuments(documents,warnings,info)){showResult("<h2>Λείπουν στοιχεία</h2><p>Παρακαλώ απάντησε στις ερωτήσεις για την αναπηρία. Αν το ποσοστό είναι 50% και άνω, συμπλήρωσε και το πεδίο για το πιστοποιητικό αναπηρίας.</p>");return}
   }
 
   const uniqueDocuments = [...new Set(documents)];
@@ -376,5 +376,6 @@ function showDocuments(){
   showResult(html);
 }
 </script>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

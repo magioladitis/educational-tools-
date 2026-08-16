@@ -259,6 +259,7 @@
       .card,.hero{box-shadow:none}
     }
   </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 <body>
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -482,9 +483,7 @@
         </div>
       </aside>
     </div>
-
-    <p class="footer">Επεξεργασία / εργαλείο: Μάριος Μαγιολαδίτης</p>
-  </main>
+</main>
 
   <script>
     (function(){
@@ -664,5 +663,6 @@
       calc();
     })();
   </script>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>

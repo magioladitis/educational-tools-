@@ -44,6 +44,7 @@ button:disabled{background:#aaa;cursor:not-allowed}
 .credits{margin-top:24px;text-align:center;font-size:13px;color:#777}
 @media(max-width:760px){body{padding:16px}.app-box{padding:18px}h1{font-size:23px}.action-links{display:block}.action-links a{display:block;margin-top:8px;text-align:center}}
 </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 <body>
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -116,7 +117,6 @@ button:disabled{background:#aaa;cursor:not-allowed}
   <div id="result" class="result"></div>
 
   <p class="small-note">Το εργαλείο παρέχει ενδεικτική καθοδήγηση. Για την υποβολή ισχύουν η επίσημη ανακοίνωση, η προκήρυξη και οι οδηγίες της ηλεκτρονικής πλατφόρμας του ΑΣΕΠ.</p>
-  <div class="credits">Υλοποίηση/σχεδιασμός: Μάριος Μαγιολαδίτης, 2026</div>
 </div>
 
 <script>
@@ -293,5 +293,6 @@ function showGuidance(){
 updateDeadlineStatus();
 setInterval(updateDeadlineStatus, 60000);
 </script>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>
