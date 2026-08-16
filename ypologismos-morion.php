@@ -456,19 +456,37 @@
 
     <div class="field-grid">
       <div class="question">
-        <label for="children">Αριθμός ανήλικων τέκνων</label>
+        <label for="children">Αριθμός επιλέξιμων τέκνων</label>
         <input type="number" id="children" min="0" step="1" value="0">
       </div>
-
       <div class="question">
-        <label for="disability">Ποσοστό αναπηρίας υποψηφίου/συζύγου/τέκνου</label>
-        <input type="number" id="disability" min="0" max="100" step="1" value="0">
+        <label for="candidateDisability">Αναπηρία υποψηφίου/ας (%)</label>
+        <input type="number" id="candidateDisability" min="0" max="100" step="1" value="0">
+      </div>
+      <div class="question">
+        <label for="spouseDisability">Αναπηρία συζύγου (%)</label>
+        <input type="number" id="spouseDisability" min="0" max="100" step="1" value="0">
+      </div>
+      <div class="question">
+        <label for="childDisability">Υψηλότερο ποσοστό αναπηρίας τέκνου (%)</label>
+        <input type="number" id="childDisability" min="0" max="100" step="1" value="0">
       </div>
     </div>
 
+    <div class="question">
+      <label><input type="checkbox" id="marriageYears4Plus"> Ο έγγαμος βίος έχει διαρκέσει τουλάχιστον 4 έτη</label>
+    </div>
+
+    <div class="question">
+      <label><input type="checkbox" id="candidateMentalCondition"> Η αναπηρία του/της υποψηφίου οφείλεται, έστω και κατά ποσοστό, σε ψυχική πάθηση</label>
+    </div>
+
     <p class="note">
-      Τέκνα: 3 μόρια για κάθε ανήλικο τέκνο.
-      Αναπηρία 50% και άνω: ποσοστό αναπηρίας × 0,4.
+      Τέκνα: 3 μόρια ανά επιλέξιμο τέκνο.
+      Αναπηρία: από 50% και άνω, ποσοστό × 0,4. Αν υπάρχουν περισσότερα επιλέξιμα πρόσωπα,
+      λαμβάνεται μόνο το υψηλότερο έγκυρο ποσοστό. Για σύζυγο απαιτείται έγγαμος βίος τουλάχιστον 4 ετών.
+      Η αναπηρία του/της υποψηφίου δεν μοριοδοτείται όταν οφείλεται κατά οποιοδήποτε ποσοστό σε ψυχική πάθηση.
+      Η αναπηρία τέκνου μοριοδοτείται ανεξαρτήτως ηλικίας.
     </p>
   </div>
 
@@ -484,6 +502,7 @@
 
 <script src="includes/academic-calculations.js"></script>
 <script src="includes/service-calculations.js"></script>
+<script src="includes/social-calculations.js"></script>
 <script>
   function valueOf(id) {
     return document.getElementById(id).value;
@@ -528,6 +547,14 @@
 
   function yes(id) {
     return valueOf(id) === "yes";
+  }
+
+  const childrenInput = document.getElementById("children");
+  if (childrenInput) {
+    childrenInput.addEventListener("input", function () {
+      if (this.value === "") return;
+      this.value = Math.max(0, Math.floor(Number(this.value) || 0));
+    });
   }
 
   function calculatePoints() {
@@ -628,25 +655,31 @@
       warnings.push("Στην εκπαιδευτική προϋπηρεσία εφαρμόστηκε ανώτατο όριο 120 μορίων.");
     }
 
-    const children = numberOf("children");
-    const disability = numberOf("disability");
+    const socialResult = EducationSocial.calculate({
+      children: numberOf("children"),
+      candidateDisability: numberOf("candidateDisability"),
+      spouseDisability: numberOf("spouseDisability"),
+      childDisability: numberOf("childDisability"),
+      marriageYears4Plus: document.getElementById("marriageYears4Plus").checked,
+      candidateMentalCondition: document.getElementById("candidateMentalCondition").checked
+    });
 
-    let socialTotal = 0;
+    const socialTotal = socialResult.total;
     const socialDetails = [];
 
-    if (children > 0) {
-      const points = children * 3;
-      socialTotal += points;
-      socialDetails.push("Ανήλικα τέκνα: " + formatPoints(points) + " μόρια");
+    if (socialResult.childrenPoints > 0) {
+      socialDetails.push("Επιλέξιμα τέκνα: " + formatPoints(socialResult.childrenPoints) + " μόρια");
     }
 
-    if (disability >= 50) {
-      const points = disability * 0.4;
-      socialTotal += points;
-      socialDetails.push("Αναπηρία " + formatPoints(disability) + "%: " + formatPoints(points) + " μόρια");
-    } else if (disability > 0) {
-      warnings.push("Η αναπηρία μοριοδοτείται όταν το ποσοστό είναι 50% και άνω.");
+    if (socialResult.disabilityPoints > 0) {
+      socialDetails.push(
+        "Αναπηρία (" + socialResult.highestLabel + " " +
+        formatPoints(socialResult.highestDisabilityPercent) + "%): " +
+        formatPoints(socialResult.disabilityPoints) + " μόρια"
+      );
     }
+
+    warnings.push(...socialResult.warnings);
 
     const total =
       academic.points +

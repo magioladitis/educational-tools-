@@ -80,10 +80,13 @@
 <section class="card">
 <h2>4. Κοινωνικά κριτήρια</h2>
 <div class="field"><label for="children">Αριθμός επιλέξιμων τέκνων<small>3 μόρια ανά τέκνο.</small></label><input id="children" type="number" min="0" step="1" value="0"></div>
-<div class="field"><label for="candDis">Αναπηρία υποψηφίου (%)<small>Μοριοδοτείται από 50% και άνω, εφόσον πληρούνται οι προϋποθέσεις της προκήρυξης.</small></label><input id="candDis" type="number" min="0" max="100" step="1" value="0"></div>
-<div class="field"><label for="spouseDis">Αναπηρία συζύγου (%)<small>Από 50% και άνω και με έγγαμο βίο τουλάχιστον 4 ετών.</small></label><input id="spouseDis" type="number" min="0" max="100" step="1" value="0"></div>
-<div class="field"><label for="childDis">Υψηλότερο ποσοστό αναπηρίας τέκνου (%)<small>Από 50% και άνω. Αν είναι ≥67%, μπορεί να θεμελιώνει και ένταξη στον επικουρικό πίνακα.</small></label><input id="childDis" type="number" min="0" max="100" step="1" value="0"></div>
+<div class="field"><label for="candidateDisability">Αναπηρία υποψηφίου (%)<small>Μοριοδοτείται από 50% και άνω, εφόσον πληρούνται οι προϋποθέσεις της προκήρυξης.</small></label><input id="candidateDisability" type="number" min="0" max="100" step="1" value="0"></div>
+<div class="field"><label for="spouseDisability">Αναπηρία συζύγου (%)<small>Από 50% και άνω και με έγγαμο βίο τουλάχιστον 4 ετών.</small></label><input id="spouseDisability" type="number" min="0" max="100" step="1" value="0"></div>
+<div class="field"><label for="childDisability">Υψηλότερο ποσοστό αναπηρίας τέκνου (%)<small>Από 50% και άνω. Αν είναι ≥67%, μπορεί να θεμελιώνει και ένταξη στον επικουρικό πίνακα.</small></label><input id="childDisability" type="number" min="0" max="100" step="1" value="0"></div>
 <div class="info">Για τη μοριοδότηση αναπηρίας λαμβάνεται μόνο το υψηλότερο επιλέξιμο ποσοστό και υπολογίζεται ως ποσοστό × 0,4.</div>
+<div class="check"><input id="marriageYears4Plus" type="checkbox"><label for="marriageYears4Plus">Ο έγγαμος βίος έχει διαρκέσει τουλάχιστον 4 έτη<small>Απαιτείται για τη μοριοδότηση αναπηρίας συζύγου.</small></label></div>
+<div class="check"><input id="candidateMentalCondition" type="checkbox"><label for="candidateMentalCondition">Η αναπηρία του/της υποψηφίου οφείλεται, έστω και κατά ποσοστό, σε ψυχική πάθηση<small>Αν επιλεγεί, η αναπηρία του/της υποψηφίου δεν μοριοδοτείται.</small></label></div>
+
 </section>
 
 <section class="card">
@@ -107,6 +110,7 @@
 </div>
 </div>
 <script src="includes/service-calculations.js"></script>
+<script src="includes/social-calculations.js"></script>
 <script>
 (function(){
  const $=id=>document.getElementById(id); const num=id=>Math.max(0,Number($(id)?.value||0)); const cap=(v,m)=>Math.min(v,m); const fmt=v=>(Math.round((v+Number.EPSILON)*100)/100).toFixed(2);
@@ -151,12 +155,16 @@
    return cap(raw,120);
  }
  function calcSocial(){
-   const childPts=num('children')*3;
-   const valid=[num('candDis'),num('spouseDis'),num('childDis')].filter(v=>v>=50);
-   const maxDis=valid.length?Math.max(...valid):0;
-   return childPts + maxDis*.4;
+   return EducationSocial.calculate({
+     children:num('children'),
+     candidateDisability:num('candidateDisability'),
+     spouseDisability:num('spouseDisability'),
+     childDisability:num('childDisability'),
+     marriageYears4Plus:$('marriageYears4Plus').checked,
+     candidateMentalCondition:$('candidateMentalCondition').checked
+   });
  }
- function eligibility(){
+ function eligibility(socialResult){
    const sp=$('specialty').value;
    if(!sp) return {type:'none',label:'Επίλεξε κλάδο',why:'Δεν έχει επιλεγεί κλάδος / ειδικότητα.'};
    let mainReasons=[];
@@ -170,7 +178,7 @@
    let auxReasons=[];
    if($('seminar400').checked) auxReasons.push('σεμινάριο Ε.Α.Ε. ≥400 ωρών / ≥7 μηνών');
    if(num('eaeMonths')>=10) auxReasons.push('τουλάχιστον 10 μήνες προϋπηρεσίας στην Ε.Α.Ε.');
-   if(num('childDis')>=67) auxReasons.push('γονέας παιδιού με αναπηρία ≥67%');
+   if(socialResult.childDisability67) auxReasons.push('γονέας παιδιού με αναπηρία ≥67%');
    if(auxReasons.length) return {type:'aux',label:'ΕΠΙΚΟΥΡΙΚΟΣ Πίνακας Ε.Α.Ε.',why:'Κριτήριο/α ένταξης: '+auxReasons.join(', ')+'.'};
    return {type:'none',label:'Δεν προκύπτει ένταξη',why:'Με τα στοιχεία που δηλώθηκαν δεν προκύπτει προσόν ένταξης ούτε στον Αξιολογικό Πίνακα Β΄ ούτε στον Επικουρικό.'};
  }
@@ -179,7 +187,7 @@
    const degreeGrade=num('degree');
    const degreeInvalid=degreeGrade>0 && (degreeGrade<5 || degreeGrade>10);
    $('degreeValidation').classList.toggle('hidden', !degreeInvalid);
-   const a=calcAcademic(), b=calcService(), c=calcSocial(), t=a+b+c, e=eligibility();
+   const a=calcAcademic(), b=calcService(), socialResult=calcSocial(), c=socialResult.total, t=a+b+c, e=eligibility(socialResult);
    $('grandTotal').textContent=fmt(t); $('resAcademic').textContent=fmt(a)+' / 120'; $('resService').textContent=fmt(b)+' / 120'; $('resSocial').textContent=fmt(c);
    $('tableStatus').className='status '+e.type; $('tableStatus').textContent=e.label; $('eligibilityWhy').innerHTML='<strong>Έλεγχος ένταξης</strong>'+e.why;
    let p=[]; if($('pde').checked) p.push('Πρόταξη λόγω Παιδαγωγικής & Διδακτικής Επάρκειας'); if($('braille').checked) p.push('Προτεραιότητα Braille για μαθητές με προβλήματα όρασης'); if($('sign').checked) p.push('Προτεραιότητα Ε.Ν.Γ. για κωφούς/βαρήκοους μαθητές');
