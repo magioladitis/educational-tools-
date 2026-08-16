@@ -325,9 +325,9 @@
     </select>
   </div>
 
-  <button onclick="checkEparkeia()">Έλεγχος Παιδαγωγικής και Διδακτικής Επάρκειας</button>
+  <button type="button" onclick="checkEparkeia()">Έλεγχος Παιδαγωγικής και Διδακτικής Επάρκειας</button>
 
-  <div id="result" class="result"></div>
+  <div id="result" class="result" role="status" aria-live="polite"></div>
 
   <p class="small-note">
     Το αποτέλεσμα είναι ενδεικτικό. Δεν αντικαθιστά την επίσημη προκήρυξη, τις οδηγίες του Α.Σ.Ε.Π.,

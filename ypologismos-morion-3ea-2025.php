@@ -87,6 +87,7 @@
 <div class="check"><input id="marriageYears4Plus" type="checkbox"><label for="marriageYears4Plus">Ο έγγαμος βίος έχει διαρκέσει τουλάχιστον 4 έτη<small>Απαιτείται για τη μοριοδότηση αναπηρίας συζύγου.</small></label></div>
 <div class="check"><input id="candidateMentalCondition" type="checkbox"><label for="candidateMentalCondition">Η αναπηρία του/της υποψηφίου οφείλεται, έστω και κατά ποσοστό, σε ψυχική πάθηση<small>Αν επιλεγεί, η αναπηρία του/της υποψηφίου δεν μοριοδοτείται.</small></label></div>
 
+<div id="socialWarnings" class="note hidden"></div>
 </section>
 
 <section class="card">
@@ -97,7 +98,7 @@
 </section>
 </main>
 
-<aside class="card result-card">
+<aside class="card result-card" aria-live="polite">
 <h2 style="text-align:center">Αποτέλεσμα</h2>
 <div class="total" id="grandTotal">0.00</div><div class="total-label">συνολικά μόρια</div>
 <div id="tableStatus" class="status none">Επίλεξε κλάδο</div>
@@ -125,21 +126,21 @@
  }
  function calcAcademic(){
    const sp=$('specialty').value;
-   if($('phdEae').checked) $('phd').checked=true;
-   if($('masterEae').checked && Number($('masters').value)<1) $('masters').value='1';
-   if($('seminar400').checked) $('training').checked=true;
+   const hasPhd = $('phd').checked || $('phdEae').checked;
+   const selectedMasters = Number($('masters').value||0);
+   const masters = Math.max(selectedMasters, $('masterEae').checked ? 1 : 0);
+   const hasTraining = $('training').checked || $('seminar400').checked;
    const degreeGrade=num('degree');
    const validDegreeGrade=degreeGrade>=5 && degreeGrade<=10;
    let pts=validDegreeGrade ? cap(degreeGrade*2.5,25) : 0;
    if($('secondDegree').checked) pts+=7;
-   if($('phd').checked) pts+=40;
-   let masters=Number($('masters').value||0);
+   if(hasPhd) pts+=40;
    if(sp==='ΠΕ61'||sp==='ΠΕ71') pts += masters>=1 ? 28 : 20;
    else pts += masters===1?20:(masters>=2?28:0);
    if(sp==='ΠΕ11' && $('pe11Qual').checked) pts+=8;
    pts += Number($('lang1').value||0)+Number($('lang2').value||0);
    if($('computer').checked && sp!=='ΠΕ86') pts+=4;
-   if($('training').checked || $('seminar400').checked) pts+=2;
+   if(hasTraining) pts+=2;
    return cap(pts,120);
  }
  function calcService(){
@@ -188,6 +189,8 @@
    const degreeInvalid=degreeGrade>0 && (degreeGrade<5 || degreeGrade>10);
    $('degreeValidation').classList.toggle('hidden', !degreeInvalid);
    const a=calcAcademic(), b=calcService(), socialResult=calcSocial(), c=socialResult.total, t=a+b+c, e=eligibility(socialResult);
+   $('socialWarnings').classList.toggle('hidden', socialResult.warnings.length===0);
+   $('socialWarnings').innerHTML=socialResult.warnings.map(w=>'• '+w).join('<br>');
    $('grandTotal').textContent=fmt(t); $('resAcademic').textContent=fmt(a)+' / 120'; $('resService').textContent=fmt(b)+' / 120'; $('resSocial').textContent=fmt(c);
    $('tableStatus').className='status '+e.type; $('tableStatus').textContent=e.label; $('eligibilityWhy').innerHTML='<strong>Έλεγχος ένταξης</strong>'+e.why;
    let p=[]; if($('pde').checked) p.push('Πρόταξη λόγω Παιδαγωγικής & Διδακτικής Επάρκειας'); if($('braille').checked) p.push('Προτεραιότητα Braille για μαθητές με προβλήματα όρασης'); if($('sign').checked) p.push('Προτεραιότητα Ε.Ν.Γ. για κωφούς/βαρήκοους μαθητές');
@@ -204,7 +207,13 @@
    if(maxAttr!==null && maxAttr!=='') v=Math.min(v,Number(maxAttr));
    if(String(v)!==el.value) el.value=String(v);
  }
- document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render();});
+ document.addEventListener('input',e=>{
+   sanitizeServiceMonthInput(e.target);
+   if(e.target && e.target.id==='children' && e.target.value!==''){
+     e.target.value=String(Math.max(0,Math.floor(Number(e.target.value)||0)));
+   }
+   render();
+ });
  document.addEventListener('change',e=>{
    sanitizeServiceMonthInput(e.target);
    if(e.target && e.target.id==='degree' && e.target.value!==''){

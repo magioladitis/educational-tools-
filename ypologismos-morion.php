@@ -110,6 +110,22 @@
       color: white;
     }
 
+    .calc-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .calc-actions .secondary {
+      background: #e8edf4;
+      color: #263445;
+    }
+
+    @media (max-width: 620px) {
+      .calc-actions { grid-template-columns: 1fr; }
+    }
+
     button:hover {
       background: #1558c0;
     }
@@ -264,7 +280,7 @@
     <div class="field-grid">
       <div class="question">
         <label for="degreeGrade">Βαθμός βασικού τίτλου σπουδών</label>
-        <input type="number" id="degreeGrade" min="5" max="10" step="0.01" placeholder="π.χ. 7.50">
+        <input type="number" id="degreeGrade" min="5" max="10" step="0.01" placeholder="π.χ. 7,50">
       </div>
 
       <div class="question">
@@ -490,9 +506,12 @@
     </p>
   </div>
 
-  <button onclick="calculatePoints()">Υπολογισμός μορίων</button>
+  <div class="calc-actions">
+    <button type="button" onclick="calculatePoints()">Υπολογισμός μορίων</button>
+    <button type="button" class="secondary" onclick="resetCalculator()">Μηδενισμός</button>
+  </div>
 
-  <div id="result" class="result"></div>
+  <div id="result" class="result" role="status" aria-live="polite"></div>
 
   <p class="small-note">
     Το αποτέλεσμα είναι ενδεικτικό και δεν αντικαθιστά την επίσημη προκήρυξη,
@@ -555,6 +574,31 @@
       if (this.value === "") return;
       this.value = Math.max(0, Math.floor(Number(this.value) || 0));
     });
+  }
+
+  function resetCalculator() {
+    document.getElementById("specialty").value = "";
+    document.getElementById("degreeGrade").value = "";
+
+    ["secondDegree","phd","computer","training"].forEach(id => {
+      document.getElementById(id).selectedIndex = 0;
+    });
+    document.getElementById("mscCount").selectedIndex = 0;
+    document.getElementById("language1").value = "";
+    document.getElementById("level1").value = "none";
+    document.getElementById("language2").value = "";
+    document.getElementById("level2").value = "none";
+
+    document.querySelectorAll('input[type="number"]').forEach(el => {
+      if (el.id !== "degreeGrade") el.value = 0;
+    });
+    document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+
+    const result = document.getElementById("result");
+    result.style.display = "none";
+    result.innerHTML = "";
+    result.className = "result";
+    document.getElementById("specialty").focus();
   }
 
   function calculatePoints() {

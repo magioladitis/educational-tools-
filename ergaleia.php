@@ -426,16 +426,16 @@
       </div>
 
       <div class="filters" role="group" aria-label="Κατηγορίες εργαλείων">
-        <button class="filter-btn active" type="button" data-filter="all">Όλα</button>
-        <button class="filter-btn" type="button" data-filter="asep">ΑΣΕΠ</button>
-        <button class="filter-btn" type="button" data-filter="eidiki-agogi">Ειδική Αγωγή</button>
-        <button class="filter-btn" type="button" data-filter="anaplirotes">Αναπληρωτές</button>
-        <button class="filter-btn" type="button" data-filter="apospaseis">Αποσπάσεις</button>
-        <button class="filter-btn" type="button" data-filter="sde">ΣΔΕ</button>
-        <button class="filter-btn" type="button" data-filter="onaseia">Ωνάσεια</button>
+        <button class="filter-btn active" type="button" data-filter="all" aria-pressed="true">Όλα</button>
+        <button class="filter-btn" type="button" data-filter="asep" aria-pressed="false">ΑΣΕΠ</button>
+        <button class="filter-btn" type="button" data-filter="eidiki-agogi" aria-pressed="false">Ειδική Αγωγή</button>
+        <button class="filter-btn" type="button" data-filter="anaplirotes" aria-pressed="false">Αναπληρωτές</button>
+        <button class="filter-btn" type="button" data-filter="apospaseis" aria-pressed="false">Αποσπάσεις</button>
+        <button class="filter-btn" type="button" data-filter="sde" aria-pressed="false">ΣΔΕ</button>
+        <button class="filter-btn" type="button" data-filter="onaseia" aria-pressed="false">Ωνάσεια</button>
       </div>
 
-      <div class="results-line" id="resultsLine">Εμφανίζονται 15 εργαλεία.</div>
+      <div class="results-line" id="resultsLine" role="status" aria-live="polite">Εμφανίζονται 15 εργαλεία.</div>
     </section>
 
     <section class="tools-grid" id="toolsGrid">
@@ -692,7 +692,7 @@
 
     </section>
 
-    <div class="no-results" id="noResults">
+    <div class="no-results" id="noResults" aria-hidden="true">
       Δεν βρέθηκε εργαλείο που να ταιριάζει στην αναζήτησή σου.
     </div>
 
@@ -754,6 +754,7 @@
           : 'Εμφανίζονται ' + visible + ' εργαλεία.';
 
         noResults.style.display = visible === 0 ? 'block' : 'none';
+        noResults.setAttribute('aria-hidden', visible === 0 ? 'false' : 'true');
       }
 
       filterButtons.forEach(button => {

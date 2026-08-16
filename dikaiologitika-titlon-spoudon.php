@@ -320,9 +320,9 @@
     </div>
   </div>
 
-  <button onclick="showDocuments()">Εμφάνιση δικαιολογητικών</button>
+  <button type="button" onclick="showDocuments()">Εμφάνιση δικαιολογητικών</button>
 
-  <div id="result" class="result"></div>
+  <div id="result" class="result" role="status" aria-live="polite"></div>
 
   <p class="small-note">
     Το αποτέλεσμα είναι ενδεικτικό και βασίζεται στις οδηγίες για μεταπτυχιακούς,

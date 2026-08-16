@@ -128,6 +128,7 @@
             <div class="field">
               <label for="requiredExperience">Έχεις τουλάχιστον 2 έτη διδακτικής προϋπηρεσίας στο σχετικό μάθημα της Γ΄ Λυκείου;</label>
               <select id="requiredExperience">
+                <option value="">— Επίλεξε —</option>
                 <option value="yes">Ναι</option>
                 <option value="no">Όχι</option>
               </select>
@@ -135,6 +136,7 @@
             <div class="field">
               <label for="videoFace">Εμφανίζεται το πρόσωπό σου στο βιντεοσκοπημένο μάθημα;</label>
               <select id="videoFace">
+                <option value="">— Επίλεξε —</option>
                 <option value="yes">Ναι</option>
                 <option value="no">Όχι</option>
               </select>
@@ -142,6 +144,7 @@
             <div class="field">
               <label for="videoDuration">Η διάρκεια του βίντεο είναι 4–7 λεπτά;</label>
               <select id="videoDuration">
+                <option value="">— Επίλεξε —</option>
                 <option value="yes">Ναι</option>
                 <option value="no">Όχι</option>
               </select>
@@ -156,6 +159,7 @@
             <div class="field full hidden" id="eaeSpecializationWrap">
               <label for="eaeSpecialization">Διαθέτεις την απαιτούμενη εξειδίκευση στην ΕΑΕ;</label>
               <select id="eaeSpecialization">
+                <option value="">— Επίλεξε —</option>
                 <option value="yes">Ναι</option>
                 <option value="no">Όχι</option>
               </select>
@@ -173,11 +177,11 @@
             <div class="max">έως 35</div>
           </div>
           <div class="score-row">
-            <div><strong>Α1. Συγκρότηση σκέψης – λόγου</strong><small>Μέγιστο 20 · βάση επιλογής 12</small></div>
+            <label for="a1"><strong>Α1. Συγκρότηση σκέψης – λόγου</strong><small>Μέγιστο 20 · βάση επιλογής 12</small></label>
             <input type="number" id="a1" min="0" max="20" step="0.1" value="0" oninput="calculate()">
           </div>
           <div class="score-row">
-            <div><strong>Α2. Επικοινωνιακές δεξιότητες</strong><small>Μέγιστο 15 · βάση επιλογής 8</small></div>
+            <label for="a2"><strong>Α2. Επικοινωνιακές δεξιότητες</strong><small>Μέγιστο 15 · βάση επιλογής 8</small></label>
             <input type="number" id="a2" min="0" max="15" step="0.1" value="0" oninput="calculate()">
           </div>
           <div class="info">Αν δεν έχει πραγματοποιηθεί ακόμη η συνέντευξη, άφησε τα Α1 και Α2 στο 0. Το εργαλείο θα σου δείξει ξεχωριστά τη βαθμολογία Β + Γ που χρησιμοποιείται πριν από τη συνέντευξη.</div>
@@ -225,7 +229,7 @@
           </div>
 
           <div class="score-row">
-            <div><strong>Β5. Πιστοποιημένη γνώση Τ.Π.Ε.</strong><small>Αν υπάρχουν περισσότερες από μία πιστοποιήσεις, βαθμολογείται μόνο η ανώτερη.</small></div>
+            <label for="ict"><strong>Β5. Πιστοποιημένη γνώση Τ.Π.Ε.</strong><small>Αν υπάρχουν περισσότερες από μία πιστοποιήσεις, βαθμολογείται μόνο η ανώτερη.</small></label>
             <select id="ict" onchange="calculate()">
               <option value="0">Καμία</option>
               <option value="1">Α΄ επίπεδο / άρθρο 9 π.δ. 85/2022 — 1</option>
@@ -244,14 +248,14 @@
             <div class="max">έως 35</div>
           </div>
           <div class="score-row">
-            <div><strong>Γ1. Βαθμολογία βιντεοσκοπημένου μαθήματος</strong><small>Μέγιστο 35 · βάση επιλογής 20</small></div>
-            <input type="number" id="videoScore" min="0" max="35" step="0.1" value="0" oninput="calculate()">
+            <label for="videoScore"><strong>Γ1. Βαθμολογία βιντεοσκοπημένου μαθήματος</strong><small>Μέγιστο 35 · βάση επιλογής 20</small></label>
+            <input type="number" id="videoScore" min="0" max="35" step="0.1" value="" placeholder="0–35" oninput="calculate()">
           </div>
           <div class="note">Για την κλήση σε συνέντευξη λαμβάνονται υπόψη οι περισσότεροι βαθμοί στις κατηγορίες <strong>Β + Γ</strong>, με απαραίτητη βάση τουλάχιστον <strong>20 μονάδων στη Γ</strong>. Η πρόσκληση προβλέπει κλήση κατά ανώτατο όριο του τριπλάσιου αριθμού υποψηφίων σε σχέση με τις θέσεις.</div>
         </section>
       </div>
 
-      <aside class="results">
+      <aside class="results" aria-live="polite">
         <section class="card">
           <div class="big-total">
             <div class="number" id="totalScore">0</div>
@@ -268,7 +272,7 @@
             <strong id="preInterview">0 / 65</strong>
           </div>
 
-          <div id="statusBox" class="status-box"></div>
+          <div id="statusBox" class="status-box" role="status" aria-live="polite"></div>
 
           <div class="actions">
             <button class="primary" type="button" onclick="calculate()">Υπολογισμός</button>
@@ -351,20 +355,33 @@
     document.getElementById('b4Result').textContent = format(b4);
     document.getElementById('b5Result').textContent = format(b5);
 
-    const requiredExperience = document.getElementById('requiredExperience').value === 'yes';
-    const videoFace = document.getElementById('videoFace').value === 'yes';
-    const videoDuration = document.getElementById('videoDuration').value === 'yes';
+    const requiredExperienceValue = document.getElementById('requiredExperience').value;
+    const videoFaceValue = document.getElementById('videoFace').value;
+    const videoDurationValue = document.getElementById('videoDuration').value;
     const eaePosition = document.getElementById('eaePosition').value === 'yes';
-    const eaeSpecialization = document.getElementById('eaeSpecialization').value === 'yes';
+    const eaeSpecializationValue = document.getElementById('eaeSpecialization').value;
 
     const issues = [];
-    if(!requiredExperience) issues.push('Δεν δηλώνεται η απαιτούμενη διετής διδακτική προϋπηρεσία στο σχετικό μάθημα.');
-    if(!videoFace) issues.push('Η πρόσκληση ορίζει ότι αν δεν εμφανίζεται το πρόσωπο του/της εκπαιδευτικού στο βίντεο, ο/η υποψήφιος/α αποκλείεται.');
-    if(!videoDuration) issues.push('Το βιντεοσκοπημένο μάθημα πρέπει να έχει διάρκεια 4–7 λεπτά.');
-    if(eaePosition && !eaeSpecialization) issues.push('Για θέση ΕΑΕ απαιτείται η προβλεπόμενη εξειδίκευση στην ΕΑΕ.');
+    const unanswered = [];
+    if(requiredExperienceValue === '') unanswered.push('διετής διδακτική προϋπηρεσία');
+    else if(requiredExperienceValue === 'no') issues.push('Δεν δηλώνεται η απαιτούμενη διετής διδακτική προϋπηρεσία στο σχετικό μάθημα.');
+
+    if(videoFaceValue === '') unanswered.push('εμφάνιση προσώπου στο βίντεο');
+    else if(videoFaceValue === 'no') issues.push('Η πρόσκληση ορίζει ότι αν δεν εμφανίζεται το πρόσωπο του/της εκπαιδευτικού στο βίντεο, ο/η υποψήφιος/α αποκλείεται.');
+
+    if(videoDurationValue === '') unanswered.push('διάρκεια βίντεο');
+    else if(videoDurationValue === 'no') issues.push('Το βιντεοσκοπημένο μάθημα πρέπει να έχει διάρκεια 4–7 λεπτά.');
+
+    if(eaePosition){
+      if(eaeSpecializationValue === '') unanswered.push('εξειδίκευση ΕΑΕ');
+      else if(eaeSpecializationValue === 'no') issues.push('Για θέση ΕΑΕ απαιτείται η προβλεπόμενη εξειδίκευση στην ΕΑΕ.');
+    }
 
     const status = [];
-    if(c < 20){
+    const videoScoreFilled = document.getElementById('videoScore').value !== '';
+    if(!videoScoreFilled){
+      status.push('<div class="info"><strong>Βαθμολογία βίντεο:</strong> συμπλήρωσε τη βαθμολογία Γ όταν είναι διαθέσιμη.</div>');
+    } else if(c < 20){
       status.push('<div class="danger"><strong>Δεν καλύπτεται η βάση του βιντεοσκοπημένου μαθήματος:</strong> απαιτούνται τουλάχιστον 20/35.</div>');
     } else {
       status.push('<div class="success"><strong>Καλύπτεται η βάση Γ:</strong> ' + format(c) + '/35. Η κλήση σε συνέντευξη εξαρτάται και από τη σχετική κατάταξη Β+Γ έναντι των άλλων υποψηφίων.</div>');
@@ -379,6 +396,9 @@
       status.push('<div class="success"><strong>Καλύπτονται και οι δύο βάσεις της συνέντευξης.</strong></div>');
     }
 
+    if(unanswered.length){
+      status.push('<div class="warning"><strong>Συμπλήρωσε τις προϋποθέσεις:</strong> ' + unanswered.join(' · ') + '.</div>');
+    }
     if(issues.length){
       status.push('<div class="danger"><strong>Έλεγχος προϋποθέσεων:</strong><ul style="margin:7px 0 0;padding-left:20px"><li>' + issues.join('</li><li>') + '</li></ul></div>');
     }
@@ -388,8 +408,9 @@
 
   function resetForm(){
     document.querySelectorAll('input[type="number"]').forEach(el => el.value = 0);
+    document.getElementById('videoScore').value = '';
     document.querySelectorAll('select').forEach(el => {
-      if(el.id === 'requiredExperience' || el.id === 'videoFace' || el.id === 'videoDuration' || el.id === 'eaeSpecialization') el.value='yes';
+      if(el.id === 'requiredExperience' || el.id === 'videoFace' || el.id === 'videoDuration' || el.id === 'eaeSpecialization') el.value='';
       else el.selectedIndex=0;
     });
     toggleEae();

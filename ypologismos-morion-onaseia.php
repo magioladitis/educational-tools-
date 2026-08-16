@@ -481,7 +481,7 @@
     <button type="button" class="reset-btn" onclick="resetForm()">Καθαρισμός</button>
   </div>
 
-  <div id="result" class="result"></div>
+  <div id="result" class="result" role="status" aria-live="polite"></div>
 </div>
 
 <script src="includes/academic-calculations.js"></script>
@@ -582,23 +582,26 @@
     ).join("");
   }
 
+  let serviceRowCounter = 0;
+
   function addServiceRow(selectedYear = "", months = "") {
+    serviceRowCounter += 1;
     const wrap = document.getElementById("serviceRows");
     const row = document.createElement("div");
     row.className = "service-row";
     row.innerHTML = `
       <div class="question">
-        <label>Σχολικό έτος</label>
-        <select class="service-year">
+        <label for="serviceYear_${serviceRowCounter}">Σχολικό έτος</label>
+        <select class="service-year" id="serviceYear_${serviceRowCounter}">
           <option value="">-- Επιλογή --</option>
           ${serviceYearOptions(selectedYear)}
         </select>
       </div>
       <div class="question">
-        <label>Αναγνωρισμένοι μήνες</label>
-        <input class="service-months" type="text" inputmode="decimal" value="${months}" placeholder="0 έως 10">
+        <label for="serviceMonths_${serviceRowCounter}">Αναγνωρισμένοι μήνες</label>
+        <input class="service-months" id="serviceMonths_${serviceRowCounter}" type="text" inputmode="decimal" value="${months}" placeholder="0 έως 10">
       </div>
-      <button type="button" class="remove-row" onclick="this.parentElement.remove()">Αφαίρεση</button>
+      <button type="button" class="remove-row" aria-label="Αφαίρεση γραμμής προϋπηρεσίας" onclick="this.parentElement.remove()">Αφαίρεση</button>
     `;
     wrap.appendChild(row);
   }

@@ -214,6 +214,7 @@
           <div class="field">
             <label for="branch">Κλάδος</label>
             <select id="branch">
+              <option value="">— Επιλογή κλάδου —</option>
               <option value="te01">ΤΕ01</option>
               <option value="te02">ΤΕ02</option>
               <option value="te16">ΤΕ16 — Μουσικής μη Ανώτατων Ιδρυμάτων</option>
@@ -228,6 +229,8 @@
             </select>
           </div>
         </div>
+
+        <div id="branchWarning" class="note">Επίλεξε κλάδο ώστε να εφαρμοστούν σωστά οι ειδικοί κανόνες του δεύτερου τίτλου και του ΤΕ16.</div>
 
         <div id="numericGradeWrap" class="field">
           <label for="degreeGrade">Βαθμός βασικού τίτλου
@@ -388,6 +391,8 @@
           Αν υπάρχουν περισσότερα επιλέξιμα πρόσωπα με αναπηρία, λαμβάνεται υπόψη μόνο το υψηλότερο έγκυρο ποσοστό.
         </div>
 
+        <div id="socialWarnings" class="note hidden"></div>
+
         <div class="subtot"><span>Σύνολο Κοινωνικών</span><span class="pill" id="socialSubtotal">0,00</span></div>
       </section>
 
@@ -400,7 +405,7 @@
       </section>
     </div>
 
-    <aside class="card results">
+    <aside class="card results" aria-live="polite">
       <div class="total">
         <div class="num" id="grandTotal">0,00</div>
         <div class="label">συνολικά μόρια</div>
@@ -445,11 +450,14 @@
 
   function updateBranchUI(){
     const branch = $('branch').value;
+    $('branchWarning').classList.toggle('hidden', Boolean(branch));
     if(branch === 'te16'){
       $('secondTitleLabel').textContent = 'Δεύτερο πτυχίο από το οποίο προκύπτει μουσική ειδίκευση, αναγνωρισμένου μη Ανώτατου Εκπαιδευτικού Ιδρύματος';
       if($('gradeScale').dataset.auto !== 'off') $('gradeScale').value = '10';
     } else {
-      $('secondTitleLabel').textContent = 'Πτυχίο επιπέδου 5 / Ι.Ε.Κ. ίδιας ειδικότητας';
+      $('secondTitleLabel').textContent = branch
+        ? 'Πτυχίο επιπέδου 5 / Ι.Ε.Κ. ίδιας ειδικότητας'
+        : 'Δεύτερος τίτλος που προβλέπεται για τον κλάδο';
       if($('gradeScale').dataset.auto !== 'off') $('gradeScale').value = '20';
     }
     updateGradeUI();
@@ -510,6 +518,9 @@
     const disabilityPts = socialResult.disabilityPoints;
     const social = socialResult.total;
 
+    $('socialWarnings').classList.toggle('hidden', socialResult.warnings.length === 0);
+    $('socialWarnings').innerHTML = socialResult.warnings.map(w => '• ' + w).join('<br>');
+
     const total = academic + service + social;
 
     if (currentScale !== 'te16text' && rawDegreeGrade > 0 && !numericGradeValid) {
@@ -560,6 +571,12 @@
     });
   });
 
+  const childrenField = $('children');
+  childrenField.addEventListener('input', () => {
+    if (childrenField.value === '') return;
+    childrenField.value = Math.max(0, Math.floor(Number(childrenField.value) || 0));
+  });
+
   document.addEventListener('input',calc);
   document.addEventListener('change',calc);
 
@@ -594,7 +611,7 @@
     document.querySelectorAll('input[type="number"]').forEach(el=>el.value=0);
     $('degreeGrade').value='';
     document.querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked=false);
-    $('branch').value='te01';
+    $('branch').value='';
     $('gradeScale').dataset.auto='on';
     $('gradeScale').value='20';
     $('language').value='0';

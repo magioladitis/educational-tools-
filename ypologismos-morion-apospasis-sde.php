@@ -97,7 +97,7 @@
           </div>
           <div class="field">
             <label for="formalEducationYears">Συνολικά πλήρη σχολικά έτη διδακτικής υπηρεσίας στην τυπική εκπαίδευση <small>Απαιτούνται τουλάχιστον 2 έτη για δικαίωμα αίτησης. Τα ίδια 2 έτη δεν μοριοδοτούνται.</small></label>
-            <input type="number" id="formalEducationYears" min="0" step="1" value="2" oninput="calculate()">
+            <input type="number" id="formalEducationYears" min="0" step="1" value="" inputmode="numeric" placeholder="π.χ. 6" oninput="calculate()">
           </div>
           <div class="field hidden" id="mathInfoDegreeWrap">
             <label for="mathInfoDegree">Πληροίς την προϋπόθεση «πτυχίο Μαθηματικών ή Πληροφορικής» που αναγράφεται για τη Β΄ ανάθεση στα Μαθηματικά;</label>
@@ -113,11 +113,11 @@
           </div>
           <div class="field">
             <label for="teleEducation">Αποδέχεσαι παροχή εκπαιδευτικού έργου με σύγχρονη τηλεκπαίδευση; <small>Δεν δίνει μόρια, αλλά χρησιμοποιείται ως πρώτο κριτήριο σε περίπτωση ισοβαθμίας.</small></label>
-            <select id="teleEducation" onchange="calculate()"><option value="yes">Ναι</option><option value="no">Όχι</option></select>
+            <select id="teleEducation" onchange="calculate()"><option value="">— Επίλεξε —</option><option value="yes">Ναι</option><option value="no">Όχι</option></select>
           </div>
           <div class="field full">
             <label for="blockingIssue">Υπάρχει κάποιο κώλυμα υποβολής αίτησης του άρθρου 4;</label>
-            <select id="blockingIssue" onchange="calculate()"><option value="no">Όχι</option><option value="yes">Ναι / πιθανόν</option></select>
+            <select id="blockingIssue" onchange="calculate()"><option value="">— Επίλεξε —</option><option value="no">Όχι</option><option value="yes">Ναι / πιθανόν</option></select>
             <details><summary>Ενδεικτικά κωλύματα</summary><ul class="criteria-list"><li>δοκιμαστική υπηρεσία χωρίς πράξη μονιμοποίησης, διαθεσιμότητα ή αργία,</li><li>απαγόρευση υπηρεσιακών μεταβολών ή υποχρεωτική υπηρεσία,</li><li>υποχρεωτική υπηρεσία λόγω διορισμού σε δυσπρόσιτο,</li><li>θέση στελέχους ή θέση με θητεία,</li><li>ανάκληση/διακοπή απόσπασης σε δομή της Γ.Γ.Ε.Ε.Κ. &amp; Δ.Β.Μ. μέσα στην τελευταία τριετία, όπου εφαρμόζεται.</li></ul></details>
           </div>
         </div>
@@ -207,12 +207,12 @@
           <div class="field">
             <label for="language1">Ξένη γλώσσα 1</label>
             <select id="language1" onchange="calculate()"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other1">Άλλη γλώσσα</option></select>
-            <select id="languageLevel1" onchange="calculate()" style="margin-top:8px"><option value="none">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select>
+            <label for="languageLevel1" class="edu-tools-sr-only">Επίπεδο ξένης γλώσσας 1</label><select id="languageLevel1" onchange="calculate()" style="margin-top:8px"><option value="none">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select>
           </div>
           <div class="field">
             <label for="language2">Ξένη γλώσσα 2</label>
             <select id="language2" onchange="calculate()"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other2">Άλλη γλώσσα</option></select>
-            <select id="languageLevel2" onchange="calculate()" style="margin-top:8px"><option value="none">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select>
+            <label for="languageLevel2" class="edu-tools-sr-only">Επίπεδο ξένης γλώσσας 2</label><select id="languageLevel2" onchange="calculate()" style="margin-top:8px"><option value="none">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select>
           </div>
           <div class="field full">
             <label for="computer">Πιστοποιημένη γνώση Η/Υ / ΤΠΕ Α΄ επιπέδου ή πιστοποιητικό γνώσης Η/Υ σύμφωνα με ΑΣΕΠ <small>+1 μόριο</small></label>
@@ -223,7 +223,7 @@
       </section>
     </div>
 
-    <aside class="results">
+    <aside class="results" aria-live="polite">
       <section class="card">
         <h2>Αποτέλεσμα</h2>
         <div class="big-total"><div class="number" id="totalScore">0</div><div class="outof">από 40 μόρια</div></div>
@@ -231,7 +231,7 @@
         <div class="result-row"><span>Εκπαίδευση</span><strong id="educationScore">0 / 23</strong></div>
         <div class="result-row"><span>Διδακτική εμπειρία</span><strong id="experienceScore">0 / 13</strong></div>
         <div class="result-row"><span>Άλλα προσόντα</span><strong id="otherScore">0 / 4</strong></div>
-        <div id="eligibilityStatus"></div>
+        <div id="eligibilityStatus" role="status" aria-live="polite"></div>
         <div class="actions"><button class="primary" type="button" onclick="calculate()">Υπολογισμός</button><button class="secondary" type="button" onclick="resetForm()">Καθαρισμός</button></div>
       </section>
 
@@ -263,12 +263,21 @@
     return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2).replace('.', ',');
   }
 
+  function normalizeWholeYears(id) {
+    const el = $(id);
+    if (!el || el.value === '') return;
+    el.value = String(Math.max(0, Math.floor(Number(el.value) || 0)));
+  }
+
   function specialtyChanged() {
     const sp = value('specialty');
     const needsMathCondition = sp === 'PE86' || sp.startsWith('PE04.');
     $('mathInfoDegreeWrap').classList.toggle('hidden', !needsMathCondition);
     $('formerPE09Wrap').classList.toggle('hidden', sp !== 'PE80');
     $('formerPE1208Wrap').classList.toggle('hidden', sp !== 'PE85');
+    if(!needsMathCondition) $('mathInfoDegree').value = 'no';
+    if(sp !== 'PE80') $('formerPE09').value = 'no';
+    if(sp !== 'PE85') $('formerPE1208').value = 'no';
     calculate();
   }
 
@@ -313,6 +322,8 @@
   }
 
   function calculate() {
+    normalizeWholeYears('formalEducationYears');
+    normalizeWholeYears('sdeYears');
     const result = SDECalculator.calculateAll(getData());
     $('totalScore').textContent = fmt(result.total);
     $('totalBar').style.width = Math.min(100, result.total / 40 * 100) + '%';
@@ -327,11 +338,33 @@
     $('assignmentBox').className = result.assignments.length ? 'success' : (value('specialty') ? 'danger' : 'info');
 
     const messages = [];
-    if (!result.eligibleByTwoYears) messages.push('<div class="danger"><strong>Δεν συμπληρώνονται τα 2 απαιτούμενα έτη διδακτικής υπηρεσίας.</strong></div>');
-    if (yes('blockingIssue')) messages.push('<div class="danger"><strong>Δήλωσες πιθανό κώλυμα του άρθρου 4.</strong> Απαιτείται έλεγχος πριν την αίτηση.</div>');
-    if (result.eligibleByTwoYears && !yes('blockingIssue')) messages.push('<div class="success"><strong>Ο βασικός έλεγχος των 2 ετών/κωλύματος είναι θετικός.</strong> Έλεγξε πάντως όλες τις προϋποθέσεις της πρόσκλησης.</div>');
-    if (value('specialty') && !result.assignments.length) messages.push('<div class="warning">Δεν εντοπίζεται αποδεκτός γραμματισμός για την επιλεγμένη ειδικότητα στο άρθρο 5.</div>');
-    if (!yes('teleEducation')) messages.push('<div class="warning">Σε ισοβαθμία προηγείται υποψήφιος που έχει αποδεχτεί τη σύγχρονη τηλεκπαίδευση.</div>');
+    const specialtySelected = Boolean(value('specialty'));
+    const blockingValue = value('blockingIssue');
+    const teleValue = value('teleEducation');
+
+    if (!specialtySelected) messages.push('<div class="info"><strong>Επίλεξε ειδικότητα</strong> για να ελεγχθούν οι αποδεκτοί γραμματισμοί.</div>');
+    const formalYearsAnswered = $('formalEducationYears').value !== '';
+    if (!formalYearsAnswered) {
+      messages.push('<div class="info"><strong>Διδακτική υπηρεσία:</strong> συμπλήρωσε τα συνολικά πλήρη σχολικά έτη στην τυπική εκπαίδευση.</div>');
+    } else if (!result.eligibleByTwoYears) {
+      messages.push('<div class="danger"><strong>Δεν συμπληρώνονται τα 2 απαιτούμενα έτη διδακτικής υπηρεσίας.</strong></div>');
+    }
+
+    if (blockingValue === '') {
+      messages.push('<div class="warning"><strong>Κωλύματα:</strong> δήλωσε αν υπάρχει πιθανό κώλυμα του άρθρου 4.</div>');
+    } else if (blockingValue === 'yes') {
+      messages.push('<div class="danger"><strong>Δήλωσες πιθανό κώλυμα του άρθρου 4.</strong> Απαιτείται έλεγχος πριν την αίτηση.</div>');
+    } else if (specialtySelected && formalYearsAnswered && result.eligibleByTwoYears) {
+      messages.push('<div class="success"><strong>Ο βασικός έλεγχος των 2 ετών/κωλύματος είναι θετικός.</strong> Έλεγξε πάντως όλες τις προϋποθέσεις της πρόσκλησης.</div>');
+    }
+
+    if (specialtySelected && !result.assignments.length) messages.push('<div class="warning">Δεν εντοπίζεται αποδεκτός γραμματισμός για την επιλεγμένη ειδικότητα στο άρθρο 5.</div>');
+
+    if (teleValue === '') {
+      messages.push('<div class="info">Δήλωσε αν αποδέχεσαι σύγχρονη τηλεκπαίδευση· χρησιμοποιείται ως πρώτο κριτήριο ισοβαθμίας.</div>');
+    } else if (teleValue === 'no') {
+      messages.push('<div class="warning">Σε ισοβαθμία προηγείται υποψήφιος που έχει αποδεχτεί τη σύγχρονη τηλεκπαίδευση.</div>');
+    }
     $('eligibilityStatus').innerHTML = messages.join('');
 
     let breakdown = detailRows('Εκπαίδευση', result.education) + detailRows('Διδακτική εμπειρία', result.experience) + detailRows('Άλλα προσόντα', result.other);
@@ -340,10 +373,10 @@
   }
 
   function resetForm() {
-    document.querySelectorAll('input[type="number"]').forEach(el => el.value = el.id === 'formalEducationYears' ? '2' : '0');
+    document.querySelectorAll('input[type="number"]').forEach(el => el.value = '0');
+    $('formalEducationYears').value = '';
     document.querySelectorAll('select').forEach(el => {
-      if (el.id === 'teleEducation') el.value = 'yes';
-      else if (el.id === 'blockingIssue') el.value = 'no';
+      if (el.id === 'teleEducation' || el.id === 'blockingIssue') el.value = '';
       else el.selectedIndex = 0;
     });
     specialtyChanged(); calculate();

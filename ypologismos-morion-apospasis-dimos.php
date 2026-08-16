@@ -458,7 +458,7 @@
         </section>
       </div>
 
-      <aside class="card results">
+      <aside class="card results" aria-live="polite">
         <div class="total">
           <span class="num" id="grandTotal">0.00</span>
           <div class="outof">από 53 μόρια</div>
@@ -475,7 +475,7 @@
         </div>
         <div class="actions">
           <button type="button" class="secondary" id="printBtn">Εκτύπωση</button>
-          <button type="button" class="secondary" id="sampleBtn">Δοκιμή</button>
+          <button type="button" class="secondary" id="sampleBtn">Φόρτωση παραδείγματος</button>
         </div>
 
         <div class="note" style="margin-top:14px">
@@ -545,6 +545,21 @@
           const group = n(item.id + "_group");
           return sum + item.pts * solo + item.pts * 0.5 * group;
         }, 0);
+      }
+
+      function normalizeIntegerFields(){
+        document.querySelectorAll('input[type="number"][step="1"]').forEach(el => {
+          if (el.value === '') return;
+          let v = Number(el.value);
+          if (!Number.isFinite(v)) v = 0;
+          v = Math.floor(v);
+          const min = el.getAttribute('min');
+          const max = el.getAttribute('max');
+          if (min !== null && min !== '') v = Math.max(Number(min), v);
+          if (max !== null && max !== '') v = Math.min(Number(max), v);
+          el.value = String(v);
+          if (!el.hasAttribute('inputmode')) el.setAttribute('inputmode','numeric');
+        });
       }
 
       function calc(){
@@ -623,7 +638,7 @@
       }
 
       document.addEventListener("input", calc);
-      document.addEventListener("change", calc);
+      document.addEventListener("change", () => { normalizeIntegerFields(); calc(); });
 
       $("resetBtn").addEventListener("click", () => {
         qsa("input[type='number']").forEach(i => i.value = 0);

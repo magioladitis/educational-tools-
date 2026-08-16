@@ -311,9 +311,9 @@
     </select>
   </div>
 
-  <button onclick="checkEligibility()">Έλεγχος δικαιώματος συμμετοχής</button>
+  <button type="button" onclick="checkEligibility()">Έλεγχος δικαιώματος συμμετοχής</button>
 
-  <div id="result" class="result"></div>
+  <div id="result" class="result" role="status" aria-live="polite"></div>
 
   <p class="small-note">
     Το αποτέλεσμα είναι ενδεικτικό και βασίζεται στις γενικές προϋποθέσεις συμμετοχής του Παραρτήματος Α΄.

@@ -55,7 +55,7 @@ button:disabled{background:#aaa;cursor:not-allowed}
   <div class="deadline-card">
     <strong>📅 Προθεσμία ενστάσεων</strong>
     <div class="deadline-line">Από <b>Τετάρτη 12 Αυγούστου 2026, ώρα 08:00</b> έως και <b>Παρασκευή 21 Αυγούστου 2026, ώρα 14:00</b>.</div>
-    <div id="deadlineStatus" class="status"></div>
+    <div id="deadlineStatus" class="status" role="status" aria-live="polite"></div>
   </div>
 
   <div class="question">
@@ -113,8 +113,8 @@ button:disabled{background:#aaa;cursor:not-allowed}
     </ul>
   </div>
 
-  <button id="guidanceBtn" onclick="showGuidance()">Εμφάνιση οδηγιών</button>
-  <div id="result" class="result"></div>
+  <button type="button" id="guidanceBtn" onclick="showGuidance()">Εμφάνιση οδηγιών</button>
+  <div id="result" class="result" role="status" aria-live="polite"></div>
 
   <p class="small-note">Το εργαλείο παρέχει ενδεικτική καθοδήγηση. Για την υποβολή ισχύουν η επίσημη ανακοίνωση, η προκήρυξη και οι οδηγίες της ηλεκτρονικής πλατφόρμας του ΑΣΕΠ.</p>
 </div>

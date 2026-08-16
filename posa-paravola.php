@@ -179,9 +179,9 @@
 	  <option value="">-- Δεν έχω 2η ειδικότητα --</option>
 	</select>
 
-    <button onclick="calculateParavola()">Υπολογισμός</button>
+    <button type="button" onclick="calculateParavola()">Υπολογισμός</button>
 
-    <div id="result" class="result"></div>
+    <div id="result" class="result" role="status" aria-live="polite"></div>
 <details class="instructions-box">
   <summary>Οδηγίες για την έκδοση και πληρωμή παραβόλου</summary>
 
@@ -296,11 +296,6 @@
       return null;
     }
 
-    function getGroup(code) {
-  if (group1.includes(code)) return 1;
-  if (group2.includes(code)) return 2;
-  return null;
-}
 
 	function getProclamation(group) {
 	  if (group === 1) return "1ΓΕ/2026";

@@ -440,6 +440,7 @@
     <div class="question">
       <label for="appointmentStatus">Κατάσταση ως προς τον διορισμό</label>
       <select id="appointmentStatus">
+        <option value="">— Επιλογή —</option>
         <option value="not_new">Δεν είμαι νεοδιόριστος/η που επηρεάζεται από τον ειδικό κανόνα</option>
         <option value="before_2024_09_01">Νεοδιόριστος/η πριν από 01-09-2024</option>
         <option value="sep_2024">Διορισμός από 01-09-2024 έως 30-09-2024 / δεν είμαι βέβαιος/η</option>
@@ -762,7 +763,7 @@
     <button class="secondary-btn" type="button" onclick="resetCalculator()">Καθαρισμός</button>
   </div>
 
-  <div id="result" class="result" aria-live="polite"></div>
+  <div id="result" class="result" role="status" aria-live="polite"></div>
 
   <p class="small-note">
     <strong>Σημαντικό:</strong> Το αποτέλεσμα είναι ενδεικτικό. Η εφαρμογή κάνει βοηθητικό έλεγχο ορισμένων
@@ -921,7 +922,10 @@
     const specialCategory = checked("prioritySpecialCategory");
     const newSelfSpouse75 = checked("priorityNewSelfSpouse75");
     const newChild67 = checked("priorityNewChild67");
-    const isNewAppointee = appointmentStatus !== "not_new";
+    if (!appointmentStatus) {
+      warnings.push("Δεν έχει δηλωθεί η κατάσταση ως προς τον διορισμό. Ο έλεγχος του ειδικού κανόνα νεοδιορίστων δεν μπορεί να ολοκληρωθεί.");
+    }
+    const isNewAppointee = ["before_2024_09_01","sep_2024","after_2024_09_30"].includes(appointmentStatus);
     const newAppointeeException = specialCategory || (isNewAppointee && (newSelfSpouse75 || newChild67));
 
     if (appointmentStatus === "after_2024_09_30" && !newAppointeeException) {
@@ -1108,7 +1112,7 @@
     document.getElementById("requestedArea").value = "";
 
     const defaults = {
-      appointmentStatus: "not_new",
+      appointmentStatus: "",
       priorityCoServiceCategory: "none",
       coServiceType: "none",
       familyStatus: "none",

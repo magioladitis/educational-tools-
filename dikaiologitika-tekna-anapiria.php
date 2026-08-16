@@ -140,8 +140,8 @@ button:hover{background:#1558c0}
 </div>
 </div>
 
-<button onclick="showDocuments()">Εμφάνιση ενδεικτικών δικαιολογητικών</button>
-<div id="result" class="result"></div>
+<button type="button" onclick="showDocuments()">Εμφάνιση ενδεικτικών δικαιολογητικών</button>
+<div id="result" class="result" role="status" aria-live="polite"></div>
 
 <p class="small-note">Το εργαλείο παρέχει ενδεικτική καθοδήγηση και δεν αντικαθιστά την επίσημη προκήρυξη, τις οδηγίες του Α.Σ.Ε.Π., τον έλεγχο του Ο.Π.ΣΥ.Δ. ή τον έλεγχο των αρμόδιων υπηρεσιών.</p>
 </div>
