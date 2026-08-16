@@ -403,13 +403,14 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
       <div class="hero-meta">
-        <span>13 διαθέσιμα εργαλεία</span>
+        <span>14 διαθέσιμα εργαλεία</span>
         <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
         <span>Αναπληρωτές</span>
         <span>Αποσπάσεις</span>
         <span>Ειδική Αγωγή</span>
         <span>Ωνάσεια</span>
         <span>Ψηφιακό Φροντιστήριο</span>
+        <span>ΣΔΕ</span>
       </div>
     </section>
 
@@ -430,10 +431,11 @@
         <button class="filter-btn" type="button" data-filter="eidiki-agogi">Ειδική Αγωγή</button>
         <button class="filter-btn" type="button" data-filter="anaplirotes">Αναπληρωτές</button>
         <button class="filter-btn" type="button" data-filter="apospaseis">Αποσπάσεις</button>
+        <button class="filter-btn" type="button" data-filter="sde">ΣΔΕ</button>
         <button class="filter-btn" type="button" data-filter="onaseia">Ωνάσεια</button>
       </div>
 
-      <div class="results-line" id="resultsLine">Εμφανίζονται 13 εργαλεία.</div>
+      <div class="results-line" id="resultsLine">Εμφανίζονται 14 εργαλεία.</div>
     </section>
 
     <section class="tools-grid" id="toolsGrid">
@@ -649,6 +651,23 @@
         <p>
           Υπολόγισε τη μοριοδότηση έως 100 μονάδες για απόσπαση στο Ψηφιακό Φροντιστήριο:
           γενική παρουσία, επιστημονική κατάρτιση–εμπειρία και βιντεοσκοπημένο μάθημα.
+        </p>
+        <span class="button-like">Άνοιγμα εργαλείου →</span>
+      </a>
+
+      <a class="tool-card"
+         href="ypologismos-morion-apospasis-sde.php"
+         data-category="apospaseis sde"
+         data-search="ΣΔΕ Σχολεία Δεύτερης Ευκαιρίας απόσπαση αποσπάσεις μόρια μοριοδότηση μόνιμοι εκπαιδευτικοί γραμματισμοί ειδικότητες εκπαίδευση ενηλίκων">
+        <span class="new-badge">ΝΕΟ</span>
+        <div class="card-top">
+          <span class="tool-number">14</span>
+          <span class="category-tag orange">ΣΔΕ / Αποσπάσεις</span>
+        </div>
+        <h2>Μόρια Απόσπασης στα ΣΔΕ</h2>
+        <p>
+          Έλεγξε αν η ειδικότητά σου είναι αποδεκτή και υπολόγισε τη μοριοδότηση έως 40 μόρια
+          για απόσπαση στα Σχολεία Δεύτερης Ευκαιρίας.
         </p>
         <span class="button-like">Άνοιγμα εργαλείου →</span>
       </a>
