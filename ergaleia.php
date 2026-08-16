@@ -403,7 +403,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
       <div class="hero-meta">
-        <span>14 διαθέσιμα εργαλεία</span>
+        <span>15 διαθέσιμα εργαλεία</span>
         <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
         <span>Αναπληρωτές</span>
         <span>Αποσπάσεις</span>
@@ -435,7 +435,7 @@
         <button class="filter-btn" type="button" data-filter="onaseia">Ωνάσεια</button>
       </div>
 
-      <div class="results-line" id="resultsLine">Εμφανίζονται 14 εργαλεία.</div>
+      <div class="results-line" id="resultsLine">Εμφανίζονται 15 εργαλεία.</div>
     </section>
 
     <section class="tools-grid" id="toolsGrid">
@@ -604,13 +604,31 @@
         <span class="button-like">Άνοιγμα εργαλείου →</span>
       </a>
 
+
+      <a class="tool-card"
+         href="ypologismos-morion-4ea-2025.php"
+         data-category="asep anaplirotes eidiki-agogi"
+         data-search="4ΕΑ 2025 ειδική αγωγή ΕΑΕ ΤΕ01 ΤΕ02 ΤΕ16 κύριος κύριο πίνακας Β επικουρικός πίνακας μόρια ΑΣΕΠ αναπληρωτές τεχνική εκπαίδευση">
+        <span class="new-badge">ΝΕΟ</span>
+        <div class="card-top">
+          <span class="tool-number">11</span>
+          <span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
+        </div>
+        <h2>Υπολογισμός μορίων 4ΕΑ/2025</h2>
+        <p>
+          Υπολόγισε τα μόρια για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16 στην Ειδική Αγωγή
+          και έλεγξε ενδεικτικά ένταξη στον Κύριο ή στον Επικουρικό Πίνακα.
+        </p>
+        <span class="button-like">Άνοιγμα εργαλείου →</span>
+      </a>
+
       <a class="tool-card"
          href="odigos-enstasis.php"
          data-category="asep"
          data-search="ένσταση ενστάσεις ΑΣΕΠ προσωρινοί πίνακες προσωρινών πινάκων παράβολο 50 ευρώ δικαιολογητικά προθεσμία">
         <span class="new-badge">ΝΕΟ</span>
         <div class="card-top">
-          <span class="tool-number">11</span>
+          <span class="tool-number">12</span>
           <span class="category-tag">ΑΣΕΠ</span>
         </div>
         <h2>Οδηγός ένστασης ΑΣΕΠ</h2>
@@ -627,7 +645,7 @@
          data-search="δικαιολογητικά τέκνα αναπηρία κοινωνικά κριτήρια ΑΣΕΠ 1ΓΕ 2ΓΕ μοριοδοτούμενα τέκνα αναπηρία ιδίου συζύγου τέκνου">
         <span class="new-badge">ΝΕΟ</span>
         <div class="card-top">
-          <span class="tool-number">12</span>
+          <span class="tool-number">13</span>
           <span class="category-tag green">ΑΣΕΠ / Αναπληρωτές</span>
         </div>
         <h2>Δικαιολογητικά τέκνων &amp; αναπηρίας</h2>
@@ -644,7 +662,7 @@
          data-search="ψηφιακό φροντιστήριο απόσπαση αποσπάσεις μόρια μοριοδότηση μόνιμοι εκπαιδευτικοί βιντεοσκοπημένο μάθημα συνέντευξη πανελλαδικές ΤΠΕ">
         <span class="new-badge">ΝΕΟ</span>
         <div class="card-top">
-          <span class="tool-number">13</span>
+          <span class="tool-number">14</span>
           <span class="category-tag orange">Αποσπάσεις</span>
         </div>
         <h2>Μόρια Απόσπασης στο Ψηφιακό Φροντιστήριο</h2>
@@ -661,7 +679,7 @@
          data-search="ΣΔΕ Σχολεία Δεύτερης Ευκαιρίας απόσπαση αποσπάσεις μόρια μοριοδότηση μόνιμοι εκπαιδευτικοί γραμματισμοί ειδικότητες εκπαίδευση ενηλίκων">
         <span class="new-badge">ΝΕΟ</span>
         <div class="card-top">
-          <span class="tool-number">14</span>
+          <span class="tool-number">15</span>
           <span class="category-tag orange">ΣΔΕ / Αποσπάσεις</span>
         </div>
         <h2>Μόρια Απόσπασης στα ΣΔΕ</h2>

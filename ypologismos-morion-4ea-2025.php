@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΓΤ/2024 για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16.">
-  <title>Υπολογισμός μορίων 1ΓΤ/2024</title>
+  <title>Υπολογισμός μορίων 4ΕΑ/2025</title>
 
   <style>
     :root {
@@ -196,11 +196,11 @@
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app">
 <section class="hero">
-    <h1>Υπολογισμός μορίων 1ΓΤ/2024</h1>
-    <p>Ενδεικτικός υπολογισμός για τους αξιολογικούς πίνακες Γενικής Εκπαίδευσης κατηγορίας Τ.Ε.</p>
+    <h1>Υπολογισμός μορίων 4ΕΑ/2025</h1>
+    <p>Ενδεικτικός υπολογισμός μορίων και ελέγχου ένταξης στους πίνακες Ειδικής Αγωγής και Εκπαίδευσης κατηγορίας Τ.Ε.</p>
     <div class="meta">
-      <span>ΤΕ01</span><span>ΤΕ02</span><span>ΤΕ16</span>
-      <span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span>
+      <span>4ΕΑ/2025</span><span>ΤΕ01</span><span>ΤΕ02</span><span>ΤΕ16</span>
+      <span>Κύριος / Επικουρικός Πίνακας</span><span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span>
     </div>
   </section>
 
@@ -208,7 +208,7 @@
     <div>
       <section class="card">
         <h2>Κλάδος και βασικός τίτλος</h2>
-        <p class="cap">Ο κλάδος επηρεάζει κυρίως τον τρόπο περιγραφής του δεύτερου τίτλου και τη βοήθεια για τον βαθμό ΤΕ16.</p>
+        <p class="cap">Η 4ΕΑ/2025 αφορά τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16 με εξειδίκευση στην Ειδική Αγωγή και Εκπαίδευση.</p>
 
         <div class="field-grid">
           <div class="field">
@@ -251,6 +251,63 @@
       </section>
 
       <section class="card">
+        <h2>Ένταξη σε πίνακα Ε.Α.Ε.</h2>
+        <p class="cap">Ενδεικτικός έλεγχος των ειδικών κριτηρίων ένταξης της 4ΕΑ/2025.</p>
+
+        <div class="field">
+          <label for="mainCriterion">Κριτήριο ένταξης στον Αξιολογικό Πίνακα Β΄ (Κύριος)</label>
+          <select id="mainCriterion">
+            <option value="none">Δεν διαθέτω κάποιο από τα παρακάτω</option>
+            <option value="phd">Διδακτορικό στην Ε.Α.Ε. ή Σχολική Ψυχολογία, με βασικές σπουδές σε Α.Ε.Ι.</option>
+            <option value="msc">Μεταπτυχιακό στην Ε.Α.Ε. ή Σχολική Ψυχολογία, με βασικές σπουδές σε Α.Ε.Ι.</option>
+            <option value="retraining">Πτυχίο διετούς μετεκπαίδευσης στην Ε.Α.Ε. Διδασκαλείου, με βασικές σπουδές σε Α.Ε.Ι.</option>
+            <option value="aei5years">Πτυχίο Α.Ε.Ι. και τουλάχιστον 5 έτη αποδεδειγμένης προϋπηρεσίας στην Ε.Α.Ε.</option>
+          </select>
+          <div class="help">Αρκεί ένα από τα παραπάνω κριτήρια για ένταξη στον Πίνακα Β΄.</div>
+        </div>
+
+        <h3>Κριτήρια Επικουρικού Πίνακα</h3>
+        <div class="note">Για τον Επικουρικό Πίνακα αρκεί <strong>ένα από τα τρία</strong> παρακάτω κριτήρια.</div>
+
+        <div class="checkrow">
+          <input type="checkbox" id="auxSeminar400">
+          <label for="auxSeminar400">Σεμινάριο εξειδίκευσης στην Ε.Α.Ε. ≥400 ωρών και διάρκειας ≥7 μηνών
+            <small>Α.Ε.Ι. ή εποπτευόμενος φορέας του δημόσιου τομέα.</small>
+          </label>
+        </div>
+
+        <div class="field">
+          <label for="eaeMonths">Μήνες προϋπηρεσίας στην Ε.Α.Ε.
+            <small>Για το κριτήριο του Επικουρικού απαιτούνται τουλάχιστον 10 μήνες.</small>
+          </label>
+          <input type="number" id="eaeMonths" min="0" step="1" value="0">
+        </div>
+
+        <div class="checkrow">
+          <input type="checkbox" id="auxParent67">
+          <label for="auxParent67">Είμαι εκπαιδευτικός γονέας παιδιού με αναπηρία 67% και άνω</label>
+        </div>
+
+        <div class="field-grid">
+          <div class="checkrow">
+            <input type="checkbox" id="braille">
+            <label for="braille">Πιστοποιημένη επάρκεια Braille<small>Προτεραιότητα για μαθητές με προβλήματα όρασης.</small></label>
+          </div>
+          <div class="checkrow">
+            <input type="checkbox" id="signLanguage">
+            <label for="signLanguage">Πιστοποιημένη επάρκεια Ε.Ν.Γ.<small>Προτεραιότητα για κωφούς και βαρήκοους μαθητές.</small></label>
+          </div>
+        </div>
+
+        <div class="priority" id="tableStatus">Δεν έχει δηλωθεί ακόμη κριτήριο ένταξης.</div>
+
+        <div class="note">
+          Η προϋπηρεσία Ε.Α.Ε. που χρησιμοποιείται για την ένταξη στον Επικουρικό Πίνακα δεν προστίθεται αυτόματα στα μόρια.
+          Καταχώρισέ την και στο κατάλληλο πεδίο προϋπηρεσίας παρακάτω, χωρίς διπλή μέτρηση.
+        </div>
+      </section>
+
+      <section class="card">
         <h2>Α. Ακαδημαϊκά προσόντα</h2>
         <p class="cap">Μέγιστο κατηγορίας: 120 μόρια</p>
 
@@ -278,7 +335,7 @@
 
         <div class="checkrow">
           <input type="checkbox" id="training">
-          <label for="training">Επιμόρφωση ≥300 ωρών και διάρκειας ≥7 μηνών<small>Α.Ε.Ι. ή εποπτευόμενος δημόσιος φορέας — μοριοδοτείται μία επιμόρφωση — 10 μόρια</small></label>
+          <label for="training">Επιμόρφωση ≥300 ωρών και διάρκειας ≥7 μηνών<small>Α.Ε.Ι. ή εποπτευόμενος δημόσιος φορέας — μοριοδοτείται μία επιμόρφωση — 10 μόρια. Το σεμινάριο Ε.Α.Ε. ≥400 ωρών του Επικουρικού καλύπτει και αυτό το κριτήριο.</small></label>
         </div>
 
         <div class="subtot"><span>Σύνολο Ακαδημαϊκών</span><span class="pill" id="academicSubtotal">0,00 / 120</span></div>
@@ -293,12 +350,12 @@
         </div>
 
         <div class="note">
-          <strong>Σημείωση 1ΓΤ/2024:</strong> Λαμβάνεται υπόψη η εκπαιδευτική προϋπηρεσία σε μήνες χωρίς να υπολογίζονται τα υπόλοιπα ημερών. Για τον λόγο αυτό, όλα τα πεδία προϋπηρεσίας δέχονται μόνο ακέραιους μήνες.
+          <strong>Σημείωση 4ΕΑ/2025:</strong> Λαμβάνεται υπόψη η εκπαιδευτική προϋπηρεσία σε μήνες χωρίς να υπολογίζονται τα υπόλοιπα ημερών. Για τον λόγο αυτό, όλα τα πεδία προϋπηρεσίας δέχονται μόνο ακέραιους μήνες.
         </div>
 
         <div class="field">
-          <label for="regularMonths">Λοιπή αναγνωρισμένη εκπαιδευτική προϋπηρεσία
-            <small>1 μόριο ανά μήνα. Εδώ μπορεί να συμπεριληφθεί και αναγνωρισμένη ιδιωτική προϋπηρεσία που πληροί τις προϋποθέσεις της προκήρυξης.</small>
+          <label for="regularMonths">Μήνες δημόσιας εκπαιδευτικής προϋπηρεσίας
+            <small>1 μόριο ανά μήνα πραγματικής εκπαιδευτικής προϋπηρεσίας.</small>
           </label>
           <input type="number" id="regularMonths" min="0" step="1" value="0">
         </div>
@@ -332,6 +389,13 @@
             <label for="covid21Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 7 μήνες · έως 20 μόρια στο έτος</small></label>
             <input type="number" id="covid21Difficult" min="0" max="7" step="1" value="0">
           </div>
+        </div>
+
+        <div class="field">
+          <label for="privateMonths">Μήνες προϋπηρεσίας στην ιδιωτική εκπαίδευση
+            <small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι ειδικές προϋποθέσεις της προκήρυξης.</small>
+          </label>
+          <input type="number" id="privateMonths" min="0" step="1" value="0">
         </div>
 
         <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
@@ -384,6 +448,8 @@
       <div class="result-row"><span>Τέκνα</span><strong id="resChildren">0,00</strong></div>
       <div class="result-row"><span>Αναπηρία</span><strong id="resDisability">0,00</strong></div>
 
+      <div class="result-row"><span>Πίνακας Ε.Α.Ε.</span><strong id="resTable">—</strong></div>
+
       <div class="priority" id="priorityBox">Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.</div>
 
       <div class="actions">
@@ -398,8 +464,8 @@
   </div>
 
   <section class="source">
-    <strong>Πηγή:</strong> Προκήρυξη ΑΣΕΠ 1ΓΤ/2024, ΦΕΚ Α.Σ.Ε.Π. 25/10.07.2024, Κεφάλαιο Γ΄ «Κριτήρια Κατάταξης».<br>
-    Το εργαλείο είναι ενημερωτικό. Η τελική μοριοδότηση προκύπτει από τον έλεγχο της αίτησης και των δικαιολογητικών από τα αρμόδια όργανα.
+    <strong>Πηγή:</strong> Προκήρυξη ΑΣΕΠ 4ΕΑ/2025, ΦΕΚ Α.Σ.Ε.Π. 42/18.08.2025, Κεφάλαια Β΄ και Γ΄.<br>
+    Το εργαλείο είναι ενημερωτικό. Η τελική ένταξη σε πίνακα και η μοριοδότηση προκύπτουν από τον έλεγχο της αίτησης και των δικαιολογητικών από τα αρμόδια όργανα.
   </section>
 </div>
 
@@ -443,24 +509,41 @@
       secondTitle: $('secondTitle').checked,
       languagePoints: Number($('language').value || 0),
       computer: $('computer').checked,
-      training: $('training').checked
+      training: $('training').checked || $('auxSeminar400').checked
     });
     const normalizedGrade = academicResult.normalizedGrade;
     const degreePoints = academicResult.degreePoints;
     const academic = academicResult.points;
 
-    const regular = intNum('regularMonths') * 1;
+    const regular = EducationService.regularPublic(intNum('regularMonths')).points;
     const difficult = EducationService.difficult(intNum('difficultMonths')).points;
     const c20reg = EducationService.threeMonthRegular2020(intNum('covid20Regular')).points;
     const c20dif = EducationService.threeMonthDifficult2020(intNum('covid20Difficult')).points;
     const c21reg = EducationService.threeMonthRegular2021(intNum('covid21Regular')).points;
     const c21dif = EducationService.threeMonthDifficult2021(intNum('covid21Difficult')).points;
-    const service = cap(regular + difficult + c20reg + c20dif + c21reg + c21dif, 120);
+    const privatePts = EducationService.privateSchool(intNum('privateMonths')).points;
+    const service = cap(regular + difficult + c20reg + c20dif + c21reg + c21dif + privatePts, 120);
 
     const childrenPts = Math.floor(num('children')) * 3;
     const disabilityPct = cap(num('disability'),100);
     const disabilityPts = disabilityPct >= 50 ? disabilityPct * 0.4 : 0;
     const social = childrenPts + disabilityPts;
+
+    const mainEligible = $('mainCriterion').value !== 'none';
+    const auxEligible =
+      $('auxSeminar400').checked ||
+      intNum('eaeMonths') >= 10 ||
+      $('auxParent67').checked;
+
+    let tableCode = 'none';
+    let tableLabel = 'Δεν προκύπτει ένταξη';
+    if (mainEligible) {
+      tableCode = 'main';
+      tableLabel = 'Αξιολογικός Πίνακας Β΄ (Κύριος)';
+    } else if (auxEligible) {
+      tableCode = 'aux';
+      tableLabel = 'Επικουρικός Πίνακας';
+    }
 
     const total = academic + service + social;
 
@@ -475,28 +558,46 @@
     $('resDegree').textContent = fmt(degreePoints);
     $('resChildren').textContent = fmt(childrenPts);
     $('resDisability').textContent = fmt(disabilityPts);
+    $('resTable').textContent = tableLabel;
+
+    $('tableStatus').classList.toggle('yes', tableCode === 'main' || tableCode === 'aux');
+    if (tableCode === 'main') {
+      $('tableStatus').textContent = 'Προκύπτει ένταξη στον Αξιολογικό Πίνακα Β΄ (Κύριο).';
+    } else if (tableCode === 'aux') {
+      $('tableStatus').textContent = 'Δεν δηλώθηκε κριτήριο Κύριου Πίνακα — προκύπτει ένταξη στον Επικουρικό Πίνακα.';
+    } else {
+      $('tableStatus').textContent = 'Δεν προκύπτει ένταξη σε Κύριο ή Επικουρικό Πίνακα από τα δηλωμένα στοιχεία.';
+    }
 
     const ped = $('pedagogical').checked;
-    $('priorityBox').classList.toggle('yes',ped);
-    $('priorityBox').textContent = ped ? 'ΠΡΟΤΑΞΗ λόγω Παιδαγωγικής & Διδακτικής Επάρκειας' : 'Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.';
+    const priorities = [];
+    if (ped) priorities.push('ΠΡΟΤΑΞΗ λόγω Π.Δ.Ε.');
+    if ($('braille').checked) priorities.push('Braille');
+    if ($('signLanguage').checked) priorities.push('Ε.Ν.Γ.');
 
-    return {normalizedGrade,degreePoints,academic,service,childrenPts,disabilityPts,social,total,ped};
+    $('priorityBox').classList.toggle('yes', priorities.length > 0);
+    $('priorityBox').textContent = priorities.length
+      ? priorities.join(' · ')
+      : 'Χωρίς δηλωμένη ειδική πρόταξη / προτεραιότητα';
+
+    return {normalizedGrade,degreePoints,academic,service,childrenPts,disabilityPts,social,total,ped,tableCode,tableLabel};
   }
 
   function summary(v){
     return [
-      'Υπολογισμός μορίων 1ΓΤ/2024',
+      'Υπολογισμός μορίων 4ΕΑ/2025',
       `Σύνολο: ${fmt(v.total)}`,
       `Ακαδημαϊκά: ${fmt(v.academic)} / 120`,
       `Προϋπηρεσία: ${fmt(v.service)} / 120`,
       `Κοινωνικά: ${fmt(v.social)}`,
+      `Πίνακας Ε.Α.Ε.: ${v.tableLabel}`,
       `Παιδαγωγική επάρκεια: ${v.ped ? 'ΝΑΙ — ΠΡΟΤΑΞΗ' : 'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
       '',
-      'Ενδεικτικός υπολογισμός βάσει της Προκήρυξης ΑΣΕΠ 1ΓΤ/2024.'
+      'Ενδεικτικός υπολογισμός βάσει της Προκήρυξης ΑΣΕΠ 4ΕΑ/2025.'
     ].join('\n');
   }
 
-  const serviceMonthIds = ['regularMonths','difficultMonths','covid20Regular','covid20Difficult','covid21Regular','covid21Difficult'];
+  const serviceMonthIds = ['regularMonths','difficultMonths','covid20Regular','covid20Difficult','covid21Regular','covid21Difficult','privateMonths','eaeMonths'];
   serviceMonthIds.forEach(id => {
     const el = $(id);
     el.addEventListener('input', () => {
@@ -528,6 +629,7 @@
     $('gradeScale').value='20';
     $('language').value='0';
     $('te16TextGrade').value='0';
+    $('mainCriterion').value='none';
     updateBranchUI();
     calc();
   });
