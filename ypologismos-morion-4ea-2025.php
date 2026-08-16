@@ -222,8 +222,8 @@
           <div class="field">
             <label for="gradeScale">Κλίμακα βαθμού τίτλου</label>
             <select id="gradeScale">
-              <option value="20">Κλίμακα 0–20</option>
-              <option value="10">Κλίμακα 0–10</option>
+              <option value="20">Κλίμακα 10–20</option>
+              <option value="10">Κλίμακα 5–10</option>
               <option value="te16text">ΤΕ16 — περιγραφικός βαθμός</option>
             </select>
           </div>
@@ -233,7 +233,7 @@
           <label for="degreeGrade">Βαθμός βασικού τίτλου
             <small>Ο βαθμός ανάγεται σε κλίμακα 20 και πολλαπλασιάζεται ×3. Μέγιστο: 60 μόρια.</small>
           </label>
-          <input type="number" id="degreeGrade" min="0" max="20" step="0.01" value="0">
+          <input type="number" id="degreeGrade" min="10" max="20" step="0.01" value="" placeholder="π.χ. 15,40">
         </div>
 
         <div id="te16TextWrap" class="field hidden">
@@ -497,14 +497,25 @@
     $('numericGradeWrap').classList.toggle('hidden', textual);
     $('te16TextWrap').classList.toggle('hidden', !textual);
     if(!textual){
-      $('degreeGrade').max = scale === '10' ? '10' : '20';
+      const minGrade = scale === '10' ? 5 : 10;
+      const maxGrade = scale === '10' ? 10 : 20;
+      $('degreeGrade').min = String(minGrade);
+      $('degreeGrade').max = String(maxGrade);
+      $('degreeGrade').placeholder = scale === '10' ? 'π.χ. 7,50' : 'π.χ. 15,00';
     }
   }
 
   function calc(){
+    const currentScale = $('gradeScale').value;
+    const rawDegreeGrade = num('degreeGrade');
+    const minDegreeGrade = currentScale === '10' ? 5 : (currentScale === '20' ? 10 : 0);
+    const maxDegreeGrade = currentScale === '10' ? 10 : (currentScale === '20' ? 20 : 20);
+    const numericGradeValid = currentScale === 'te16text'
+      || (rawDegreeGrade >= minDegreeGrade && rawDegreeGrade <= maxDegreeGrade);
+
     const academicResult = TEAcademic.calculate({
-      gradeScale: $('gradeScale').value,
-      degreeGrade: num('degreeGrade'),
+      gradeScale: currentScale,
+      degreeGrade: numericGradeValid ? rawDegreeGrade : 0,
       te16TextGrade: Number($('te16TextGrade').value || 0),
       secondTitle: $('secondTitle').checked,
       languagePoints: Number($('language').value || 0),
@@ -547,7 +558,13 @@
 
     const total = academic + service + social;
 
-    $('normalizedGradeInfo').textContent = `Αναγμένος βαθμός: ${fmt(normalizedGrade)} / 20 · Μόρια βαθμού: ${fmt(degreePoints)} / 60`;
+    if (currentScale !== 'te16text' && rawDegreeGrade > 0 && !numericGradeValid) {
+      $('normalizedGradeInfo').textContent =
+        `Μη έγκυρος βαθμός: επιτρέπεται ${minDegreeGrade}–${maxDegreeGrade}. Δεν υπολογίζονται μόρια βαθμού.`;
+    } else {
+      $('normalizedGradeInfo').textContent =
+        `Αναγμένος βαθμός: ${fmt(normalizedGrade)} / 20 · Μόρια βαθμού: ${fmt(degreePoints)} / 60`;
+    }
     $('academicSubtotal').textContent = `${fmt(academic)} / 120`;
     $('serviceSubtotal').textContent = `${fmt(service)} / 120`;
     $('socialSubtotal').textContent = fmt(social);
@@ -621,8 +638,25 @@
     calc();
   });
 
+  $('degreeGrade').addEventListener('change',()=>{
+    if ($('degreeGrade').value === '') return;
+    const scale = $('gradeScale').value;
+    if (scale === 'te16text') return;
+    const minGrade = scale === '10' ? 5 : 10;
+    const maxGrade = scale === '10' ? 10 : 20;
+    let value = Number(String($('degreeGrade').value).replace(',', '.'));
+    if (!Number.isFinite(value)) {
+      $('degreeGrade').value = '';
+      return;
+    }
+    value = Math.min(maxGrade, Math.max(minGrade, value));
+    $('degreeGrade').value = value;
+    calc();
+  });
+
   $('resetBtn').addEventListener('click',()=>{
     document.querySelectorAll('input[type="number"]').forEach(el=>el.value=0);
+    $('degreeGrade').value='';
     document.querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked=false);
     $('branch').value='te01';
     $('gradeScale').dataset.auto='on';

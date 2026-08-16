@@ -43,8 +43,8 @@
 </section>
 
 <section class="card">
-<h2>2. Ακαδημαϊκά προσόντα</h2><p class="cap">Μέγιστο κατηγορίας Α: 120 μόρια.</p>
-<div class="field"><label for="degree">Βαθμός βασικού πτυχίου (0–10)<small>Βαθμός × 2,5 · ανώτατο 25.</small></label><input id="degree" type="number" min="0" max="10" step="0.01" value="0"></div>
+<h2>2. Ακαδημαϊκά προσόντα</h2><p class="cap">Μέγιστο κατηγορίας Α: 120 μόρια.</p><div id="degreeValidation" class="note hidden">Ο βαθμός βασικού πτυχίου πρέπει να είναι από 5,00 έως 10,00.</div>
+<div class="field"><label for="degree">Βαθμός βασικού πτυχίου (5–10)<small>Βαθμός × 2,5 · ανώτατο 25.</small></label><input id="degree" type="number" min="5" max="10" step="0.01" value="" placeholder="π.χ. 7,50"></div>
 <div class="check"><input type="checkbox" id="secondDegree"><label for="secondDegree">Δεύτερο πτυχίο ΑΕΙ <small>+7 μόρια, εφόσον δεν αποτελεί τυπικό προσόν διορισμού.</small></label></div>
 <div class="check"><input type="checkbox" id="phd"><label for="phd">Διδακτορικό δίπλωμα <small>+40 μόρια. Αν τσεκάρεις «Διδακτορικό ΕΑΕ» παραπάνω, ενεργοποιείται αυτόματα.</small></label></div>
 <div class="field"><label for="masters">Μεταπτυχιακοί τίτλοι / integrated master<small>1 τίτλος: 20 · 2 ή περισσότεροι: 28 συνολικά. Για ΠΕ61/ΠΕ71 το βασικό πτυχίο δίνει αυτοδικαίως 20 και με επιπλέον μεταπτυχιακό η σχετική μοριοδότηση γίνεται 28.</small></label><select id="masters"><option value="0">Κανένας</option><option value="1">Ένας</option><option value="2">Δύο ή περισσότεροι</option></select></div>
@@ -124,7 +124,9 @@
    if($('phdEae').checked) $('phd').checked=true;
    if($('masterEae').checked && Number($('masters').value)<1) $('masters').value='1';
    if($('seminar400').checked) $('training').checked=true;
-   let pts=cap(num('degree')*2.5,25);
+   const degreeGrade=num('degree');
+   const validDegreeGrade=degreeGrade>=5 && degreeGrade<=10;
+   let pts=validDegreeGrade ? cap(degreeGrade*2.5,25) : 0;
    if($('secondDegree').checked) pts+=7;
    if($('phd').checked) pts+=40;
    let masters=Number($('masters').value||0);
@@ -174,6 +176,9 @@
  }
  function render(){
    syncSpecial();
+   const degreeGrade=num('degree');
+   const degreeInvalid=degreeGrade>0 && (degreeGrade<5 || degreeGrade>10);
+   $('degreeValidation').classList.toggle('hidden', !degreeInvalid);
    const a=calcAcademic(), b=calcService(), c=calcSocial(), t=a+b+c, e=eligibility();
    $('grandTotal').textContent=fmt(t); $('resAcademic').textContent=fmt(a)+' / 120'; $('resService').textContent=fmt(b)+' / 120'; $('resSocial').textContent=fmt(c);
    $('tableStatus').className='status '+e.type; $('tableStatus').textContent=e.label; $('eligibilityWhy').innerHTML='<strong>Έλεγχος ένταξης</strong>'+e.why;
@@ -192,9 +197,17 @@
    if(String(v)!==el.value) el.value=String(v);
  }
  document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render();});
- document.addEventListener('change',e=>{sanitizeServiceMonthInput(e.target);render();});
+ document.addEventListener('change',e=>{
+   sanitizeServiceMonthInput(e.target);
+   if(e.target && e.target.id==='degree' && e.target.value!==''){
+     let v=Number(String(e.target.value).replace(',', '.'));
+     if(Number.isFinite(v)) e.target.value=String(Math.min(10,Math.max(5,v)));
+     else e.target.value='';
+   }
+   render();
+ });
  $('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});
- $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);render();});
+ $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degree').value='';document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);render();});
  render();
 })();
 </script>

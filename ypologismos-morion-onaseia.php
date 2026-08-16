@@ -347,7 +347,7 @@
       <h3>Τίτλοι σπουδών</h3>
       <div class="field-grid">
         <div class="question">
-          <label for="degreeGrade">Βαθμός βασικού τίτλου σπουδών</label>
+          <label for="degreeGrade">Βαθμός βασικού τίτλου σπουδών <small>Έγκυρος βαθμός: 5,00–10,00.</small></label>
           <input type="text" inputmode="decimal" id="degreeGrade" placeholder="π.χ. 7,50">
         </div>
 
