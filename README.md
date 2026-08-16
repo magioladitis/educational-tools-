@@ -65,3 +65,6 @@ php -l <αρχείο.php>
 
 - `includes/social-calculations.js` — κοινή μοριοδότηση κοινωνικών κριτηρίων για 1ΓΕ/2ΓΕ, 1ΓΤ, 3ΕΑ και 4ΕΑ.
 - `includes/abroad-calculations.js` — μοριοδότηση και βασικός έλεγχος απόσπασης στο εξωτερικό.
+
+17. `ypologismos-morion-apospasis-evropaika-scholeia.php` — Μόρια απόσπασης σε Ευρωπαϊκά Σχολεία, με δύο στάδια αξιολόγησης.
+- `includes/european-schools-calculations.js` — υπολογισμός μορίων και βασικών προϋποθέσεων Ευρωπαϊκών Σχολείων.
