@@ -212,6 +212,147 @@
         font-size: 24px;
       }
     }
+
+    /* Layout aligned with the 1ΓΤ/2024 reference calculator. */
+    body.edu-ui .app-box.edu-modernized {
+      max-width: 1060px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      column-gap: 18px;
+      align-items: start;
+    }
+
+    body.edu-ui .app-box.edu-modernized > .edu-legacy-hero {
+      grid-column: 1 / -1;
+    }
+
+    body.edu-ui .app-box.edu-modernized > .section,
+    body.edu-ui .app-box.edu-modernized > #result,
+    body.edu-ui .app-box.edu-modernized > .small-note {
+      grid-column: 1;
+    }
+
+    .hero .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .hero .meta span {
+      background: rgba(255,255,255,.14);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .calc-sidebar {
+      grid-column: 2;
+      grid-row: 2 / span 12;
+      position: sticky;
+      top: 16px;
+      background: #fff;
+      border: 1px solid #dbe3ec;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(28,39,55,.05);
+    }
+
+    .calc-sidebar .total-summary {
+      text-align: center;
+      padding: 6px 0 16px;
+    }
+
+    .calc-sidebar .total-summary .num {
+      font-size: 54px;
+      line-height: 1;
+      font-weight: 850;
+      color: #1f6feb;
+      letter-spacing: -.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .calc-sidebar .total-summary .label {
+      margin-top: 6px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .calc-sidebar .result-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 0;
+      border-top: 1px solid #edf1f5;
+      font-size: 14px;
+    }
+
+    .calc-sidebar .result-row strong {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .calc-sidebar .sidebar-status {
+      margin: 14px 0 0;
+      padding: 10px 11px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid #dbe3ec;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .calc-sidebar .calculate-btn {
+      width: 100%;
+      margin-top: 14px;
+    }
+
+    .sidebar-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .sidebar-actions button {
+      width: 100%;
+      margin-top: 0;
+      padding: 11px;
+      font-size: 14px;
+      border-radius: 10px;
+    }
+
+    .sidebar-actions button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 900px) {
+      body.edu-ui .app-box.edu-modernized {
+        grid-template-columns: 1fr;
+      }
+
+      body.edu-ui .app-box.edu-modernized > .section,
+      body.edu-ui .app-box.edu-modernized > #result,
+      body.edu-ui .app-box.edu-modernized > .small-note,
+      .calc-sidebar {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .calc-sidebar {
+        position: static;
+        margin: 0 0 16px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .sidebar-actions { grid-template-columns: 1fr; }
+      .calc-sidebar .total-summary .num { font-size: 46px; }
+    }
   </style>
   <link rel="stylesheet" href="assets/common.css">
 </head>
@@ -226,6 +367,12 @@
     Συμπλήρωσε τα στοιχεία σου για έναν <strong>ενδεικτικό</strong> υπολογισμό μορίων
     στους αξιολογικούς πίνακες Γενικής Εκπαίδευσης.
   </p>
+  <div class="meta">
+    <span>1ΓΕ/2026</span>
+    <span>2ΓΕ/2026</span>
+    <span>Ακαδημαϊκά έως 120</span>
+    <span>Προϋπηρεσία έως 120</span>
+  </div>
 </section>
 
   <div class="section">
@@ -507,10 +654,27 @@
     </p>
   </div>
 
-  <div class="calc-actions">
-    <button type="button" onclick="calculatePoints()">Υπολογισμός μορίων</button>
-    <button type="button" class="secondary" onclick="resetCalculator()">Μηδενισμός</button>
-  </div>
+  <aside class="calc-sidebar" aria-live="polite">
+    <div class="total-summary">
+      <div class="num" id="grandTotal">0,00</div>
+      <div class="label">συνολικά μόρια</div>
+    </div>
+
+    <div class="result-row"><span>Ακαδημαϊκά</span><strong id="resAcademic">0,00 / 120</strong></div>
+    <div class="result-row"><span>Προϋπηρεσία</span><strong id="resService">0,00 / 120</strong></div>
+    <div class="result-row"><span>Κοινωνικά</span><strong id="resSocial">0,00</strong></div>
+    <div class="result-row"><span>Βαθμός τίτλου</span><strong id="resDegree">0,00</strong></div>
+
+    <div class="sidebar-status" id="sidebarStatus">
+      Συμπλήρωσε τα στοιχεία και πάτησε «Υπολογισμός μορίων».
+    </div>
+
+    <button type="button" class="calculate-btn" onclick="calculatePoints()">Υπολογισμός μορίων</button>
+    <div class="sidebar-actions">
+      <button type="button" id="copyResultBtn" onclick="copyResult()" disabled>Αντιγραφή αποτελέσματος</button>
+      <button type="button" class="secondary" onclick="resetCalculator()">Μηδενισμός</button>
+    </div>
+  </aside>
 
   <div id="result" class="result" role="status" aria-live="polite"></div>
 
@@ -524,10 +688,44 @@
 <script src="includes/service-calculations.js"></script>
 <script src="includes/social-calculations.js"></script>
 <script>
+  let lastResultText = "";
+
   function valueOf(id) {
     return document.getElementById(id).value;
   }
 
+  function updateSidebarSummary({ total = 0, academic = 0, service = 0, social = 0, degree = 0, specialty = "" } = {}) {
+    document.getElementById("grandTotal").textContent = formatPointsFixed(total);
+    document.getElementById("resAcademic").textContent = formatPointsFixed(academic) + " / 120";
+    document.getElementById("resService").textContent = formatPointsFixed(service) + " / 120";
+    document.getElementById("resSocial").textContent = formatPointsFixed(social);
+    document.getElementById("resDegree").textContent = formatPointsFixed(degree);
+
+    const status = document.getElementById("sidebarStatus");
+    status.textContent = specialty
+      ? "Τελευταίος υπολογισμός για " + specialty + ". Δες την αναλυτική κατανομή κάτω από τη φόρμα."
+      : "Συμπλήρωσε τα στοιχεία και πάτησε «Υπολογισμός μορίων».";
+  }
+
+  async function copyResult() {
+    if (!lastResultText) return;
+    const btn = document.getElementById("copyResultBtn");
+    try {
+      await navigator.clipboard.writeText(lastResultText);
+    } catch (error) {
+      const textarea = document.createElement("textarea");
+      textarea.value = lastResultText;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+    const old = btn.textContent;
+    btn.textContent = "Αντιγράφηκε";
+    setTimeout(() => { btn.textContent = old; }, 1400);
+  }
 
   function limitIntegerMonth(input) {
     let value = String(input.value).replace(/[^0-9]/g, "");
@@ -551,11 +749,19 @@
     return rounded.toFixed(2).replace(".", ",");
   }
 
+  function formatPointsFixed(value) {
+    return (Math.round((Number(value) + Number.EPSILON) * 100) / 100)
+      .toLocaleString("el-GR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
   function showError(message) {
     const result = document.getElementById("result");
     result.style.display = "block";
     result.className = "result error";
     result.innerHTML = message;
+
+    const status = document.getElementById("sidebarStatus");
+    if (status) status.textContent = "Δεν έγινε νέος υπολογισμός: " + message;
   }
 
   function showResult(html) {
@@ -599,6 +805,10 @@
     result.style.display = "none";
     result.innerHTML = "";
     result.className = "result";
+
+    lastResultText = "";
+    document.getElementById("copyResultBtn").disabled = true;
+    updateSidebarSummary();
     document.getElementById("specialty").focus();
   }
 
@@ -803,6 +1013,26 @@
         </div>
       `;
     }
+
+    updateSidebarSummary({
+      total: total,
+      academic: academic.points,
+      service: serviceTotal,
+      social: socialTotal,
+      degree: academic.degreePoints || (degreeGrade * 2.5),
+      specialty: specialty
+    });
+
+    lastResultText = [
+      "Υπολογισμός μορίων 1ΓΕ/2026 & 2ΓΕ/2026",
+      "Κλάδος / ειδικότητα: " + specialty,
+      "Συνολικά μόρια: " + formatPoints(total),
+      "Ακαδημαϊκά: " + formatPoints(academic.points) + " / 120",
+      "Προϋπηρεσία: " + formatPoints(serviceTotal) + " / 120",
+      "Κοινωνικά: " + formatPoints(socialTotal),
+      "Βαθμός βασικού τίτλου: " + formatPoints(degreeGrade)
+    ].join("\n");
+    document.getElementById("copyResultBtn").disabled = false;
 
     showResult(html);
   }
