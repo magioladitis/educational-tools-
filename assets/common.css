@@ -1,11 +1,71 @@
-/* Shared UI for Educational Tools. Keep tool-specific styles in each page. */
+/*
+ * Educational Tools — Shared UI v2
+ * Common design system for all calculators / guides.
+ * Tool-specific rules may remain in each page, while this file provides
+ * consistent tokens, controls, cards, messages, actions, header/footer and print UX.
+ */
+
 :root {
-  --edu-tools-blue: #1f6feb;
-  --edu-tools-blue-dark: #174ea6;
-  --edu-tools-muted: #6b7280;
-  --edu-tools-border: #dfe5ec;
+  --edu-bg: #f4f7fb;
+  --edu-surface: #ffffff;
+  --edu-surface-soft: #fbfcfe;
+  --edu-text: #18202b;
+  --edu-muted: #64748b;
+  --edu-border: #dbe3ec;
+  --edu-border-strong: #cbd5e1;
+
+  --edu-primary: #1f6feb;
+  --edu-primary-dark: #174ea6;
+  --edu-primary-soft: #eef4ff;
+
+  --edu-success: #137333;
+  --edu-success-soft: #eaf7ef;
+  --edu-success-border: #b7e0c7;
+
+  --edu-warning: #8a5300;
+  --edu-warning-soft: #fff4e5;
+  --edu-warning-border: #f0d4a8;
+
+  --edu-danger: #b3261e;
+  --edu-danger-soft: #fdecea;
+  --edu-danger-border: #efc1bd;
+
+  --edu-neutral-soft: #f1f5f9;
+  --edu-shadow-sm: 0 4px 16px rgba(28,39,55,.055);
+  --edu-shadow: 0 10px 30px rgba(28,39,55,.09);
+
+  --edu-radius-sm: 9px;
+  --edu-radius: 14px;
+  --edu-radius-lg: 18px;
+  --edu-control-height: 44px;
+
+  /* Backwards-compatible aliases used by existing pages. */
+  --edu-tools-blue: var(--edu-primary);
+  --edu-tools-blue-dark: var(--edu-primary-dark);
+  --edu-tools-muted: var(--edu-muted);
+  --edu-tools-border: var(--edu-border);
 }
 
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body.edu-ui {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--edu-bg);
+  color: var(--edu-text);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.edu-ui ::selection {
+  background: rgba(31,111,235,.18);
+}
+
+/* --------------------------------------------------------------------------
+   Global header / footer
+   -------------------------------------------------------------------------- */
 .edu-tools-global-header,
 .edu-tools-global-footer {
   width: 100%;
@@ -21,67 +81,363 @@
 .edu-tools-global-footer__inner {
   max-width: 1180px;
   margin: 0 auto;
-  padding-left: 4px;
-  padding-right: 4px;
 }
 
+.edu-tools-global-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,.93);
+  border: 1px solid var(--edu-border);
+  border-radius: 13px;
+  box-shadow: 0 3px 12px rgba(28,39,55,.05);
+}
+
+.edu-tools-global-header__brand,
 .edu-tools-global-header__back {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: var(--edu-tools-blue);
+  gap: 7px;
+  text-decoration: none;
+  line-height: 1.35;
+}
+
+.edu-tools-global-header__brand {
+  min-width: 0;
+  color: var(--edu-text);
   font-size: 14px;
-  font-weight: 700;
-  line-height: 1.4;
+  font-weight: 800;
+}
+
+.edu-tools-global-header__brand-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--edu-primary-soft);
+  color: var(--edu-primary-dark);
+  flex: 0 0 auto;
+}
+
+.edu-tools-global-header__back {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border-radius: 9px;
+  color: var(--edu-primary-dark);
+  background: var(--edu-primary-soft);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.edu-tools-global-header__brand:hover,
+.edu-tools-global-header__back:hover {
   text-decoration: none;
 }
 
-.edu-tools-global-header__back:hover,
-.edu-tools-global-header__back:focus-visible {
-  color: var(--edu-tools-blue-dark);
-  text-decoration: underline;
-}
-
-.edu-tools-global-header__back:focus-visible {
-  outline: 3px solid rgba(31, 111, 235, .22);
-  outline-offset: 3px;
-  border-radius: 4px;
+.edu-tools-global-header__back:hover {
+  background: #dfeaff;
 }
 
 .edu-tools-global-footer {
   margin-top: 28px;
   padding: 18px 16px 26px;
-  color: var(--edu-tools-muted);
+  color: var(--edu-muted);
   font-size: 13px;
   line-height: 1.5;
   text-align: center;
 }
 
 .edu-tools-global-footer__inner {
-  padding-top: 14px;
-  border-top: 1px solid var(--edu-tools-border);
+  padding-top: 15px;
+  border-top: 1px solid var(--edu-border);
 }
 
-@media (max-width: 620px) {
-  .edu-tools-global-header__inner {
-    padding-left: 2px;
-    padding-right: 2px;
-  }
-  .edu-tools-global-footer {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
+.edu-tools-global-footer__meta {
+  display: flex;
+  justify-content: center;
+  gap: 6px 14px;
+  flex-wrap: wrap;
 }
 
-@media print {
-  .edu-tools-global-header,
-  .edu-tools-global-footer {
-    display: none !important;
-  }
+.edu-tools-global-footer__disclaimer {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #7b8794;
 }
 
+/* --------------------------------------------------------------------------
+   Canonical containers + backwards-compatible aliases
+   -------------------------------------------------------------------------- */
+body.edu-ui .edu-tool-shell,
+body.edu-ui .app-box {
+  border: 1px solid var(--edu-border);
+  border-radius: var(--edu-radius-lg);
+  box-shadow: var(--edu-shadow);
+}
 
-/* Shared accessibility / UX helpers */
+body.edu-ui .app-box {
+  background: var(--edu-surface);
+}
+
+body.edu-ui .edu-card,
+body.edu-ui .card,
+body.edu-ui .section,
+body.edu-ui .panel,
+body.edu-ui .question,
+body.edu-ui .toolbar,
+body.edu-ui .instructions-box,
+body.edu-ui .source {
+  border-color: var(--edu-border);
+}
+
+body.edu-ui .edu-card {
+  background: var(--edu-surface);
+  border: 1px solid var(--edu-border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: var(--edu-shadow-sm);
+}
+
+body.edu-ui .card,
+body.edu-ui .section,
+body.edu-ui .panel {
+  border-radius: 15px;
+}
+
+body.edu-ui .question {
+  border-radius: 12px;
+}
+
+body.edu-ui .hero {
+  box-shadow: var(--edu-shadow);
+}
+
+body.edu-ui h1,
+body.edu-ui h2,
+body.edu-ui h3 {
+  text-wrap: balance;
+}
+
+body.edu-ui .intro,
+body.edu-ui .subtitle,
+body.edu-ui .cap,
+body.edu-ui .small-note,
+body.edu-ui .help {
+  color: var(--edu-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Forms
+   -------------------------------------------------------------------------- */
+body.edu-ui label {
+  color: var(--edu-text);
+}
+
+body.edu-ui input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body.edu-ui select,
+body.edu-ui textarea {
+  min-height: var(--edu-control-height);
+  border: 1px solid var(--edu-border-strong);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--edu-text);
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+body.edu-ui input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):hover,
+body.edu-ui select:hover,
+body.edu-ui textarea:hover {
+  border-color: #aeb9c8;
+}
+
+body.edu-ui input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+body.edu-ui select:focus,
+body.edu-ui textarea:focus {
+  outline: 0;
+  border-color: var(--edu-primary);
+  box-shadow: 0 0 0 3px rgba(31,111,235,.13);
+}
+
+body.edu-ui input[type="checkbox"],
+body.edu-ui input[type="radio"] {
+  accent-color: var(--edu-primary);
+}
+
+body.edu-ui input::placeholder,
+body.edu-ui textarea::placeholder {
+  color: #9aa5b1;
+}
+
+body.edu-ui input:disabled,
+body.edu-ui select:disabled,
+body.edu-ui textarea:disabled,
+body.edu-ui button:disabled {
+  cursor: not-allowed;
+  opacity: .62;
+}
+
+/* Canonical form helpers for all new tools. */
+.edu-field-grid,
+body.edu-ui .field-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.edu-field-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.edu-field { min-width: 0; }
+.edu-field--full { grid-column: 1 / -1; }
+.edu-help { margin-top: 5px; color: var(--edu-muted); font-size: 13px; line-height: 1.4; }
+
+/* --------------------------------------------------------------------------
+   Buttons / actions
+   -------------------------------------------------------------------------- */
+body.edu-ui button:not(.filter-btn),
+body.edu-ui .edu-btn {
+  min-height: 42px;
+  border-radius: 10px;
+  transition: transform .08s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+}
+
+body.edu-ui button:not(.filter-btn):not(:disabled):active,
+body.edu-ui .edu-btn:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+body.edu-ui button.edu-btn-primary,
+body.edu-ui .edu-btn--primary {
+  background: var(--edu-primary) !important;
+  color: #fff !important;
+}
+
+body.edu-ui button.edu-btn-primary:hover,
+body.edu-ui .edu-btn--primary:hover {
+  background: var(--edu-primary-dark) !important;
+}
+
+body.edu-ui button.edu-btn-secondary,
+body.edu-ui button.secondary,
+body.edu-ui button.reset-button,
+body.edu-ui .edu-btn--secondary {
+  background: #e8edf4 !important;
+  color: #263445 !important;
+}
+
+body.edu-ui button.edu-btn-secondary:hover,
+body.edu-ui button.secondary:hover,
+body.edu-ui button.reset-button:hover,
+body.edu-ui .edu-btn--secondary:hover {
+  background: #dbe2eb !important;
+}
+
+.edu-actions,
+body.edu-ui .actions,
+body.edu-ui .calc-actions,
+body.edu-ui .button-row {
+  gap: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   Status / message boxes — canonical + aliases already used by the project
+   -------------------------------------------------------------------------- */
+.edu-message,
+body.edu-ui .note,
+body.edu-ui .note-box,
+body.edu-ui .info,
+body.edu-ui .warning,
+body.edu-ui .warning-box,
+body.edu-ui .success,
+body.edu-ui .success-box,
+body.edu-ui .danger,
+body.edu-ui .danger-box,
+body.edu-ui .inline-impediment,
+body.edu-ui .duplicate-warning {
+  border-radius: 11px;
+  line-height: 1.5;
+}
+
+.edu-message { padding: 12px 13px; border: 1px solid; }
+
+body.edu-ui .note,
+body.edu-ui .note-box,
+body.edu-ui .info,
+.edu-message--info {
+  background: var(--edu-primary-soft);
+  border: 1px solid #d5e4ff;
+  color: var(--edu-primary-dark);
+}
+
+body.edu-ui .warning,
+body.edu-ui .warning-box,
+.edu-message--warning {
+  background: var(--edu-warning-soft);
+  border: 1px solid var(--edu-warning-border);
+  color: var(--edu-warning);
+}
+
+body.edu-ui .success,
+body.edu-ui .success-box,
+.edu-message--success {
+  background: var(--edu-success-soft);
+  border: 1px solid var(--edu-success-border);
+  color: var(--edu-success);
+}
+
+body.edu-ui .danger,
+body.edu-ui .danger-box,
+body.edu-ui .inline-impediment,
+body.edu-ui .duplicate-warning,
+.edu-message--danger {
+  background: var(--edu-danger-soft);
+  border: 1px solid var(--edu-danger-border);
+  color: var(--edu-danger);
+}
+
+/* --------------------------------------------------------------------------
+   Results / totals / tables
+   -------------------------------------------------------------------------- */
+body.edu-ui .result,
+body.edu-ui .results .card,
+body.edu-ui .result-card {
+  border-radius: 14px;
+}
+
+body.edu-ui .total .num,
+body.edu-ui .pill,
+body.edu-ui .result-row strong,
+body.edu-ui .field-box strong {
+  font-variant-numeric: tabular-nums;
+}
+
+body.edu-ui table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+body.edu-ui .breakdown th,
+body.edu-ui .breakdown td {
+  border-color: var(--edu-border);
+}
+
+body.edu-ui .breakdown th {
+  background: var(--edu-neutral-soft);
+  color: #344054;
+}
+
+/* --------------------------------------------------------------------------
+   Links, details, focus, accessibility
+   -------------------------------------------------------------------------- */
+body.edu-ui a {
+  text-underline-offset: 2px;
+}
+
+body.edu-ui details > summary {
+  border-radius: 8px;
+}
+
 .edu-tools-sr-only {
   position: absolute !important;
   width: 1px !important;
@@ -89,7 +445,7 @@
   padding: 0 !important;
   margin: -1px !important;
   overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
+  clip: rect(0,0,0,0) !important;
   white-space: nowrap !important;
   border: 0 !important;
 }
@@ -100,24 +456,106 @@ select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible,
 a:focus-visible {
-  outline: 3px solid rgba(31, 111, 235, .24);
+  outline: 3px solid rgba(31,111,235,.24);
   outline-offset: 2px;
 }
 
-input[disabled],
-select[disabled],
-button[disabled] {
-  cursor: not-allowed;
-  opacity: .65;
+/* Common floating “back to top” control, injected by common.js. */
+.edu-back-to-top {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 999;
+  display: grid;
+  place-items: center;
+  width: 44px !important;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid rgba(255,255,255,.55) !important;
+  border-radius: 999px !important;
+  background: var(--edu-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 24px rgba(28,39,55,.2);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease, background .15s ease !important;
 }
 
+.edu-back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.edu-back-to-top:hover { background: var(--edu-primary-dark) !important; }
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 700px) {
+  .edu-tools-global-header__inner {
+    margin: 0;
+    padding: 9px 10px;
+  }
+
+  .edu-tools-global-header__brand-text { display: none; }
+
+  .edu-tools-global-header__back {
+    padding: 7px 9px;
+  }
+
+  .edu-field-grid { grid-template-columns: 1fr; }
+
+  body.edu-ui .field-grid.three { grid-template-columns: 1fr; }
+
+  .edu-back-to-top {
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .edu-tools-global-header__back-label { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion / print
+   -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     scroll-behavior: auto !important;
     transition-duration: .01ms !important;
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+@media print {
+  body.edu-ui { background: #fff !important; }
+
+  .edu-tools-global-header,
+  .edu-tools-global-footer,
+  .edu-back-to-top,
+  body.edu-ui button,
+  body.edu-ui .actions,
+  body.edu-ui .calc-actions,
+  body.edu-ui .button-row {
+    display: none !important;
+  }
+
+  body.edu-ui .app-box,
+  body.edu-ui .card,
+  body.edu-ui .section,
+  body.edu-ui .panel,
+  body.edu-ui .edu-card {
+    box-shadow: none !important;
+  }
+
+  body.edu-ui .results {
+    position: static !important;
   }
 }
