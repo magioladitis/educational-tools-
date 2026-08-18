@@ -1,5 +1,5 @@
 /*
- * Educational Tools — Shared UI v2
+ * Educational Tools — Shared UI v3
  * Common design system for all calculators / guides.
  * Tool-specific rules may remain in each page, while this file provides
  * consistent tokens, controls, cards, messages, actions, header/footer and print UX.
@@ -557,5 +557,167 @@ a:focus-visible {
 
   body.edu-ui .results {
     position: static !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Structural consistency pass (v3)
+   Legacy pages keep their own colour identity, but gain the same visual
+   grammar as the 1ΓΤ/2024 reference: hero → cards/sections → clear results.
+   -------------------------------------------------------------------------- */
+body.edu-ui .app-box.edu-modernized {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+body.edu-ui .app-box.edu-modernized > .edu-legacy-hero {
+  background: linear-gradient(135deg, var(--edu-page-accent-dark, #173b7a), var(--edu-page-accent, #1f6feb));
+  color: #fff;
+  border: 0;
+  border-radius: 18px;
+  padding: 28px 30px;
+  margin: 0 0 18px;
+  box-shadow: var(--edu-shadow);
+  text-align: left;
+}
+
+body.edu-ui .app-box.edu-modernized > .edu-legacy-hero h1 {
+  margin: 0 0 8px !important;
+  color: #fff !important;
+  text-align: left !important;
+  font-size: clamp(25px, 4vw, 36px) !important;
+  line-height: 1.15;
+}
+
+body.edu-ui .app-box.edu-modernized > .edu-legacy-hero p,
+body.edu-ui .app-box.edu-modernized > .edu-legacy-hero .intro {
+  margin: 4px 0 0 !important;
+  color: rgba(255,255,255,.9) !important;
+  text-align: left !important;
+  line-height: 1.5;
+}
+
+/* Top-level content blocks become the same clean white cards used by the
+   reference calculators. Existing semantic colours inside each tool remain. */
+body.edu-ui .app-box.edu-modernized > .section,
+body.edu-ui .app-box.edu-modernized > .panel,
+body.edu-ui .app-box.edu-modernized > .question,
+body.edu-ui .app-box.edu-modernized > .progress-panel,
+body.edu-ui .app-box.edu-modernized > .deadline-card,
+body.edu-ui .app-box.edu-modernized > .quick-card,
+body.edu-ui .app-box.edu-modernized > .official-note,
+body.edu-ui .app-box.edu-modernized > .important,
+body.edu-ui .app-box.edu-modernized > .notice,
+body.edu-ui .app-box.edu-modernized > .paravolo-summary,
+body.edu-ui .app-box.edu-modernized > .instructions-box,
+body.edu-ui .app-box.edu-modernized > .edu-legacy-main-card {
+  background: var(--edu-surface) !important;
+  border: 1px solid var(--edu-border) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--edu-shadow-sm);
+  margin-bottom: 16px;
+}
+
+body.edu-ui .app-box.edu-modernized > .section,
+body.edu-ui .app-box.edu-modernized > .panel,
+body.edu-ui .app-box.edu-modernized > .question,
+body.edu-ui .app-box.edu-modernized > .progress-panel,
+body.edu-ui .app-box.edu-modernized > .deadline-card,
+body.edu-ui .app-box.edu-modernized > .quick-card,
+body.edu-ui .app-box.edu-modernized > .official-note,
+body.edu-ui .app-box.edu-modernized > .important,
+body.edu-ui .app-box.edu-modernized > .notice,
+body.edu-ui .app-box.edu-modernized > .paravolo-summary,
+body.edu-ui .app-box.edu-modernized > .instructions-box {
+  padding: 18px !important;
+}
+
+/* In calculators that already have section cards, individual questions are
+   fields rather than nested grey cards. This mirrors 1ΓΤ/2024 more closely. */
+body.edu-ui .app-box.edu-modernized .section > .question,
+body.edu-ui .app-box.edu-modernized .panel > .question,
+body.edu-ui .app-box.edu-modernized .edu-legacy-main-card > .question {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 14px !important;
+}
+
+body.edu-ui .app-box.edu-modernized .section > h2,
+body.edu-ui .app-box.edu-modernized .panel > h2,
+body.edu-ui .app-box.edu-modernized .edu-legacy-main-card > h2 {
+  margin-top: 0;
+  color: var(--edu-page-accent-dark, var(--edu-primary-dark));
+  font-size: 21px;
+}
+
+body.edu-ui .app-box.edu-modernized .section > h3,
+body.edu-ui .app-box.edu-modernized .panel > h3 {
+  margin-top: 20px;
+  font-size: 17px;
+}
+
+body.edu-ui .app-box.edu-modernized .result,
+body.edu-ui .app-box.edu-modernized .results,
+body.edu-ui .app-box.edu-modernized .result-box {
+  box-shadow: var(--edu-shadow-sm);
+}
+
+body.edu-ui .app-box.edu-modernized .result:empty {
+  box-shadow: none;
+}
+
+body.edu-ui .app-box.edu-modernized .small-note,
+body.edu-ui .app-box.edu-modernized > .credits {
+  color: var(--edu-muted) !important;
+}
+
+/* The paravolo tool has a compact form with direct labels/selects. */
+body.edu-ui .app-box.edu-modernized .edu-legacy-main-card {
+  padding: 20px !important;
+}
+
+body.edu-ui .app-box.edu-modernized .edu-legacy-main-card > label {
+  margin-top: 16px;
+}
+
+body.edu-ui .app-box.edu-modernized .edu-legacy-main-card > label:first-of-type {
+  margin-top: 18px;
+}
+
+/* Do not let old local CSS re-centre explanatory text inside the new cards. */
+body.edu-ui .app-box.edu-modernized .edu-legacy-main-card p,
+body.edu-ui .app-box.edu-modernized .section p,
+body.edu-ui .app-box.edu-modernized .panel p,
+body.edu-ui .app-box.edu-modernized .question p {
+  text-align: left;
+}
+
+@media (max-width: 650px) {
+  body.edu-ui .app-box.edu-modernized > .edu-legacy-hero {
+    padding: 23px 19px;
+  }
+
+  body.edu-ui .app-box.edu-modernized > .section,
+  body.edu-ui .app-box.edu-modernized > .panel,
+  body.edu-ui .app-box.edu-modernized > .question,
+  body.edu-ui .app-box.edu-modernized > .edu-legacy-main-card {
+    padding: 16px !important;
+  }
+}
+
+@media print {
+  body.edu-ui .app-box.edu-modernized > .edu-legacy-hero {
+    background: #fff !important;
+    color: #000 !important;
+    border: 1px solid #bbb !important;
+  }
+  body.edu-ui .app-box.edu-modernized > .edu-legacy-hero h1,
+  body.edu-ui .app-box.edu-modernized > .edu-legacy-hero p {
+    color: #000 !important;
   }
 }
