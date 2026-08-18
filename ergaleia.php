@@ -401,7 +401,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
 <div class="hero-meta">
-<span>17 διαθέσιμα εργαλεία</span>
+<span>18 διαθέσιμα εργαλεία</span>
 <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
 <span>Αναπληρωτές</span>
 <span>Αποσπάσεις</span>
@@ -424,7 +424,7 @@
 <button aria-pressed="false" class="filter-btn" data-filter="sde" type="button">ΣΔΕ</button>
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 17 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 18 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
@@ -629,7 +629,14 @@
         </p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a>
-<a class="tool-card" data-category="apospaseis" data-search="ευρωπαϊκά σχολεία Ευρωπαϊκά Σχολεία απόσπαση αποσπάσεις μόρια μοριοδότηση συνέντευξη γλωσσομάθεια ΤΠΕ διδασκαλία" href="ypologismos-morion-apospasis-evropaika-scholeia.php"><span class="new-badge">ΝΕΟ</span><div class="card-top"><span class="tool-number">17</span><span class="category-tag orange">Αποσπάσεις</span></div><h2>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</h2><p>Υπολόγισε τα μόρια τυπικών προσόντων και εμπειρίας πριν από τη συνέντευξη και το τελικό σύνολο μετά την προφορική διαδικασία.</p><span class="button-like">Άνοιγμα εργαλείου →</span></a></section>
+<a class="tool-card" data-category="apospaseis" data-search="ευρωπαϊκά σχολεία Ευρωπαϊκά Σχολεία απόσπαση αποσπάσεις μόρια μοριοδότηση συνέντευξη γλωσσομάθεια ΤΠΕ διδασκαλία" href="ypologismos-morion-apospasis-evropaika-scholeia.php"><span class="new-badge">ΝΕΟ</span><div class="card-top"><span class="tool-number">17</span><span class="category-tag orange">Αποσπάσεις</span></div><h2>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</h2><p>Υπολόγισε τα μόρια τυπικών προσόντων και εμπειρίας πριν από τη συνέντευξη και το τελικό σύνολο μετά την προφορική διαδικασία.</p><span class="button-like">Άνοιγμα εργαλείου →</span></a>
+<a class="tool-card" data-category="asep" data-search="μετατροπή κλίμακας βαθμός πτυχίου 10βάθμια 20βάθμια 1ΓΕ 2026 1ΓΤ 2024 λεκτική ΚΑΛΩΣ ΛΙΑΝ ΚΑΛΩΣ ΑΡΙΣΤΑ ακέραιο μέρος αριθμητής παρονομαστής κλάσμα δεκαδικός" href="metatropi-klimakas.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">18</span><span class="category-tag">ΑΣΕΠ</span></div>
+<h2>Μετατροπή κλίμακας βαθμού</h2>
+<p>Μετέτρεψε βαθμό από 10βάθμια σε 20βάθμια κλίμακα ή από λεκτική μορφή και πάρε έτοιμα τα πεδία Ακέραιο μέρος – Αριθμητής – Παρονομαστής.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a></section>
 <div aria-hidden="true" class="no-results" id="noResults">
       Δεν βρέθηκε εργαλείο που να ταιριάζει στην αναζήτησή σου.
     </div>

@@ -243,6 +243,16 @@
         <span class="button-like">Άνοιγμα εργαλείου →</span>
       </a>
 
+      <a class="tool-card" href="metatropi-klimakas.php">
+        <span class="tool-number">8</span>
+        <h2>Μετατροπή κλίμακας βαθμού</h2>
+        <p>
+          Μετέτρεψε δεκαδικό ή λεκτικό βαθμό από 10βάθμια σε 20βάθμια κλίμακα
+          και πάρε έτοιμα τα πεδία Ακέραιο μέρος – Αριθμητής – Παρονομαστής.
+        </p>
+        <span class="button-like">Άνοιγμα εργαλείου →</span>
+      </a>
+
 
     </div>
 	
@@ -263,7 +273,8 @@
         <a href="dikaioma-symmetoxis.php">Έχω δικαίωμα συμμετοχής στην προκήρυξη;</a><br>
         <a href="dikaiologitika-titlon-spoudon.php">Τι δικαιολογητικά χρειάζομαι για τίτλους σπουδών;</a><br>
         <a href="dikaiologitika-tekna-anapiria.php">Δικαιολογητικά τέκνων και αναπηρίας</a><br>
-        <a href="odigos-enstasis.php">Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</a>
+        <a href="odigos-enstasis.php">Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</a><br>
+        <a href="metatropi-klimakas.php">Μετατροπή κλίμακας βαθμού</a>
       </p>
     </div>
 </div>
