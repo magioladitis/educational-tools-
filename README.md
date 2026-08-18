@@ -17,13 +17,17 @@
 7. `ypologismos-morion-onaseia.php` — Μόρια αναπληρωτή στα Δημόσια Ωνάσεια Σχολεία
 8. `ypologismos-morion-apospasis-dimos.php` — Μόρια απόσπασης στα ΔΗΜ.Ω.Σ.
 9. `ypologismos-morion-apospasis.php` — Υπολογισμός μορίων απόσπασης
-10. `ypologismos-morion-3ea-2025.php` — Υπολογισμός μορίων 3ΕΑ/2025
-11. `ypologismos-morion-4ea-2025.php` — Υπολογισμός μορίων 4ΕΑ/2025 (ΤΕ Ειδικής Αγωγής) και έλεγχος Κύριου/Επικουρικού Πίνακα
-12. `odigos-enstasis.php` — Οδηγός ένστασης 1ΓΕ/2026 & 2ΓΕ/2026
-13. `dikaiologitika-tekna-anapiria.php` — Δικαιολογητικά τέκνων & αναπηρίας
-14. `ypologismos-morion-apospasis-psifiako-frontistirio.php` — Μόρια απόσπασης στο Ψηφιακό Φροντιστήριο
-15. `ypologismos-morion-apospasis-sde.php` — Μόρια απόσπασης στα Σχολεία Δεύτερης Ευκαιρίας (ΣΔΕ) και έλεγχος αποδεκτών ειδικοτήτων
-16. `ypologismos-morion-apospasis-exoteriko.php` — Μόρια απόσπασης στο εξωτερικό και βασικός έλεγχος δικαιώματος
+10. `ypologismos-morion-1ea-2025.php` — Υπολογισμός μορίων 1ΕΑ/2025 (ΔΕ01-ΕΒΠ)
+11. `ypologismos-morion-2ea-2025.php` — Υπολογισμός μορίων 2ΕΑ/2025 (ΕΕΠ) και ενδείξεις πρόταξης
+12. `ypologismos-morion-3ea-2025.php` — Υπολογισμός μορίων 3ΕΑ/2025
+13. `ypologismos-morion-4ea-2025.php` — Υπολογισμός μορίων 4ΕΑ/2025 (ΤΕ Ειδικής Αγωγής) και έλεγχος Κύριου/Επικουρικού Πίνακα
+14. `odigos-enstasis.php` — Οδηγός ένστασης 1ΓΕ/2026 & 2ΓΕ/2026
+15. `dikaiologitika-tekna-anapiria.php` — Δικαιολογητικά τέκνων & αναπηρίας
+16. `ypologismos-morion-apospasis-psifiako-frontistirio.php` — Μόρια απόσπασης στο Ψηφιακό Φροντιστήριο
+17. `ypologismos-morion-apospasis-sde.php` — Μόρια απόσπασης στα Σχολεία Δεύτερης Ευκαιρίας (ΣΔΕ)
+18. `ypologismos-morion-apospasis-exoteriko.php` — Μόρια απόσπασης στο εξωτερικό
+19. `ypologismos-morion-apospasis-evropaika-scholeia.php` — Μόρια απόσπασης σε Ευρωπαϊκά Σχολεία
+20. `metatropi-klimakas.php` — Μετατροπή κλίμακας βαθμού
 
 Η σελίδα `asep-tools.php` λειτουργεί ως επιπλέον θεματικός κόμβος για εργαλεία ΑΣΕΠ.
 
@@ -63,8 +67,12 @@ php -l <αρχείο.php>
 ### Κοινή λογική ΤΕ
 - `includes/te-academic-calculations.js` — κοινή ακαδημαϊκή μοριοδότηση για 1ΓΤ/2024 και 4ΕΑ/2025.
 
-- `includes/social-calculations.js` — κοινή μοριοδότηση κοινωνικών κριτηρίων για 1ΓΕ/2ΓΕ, 1ΓΤ, 3ΕΑ και 4ΕΑ.
+- `includes/social-calculations.js` — κοινή μοριοδότηση κοινωνικών κριτηρίων για 1ΓΕ/2ΓΕ, 1ΓΤ και 1ΕΑ–4ΕΑ.
 - `includes/abroad-calculations.js` — μοριοδότηση και βασικός έλεγχος απόσπασης στο εξωτερικό.
 
-17. `ypologismos-morion-apospasis-evropaika-scholeia.php` — Μόρια απόσπασης σε Ευρωπαϊκά Σχολεία, με δύο στάδια αξιολόγησης.
 - `includes/european-schools-calculations.js` — υπολογισμός μορίων και βασικών προϋποθέσεων Ευρωπαϊκών Σχολείων.
+
+- `metatropi-klimakas.php`: μετατροπή βαθμού 10βάθμιας/20βάθμιας κλίμακας, δεκαδικής ή λεκτικής μορφής, με έξοδο ακέραιο μέρος/αριθμητής/παρονομαστής.
+
+## Κοινό UI
+Από την έκδοση Common UI v2, όλα τα εργαλεία μοιράζονται το ίδιο design system μέσω των `assets/common.css` και `assets/common.js`. Οι υπάρχουσες κλάσεις παραμένουν συμβατές, ενώ για νέα εργαλεία προτείνονται οι canonical `edu-*` κλάσεις που περιγράφονται στο `UI-GUIDE.md`.
