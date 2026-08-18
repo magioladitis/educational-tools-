@@ -538,10 +538,36 @@
         </p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a>
-<a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="3ΕΑ 2025 ειδική αγωγή ΕΑΕ κύριος κύριο πίνακας Β επικουρικός πίνακας μόρια ΑΣΕΠ αναπληρωτές ειδική εκπαίδευση" href="ypologismos-morion-3ea-2025.php">
+<a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="1ΕΑ 2025 ΕΒΠ ΔΕ01 ειδικό βοηθητικό προσωπικό ειδική αγωγή μόρια ΑΣΕΠ βαθμός ΙΕΚ ΕΠΑΛ προϋπηρεσία κοινωνικά κριτήρια" href="ypologismos-morion-1ea-2025.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
 <span class="tool-number">10</span>
+<span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
+</div>
+<h2>Υπολογισμός μορίων 1ΕΑ/2025</h2>
+<p>
+          Υπολόγισε τα μόρια για τον κλάδο ΔΕ01 Ειδικού Βοηθητικού Προσωπικού,
+          με διαφορετικό συντελεστή βαθμού για τίτλους δευτεροβάθμιας και ΙΕΚ/Τάξης Μαθητείας.
+        </p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
+<a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="2ΕΑ 2025 ΕΕΠ ΠΕ21 ΠΕ22 ΠΕ23 ΠΕ25 ΠΕ28 ΠΕ29 ΠΕ30 ΠΕ31 ειδικό εκπαιδευτικό προσωπικό ειδική αγωγή μόρια ΑΣΕΠ πρόταξη σχολική ψυχολογία παιδαγωγική επάρκεια Braille ΕΝΓ" href="ypologismos-morion-2ea-2025.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top">
+<span class="tool-number">11</span>
+<span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
+</div>
+<h2>Υπολογισμός μορίων 2ΕΑ/2025</h2>
+<p>
+          Υπολόγισε τα μόρια των κλάδων ΕΕΠ και δες ειδικές ενδείξεις πρόταξης
+          για Παιδαγωγική Επάρκεια, ΠΕ23 Σχολικής Ψυχολογίας, Braille και ΕΝΓ.
+        </p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
+<a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="3ΕΑ 2025 ειδική αγωγή ΕΑΕ κύριος κύριο πίνακας Β επικουρικός πίνακας μόρια ΑΣΕΠ αναπληρωτές ειδική εκπαίδευση" href="ypologismos-morion-3ea-2025.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top">
+<span class="tool-number">12</span>
 <span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
 </div>
 <h2>Υπολογισμός μορίων 3ΕΑ/2025</h2>
@@ -554,7 +580,7 @@
 <a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="4ΕΑ 2025 ειδική αγωγή ΕΑΕ ΤΕ01 ΤΕ02 ΤΕ16 κύριος κύριο πίνακας Β επικουρικός πίνακας μόρια ΑΣΕΠ αναπληρωτές τεχνική εκπαίδευση" href="ypologismos-morion-4ea-2025.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">11</span>
+<span class="tool-number">13</span>
 <span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
 </div>
 <h2>Υπολογισμός μορίων 4ΕΑ/2025</h2>
@@ -567,7 +593,7 @@
 <a class="tool-card" data-category="asep" data-search="ένσταση ενστάσεις ΑΣΕΠ 1ΓΕ 2ΓΕ 2026 προσωρινοί πίνακες προσωρινών πινάκων e-παράβολο eparavolo παράβολο 50 ευρώ 20ψήφιο 20 ψηφία κωδικός επανυποβολή ανάκληση προθεσμία countdown δικαιολογητικά" href="odigos-enstasis.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">12</span>
+<span class="tool-number">14</span>
 <span class="category-tag">ΑΣΕΠ</span>
 </div>
 <h2>Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</h2>
@@ -580,7 +606,7 @@
 <a class="tool-card" data-category="asep anaplirotes" data-search="δικαιολογητικά τέκνα αναπηρία κοινωνικά κριτήρια ΑΣΕΠ 1ΓΕ 2ΓΕ μοριοδοτούμενα τέκνα αναπηρία ιδίου συζύγου τέκνου" href="dikaiologitika-tekna-anapiria.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">13</span>
+<span class="tool-number">15</span>
 <span class="category-tag green">ΑΣΕΠ / Αναπληρωτές</span>
 </div>
 <h2>Δικαιολογητικά τέκνων &amp; αναπηρίας</h2>
@@ -593,7 +619,7 @@
 <a class="tool-card" data-category="apospaseis" data-search="ψηφιακό φροντιστήριο απόσπαση αποσπάσεις μόρια μοριοδότηση μόνιμοι εκπαιδευτικοί βιντεοσκοπημένο μάθημα συνέντευξη πανελλαδικές ΤΠΕ" href="ypologismos-morion-apospasis-psifiako-frontistirio.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">14</span>
+<span class="tool-number">16</span>
 <span class="category-tag orange">Αποσπάσεις</span>
 </div>
 <h2>Μόρια Απόσπασης στο Ψηφιακό Φροντιστήριο</h2>
@@ -606,7 +632,7 @@
 <a class="tool-card" data-category="apospaseis sde" data-search="ΣΔΕ Σχολεία Δεύτερης Ευκαιρίας απόσπαση αποσπάσεις μόρια μοριοδότηση μόνιμοι εκπαιδευτικοί γραμματισμοί ειδικότητες εκπαίδευση ενηλίκων" href="ypologismos-morion-apospasis-sde.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">15</span>
+<span class="tool-number">17</span>
 <span class="category-tag orange">ΣΔΕ / Αποσπάσεις</span>
 </div>
 <h2>Μόρια Απόσπασης στα ΣΔΕ</h2>
@@ -619,7 +645,7 @@
 <a class="tool-card" data-category="apospaseis" data-search="εξωτερικό απόσπαση αποσπάσεις εκπαιδευτικών μόρια μοριοδότηση γλωσσομάθεια βασικός πίνακας εναλλακτικός πίνακας ΔΙΠΟΔΕ ελληνόγλωσση εκπαίδευση" href="ypologismos-morion-apospasis-exoteriko.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">16</span>
+<span class="tool-number">18</span>
 <span class="category-tag orange">Αποσπάσεις</span>
 </div>
 <h2>Μόρια Απόσπασης στο Εξωτερικό</h2>
@@ -629,10 +655,10 @@
         </p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a>
-<a class="tool-card" data-category="apospaseis" data-search="ευρωπαϊκά σχολεία Ευρωπαϊκά Σχολεία απόσπαση αποσπάσεις μόρια μοριοδότηση συνέντευξη γλωσσομάθεια ΤΠΕ διδασκαλία" href="ypologismos-morion-apospasis-evropaika-scholeia.php"><span class="new-badge">ΝΕΟ</span><div class="card-top"><span class="tool-number">17</span><span class="category-tag orange">Αποσπάσεις</span></div><h2>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</h2><p>Υπολόγισε τα μόρια τυπικών προσόντων και εμπειρίας πριν από τη συνέντευξη και το τελικό σύνολο μετά την προφορική διαδικασία.</p><span class="button-like">Άνοιγμα εργαλείου →</span></a>
+<a class="tool-card" data-category="apospaseis" data-search="ευρωπαϊκά σχολεία Ευρωπαϊκά Σχολεία απόσπαση αποσπάσεις μόρια μοριοδότηση συνέντευξη γλωσσομάθεια ΤΠΕ διδασκαλία" href="ypologismos-morion-apospasis-evropaika-scholeia.php"><span class="new-badge">ΝΕΟ</span><div class="card-top"><span class="tool-number">19</span><span class="category-tag orange">Αποσπάσεις</span></div><h2>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</h2><p>Υπολόγισε τα μόρια τυπικών προσόντων και εμπειρίας πριν από τη συνέντευξη και το τελικό σύνολο μετά την προφορική διαδικασία.</p><span class="button-like">Άνοιγμα εργαλείου →</span></a>
 <a class="tool-card" data-category="asep" data-search="μετατροπή κλίμακας βαθμός πτυχίου 10βάθμια 20βάθμια 1ΓΕ 2026 1ΓΤ 2024 λεκτική ΚΑΛΩΣ ΛΙΑΝ ΚΑΛΩΣ ΑΡΙΣΤΑ ακέραιο μέρος αριθμητής παρονομαστής κλάσμα δεκαδικός" href="metatropi-klimakas.php">
 <span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">18</span><span class="category-tag">ΑΣΕΠ</span></div>
+<div class="card-top"><span class="tool-number">20</span><span class="category-tag">ΑΣΕΠ</span></div>
 <h2>Μετατροπή κλίμακας βαθμού</h2>
 <p>Μετέτρεψε βαθμό από 10βάθμια σε 20βάθμια κλίμακα ή από λεκτική μορφή και πάρε έτοιμα τα πεδία Ακέραιο μέρος – Αριθμητής – Παρονομαστής.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
