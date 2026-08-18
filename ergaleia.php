@@ -392,7 +392,7 @@
   </style>
 <link href="assets/common.css" rel="stylesheet"/>
 </head>
-<body>
+<body class="edu-ui">
 <main class="page-shell">
 <section class="hero">
 <span class="hero-kicker">ΔΩΡΕΑΝ ΕΡΓΑΛΕΙΑ ΓΙΑ ΕΚΠΑΙΔΕΥΤΙΚΟΥΣ</span>
@@ -744,5 +744,6 @@
     })();
   </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

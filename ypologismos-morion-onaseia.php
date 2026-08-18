@@ -265,16 +265,17 @@
   </style>
   <link rel="stylesheet" href="assets/common.css">
 </head>
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
-<div class="app-box">
-  <h1>Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία</h1>
-
-  <p class="intro">
+<div class="app-box edu-modernized">
+  <section class="hero edu-legacy-hero">
+<h1>Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία</h1>
+<p class="intro">
     Σχολικό έτος <strong>2026-2027</strong>. Ο υπολογισμός βασίζεται στα ακαδημαϊκά προσόντα
     του πίνακα Α.Σ.Ε.Π. και στην αναγνωρισμένη προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία.
   </p>
+</section>
 
   <div class="important">
     <strong>Τύπος υπολογισμού:</strong><br>
@@ -751,5 +752,6 @@
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

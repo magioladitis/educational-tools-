@@ -11,7 +11,7 @@
 </style>
 <link rel="stylesheet" href="assets/common.css">
 </head>
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app">
 <section class="hero">
@@ -78,5 +78,6 @@ function summary(r){return`Υπολογισμός μορίων 1ΕΑ/2025 — Δ
 document.addEventListener('input',render);document.addEventListener('change',render);$('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});$('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=x.id==='degreeGrade'?'':'0');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);render();});render();})();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

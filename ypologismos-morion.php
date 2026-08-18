@@ -216,16 +216,17 @@
   <link rel="stylesheet" href="assets/common.css">
 </head>
 
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
-<div class="app-box">
+<div class="app-box edu-modernized">
+<section class="hero edu-legacy-hero">
 <h1>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</h1>
-
-  <p class="intro">
+<p class="intro">
     Συμπλήρωσε τα στοιχεία σου για έναν <strong>ενδεικτικό</strong> υπολογισμό μορίων
     στους αξιολογικούς πίνακες Γενικής Εκπαίδευσης.
   </p>
+</section>
 
   <div class="section">
     <h2>Κλάδος / ειδικότητα</h2>
@@ -808,5 +809,6 @@
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

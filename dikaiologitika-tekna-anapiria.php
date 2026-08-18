@@ -30,11 +30,13 @@ button:hover{background:#1558c0}
 </style>
   <link rel="stylesheet" href="assets/common.css">
 </head>
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
-<div class="app-box">
+<div class="app-box edu-modernized">
+<section class="hero edu-legacy-hero">
 <h1>Οδηγός δικαιολογητικών τέκνων και αναπηρίας</h1>
 <p class="intro">Ενδεικτικός οδηγός για τα κοινωνικά κριτήρια, διαμορφωμένος σύμφωνα με τα τέσσερα σχετικά πεδία της πλατφόρμας: <strong>Μοριοδοτούμενα Τέκνα</strong>, <strong>Αναπηρία Ιδίου</strong>, <strong>Αναπηρία Τέκνου</strong> και <strong>Αναπηρία Συζύγου</strong>.</p>
+</section>
 
 <div class="question">
 <label for="criterion">Ποιο πεδίο της πλατφόρμας θέλεις να ελέγξεις;</label>
@@ -377,5 +379,6 @@ function showDocuments(){
 }
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

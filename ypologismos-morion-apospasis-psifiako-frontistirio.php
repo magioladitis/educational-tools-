@@ -105,7 +105,7 @@
   </style>
   <link rel="stylesheet" href="assets/common.css">
 </head>
-<body>
+<body class="edu-ui">
   <main class="page-shell">
     <?php require_once __DIR__ . '/includes/header.php'; ?>
 
@@ -421,5 +421,6 @@
   calculate();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

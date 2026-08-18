@@ -58,11 +58,13 @@ button:disabled{background:#aaa;cursor:not-allowed}
 </style>
 <link rel="stylesheet" href="assets/common.css">
 </head>
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
-<div class="app-box">
-  <h1>Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</h1>
-  <p class="intro">Γρήγορος, διαδραστικός οδηγός για την υποβολή ένστασης κατά των προσωρινών πινάκων εκπαιδευτικών.</p>
+<div class="app-box edu-modernized">
+  <section class="hero edu-legacy-hero">
+<h1>Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</h1>
+<p class="intro">Γρήγορος, διαδραστικός οδηγός για την υποβολή ένστασης κατά των προσωρινών πινάκων εκπαιδευτικών.</p>
+</section>
 
   <div class="deadline-card">
     <strong>📅 Προθεσμία ενστάσεων</strong>
@@ -493,5 +495,6 @@ updateResubmissionInfo();
 updateParavoloUI();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

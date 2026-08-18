@@ -411,18 +411,19 @@
   <link rel="stylesheet" href="assets/common.css">
 </head>
 
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
-<div class="app-box">
+<div class="app-box edu-modernized">
+<section class="hero edu-legacy-hero">
 <h1>Υπολογισμός μορίων απόσπασης εκπαιδευτικών</h1>
-
-  <p class="intro">
+<p class="intro">
     Υπολόγισε <strong>ενδεικτικά</strong> τα μόριά σου για απόσπαση
     <strong>από ΠΥΣΠΕ/ΠΥΣΔΕ σε ΠΥΣΠΕ/ΠΥΣΔΕ</strong>.
     Ορισμένα κριτήρια εξαρτώνται από τη συγκεκριμένη περιοχή που ζητάς,
     γι’ αυτό ο υπολογισμός πρέπει να γίνεται χωριστά για κάθε περιοχή ενδιαφέροντος.
   </p>
+</section>
 
   <div class="official-note">
     <strong>Βάση υπολογισμού:</strong> Εγκύκλιος Υ.ΠΑΙ.Θ.Α. 41297/Ε2/02-04-2026
@@ -1132,5 +1133,6 @@
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

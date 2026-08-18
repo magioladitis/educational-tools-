@@ -192,7 +192,7 @@
   </style>
   <link rel="stylesheet" href="assets/common.css">
 </head>
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app">
 <section class="hero">
@@ -636,5 +636,6 @@
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

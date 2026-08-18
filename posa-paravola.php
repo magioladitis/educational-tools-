@@ -185,13 +185,16 @@
   <link rel="stylesheet" href="assets/common.css">
 </head>
 
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
-  <div class="app-box">
+  <div class="app-box edu-modernized">
+<section class="hero edu-legacy-hero">
 <h1>Μάθε σε ποια προκήρυξη μπορείς να συμμετέχεις και πόσα παράβολα χρειάζεσαι</h1>
-    <p>Επίλεξε την 1η ειδικότητα και, προαιρετικά, τη 2η ειδικότητα. Το αποτέλεσμα ενημερώνεται αυτόματα.</p>
+<p>Επίλεξε την 1η ειδικότητα και, προαιρετικά, τη 2η ειδικότητα. Το αποτέλεσμα ενημερώνεται αυτόματα.</p>
+</section>
 
+    <section class="card edu-legacy-main-card">
     <div class="paravolo-rule">
       ℹ️ Το παράβολο υπολογίζεται <strong>ανά προκήρυξη και όχι ανά ειδικότητα</strong>.
       Αν δύο ειδικότητες ανήκουν στην ίδια προκήρυξη, χρειάζεται ένα μόνο παράβολο.
@@ -257,6 +260,7 @@
     </p>
   </div>
 </details>
+    </section>
   </div>
 
   <script>
@@ -416,5 +420,6 @@
   </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

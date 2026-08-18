@@ -57,11 +57,13 @@ input:focus,select:focus{border-color:var(--blue)}
 </style>
 <link rel="stylesheet" href="assets/common.css">
 </head>
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
-<div class="app-box">
-  <h1>Μετατροπή κλίμακας βαθμού πτυχίου</h1>
-  <p class="intro">Μετατροπή από 10βάθμια σε 20βάθμια κλίμακα και από δεκαδική ή λεκτική μορφή στα πεδία <strong>Ακέραιο μέρος – Αριθμητής – Παρονομαστής</strong>.</p>
+<div class="app-box edu-modernized">
+  <section class="hero edu-legacy-hero">
+<h1>Μετατροπή κλίμακας βαθμού πτυχίου</h1>
+<p class="intro">Μετατροπή από 10βάθμια σε 20βάθμια κλίμακα και από δεκαδική ή λεκτική μορφή στα πεδία <strong>Ακέραιο μέρος – Αριθμητής – Παρονομαστής</strong>.</p>
+</section>
 
   <div class="notice">
     <strong>⚠️ Προσοχή στη διαφορετική κλίμακα:</strong><br>
@@ -292,5 +294,6 @@ input:focus,select:focus{border-color:var(--blue)}
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

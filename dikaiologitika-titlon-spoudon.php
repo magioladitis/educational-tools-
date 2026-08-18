@@ -163,16 +163,17 @@
   <link rel="stylesheet" href="assets/common.css">
 </head>
 
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
-<div class="app-box">
+<div class="app-box edu-modernized">
+<section class="hero edu-legacy-hero">
 <h1>Τι δικαιολογητικά χρειάζομαι για τίτλους σπουδών;</h1>
-
-  <p class="intro">
+<p class="intro">
     Το εργαλείο παρέχει <strong>ενδεικτική</strong> καθοδήγηση για μεταπτυχιακούς τίτλους,
     διδακτορικά διπλώματα, integrated master και τίτλους σπουδών της αλλοδαπής.
   </p>
+</section>
 
   <div class="question">
     <label for="titleType">Τι θέλεις να δηλώσεις;</label>
@@ -720,5 +721,6 @@
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

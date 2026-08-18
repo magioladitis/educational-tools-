@@ -11,7 +11,7 @@
 </style>
 <link rel="stylesheet" href="assets/common.css">
 </head>
-<body>
+<body class="edu-ui">
 <main class="page-shell">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <section class="hero">
@@ -78,5 +78,6 @@ async function copySummary(){const r=calculate(),p=EuropeanSchools.POSITIONS_202
 function reset(){document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('input[type="number"]').forEach(x=>x.value='');document.querySelectorAll('input[type="text"]').forEach(x=>x.value='');document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);['higherEducationSemesters','innovativePrograms','universityTrainingCount','ministryTrainingHours','publicAdminTrainingHours','eapAnnualUnits','eapSemesterUnits'].forEach(id=>$(id).value='0');['hostLanguageLevel','secondWorkingLevel','thirdWorkingLevel','otherEULevel'].forEach(id=>$(id).value='none');calculate();$('position').focus()}
 ids.forEach(id=>{const e=$(id);if(e){e.addEventListener('input',calculate);e.addEventListener('change',calculate)}});$('copyBtn').addEventListener('click',copySummary);$('resetBtn').addEventListener('click',reset);calculate();})();
 </script>
+  <script src="assets/common.js"></script>
 </body>
 </html>

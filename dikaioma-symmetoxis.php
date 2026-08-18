@@ -214,17 +214,18 @@
   <link rel="stylesheet" href="assets/common.css">
 </head>
 
-<body>
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
-<div class="app-box">
+<div class="app-box edu-modernized">
+<section class="hero edu-legacy-hero">
 <h1>Έχω δικαίωμα συμμετοχής στις προκηρύξεις 1ΓΕ/2026 &amp; 2ΓΕ/2026;</h1>
-
 <p class="intro">
   Το παρόν εργαλείο παρέχει έναν ενδεικτικό έλεγχο των γενικών προϋποθέσεων συμμετοχής
   στις <a href="https://search.et.gr/el/fek/?fekId=798251">1ΓΕ/2026</a> και <a href="https://search.et.gr/el/fek/?fekId=798194">2ΓΕ/2026</a> και δεν αντικαθιστά την επίσημη προκήρυξη του Α.Σ.Ε.Π. ούτε την προσωπική ευθύνη
   του/της υποψηφίου/ας για την ορθή υποβολή της αίτησης.
 </p>
+</section>
   <p class="intro">
     Απάντησε στις παρακάτω ερωτήσεις για έναν ενδεικτικό έλεγχο των γενικών προϋποθέσεων συμμετοχής.
   </p>
@@ -752,5 +753,6 @@
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="assets/common.js"></script>
 </body>
 </html>

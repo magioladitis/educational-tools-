@@ -63,3 +63,17 @@
 ```
 
 Το `header.php` και το `footer.php` παραμένουν κοινά για όλο το project.
+
+
+## Visual consistency rule (v3)
+
+The goal is **structural consistency, not identical colours**. A tool may keep its own accent palette (for example the SDE calculator), but pages should share the same visual grammar:
+
+1. Hero/title area at the top.
+2. White section cards with clear headings.
+3. Consistent fields, spacing and focus states.
+4. Semantic info/warning/success/danger messages.
+5. A clearly separated result/total area.
+6. Secondary actions (reset/copy/print) presented consistently.
+
+`ypologismos-morion-1gt-2024.php` is the reference for layout density and card hierarchy. Legacy `.app-box` tools use the `edu-modernized` compatibility layer so they can move toward this structure without rewriting their calculation logic.

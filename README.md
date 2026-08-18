@@ -76,3 +76,7 @@ php -l <αρχείο.php>
 
 ## Κοινό UI
 Από την έκδοση Common UI v2, όλα τα εργαλεία μοιράζονται το ίδιο design system μέσω των `assets/common.css` και `assets/common.js`. Οι υπάρχουσες κλάσεις παραμένουν συμβατές, ενώ για νέα εργαλεία προτείνονται οι canonical `edu-*` κλάσεις που περιγράφονται στο `UI-GUIDE.md`.
+
+
+### Common UI v3
+The common UI now standardises the **structure** of older tools (hero, cards, fields, results and actions) while allowing each tool to retain its own colour identity. Ten legacy `app-box` pages were upgraded through the `edu-modernized` compatibility layer.
