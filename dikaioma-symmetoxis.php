@@ -89,6 +89,82 @@
       background: #1558c0;
     }
 
+    .progress-panel {
+      margin: 0 0 22px;
+      padding: 14px;
+      border: 1px solid #d8e2f2;
+      border-radius: 10px;
+      background: #f7faff;
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #174ea6;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #dfe7f3;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: #1f6feb;
+      transition: width .2s ease;
+    }
+
+    .question.has-impediment {
+      border-color: #e4a09a;
+      background: #fff8f7;
+    }
+
+    .inline-impediment {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #fdecea;
+      color: #b3261e;
+      font-weight: bold;
+      line-height: 1.45;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: stretch;
+      margin-top: 20px;
+    }
+
+    .button-row button {
+      margin-top: 0;
+    }
+
+    .reset-button {
+      width: auto;
+      min-width: 130px;
+      background: #6b7280;
+    }
+
+    .reset-button:hover {
+      background: #4b5563;
+    }
+
+    @media(max-width:620px) {
+      .button-row { grid-template-columns: 1fr; }
+      .reset-button { width: 100%; }
+    }
+
     .result {
       margin-top: 24px;
       padding: 18px;
@@ -152,6 +228,16 @@
   <p class="intro">
     Απάντησε στις παρακάτω ερωτήσεις για έναν ενδεικτικό έλεγχο των γενικών προϋποθέσεων συμμετοχής.
   </p>
+
+  <div class="progress-panel" aria-live="polite">
+    <div class="progress-head">
+      <span>Πρόοδος συμπλήρωσης</span>
+      <span id="progressText">0/14 απαντήσεις</span>
+    </div>
+    <div class="progress-track" aria-hidden="true">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+  </div>
 
 	<div class="question">
 	  <label for="birthYear">Έτος γέννησης υποψηφίου/ας</label>
@@ -311,7 +397,10 @@
     </select>
   </div>
 
-  <button type="button" onclick="checkEligibility()">Έλεγχος δικαιώματος συμμετοχής</button>
+  <div class="button-row">
+    <button type="button" onclick="checkEligibility()">Έλεγχος δικαιώματος συμμετοχής</button>
+    <button type="button" class="reset-button" onclick="resetForm()">Μηδενισμός</button>
+  </div>
 
   <div id="result" class="result" role="status" aria-live="polite"></div>
 
@@ -332,6 +421,149 @@
     result.className = "result " + cssClass;
     result.innerHTML = message;
   }
+
+  const fieldIds = [
+    "birthYear",
+    "citizenship",
+    "health",
+    "qualifications",
+    "dismissed",
+    "criminal",
+    "convictionImpediment",
+    "indictmentImpediment",
+    "civilRightsOrSupport",
+    "commercial",
+    "politicalOffice",
+    "publicFullTime",
+    "privateEducation",
+    "military"
+  ];
+
+  const immediateImpediments = {
+    citizenship: {
+      value: "not_eligible",
+      message: "⚠️ Η συγκεκριμένη απάντηση δεν πληροί την προϋπόθεση ιθαγένειας / ειδικής κατηγορίας υποψηφίου/ας."
+    },
+    health: {
+      value: "no",
+      message: "⚠️ Η συγκεκριμένη απάντηση αποτελεί κώλυμα, επειδή δηλώθηκε ότι δεν υπάρχει η απαιτούμενη υγεία για την εκτέλεση των καθηκόντων."
+    },
+    qualifications: {
+      value: "no",
+      message: "⚠️ Η συγκεκριμένη απάντηση αποτελεί κώλυμα, επειδή δηλώθηκε ότι δεν κατέχονται τα απαιτούμενα προσόντα της ειδικότητας."
+    },
+    dismissed: {
+      value: "yes",
+      message: "⚠️ Δηλώθηκε απόλυση που, σύμφωνα με τα κριτήρια του εργαλείου, δημιουργεί κώλυμα συμμετοχής."
+    },
+    criminal: {
+      value: "yes",
+      message: "⚠️ Δηλώθηκε ποινική δίωξη ή καταδίκη για αδικήματα που αποτελούν κώλυμα."
+    },
+    convictionImpediment: {
+      value: "yes",
+      message: "⚠️ Δηλώθηκε καταδίκη που, σύμφωνα με τα κριτήρια του εργαλείου, αποτελεί κώλυμα διορισμού."
+    },
+    indictmentImpediment: {
+      value: "yes",
+      message: "⚠️ Δηλώθηκε παραπομπή με τελεσίδικο βούλευμα που, σύμφωνα με τα κριτήρια του εργαλείου, αποτελεί κώλυμα διορισμού."
+    },
+    civilRightsOrSupport: {
+      value: "yes",
+      message: "⚠️ Δηλώθηκε στέρηση πολιτικών δικαιωμάτων ή δικαστική συμπαράσταση, που αποτελεί κώλυμα σύμφωνα με τα κριτήρια του εργαλείου."
+    }
+  };
+
+  function setInlineWarning(field, message) {
+    const question = field.closest(".question");
+    if (!question) return;
+
+    let warning = question.querySelector(".inline-impediment");
+    if (!warning) {
+      warning = document.createElement("div");
+      warning.className = "inline-impediment";
+      warning.setAttribute("role", "alert");
+      question.appendChild(warning);
+    }
+
+    if (message) {
+      question.classList.add("has-impediment");
+      warning.textContent = message;
+      warning.style.display = "block";
+    } else {
+      question.classList.remove("has-impediment");
+      warning.textContent = "";
+      warning.style.display = "none";
+    }
+  }
+
+  function updateProgress() {
+    const answered = fieldIds.filter(id => String(valueOf(id)).trim() !== "").length;
+    const total = fieldIds.length;
+    document.getElementById("progressText").textContent = `${answered}/${total} απαντήσεις`;
+    document.getElementById("progressFill").style.width = `${(answered / total) * 100}%`;
+  }
+
+  function updateImmediateWarning(field) {
+    const id = field.id;
+
+    if (id === "birthYear") {
+      const raw = field.value.trim();
+      if (!raw) {
+        setInlineWarning(field, "");
+        return;
+      }
+
+      const birthYear = parseInt(raw, 10);
+      if (birthYear < 1900 || birthYear > 2026) {
+        setInlineWarning(field, "⚠️ Συμπλήρωσε έγκυρο έτος γέννησης.");
+      } else if (birthYear < 1959 || birthYear > 2005) {
+        setInlineWarning(field, "⚠️ Με βάση το ηλικιακό κριτήριο του εργαλείου για το 2026, το αποδεκτό εύρος γέννησης είναι 1959–2005.");
+      } else {
+        setInlineWarning(field, "");
+      }
+      return;
+    }
+
+    const rule = immediateImpediments[id];
+    if (rule && field.value === rule.value) {
+      setInlineWarning(field, rule.message);
+    } else {
+      setInlineWarning(field, "");
+    }
+  }
+
+  function updateFormState(event) {
+    const field = event.target;
+    updateProgress();
+    updateImmediateWarning(field);
+
+    // Αποφεύγουμε να μένει στην οθόνη παλιό αποτέλεσμα μετά από αλλαγή απάντησης.
+    const result = document.getElementById("result");
+    result.style.display = "none";
+    result.innerHTML = "";
+  }
+
+  function resetForm() {
+    fieldIds.forEach(id => {
+      const field = document.getElementById(id);
+      field.value = "";
+      setInlineWarning(field, "");
+    });
+
+    const result = document.getElementById("result");
+    result.style.display = "none";
+    result.innerHTML = "";
+    updateProgress();
+    document.getElementById("birthYear").focus();
+  }
+
+  fieldIds.forEach(id => {
+    const field = document.getElementById(id);
+    field.addEventListener(field.tagName === "SELECT" ? "change" : "input", updateFormState);
+  });
+
+  updateProgress();
 
   function checkEligibility() {
     const birthYear = parseInt(valueOf("birthYear"), 10);

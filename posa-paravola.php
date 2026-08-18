@@ -77,6 +77,29 @@
       background: #1558c0;
     }
 
+    .paravolo-rule {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 9px;
+      background: #eef4ff;
+      border: 1px solid #cbdaf5;
+      color: #174ea6;
+      font-weight: bold;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    .duplicate-warning {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #fdecea;
+      color: #b3261e;
+      font-weight: bold;
+      line-height: 1.45;
+    }
+
     .result {
       margin-top: 22px;
       padding: 16px;
@@ -167,7 +190,12 @@
 
   <div class="app-box">
 <h1>Μάθε σε ποια προκήρυξη μπορείς να συμμετέχεις και πόσα παράβολα χρειάζεσαι</h1>
-    <p>  Επίλεξε την 1η ειδικότητα και, προαιρετικά, τη 2η ειδικότητα.</p>
+    <p>Επίλεξε την 1η ειδικότητα και, προαιρετικά, τη 2η ειδικότητα. Το αποτέλεσμα ενημερώνεται αυτόματα.</p>
+
+    <div class="paravolo-rule">
+      ℹ️ Το παράβολο υπολογίζεται <strong>ανά προκήρυξη και όχι ανά ειδικότητα</strong>.
+      Αν δύο ειδικότητες ανήκουν στην ίδια προκήρυξη, χρειάζεται ένα μόνο παράβολο.
+    </div>
 
     <label for="specialty1">1η ειδικότητα</label>
     <select id="specialty1">
@@ -179,8 +207,7 @@
 	  <option value="">-- Δεν έχω 2η ειδικότητα --</option>
 	</select>
 
-    <button type="button" onclick="calculateParavola()">Υπολογισμός</button>
-
+    <div id="duplicateWarning" class="duplicate-warning" role="alert"></div>
     <div id="result" class="result" role="status" aria-live="polite"></div>
 <details class="instructions-box">
   <summary>Οδηγίες για την έκδοση και πληρωμή παραβόλου</summary>
@@ -290,6 +317,33 @@
     fillSelect("specialty1");
     fillSelect("specialty2");
 
+    const specialty1Select = document.getElementById("specialty1");
+    const specialty2Select = document.getElementById("specialty2");
+    const duplicateWarning = document.getElementById("duplicateWarning");
+
+    function updateDuplicateProtection() {
+      const specialty1 = specialty1Select.value;
+      const specialty2 = specialty2Select.value;
+
+      [...specialty2Select.options].forEach(option => {
+        option.disabled = Boolean(specialty1 && option.value === specialty1);
+      });
+
+      if (specialty1 && specialty2 && specialty1 === specialty2) {
+        specialty2Select.value = "";
+        duplicateWarning.textContent = "Η ίδια ειδικότητα δεν μπορεί να επιλεγεί δύο φορές. Η 2η επιλογή αφαιρέθηκε αυτόματα.";
+        duplicateWarning.style.display = "block";
+      } else {
+        duplicateWarning.style.display = "none";
+        duplicateWarning.textContent = "";
+      }
+
+      calculateParavola();
+    }
+
+    specialty1Select.addEventListener("change", updateDuplicateProtection);
+    specialty2Select.addEventListener("change", updateDuplicateProtection);
+
     function getGroup(code) {
       if (group1.includes(code)) return 1;
       if (group2.includes(code)) return 2;
@@ -308,14 +362,15 @@
 	  const specialty2 = document.getElementById("specialty2").value;
 	  const result = document.getElementById("result");
 
-	  result.style.display = "block";
 	  result.className = "result";
 
 	  if (!specialty1) {
-		result.textContent = "Παρακαλώ επίλεξε τουλάχιστον την 1η ειδικότητα.";
-		result.classList.add("error");
+        result.style.display = "none";
+        result.innerHTML = "";
 		return;
 	  }
+
+      result.style.display = "block";
 
 	  const selectedSpecialties = [specialty1];
 
@@ -346,7 +401,10 @@
 		  Χρειάζεσαι <strong>${paravolaText}</strong>.<br>
 		  Κάθε παράβολο έχει αξία <strong>15 ευρώ</strong>.<br>
 		  Συνολικό κόστος: <strong>${totalCost} ευρώ</strong>.<br><br>
-		  ${proclamationText}
+		  ${proclamationText}<br><br>
+          <span style="font-size:15px;font-weight:normal;line-height:1.45;display:block;">
+            Το παράβολο είναι <strong>ανά προκήρυξη, όχι ανά ειδικότητα</strong>.
+          </span>
 		`;
 
 	  if (paravolaCount === 1) {
