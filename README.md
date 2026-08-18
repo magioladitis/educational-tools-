@@ -19,7 +19,7 @@
 9. `ypologismos-morion-apospasis.php` — Υπολογισμός μορίων απόσπασης
 10. `ypologismos-morion-3ea-2025.php` — Υπολογισμός μορίων 3ΕΑ/2025
 11. `ypologismos-morion-4ea-2025.php` — Υπολογισμός μορίων 4ΕΑ/2025 (ΤΕ Ειδικής Αγωγής) και έλεγχος Κύριου/Επικουρικού Πίνακα
-12. `odigos-enstasis.php` — Οδηγός ένστασης ΑΣΕΠ
+12. `odigos-enstasis.php` — Οδηγός ένστασης 1ΓΕ/2026 & 2ΓΕ/2026
 13. `dikaiologitika-tekna-anapiria.php` — Δικαιολογητικά τέκνων & αναπηρίας
 14. `ypologismos-morion-apospasis-psifiako-frontistirio.php` — Μόρια απόσπασης στο Ψηφιακό Φροντιστήριο
 15. `ypologismos-morion-apospasis-sde.php` — Μόρια απόσπασης στα Σχολεία Δεύτερης Ευκαιρίας (ΣΔΕ) και έλεγχος αποδεκτών ειδικοτήτων

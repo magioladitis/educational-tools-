@@ -235,7 +235,7 @@
 
       <a class="tool-card" href="odigos-enstasis.php">
         <span class="tool-number">7</span>
-        <h2>Οδηγός ένστασης ΑΣΕΠ</h2>
+        <h2>Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</h2>
         <p>
           Γρήγορος οδηγός για ένσταση κατά προσωρινών πινάκων, παράβολο 50€,
           βασική τεκμηρίωση και προθεσμίες.
@@ -263,7 +263,7 @@
         <a href="dikaioma-symmetoxis.php">Έχω δικαίωμα συμμετοχής στην προκήρυξη;</a><br>
         <a href="dikaiologitika-titlon-spoudon.php">Τι δικαιολογητικά χρειάζομαι για τίτλους σπουδών;</a><br>
         <a href="dikaiologitika-tekna-anapiria.php">Δικαιολογητικά τέκνων και αναπηρίας</a><br>
-        <a href="odigos-enstasis.php">Οδηγός ένστασης ΑΣΕΠ</a>
+        <a href="odigos-enstasis.php">Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</a>
       </p>
     </div>
 </div>
