@@ -63,7 +63,7 @@
 </main><aside class="results">
 <section class="card"><h2>Αποτέλεσμα</h2><div class="total"><div class="num" id="totalPoints">0,00</div><div class="label">συνολικά μόρια</div></div><div class="result-row"><span>Βαθμός τίτλου</span><strong id="degreePoints">0,00</strong></div><div class="result-row"><span>Ακαδημαϊκά</span><strong id="academicPoints">0,00</strong></div><div class="result-row"><span>Προϋπηρεσία</span><strong id="servicePoints">0,00</strong></div><div class="result-row"><span>Κοινωνικά</span><strong id="socialPoints">0,00</strong></div><div class="result-row"><span>Όριο ακαδημαϊκών</span><strong id="academicCap">64</strong></div><div id="priorityBox" class="priority">Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ</div><div class="actions"><button type="button" id="copyBtn">Αντιγραφή</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div></section>
 </aside></div>
-<div class="source"><strong>Βάση υπολογισμού:</strong> Προκήρυξη ΑΣΕΠ 1ΕΑ/2025, Κεφάλαιο Γ΄ — κριτήρια αξιολογικού πίνακα Γ2΄ ΕΒΠ. Το εργαλείο είναι βοηθητικό και δεν υποκαθιστά τον επίσημο έλεγχο ΑΣΕΠ/ΟΠΣΥΔ.</div>
+<div class="source"><strong>Πηγές / Νομική βάση:</strong><br><strong>Βάση υπολογισμού:</strong> Προκήρυξη ΑΣΕΠ 1ΕΑ/2025, Κεφάλαιο Γ΄ — κριτήρια αξιολογικού πίνακα Γ2΄ ΕΒΠ. Το εργαλείο είναι βοηθητικό και δεν υποκαθιστά τον επίσημο έλεγχο ΑΣΕΠ/ΟΠΣΥΔ.</div>
 <div class="credits">Εργαλείο υπολογισμού μορίων · 1ΕΑ/2025</div>
 </div>
 <script src="includes/service-calculations.js"></script>

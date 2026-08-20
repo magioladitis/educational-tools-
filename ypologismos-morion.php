@@ -1038,6 +1038,13 @@
   }
 </script>
 
+
+<section class="edu-source-card" aria-labelledby="sourcesTitle">
+  <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+  <p>Προκηρύξεις Α.Σ.Ε.Π. <strong>1ΓΕ/2026</strong> (ΦΕΚ 21/29.04.2026) και <strong>2ΓΕ/2026</strong> (ΦΕΚ 22/29.04.2026), ιδίως το Κεφάλαιο Γ΄ «Κριτήρια Κατάταξης». Η τελική μοριοδότηση προκύπτει από τον επίσημο έλεγχο της αίτησης και των δικαιολογητικών.</p>
+  <p class="source-links"><a href="https://info.asep.gr/node/78700" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 — ΑΣΕΠ ↗</a> · <a href="https://info.asep.gr/node/78701" target="_blank" rel="noopener noreferrer">2ΓΕ/2026 — ΑΣΕΠ ↗</a></p>
+</section>
+
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="assets/common.js"></script>
 </body>

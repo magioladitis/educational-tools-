@@ -751,6 +751,13 @@
   updateAcademicMode();
 </script>
 
+
+<section class="edu-source-card" aria-labelledby="sourcesTitle">
+  <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+  <p>Προκήρυξη της Διοικούσας Επιτροπής Δημοσίων Ωνασείων Σχολείων για τη διαδικασία κατάταξης εκπαιδευτικών Δευτεροβάθμιας Εκπαίδευσης και την πλήρωση κενών θέσεων θητείας στα ΔΗΜ.Ω.Σ. για το 2026. Για τα ακαδημαϊκά κριτήρια που αντλούνται από τους πίνακες Α.Σ.Ε.Π. χρησιμοποιούνται και οι κανόνες των 1ΓΕ/2026–2ΓΕ/2026.</p>
+  <p class="source-links"><a href="https://www.minedu.gov.gr/news?catid=1183&id=63940%3A30-01-26-prokiryksi-diadikasias-katataksis-ekpaideftikon-vvathmias-ekpaidefsis-me-seira-proteraiotitas-kata-klado-kai-eidikotita-ypopsifion-gia-tin-plirosi-kenon-theseon-thiteias-sta-dimosia-onaseia-sxoleia&view=article" target="_blank" rel="noopener noreferrer">Επίσημη προκήρυξη ΔΗΜ.Ω.Σ. — ΥΠΑΙΘΑ ↗</a> · <a href="https://info.asep.gr/node/78737" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 &amp; 2ΓΕ/2026 — ΑΣΕΠ ↗</a></p>
+</section>
+
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="assets/common.js"></script>
 </body>

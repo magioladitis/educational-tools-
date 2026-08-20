@@ -678,6 +678,13 @@
       calc();
     })();
   </script>
+
+<section class="edu-source-card" aria-labelledby="sourcesTitle">
+  <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+  <p><strong>28/ΔΕΔΗΜΩΣ/26-06-2026</strong>, «Πρόσκληση εκδήλωσης ενδιαφέροντος για πλήρωση λειτουργικών κενών στα Δημόσια Ωνάσεια Σχολεία με απόσπαση μόνιμων εκπαιδευτικών Δ.Ε. διάρκειας ενός διδακτικού έτους, 2026-2027» (ΑΔΑ: Ρ0ΦΛ46ΝΚΠΔ-Σ02). Η διαδικασία παραπέμπει επίσης στις Υ.Α. 81473/Δ6/03-07-2025 (Β΄ 3528) και 169485/Δ6/30-12-2025 (Β΄ 7259), όπως ισχύουν.</p>
+  <p class="source-links"><a href="https://www.minedu.gov.gr/news/65393-29-06-26-prosklisi-apospaseon-sta-dimos" target="_blank" rel="noopener noreferrer">Επίσημη πρόσκληση — ΥΠΑΙΘΑ ↗</a> · <a href="https://apps.espa.minedu.gov.gr/apospaseisdimos/" target="_blank" rel="noopener noreferrer">Επίσημη πλατφόρμα αιτήσεων ↗</a></p>
+</section>
+
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="assets/common.js"></script>
 </body>

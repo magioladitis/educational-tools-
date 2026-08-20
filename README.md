@@ -26,8 +26,9 @@
 16. `ypologismos-morion-apospasis-psifiako-frontistirio.php` — Μόρια απόσπασης στο Ψηφιακό Φροντιστήριο
 17. `ypologismos-morion-apospasis-sde.php` — Μόρια απόσπασης στα Σχολεία Δεύτερης Ευκαιρίας (ΣΔΕ)
 18. `ypologismos-morion-apospasis-exoteriko.php` — Μόρια απόσπασης στο εξωτερικό
-19. `ypologismos-morion-apospasis-evropaika-scholeia.php` — Μόρια απόσπασης σε Ευρωπαϊκά Σχολεία
+19. `ypologismos-morion-apospasis-evropaika-scholeia.php` — Μόρια απόσπασης σε Ευρωπαϊκά Σχολεία, έλεγχος γλωσσών, αναλυτικό breakdown και δυναμικό checklist δικαιολογητικών
 20. `metatropi-klimakas.php` — Μετατροπή κλίμακας βαθμού
+21. `ypologismos-morion-diefthynton-ypodiefthynton-sde.php` — Μόρια επιλογής Διευθυντών & Υποδιευθυντών ΣΔΕ
 
 Η σελίδα `asep-tools.php` λειτουργεί ως επιπλέον θεματικός κόμβος για εργαλεία ΑΣΕΠ.
 
@@ -43,7 +44,8 @@ includes/
 ├── footer.php                  # κοινό footer/δημιουργός
 ├── academic-calculations.js    # κοινά ακαδημαϊκά κριτήρια
 ├── service-calculations.js     # κοινός υπολογισμός προϋπηρεσίας
-└── sde-calculations.js         # μοριοδότηση και αντιστοίχιση ειδικοτήτων ΣΔΕ
+├── sde-calculations.js         # μοριοδότηση και αντιστοίχιση ειδικοτήτων ΣΔΕ
+└── sde-leadership-calculations.js # μοριοδότηση Διευθυντών / Υποδιευθυντών ΣΔΕ
 ```
 
 Τα επιμέρους εργαλεία διατηρούν το δικό τους CSS/JavaScript μόνο όταν η λειτουργία ή η εμφάνιση είναι ειδική για το συγκεκριμένο εργαλείο.
@@ -80,3 +82,6 @@ php -l <αρχείο.php>
 
 ### Common UI v3
 The common UI now standardises the **structure** of older tools (hero, cards, fields, results and actions) while allowing each tool to retain its own colour identity. Ten legacy `app-box` pages were upgraded through the `edu-modernized` compatibility layer.
+
+### Απόσπαση στο εξωτερικό — Παράρτημα V
+Το `ypologismos-morion-apospasis-exoteriko.php` περιλαμβάνει πλέον τα μηνιαία επιμίσθια της πρόσκλησης 11771/Η2/30-01-2026. Οι έως τρεις προτιμήσεις συγκρίνονται αυτόματα ως προς το ονομαστικό μηνιαίο ποσό και εμφανίζεται ενδεικτικό 12μηνο (μηνιαίο × 12).

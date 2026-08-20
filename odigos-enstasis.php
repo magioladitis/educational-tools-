@@ -494,6 +494,13 @@ updateRecognitionDate();
 updateResubmissionInfo();
 updateParavoloUI();
 </script>
+
+<section class="edu-source-card" aria-labelledby="sourcesTitle">
+  <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+  <p>Προκηρύξεις Α.Σ.Ε.Π. 1ΓΕ/2026 και 2ΓΕ/2026, η επίσημη ανακοίνωση για τις ενστάσεις των προσωρινών πινάκων, καθώς και τα επίσημα εγχειρίδια Α.Σ.Ε.Π. για ηλεκτρονική ένσταση και e-Παράβολο.</p>
+  <p class="source-links"><a href="https://info.asep.gr/node/79576" target="_blank" rel="noopener noreferrer">Ανακοίνωση ενστάσεων — ΑΣΕΠ ↗</a> · <a href="https://info.asep.gr/sites/default/files/2023-10/manual_enstasi_ekpaideutikon.pdf" target="_blank" rel="noopener noreferrer">Εγχειρίδιο ένστασης ↗</a> · <a href="https://info.asep.gr/sites/default/files/2023-10/e-paravolo_enstasi.pdf" target="_blank" rel="noopener noreferrer">Οδηγίες e-Παραβόλου ↗</a></p>
+</section>
+
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="assets/common.js"></script>
 </body>

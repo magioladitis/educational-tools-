@@ -401,7 +401,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
 <div class="hero-meta">
-<span>20 διαθέσιμα εργαλεία</span>
+<span>21 διαθέσιμα εργαλεία</span>
 <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
 <span>Αναπληρωτές</span>
 <span>Αποσπάσεις</span>
@@ -424,7 +424,7 @@
 <button aria-pressed="false" class="filter-btn" data-filter="sde" type="button">ΣΔΕ</button>
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 20 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 21 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
@@ -661,6 +661,13 @@
 <div class="card-top"><span class="tool-number">20</span><span class="category-tag">ΑΣΕΠ</span></div>
 <h2>Μετατροπή κλίμακας βαθμού</h2>
 <p>Μετέτρεψε βαθμό από 10βάθμια σε 20βάθμια κλίμακα ή από λεκτική μορφή και πάρε έτοιμα τα πεδία Ακέραιο μέρος – Αριθμητής – Παρονομαστής.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
+<a class="tool-card" data-category="sde" data-search="ΣΔΕ Σχολεία Δεύτερης Ευκαιρίας Διευθυντές Υποδιευθυντές διευθυντής υποδιευθυντής θέσεις ευθύνης μόρια μοριοδότηση διοικητική εμπειρία διδακτική εμπειρία εκπαίδευση ενηλίκων συνέντευξη" href="ypologismos-morion-diefthynton-ypodiefthynton-sde.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">21</span><span class="category-tag orange">ΣΔΕ / Θέσεις Ευθύνης</span></div>
+<h2>Μόρια Διευθυντών &amp; Υποδιευθυντών ΣΔΕ</h2>
+<p>Υπολόγισε τα μόρια για θέσεις Διευθυντή ή Υποδιευθυντή ΣΔΕ, με τυπικά προσόντα, διδακτική και διοικητική εμπειρία, επιμόρφωση και συνέντευξη όπου προβλέπεται.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a></section>
 <div aria-hidden="true" class="no-results" id="noResults">

@@ -109,6 +109,16 @@
 <div class="note" style="margin-top:14px">Ενημερωτικός υπολογισμός βάσει της 3ΕΑ/2025. Η τελική ένταξη και μοριοδότηση προκύπτει από τον έλεγχο ΑΣΕΠ/ΟΠΣΥΔ και τα επίσημα δικαιολογητικά.</div>
 </aside>
 </div>
+
+<section class="source edu-card" aria-labelledby="sourcesTitle" style="margin-top:18px;color:var(--muted);font-size:13.5px">
+  <strong id="sourcesTitle">Πηγές / Νομική βάση:</strong><br>
+  Προκήρυξη ΑΣΕΠ <strong>3ΕΑ/2025</strong> για εκπαιδευτικούς Ειδικής Αγωγής και Εκπαίδευσης κατηγορίας ΠΕ —
+  <strong>ΦΕΚ 22/23.05.2025/τ. Α.Σ.Ε.Π.</strong> και <strong>ΦΕΚ 25/02.06.2025/τ. Α.Σ.Ε.Π.</strong>, ιδίως τα Κεφάλαια Β΄ και Γ΄.<br>
+  <a href="https://info.asep.gr/node/76185" target="_blank" rel="noopener noreferrer">Επίσημη σελίδα 3ΕΑ/2025 στο ΑΣΕΠ ↗</a>
+  &nbsp;·&nbsp;
+  <a href="https://info.asep.gr/sites/default/files/2025-05/3%CE%95%CE%91_2025%20%CE%A4%CF%85%CF%80%CE%B9%CE%BA%CE%AC%20%CE%A0%CF%81%CE%BF%CF%83%CF%8C%CE%BD%CF%84%CE%B1%20%CE%88%CE%BD%CF%84%CE%B1%CE%BE%CE%B7%CF%82.pdf" target="_blank" rel="noopener noreferrer">Τυπικά Προσόντα Ένταξης 3ΕΑ/2025 ↗</a><br>
+  <span>Το εργαλείο είναι ενημερωτικό και δεν υποκαθιστά τον επίσημο έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από το ΑΣΕΠ και τα αρμόδια όργανα.</span>
+</section>
 </div>
 <script src="includes/service-calculations.js"></script>
 <script src="includes/social-calculations.js"></script>
