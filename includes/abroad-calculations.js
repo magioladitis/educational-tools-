@@ -87,8 +87,13 @@
     const issues = [];
     const warnings = [];
 
-    if (!branchAllowed) unanswered.push("ειδικότητα / Παράρτημα ΙΙΙ");
-    else if (branchAllowed === "no") issues.push("Η ειδικότητα δεν δηλώνεται ως αποδεκτή για τη συγκεκριμένη χώρα/περιοχή στο Παράρτημα ΙΙΙ της πρόσκλησης.");
+    if (options.specialtySelected !== true) {
+      unanswered.push("ειδικότητα (Παράρτημα ΙΙΙ)");
+    } else if (options.preferenceSelected !== true) {
+      unanswered.push("1η προτίμηση χώρας / περιοχής (Παράρτημα ΙΙΙ)");
+    } else if (branchAllowed === "no") {
+      issues.push("Η ειδικότητα δεν περιλαμβάνεται για τη συγκεκριμένη χώρα/περιοχή στο Παράρτημα ΙΙΙ της πρόσκλησης.");
+    }
 
     if (options.educationYearsAnswered !== true) {
       unanswered.push("5ετής εκπαιδευτική υπηρεσία");
