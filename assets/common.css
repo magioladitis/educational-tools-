@@ -721,3 +721,21 @@ body.edu-ui .app-box.edu-modernized .question p {
     color: #000 !important;
   }
 }
+
+
+/* Common legal/source card used by rule-based tools. */
+body.edu-ui .edu-source-card {
+  width: min(calc(100% - 32px), 1180px);
+  margin: 18px auto 22px;
+  padding: 18px 20px;
+  background: var(--edu-surface);
+  border: 1px solid var(--edu-border);
+  border-radius: 16px;
+  box-shadow: var(--edu-shadow-sm);
+  color: var(--edu-text);
+}
+body.edu-ui .edu-source-card h2 { margin: 0 0 8px; font-size: 18px; }
+body.edu-ui .edu-source-card p { margin: 6px 0; line-height: 1.55; }
+body.edu-ui .edu-source-card .source-links { margin-top: 10px; }
+body.edu-ui .edu-source-card a { font-weight: 700; }
+@media print { body.edu-ui .edu-source-card { box-shadow: none; } }
