@@ -264,7 +264,7 @@ body.edu-ui textarea:focus {
 
 body.edu-ui input[type="checkbox"],
 body.edu-ui input[type="radio"] {
-  accent-color: var(--edu-primary);
+  accent-color: var(--edu-page-accent, var(--edu-primary));
 }
 
 body.edu-ui input::placeholder,
@@ -309,13 +309,13 @@ body.edu-ui .edu-btn:not(:disabled):active {
 
 body.edu-ui button.edu-btn-primary,
 body.edu-ui .edu-btn--primary {
-  background: var(--edu-primary) !important;
+  background: var(--edu-page-accent, var(--edu-primary)) !important;
   color: #fff !important;
 }
 
 body.edu-ui button.edu-btn-primary:hover,
 body.edu-ui .edu-btn--primary:hover {
-  background: var(--edu-primary-dark) !important;
+  background: var(--edu-page-accent-dark, var(--edu-primary-dark)) !important;
 }
 
 body.edu-ui button.edu-btn-secondary,
@@ -476,7 +476,7 @@ a:focus-visible {
   padding: 0 !important;
   border: 1px solid rgba(255,255,255,.55) !important;
   border-radius: 999px !important;
-  background: var(--edu-primary) !important;
+  background: var(--edu-page-accent, var(--edu-primary)) !important;
   color: #fff !important;
   box-shadow: 0 8px 24px rgba(28,39,55,.2);
   opacity: 0;
@@ -739,3 +739,264 @@ body.edu-ui .edu-source-card p { margin: 6px 0; line-height: 1.55; }
 body.edu-ui .edu-source-card .source-links { margin-top: 10px; }
 body.edu-ui .edu-source-card a { font-weight: 700; }
 @media print { body.edu-ui .edu-source-card { box-shadow: none; } }
+
+
+/* Keep legal/source references visually inside the tool shell, including legacy pages. */
+body.edu-ui .edu-source-card.is-embedded {
+  width: 100%;
+  max-width: none;
+  margin: 10px 0 0;
+  box-sizing: border-box;
+}
+
+body.edu-ui .app-box.edu-modernized > .edu-source-card.is-embedded {
+  grid-column: 1 / -1;
+}
+
+body.edu-ui .edu-source-card.is-embedded:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================\n   UI consolidation v3.20 — shared calculator / guide components\n   ========================================================================== */
+
+/* Legacy aliases still used by mature calculators. Pages may override them. */
+:root {
+  --bg: var(--edu-bg);
+  --card: var(--edu-surface);
+  --text: var(--edu-text);
+  --muted: var(--edu-muted);
+  --border: var(--edu-border);
+  --blue: var(--edu-primary);
+  --blue-dark: var(--edu-primary-dark);
+  --blue-soft: var(--edu-primary-soft);
+  --green: var(--edu-success);
+  --green-soft: var(--edu-success-soft);
+  --red: var(--edu-danger);
+  --red-soft: var(--edu-danger-soft);
+  --orange: var(--edu-warning);
+  --orange-soft: var(--edu-warning-soft);
+  --shadow: var(--edu-shadow);
+}
+
+/* Standard blue ASEP calculator family: 1ΓΕ/2ΓΕ, 1ΓΤ, 1ΕΑ, 2ΕΑ, 4ΕΑ. */
+body.edu-ui.edu-calc-standard {
+  margin: 0;
+  padding: 30px 18px;
+  background: var(--bg, var(--edu-bg));
+  color: var(--text, var(--edu-text));
+}
+body.edu-ui.edu-calc-standard .app {
+  max-width: var(--edu-calc-max-width, 1060px);
+  margin: auto;
+}
+body.edu-ui.edu-calc-standard .hero {
+  background: linear-gradient(135deg, var(--edu-page-accent-dark, #173b7a), var(--edu-page-accent, #1f6feb));
+  color: #fff;
+  border-radius: 18px;
+  padding: 30px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow, var(--edu-shadow));
+}
+body.edu-ui.edu-calc-standard .hero h1 {
+  margin: 0 0 8px;
+  font-size: clamp(26px,4vw,39px);
+  line-height: 1.15;
+  color: #fff;
+}
+body.edu-ui.edu-calc-standard .hero p { margin: 4px 0; color: #e9f1ff; }
+body.edu-ui.edu-calc-standard .hero .meta,
+body.edu-ui.edu-calc-standard .meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+body.edu-ui.edu-calc-standard .hero .meta span,
+body.edu-ui.edu-calc-standard .meta span {
+  background: rgba(255,255,255,.14);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+body.edu-ui.edu-calc-standard .layout {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) var(--edu-calc-sidebar-width,330px);
+  gap: 18px;
+  align-items: start;
+}
+body.edu-ui.edu-calc-standard .card {
+  background: var(--card, var(--edu-surface));
+  border: 1px solid var(--border, var(--edu-border));
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(28,39,55,.05);
+}
+body.edu-ui.edu-calc-standard .card h2 { margin:0 0 5px; color:var(--blue-dark); font-size:21px; }
+body.edu-ui.edu-calc-standard .card h3 { margin:20px 0 7px; font-size:17px; }
+body.edu-ui.edu-calc-standard .cap { color:var(--muted); font-size:14px; margin:0 0 15px; }
+body.edu-ui.edu-calc-standard .field-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+body.edu-ui.edu-calc-standard .field { margin-bottom:13px; }
+body.edu-ui.edu-calc-standard label { display:block; font-weight:700; margin-bottom:6px; line-height:1.35; }
+body.edu-ui.edu-calc-standard label small,
+body.edu-ui.edu-calc-standard .help { display:block; color:var(--muted); font-weight:400; font-size:13px; margin-top:3px; }
+body.edu-ui.edu-calc-standard input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body.edu-ui.edu-calc-standard select {
+  width:100%; padding:11px; border-radius:9px; font-size:15px;
+}
+body.edu-ui.edu-calc-standard .checkrow { display:flex; gap:10px; align-items:flex-start; padding:9px 0; }
+body.edu-ui.edu-calc-standard .checkrow input { width:19px; height:19px; margin-top:2px; flex:0 0 auto; }
+body.edu-ui.edu-calc-standard .checkrow label { margin:0; }
+body.edu-ui.edu-calc-standard .note,
+body.edu-ui.edu-calc-standard .info-note,
+body.edu-ui.edu-calc-standard .info,
+body.edu-ui.edu-calc-standard .warning {
+  margin:12px 0; padding:11px 12px; border-radius:10px; font-size:13.5px;
+}
+body.edu-ui.edu-calc-standard .note {
+  background:var(--orange-soft); color:#7b4900; border:1px solid var(--edu-warning-border);
+}
+body.edu-ui.edu-calc-standard .info-note,
+body.edu-ui.edu-calc-standard .info {
+  background:var(--blue-soft); color:var(--blue-dark); border:1px solid #d5e4ff;
+}
+body.edu-ui.edu-calc-standard .subtot {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin-top:15px; padding-top:12px; border-top:1px dashed #cbd5e1; font-weight:700;
+}
+body.edu-ui.edu-calc-standard .pill {
+  display:inline-flex; padding:6px 10px; border-radius:999px; background:var(--blue-soft);
+  color:var(--blue-dark); font-variant-numeric:tabular-nums; white-space:nowrap;
+}
+body.edu-ui.edu-calc-standard .results { position:sticky; top:16px; }
+body.edu-ui.edu-calc-standard .total { text-align:center; padding:10px 0 18px; }
+body.edu-ui.edu-calc-standard .total .num {
+  font-size:54px; line-height:1; font-weight:850; color:var(--edu-page-accent,var(--blue));
+  letter-spacing:-.04em; font-variant-numeric:tabular-nums;
+}
+body.edu-ui.edu-calc-standard .total .label { color:var(--muted); margin-top:5px; }
+body.edu-ui.edu-calc-standard .result-row {
+  display:flex; justify-content:space-between; gap:12px; padding:9px 0;
+  border-top:1px solid #edf1f5; font-size:14px;
+}
+body.edu-ui.edu-calc-standard .result-row strong { text-align:right; font-variant-numeric:tabular-nums; }
+body.edu-ui.edu-calc-standard .priority {
+  margin:14px 0 4px; padding:11px; border-radius:10px; background:#f8fafc;
+  border:1px solid var(--border); text-align:center; font-weight:700; color:var(--muted);
+}
+body.edu-ui.edu-calc-standard .priority.yes {
+  background:var(--green-soft); border-color:var(--edu-success-border); color:var(--green);
+}
+body.edu-ui.edu-calc-standard .priority.special {
+  background:#f1edff; border-color:#d8cdf7; color:#6941c6;
+}
+body.edu-ui.edu-calc-standard .actions {
+  display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px;
+}
+body.edu-ui.edu-calc-standard .actions button { width:100%; margin-top:0; padding:11px; font-size:14px; font-weight:700; border:0; }
+body.edu-ui.edu-calc-standard .source {
+  background:#fff; border:1px solid var(--border); border-radius:14px; padding:16px;
+  margin-top:18px; color:var(--muted); font-size:13.5px;
+}
+body.edu-ui.edu-calc-standard .source strong { color:var(--text); }
+body.edu-ui.edu-calc-standard .credits { text-align:center; margin-top:20px; color:#7a8490; font-size:13px; }
+body.edu-ui .hidden { display:none !important; }
+
+/* Shared seminar-certificate proof component. */
+body.edu-ui .training-proof {
+  margin:10px 0 4px; padding:13px; border:1px solid #d9e2ec;
+  border-radius:12px; background:#f8fafc;
+}
+body.edu-ui .training-proof-title { font-weight:800; color:var(--blue-dark,var(--edu-primary-dark)); margin-bottom:8px; }
+body.edu-ui .training-proof-question { font-size:13.5px; color:var(--text,var(--edu-text)); margin-bottom:9px; }
+body.edu-ui .segmented-choice { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 10px; }
+body.edu-ui .segmented-choice label { margin:0; cursor:pointer; }
+body.edu-ui .segmented-choice input { position:absolute; opacity:0; pointer-events:none; }
+body.edu-ui .segmented-choice span {
+  display:inline-flex; align-items:center; justify-content:center; min-width:92px; padding:8px 13px;
+  border:1px solid #cbd5e1; border-radius:999px; background:#fff; color:#334155;
+  font-weight:800; transition:.15s ease;
+}
+body.edu-ui .segmented-choice input:focus-visible + span {
+  box-shadow:0 0 0 3px rgba(31,111,235,.15); border-color:var(--edu-page-accent,var(--edu-primary));
+}
+body.edu-ui .segmented-choice input:checked + span {
+  background:var(--edu-primary-soft); border-color:#9ec2ff; color:var(--edu-primary-dark);
+}
+body.edu-ui .segmented-choice input[value="no"]:checked + span {
+  background:#fff1f0; border-color:#f0b5af; color:#a33228;
+}
+body.edu-ui .training-proof-status {
+  padding:9px 10px; border-radius:9px; font-size:13px; font-weight:700; margin-bottom:8px;
+}
+body.edu-ui .training-proof-status.neutral { background:var(--edu-primary-soft); color:var(--edu-primary-dark); border:1px solid #d5e4ff; }
+body.edu-ui .training-proof-status.success { background:var(--edu-success-soft); color:var(--edu-success); border:1px solid var(--edu-success-border); }
+body.edu-ui .training-proof-status.warning { background:#fff1f0; color:#9f2d24; border:1px solid #efb5af; }
+body.edu-ui .training-proof-legal { display:block; color:var(--edu-muted); font-size:12.5px; line-height:1.45; }
+body.edu-ui .training-proof-legal strong { color:#9f2d24; }
+
+/* Result / breakdown helpers used by the main 1ΓΕ/2ΓΕ calculator. */
+body.edu-ui.edu-calc-standard .calculate-primary { width:100%; margin-top:14px; }
+body.edu-ui.edu-calc-standard .result {
+  display:none; margin:0 0 16px; padding:18px; border-radius:16px; background:#eef4ff;
+  border:1px solid #d5e4ff; color:#174ea6; line-height:1.6; box-shadow:0 4px 16px rgba(28,39,55,.04); overflow-x:auto;
+}
+body.edu-ui.edu-calc-standard .result.error { background:#fdecea; border-color:#f2c7c2; color:#b3261e; font-weight:700; }
+body.edu-ui.edu-calc-standard .result h2 { margin-top:0; }
+body.edu-ui.edu-calc-standard .breakdown { width:100%; border-collapse:collapse; margin-top:12px; background:#fff; color:var(--text); }
+body.edu-ui.edu-calc-standard .breakdown th,
+body.edu-ui.edu-calc-standard .breakdown td { border:1px solid #d0d7de; padding:9px; text-align:left; vertical-align:top; }
+body.edu-ui.edu-calc-standard .breakdown th { background:#f1f3f4; }
+body.edu-ui.edu-calc-standard .total-row { font-weight:700; background:var(--green-soft); color:var(--green); }
+body.edu-ui.edu-calc-standard .small-note { margin:3px 2px 16px; font-size:13px; color:var(--muted); line-height:1.5; }
+body.edu-ui.edu-calc-standard .source-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+body.edu-ui.edu-calc-standard .source-links a { font-weight:700; }
+
+/* Guide family: compact single-column decision / documentation tools. */
+body.edu-ui.edu-guide-standard { margin:0; padding:30px 18px; background:var(--edu-bg); color:var(--edu-text); }
+body.edu-ui.edu-guide-standard .app-box.edu-modernized { max-width:880px; margin:auto; }
+body.edu-ui.edu-guide-standard .question { margin-bottom:18px; }
+body.edu-ui.edu-guide-standard .checkbox-group label {
+  display:flex; gap:8px; align-items:flex-start; font-weight:400; margin:8px 0; line-height:1.4;
+}
+body.edu-ui.edu-guide-standard .result {
+  display:none; margin-top:24px; padding:18px; border-radius:12px;
+  background:var(--edu-primary-soft); color:var(--edu-primary-dark); line-height:1.6;
+}
+body.edu-ui.edu-guide-standard .result h2 { margin-top:0; font-size:20px; }
+body.edu-ui.edu-guide-standard .result ul { margin-top:8px; padding-left:22px; }
+body.edu-ui.edu-guide-standard .note-box,
+body.edu-ui.edu-guide-standard .warning-box,
+body.edu-ui.edu-guide-standard .success-box { margin-top:14px; padding:12px; }
+body.edu-ui.edu-guide-standard .small-note { margin-top:18px; font-size:13px; line-height:1.5; text-align:justify; }
+body.edu-ui.edu-guide-standard .guide-submit { width:100%; margin-top:20px; padding:14px; font-size:17px; font-weight:700; border:0; }
+
+/* Utility classes replacing one-off style="..." attributes. */
+.edu-mt-7 { margin-top:7px !important; }
+.edu-mt-8 { margin-top:8px !important; }
+.edu-mt-10 { margin-top:10px !important; }
+.edu-mt-13 { margin-top:13px !important; }
+.edu-mt-14 { margin-top:14px !important; }
+.edu-mt-18 { margin-top:18px !important; }
+.edu-text-center { text-align:center !important; }
+.edu-source-compact { margin-top:18px !important; color:var(--muted,var(--edu-muted)) !important; font-size:13.5px !important; }
+.edu-mb-0 { margin-bottom:0 !important; }
+.edu-small-muted { color:#667085; font-size:13px; }
+.edu-stage-suffix { font-size:18px; color:#667085; }
+
+@media (max-width:900px) {
+  body.edu-ui.edu-calc-standard .layout { grid-template-columns:1fr; }
+  body.edu-ui.edu-calc-standard .results { position:static; }
+}
+@media (max-width:650px) {
+  body.edu-ui.edu-calc-standard { padding:16px 10px; }
+  body.edu-ui.edu-calc-standard .hero { padding:24px 19px; }
+  body.edu-ui.edu-calc-standard .field-grid { grid-template-columns:1fr; }
+  body.edu-ui.edu-calc-standard .card { padding:16px; }
+  body.edu-ui.edu-calc-standard .actions { grid-template-columns:1fr; }
+}
+@media (max-width:760px) {
+  body.edu-ui.edu-guide-standard { padding:18px 12px; }
+}
+
