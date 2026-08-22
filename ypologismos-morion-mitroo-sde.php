@@ -17,7 +17,7 @@
     .assignment-list{display:grid;gap:8px;margin-top:10px}.assignment-item{display:flex;justify-content:space-between;gap:12px;border:1px solid #dbe8e3;background:#f7fcfa;border-radius:10px;padding:9px 11px;font-size:13.5px}.assignment-item strong{color:var(--sde-dark)}.source-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 5px 18px rgba(28,39,55,.05);font-size:13px;color:#5f6b7a}.source-card h2{font-size:18px;color:var(--text);margin:0 0 8px}.source-card p{margin:7px 0}.small{font-size:12.5px;color:#667085}.badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef2f7;color:#475467;font-size:11.5px;font-weight:700}.priority{background:#fff8e6;border:1px solid #efd28a;color:#785400;border-radius:11px;padding:11px 12px;margin-top:12px;font-size:13.5px}
     @media(max-width:940px){.layout{grid-template-columns:1fr}.results{position:static}}@media(max-width:650px){.page-shell{padding:16px 12px 34px}.hero{padding:24px 19px}.field-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.actions{grid-template-columns:1fr}.section-head{display:block}.max{margin-top:5px}}
   </style>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.3">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.4">
 </head>
 <body class="edu-ui">
 <main class="page-shell">
@@ -156,7 +156,7 @@
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
-<script src="includes/sde-registry-calculations.js?v=3.20.3"></script>
+<script src="includes/sde-registry-calculations.js?v=3.20.4"></script>
 <script>
 const $=id=>document.getElementById(id); const val=id=>$(id)?.value||''; const checked=id=>!!$(id)?.checked;
 const fmt=x=>Number(x||0).toLocaleString('el-GR',{maximumFractionDigits:2,minimumFractionDigits:Number.isInteger(Number(x||0))?0:1});
@@ -202,5 +202,5 @@ function copySummary(btn){const d=data(),r=SDERegistryCalc.calculateAll(d);let t
 function resetForm(){document.querySelectorAll('input[type="number"]').forEach(x=>x.value='0');document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);$('fppBefore1993').value='no';$('eoppepAdultTrainer').value='no';roleChanged();psychFppChanged();}
 fillSpecialties();roleChanged();
 </script>
-<script src="assets/common.js?v=3.20.3"></script>
+<script src="assets/common.js?v=3.20.4"></script>
 </body></html>

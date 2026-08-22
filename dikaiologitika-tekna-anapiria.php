@@ -9,7 +9,7 @@
 /* Only guide-specific micro-layout remains local. */
 body.edu-guide-standard .question > .small-note{margin-bottom:0}
 </style>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.3">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.4">
 </head>
 <body class="edu-ui edu-guide-standard">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -243,6 +243,6 @@ function showDocuments(){
 }
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-<script src="assets/common.js?v=3.20.3"></script>
+<script src="assets/common.js?v=3.20.4"></script>
 </body>
 </html>

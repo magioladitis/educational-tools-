@@ -12,7 +12,7 @@
 body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330px}
 .warning{background:var(--red-soft)!important;color:var(--red)!important;border:1px solid var(--edu-danger-border)!important}
 </style>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.3">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.4">
 </head>
 <body class="edu-ui edu-calc-standard">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -375,6 +375,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.3"></script>
+  <script src="assets/common.js?v=3.20.4"></script>
 </body>
 </html>

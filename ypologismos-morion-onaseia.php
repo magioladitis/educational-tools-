@@ -487,6 +487,7 @@
 
       <p class="note">
         Μοριοδοτούνται έως δύο ξένες γλώσσες: άριστη 7, πολύ καλή 5, καλή 3 μόρια.
+        Η ίδια κατονομασμένη γλώσσα δεν μπορεί να επιλεγεί και στα δύο πεδία.
         Η Γαλλική δεν μοριοδοτείται στον ΠΕ05, η Αγγλική στον ΠΕ06 και η Γερμανική στον ΠΕ07.
       </p>
 
@@ -617,6 +618,36 @@
   });
 
   document.getElementById("specialty").addEventListener("change", updateAcademicMode);
+
+  const onaseiaNamedLanguages = new Set(["en", "fr", "de", "it", "es"]);
+
+  function syncOnaseiaLanguageOptions(changedId = "") {
+    const language1 = document.getElementById("language1");
+    const language2 = document.getElementById("language2");
+    const level1 = document.getElementById("level1");
+    const level2 = document.getElementById("level2");
+
+    if (onaseiaNamedLanguages.has(language1.value) && language1.value === language2.value) {
+      if (changedId === "language2") {
+        language1.value = "";
+        level1.value = "none";
+      } else {
+        language2.value = "";
+        level2.value = "none";
+      }
+    }
+
+    Array.from(language1.options).forEach(option => {
+      option.disabled = onaseiaNamedLanguages.has(option.value) && option.value === language2.value;
+    });
+    Array.from(language2.options).forEach(option => {
+      option.disabled = onaseiaNamedLanguages.has(option.value) && option.value === language1.value;
+    });
+  }
+
+  document.getElementById("language1").addEventListener("change", () => syncOnaseiaLanguageOptions("language1"));
+  document.getElementById("language2").addEventListener("change", () => syncOnaseiaLanguageOptions("language2"));
+  syncOnaseiaLanguageOptions();
 
   function calculateDetailedAcademic(specialty, warnings) {
     const academic = EducationAcademic.calculate({
@@ -819,6 +850,7 @@
     document.getElementById("level1").value = "none";
     document.getElementById("language2").value = "";
     document.getElementById("level2").value = "none";
+    syncOnaseiaLanguageOptions();
     document.getElementById("computer").value = "no";
     document.getElementById("training").value = "no";
     document.getElementById("serviceRows").innerHTML = "";
