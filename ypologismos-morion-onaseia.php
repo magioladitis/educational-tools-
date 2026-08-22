@@ -251,36 +251,6 @@
       color: #777;
     }
 
-    /* 2026-2027 active DEDIMOS invitation deadlines. Scoped to this tool. */
-    .onaseia-deadline-card h2 { margin: 0 0 6px; }
-    .onaseia-deadline-intro { margin: 0; color: #5f6368; line-height: 1.5; }
-    .onaseia-deadline-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .onaseia-deadline-item {
-      border: 1px solid #d8e2f2;
-      border-radius: 12px;
-      background: #f8fbff;
-      padding: 14px;
-    }
-    .onaseia-deadline-item h3 { margin: 0 0 7px; font-size: 16px; color: var(--blue); }
-    .onaseia-deadline-meta { margin: 0; line-height: 1.5; font-size: 14px; color: #3c4043; }
-    .onaseia-deadline-status {
-      margin-top: 10px;
-      padding: 9px 11px;
-      border-radius: 8px;
-      font-weight: 700;
-      line-height: 1.45;
-    }
-    .onaseia-deadline-status.open { background: #e6f4ea; color: #137333; }
-    .onaseia-deadline-status.closed { background: #fdecea; color: #b3261e; }
-    .onaseia-countdown { display: block; margin-top: 3px; font-size: 14px; }
-    .onaseia-deadline-link { display: inline-block; margin-top: 9px; font-weight: 700; }
-    .onaseia-deadline-note { margin: 12px 0 0; font-size: 12.5px; color: #667085; }
-
     .hidden { display: none !important; }
 
     @media (max-width: 760px) {
@@ -290,11 +260,10 @@
       .service-row { grid-template-columns: 1fr; }
       .remove-row { width: 100%; }
       .actions { grid-template-columns: 1fr; }
-      .onaseia-deadline-grid { grid-template-columns: 1fr; }
       h1 { font-size: 24px; }
     }
   </style>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.4">
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 <body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -307,26 +276,6 @@
     του πίνακα Α.Σ.Ε.Π. και στην αναγνωρισμένη προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία.
   </p>
 </section>
-
-  <section class="deadline-card onaseia-deadline-card" aria-labelledby="onaseiaDeadlinesTitle">
-    <h2 id="onaseiaDeadlinesTitle">📅 Προθεσμίες αιτήσεων ΔΗΜ.Ω.Σ. 2026–2027</h2>
-    <p class="onaseia-deadline-intro">Οι δύο φετινές προσκλήσεις έχουν διαφορετική καταληκτική ημερομηνία. Η αντίστροφη μέτρηση γίνεται σε ώρα Ελλάδας.</p>
-    <div class="onaseia-deadline-grid">
-      <article class="onaseia-deadline-item">
-        <h3>Γενική πρόσκληση εκπαιδευτικών</h3>
-        <p class="onaseia-deadline-meta">1ΓΕ/2026, 2ΓΕ/2026 και 1ΓΤ/2024<br>Αιτήσεις έως <strong>Δευτέρα 24 Αυγούστου 2026, 15:00</strong>.</p>
-        <div id="onaseiaGeneralDeadlineStatus" class="onaseia-deadline-status" role="status" aria-live="polite"></div>
-        <a class="onaseia-deadline-link" href="https://diavgeia.gov.gr/doc/%CE%957%CE%98%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%9C%CE%98?inline=true" target="_blank" rel="noopener noreferrer">Πρόσκληση στη Διαύγεια — ΑΔΑ Ε7ΘΑ46ΝΚΠΔ-ΡΜΘ ↗</a>
-      </article>
-      <article class="onaseia-deadline-item">
-        <h3>Ειδική πρόσκληση ΕΑΕ — Τμήματα Ένταξης</h3>
-        <p class="onaseia-deadline-meta">3ΕΑ/2025 — ΠΕ02, ΠΕ03 και ΠΕ04 με εξειδίκευση στην ΕΑΕ<br>Αιτήσεις έως <strong>Δευτέρα 31 Αυγούστου 2026, 15:00</strong>.<br><strong>Για την ΕΑΕ:</strong> χρησιμοποίησε τη χειροκίνητη καταχώριση των ακαδημαϊκών μορίων όπως εμφανίζονται στον πίνακα 3ΕΑ/2025· ο αναλυτικός υπολογισμός της σελίδας αφορά 1ΓΕ/2026–2ΓΕ/2026.</p>
-        <div id="onaseiaEaeDeadlineStatus" class="onaseia-deadline-status" role="status" aria-live="polite"></div>
-        <a class="onaseia-deadline-link" href="https://diavgeia.gov.gr/doc/%CE%A1%CE%A4%CE%91%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%932%CE%97?inline=true" target="_blank" rel="noopener noreferrer">Πρόσκληση ΕΑΕ στη Διαύγεια — ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗</a>
-      </article>
-    </div>
-    <p class="onaseia-deadline-note">Το countdown είναι ενημερωτικό. Για την ακριβή ισχύ της προθεσμίας υπερισχύει πάντοτε το κείμενο της αντίστοιχης επίσημης πρόσκλησης.</p>
-  </section>
 
   <div class="important">
     <strong>Τύπος υπολογισμού:</strong><br>
@@ -387,13 +336,11 @@
 
     <div id="manualAcademic" class="hidden">
       <div class="question">
-        <label for="manualAcademicPoints">Ακαδημαϊκά μόρια Α.Σ.Ε.Π. (<span id="manualAcademicRange">12,50–120</span>)</label>
-        <input type="text" inputmode="decimal" id="manualAcademicPoints" placeholder="π.χ. 82,50" aria-describedby="manualAcademicHelp">
+        <label for="manualAcademicPoints">Ακαδημαϊκά μόρια Α.Σ.Ε.Π. (0-120)</label>
+        <input type="text" inputmode="decimal" id="manualAcademicPoints" placeholder="π.χ. 82,50">
       </div>
-      <p class="note" id="manualAcademicHelp">
+      <p class="note">
         Συμπλήρωσε μόνο τη μοριοδότηση της κατηγορίας «Ακαδημαϊκά Προσόντα» και όχι το συνολικό σκορ κατάταξης.
-        Για τους κλάδους ΠΕ το ελάχιστο είναι <strong>12,50 μόρια</strong> (βαθμός βασικού τίτλου 5,00 × 2,5).
-        Για τον ΤΕ16, που χρησιμοποιεί τα μόρια της 1ΓΤ/2024, το ελάχιστο είναι <strong>30 μόρια</strong>.
       </p>
     </div>
 
@@ -519,7 +466,7 @@
   <div class="section">
     <h2>3. Προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία</h2>
 
-    <p class="note">
+    <p class="note" style="margin-bottom:14px;">
       Καταχώρισε τους <strong>αναγνωρισμένους μήνες ανά σχολικό έτος</strong>.
       Κάθε μήνας δίνει 1,5 μόριο, με μέγιστο 15 μόρια ανά σχολικό έτος.
       Οι μήνες Ιουλίου και Αυγούστου δεν προσμετρώνται.
@@ -538,10 +485,8 @@
   <div id="result" class="result" role="status" aria-live="polite"></div>
 </div>
 
-<script src="includes/academic-calculations.js?v=3.20.4"></script>
-<script src="includes/onaseia-calculations.js?v=3.20.4"></script>
+<script src="includes/academic-calculations.js"></script>
 <script>
-  let isLiveCalculation = false;
   const schoolYears = [];
   for (let y = 2025; y >= 1990; y--) {
     schoolYears.push(`${y}-${y + 1}`);
@@ -575,7 +520,7 @@
     result.style.display = "block";
     result.className = "result error";
     result.innerHTML = message;
-    if (!isLiveCalculation) result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    result.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   function showResult(html) {
@@ -583,7 +528,7 @@
     result.style.display = "block";
     result.className = "result";
     result.innerHTML = html;
-    if (!isLiveCalculation) result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    result.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   function currentAcademicMode() {
@@ -605,11 +550,6 @@
     const manual = currentAcademicMode() === "manual";
     document.getElementById("manualAcademic").classList.toggle("hidden", !manual);
     document.getElementById("detailedAcademic").classList.toggle("hidden", manual);
-
-    const manualMin = OnaseiaAcademic.manualAcademicMin(specialty);
-    document.getElementById("manualAcademicRange").textContent = `${formatPoints(manualMin)}–120`;
-    document.getElementById("manualAcademicPoints").setAttribute("data-min", String(manualMin));
-    document.getElementById("manualAcademicPoints").setAttribute("data-max", "120");
   }
 
   document.querySelectorAll('input[name="academicMode"]').forEach(el => {
@@ -721,14 +661,13 @@
 
       if (currentAcademicMode() === "manual") {
         const manualRaw = valueOf("manualAcademicPoints").trim();
-        const manualCheck = OnaseiaAcademic.validateManualAcademicPoints(manualRaw, specialty);
-        if (manualCheck.reason === "empty") {
+        if (manualRaw === "") {
           throw new Error("Παρακαλώ συμπλήρωσε τα ακαδημαϊκά μόρια Α.Σ.Ε.Π.");
         }
-        if (!manualCheck.valid) {
-          throw new Error(`Τα ακαδημαϊκά μόρια Α.Σ.Ε.Π. πρέπει να είναι από ${formatPoints(manualCheck.min)} έως ${formatPoints(manualCheck.max)}.`);
+        academicPoints = greekNumber(manualRaw);
+        if (academicPoints < 0 || academicPoints > 120) {
+          throw new Error("Τα ακαδημαϊκά μόρια Α.Σ.Ε.Π. πρέπει να είναι από 0 έως 120.");
         }
-        academicPoints = manualCheck.points;
         academicDetails.push("Καταχώριση από τον πίνακα Α.Σ.Ε.Π.");
       } else {
         const academic = calculateDetailedAcademic(specialty, warnings);
@@ -768,7 +707,7 @@
           </tr>
         </table>
 
-        <p class="note">
+        <p class="note" style="margin-top:14px;">
           Σε περίπτωση ισοβαθμίας, η πρόσκληση προβλέπει πρόταξη του υποψηφίου με περισσότερη προϋπηρεσία στον πίνακα Α.Σ.Ε.Π.
         </p>
       `;
@@ -781,29 +720,6 @@
     } catch (err) {
       showError(err.message || "Παρουσιάστηκε σφάλμα στον υπολογισμό.");
     }
-  }
-
-  function clearLiveResult() {
-    const result = document.getElementById("result");
-    result.style.display = "none";
-    result.innerHTML = "";
-    result.className = "result";
-  }
-
-  function liveCalculatePoints() {
-    const specialty = valueOf("specialty");
-    if (!specialty) { clearLiveResult(); return; }
-
-    if (currentAcademicMode() === "manual") {
-      const check = OnaseiaAcademic.validateManualAcademicPoints(valueOf("manualAcademicPoints"), specialty);
-      if (!check.valid) { clearLiveResult(); return; }
-    } else {
-      const grade = greekNumber(valueOf("degreeGrade"));
-      if (!grade || grade < 5 || grade > 10) { clearLiveResult(); return; }
-    }
-
-    isLiveCalculation = true;
-    try { calculatePoints(); } finally { isLiveCalculation = false; }
   }
 
   function resetForm() {
@@ -833,65 +749,16 @@
   addServiceRow("2024-2025");
   addServiceRow("2023-2024");
   updateAcademicMode();
-  const onaseiaDeadlines = [
-    { id: "onaseiaGeneralDeadlineStatus", end: new Date("2026-08-24T15:00:00+03:00") },
-    { id: "onaseiaEaeDeadlineStatus", end: new Date("2026-08-31T15:00:00+03:00") }
-  ];
-
-  function formatOnaseiaRemaining(ms) {
-    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    const parts = [];
-    if (days) parts.push(days + (days === 1 ? " ημέρα" : " ημέρες"));
-    parts.push(String(hours).padStart(2, "0") + " ώρες");
-    parts.push(String(minutes).padStart(2, "0") + " λεπτά");
-    parts.push(String(seconds).padStart(2, "0") + " δευτ.");
-    return parts.join(", ");
-  }
-
-  function updateOnaseiaDeadlines() {
-    const now = new Date();
-    onaseiaDeadlines.forEach(item => {
-      const box = document.getElementById(item.id);
-      if (!box) return;
-      box.className = "onaseia-deadline-status";
-      if (now <= item.end) {
-        box.classList.add("open");
-        box.innerHTML = "🟢 Η προθεσμία είναι ανοικτή." +
-          '<span class="onaseia-countdown">Απομένουν: <strong>' + formatOnaseiaRemaining(item.end - now) + "</strong></span>";
-      } else {
-        box.classList.add("closed");
-        box.textContent = "🔴 Η προθεσμία έχει λήξει.";
-      }
-    });
-  }
-
-  updateOnaseiaDeadlines();
-  setInterval(updateOnaseiaDeadlines, 1000);
-
-  document.addEventListener("input", event => {
-    if (event.target && event.target.matches("input, select")) liveCalculatePoints();
-  });
-  document.addEventListener("change", event => {
-    if (event.target && event.target.matches("input, select")) liveCalculatePoints();
-  });
 </script>
 
 
 <section class="edu-source-card" aria-labelledby="sourcesTitle">
   <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
-  <p>Η κατάταξη στα ΔΗΜ.Ω.Σ. συνδυάζει τη μοριοδότηση των ακαδημαϊκών προσόντων όπως έχει διαμορφωθεί στον αντίστοιχο πίνακα Α.Σ.Ε.Π. με την αναγνωρισμένη προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία.</p>
-  <p><strong>Φετινές προσκλήσεις πρόσληψης 2026–2027:</strong><br>
-    <a href="https://diavgeia.gov.gr/doc/%CE%957%CE%98%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%9C%CE%98?inline=true" target="_blank" rel="noopener noreferrer">14/08/2026 — Γενική πρόσκληση ΔΗΜ.Ω.Σ. για αναπληρωτές — ΑΔΑ Ε7ΘΑ46ΝΚΠΔ-ΡΜΘ ↗</a><br>
-    <a href="https://diavgeia.gov.gr/doc/%CE%A1%CE%A4%CE%91%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%932%CE%97?inline=true" target="_blank" rel="noopener noreferrer">20/08/2026 — Ειδική πρόσκληση ΕΑΕ για Τμήματα Ένταξης ΔΗΜ.Ω.Σ. — ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗</a>
-  </p>
-  <p class="source-links"><a href="https://www.minedu.gov.gr/news?catid=1183&id=63940%3A30-01-26-prokiryksi-diadikasias-katataksis-ekpaideftikon-vvathmias-ekpaidefsis-me-seira-proteraiotitas-kata-klado-kai-eidikotita-ypopsifion-gia-tin-plirosi-kenon-theseon-thiteias-sta-dimosia-onaseia-sxoleia&view=article" target="_blank" rel="noopener noreferrer">Προκήρυξη διαδικασίας κατάταξης ΔΗΜ.Ω.Σ. — ΥΠΑΙΘΑ ↗</a> · <a href="https://info.asep.gr/node/78737" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 &amp; 2ΓΕ/2026 — ΑΣΕΠ ↗</a></p>
+  <p>Προκήρυξη της Διοικούσας Επιτροπής Δημοσίων Ωνασείων Σχολείων για τη διαδικασία κατάταξης εκπαιδευτικών Δευτεροβάθμιας Εκπαίδευσης και την πλήρωση κενών θέσεων θητείας στα ΔΗΜ.Ω.Σ. για το 2026. Για τα ακαδημαϊκά κριτήρια που αντλούνται από τους πίνακες Α.Σ.Ε.Π. χρησιμοποιούνται και οι κανόνες των 1ΓΕ/2026–2ΓΕ/2026.</p>
+  <p class="source-links"><a href="https://www.minedu.gov.gr/news?catid=1183&id=63940%3A30-01-26-prokiryksi-diadikasias-katataksis-ekpaideftikon-vvathmias-ekpaidefsis-me-seira-proteraiotitas-kata-klado-kai-eidikotita-ypopsifion-gia-tin-plirosi-kenon-theseon-thiteias-sta-dimosia-onaseia-sxoleia&view=article" target="_blank" rel="noopener noreferrer">Επίσημη προκήρυξη ΔΗΜ.Ω.Σ. — ΥΠΑΙΘΑ ↗</a> · <a href="https://info.asep.gr/node/78737" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 &amp; 2ΓΕ/2026 — ΑΣΕΠ ↗</a></p>
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.4"></script>
+  <script src="assets/common.js"></script>
 </body>
 </html>

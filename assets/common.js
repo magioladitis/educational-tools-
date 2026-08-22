@@ -8,12 +8,8 @@
 
   function enhanceButtons(root) {
     (root || document).querySelectorAll('button').forEach(function (button) {
-      if (button.classList.contains('edu-back-to-top')) return;
+      if (button.classList.contains('filter-btn') || button.classList.contains('edu-back-to-top')) return;
       if (button.classList.contains('edu-btn-primary') || button.classList.contains('edu-btn-secondary')) return;
-
-      /* Stateful / component buttons keep their page-specific appearance. */
-      if (button.matches('.filter-btn, .add-row, .remove-row, .tab, .tab-btn, .mode-tab')) return;
-      if (button.closest('.filters, .mode-tabs, [role="tablist"], .segmented-choice')) return;
 
       var text = normaliseText(button.textContent);
       var isSecondary =
@@ -21,17 +17,8 @@
         text.indexOf('καθαρισ') !== -1 ||
         text.indexOf('αντιγραφ') !== -1 ||
         text.indexOf('εκτύπ') !== -1 ||
-        text.indexOf('κλείσ') !== -1 ||
-        text.indexOf('παράδειγμα') !== -1;
+        text.indexOf('κλείσ') !== -1;
 
-      if (button.classList.contains('secondary') || button.classList.contains('reset-button') || button.classList.contains('reset-btn')) {
-        isSecondary = true;
-      }
-
-      /* Explicit primary/secondary classes are respected; otherwise enhance
-         ordinary action buttons progressively. */
-      if (button.classList.contains('primary') || button.classList.contains('secondary') ||
-          button.classList.contains('reset-button') || button.classList.contains('reset-btn')) return;
       button.classList.add(isSecondary ? 'edu-btn-secondary' : 'edu-btn-primary');
     });
   }
@@ -39,24 +26,6 @@
   function enhanceResults(root) {
     (root || document).querySelectorAll('.result, .results').forEach(function (result) {
       if (!result.hasAttribute('aria-live')) result.setAttribute('aria-live', 'polite');
-    });
-  }
-
-  function embedSourceCards() {
-    document.querySelectorAll('.edu-source-card').forEach(function (card) {
-      var existingHost = card.closest('.app-box, .edu-tool-shell, main');
-      if (existingHost) {
-        card.classList.add('is-embedded');
-        return;
-      }
-
-      var host = document.querySelector(
-        '.app-box.edu-modernized, .app-box, main.dimos-calc, main.edu-tool-shell, main'
-      );
-
-      if (!host) return;
-      host.appendChild(card);
-      card.classList.add('is-embedded');
     });
   }
 
@@ -87,7 +56,6 @@
     document.body.classList.add('edu-ui');
     enhanceButtons(document);
     enhanceResults(document);
-    embedSourceCards();
     installBackToTop();
 
     /* Dynamic result content may create buttons/messages after page load. */

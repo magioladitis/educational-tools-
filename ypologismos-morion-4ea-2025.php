@@ -1,20 +1,198 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<!-- UI consolidation v3.20: shared design system in assets/common.css -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 4ΕΑ/2025 για εκπαιδευτικούς Ειδικής Αγωγής κατηγορίας ΤΕ (ΤΕ01, ΤΕ02, ΤΕ16).">
+  <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΓΤ/2024 για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16.">
   <title>Υπολογισμός μορίων 4ΕΑ/2025</title>
 
   <style>
-:root{--purple:#6941c6;--purple-soft:#f1edff}
-body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330px}
-.warning{background:var(--red-soft)!important;color:var(--red)!important;border:1px solid var(--edu-danger-border)!important}
-</style>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.3">
+    :root {
+      --bg:#f4f7fb;
+      --card:#fff;
+      --text:#18202b;
+      --muted:#64748b;
+      --border:#dbe3ec;
+      --blue:#1f6feb;
+      --blue-dark:#174ea6;
+      --blue-soft:#eef4ff;
+      --green:#137333;
+      --green-soft:#eaf7ef;
+      --orange:#9a5b00;
+      --orange-soft:#fff4e5;
+      --purple:#6941c6;
+      --purple-soft:#f1edff;
+      --shadow:0 8px 24px rgba(28,39,55,.08);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      margin:0;
+      padding:30px 18px;
+      color:var(--text);
+      line-height:1.55;
+    }
+
+    .app{
+      max-width:1060px;
+      margin:auto;
+    }
+
+    .back-tools{
+      display:inline-block;
+      margin:0 0 16px;
+      color:var(--blue);
+      font-weight:700;
+      text-decoration:none;
+    }
+    .back-tools:hover{text-decoration:underline}
+
+    .hero{
+      background:linear-gradient(135deg,#173b7a,#1f6feb);
+      color:#fff;
+      border-radius:18px;
+      padding:30px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    .hero h1{margin:0 0 8px;font-size:clamp(26px,4vw,38px);line-height:1.15}
+    .hero p{margin:5px 0;color:#e9f1ff}
+    .hero .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+    .hero .meta span{background:rgba(255,255,255,.14);padding:6px 10px;border-radius:999px;font-size:13px;font-weight:700}
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 330px;
+      gap:18px;
+      align-items:start;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:16px;
+      box-shadow:0 4px 16px rgba(28,39,55,.05);
+    }
+    .card h2{margin:0 0 5px;color:var(--blue-dark);font-size:21px}
+    .card h3{margin:20px 0 7px;font-size:17px}
+    .cap{color:var(--muted);font-size:14px;margin:0 0 15px}
+
+    .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .field{margin-bottom:13px}
+    label{display:block;font-weight:700;margin-bottom:6px;line-height:1.35}
+    label small,.help{display:block;color:var(--muted);font-weight:400;font-size:13px;margin-top:3px}
+
+    input,select{
+      width:100%;
+      padding:11px;
+      border:1px solid #cbd5e1;
+      border-radius:9px;
+      background:#fff;
+      color:var(--text);
+      font-size:15px;
+    }
+    input:focus,select:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,111,235,.12)}
+
+    .checkrow{display:flex;gap:10px;align-items:flex-start;padding:9px 0}
+    .checkrow input{width:19px;height:19px;margin-top:2px;flex:0 0 auto}
+    .checkrow label{margin:0}
+
+    .note{
+      margin:12px 0;
+      padding:11px 12px;
+      border-radius:10px;
+      background:var(--orange-soft);
+      color:#7b4900;
+      border:1px solid #f0d4a8;
+      font-size:13.5px;
+    }
+    .info-note{
+      margin:12px 0;
+      padding:11px 12px;
+      border-radius:10px;
+      background:var(--blue-soft);
+      color:var(--blue-dark);
+      border:1px solid #d5e4ff;
+      font-size:13.5px;
+    }
+
+    .subtot{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:15px;
+      padding-top:12px;
+      border-top:1px dashed #cbd5e1;
+      font-weight:700;
+    }
+    .pill{
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--blue-soft);
+      color:var(--blue-dark);
+      font-variant-numeric:tabular-nums;
+      white-space:nowrap;
+    }
+
+    .results{position:sticky;top:16px}
+    .total{text-align:center;padding:10px 0 18px}
+    .total .num{font-size:54px;line-height:1;font-weight:850;color:var(--blue);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+    .total .label{color:var(--muted);margin-top:5px}
+    .result-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #edf1f5;font-size:14px}
+    .result-row strong{font-variant-numeric:tabular-nums;text-align:right}
+
+    .priority{
+      margin:14px 0 4px;
+      padding:11px;
+      border-radius:10px;
+      background:#f8fafc;
+      border:1px solid var(--border);
+      text-align:center;
+      font-weight:700;
+      color:var(--muted);
+    }
+    .priority.yes{background:var(--green-soft);border-color:#b7e0c7;color:var(--green)}
+
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+    button{border:0;border-radius:10px;padding:11px;font-weight:700;cursor:pointer;font-size:14px;background:var(--blue);color:#fff}
+    button.secondary{background:#e7ecf2;color:#243244}
+
+    .source{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:16px;
+      margin-top:18px;
+      color:var(--muted);
+      font-size:13.5px;
+    }
+    .source strong{color:var(--text)}
+    .credits{text-align:center;margin-top:20px;color:#7a8490;font-size:13px}
+
+    .hidden{display:none!important}
+
+    @media(max-width:900px){
+      .layout{grid-template-columns:1fr}
+      .results{position:static}
+    }
+    @media(max-width:650px){
+      body{padding:16px 10px}
+      .hero{padding:24px 19px}
+      .field-grid{grid-template-columns:1fr}
+      .card{padding:16px}
+      .actions{grid-template-columns:1fr}
+    }
+  </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
-<body class="edu-ui edu-calc-standard">
+<body class="edu-ui">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app">
 <section class="hero">
@@ -36,32 +214,10 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
           <div class="field">
             <label for="branch">Κλάδος</label>
             <select id="branch">
-              <option value="">— Επιλογή κλάδου / ειδικότητας —</option>
-              <optgroup label="ΤΕ01">
-                <option value="ΤΕ01.04">ΤΕ01.04 — Ψυκτικοί</option>
-                <option value="ΤΕ01.06">ΤΕ01.06 — Ηλεκτρολόγοι</option>
-                <option value="ΤΕ01.07">ΤΕ01.07 — Ηλεκτρονικοί</option>
-                <option value="ΤΕ01.13">ΤΕ01.13 — Προγραμματιστές Η/Υ</option>
-                <option value="ΤΕ01.19">ΤΕ01.19 — Κομμωτικής</option>
-                <option value="ΤΕ01.20">ΤΕ01.20 — Αισθητικής</option>
-                <option value="ΤΕ01.25">ΤΕ01.25 — Αργυροχρυσοχοΐας</option>
-                <option value="ΤΕ01.26">ΤΕ01.26 — Οδοντοτεχνικής</option>
-                <option value="ΤΕ01.29">ΤΕ01.29 — Βοηθών Ιατρικών &amp; Βιολογικών Εργαστηρίων</option>
-                <option value="ΤΕ01.30">ΤΕ01.30 — Βοηθοί Βρεφοκόμων – Παιδοκόμων</option>
-                <option value="ΤΕ01.31">ΤΕ01.31 — Χειριστές Ιατρικών Συσκευών (Βοηθοί Ακτινολόγοι)</option>
-              </optgroup>
-              <optgroup label="ΤΕ02">
-                <option value="ΤΕ02.01">ΤΕ02.01 — Σχεδιαστές – Δομικοί</option>
-                <option value="ΤΕ02.02">ΤΕ02.02 — Μηχανολόγοι</option>
-                <option value="ΤΕ02.03">ΤΕ02.03 — Χημικοί Εργαστηρίων</option>
-                <option value="ΤΕ02.04">ΤΕ02.04 — Οικονομίας – Διοίκησης</option>
-                <option value="ΤΕ02.05">ΤΕ02.05 — Εφαρμοσμένων Τεχνών</option>
-                <option value="ΤΕ02.06">ΤΕ02.06 — Σχεδιασμού και Παραγωγής Προϊόντων</option>
-                <option value="ΤΕ02.07">ΤΕ02.07 — Γεωπονίας</option>
-              </optgroup>
-              <optgroup label="ΤΕ16">
-                <option value="ΤΕ16">ΤΕ16 — Μουσικής μη Ανώτατων Ιδρυμάτων</option>
-              </optgroup>
+              <option value="">— Επιλογή κλάδου —</option>
+              <option value="te01">ΤΕ01</option>
+              <option value="te02">ΤΕ02</option>
+              <option value="te16">ΤΕ16 — Μουσικής μη Ανώτατων Ιδρυμάτων</option>
             </select>
           </div>
           <div class="field">
@@ -73,6 +229,8 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
             </select>
           </div>
         </div>
+
+        <div id="branchWarning" class="note">Επίλεξε κλάδο πριν αξιολογήσεις την ένταξη σε πίνακα Ε.Α.Ε.</div>
 
         <div id="numericGradeWrap" class="field">
           <label for="degreeGrade">Βαθμός βασικού τίτλου
@@ -93,7 +251,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
         </div>
 
         <div class="info-note" id="normalizedGradeInfo">Αναγμένος βαθμός: 0,00 / 20 · Μόρια βαθμού: 0,00 / 60</div>
-        <div id="gradeWarning" class="warning hidden">Ο βαθμός δεν βρίσκεται στα επιτρεπτά όρια της επιλεγμένης κλίμακας.</div>
       </section>
 
       <section class="card">
@@ -129,8 +286,8 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
           <input type="number" id="eaeMonths" min="0" step="1" value="0">
         </div>
 
-        <div class="info-note">
-          Το κριτήριο <strong>εκπαιδευτικού γονέα παιδιού με αναπηρία 67% και άνω</strong> ελέγχεται αυτόματα από το ποσοστό αναπηρίας τέκνου που δηλώνεται στα Κοινωνικά Κριτήρια παρακάτω.
+                <div class="note">
+          Το κριτήριο «γονέας παιδιού με αναπηρία 67% και άνω» ελέγχεται αυτόματα από το ποσοστό αναπηρίας τέκνου στα Κοινωνικά Κριτήρια παρακάτω.
         </div>
 
         <div class="field-grid">
@@ -145,7 +302,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
         </div>
 
         <div class="priority" id="tableStatus">Δεν έχει δηλωθεί ακόμη κριτήριο ένταξης.</div>
-        <div class="info-note" id="eligibilityWhy">Συμπλήρωσε κλάδο και προσόντα για αναλυτικό έλεγχο ένταξης.</div>
 
         <div class="note">
           Η προϋπηρεσία Ε.Α.Ε. που χρησιμοποιείται για την ένταξη στον Επικουρικό Πίνακα δεν προστίθεται αυτόματα στα μόρια.
@@ -162,36 +318,17 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
           <label for="secondTitle"><span id="secondTitleLabel">Πτυχίο επιπέδου 5 / Ι.Ε.Κ. ίδιας ειδικότητας</span><small>10 μόρια</small></label>
         </div>
 
-        <h3>Ξένη γλώσσα — μοριοδοτείται μία</h3>
-        <div class="info-note">Επίλεξε <strong>ποια γλώσσα</strong> και το επίπεδό της. Η 4ΕΑ/2025 μοριοδοτεί μία μόνο ξένη γλώσσα.</div>
-        <div class="field-grid">
-          <div class="field">
-            <label for="langName">Ξένη γλώσσα</label>
-            <select id="langName">
-              <option value="">— Επιλογή γλώσσας —</option>
-              <option value="en">Αγγλική</option>
-              <option value="fr">Γαλλική</option>
-              <option value="de">Γερμανική</option>
-              <option value="it">Ιταλική</option>
-              <option value="es">Ισπανική</option>
-              <option value="other">Άλλη ξένη γλώσσα</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="langLevel">Επίπεδο</label>
-            <select id="langLevel">
-              <option value="0">Καμία / χωρίς μόρια</option>
-              <option value="10">Καλή γνώση — 10 μόρια</option>
-              <option value="15">Πολύ καλή γνώση — 15 μόρια</option>
-              <option value="20">Άριστη γνώση — 20 μόρια</option>
-            </select>
-          </div>
-          <div class="field hidden" id="langOtherWrap">
-            <label for="langOther">Ονομασία άλλης ξένης γλώσσας</label>
-            <input id="langOther" type="text" placeholder="π.χ. Πορτογαλική">
-          </div>
+        <div class="field">
+          <label for="language">Καλύτερη ξένη γλώσσα
+            <small>Μοριοδοτείται μόνο μία ξένη γλώσσα.</small>
+          </label>
+          <select id="language">
+            <option value="0">Καμία / δεν μοριοδοτείται</option>
+            <option value="10">Καλή γνώση — 10 μόρια</option>
+            <option value="15">Πολύ καλή γνώση — 15 μόρια</option>
+            <option value="20">Άριστη γνώση — 20 μόρια</option>
+          </select>
         </div>
-        <div id="languageWarning" class="note hidden"></div>
 
         <div class="checkrow">
           <input type="checkbox" id="computer">
@@ -201,17 +338,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
         <div class="checkrow">
           <input type="checkbox" id="training">
           <label for="training">Επιμόρφωση ≥300 ωρών και διάρκειας ≥7 μηνών<small>Α.Ε.Ι. ή εποπτευόμενος δημόσιος φορέας — μοριοδοτείται μία επιμόρφωση — 10 μόρια. Το σεμινάριο Ε.Α.Ε. ≥400 ωρών του Επικουρικού καλύπτει και αυτό το κριτήριο.</small></label>
-        </div>
-
-        <div class="training-proof hidden" id="trainingProof">
-          <div class="training-proof-title">Έλεγχος πιστοποιητικού σεμιναρίου</div>
-          <div class="training-proof-question">Στο πιστοποιητικό αναγράφονται η ημερομηνία έναρξης και η ημερομηνία λήξης του σεμιναρίου;</div>
-          <div class="segmented-choice" role="radiogroup" aria-label="Ημερομηνίες έναρξης και λήξης στο πιστοποιητικό">
-            <label><input type="radio" name="trainingDates" id="trainingDatesYes" value="yes"><span>✓ Ναι</span></label>
-            <label><input type="radio" name="trainingDates" id="trainingDatesNo" value="no"><span>Όχι</span></label>
-          </div>
-          <div class="training-proof-status neutral" id="trainingDatesStatus">Έλεγξε το πιστοποιητικό πριν την υποβολή των δικαιολογητικών.</div>
-          <small class="training-proof-legal">Σε περίπτωση που στο πιστοποιητικό δεν αναγράφεται η ημεροχρονολογία έναρξης και λήξης του σεμιναρίου, απαιτείται η προσκόμιση σχετικής βεβαίωσης από τον οικείο φορέα. <strong>Πρέπει να προκύπτει ολόκληρο το χρονικό διάστημα των 7 μηνών· 6 μήνες και 29 ημέρες δεν γίνονται δεκτοί.</strong></small>
         </div>
 
         <div class="subtot"><span>Σύνολο Ακαδημαϊκών</span><span class="pill" id="academicSubtotal">0,00 / 120</span></div>
@@ -279,17 +405,57 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
 
       <section class="card">
         <h2>Γ. Κοινωνικά κριτήρια</h2>
-        <div class="field"><label for="children">Αριθμός επιλέξιμων τέκνων<small>3 μόρια ανά τέκνο.</small></label><input id="children" type="number" min="0" step="1" value="0"></div>
-        <h3>Αναπηρία — λαμβάνεται μόνο το υψηλότερο επιλέξιμο ποσοστό</h3>
+
         <div class="field-grid">
-          <div class="field"><label for="candidateDisability">Αναπηρία υποψηφίου (%)<small>Μοριοδοτείται από 50% και άνω, εφόσον δεν οφείλεται έστω κατά ποσοστό σε ψυχική πάθηση.</small></label><input id="candidateDisability" type="number" min="0" max="100" step="0.01" value="0"></div>
-          <div class="field"><label for="spouseDisability">Αναπηρία συζύγου (%)<small>Από 50% και άνω, με έγγαμο βίο τουλάχιστον 4 ετών.</small></label><input id="spouseDisability" type="number" min="0" max="100" step="0.01" value="0"></div>
-          <div class="field"><label for="childDisability">Υψηλότερο ποσοστό αναπηρίας τέκνου (%)<small>Από 50% και άνω. Από 67% και άνω θεμελιώνει και κριτήριο ένταξης στον Επικουρικό Πίνακα.</small></label><input id="childDisability" type="number" min="0" max="100" step="0.01" value="0"></div>
+          <div class="field">
+            <label for="children">Αριθμός επιλέξιμων τέκνων
+              <small>3 μόρια ανά τέκνο, σύμφωνα με τις προϋποθέσεις ηλικίας, σπουδών ή στρατιωτικής θητείας της προκήρυξης.</small>
+            </label>
+            <input type="number" id="children" min="0" step="1" value="0">
+          </div>
+
+          <div class="field">
+            <label for="candidateDisability">Αναπηρία υποψηφίου/ας (%)
+              <small>Μοριοδοτείται από 50% και άνω, εφόσον δεν οφείλεται κατά κανένα ποσοστό σε ψυχική πάθηση.</small>
+            </label>
+            <input type="number" id="candidateDisability" min="0" max="100" step="1" value="0">
+          </div>
+
+          <div class="field">
+            <label for="spouseDisability">Αναπηρία συζύγου (%)
+              <small>Μοριοδοτείται από 50% και άνω, εφόσον ο έγγαμος βίος έχει διαρκέσει τουλάχιστον 4 έτη.</small>
+            </label>
+            <input type="number" id="spouseDisability" min="0" max="100" step="1" value="0">
+          </div>
+
+          <div class="field">
+            <label for="childDisability">Υψηλότερο ποσοστό αναπηρίας τέκνου (%)
+              <small>Μοριοδοτείται από 50% και άνω, ανεξαρτήτως ηλικίας του τέκνου.</small>
+            </label>
+            <input type="number" id="childDisability" min="0" max="100" step="1" value="0">
+          </div>
         </div>
-        <div class="info-note">Για τη μοριοδότηση αναπηρίας λαμβάνεται μόνο το υψηλότερο επιλέξιμο ποσοστό και υπολογίζεται ως ποσοστό × 0,4.</div>
-        <div class="checkrow"><input id="marriageYears4Plus" type="checkbox"><label for="marriageYears4Plus">Ο έγγαμος βίος έχει διαρκέσει τουλάχιστον 4 έτη<small>Απαιτείται για τη μοριοδότηση αναπηρίας συζύγου.</small></label></div>
-        <div class="checkrow"><input id="candidateMentalCondition" type="checkbox"><label for="candidateMentalCondition">Η αναπηρία του/της υποψηφίου οφείλεται, έστω και κατά ποσοστό, σε ψυχική πάθηση<small>Αν επιλεγεί, η αναπηρία του/της υποψηφίου δεν μοριοδοτείται.</small></label></div>
-        <div id="socialWarning" class="note hidden"></div>
+
+        <div class="checkrow">
+          <input type="checkbox" id="marriageYears4Plus">
+          <label for="marriageYears4Plus">Ο έγγαμος βίος έχει διαρκέσει τουλάχιστον 4 έτη
+            <small>Απαιτείται μόνο για τη μοριοδότηση αναπηρίας συζύγου.</small>
+          </label>
+        </div>
+
+        <div class="checkrow">
+          <input type="checkbox" id="candidateMentalCondition">
+          <label for="candidateMentalCondition">Η αναπηρία του/της υποψηφίου οφείλεται, έστω και κατά ποσοστό, σε ψυχική πάθηση
+            <small>Αν επιλεγεί, η αναπηρία του/της υποψηφίου δεν μοριοδοτείται.</small>
+          </label>
+        </div>
+
+        <div class="note">
+          Αν υπάρχουν περισσότερα επιλέξιμα πρόσωπα με αναπηρία, λαμβάνεται υπόψη μόνο το υψηλότερο έγκυρο ποσοστό.
+        </div>
+
+        <div id="socialWarnings" class="note hidden"></div>
+
         <div class="subtot"><span>Σύνολο Κοινωνικών</span><span class="pill" id="socialSubtotal">0,00</span></div>
       </section>
 
@@ -302,7 +468,7 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
       </section>
     </div>
 
-    <aside class="card results">
+    <aside class="card results" aria-live="polite">
       <div class="total">
         <div class="num" id="grandTotal">0,00</div>
         <div class="label">συνολικά μόρια</div>
@@ -312,7 +478,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
       <div class="result-row"><span>Προϋπηρεσία</span><strong id="resService">0,00 / 120</strong></div>
       <div class="result-row"><span>Κοινωνικά</span><strong id="resSocial">0,00</strong></div>
       <div class="result-row"><span>Βαθμός τίτλου</span><strong id="resDegree">0,00</strong></div>
-      <div class="result-row"><span>Ξένη γλώσσα</span><strong id="resLanguage">0,00</strong></div>
       <div class="result-row"><span>Τέκνα</span><strong id="resChildren">0,00</strong></div>
       <div class="result-row"><span>Αναπηρία</span><strong id="resDisability">0,00</strong></div>
 
@@ -325,56 +490,42 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
         <button type="button" class="secondary" id="resetBtn">Μηδενισμός</button>
       </div>
 
-      <div class="info-note edu-mt-14">
+      <div class="info-note" style="margin-top:14px">
         Σε ισοβαθμία προηγούνται κατά σειρά: περισσότερα κοινωνικά μόρια (και ειδικότερα αναπηρία), έπειτα περισσότερα ακαδημαϊκά / μεγαλύτερος βαθμός πτυχίου και τέλος περισσότερη προϋπηρεσία.
       </div>
     </aside>
   </div>
 
   <section class="source">
-    <strong>Πηγές / Νομική βάση:</strong> Προκήρυξη ΑΣΕΠ <strong>4ΕΑ/2025</strong>, <strong>ΦΕΚ Α.Σ.Ε.Π. 42/18.08.2025</strong>, ιδίως Κεφάλαια Β΄, Γ΄ και Δ΄.<br>
-    <a href="https://info.asep.gr/node/77020" target="_blank" rel="noopener noreferrer">Επίσημη σελίδα 4ΕΑ/2025 στο ΑΣΕΠ ↗</a><br>
-    Το εργαλείο είναι ενημερωτικό. Η τελική ένταξη σε πίνακα και η μοριοδότηση προκύπτουν από τον έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από τα αρμόδια όργανα.
+    <strong>Πηγές / Νομική βάση:</strong><br>
+    <strong>Πηγή:</strong> Προκήρυξη ΑΣΕΠ 4ΕΑ/2025, ΦΕΚ Α.Σ.Ε.Π. 42/18.08.2025, Κεφάλαια Β΄ και Γ΄.<br>
+    Το εργαλείο είναι ενημερωτικό. Η τελική ένταξη σε πίνακα και η μοριοδότηση προκύπτουν από τον έλεγχο της αίτησης και των δικαιολογητικών από τα αρμόδια όργανα.
   </section>
 </div>
 
 <script src="includes/service-calculations.js"></script>
-<script src="includes/social-calculations.js"></script>
-<script src="includes/language-calculations.js"></script>
 <script src="includes/te-academic-calculations.js"></script>
+<script src="includes/social-calculations.js"></script>
 <script>
 (function(){
-  "use strict";
   const $ = id => document.getElementById(id);
   const num = id => Math.max(0, Number($(id)?.value || 0));
   const intNum = id => Math.max(0, Math.floor(Number($(id)?.value || 0)));
+  const cap = (v,max) => Math.min(Math.max(0,v),max);
   const fmt = v => (Math.round((Number(v)+Number.EPSILON)*100)/100).toLocaleString('el-GR',{minimumFractionDigits:2,maximumFractionDigits:2});
 
-  function branchFamily(){
-    const value = $('branch').value;
-    if(value === 'ΤΕ16') return 'ΤΕ16';
-    if(value.startsWith('ΤΕ01')) return 'ΤΕ01';
-    if(value.startsWith('ΤΕ02')) return 'ΤΕ02';
-    return '';
-  }
-
-  function selectedBranchLabel(){
-    const option = $('branch').selectedOptions[0];
-    return option && option.value ? option.textContent.trim() : 'κλάδος/ειδικότητα μη επιλεγμένος/η';
-  }
-
   function updateBranchUI(){
-    const family = branchFamily();
-    if(family === 'ΤΕ16'){
+    const branch = $('branch').value;
+    $('branchWarning').classList.toggle('hidden', Boolean(branch));
+    if(branch === 'te16'){
       $('secondTitleLabel').textContent = 'Δεύτερο πτυχίο από το οποίο προκύπτει μουσική ειδίκευση, αναγνωρισμένου μη Ανώτατου Εκπαιδευτικού Ιδρύματος';
       if($('gradeScale').dataset.auto !== 'off') $('gradeScale').value = '10';
     } else {
-      $('secondTitleLabel').textContent = 'Πτυχίο επιπέδου 5 / Ι.Ε.Κ. ίδιας ειδικότητας';
+      $('secondTitleLabel').textContent = branch
+        ? 'Πτυχίο επιπέδου 5 / Ι.Ε.Κ. ίδιας ειδικότητας'
+        : 'Δεύτερος τίτλος που προβλέπεται για τον κλάδο';
       if($('gradeScale').dataset.auto !== 'off') $('gradeScale').value = '20';
     }
-    const te16Option = Array.from($('gradeScale').options).find(o=>o.value==='te16text');
-    if(te16Option) te16Option.disabled = family !== 'ΤΕ16';
-    if(family !== 'ΤΕ16' && $('gradeScale').value === 'te16text') $('gradeScale').value='20';
     updateGradeUI();
   }
 
@@ -392,211 +543,192 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
     }
   }
 
-  function syncLanguageUI(){
-    $('langOtherWrap').classList.toggle('hidden', $('langName').value !== 'other');
-  }
-
-  function languageResult(){
-    syncLanguageUI();
-    return EducationLanguages.calculatePair([{
-      language:$('langName').value,
-      otherText:$('langOther').value,
-      points:num('langLevel')
-    }],{cap:20});
-  }
-
-  function trainingDatesSelection(){
-    const selected=document.querySelector('input[name="trainingDates"]:checked');
-    return selected?selected.value:'';
-  }
-
-  function trainingActive(){
-    return $('training').checked || $('auxSeminar400').checked;
-  }
-
-  function updateTrainingProofUI(){
-    const active=trainingActive();
-    $('trainingProof').classList.toggle('hidden',!active);
-    if(!active) return;
-    const value=trainingDatesSelection();
-    const status=$('trainingDatesStatus');
-    status.className='training-proof-status '+(value==='yes'?'success':value==='no'?'warning':'neutral');
-    if(value==='yes') status.textContent='✓ Οι ημερομηνίες έναρξης και λήξης αναγράφονται στο πιστοποιητικό.';
-    else if(value==='no') status.textContent='⚠️ Απαιτείται πρόσθετη βεβαίωση από τον οικείο φορέα με την ημερομηνία έναρξης και λήξης.';
-    else status.textContent='Έλεγξε το πιστοποιητικό πριν την υποβολή των δικαιολογητικών.';
-  }
-
-  function trainingProofSummary(){
-    if(!trainingActive()) return '';
-    const value=trainingDatesSelection();
-    if(value==='yes') return 'Πιστοποιητικό σεμιναρίου: αναγράφονται ημερομηνία έναρξης και λήξης.';
-    if(value==='no') return 'ΔΙΚΑΙΟΛΟΓΗΤΙΚΟ: απαιτείται βεβαίωση φορέα με ημερομηνία έναρξης και λήξης του σεμιναρίου.';
-    return 'Έλεγχος πιστοποιητικού σεμιναρίου: εκκρεμεί ο έλεγχος ημερομηνίας έναρξης και λήξης.';
-  }
-
-  function socialResult(){
-    return EducationSocial.calculate({
-      children:num('children'),
-      candidateDisability:num('candidateDisability'),
-      spouseDisability:num('spouseDisability'),
-      childDisability:num('childDisability'),
-      marriageYears4Plus:$('marriageYears4Plus').checked,
-      candidateMentalCondition:$('candidateMentalCondition').checked
-    });
-  }
-
-  function serviceResult(){
-    const parts=[
-      EducationService.regularPublic(intNum('regularMonths')),
-      EducationService.difficult(intNum('difficultMonths')),
-      EducationService.threeMonthRegular2020(intNum('covid20Regular')),
-      EducationService.threeMonthDifficult2020(intNum('covid20Difficult')),
-      EducationService.threeMonthRegular2021(intNum('covid21Regular')),
-      EducationService.threeMonthDifficult2021(intNum('covid21Difficult')),
-      EducationService.privateSchool(intNum('privateMonths'))
-    ];
-    const raw=parts.reduce((sum,p)=>sum+p.points,0);
-    const months=parts.reduce((sum,p)=>sum+p.months,0);
-    return {raw,points:Math.min(raw,120),months};
-  }
-
   function calc(){
-    updateBranchUI();
-    syncLanguageUI();
-    updateTrainingProofUI();
-
     const currentScale = $('gradeScale').value;
     const rawDegreeGrade = num('degreeGrade');
     const minDegreeGrade = currentScale === '10' ? 5 : (currentScale === '20' ? 10 : 0);
     const maxDegreeGrade = currentScale === '10' ? 10 : (currentScale === '20' ? 20 : 20);
-    const numericGradeValid = currentScale === 'te16text' || ($('degreeGrade').value!=='' && rawDegreeGrade >= minDegreeGrade && rawDegreeGrade <= maxDegreeGrade);
+    const numericGradeValid = currentScale === 'te16text'
+      || (rawDegreeGrade >= minDegreeGrade && rawDegreeGrade <= maxDegreeGrade);
 
-    const languages=languageResult();
     const academicResult = TEAcademic.calculate({
       gradeScale: currentScale,
       degreeGrade: numericGradeValid ? rawDegreeGrade : 0,
       te16TextGrade: Number($('te16TextGrade').value || 0),
       secondTitle: $('secondTitle').checked,
-      languagePoints: languages.points,
+      languagePoints: Number($('language').value || 0),
       computer: $('computer').checked,
-      training: trainingActive()
+      training: $('training').checked || $('auxSeminar400').checked
     });
-    const service=serviceResult();
-    const social=socialResult();
+    const normalizedGrade = academicResult.normalizedGrade;
+    const degreePoints = academicResult.degreePoints;
+    const academic = academicResult.points;
 
-    const mainEligible = $('mainCriterion').value !== 'none';
-    const auxReasons=[];
-    if($('auxSeminar400').checked) auxReasons.push('σεμινάριο Ε.Α.Ε. ≥400 ωρών / ≥7 μηνών');
-    if(intNum('eaeMonths') >= 10) auxReasons.push('τουλάχιστον 10 μήνες προϋπηρεσίας στην Ε.Α.Ε.');
-    if(social.childDisability67) auxReasons.push('γονέας παιδιού με αναπηρία ≥67%');
-    const auxEligible=auxReasons.length>0;
+    const regular = EducationService.regularPublic(intNum('regularMonths')).points;
+    const difficult = EducationService.difficult(intNum('difficultMonths')).points;
+    const c20reg = EducationService.threeMonthRegular2020(intNum('covid20Regular')).points;
+    const c20dif = EducationService.threeMonthDifficult2020(intNum('covid20Difficult')).points;
+    const c21reg = EducationService.threeMonthRegular2021(intNum('covid21Regular')).points;
+    const c21dif = EducationService.threeMonthDifficult2021(intNum('covid21Difficult')).points;
+    const privatePts = EducationService.privateSchool(intNum('privateMonths')).points;
+    const service = cap(regular + difficult + c20reg + c20dif + c21reg + c21dif + privatePts, 120);
 
-    let tableCode='none', tableLabel='Δεν προκύπτει ένταξη', why='';
-    if(!$('branch').value){
-      why='Επίλεξε κλάδο/ειδικότητα για να ολοκληρωθεί ο έλεγχος ένταξης.';
-    } else if(mainEligible){
-      tableCode='main';
-      tableLabel='Αξιολογικός Πίνακας Β΄ (Κύριος)';
-      why='Δηλώθηκε προσόν που θεμελιώνει ένταξη στον Αξιολογικό Πίνακα Β΄.';
-    } else if(auxEligible){
-      tableCode='aux';
-      tableLabel='Επικουρικός Πίνακας';
-      why='Κριτήριο/α Επικουρικού: '+auxReasons.join(' · ')+'.';
-    } else {
-      why='Δεν έχει δηλωθεί προσόν Κύριου Πίνακα ούτε ένα από τα τρία κριτήρια Επικουρικού.';
+    const socialResult = EducationSocial.calculate({
+      children: num('children'),
+      candidateDisability: num('candidateDisability'),
+      spouseDisability: num('spouseDisability'),
+      childDisability: num('childDisability'),
+      marriageYears4Plus: $('marriageYears4Plus').checked,
+      candidateMentalCondition: $('candidateMentalCondition').checked
+    });
+    const childrenPts = socialResult.childrenPoints;
+    const disabilityPts = socialResult.disabilityPoints;
+    const social = socialResult.total;
+
+    $('socialWarnings').classList.toggle('hidden', socialResult.warnings.length === 0);
+    $('socialWarnings').innerHTML = socialResult.warnings.map(w => '• ' + w).join('<br>');
+
+    const branchSelected = Boolean($('branch').value);
+    const mainEligible = branchSelected && $('mainCriterion').value !== 'none';
+    const auxEligible = branchSelected && (
+      $('auxSeminar400').checked ||
+      intNum('eaeMonths') >= 10 ||
+      socialResult.childDisability67
+    );
+
+    let tableCode = 'none';
+    let tableLabel = branchSelected ? 'Δεν προκύπτει ένταξη' : 'Επίλεξε κλάδο';
+    if (mainEligible) {
+      tableCode = 'main';
+      tableLabel = 'Αξιολογικός Πίνακας Β΄ (Κύριος)';
+    } else if (auxEligible) {
+      tableCode = 'aux';
+      tableLabel = 'Επικουρικός Πίνακας';
     }
 
-    const total = academicResult.points + service.points + social.total;
+    const total = academic + service + social;
 
-    if(currentScale !== 'te16text' && $('degreeGrade').value!=='' && !numericGradeValid){
-      $('normalizedGradeInfo').textContent=`Μη έγκυρος βαθμός: επιτρέπεται ${minDegreeGrade}–${maxDegreeGrade}. Δεν υπολογίζονται μόρια βαθμού.`;
+    if (currentScale !== 'te16text' && rawDegreeGrade > 0 && !numericGradeValid) {
+      $('normalizedGradeInfo').textContent =
+        `Μη έγκυρος βαθμός: επιτρέπεται ${minDegreeGrade}–${maxDegreeGrade}. Δεν υπολογίζονται μόρια βαθμού.`;
     } else {
-      $('normalizedGradeInfo').textContent=`Αναγμένος βαθμός: ${fmt(academicResult.normalizedGrade)} / 20 · Μόρια βαθμού: ${fmt(academicResult.degreePoints)} / 60`;
+      $('normalizedGradeInfo').textContent =
+        `Αναγμένος βαθμός: ${fmt(normalizedGrade)} / 20 · Μόρια βαθμού: ${fmt(degreePoints)} / 60`;
     }
-    $('gradeWarning').classList.toggle('hidden', currentScale==='te16text' || $('degreeGrade').value==='' || numericGradeValid);
+    $('academicSubtotal').textContent = `${fmt(academic)} / 120`;
+    $('serviceSubtotal').textContent = `${fmt(service)} / 120`;
+    $('socialSubtotal').textContent = fmt(social);
+    $('grandTotal').textContent = fmt(total);
+    $('resAcademic').textContent = `${fmt(academic)} / 120`;
+    $('resService').textContent = `${fmt(service)} / 120`;
+    $('resSocial').textContent = fmt(social);
+    $('resDegree').textContent = fmt(degreePoints);
+    $('resChildren').textContent = fmt(childrenPts);
+    $('resDisability').textContent = fmt(disabilityPts);
+    $('resTable').textContent = tableLabel;
 
-    $('academicSubtotal').textContent=`${fmt(academicResult.points)} / 120`;
-    $('serviceSubtotal').textContent=`${fmt(service.points)} / 120`;
-    $('socialSubtotal').textContent=fmt(social.total);
-    $('grandTotal').textContent=fmt(total);
-    $('resAcademic').textContent=`${fmt(academicResult.points)} / 120`;
-    $('resService').textContent=`${fmt(service.points)} / 120`;
-    $('resSocial').textContent=fmt(social.total);
-    $('resDegree').textContent=fmt(academicResult.degreePoints);
-    $('resLanguage').textContent=fmt(languages.points);
-    $('resChildren').textContent=fmt(social.childrenPoints);
-    $('resDisability').textContent=fmt(social.disabilityPoints);
-    $('resTable').textContent=tableLabel;
+    $('tableStatus').classList.toggle('yes', tableCode === 'main' || tableCode === 'aux');
+    if (!branchSelected) {
+      $('tableStatus').textContent = 'Επίλεξε πρώτα κλάδο / ειδικότητα.';
+    } else if (tableCode === 'main') {
+      $('tableStatus').textContent = 'Προκύπτει ένταξη στον Αξιολογικό Πίνακα Β΄ (Κύριο).';
+    } else if (tableCode === 'aux') {
+      const auxReasons = [];
+      if ($('auxSeminar400').checked) auxReasons.push('σεμινάριο Ε.Α.Ε. ≥400 ωρών / ≥7 μηνών');
+      if (intNum('eaeMonths') >= 10) auxReasons.push('προϋπηρεσία Ε.Α.Ε. ≥10 μηνών');
+      if (socialResult.childDisability67) auxReasons.push('τέκνο με αναπηρία ≥67%');
+      $('tableStatus').textContent =
+        'Δεν δηλώθηκε κριτήριο Κύριου Πίνακα — προκύπτει ένταξη στον Επικουρικό Πίνακα'
+        + (auxReasons.length ? ' λόγω: ' + auxReasons.join(' · ') : '') + '.';
+    } else {
+      $('tableStatus').textContent = 'Δεν προκύπτει ένταξη σε Κύριο ή Επικουρικό Πίνακα από τα δηλωμένα στοιχεία.';
+    }
 
-    const lw=$('languageWarning');
-    lw.textContent=languages.warnings.join(' ');
-    lw.classList.toggle('hidden',languages.warnings.length===0);
-    const sw=$('socialWarning');
-    sw.textContent=social.warnings.join(' ');
-    sw.classList.toggle('hidden',social.warnings.length===0);
+    const ped = $('pedagogical').checked;
+    const priorities = [];
+    if (ped) priorities.push('ΠΡΟΤΑΞΗ λόγω Π.Δ.Ε.');
+    if ($('braille').checked) priorities.push('Braille');
+    if ($('signLanguage').checked) priorities.push('Ε.Ν.Γ.');
 
-    $('tableStatus').classList.toggle('yes',tableCode==='main'||tableCode==='aux');
-    $('tableStatus').textContent=tableLabel;
-    $('eligibilityWhy').textContent=why;
+    $('priorityBox').classList.toggle('yes', priorities.length > 0);
+    $('priorityBox').textContent = priorities.length
+      ? priorities.join(' · ')
+      : 'Χωρίς δηλωμένη ειδική πρόταξη / προτεραιότητα';
 
-    const ped=$('pedagogical').checked;
-    const priorities=[];
-    if(ped) priorities.push('ΠΡΟΤΑΞΗ λόγω Παιδαγωγικής και Διδακτικής Επάρκειας');
-    if($('braille').checked) priorities.push('Braille — προτεραιότητα για μαθητές με προβλήματα όρασης');
-    if($('signLanguage').checked) priorities.push('Ε.Ν.Γ. — προτεραιότητα για κωφούς/βαρήκοους μαθητές');
-    $('priorityBox').classList.toggle('yes',priorities.length>0);
-    $('priorityBox').textContent=priorities.length?priorities.join(' · '):'Χωρίς δηλωμένη ειδική πρόταξη / προτεραιότητα';
-
-    return {academicResult,languages,service,social,total,ped,tableCode,tableLabel,why,priorities};
+    return {normalizedGrade,degreePoints,academic,service,childrenPts,disabilityPts,social,total,ped,tableCode,tableLabel};
   }
 
   function summary(v){
     return [
-      `Υπολογισμός μορίων 4ΕΑ/2025 — ${selectedBranchLabel()}`,
+      'Υπολογισμός μορίων 4ΕΑ/2025',
       `Σύνολο: ${fmt(v.total)}`,
-      `Ακαδημαϊκά: ${fmt(v.academicResult.points)} / 120`,
-      `Ξένη γλώσσα: ${fmt(v.languages.points)}`,
-      `Προϋπηρεσία: ${fmt(v.service.points)} / 120`,
-      `Κοινωνικά: ${fmt(v.social.total)}`,
+      `Ακαδημαϊκά: ${fmt(v.academic)} / 120`,
+      `Προϋπηρεσία: ${fmt(v.service)} / 120`,
+      `Κοινωνικά: ${fmt(v.social)}`,
       `Πίνακας Ε.Α.Ε.: ${v.tableLabel}`,
-      v.why,
-      `Παιδαγωγική επάρκεια: ${v.ped?'ΝΑΙ — ΠΡΟΤΑΞΗ':'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
-      v.priorities.length?'Προτεραιότητες: '+v.priorities.join(' · '):'',
-      trainingProofSummary()
-    ].filter(Boolean).join('\n');
+      `Παιδαγωγική επάρκεια: ${v.ped ? 'ΝΑΙ — ΠΡΟΤΑΞΗ' : 'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
+      '',
+      'Ενδεικτικός υπολογισμός βάσει της Προκήρυξης ΑΣΕΠ 4ΕΑ/2025.'
+    ].join('\n');
   }
 
-  function sanitizeIntegerInput(el){
-    if(!el) return;
-    const ids=['regularMonths','difficultMonths','covid20Regular','covid20Difficult','covid21Regular','covid21Difficult','privateMonths','eaeMonths','children'];
-    if(!ids.includes(el.id) || el.value==='') return;
-    let value=Math.max(0,Math.floor(Number(el.value)||0));
-    const max=el.getAttribute('max');
-    if(max!==null && max!=='') value=Math.min(value,Number(max));
-    el.value=String(value);
-  }
-
-  document.addEventListener('input',e=>{sanitizeIntegerInput(e.target);calc();});
-  document.addEventListener('change',e=>{
-    sanitizeIntegerInput(e.target);
-    if(e.target && e.target.id==='gradeScale') $('gradeScale').dataset.auto='off';
-    calc();
+  const serviceMonthIds = ['regularMonths','difficultMonths','covid20Regular','covid20Difficult','covid21Regular','covid21Difficult','privateMonths','eaeMonths'];
+  serviceMonthIds.forEach(id => {
+    const el = $(id);
+    el.addEventListener('input', () => {
+      if (el.value === '') return;
+      const value = Math.max(0, Math.floor(Number(el.value) || 0));
+      el.value = value;
+    });
   });
 
+  const childrenField = $('children');
+  childrenField.addEventListener('input', () => {
+    if (childrenField.value === '') return;
+    childrenField.value = Math.max(0, Math.floor(Number(childrenField.value) || 0));
+  });
+
+  document.addEventListener('input',calc);
+  document.addEventListener('change',calc);
+
   $('branch').addEventListener('change',()=>{
-    $('gradeScale').dataset.auto='on';
+    $('gradeScale').dataset.auto = 'on';
     updateBranchUI();
+    calc();
+  });
+  $('gradeScale').addEventListener('change',()=>{
+    $('gradeScale').dataset.auto = 'off';
+    updateGradeUI();
     calc();
   });
 
   $('degreeGrade').addEventListener('change',()=>{
-    if($('degreeGrade').value==='') return;
-    const scale=$('gradeScale').value;
-    if(scale==='te16text') return;
-    const min=scale==='10'?5:10, max=scale==='10'?10:20;
-    const value=Number(String($('degreeGrade').value).replace(',', '.'));
-    if(!Number.isFinite(value)) $('degreeGrade').value='';
-    else $('degreeGrade').value=String(Math.min(max,Math.max(min,value)));
+    if ($('degreeGrade').value === '') return;
+    const scale = $('gradeScale').value;
+    if (scale === 'te16text') return;
+    const minGrade = scale === '10' ? 5 : 10;
+    const maxGrade = scale === '10' ? 10 : 20;
+    let value = Number(String($('degreeGrade').value).replace(',', '.'));
+    if (!Number.isFinite(value)) {
+      $('degreeGrade').value = '';
+      return;
+    }
+    value = Math.min(maxGrade, Math.max(minGrade, value));
+    $('degreeGrade').value = value;
+    calc();
+  });
+
+  $('resetBtn').addEventListener('click',()=>{
+    document.querySelectorAll('input[type="number"]').forEach(el=>el.value=0);
+    $('degreeGrade').value='';
+    document.querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked=false);
+    $('branch').value='';
+    $('gradeScale').dataset.auto='on';
+    $('gradeScale').value='20';
+    $('language').value='0';
+    $('te16TextGrade').value='0';
+    $('mainCriterion').value='none';
+    updateBranchUI();
     calc();
   });
 
@@ -607,24 +739,7 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
       const old=$('copyBtn').textContent;
       $('copyBtn').textContent='Αντιγράφηκε';
       setTimeout(()=>$('copyBtn').textContent=old,1400);
-    }catch(e){alert(text);}
-  });
-
-  $('resetBtn').addEventListener('click',()=>{
-    document.querySelectorAll('input[type="number"]').forEach(el=>el.value='0');
-    $('degreeGrade').value='';
-    document.querySelectorAll('input[type="text"]').forEach(el=>el.value='');
-    document.querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked=false);
-    document.querySelectorAll('input[name="trainingDates"]').forEach(el=>el.checked=false);
-    $('branch').value='';
-    $('gradeScale').dataset.auto='on';
-    $('gradeScale').value='20';
-    $('langName').value='';
-    $('langLevel').value='0';
-    $('te16TextGrade').value='0';
-    $('mainCriterion').value='none';
-    updateBranchUI();
-    calc();
+    }catch(e){ alert(text); }
   });
 
   $('gradeScale').dataset.auto='on';
@@ -633,6 +748,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.3"></script>
+  <script src="assets/common.js"></script>
 </body>
 </html>
