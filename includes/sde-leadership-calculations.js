@@ -193,10 +193,14 @@
   }
 
   function calculateTraining(data) {
-    const points = Math.min(n(data.trainingHours) / 100 * 0.5, 5);
+    const hours = n(data.trainingHours);
+    const points = hours > 0 && hours < 15 ? 0 : Math.min(hours / 100 * 0.5, 5);
+    const warnings = [];
+    if (hours > 0 && hours < 15) warnings.push('Η δηλωμένη επιμόρφωση είναι μικρότερη των 15 ωρών και δεν μοριοδοτείται.');
     return {
       total: round2(points),
-      details: points ? [{ label: 'Επιμόρφωση Εκπαίδευσης Ενηλίκων / ΣΔΕ / Διοίκησης', points: round2(points) }] : []
+      details: points ? [{ label: 'Επιμόρφωση Εκπαίδευσης Ενηλίκων / ΣΔΕ / Διοίκησης', points: round2(points) }] : [],
+      warnings
     };
   }
 
@@ -265,7 +269,7 @@
       interviewEntered,
       final,
       eligibility,
-      warnings: formal.warnings.slice()
+      warnings:[].concat(formal.warnings || [], training.warnings || [])
     };
   }
 

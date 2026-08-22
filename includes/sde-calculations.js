@@ -1,16 +1,16 @@
 /*
  * Μοριοδότηση και αντιστοίχιση ειδικοτήτων για αποσπάσεις στα ΣΔΕ.
- * Βάση: Υ.Α. 88422/Κ1, ΦΕΚ Β' 4088/03.07.2026.
+ * Βάση: Υ.Α. 88422/Κ1, ΦΕΚ Β' 4088/03.07.2026, όπως διορθώθηκε με ΦΕΚ Β' 4199/10.07.2026.
  */
 (function (global) {
   'use strict';
 
   const MAX = Object.freeze({
-    formalQualifications: 19,
+    formalQualifications: 18,
     training: 4,
-    education: 23,
+    education: 22,
     teachingExperience: 13,
-    otherQualifications: 4,
+    otherQualifications: 5,
     total: 40
   });
 
@@ -56,19 +56,19 @@
   }
 
   function phdPoints(value) {
-    return value === 'adult' ? 10 : value === 'other' ? 9 : 0;
+    return value === 'adult' ? 11 : value === 'other' ? 10 : 0;
   }
 
   function masterPoints(value) {
-    return value === 'adult' ? 7 : value === 'other' ? 6 : 0;
+    return value === 'adult' ? 8 : value === 'other' ? 7 : 0;
   }
 
   function secondPhdPoints(value) {
-    return value === 'adult' ? 3 : value === 'other' ? 2 : 0;
+    return value === 'adult' ? 2 : value === 'other' ? 1 : 0;
   }
 
   function secondMasterPoints(value) {
-    return value === 'adult' ? 2 : value === 'other' ? 1 : 0;
+    return value === 'adult' ? 1 : value === 'other' ? 0 : 0;
   }
 
   function calculateEducation(data) {
@@ -95,8 +95,12 @@
     const formalRaw = phd + master + secondDegree + secondPhd + secondMaster;
     const formal = Math.min(formalRaw, MAX.formalQualifications);
 
-    const sdeTraining = Math.min(num(data.sdeTrainingHours) / 100 * 0.25, 2);
-    const adultTraining = Math.min(num(data.adultTrainingHours) / 100 * 0.25, 2);
+    const sdeTrainingHours = num(data.sdeTrainingHours);
+    const adultTrainingHours = num(data.adultTrainingHours);
+    const sdeTraining = sdeTrainingHours > 0 && sdeTrainingHours < 15 ? 0 : Math.min(sdeTrainingHours / 100 * 0.25, 2);
+    const adultTraining = adultTrainingHours > 0 && adultTrainingHours < 15 ? 0 : Math.min(adultTrainingHours / 100 * 0.25, 2);
+    if (sdeTrainingHours > 0 && sdeTrainingHours < 15) warnings.push('Η επιμόρφωση σε θέματα ΣΔΕ είναι μικρότερη των 15 ωρών και δεν μοριοδοτείται.');
+    if (adultTrainingHours > 0 && adultTrainingHours < 15) warnings.push('Η επιμόρφωση στις αρχές Εκπαίδευσης Ενηλίκων είναι μικρότερη των 15 ωρών και δεν μοριοδοτείται.');
     if (sdeTraining > 0) details.push({ label: 'Επιμόρφωση σε θέματα ΣΔΕ', points: sdeTraining });
     if (adultTraining > 0) details.push({ label: 'Επιμόρφωση στις αρχές Εκπαίδευσης Ενηλίκων', points: adultTraining });
 
@@ -119,9 +123,8 @@
     if (adultPoints > 0) details.push({ label: 'Εκπαίδευση Ενηλίκων εκτός ΣΔΕ', points: adultPoints });
 
     const formalYearsTotal = Math.floor(num(data.formalEducationYears));
-    const beyondRequired = Math.max(0, formalYearsTotal - 2);
-    const formalPoints = Math.min(beyondRequired, 4);
-    if (formalPoints > 0) details.push({ label: 'Τυπική εκπαίδευση πέραν των 2 προαπαιτούμενων ετών', points: formalPoints });
+    const formalPoints = Math.min(formalYearsTotal, 4);
+    if (formalPoints > 0) details.push({ label: 'Διδακτική εμπειρία στην τυπική εκπαίδευση', points: formalPoints });
 
     const raw = sdePoints + adultPoints + formalPoints;
     return {
@@ -180,9 +183,9 @@
 
   function calculateOther(data) {
     const language = calculateLanguages(data);
-    const computer = data.computer ? 1 : 0;
+    const computer = (data.computer || data.specialty === 'PE86') ? 2 : 0;
     const details = language.details.slice();
-    if (computer) details.push({ label: 'Γνώσεις χειρισμού Η/Υ / ΤΠΕ Α΄ επιπέδου', points: 1 });
+    if (computer) details.push({ label: data.specialty === 'PE86' ? 'Γνώσεις Η/Υ (τεκμαίρονται για ΠΕ86)' : 'Γνώσεις χειρισμού Η/Υ / ΤΠΕ Α΄ επιπέδου', points: 2 });
     return {
       languagePoints: language.points,
       computerPoints: computer,
@@ -255,7 +258,8 @@
       other,
       total: Math.min(raw, MAX.total),
       assignments: assignmentsFor(data.specialty, data.flags || {}),
-      eligibleByTwoYears: experience.formalYearsTotal >= 2,
+      eligibilitySchoolYears: num(data.eligibilitySchoolYears),
+      eligibleByTwoYears: num(data.eligibilitySchoolYears) >= 2,
       max: MAX
     };
   }

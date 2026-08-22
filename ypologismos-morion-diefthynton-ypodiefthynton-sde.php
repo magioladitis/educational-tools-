@@ -195,7 +195,7 @@
 
       <section class="card">
         <div class="section-head"><div><h2>5. Επιμόρφωση</h2><p class="subtitle">Επιμόρφωση στις αρχές Εκπαίδευσης Ενηλίκων, σε θέματα ΣΔΕ ή στη Διοίκηση Εκπαιδευτικών Μονάδων από φορείς του δημόσιου ή ευρύτερου δημόσιου τομέα.</p></div><div class="max">έως 5</div></div>
-        <div class="field-grid"><div class="field full"><label for="trainingHours">Συνολικές επιλέξιμες ώρες ολοκληρωμένων επιμορφώσεων <small>0,5 μόρια ανά 100 ώρες. Μην συμπεριλαμβάνεις επιμορφώσεις κάτω των 15 ωρών, ημερίδες, διημερίδες ή συνέδρια.</small></label><input type="number" id="trainingHours" min="0" step="1" value="0" oninput="calculate()"></div></div>
+        <div class="field-grid"><div class="field full"><label for="trainingHours">Συνολικές επιλέξιμες ώρες ολοκληρωμένων επιμορφώσεων <small>0,5 μόρια ανά 100 ώρες. Κάθε επιμέρους επιμόρφωση κάτω των 15 ωρών λαμβάνει 0 μόρια. Μην συμπεριλαμβάνεις ημερίδες, διημερίδες ή συνέδρια.</small></label><input type="number" id="trainingHours" min="0" step="1" value="0" oninput="calculate()"></div></div>
       </section>
 
       <section class="card hidden" id="interviewCard">

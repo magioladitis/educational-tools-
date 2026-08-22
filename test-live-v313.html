@@ -1,22 +1,265 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<!-- UI consolidation v3.20: shared design system in assets/common.css -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</title>
 
   <style>
-:root{--purple:#6941c6;--purple-soft:#f1edff}
-body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330px}
-.training-proof{grid-column:1/-1;margin-top:2px}
-.warning{background:var(--orange-soft)!important;color:#7b4900!important;border:1px solid var(--edu-warning-border)!important;font-weight:700}
-</style>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.3">
+    :root {
+      --bg:#f4f7fb;
+      --card:#fff;
+      --text:#18202b;
+      --muted:#64748b;
+      --border:#dbe3ec;
+      --blue:#1f6feb;
+      --blue-dark:#174ea6;
+      --blue-soft:#eef4ff;
+      --green:#137333;
+      --green-soft:#eaf7ef;
+      --orange:#9a5b00;
+      --orange-soft:#fff4e5;
+      --purple:#6941c6;
+      --purple-soft:#f1edff;
+      --shadow:0 8px 24px rgba(28,39,55,.08);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      margin:0;
+      padding:30px 18px;
+      color:var(--text);
+      line-height:1.55;
+    }
+
+    .app{
+      max-width:1060px;
+      margin:auto;
+    }
+
+    .back-tools{
+      display:inline-block;
+      margin:0 0 16px;
+      color:var(--blue);
+      font-weight:700;
+      text-decoration:none;
+    }
+    .back-tools:hover{text-decoration:underline}
+
+    .hero{
+      background:linear-gradient(135deg,#173b7a,#1f6feb);
+      color:#fff;
+      border-radius:18px;
+      padding:30px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    .hero h1{margin:0 0 8px;font-size:clamp(26px,4vw,38px);line-height:1.15}
+    .hero p{margin:5px 0;color:#e9f1ff}
+    .hero .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+    .hero .meta span{background:rgba(255,255,255,.14);padding:6px 10px;border-radius:999px;font-size:13px;font-weight:700}
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 330px;
+      gap:18px;
+      align-items:start;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:16px;
+      box-shadow:0 4px 16px rgba(28,39,55,.05);
+    }
+    .card h2{margin:0 0 5px;color:var(--blue-dark);font-size:21px}
+    .card h3{margin:20px 0 7px;font-size:17px}
+    .cap{color:var(--muted);font-size:14px;margin:0 0 15px}
+
+    .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .field{margin-bottom:13px}
+    label{display:block;font-weight:700;margin-bottom:6px;line-height:1.35}
+    label small,.help{display:block;color:var(--muted);font-weight:400;font-size:13px;margin-top:3px}
+
+    input,select{
+      width:100%;
+      padding:11px;
+      border:1px solid #cbd5e1;
+      border-radius:9px;
+      background:#fff;
+      color:var(--text);
+      font-size:15px;
+    }
+    input:focus,select:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,111,235,.12)}
+
+    .checkrow{display:flex;gap:10px;align-items:flex-start;padding:9px 0}
+    .checkrow input{width:19px;height:19px;margin-top:2px;flex:0 0 auto}
+    .checkrow label{margin:0}
+
+    .note{
+      margin:12px 0;
+      padding:11px 12px;
+      border-radius:10px;
+      background:var(--orange-soft);
+      color:#7b4900;
+      border:1px solid #f0d4a8;
+      font-size:13.5px;
+    }
+    .info-note{
+      margin:12px 0;
+      padding:11px 12px;
+      border-radius:10px;
+      background:var(--blue-soft);
+      color:var(--blue-dark);
+      border:1px solid #d5e4ff;
+      font-size:13.5px;
+    }
+
+    .training-proof{
+      grid-column:1 / -1;
+      margin-top:2px;
+      padding:13px;
+      border:1px solid #d9e2ec;
+      border-radius:12px;
+      background:#f8fafc;
+    }
+    .training-proof-title{font-weight:800;color:var(--blue-dark);margin-bottom:8px}
+    .training-proof-question{font-size:13.5px;color:var(--text);margin-bottom:9px}
+    .segmented-choice{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+    .segmented-choice label{margin:0;cursor:pointer}
+    .segmented-choice input{position:absolute;opacity:0;pointer-events:none}
+    .segmented-choice span{
+      display:inline-flex;align-items:center;justify-content:center;min-width:92px;
+      padding:8px 13px;border:1px solid #cbd5e1;border-radius:999px;background:#fff;
+      color:#334155;font-weight:800;transition:.15s ease;
+    }
+    .segmented-choice input:focus-visible + span{box-shadow:0 0 0 3px rgba(31,111,235,.15);border-color:var(--blue)}
+    .segmented-choice input:checked + span{background:var(--blue-soft);border-color:#9ec2ff;color:var(--blue-dark)}
+    .segmented-choice input[value="no"]:checked + span{background:#fff1f0;border-color:#f0b5af;color:#a33228}
+    .training-proof-status{padding:9px 10px;border-radius:9px;font-size:13px;font-weight:700;margin-bottom:8px}
+    .training-proof-status.neutral{background:#eef4ff;color:var(--blue-dark);border:1px solid #d5e4ff}
+    .training-proof-status.success{background:var(--green-soft);color:var(--green);border:1px solid #b7e0c7}
+    .training-proof-status.warning{background:#fff1f0;color:#9f2d24;border:1px solid #efb5af}
+    .training-proof-legal{display:block;color:var(--muted);font-size:12.5px;line-height:1.45}
+
+    .subtot{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:15px;
+      padding-top:12px;
+      border-top:1px dashed #cbd5e1;
+      font-weight:700;
+    }
+    .pill{
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--blue-soft);
+      color:var(--blue-dark);
+      font-variant-numeric:tabular-nums;
+      white-space:nowrap;
+    }
+
+    .results{position:sticky;top:16px}
+    .total{text-align:center;padding:10px 0 18px}
+    .total .num{font-size:54px;line-height:1;font-weight:850;color:var(--blue);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+    .total .label{color:var(--muted);margin-top:5px}
+    .result-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #edf1f5;font-size:14px}
+    .result-row strong{font-variant-numeric:tabular-nums;text-align:right}
+
+    .priority{
+      margin:14px 0 4px;
+      padding:11px;
+      border-radius:10px;
+      background:#f8fafc;
+      border:1px solid var(--border);
+      text-align:center;
+      font-weight:700;
+      color:var(--muted);
+    }
+    .priority.yes{background:var(--green-soft);border-color:#b7e0c7;color:var(--green)}
+
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+    button{border:0;border-radius:10px;padding:11px;font-weight:700;cursor:pointer;font-size:14px;background:var(--blue);color:#fff}
+    button.secondary{background:#e7ecf2;color:#243244}
+
+    .source{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:16px;
+      margin-top:18px;
+      color:var(--muted);
+      font-size:13.5px;
+    }
+    .source strong{color:var(--text)}
+    .credits{text-align:center;margin-top:20px;color:#7a8490;font-size:13px}
+
+    .hidden{display:none!important}
+
+
+    /* 1ΓΕ/2ΓΕ-only helpers: same visual language, richer calculated breakdown. */
+    .calculate-primary{width:100%;margin-top:14px}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .result{
+      display:none;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:20px;
+      margin:2px 0 16px;
+      box-shadow:0 4px 16px rgba(28,39,55,.05);
+      color:var(--text);
+      line-height:1.6;
+      overflow-x:auto;
+    }
+    .result h2{margin:0 0 12px;color:var(--blue-dark);font-size:21px}
+    .result.error{background:#fdecea;border-color:#f2c7c2;color:#b3261e;font-weight:700}
+    .breakdown{width:100%;border-collapse:collapse;margin-top:12px;background:#fff;color:var(--text)}
+    .breakdown th,.breakdown td{border:1px solid #d0d7de;padding:9px;text-align:left;vertical-align:top}
+    .breakdown th{background:#f1f3f4}
+    .total-row{font-weight:700;background:var(--green-soft);color:var(--green)}
+    .warning{margin-top:16px;padding:12px;border-radius:10px;background:var(--orange-soft);color:#7b4900;border:1px solid #f0d4a8;font-weight:700}
+    .small-note{margin:3px 2px 16px;font-size:13px;color:var(--muted);line-height:1.5}
+    .source-links{margin:.45rem 0 0}
+    .source-links a{font-weight:700}
+
+
+    @media(max-width:900px){
+      .layout{grid-template-columns:1fr}
+      .results{position:static}
+    }
+    @media(max-width:650px){
+      body{padding:16px 10px}
+      .hero{padding:24px 19px}
+      .field-grid{grid-template-columns:1fr}
+      .card{padding:16px}
+      .actions{grid-template-columns:1fr}
+    }
+  </style>
+  <link rel="stylesheet" href="assets/common.css">
 </head>
 
-<body class="edu-ui edu-calc-standard">
-<?php require_once __DIR__ . '/includes/header.php'; ?>
+<body class="edu-ui">
+<header class="edu-tools-global-header" aria-label="Πλοήγηση Εργαλειοθήκης Εκπαιδευτικού">
+  <div class="edu-tools-global-header__inner">
+    <a class="edu-tools-global-header__brand" href="ergaleia.php">
+      <span class="edu-tools-global-header__brand-icon" aria-hidden="true">🧰</span>
+      <span class="edu-tools-global-header__brand-text">Εργαλειοθήκη Εκπαιδευτικού</span>
+    </a>
+    <a class="edu-tools-global-header__back" href="ergaleia.php">
+      <span aria-hidden="true">←</span>
+      <span class="edu-tools-global-header__back-label">Όλα τα εργαλεία</span>
+    </a>
+  </div>
+</header>
 
 <div class="app">
 <section class="hero">
@@ -84,35 +327,25 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
         </div>
 
         <h3>Ξένες γλώσσες</h3>
-        <div class="note">Επίλεξε <strong>γλώσσα + επίπεδο</strong>. Αν δηλωθεί η ίδια γλώσσα δύο φορές, μοριοδοτείται μόνο το ανώτερο επίπεδο. Για ΠΕ05, ΠΕ06, ΠΕ07, ΠΕ34 και ΠΕ40 η γλώσσα του κλάδου αποκλείεται αυτόματα από τη μοριοδότηση.</div>
         <div class="field-grid">
           <div class="field">
             <label for="language1">1η ξένη γλώσσα</label>
-            <select id="language1"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select>
+            <select id="language1"><option value="">— Καμία —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select>
           </div>
           <div class="field">
             <label for="level1">Επίπεδο 1ης γλώσσας</label>
             <select id="level1"><option value="none">— Κανένα —</option><option value="excellent">Άριστη γνώση</option><option value="very_good">Πολύ καλή γνώση</option><option value="good">Καλή γνώση</option></select>
           </div>
-          <div class="field hidden" id="languageOther1Wrap">
-            <label for="languageOther1">Ονομασία άλλης 1ης γλώσσας</label>
-            <input id="languageOther1" type="text" placeholder="π.χ. Πορτογαλική">
-          </div>
           <div class="field">
             <label for="language2">2η ξένη γλώσσα</label>
-            <select id="language2"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select>
+            <select id="language2"><option value="">— Καμία —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other2">Άλλη ξένη γλώσσα</option></select>
           </div>
           <div class="field">
             <label for="level2">Επίπεδο 2ης γλώσσας</label>
             <select id="level2"><option value="none">— Κανένα —</option><option value="excellent">Άριστη γνώση</option><option value="very_good">Πολύ καλή γνώση</option><option value="good">Καλή γνώση</option></select>
           </div>
-          <div class="field hidden" id="languageOther2Wrap">
-            <label for="languageOther2">Ονομασία άλλης 2ης γλώσσας</label>
-            <input id="languageOther2" type="text" placeholder="π.χ. Πορτογαλική">
-          </div>
         </div>
-        <div id="languageWarning" class="note hidden"></div>
-        <div class="note">Μοριοδοτούνται μέχρι δύο ξένες γλώσσες. Άριστη: 7 μόρια, πολύ καλή: 5, καλή: 3.</div>
+        <div class="note">Μοριοδοτούνται μέχρι δύο ξένες γλώσσες. Άριστη: 7 μόρια, πολύ καλή: 5, καλή: 3. Η αντίστοιχη γλώσσα δεν μοριοδοτείται στους κλάδους ΠΕ05, ΠΕ06, ΠΕ07, ΠΕ34 και ΠΕ40.</div>
 
         <h3>Λοιπά ακαδημαϊκά προσόντα</h3>
         <div class="field-grid">
@@ -200,7 +433,7 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
         <button type="button" class="secondary" onclick="resetCalculator()">Μηδενισμός</button>
       </div>
 
-      <div class="info-note edu-mt-14">Η τελική σειρά κατάταξης εξαρτάται από τους κανόνες της αντίστοιχης προκήρυξης και τον επίσημο έλεγχο των δικαιολογητικών.</div>
+      <div class="info-note" style="margin-top:14px">Η τελική σειρά κατάταξης εξαρτάται από τους κανόνες της αντίστοιχης προκήρυξης και τον επίσημο έλεγχο των δικαιολογητικών.</div>
     </aside>
   </div>
 
@@ -215,7 +448,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
 </div>
 
 <script src="includes/academic-calculations.js"></script>
-<script src="includes/language-calculations.js"></script>
 <script src="includes/service-calculations.js"></script>
 <script src="includes/social-calculations.js"></script>
 <script>
@@ -313,93 +545,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
     return valueOf(id) === "yes";
   }
 
-  const languageOwn = Object.freeze({
-    "ΠΕ05": "fr",
-    "ΠΕ06": "en",
-    "ΠΕ07": "de",
-    "ΠΕ34": "it",
-    "ΠΕ40": "es"
-  });
-
-  const languageLevelPoints = Object.freeze({
-    none: 0,
-    good: 3,
-    very_good: 5,
-    excellent: 7
-  });
-
-  const languageLevelNames = Object.freeze({
-    3: "Καλή",
-    5: "Πολύ καλή",
-    7: "Άριστη"
-  });
-
-  function languageResult() {
-    const specialty = valueOf("specialty");
-    const excluded = languageOwn[specialty] ? [languageOwn[specialty]] : [];
-    return EducationLanguages.calculatePair([
-      {
-        language: valueOf("language1"),
-        otherText: valueOf("languageOther1"),
-        points: languageLevelPoints[valueOf("level1")] || 0
-      },
-      {
-        language: valueOf("language2"),
-        otherText: valueOf("languageOther2"),
-        points: languageLevelPoints[valueOf("level2")] || 0
-      }
-    ], { excluded });
-  }
-
-  function languageDetails(result) {
-    return result.accepted.map(item =>
-      item.label + " - " + (languageLevelNames[item.points] || "") + ": " +
-      formatPoints(item.points) + " μόρια"
-    );
-  }
-
-  function syncLanguageUI() {
-    const specialty = valueOf("specialty");
-    const excluded = languageOwn[specialty] || "";
-    const first = document.getElementById("language1");
-    const second = document.getElementById("language2");
-
-    document.getElementById("languageOther1Wrap").classList.toggle("hidden", first.value !== "other");
-    document.getElementById("languageOther2Wrap").classList.toggle("hidden", second.value !== "other");
-
-    [first, second].forEach(select => {
-      Array.from(select.options).forEach(option => { option.disabled = false; });
-    });
-
-    [first, second].forEach(select => {
-      if (!excluded) return;
-      const option = Array.from(select.options).find(item => item.value === excluded);
-      if (option) option.disabled = true;
-    });
-
-    if (first.value && first.value !== "other") {
-      const option = Array.from(second.options).find(item => item.value === first.value);
-      if (option) option.disabled = true;
-    }
-    if (second.value && second.value !== "other") {
-      const option = Array.from(first.options).find(item => item.value === second.value);
-      if (option) option.disabled = true;
-    }
-
-    const messages = [];
-    if (excluded) {
-      messages.push(
-        "Στον " + specialty + " δεν μοριοδοτείται η " +
-        EducationLanguages.LABELS[excluded] + " γλώσσα που αποτελεί προσόν του κλάδου."
-      );
-    }
-    messages.push(...languageResult().warnings);
-
-    const warning = document.getElementById("languageWarning");
-    warning.textContent = messages.join(" ");
-    warning.classList.toggle("hidden", messages.length === 0);
-  }
-
   function trainingDatesSelection() {
     const selected = document.querySelector('input[name="trainingDates"]:checked');
     return selected ? selected.value : "";
@@ -439,7 +584,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
 
   function liveCalculatePoints() {
     updateTrainingProofUI();
-    syncLanguageUI();
     const specialty = valueOf("specialty");
     const degreeGrade = numberOf("degreeGrade");
     if (!specialty || !degreeGrade || degreeGrade < 5 || degreeGrade > 10) {
@@ -469,8 +613,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
     document.getElementById("level1").value = "none";
     document.getElementById("language2").value = "";
     document.getElementById("level2").value = "none";
-    document.getElementById("languageOther1").value = "";
-    document.getElementById("languageOther2").value = "";
 
     document.querySelectorAll('input[type="number"]').forEach(el => {
       if (el.id !== "degreeGrade") el.value = 0;
@@ -478,7 +620,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
     document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
     document.querySelectorAll('input[name="trainingDates"]').forEach(el => el.checked = false);
     updateTrainingProofUI();
-    syncLanguageUI();
 
     const result = document.getElementById("result");
     result.style.display = "none";
@@ -509,38 +650,19 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
 
     let academic;
     try {
-      // Η κοινή EducationAcademic υπολογίζει όλα τα ακαδημαϊκά εκτός από τις γλώσσες.
-      // Οι γλώσσες περνούν αποκλειστικά από EducationLanguages.calculatePair(),
-      // όπως στα 1ΕΑ/2ΕΑ/3ΕΑ της v3.17.
       academic = EducationAcademic.calculate({
         specialty: specialty,
         degreeGrade: degreeGrade,
         secondDegree: yes("secondDegree"),
         phd: yes("phd"),
         mscCount: parseInt(valueOf("mscCount"), 10) || 0,
-        languages: [],
+        languages: [
+          { language: valueOf("language1"), level: valueOf("level1") },
+          { language: valueOf("language2"), level: valueOf("level2") }
+        ],
         computer: yes("computer"),
         training: yes("training")
       });
-
-      const languages = languageResult();
-      const langDetails = languageDetails(languages);
-      academic.languagePoints = languages.points;
-      academic.languageDetails = langDetails;
-      academic.rawPoints += languages.points;
-      academic.points = Math.min(academic.rawPoints, EducationAcademic.RULES.maxAcademicPoints);
-      academic.details = [
-        ...academic.coreDetails,
-        ...langDetails,
-        ...academic.computerDetails,
-        ...academic.trainingDetails
-      ];
-      academic.warnings = [...academic.warnings, ...languages.warnings];
-
-      if (academic.rawPoints > EducationAcademic.RULES.maxAcademicPoints &&
-          !academic.warnings.some(message => message.includes("ανώτατο όριο των 120"))) {
-        academic.warnings.push("Στα Ακαδημαϊκά Προσόντα εφαρμόστηκε το ανώτατο όριο των 120 μορίων.");
-      }
     } catch (error) {
       showError(error.message);
       return;
@@ -760,10 +882,29 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
     el.addEventListener('change', liveCalculatePoints);
   });
   updateTrainingProofUI();
-  syncLanguageUI();
 </script>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.3"></script>
-</body>
+<footer class="edu-tools-global-footer">
+  <div class="edu-tools-global-footer__inner">
+    <div class="edu-tools-global-footer__meta">
+      <span><strong>Εργαλειοθήκη Εκπαιδευτικού</strong></span>
+      <span>Σχεδιασμός &amp; υλοποίηση: Μάριος Μαγιολαδίτης (ΠΕ03, ΠΕ86), 2026</span>
+    </div>
+    <span class="edu-tools-global-footer__disclaimer">Τα εργαλεία παρέχουν βοηθητικούς υπολογισμούς και οδηγίες· για την επίσημη διαδικασία ισχύουν οι αντίστοιχες προκηρύξεις και ανακοινώσεις.</span>
+  </div>
+</footer>
+  <script src="assets/common.js"></script>
+<script>
+window.addEventListener('load',()=>{
+  const sp=document.getElementById('specialty'); sp.value='ΠΕ02'; sp.dispatchEvent(new Event('change',{bubbles:true}));
+  const dg=document.getElementById('degreeGrade'); dg.value='7.5'; dg.dispatchEvent(new Event('input',{bubbles:true}));
+  const tr=document.getElementById('training'); tr.value='yes'; tr.dispatchEvent(new Event('change',{bubbles:true}));
+  const no=document.getElementById('trainingDatesNo'); no.checked=true; no.dispatchEvent(new Event('change',{bubbles:true}));
+  setTimeout(()=>{
+    document.body.dataset.testTotal=document.getElementById('grandTotal').textContent;
+    document.body.dataset.testTrainingHidden=document.getElementById('trainingProof').classList.contains('hidden')?'yes':'no';
+    document.body.dataset.testTrainingStatus=document.getElementById('trainingDatesStatus').textContent;
+  },100);
+});
+</script></body>
 </html>

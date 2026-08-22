@@ -776,6 +776,7 @@
 </div>
 
 <script>
+  let isLiveCalculation = false;
   function valueOf(id) { return document.getElementById(id).value; }
   function numberOf(id) {
     const value = parseFloat(valueOf(id));
@@ -803,7 +804,7 @@
     result.style.display = "block";
     result.className = "result error";
     result.innerHTML = message;
-    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!isLiveCalculation) result.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function showResult(html) {
@@ -811,7 +812,7 @@
     result.style.display = "block";
     result.className = "result";
     result.innerHTML = html;
-    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!isLiveCalculation) result.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function calculateServicePoints(years, months, days) {
@@ -1108,6 +1109,11 @@
     showResult(html);
   }
 
+  function liveCalculatePoints() {
+    isLiveCalculation = true;
+    try { calculatePoints(); } finally { isLiveCalculation = false; }
+  }
+
   function resetCalculator() {
     document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
     document.querySelectorAll('input[type="number"]').forEach(el => el.value = 0);
@@ -1131,6 +1137,13 @@
     result.className = "result";
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
+  document.addEventListener("input", event => {
+    if (event.target && event.target.matches("input, select")) liveCalculatePoints();
+  });
+  document.addEventListener("change", event => {
+    if (event.target && event.target.matches("input, select")) liveCalculatePoints();
+  });
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
