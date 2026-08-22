@@ -62,9 +62,15 @@
     .stipend-table th{color:#4f5f73;font-size:12px;text-transform:uppercase;letter-spacing:.02em}
     .stipend-table td.amount{white-space:nowrap;font-weight:800;color:var(--blue-dark);font-variant-numeric:tabular-nums}
     .stipend-highlight{margin-top:11px;padding:10px 12px;border-radius:10px;background:#eaf7f0;border:1px solid #b7e3c9;color:#12633f;font-size:13px}
+    .stipend-tax-info{margin-top:12px;padding:13px;border-radius:12px;background:#f0f9f4;border:1px solid #b7e3c9;color:#174f38;font-size:13px;line-height:1.5}
+    .stipend-tax-info strong.title{display:block;font-size:14px;margin-bottom:7px}
+    .stipend-tax-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 14px;align-items:baseline}
+    .stipend-tax-grid b{text-align:right;white-space:nowrap}
+    .stipend-net-list{margin:9px 0 0;padding-left:20px}
+    .stipend-net-list li{margin:3px 0}
     .stipend-footnote{margin-top:10px;color:#667085;font-size:12px;line-height:1.45}
     @media(max-width:920px){.layout{grid-template-columns:1fr}.results{position:static}}
-    @media(max-width:650px){.page-shell{padding:16px 12px 34px}.hero{padding:24px 19px}.field-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.actions{grid-template-columns:1fr}.stipend-table th:nth-child(4),.stipend-table td:nth-child(4){display:none}}
+    @media(max-width:650px){.page-shell{padding:16px 12px 34px}.hero{padding:24px 19px}.field-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.actions{grid-template-columns:1fr}.stipend-table th:nth-child(4),.stipend-table td:nth-child(4){display:none}.stipend-tax-grid{grid-template-columns:1fr}.stipend-tax-grid b{text-align:left;white-space:normal}}
   </style>
   <link rel="stylesheet" href="assets/common.css">
 </head>
@@ -364,14 +370,18 @@
   </div>
 
   <div class="source-note">
-    <strong>Πηγές / Νομική βάση:</strong><br>
     <strong>Πηγή:</strong> Υ.Α. 83046/Η2/30-06-2020, ΦΕΚ Β΄ 2687/01.07.2020, ιδίως άρθρα 2–3.
     Η πρόσκληση 11771/Η2/30-01-2026 για το σχολικό έτος 2026-2027 και το 2027 Νοτίου Ημισφαιρίου εξακολουθεί να χρησιμοποιεί την παραπάνω Υ.Α. για την κατάρτιση των πινάκων και τη μοριοδότηση.
     Ο πίνακας χωρών/ειδικοτήτων έχει ενσωματωθεί από το <strong>Παράρτημα ΙΙΙ</strong> και τα μηνιαία επιμίσθια από το <strong>Παράρτημα V</strong> της πρόσκλησης 11771/Η2/30-01-2026 (ΑΔΑ: 9Η5Ο46ΝΚΠΔ-Λ91).
-    Στο Παράρτημα V τα ποσά αναγράφονται σε ευρώ και σημειώνεται ότι το επιμίσθιο είναι αφορολόγητο από 01-01-2012. Το «ενδεικτικό 12μηνο» του εργαλείου είναι απλός πολλαπλασιασμός του μηνιαίου ποσού × 12 και δεν αποτελεί αυτοτελή εγγύηση καταβολής για συγκεκριμένο χρονικό διάστημα.
-    Το εργαλείο αφορά τις ελληνόγλωσσες εκπαιδευτικές μονάδες εξωτερικού και δεν υποκαθιστά τον έλεγχο της πρόσκλησης και των ειδικών τοπικών προϋποθέσεων.
+    Στο Παράρτημα V τα ποσά αναγράφονται σε ευρώ και σημειώνεται ότι το επιμίσθιο είναι <strong>αφορολόγητο από 01-01-2012</strong> (ν. 4038/2012). Ο ισχύων Κώδικας Φορολογίας Εισοδήματος εξαιρεί επίσης το επίδομα αλλοδαπής των λοιπών δημόσιων πολιτικών υπηρεσιών από το εισόδημα μισθωτής εργασίας (άρθρο 14 παρ. 1γ ν. 4172/2013).
+    Ως προς τις ειδικές κρατήσεις, η παλαιά εισφορά <strong>1% υπέρ ΤΠΔΥ έχει καταργηθεί</strong> με το άρθρο 84 ν. 4997/2022, ενώ η ειδική εισφορά αλληλεγγύης για την καταπολέμηση της ανεργίας <strong>2%</strong> της παρ. 2α του άρθρου 38 ν. 3986/2011 εξακολουθεί να ισχύει. Επειδή το Παράρτημα V της πρόσκλησης 2026 αναφέρει το αφορολόγητο αλλά δεν επαναλαμβάνει αναλυτικό πίνακα κρατήσεων, το εργαλείο εμφανίζει το 98% ως <strong>ενδεικτικό ποσό μετά τη νόμιμη κράτηση 2%</strong> και όχι ως δεσμευτική εκκαθάριση μισθοδοσίας.
+    Το «ενδεικτικό 12μηνο» είναι απλός πολλαπλασιασμός του μηνιαίου ποσού × 12. Τυχόν φορολογικές υποχρεώσεις στη χώρα υποδοχής, τραπεζικά έξοδα ή άλλες προσωπικές/τοπικές επιβαρύνσεις δεν περιλαμβάνονται.
+    Το εργαλείο αφορά τις ελληνόγλωσσες εκπαιδευτικές μονάδες εξωτερικού και δεν υποκαθιστά τον έλεγχο της πρόσκλησης, της μισθοδοτικής εκκαθάρισης και των ειδικών τοπικών προϋποθέσεων.
     <a href="https://www.minedu.gov.gr/news/63949-30-01-26-prosklisi-ekdilosis-endiaferontos-ekpaideftikon-gia-apospasi-sto-eksoteriko-apo-to-sxoliko-etos-2026-2027-kai-apo-to-etos-2027-notiou-imisfairiou" target="_blank" rel="noopener">Επίσημη ανακοίνωση ΥΠΑΙΘΑ</a> ·
-    <a href="https://www.minedu.gov.gr/publications/docs2026/9%CE%975%CE%9F46%CE%9D%CE%9A%CE%A0%CE%94-%CE%9B91_%CE%A0%CE%A1%CE%9F%CE%A3%CE%9A%CE%9B%CE%97%CE%A3%CE%97_%CE%95%CE%9D%CE%94%CE%99%CE%91%CE%A6%CE%95%CE%A1%CE%9F%CE%9D%CE%A4%CE%9F%CE%A3_%CE%93%CE%99%CE%91_%CE%A3%CE%A7_%CE%95%CE%A4%CE%9F%CE%A3_2026-2027-%CE%9D.%CE%97_2027.pdf" target="_blank" rel="noopener">Πρόσκληση — Παραρτήματα ΙΙΙ & V (PDF)</a>.
+    <a href="https://www.minedu.gov.gr/publications/docs2026/9%CE%975%CE%9F46%CE%9D%CE%9A%CE%A0%CE%94-%CE%9B91_%CE%A0%CE%A1%CE%9F%CE%A3%CE%9A%CE%9B%CE%97%CE%A3%CE%97_%CE%95%CE%9D%CE%94%CE%99%CE%91%CE%A6%CE%95%CE%A1%CE%9F%CE%9D%CE%A4%CE%9F%CE%A3_%CE%93%CE%99%CE%91_%CE%A3%CE%A7_%CE%95%CE%A4%CE%9F%CE%A3_2026-2027-%CE%9D.%CE%97_2027.pdf" target="_blank" rel="noopener">Πρόσκληση — Παράρτημα V (PDF)</a> ·
+    <a href="https://elib.aade.gr/elib/printview?d=%2Fgr%2Fact%2F2013%2F4172%2Fmain%2Fsec%2F1%2Fpart%2F6%2Fart%2F67%2F" target="_blank" rel="noopener">ΚΦΕ — άρθρο 14 παρ. 1γ</a> ·
+    <a href="https://www.efka.gov.gr/el/menoy/sychnes-eroteseis/asphalisi-eisphores/asphalismenoi/misthotoi-demosioy-tomea/epistrophe-achreostetos-katabletheison-eisphoron/epistrophe-tes-eidikes-eisphoras-1-yper-tpdy" target="_blank" rel="noopener">e-ΕΦΚΑ — κατάργηση 1% ΤΠΔΥ</a> ·
+    <a href="https://www.e-nomothesia.gr/kat-oikonomia/n-3986-2011.html" target="_blank" rel="noopener">ν. 3986/2011 — άρθρο 38</a>.
   </div>
 
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
@@ -511,6 +521,12 @@
     return Number(value || 0).toLocaleString('el-GR', {style:'currency', currency:'EUR', maximumFractionDigits:0});
   }
 
+  function euroCents(value){
+    return Number(value || 0).toLocaleString('el-GR', {style:'currency', currency:'EUR', minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  const CURRENT_STIPEND_DEDUCTION_RATE = 0.02;
+
   function updateStipendComparison(){
     const preferenceIds = [$('preference1').value, $('preference2').value, $('preference3').value];
     const selected = preferenceIds
@@ -535,6 +551,25 @@
       highlight = `<div class="stipend-highlight"><strong>Μεγαλύτερο ονομαστικό επιμίσθιο από τις επιλογές σου:</strong> ${highest.name} — ${euro(highest.stipend)} / μήνα.</div>`;
     }
 
+    const estimatedNetRows = selected.map(item => {
+      const deduction = item.stipend * CURRENT_STIPEND_DEDUCTION_RATE;
+      const afterDeduction = item.stipend - deduction;
+      return `<li><strong>${item.name}:</strong> ${euroCents(item.stipend)} − ${euroCents(deduction)} (2%) = <strong>${euroCents(afterDeduction)} / μήνα</strong></li>`;
+    }).join('');
+
+    const taxInfo = `
+      <div class="stipend-tax-info">
+        <strong class="title">🧾 Φορολογία &amp; ειδικές κρατήσεις του επιμισθίου</strong>
+        <div class="stipend-tax-grid">
+          <span>Φόρος εισοδήματος στην Ελλάδα</span><b>0% — αφορολόγητο</b>
+          <span>Ειδική εισφορά ΤΠΔΥ</span><b>0% — καταργήθηκε</b>
+          <span>Ειδική εισφορά αλληλεγγύης ν. 3986/2011</span><b>2%</b>
+        </div>
+        <div class="stipend-footnote">Η κράτηση 2% είναι η ειδική εισφορά για την καταπολέμηση της ανεργίας του άρθρου 38 ν. 3986/2011· είναι διαφορετική από την παλαιά φορολογική «εισφορά αλληλεγγύης» του ΚΦΕ.</div>
+        <ul class="stipend-net-list">${estimatedNetRows}</ul>
+        <div class="stipend-footnote"><strong>Προσοχή:</strong> το ποσό μετά το 2% είναι ενδεικτικό ως προς την ελληνική μισθοδοσία. Η πρόσκληση 2026 επιβεβαιώνει ρητά το αφορολόγητο, αλλά δεν επαναλαμβάνει αναλυτικό πίνακα κρατήσεων. Δεν συνυπολογίζονται τυχόν υποχρεώσεις στη χώρα υποδοχής ή τραπεζικά έξοδα.</div>
+      </div>`;
+
     box.innerHTML = `
       <h3>💶 Επιμίσθια Παραρτήματος V</h3>
       <p class="stipend-intro">Τα ποσά είναι τα μηνιαία επιμίσθια της πρόσκλησης 11771/Η2/30-01-2026. Το 12μηνο είναι ενδεικτικός υπολογισμός ×12.</p>
@@ -545,7 +580,8 @@
         </table>
       </div>
       ${highlight}
-      <div class="stipend-footnote">Παράρτημα V: το επιμίσθιο είναι αφορολόγητο από 01-01-2012. Η σύγκριση αφορά μόνο το ονομαστικό ποσό και δεν συνυπολογίζει κόστος ζωής ή άλλες οικονομικές παραμέτρους.</div>`;
+      ${taxInfo}
+      <div class="stipend-footnote">Παράρτημα V: το επιμίσθιο είναι αφορολόγητο από 01-01-2012. Η σύγκριση εξακολουθεί να βασίζεται στα ονομαστικά ποσά της πρόσκλησης και δεν συνυπολογίζει κόστος ζωής ή άλλες οικονομικές παραμέτρους.</div>`;
     box.classList.remove('hidden');
   }
 
