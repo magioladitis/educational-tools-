@@ -5,13 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Οδηγός δικαιολογητικών τέκνων και αναπηρίας</title>
-<style>
-/* Only guide-specific micro-layout remains local. */
-body.edu-guide-standard .question > .small-note{margin-bottom:0}
-</style>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.4">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.9-rc1">
 </head>
-<body class="edu-ui edu-guide-standard">
+<body class="edu-ui edu-guide-standard edu-guide-children-disability">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app-box edu-modernized">
 <section class="hero edu-legacy-hero">

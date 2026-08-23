@@ -1,0 +1,406 @@
+--- before/ergaleia(3).php
++++ after/ergaleia.php
+@@ -6,393 +6,9 @@
+ <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+ <meta content="Εργαλειοθήκη Εκπαιδευτικού: δωρεάν εργαλεία για ΑΣΕΠ, αναπληρωτές, αποσπάσεις και Δημόσια Ωνάσεια Σχολεία." name="description"/>
+ <title>Εργαλειοθήκη Εκπαιδευτικού</title>
+-<style>
+-    :root {
+-      --bg: #f4f7fb;
+-      --card: #ffffff;
+-      --text: #18202b;
+-      --muted: #5f6b7a;
+-      --border: #dfe5ec;
+-      --blue: #1f6feb;
+-      --blue-dark: #174ea6;
+-      --blue-soft: #eef4ff;
+-      --green: #18794e;
+-      --green-soft: #eaf7f0;
+-      --purple: #6941c6;
+-      --purple-soft: #f1edff;
+-      --orange: #b45309;
+-      --orange-soft: #fff4e5;
+-      --shadow: 0 10px 30px rgba(28, 39, 55, 0.09);
+-    }
+-
+-    * {
+-      box-sizing: border-box;
+-    }
+-
+-    body {
+-      font-family: Arial, Helvetica, sans-serif;
+-      background: var(--bg);
+-      margin: 0;
+-      color: var(--text);
+-      line-height: 1.55;
+-    }
+-
+-    .page-shell {
+-      max-width: 1180px;
+-      margin: 0 auto;
+-      padding: 34px 22px 50px;
+-    }
+-
+-    .hero {
+-      position: relative;
+-      overflow: hidden;
+-      background: linear-gradient(135deg, #174ea6 0%, #1f6feb 58%, #3b82f6 100%);
+-      color: #fff;
+-      border-radius: 22px;
+-      padding: 42px 36px;
+-      box-shadow: var(--shadow);
+-    }
+-
+-    .hero::after {
+-      content: "";
+-      position: absolute;
+-      width: 260px;
+-      height: 260px;
+-      border-radius: 50%;
+-      background: rgba(255,255,255,0.08);
+-      right: -70px;
+-      top: -100px;
+-    }
+-
+-    .hero-kicker {
+-      display: inline-block;
+-      padding: 6px 11px;
+-      margin-bottom: 13px;
+-      border-radius: 999px;
+-      background: rgba(255,255,255,0.14);
+-      border: 1px solid rgba(255,255,255,0.22);
+-      font-size: 13px;
+-      font-weight: bold;
+-      letter-spacing: .02em;
+-    }
+-
+-    .hero h1 {
+-      position: relative;
+-      z-index: 1;
+-      margin: 0 0 12px;
+-      font-size: clamp(30px, 5vw, 44px);
+-      line-height: 1.12;
+-    }
+-
+-    .hero p {
+-      position: relative;
+-      z-index: 1;
+-      margin: 0;
+-      max-width: 800px;
+-      color: rgba(255,255,255,0.92);
+-      font-size: 17px;
+-    }
+-
+-    .hero-meta {
+-      position: relative;
+-      z-index: 1;
+-      display: flex;
+-      gap: 10px;
+-      flex-wrap: wrap;
+-      margin-top: 22px;
+-    }
+-
+-    .hero-meta span {
+-      padding: 7px 11px;
+-      border-radius: 9px;
+-      background: rgba(0,0,0,0.12);
+-      font-size: 13px;
+-      font-weight: bold;
+-    }
+-
+-    .toolbar {
+-      margin-top: 24px;
+-      background: var(--card);
+-      border: 1px solid var(--border);
+-      border-radius: 18px;
+-      padding: 18px;
+-      box-shadow: 0 4px 18px rgba(28,39,55,0.05);
+-    }
+-
+-    .search-wrap {
+-      position: relative;
+-    }
+-
+-    .search-wrap::before {
+-      content: "🔎";
+-      position: absolute;
+-      left: 15px;
+-      top: 50%;
+-      transform: translateY(-50%);
+-      font-size: 16px;
+-      pointer-events: none;
+-    }
+-
+-    #toolSearch {
+-      width: 100%;
+-      border: 1px solid #cfd7e2;
+-      border-radius: 12px;
+-      padding: 14px 14px 14px 45px;
+-      font-size: 16px;
+-      outline: none;
+-      background: #fbfcfe;
+-      color: var(--text);
+-      transition: border-color .15s ease, box-shadow .15s ease;
+-    }
+-
+-    #toolSearch:focus {
+-      border-color: var(--blue);
+-      box-shadow: 0 0 0 3px rgba(31,111,235,0.12);
+-    }
+-
+-    .filters {
+-      display: flex;
+-      gap: 9px;
+-      flex-wrap: wrap;
+-      margin-top: 14px;
+-    }
+-
+-    .filter-btn {
+-      appearance: none;
+-      border: 1px solid #d4dbe5;
+-      background: #fff;
+-      color: #465262;
+-      border-radius: 999px;
+-      padding: 8px 13px;
+-      font-size: 14px;
+-      font-weight: bold;
+-      cursor: pointer;
+-      transition: all .15s ease;
+-    }
+-
+-    .filter-btn:hover,
+-    .filter-btn.active {
+-      color: #fff;
+-      background: var(--blue);
+-      border-color: var(--blue);
+-    }
+-
+-    .results-line {
+-      margin: 17px 2px 0;
+-      color: var(--muted);
+-      font-size: 14px;
+-    }
+-
+-    .tools-grid {
+-      display: grid;
+-      grid-template-columns: repeat(3, minmax(0, 1fr));
+-      gap: 18px;
+-      margin-top: 18px;
+-    }
+-
+-    .tool-card {
+-      position: relative;
+-      display: flex;
+-      flex-direction: column;
+-      min-height: 265px;
+-      text-decoration: none;
+-      color: inherit;
+-      background: var(--card);
+-      border: 1px solid var(--border);
+-      border-radius: 17px;
+-      padding: 20px;
+-      box-shadow: 0 4px 16px rgba(28,39,55,0.05);
+-      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+-    }
+-
+-    .tool-card:hover {
+-      transform: translateY(-4px);
+-      box-shadow: 0 12px 28px rgba(28,39,55,0.12);
+-      border-color: #a8c7fa;
+-    }
+-
+-    .card-top {
+-      display: flex;
+-      align-items: center;
+-      justify-content: space-between;
+-      gap: 10px;
+-      margin-bottom: 15px;
+-    }
+-
+-    .tool-number {
+-      display: inline-flex;
+-      align-items: center;
+-      justify-content: center;
+-      min-width: 38px;
+-      height: 32px;
+-      padding: 0 10px;
+-      background: var(--blue);
+-      color: #fff;
+-      font-weight: bold;
+-      border-radius: 999px;
+-      font-size: 13px;
+-    }
+-
+-    .category-tag {
+-      display: inline-block;
+-      padding: 5px 9px;
+-      border-radius: 999px;
+-      font-size: 12px;
+-      font-weight: bold;
+-      background: var(--blue-soft);
+-      color: var(--blue-dark);
+-    }
+-
+-    .category-tag.green {
+-      background: var(--green-soft);
+-      color: var(--green);
+-    }
+-
+-    .category-tag.purple {
+-      background: var(--purple-soft);
+-      color: var(--purple);
+-    }
+-
+-    .category-tag.orange {
+-      background: var(--orange-soft);
+-      color: var(--orange);
+-    }
+-
+-    .new-badge {
+-      position: absolute;
+-      right: 18px;
+-      top: -10px;
+-      padding: 5px 9px;
+-      border-radius: 999px;
+-      background: #137333;
+-      color: #fff;
+-      font-size: 11px;
+-      font-weight: bold;
+-      box-shadow: 0 3px 8px rgba(0,0,0,.12);
+-    }
+-
+-    .tool-card h2 {
+-      font-size: 20px;
+-      line-height: 1.3;
+-      margin: 0 0 10px;
+-    }
+-
+-    .tool-card p {
+-      color: var(--muted);
+-      font-size: 14.5px;
+-      margin: 0 0 18px;
+-    }
+-
+-    .tool-card .button-like {
+-      margin-top: auto;
+-      color: var(--blue);
+-      font-size: 14.5px;
+-      font-weight: bold;
+-    }
+-
+-    .no-results {
+-      display: none;
+-      margin-top: 18px;
+-      padding: 24px;
+-      text-align: center;
+-      color: var(--muted);
+-      background: #fff;
+-      border: 1px dashed #cfd7e2;
+-      border-radius: 14px;
+-    }
+-
+-    .info-grid {
+-      display: grid;
+-      grid-template-columns: 1.15fr .85fr;
+-      gap: 18px;
+-      margin-top: 26px;
+-    }
+-
+-    .notice,
+-    .side-box {
+-      padding: 18px;
+-      border-radius: 14px;
+-      line-height: 1.6;
+-      font-size: 14.5px;
+-    }
+-
+-    .notice {
+-      background: var(--orange-soft);
+-      color: #7b4900;
+-      border: 1px solid #f0d4a8;
+-    }
+-
+-    .notice strong {
+-      color: #633b00;
+-    }
+-
+-    .side-box {
+-      background: var(--blue-soft);
+-      color: var(--blue-dark);
+-      border: 1px solid #d6e4ff;
+-    }
+-
+-    .side-box strong {
+-      display: block;
+-      margin-bottom: 5px;
+-    }
+-
+-    .side-box a {
+-      color: var(--blue);
+-      font-weight: bold;
+-    }
+-
+-    .credits {
+-      text-align: center;
+-      margin-top: 27px;
+-      color: #7a8490;
+-      font-size: 13px;
+-    }
+-
+-    .hidden-card {
+-      display: none !important;
+-    }
+-
+-    @media (max-width: 900px) {
+-      .tools-grid {
+-        grid-template-columns: repeat(2, minmax(0, 1fr));
+-      }
+-
+-      .info-grid {
+-        grid-template-columns: 1fr;
+-      }
+-    }
+-
+-    @media (max-width: 620px) {
+-      .page-shell {
+-        padding: 18px 13px 35px;
+-      }
+-
+-      .hero {
+-        padding: 30px 22px;
+-        border-radius: 17px;
+-      }
+-
+-      .hero p {
+-        font-size: 15px;
+-      }
+-
+-      .tools-grid {
+-        grid-template-columns: 1fr;
+-      }
+-
+-      .tool-card {
+-        min-height: 230px;
+-      }
+-
+-      .toolbar {
+-        padding: 14px;
+-      }
+-    }
+-  </style>
+-<link href="assets/common.css" rel="stylesheet"/>
++<link href="assets/common.css?v=3.20.9-b3" rel="stylesheet"/>
+ </head>
+-<body class="edu-ui">
++<body class="edu-ui edu-tools-directory">
+ <main class="page-shell">
+ <section class="hero">
+ <span class="hero-kicker">ΔΩΡΕΑΝ ΕΡΓΑΛΕΙΑ ΓΙΑ ΕΚΠΑΙΔΕΥΤΙΚΟΥΣ</span>
+@@ -758,6 +374,6 @@
+     })();
+   </script>
+ <?php require_once __DIR__ . '/includes/footer.php'; ?>
+-  <script src="assets/common.js"></script>
++  <script src="assets/common.js?v=3.20.9-b3"></script>
+ </body>
+ </html>

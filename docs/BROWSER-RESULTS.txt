@@ -1,0 +1,23 @@
+PASS ypologismos-morion-apospasis-sde mobile overflow <=1px overflow=0
+PASS ypologismos-morion-apospasis-sde hero visible 
+PASS ypologismos-morion-apospasis-sde PE86 computer auto yes 
+PASS ypologismos-morion-apospasis-sde PE86 computer disabled 
+PASS ypologismos-morion-apospasis-sde PE86 computer scores 2 
+PASS ypologismos-morion-apospasis-sde education max text 22 
+PASS ypologismos-morion-apospasis-sde total populated 
+PASS ypologismos-morion-apospasis-sde eligibility positive 
+PASS ypologismos-morion-apospasis-sde mapping scroll contained 
+PASS ypologismos-morion-apospasis-sde no runtime errors 
+PASS ergaleia mobile overflow <=1px overflow=0
+PASS ergaleia 22 cards present 
+PASS ergaleia initial result says 22 
+PASS ergaleia search filters cards 
+PASS ergaleia result count updated 
+PASS ergaleia SDE filter active 
+PASS ergaleia no runtime errors 
+PASS asep-tools mobile overflow <=1px overflow=0
+PASS asep-tools tool cards present 
+PASS asep-tools page box visible 
+PASS asep-tools quick links visible 
+PASS asep-tools no runtime errors 
+SUMMARY 22 / 22

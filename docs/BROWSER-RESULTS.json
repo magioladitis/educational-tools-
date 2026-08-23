@@ -1,0 +1,282 @@
+[
+  {
+    "page": "ypologismos-morion-mitroo-sde",
+    "check": "mobile overflow <=1px",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-mitroo-sde",
+    "check": "hero visible",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-mitroo-sde",
+    "check": "PE86 computer disabled",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-mitroo-sde",
+    "check": "score populated",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-mitroo-sde",
+    "check": "no runtime errors",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-onaseia",
+    "check": "mobile overflow <=1px",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-onaseia",
+    "check": "hero visible",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-onaseia",
+    "check": "manual academic accepts minimum",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-onaseia",
+    "check": "result container exists",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-onaseia",
+    "check": "no runtime errors",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-diefthynton-ypodiefthynton-sde",
+    "check": "mobile overflow <=1px",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-diefthynton-ypodiefthynton-sde",
+    "check": "hero visible",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-diefthynton-ypodiefthynton-sde",
+    "check": "leadership total populated",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-diefthynton-ypodiefthynton-sde",
+    "check": "language utility class active",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-diefthynton-ypodiefthynton-sde",
+    "check": "no runtime errors",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "metatropi-klimakas",
+    "check": "mobile overflow <=1px",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "metatropi-klimakas",
+    "check": "hero visible",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "metatropi-klimakas",
+    "check": "converter result visible",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "metatropi-klimakas",
+    "check": "20-scale grade populated",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "metatropi-klimakas",
+    "check": "no runtime errors",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-3ea-2025",
+    "check": "mobile overflow <=1px",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-3ea-2025",
+    "check": "hero visible",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-3ea-2025",
+    "check": "3EA total updates",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-3ea-2025",
+    "check": "no runtime errors",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-4ea-2025",
+    "check": "mobile overflow <=1px",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-4ea-2025",
+    "check": "hero visible",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-4ea-2025",
+    "check": "4EA total updates",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-4ea-2025",
+    "check": "no runtime errors",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-1ea-2025",
+    "check": "mobile overflow <=1px",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-1ea-2025",
+    "check": "hero visible",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-1ea-2025",
+    "check": "1EA total updates",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-1ea-2025",
+    "check": "no runtime errors",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-1gt-2024",
+    "check": "mobile overflow <=1px",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-1gt-2024",
+    "check": "hero visible",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-1gt-2024",
+    "check": "1GT total updates",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-1gt-2024",
+    "check": "no runtime errors",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-2ea-2025",
+    "check": "mobile overflow <=1px",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-2ea-2025",
+    "check": "hero visible",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-2ea-2025",
+    "check": "2EA total updates",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "page": "ypologismos-morion-2ea-2025",
+    "check": "no runtime errors",
+    "pass": true,
+    "overflow": 0,
+    "errors": []
+  }
+]

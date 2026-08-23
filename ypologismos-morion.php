@@ -1,21 +1,14 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<!-- UI consolidation v3.20: shared design system in assets/common.css -->
+<!-- UI consolidation v3.20: shared design system in assets/common.css?v=3.20.9-rc1 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</title>
-
-  <style>
-:root{--purple:#6941c6;--purple-soft:#f1edff}
-body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330px}
-.training-proof{grid-column:1/-1;margin-top:2px}
-.warning{background:var(--orange-soft)!important;color:#7b4900!important;border:1px solid var(--edu-warning-border)!important;font-weight:700}
-</style>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.3">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.9-rc1">
 </head>
 
-<body class="edu-ui edu-calc-standard">
+<body class="edu-ui edu-calc-standard edu-calc-asep-main">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
 <div class="app">
@@ -764,6 +757,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.3"></script>
+  <script src="assets/common.js?v=3.20.4"></script>
 </body>
 </html>

@@ -5,59 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Μετατροπή βαθμού πτυχίου από 10βάθμια σε 20βάθμια κλίμακα και από δεκαδική ή λεκτική μορφή σε ακέραιο μέρος, αριθμητή και παρονομαστή για 1ΓΕ/2026 και 1ΓΤ/2024.">
 <title>Μετατροπή κλίμακας βαθμού πτυχίου</title>
-<style>
-:root{
-  --blue:#1f6feb;--blue-dark:#174ea6;--bg:#f5f7fb;--card:#fff;--text:#202124;
-  --muted:#5f6368;--border:#d9e0e8;--soft:#eef4ff;--green:#137333;--green-soft:#e6f4ea;
-  --orange:#8a5300;--orange-soft:#fff4e5;--shadow:0 5px 18px rgba(0,0,0,.09)
-}
-*{box-sizing:border-box}
-body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);margin:0;padding:30px;color:var(--text);line-height:1.5}
-.app-box{max-width:920px;margin:auto;background:var(--card);padding:26px;border-radius:16px;box-shadow:var(--shadow)}
-h1{text-align:center;font-size:28px;line-height:1.2;margin:0 0 8px}
-.intro{text-align:center;color:var(--muted);max-width:760px;margin:0 auto 22px}
-.notice{padding:15px 16px;border-radius:10px;background:var(--orange-soft);color:var(--orange);margin-bottom:22px;border:1px solid #f0d7aa}
-.notice strong{color:#6f4300}
-.mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 18px}
-.mode-tabs button{border:1px solid #cfd8e3;background:#fff;color:#344054;border-radius:10px;padding:12px 14px;font-size:15px;font-weight:700;cursor:pointer}
-.mode-tabs button.active{background:var(--blue);border-color:var(--blue);color:#fff}
-.panel{padding:17px;border:1px solid var(--border);border-radius:12px;background:#fafbfc;margin-bottom:18px}
-.panel h2{font-size:18px;margin:0 0 13px}
-label{display:block;font-weight:700;margin:0 0 8px}
-input,select{width:100%;padding:12px 13px;border:1px solid #c7d0dc;border-radius:9px;background:#fff;color:var(--text);font-size:16px}
-input:focus,select:focus{border-color:var(--blue)}
-.hint{font-size:13px;color:var(--muted);margin:7px 0 0}
-.hidden{display:none!important}
-.result{margin-top:20px}
-.result-title{text-align:center;margin:0 0 14px;font-size:21px}
-.source-summary{padding:13px 14px;background:var(--soft);border:1px solid #cbdcf8;border-radius:10px;color:var(--blue-dark);margin-bottom:15px;text-align:center;font-weight:700}
-.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.result-card{border:1px solid var(--border);border-radius:13px;padding:17px;background:#fff}
-.result-card.recommended{border:2px solid var(--blue);box-shadow:0 4px 14px rgba(31,111,235,.09)}
-.result-card h3{margin:0 0 5px;font-size:19px}
-.result-card .subtitle{font-size:13px;color:var(--muted);margin-bottom:13px}
-.big-grade{font-size:36px;font-weight:700;line-height:1;margin:9px 0 16px;color:var(--blue-dark)}
-.fraction-title{font-weight:700;margin:14px 0 8px}
-.fraction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.field-box{background:#f7f8fa;border:1px solid #e0e4ea;border-radius:9px;padding:10px;text-align:center}
-.field-box span{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
-.field-box strong{font-size:24px}
-.points{margin-top:13px;padding:11px;background:var(--green-soft);color:var(--green);border-radius:9px;font-weight:700}
-.action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.action-row button{border:0;border-radius:9px;padding:11px 14px;font-size:14px;font-weight:700;cursor:pointer}
-.copy-btn{background:var(--blue);color:#fff}
-.reset-btn{background:#eef0f3;color:#333}
-.lexical-map{margin-top:14px;padding:12px 14px;background:#fff;border:1px dashed #c9d2dd;border-radius:9px;font-size:14px;color:#4b5563}
-.lexical-map strong{color:#222}
-.error{display:none;margin-top:10px;padding:10px 12px;border-radius:8px;background:#fdecea;color:#b3261e;font-weight:700}
-.small-note{margin-top:20px;font-size:13px;color:#666;text-align:justify}
-.copy-status{font-size:13px;color:var(--green);font-weight:700;align-self:center}
-@media(max-width:720px){body{padding:16px}.app-box{padding:18px}.result-grid{grid-template-columns:1fr}.fraction-grid{grid-template-columns:1fr 1fr 1fr}.mode-tabs{grid-template-columns:1fr}h1{font-size:24px}}
-@media print{body{background:#fff;padding:0}.app-box{box-shadow:none;max-width:none}.mode-tabs,.panel,.action-row,.notice,.small-note{display:none}.result{margin-top:0}}
-</style>
-<link rel="stylesheet" href="assets/common.css">
+<link rel="stylesheet" href="assets/common.css?v=3.20.9-b2">
 </head>
-<body class="edu-ui">
+<body class="edu-ui edu-page-grade-converter">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app-box edu-modernized">
   <section class="hero edu-legacy-hero">
@@ -301,6 +251,6 @@ input:focus,select:focus{border-color:var(--blue)}
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js"></script>
+  <script src="assets/common.js?v=3.20.9-b2"></script>
 </body>
 </html>

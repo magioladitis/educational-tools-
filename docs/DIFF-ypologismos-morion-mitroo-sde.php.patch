@@ -1,0 +1,33 @@
+--- ypologismos-morion-mitroo-sde.php
++++ ypologismos-morion-mitroo-sde.php
+@@ -5,21 +5,9 @@
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="Υπολογισμός μορίων Μητρώου ΣΔΕ για ωρομίσθιο εκπαιδευτικό προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας βάσει της Υ.Α. 75975/Κ1, ΦΕΚ Β' 3224/25.06.2025.">
+   <title>Μόρια Μητρώου ΣΔΕ</title>
+-  <style>
+-    :root{--bg:#f4f7fb;--card:#fff;--text:#18202b;--muted:#5f6b7a;--border:#dfe5ec;--sde:#176b55;--sde-dark:#134e40;--sde-soft:#eaf7f1;--blue:#1f6feb;--blue-soft:#eef4ff;--orange:#925300;--orange-soft:#fff5e8;--red:#b42318;--red-soft:#fff0ee;--shadow:0 10px 30px rgba(28,39,55,.09)}
+-    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}.page-shell{max-width:1260px;margin:0 auto;padding:28px 22px 50px}
+-    .hero{background:linear-gradient(135deg,#143b33 0%,#176b55 57%,#319276 100%);color:#fff;border-radius:20px;padding:30px;box-shadow:var(--shadow);margin-bottom:20px}.hero h1{margin:0 0 8px;font-size:clamp(28px,4vw,40px);line-height:1.15}.hero p{margin:4px 0;color:rgba(255,255,255,.94);max-width:980px}.hero-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.hero-meta span{background:rgba(0,0,0,.16);padding:6px 10px;border-radius:999px;font-size:13px;font-weight:700}
+-    .layout{display:grid;grid-template-columns:minmax(0,1fr) 365px;gap:18px;align-items:start}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 5px 18px rgba(28,39,55,.05)}.card h2{margin:0 0 5px;font-size:20px}.card h3{margin:18px 0 8px;font-size:16px}.subtitle{margin:0 0 14px;color:var(--muted);font-size:14px}
+-    .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{border:1px solid #e5e9ef;border-radius:12px;padding:13px;background:#fbfcfe}.field.full{grid-column:1/-1}label{display:block;font-weight:700;margin-bottom:7px}label small{display:block;font-weight:400;color:var(--muted);margin-top:3px;line-height:1.4}input[type="number"],select{width:100%;padding:10px 11px;border:1px solid #cfd7e2;border-radius:9px;font-size:15px;background:#fff;color:var(--text)}input[type="checkbox"]{width:18px;height:18px}.check-row{display:flex;align-items:flex-start;gap:9px}.check-row label{margin:0;font-weight:600}.hidden{display:none!important}
+-    .section-head{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:12px}.max{font-weight:700;color:var(--sde);white-space:nowrap}.note,.warning,.danger,.success{margin-top:13px;padding:12px 13px;border-radius:11px;font-size:14px;line-height:1.5}.note{background:var(--blue-soft);border:1px solid #d6e4ff;color:#174ea6}.warning{background:var(--orange-soft);border:1px solid #f0d4a8;color:#7b4900}.danger{background:var(--red-soft);border:1px solid #f3c1bc;color:#8f1f17}.success{background:var(--sde-soft);border:1px solid #b7e3cf;color:#12543f}
+-    .results{position:sticky;top:14px}.role-chip{display:inline-block;padding:4px 9px;border-radius:999px;background:var(--sde-soft);color:var(--sde-dark);font-size:12px;font-weight:700;margin-bottom:7px}.big-total{text-align:center;padding:8px 0 12px}.big-total .context{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#667085;font-weight:700;margin-bottom:8px}.big-total .number{font-size:56px;font-weight:800;line-height:1;color:var(--sde);font-variant-numeric:tabular-nums}.big-total .outof{color:var(--muted);margin-top:5px}.bar{height:11px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:12px 0}.bar div{height:100%;width:0;background:linear-gradient(90deg,#176b55,#1f6feb);transition:width .2s ease}.result-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #edf0f4;font-size:14px}.result-row strong{font-variant-numeric:tabular-nums}.result-row.emphasis{font-size:15px;color:var(--sde-dark)}
+-    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}button{border:0;border-radius:10px;padding:11px 12px;font-weight:700;cursor:pointer;font-size:14px}.primary{background:var(--sde);color:#fff}.secondary{background:#e8edf4;color:#253247}.breakdown-list{list-style:none;margin:0;padding:0}.breakdown-list li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #edf0f4;font-size:13.5px}.breakdown-list li:last-child{border-bottom:0}.breakdown-list strong{font-variant-numeric:tabular-nums}
+-    .assignment-list{display:grid;gap:8px;margin-top:10px}.assignment-item{display:flex;justify-content:space-between;gap:12px;border:1px solid #dbe8e3;background:#f7fcfa;border-radius:10px;padding:9px 11px;font-size:13.5px}.assignment-item strong{color:var(--sde-dark)}.source-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 5px 18px rgba(28,39,55,.05);font-size:13px;color:#5f6b7a}.source-card h2{font-size:18px;color:var(--text);margin:0 0 8px}.source-card p{margin:7px 0}.small{font-size:12.5px;color:#667085}.badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef2f7;color:#475467;font-size:11.5px;font-weight:700}.priority{background:#fff8e6;border:1px solid #efd28a;color:#785400;border-radius:11px;padding:11px 12px;margin-top:12px;font-size:13.5px}
+-    @media(max-width:940px){.layout{grid-template-columns:1fr}.results{position:static}}@media(max-width:650px){.page-shell{padding:16px 12px 34px}.hero{padding:24px 19px}.field-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.actions{grid-template-columns:1fr}.section-head{display:block}.max{margin-top:5px}}
+-  </style>
+-  <link rel="stylesheet" href="assets/common.css?v=3.20.4">
++<link rel="stylesheet" href="assets/common.css?v=3.20.9-b2">
+ </head>
+-<body class="edu-ui">
++<body class="edu-ui edu-calc-sde edu-page-sde-registry">
+ <main class="page-shell">
+ <?php require_once __DIR__ . '/includes/header.php'; ?>
+ 
+@@ -202,5 +190,5 @@
+ function resetForm(){document.querySelectorAll('input[type="number"]').forEach(x=>x.value='0');document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);$('fppBefore1993').value='no';$('eoppepAdultTrainer').value='no';roleChanged();psychFppChanged();}
+ fillSpecialties();roleChanged();
+ </script>
+-<script src="assets/common.js?v=3.20.4"></script>
++<script src="assets/common.js?v=3.20.9-b2"></script>
+ </body></html>

@@ -1,0 +1,8 @@
+471a2220a58ad32f67862703eea85a2e2e94beec29ac64765595da5f2b86ccf3  ./README.md
+9c59e7242cbc3d1adf4a1da291802916cd161cf3e7775e5df277c6d9465df49b  ./assets/common.css
+400aaba3902113bc8401a3857bc3136daaeee571f7d88f183e48abcd9793ba12  ./dikaiologitika-tekna-anapiria.php
+b8b2266e90fa478d5be3afac796190697f88fc951f5fab845d50f3d093a93f0a  ./dikaioma-symmetoxis.php
+b1720104ac195145dcb5a2309a54e612ba059b5be13c6b59439bacad40fe0ef4  ./docs/BATCH4-AUDIT.md
+2f89b2fd78a8316d6ff39b1aabb0a6fa8e817631b0fc20a527038a36c75ddb73  ./docs/TEST-RESULTS.md
+c7f1d5c4e1b3f9c24b69f1c2605922f239c0ae84834650898faeaf60fb731664  ./docs/TOOLBOX-22-COVERAGE.md
+4b3546fd2ac8fcc51e7f26dfe752a770c83ffa6a5966df86ee84b7c72eeba448  ./ypologismos-morion.php

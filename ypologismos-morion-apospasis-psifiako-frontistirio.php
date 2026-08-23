@@ -5,107 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μοριοδότησης για απόσπαση μονίμων εκπαιδευτικών στο Ψηφιακό Φροντιστήριο 2026-2027.">
   <title>Υπολογισμός μορίων απόσπασης στο Ψηφιακό Φροντιστήριο</title>
-  <style>
-    :root{
-      --bg:#f4f7fb;
-      --card:#fff;
-      --text:#18202b;
-      --muted:#5f6b7a;
-      --border:#dfe5ec;
-      --blue:#1f6feb;
-      --blue-dark:#174ea6;
-      --green:#18794e;
-      --green-soft:#eaf7f0;
-      --orange:#9a4d00;
-      --orange-soft:#fff4e5;
-      --red:#b42318;
-      --red-soft:#fff0ee;
-      --purple:#6941c6;
-      --purple-soft:#f1edff;
-      --shadow:0 10px 30px rgba(28,39,55,.09);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Arial,Helvetica,sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.55;
-    }
-    .page-shell{max-width:1180px;margin:0 auto;padding:28px 22px 50px}
-    .hero{
-      background:linear-gradient(135deg,#132f5b 0%,#1f6feb 65%,#4a8df6 100%);
-      color:#fff;
-      border-radius:20px;
-      padding:30px;
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-    }
-    .hero h1{margin:0 0 9px;font-size:clamp(27px,4vw,40px);line-height:1.15}
-    .hero p{margin:5px 0;color:rgba(255,255,255,.92);max-width:900px}
-    .hero-meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
-    .hero-meta span{background:rgba(0,0,0,.15);padding:6px 10px;border-radius:999px;font-size:13px;font-weight:bold}
-    .layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:18px;
-      margin-bottom:16px;
-      box-shadow:0 5px 18px rgba(28,39,55,.05);
-    }
-    .card h2{margin:0 0 5px;font-size:20px}
-    .card .subtitle{margin:0 0 15px;color:var(--muted);font-size:14px}
-    .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-    .field{border:1px solid #e5e9ef;border-radius:12px;padding:13px;background:#fbfcfe}
-    .field.full{grid-column:1/-1}
-    label{display:block;font-weight:700;margin-bottom:7px}
-    label small{display:block;font-weight:400;color:var(--muted);margin-top:3px;line-height:1.4}
-    input[type="number"],select{
-      width:100%;padding:10px 11px;border:1px solid #cfd7e2;border-radius:9px;
-      font-size:15px;background:#fff;color:var(--text)
-    }
-    select{cursor:pointer}
-    .note,.info,.warning,.danger,.success{
-      margin-top:13px;padding:12px 13px;border-radius:11px;font-size:14px;line-height:1.5
-    }
-    .note,.info{background:#eef4ff;border:1px solid #d6e4ff;color:#174ea6}
-    .warning{background:var(--orange-soft);border:1px solid #f0d4a8;color:#7b4900}
-    .danger{background:var(--red-soft);border:1px solid #f3c1bc;color:#8f1f17}
-    .success{background:var(--green-soft);border:1px solid #b7e3c9;color:#12633f}
-    .criterion-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:13px}
-    .criterion-head .max{font-weight:bold;color:var(--blue-dark);white-space:nowrap}
-    .score-row{
-      display:grid;grid-template-columns:minmax(0,1fr) 140px;gap:12px;align-items:center;
-      padding:12px 0;border-top:1px solid #edf0f4
-    }
-    .score-row:first-of-type{border-top:0}
-    .score-row strong{display:block}
-    .score-row small{display:block;color:var(--muted);margin-top:2px}
-    .results{position:sticky;top:14px}
-    .big-total{text-align:center;padding:9px 0 16px}
-    .big-total .number{font-size:54px;font-weight:800;line-height:1;color:var(--blue);font-variant-numeric:tabular-nums}
-    .big-total .outof{color:var(--muted);margin-top:5px}
-    .bar{height:11px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:12px 0}
-    .bar div{height:100%;width:0;background:linear-gradient(90deg,#1f6feb,#6941c6);transition:width .2s ease}
-    .result-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #edf0f4;font-size:14px}
-    .result-row strong{font-variant-numeric:tabular-nums}
-    .pre-interview{margin-top:13px;padding:13px;border-radius:12px;background:var(--purple-soft);color:#4d2b9b;border:1px solid #ddd2ff}
-    .pre-interview strong{font-size:20px}
-    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-    button{border:0;border-radius:10px;padding:11px 12px;font-weight:bold;cursor:pointer;font-size:14px}
-    button.primary{background:var(--blue);color:#fff}
-    button.secondary{background:#e8edf4;color:#253247}
-    .status-box{margin-top:14px}
-    .credits{text-align:center;color:#7a8490;font-size:13px;margin-top:24px}
-    .source-note{font-size:13px;color:#667085;margin-top:18px;text-align:justify}
-    .hidden{display:none!important}
-    @media(max-width:900px){.layout{grid-template-columns:1fr}.results{position:static}}
-    @media(max-width:650px){.page-shell{padding:16px 12px 34px}.hero{padding:24px 19px}.field-grid{grid-template-columns:1fr}.score-row{grid-template-columns:1fr}.field.full{grid-column:auto}.actions{grid-template-columns:1fr}}
-  </style>
-  <link rel="stylesheet" href="assets/common.css">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.9-b1">
 </head>
-<body class="edu-ui">
+<body class="edu-ui edu-page-digital-tutoring">
   <main class="page-shell">
     <?php require_once __DIR__ . '/includes/header.php'; ?>
 
@@ -221,9 +123,9 @@
               <small>Μόνο πέραν των απαιτούμενων 2 ετών και σε πανελλαδικώς εξεταζόμενο μάθημα του ίδιου κλάδου με την προκηρυσσόμενη θέση, σε δημόσιο ή ιδιωτικό σχολείο ή στο Ψηφιακό Φροντιστήριο. 2 μονάδες ανά πλήρες διδακτικό έτος, 1 μονάδα ανά τετράμηνο, έως 6. Χρόνος μικρότερος του τετραμήνου δεν υπολογίζεται.</small>
             </div>
             <div>
-              <label for="extraYears" style="font-size:13px">Πλήρη επιπλέον έτη</label>
+              <label for="extraYears" class="edu-font-13">Πλήρη επιπλέον έτη</label>
               <input type="number" id="extraYears" min="0" step="1" value="0" oninput="normalizeInteger(this);calculate()">
-              <label for="extraMonths" style="font-size:13px;margin-top:8px">Υπόλοιπο μηνών (0–11)</label>
+              <label for="extraMonths" class="edu-font-13 edu-mt-8">Υπόλοιπο μηνών (0–11)</label>
               <input type="number" id="extraMonths" min="0" max="11" step="1" value="0" oninput="normalizeInteger(this,11);calculate()">
             </div>
           </div>
@@ -400,7 +302,7 @@
       status.push('<div class="warning"><strong>Συμπλήρωσε τις προϋποθέσεις:</strong> ' + unanswered.join(' · ') + '.</div>');
     }
     if(issues.length){
-      status.push('<div class="danger"><strong>Έλεγχος προϋποθέσεων:</strong><ul style="margin:7px 0 0;padding-left:20px"><li>' + issues.join('</li><li>') + '</li></ul></div>');
+      status.push('<div class="danger"><strong>Έλεγχος προϋποθέσεων:</strong><ul class="edu-list-compact"><li>' + issues.join('</li><li>') + '</li></ul></div>');
     }
 
     document.getElementById('statusBox').innerHTML = status.join('');
@@ -421,6 +323,6 @@
   calculate();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js"></script>
+  <script src="assets/common.js?v=3.20.9-b1"></script>
 </body>
 </html>

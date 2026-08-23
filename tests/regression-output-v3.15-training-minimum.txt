@@ -1,0 +1,1 @@
+Training minimum regression: PASS

@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<!-- UI consolidation v3.20: shared design system in assets/common.css -->
+<!-- UI consolidation v3.20: shared design system in assets/common.css?v=3.20.9-b2 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΓΤ/2024 για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16.">
   <title>Υπολογισμός μορίων 1ΓΤ/2024</title>
-
-  <style>
-:root{--purple:#6941c6;--purple-soft:#f1edff}
-body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330px}
-.warning{background:var(--red-soft)!important;color:var(--red)!important;border:1px solid var(--edu-danger-border)!important}
-</style>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.4">
+<link rel="stylesheet" href="assets/common.css?v=3.20.9-b2">
 </head>
-<body class="edu-ui edu-calc-standard">
+<body class="edu-ui edu-calc-standard edu-page-gt1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app">
 <section class="hero">
@@ -375,6 +369,6 @@ body.edu-calc-standard{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330p
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.4"></script>
+  <script src="assets/common.js?v=3.20.9-b2"></script>
 </body>
 </html>
