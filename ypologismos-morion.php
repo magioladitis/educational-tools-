@@ -125,18 +125,15 @@ renderAsepSocialCriteria(array(
         <div class="label">συνολικά μόρια</div>
       </div>
 
-      <div class="result-row"><span>Ακαδημαϊκά</span><strong id="resAcademic">0,00 / 120</strong></div>
-      <div class="result-row"><span>Προϋπηρεσία</span><strong id="resService">0,00 / 120</strong></div>
-      <div class="result-row"><span>Κοινωνικά</span><strong id="resSocial">0,00</strong></div>
-      <div class="result-row"><span>Βαθμός τίτλου</span><strong id="resDegree">0,00</strong></div>
+      <?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά', 'value_html' => '0,00 / 120', 'value_id' => 'resAcademic')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Προϋπηρεσία', 'value_html' => '0,00 / 120', 'value_id' => 'resService')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Κοινωνικά', 'value_html' => '0,00', 'value_id' => 'resSocial')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Βαθμός τίτλου', 'value_html' => '0,00', 'value_id' => 'resDegree')); ?>
 
       <div class="priority" id="sidebarStatus">Συμπλήρωσε κλάδο και βαθμό τίτλου· στη συνέχεια τα μόρια ενημερώνονται αυτόματα.</div>
 
       <button type="button" class="calculate-primary" onclick="calculatePoints()">Υπολογισμός μορίων</button>
-      <div class="actions">
-        <button type="button" id="copyResultBtn" onclick="copyResult()" disabled>Αντιγραφή αποτελέσματος</button>
-        <button type="button" class="secondary" onclick="resetCalculator()">Μηδενισμός</button>
-      </div>
+      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyResultBtn', 'onclick' => 'copyResult()', 'disabled' => true), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'onclick' => 'resetCalculator()'), 'html' => 'Μηδενισμός'))); ?>
 
       <div class="info-note edu-mt-14">Η τελική σειρά κατάταξης εξαρτάται από τους κανόνες της αντίστοιχης προκήρυξης και τον επίσημο έλεγχο των δικαιολογητικών.</div>
     <?php calculatorResultsEnd(); ?>

@@ -132,20 +132,17 @@ renderAsepSocialCriteria(array(
         <div class="label">συνολικά μόρια</div>
       </div>
 
-      <div class="result-row"><span>Ακαδημαϊκά</span><strong id="resAcademic">0,00 / 120</strong></div>
-      <div class="result-row"><span>Προϋπηρεσία</span><strong id="resService">0,00 / 120</strong></div>
-      <div class="result-row"><span>Κοινωνικά</span><strong id="resSocial">0,00</strong></div>
-      <div class="result-row"><span>Βαθμός τίτλου</span><strong id="resDegree">0,00</strong></div>
-      <div class="result-row"><span>Ξένη γλώσσα</span><strong id="resLanguage">0,00</strong></div>
-      <div class="result-row"><span>Τέκνα</span><strong id="resChildren">0,00</strong></div>
-      <div class="result-row"><span>Αναπηρία</span><strong id="resDisability">0,00</strong></div>
+      <?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά', 'value_html' => '0,00 / 120', 'value_id' => 'resAcademic')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Προϋπηρεσία', 'value_html' => '0,00 / 120', 'value_id' => 'resService')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Κοινωνικά', 'value_html' => '0,00', 'value_id' => 'resSocial')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Βαθμός τίτλου', 'value_html' => '0,00', 'value_id' => 'resDegree')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Ξένη γλώσσα', 'value_html' => '0,00', 'value_id' => 'resLanguage')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Τέκνα', 'value_html' => '0,00', 'value_id' => 'resChildren')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Αναπηρία', 'value_html' => '0,00', 'value_id' => 'resDisability')); ?>
 
       <div class="priority" id="priorityBox">Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.</div>
 
-      <div class="actions">
-        <button type="button" id="copyBtn">Αντιγραφή αποτελέσματος</button>
-        <button type="button" class="secondary" id="resetBtn">Μηδενισμός</button>
-      </div>
+      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
 
       <div class="info-note edu-mt-14">
         Σε ισοβαθμία προηγούνται κατά σειρά: περισσότερα κοινωνικά μόρια (και ειδικότερα αναπηρία), έπειτα περισσότερα ακαδημαϊκά / μεγαλύτερος βαθμός πτυχίου και τέλος περισσότερη προϋπηρεσία.

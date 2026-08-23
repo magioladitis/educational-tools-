@@ -24,10 +24,7 @@
 
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
-      <?php calculatorCardStart(); ?>
-        <div class="section-head">
-          <div><h2>1. Ειδικότητα &amp; αποδεκτοί γραμματισμοί</h2><p class="subtitle">Επίλεξε τον κλάδο σου για να εμφανιστούν οι Α΄/Β΄ αναθέσεις που προβλέπονται στο άρθρο 5.</p></div>
-        </div>
+      <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '1. Ειδικότητα &amp; αποδεκτοί γραμματισμοί', 'subtitle_html' => 'Επίλεξε τον κλάδο σου για να εμφανιστούν οι Α΄/Β΄ αναθέσεις που προβλέπονται στο άρθρο 5.')); ?>
         <div class="field-grid">
           <div class="field">
             <label for="specialty">Κλάδος / ειδικότητα</label>
@@ -105,8 +102,7 @@
         </details>
       <?php calculatorCardEnd(); ?>
 
-      <?php calculatorCardStart(); ?>
-        <div class="section-head"><div><h2>2. Εκπαίδευση</h2><p class="subtitle">Τυπικά προσόντα έως 18 + επιμόρφωση έως 4.</p></div><div class="max">έως 22</div></div>
+      <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '2. Εκπαίδευση', 'subtitle_html' => 'Τυπικά προσόντα έως 18 + επιμόρφωση έως 4.', 'cap_html' => 'έως 22')); ?>
         <div class="field-grid">
           <div class="field">
             <label for="phd">Διδακτορικό <small>11 μόρια στην Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου, 10 σε άλλη κατεύθυνση.</small></label>
@@ -141,8 +137,7 @@
         <div class="warning">Δεν μοριοδοτείται τίτλος σπουδών που αποτέλεσε προσόν διορισμού. Αν υπάρχει διδακτορικό και μεταπτυχιακός τίτλος, το ΦΕΚ ορίζει ότι μοριοδοτείται μόνο το διδακτορικό. Το εργαλείο δεν προσμετρά τον πρώτο μεταπτυχιακό όταν δηλώνεται διδακτορικό. Το «δεύτερο μεταπτυχιακό» παραμένει ξεχωριστό πεδίο, όπως στον πίνακα του ΦΕΚ.</div>
       <?php calculatorCardEnd(); ?>
 
-      <?php calculatorCardStart(); ?>
-        <div class="section-head"><div><h2>3. Διδακτική εμπειρία</h2><p class="subtitle">Μοριοδοτείται μόνο διδακτική εμπειρία σύμφωνα με τους ειδικούς κανόνες του άρθρου 6.</p></div><div class="max">έως 13</div></div>
+      <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '3. Διδακτική εμπειρία', 'subtitle_html' => 'Μοριοδοτείται μόνο διδακτική εμπειρία σύμφωνα με τους ειδικούς κανόνες του άρθρου 6.', 'cap_html' => 'έως 13')); ?>
         <div class="field-grid">
           <div class="field">
             <label for="sdeYears">Πλήρη σχολικά έτη διδακτικής εμπειρίας σε ΣΔΕ <small>1 μόριο ανά σχολικό έτος, έως 5.</small></label>
@@ -164,8 +159,7 @@
         <div class="note">Δεν προσμετράται χρόνος άδειας άνευ αποδοχών, εκπαιδευτικής άδειας ή απόσπασης σε θέση με διοικητικά καθήκοντα. Επίσης δεν μοριοδοτείται προϋπηρεσία που αναγνωρίστηκε κατά τον διορισμό στην τυπική εκπαίδευση.</div>
       <?php calculatorCardEnd(); ?>
 
-      <?php calculatorCardStart(); ?>
-        <div class="section-head"><div><h2>4. Άλλα προσόντα</h2><p class="subtitle">Έως δύο ξένες γλώσσες και γνώση χειρισμού Η/Υ.</p></div><div class="max">έως 5</div></div>
+      <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '4. Άλλα προσόντα', 'subtitle_html' => 'Έως δύο ξένες γλώσσες και γνώση χειρισμού Η/Υ.', 'cap_html' => 'έως 5')); ?>
         <?php renderAsepLanguageSelector(array(
           'id' => 'sdeLanguages',
           'profile' => 'sde_secondment',
@@ -186,11 +180,11 @@
         <h2>Αποτέλεσμα</h2>
         <div class="big-total"><div class="number" id="totalScore">0</div><div class="outof">από 40 μόρια</div></div>
         <div class="bar"><div id="totalBar"></div></div>
-        <div class="result-row"><span>Εκπαίδευση</span><strong id="educationScore">0 / 22</strong></div>
-        <div class="result-row"><span>Διδακτική εμπειρία</span><strong id="experienceScore">0 / 13</strong></div>
-        <div class="result-row"><span>Άλλα προσόντα</span><strong id="otherScore">0 / 5</strong></div>
+        <?php calculatorResultRow(array('label_html' => 'Εκπαίδευση', 'value_html' => '0 / 22', 'value_id' => 'educationScore')); ?>
+        <?php calculatorResultRow(array('label_html' => 'Διδακτική εμπειρία', 'value_html' => '0 / 13', 'value_id' => 'experienceScore')); ?>
+        <?php calculatorResultRow(array('label_html' => 'Άλλα προσόντα', 'value_html' => '0 / 5', 'value_id' => 'otherScore')); ?>
         <div id="eligibilityStatus" role="status" aria-live="polite"></div>
-        <div class="actions"><button class="primary" type="button" onclick="calculate()">Υπολογισμός</button><button class="secondary" type="button" onclick="resetForm()">Καθαρισμός</button></div>
+        <?php calculatorActions(array(array('attrs' => array('class' => 'primary', 'type' => 'button', 'onclick' => 'calculate()'), 'html' => 'Υπολογισμός'), array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Καθαρισμός'))); ?>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorCardStart(); ?>

@@ -204,18 +204,12 @@
           <div class="bar"><div id="totalBar"></div></div>
         </div>
 
-        <div class="result-row"><span>Α. Συγκρότηση & κατάρτιση</span><strong id="resA">0.00 / 29</strong></div>
-        <div class="result-row"><span>Β. Επιστημονικό έργο</span><strong id="resB">0.00 / 13</strong></div>
-        <div class="result-row"><span>Γ. Καινοτόμο έργο</span><strong id="resC">0.00 / 11</strong></div>
+        <?php calculatorResultRow(array('label_html' => 'Α. Συγκρότηση & κατάρτιση', 'value_html' => '0.00 / 29', 'value_id' => 'resA')); ?>
+        <?php calculatorResultRow(array('label_html' => 'Β. Επιστημονικό έργο', 'value_html' => '0.00 / 13', 'value_id' => 'resB')); ?>
+        <?php calculatorResultRow(array('label_html' => 'Γ. Καινοτόμο έργο', 'value_html' => '0.00 / 11', 'value_id' => 'resC')); ?>
 
-        <div class="actions">
-          <button type="button" id="copyBtn">Αντιγραφή</button>
-          <button type="button" class="secondary" id="resetBtn">Μηδενισμός</button>
-        </div>
-        <div class="actions">
-          <button type="button" class="secondary" id="printBtn">Εκτύπωση</button>
-          <button type="button" class="secondary" id="sampleBtn">Φόρτωση παραδείγματος</button>
-        </div>
+        <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
+        <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'printBtn'), 'html' => 'Εκτύπωση'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'sampleBtn'), 'html' => 'Φόρτωση παραδείγματος'))); ?>
 
         <div class="note edu-mt-14">
           Το εργαλείο είναι βοηθητικό. Η τελική αποτίμηση γίνεται από τα αρμόδια όργανα και προϋποθέτει τα σωστά δικαιολογητικά στα αντίστοιχα πεδία.

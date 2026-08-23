@@ -26,8 +26,7 @@
 
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
-      <?php calculatorCardStart(); ?>
-        <div class="section-head"><div><h2>1. Θέση &amp; βασικές προϋποθέσεις</h2><p class="subtitle">Η θέση αλλάζει αυτόματα τα ελάχιστα έτη υπηρεσίας, τις απαιτούμενες ώρες διδακτικού έργου και τα επιμέρους πλαφόν.</p></div></div>
+      <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '1. Θέση &amp; βασικές προϋποθέσεις', 'subtitle_html' => 'Η θέση αλλάζει αυτόματα τα ελάχιστα έτη υπηρεσίας, τις απαιτούμενες ώρες διδακτικού έργου και τα επιμέρους πλαφόν.')); ?>
         <div class="field-grid">
           <div class="field full">
             <label for="role">Θέση υποψηφιότητας</label>
@@ -73,8 +72,7 @@
         </div>
       <?php calculatorCardEnd(); ?>
 
-      <?php calculatorCardStart(); ?>
-        <div class="section-head"><div><h2>2. Τυπικά προσόντα</h2><p class="subtitle">Οι συναφείς μεταπτυχιακές σπουδές σε Εκπαίδευση Ενηλίκων, Συνεχιζόμενη Εκπαίδευση, Διά Βίου Μάθηση ή Διοίκηση Εκπαιδευτικών Μονάδων λαμβάνουν το μέγιστο.</p></div><div class="max">έως 25</div></div>
+      <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '2. Τυπικά προσόντα', 'subtitle_html' => 'Οι συναφείς μεταπτυχιακές σπουδές σε Εκπαίδευση Ενηλίκων, Συνεχιζόμενη Εκπαίδευση, Διά Βίου Μάθηση ή Διοίκηση Εκπαιδευτικών Μονάδων λαμβάνουν το μέγιστο.', 'cap_html' => 'έως 25')); ?>
         <div class="field-grid">
           <div class="field">
             <label for="phd">Διδακτορικό</label>
@@ -108,8 +106,7 @@
         <div class="note">Το εργαλείο ταξινομεί αυτόματα τις δύο επιλέξιμες γλώσσες ώστε η ισχυρότερη να μοριοδοτείται ως 1η. Η ίδια γλώσσα λαμβάνεται μόνο μία φορά, στο ανώτερο επίπεδο.</div>
       <?php calculatorCardEnd(); ?>
 
-      <?php calculatorCardStart(); ?>
-        <div class="section-head"><div><h2>3. Διδακτική εμπειρία</h2><p class="subtitle">Τα όρια αλλάζουν ανά θέση. Στην ωρομίσθια απασχόληση στα ΣΔΕ και στις σχολικές μονάδες/ΣΑΕΚ/ΕΣΚ, 650 ώρες αντιστοιχούν σε ένα έτος.</p></div><div class="max" id="teachingMax">έως —</div></div>
+      <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '3. Διδακτική εμπειρία', 'subtitle_html' => 'Τα όρια αλλάζουν ανά θέση. Στην ωρομίσθια απασχόληση στα ΣΔΕ και στις σχολικές μονάδες/ΣΑΕΚ/ΕΣΚ, 650 ώρες αντιστοιχούν σε ένα έτος.', 'cap_html' => 'έως —', 'cap_attrs' => array('id' => 'teachingMax'))); ?>
         <div class="field-grid">
           <div class="field">
             <label for="sdeTeachingYears">Διδακτικό έργο στα ΣΔΕ — πλήρη έτη <small>Μην περιλαμβάνεις εδώ χρόνο διοικητικής θητείας που παίρνει μόρια στην ενότητα 4.</small></label>
@@ -143,8 +140,7 @@
         <div class="warning">Δεν προσμετράται χρόνος άδειας άνευ αποδοχών, εκπαιδευτικής άδειας ή απόσπασης σε θέση με διοικητικά καθήκοντα, ούτε προϋπηρεσία που αναγνωρίστηκε κατά τον διορισμό στην τυπική εκπαίδευση. Το διδακτικό έργο στην τριτοβάθμια εκπαίδευση δεν θεωρείται διδακτικό έργο στην Εκπαίδευση Ενηλίκων.</div>
       <?php calculatorCardEnd(); ?>
 
-      <?php calculatorCardStart(); ?>
-        <div class="section-head"><div><h2>4. Διοικητική εμπειρία</h2><p class="subtitle">Η ίδια χρονική περίοδος δεν μπορεί να μοριοδοτηθεί και ως διοικητική και ως διδακτική εμπειρία.</p></div><div class="max" id="adminMax">έως —</div></div>
+      <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '4. Διοικητική εμπειρία', 'subtitle_html' => 'Η ίδια χρονική περίοδος δεν μπορεί να μοριοδοτηθεί και ως διοικητική και ως διδακτική εμπειρία.', 'cap_html' => 'έως —', 'cap_attrs' => array('id' => 'adminMax'))); ?>
         <div class="field-grid">
           <div class="field">
             <label for="sdeDirectorYears">Στα ΣΔΕ ως Διευθυντής — σχολικά έτη <small>2 μόρια ανά έτος.</small></label>
@@ -162,13 +158,11 @@
         <div class="overflow-box" id="overflowHint">Επίλεξε θέση για να υπολογιστούν τα επιμέρους πλαφόν και τυχόν διοικητικός χρόνος που μένει εκτός μοριοδότησης.</div>
       <?php calculatorCardEnd(); ?>
 
-      <?php calculatorCardStart(); ?>
-        <div class="section-head"><div><h2>5. Επιμόρφωση</h2><p class="subtitle">Επιμόρφωση στις αρχές Εκπαίδευσης Ενηλίκων, σε θέματα ΣΔΕ ή στη Διοίκηση Εκπαιδευτικών Μονάδων από φορείς του δημόσιου ή ευρύτερου δημόσιου τομέα.</p></div><div class="max">έως 5</div></div>
+      <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '5. Επιμόρφωση', 'subtitle_html' => 'Επιμόρφωση στις αρχές Εκπαίδευσης Ενηλίκων, σε θέματα ΣΔΕ ή στη Διοίκηση Εκπαιδευτικών Μονάδων από φορείς του δημόσιου ή ευρύτερου δημόσιου τομέα.', 'cap_html' => 'έως 5')); ?>
         <div class="field-grid"><div class="field full"><label for="trainingHours">Συνολικές επιλέξιμες ώρες ολοκληρωμένων επιμορφώσεων <small>0,5 μόρια ανά 100 ώρες. Κάθε επιμέρους επιμόρφωση κάτω των 15 ωρών λαμβάνει 0 μόρια. Μην συμπεριλαμβάνεις ημερίδες, διημερίδες ή συνέδρια.</small></label><input type="number" id="trainingHours" min="0" step="1" value="0" oninput="calculate()"></div></div>
       <?php calculatorCardEnd(); ?>
 
-      <?php calculatorCardStart(array('id' => 'interviewCard', 'class' => 'card hidden')); ?>
-        <div class="section-head"><div><h2>6. Συνέντευξη</h2><p class="subtitle">Μόνο για τους υποψήφιους Διευθυντές. Αν δεν έχει πραγματοποιηθεί ακόμη, άφησε το πεδίο κενό για να δεις το σύνολο πριν από τη συνέντευξη.</p></div><div class="max">έως 25</div></div>
+      <?php calculatorCardStart(array('id' => 'interviewCard', 'class' => 'card hidden', 'header_variant' => 'section-head', 'title_html' => '6. Συνέντευξη', 'subtitle_html' => 'Μόνο για τους υποψήφιους Διευθυντές. Αν δεν έχει πραγματοποιηθεί ακόμη, άφησε το πεδίο κενό για να δεις το σύνολο πριν από τη συνέντευξη.', 'cap_html' => 'έως 25')); ?>
         <div class="field-grid"><div class="field full"><label for="interviewScore">Βαθμολογία συνέντευξης</label><input type="number" id="interviewScore" min="0" max="25" step="0.01" placeholder="0–25" oninput="normalizeBoundedScore(this);calculate()"></div></div>
       <?php calculatorCardEnd(); ?>
     <?php calculatorMainEnd(); ?>
@@ -179,14 +173,14 @@
         <h2>Αποτέλεσμα</h2>
         <div class="big-total"><div class="context" id="totalContext">Μόρια κριτηρίων</div><div class="number" id="totalScore">0</div><div class="outof" id="totalOutOf">από 75 μόρια</div></div>
         <div class="bar"><div id="totalBar"></div></div>
-        <div class="result-row"><span>Τυπικά προσόντα</span><strong id="formalScore">0 / 25</strong></div>
-        <div class="result-row"><span>Διδακτική εμπειρία</span><strong id="teachingScore">0 / —</strong></div>
-        <div class="result-row"><span>Διοικητική εμπειρία</span><strong id="adminScore">0 / —</strong></div>
-        <div class="result-row"><span>Επιμόρφωση</span><strong id="trainingScore">0 / 5</strong></div>
-        <div class="result-row hidden" id="interviewRow"><span>Συνέντευξη</span><strong id="interviewResult">— / 25</strong></div>
-        <div class="result-row emphasis" id="criteriaRow"><span>Σύνολο πριν συνέντευξη</span><strong id="criteriaScore">0 / 75</strong></div>
+        <?php calculatorResultRow(array('label_html' => 'Τυπικά προσόντα', 'value_html' => '0 / 25', 'value_id' => 'formalScore')); ?>
+        <?php calculatorResultRow(array('label_html' => 'Διδακτική εμπειρία', 'value_html' => '0 / —', 'value_id' => 'teachingScore')); ?>
+        <?php calculatorResultRow(array('label_html' => 'Διοικητική εμπειρία', 'value_html' => '0 / —', 'value_id' => 'adminScore')); ?>
+        <?php calculatorResultRow(array('label_html' => 'Επιμόρφωση', 'value_html' => '0 / 5', 'value_id' => 'trainingScore')); ?>
+        <?php calculatorResultRow(array('class' => 'result-row hidden', 'id' => 'interviewRow', 'label_html' => 'Συνέντευξη', 'value_html' => '— / 25', 'value_id' => 'interviewResult')); ?>
+        <?php calculatorResultRow(array('class' => 'result-row emphasis', 'id' => 'criteriaRow', 'label_html' => 'Σύνολο πριν συνέντευξη', 'value_html' => '0 / 75', 'value_id' => 'criteriaScore')); ?>
         <div id="eligibilityStatus" role="status" aria-live="polite"></div>
-        <div class="actions"><button class="primary" type="button" onclick="copySummary(this)">Αντιγραφή αποτελέσματος</button><button class="secondary" type="button" onclick="resetForm()">Μηδενισμός</button></div>
+        <?php calculatorActions(array(array('attrs' => array('class' => 'primary', 'type' => 'button', 'onclick' => 'copySummary(this)'), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Μηδενισμός'))); ?>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorCardStart(); ?><h2>Ανάλυση μορίων</h2><div id="breakdown" class="subtitle">Συμπλήρωσε τα στοιχεία σου.</div><?php calculatorCardEnd(); ?>

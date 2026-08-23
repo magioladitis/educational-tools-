@@ -285,17 +285,14 @@
 
       <div class="bar"><div id="scoreBar"></div></div>
 
-      <div class="result-row"><span>Τίτλοι σπουδών</span><strong id="academicResult">0</strong></div>
-      <div class="result-row"><span id="primaryResultLabel">Γλώσσα πίνακα</span><strong id="primaryResult">0</strong></div>
-      <div class="result-row"><span>Δεύτερη ξένη γλώσσα</span><strong id="secondLanguageResult">0</strong></div>
-      <div class="result-row"><span>Πίνακας</span><strong id="tableResult">—</strong></div>
+      <?php calculatorResultRow(array('label_html' => 'Τίτλοι σπουδών', 'value_html' => '0', 'value_id' => 'academicResult')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Γλώσσα πίνακα', 'label_id' => 'primaryResultLabel', 'value_html' => '0', 'value_id' => 'primaryResult')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Δεύτερη ξένη γλώσσα', 'value_html' => '0', 'value_id' => 'secondLanguageResult')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Πίνακας', 'value_html' => '—', 'value_id' => 'tableResult')); ?>
 
       <div id="eligibilityStatus" role="status" aria-live="polite"></div>
 
-      <div class="actions">
-        <button type="button" class="primary" id="copyBtn">Αντιγραφή σύνοψης</button>
-        <button type="button" class="secondary" id="resetBtn">Μηδενισμός</button>
-      </div>
+      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'primary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή σύνοψης'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
 
       <div class="note">
         *Τα 185/165 είναι το θεωρητικό άθροισμα των επιμέρους μοριοδοτούμενων κριτηρίων του ΦΕΚ και όχι ξεχωριστό συνολικό πλαφόν που αναγράφεται στην απόφαση.

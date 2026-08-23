@@ -155,7 +155,7 @@ renderEaeSensoryPriority(array(
 <div id="eligibilityWhy" class="eligibility-box"><strong>Έλεγχος ένταξης</strong>Συμπλήρωσε τα προσόντα σου.</div>
 <table class="table"><tr><td>Ακαδημαϊκά</td><td id="resAcademic">0.00 / 120</td></tr><tr><td>Προϋπηρεσία</td><td id="resService">0.00 / 120</td></tr><tr><td>Κοινωνικά</td><td id="resSocial">0.00</td></tr></table>
 <div id="priorities"></div>
-<div class="actions"><button type="button" id="copyBtn">Αντιγραφή</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div>
+<?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
 <div class="note edu-mt-14">Ενημερωτικός υπολογισμός βάσει της 3ΕΑ/2025. Η τελική ένταξη και μοριοδότηση προκύπτει από τον έλεγχο ΑΣΕΠ/ΟΠΣΥΔ και τα επίσημα δικαιολογητικά.</div>
 <?php calculatorResultsEnd(); ?>
 <?php calculatorColumnsEnd(); ?>

@@ -166,9 +166,9 @@
           </div>
           <div class="bar"><div id="totalBar"></div></div>
 
-          <div class="result-row"><span>Α. Γενική παρουσία</span><strong id="aTotal">0 / 35</strong></div>
-          <div class="result-row"><span>Β. Κατάρτιση – εμπειρία</span><strong id="bTotal">0 / 30</strong></div>
-          <div class="result-row"><span>Γ. Βιντεοσκοπημένο μάθημα</span><strong id="cTotal">0 / 35</strong></div>
+          <?php calculatorResultRow(array('label_html' => 'Α. Γενική παρουσία', 'value_html' => '0 / 35', 'value_id' => 'aTotal')); ?>
+          <?php calculatorResultRow(array('label_html' => 'Β. Κατάρτιση – εμπειρία', 'value_html' => '0 / 30', 'value_id' => 'bTotal')); ?>
+          <?php calculatorResultRow(array('label_html' => 'Γ. Βιντεοσκοπημένο μάθημα', 'value_html' => '0 / 35', 'value_id' => 'cTotal')); ?>
 
           <div class="pre-interview">
             <div>Β + Γ πριν από τη συνέντευξη</div>
@@ -177,19 +177,16 @@
 
           <div id="statusBox" class="status-box" role="status" aria-live="polite"></div>
 
-          <div class="actions">
-            <button class="primary" type="button" onclick="calculate()">Υπολογισμός</button>
-            <button class="secondary" type="button" onclick="resetForm()">Καθαρισμός</button>
-          </div>
+          <?php calculatorActions(array(array('attrs' => array('class' => 'primary', 'type' => 'button', 'onclick' => 'calculate()'), 'html' => 'Υπολογισμός'), array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Καθαρισμός'))); ?>
         <?php calculatorCardEnd(); ?>
 
         <?php calculatorCardStart(); ?>
           <h2>Ανάλυση Β</h2>
-          <div class="result-row"><span>Β1. Διδακτορικό</span><strong id="b1Result">0</strong></div>
-          <div class="result-row"><span>Β2. Μεταπτυχιακό</span><strong id="b2Result">0</strong></div>
-          <div class="result-row"><span>Β3. Πανελλαδικές</span><strong id="b3Result">0</strong></div>
-          <div class="result-row"><span>Β4. Πρόσθετη προϋπηρεσία</span><strong id="b4Result">0</strong></div>
-          <div class="result-row"><span>Β5. Τ.Π.Ε.</span><strong id="b5Result">0</strong></div>
+          <?php calculatorResultRow(array('label_html' => 'Β1. Διδακτορικό', 'value_html' => '0', 'value_id' => 'b1Result')); ?>
+          <?php calculatorResultRow(array('label_html' => 'Β2. Μεταπτυχιακό', 'value_html' => '0', 'value_id' => 'b2Result')); ?>
+          <?php calculatorResultRow(array('label_html' => 'Β3. Πανελλαδικές', 'value_html' => '0', 'value_id' => 'b3Result')); ?>
+          <?php calculatorResultRow(array('label_html' => 'Β4. Πρόσθετη προϋπηρεσία', 'value_html' => '0', 'value_id' => 'b4Result')); ?>
+          <?php calculatorResultRow(array('label_html' => 'Β5. Τ.Π.Ε.', 'value_html' => '0', 'value_id' => 'b5Result')); ?>
         <?php calculatorCardEnd(); ?>
       <?php calculatorResultsEnd(); ?>
     <?php calculatorColumnsEnd(); ?>

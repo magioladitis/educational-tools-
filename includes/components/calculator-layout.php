@@ -202,21 +202,37 @@ if (!function_exists('calculatorCardStart')) {
         if ($headerVariant === 'section-head') {
             if ($title !== '' || $subtitle !== '' || $cap !== '') {
                 echo '<div class="section-head"><div>';
-                if ($title !== '') echo '<h2>' . $title . '</h2>';
-                if ($subtitle !== '') echo '<p class="subtitle">' . $subtitle . '</p>';
+                if ($title !== '') {
+                    $titleAttrs = isset($config['title_attrs']) && is_array($config['title_attrs']) ? $config['title_attrs'] : array();
+                    echo '<h2' . calculatorLayoutAttributes($titleAttrs) . '>' . $title . '</h2>';
+                }
+                if ($subtitle !== '') {
+                    $subtitleAttrs = isset($config['subtitle_attrs']) && is_array($config['subtitle_attrs']) ? $config['subtitle_attrs'] : array();
+                    if (!isset($subtitleAttrs['class'])) $subtitleAttrs['class'] = 'subtitle';
+                    echo '<p' . calculatorLayoutAttributes($subtitleAttrs) . '>' . $subtitle . '</p>';
+                }
                 echo '</div>';
-                if ($cap !== '') echo '<div class="max">' . $cap . '</div>';
+                if ($cap !== '') {
+                    $capAttrs = isset($config['cap_attrs']) && is_array($config['cap_attrs']) ? $config['cap_attrs'] : array();
+                    if (!isset($capAttrs['class'])) $capAttrs['class'] = 'max';
+                    echo '<div' . calculatorLayoutAttributes($capAttrs) . '>' . $cap . '</div>';
+                }
                 echo '</div>';
             }
         } else {
-            if ($title !== '') echo '<h2>' . $title . '</h2>';
+            if ($title !== '') {
+                $titleAttrs = isset($config['title_attrs']) && is_array($config['title_attrs']) ? $config['title_attrs'] : array();
+                echo '<h2' . calculatorLayoutAttributes($titleAttrs) . '>' . $title . '</h2>';
+            }
             if ($subtitle !== '') {
-                $subtitleClass = isset($config['subtitle_class']) ? $config['subtitle_class'] : 'subtitle';
-                echo '<p class="' . calculatorLayoutEscape($subtitleClass) . '">' . $subtitle . '</p>';
+                $subtitleAttrs = isset($config['subtitle_attrs']) && is_array($config['subtitle_attrs']) ? $config['subtitle_attrs'] : array();
+                if (!isset($subtitleAttrs['class'])) $subtitleAttrs['class'] = isset($config['subtitle_class']) ? $config['subtitle_class'] : 'subtitle';
+                echo '<p' . calculatorLayoutAttributes($subtitleAttrs) . '>' . $subtitle . '</p>';
             }
             if ($cap !== '') {
-                $capClass = isset($config['cap_class']) ? $config['cap_class'] : 'cap';
-                echo '<p class="' . calculatorLayoutEscape($capClass) . '">' . $cap . '</p>';
+                $capAttrs = isset($config['cap_attrs']) && is_array($config['cap_attrs']) ? $config['cap_attrs'] : array();
+                if (!isset($capAttrs['class'])) $capAttrs['class'] = isset($config['cap_class']) ? $config['cap_class'] : 'cap';
+                echo '<p' . calculatorLayoutAttributes($capAttrs) . '>' . $cap . '</p>';
             }
         }
     }
@@ -256,6 +272,29 @@ if (!function_exists('calculatorResultsEnd')) {
     function calculatorResultsEnd() {
         $tags = calculatorLayoutStackPop('results');
         foreach (array_reverse($tags) as $tag) echo '</' . $tag . '>';
+    }
+}
+
+if (!function_exists('calculatorResultRow')) {
+    function calculatorResultRow($config = array()) {
+        $config = is_array($config) ? $config : array();
+        $class = isset($config['class']) ? $config['class'] : 'result-row';
+        $id = isset($config['id']) ? $config['id'] : null;
+        $attrs = isset($config['attrs']) && is_array($config['attrs']) ? $config['attrs'] : array();
+        calculatorLayoutOpenTag('div', $class, $id, $attrs);
+
+        $labelAttrs = isset($config['label_attrs']) && is_array($config['label_attrs']) ? $config['label_attrs'] : array();
+        if (isset($config['label_id'])) $labelAttrs['id'] = $config['label_id'];
+        if (isset($config['label_class'])) $labelAttrs['class'] = $config['label_class'];
+        $label = calculatorLayoutTextOrHtml($config, 'label', 'label_html');
+        echo '<span' . calculatorLayoutAttributes($labelAttrs) . '>' . $label . '</span>';
+
+        $valueAttrs = isset($config['value_attrs']) && is_array($config['value_attrs']) ? $config['value_attrs'] : array();
+        if (isset($config['value_id'])) $valueAttrs['id'] = $config['value_id'];
+        if (isset($config['value_class'])) $valueAttrs['class'] = $config['value_class'];
+        $value = calculatorLayoutTextOrHtml($config, 'value', 'value_html');
+        echo '<strong' . calculatorLayoutAttributes($valueAttrs) . '>' . $value . '</strong>';
+        echo '</div>';
     }
 }
 

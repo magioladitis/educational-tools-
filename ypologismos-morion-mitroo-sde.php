@@ -22,8 +22,7 @@
 
 <?php calculatorColumnsStart(); ?>
 <?php calculatorMainStart(); ?>
-  <?php calculatorCardStart(); ?>
-    <div class="section-head"><div><h2>1. Κατηγορία &amp; προϋποθέσεις ένταξης</h2><p class="subtitle">Η επιλογή κατηγορίας αλλάζει αυτόματα τα απαιτούμενα προσόντα, τις επιμορφώσεις και την εμπειρία που μοριοδοτείται.</p></div></div>
+  <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '1. Κατηγορία &amp; προϋποθέσεις ένταξης', 'subtitle_html' => 'Η επιλογή κατηγορίας αλλάζει αυτόματα τα απαιτούμενα προσόντα, τις επιμορφώσεις και την εμπειρία που μοριοδοτείται.')); ?>
     <div class="field-grid">
       <div class="field full"><label for="role">Κατηγορία υποψηφίου</label><select id="role" onchange="roleChanged()"><option value="">— Επίλεξε —</option><option value="educator">Εκπαιδευτικό Προσωπικό</option><option value="psychologist">Σύμβουλος Ψυχολόγος</option><option value="career">Σύμβουλος Σταδιοδρομίας</option></select></div>
     </div>
@@ -54,8 +53,7 @@
     <div id="eligibilityInline"></div>
   <?php calculatorCardEnd(); ?>
 
-  <?php calculatorCardStart(); ?>
-    <div class="section-head"><div><h2>2. Εκπαίδευση</h2><p class="subtitle">Τυπικά προσόντα έως 18 μόρια + επιμόρφωση έως 4 μόρια.</p></div><div class="max">έως 22</div></div>
+  <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '2. Εκπαίδευση', 'subtitle_html' => 'Τυπικά προσόντα έως 18 μόρια + επιμόρφωση έως 4 μόρια.', 'cap_html' => 'έως 22')); ?>
     <h3>Τυπικά προσόντα</h3>
     <div class="field-grid">
       <div class="field"><label for="phd">Διδακτορικό <small id="phdTargetHint">Η συναφής κατεύθυνση αλλάζει ανά κατηγορία.</small></label><select id="phd" onchange="calculate()"><option value="none">Δεν διαθέτω</option><option value="target">Στη μοριοδοτούμενη κατεύθυνση — 11 μόρια</option><option value="other">Σε άλλη κατεύθυνση — 9 μόρια</option></select></div>
@@ -78,8 +76,7 @@
     <div class="warning hidden" id="educatorTrainingProof">Για το Εκπαιδευτικό Προσωπικό, το δικαιολογητικό πρέπει να αναφέρει σαφώς φορέα, αντικείμενο, χρονικό διάστημα και διάρκεια αποκλειστικά σε ώρες. Αν δεν αναφέρονται ώρες, μπορούν να αποδειχθούν με το πρόγραμμα της επιμόρφωσης· Υπεύθυνη Δήλωση του υποψηφίου δεν γίνεται αποδεκτή.</div>
   <?php calculatorCardEnd(); ?>
 
-  <?php calculatorCardStart(); ?>
-    <div class="section-head"><div><h2>3. Εμπειρία</h2><p class="subtitle" id="experienceSubtitle">Επίλεξε κατηγορία για να εμφανιστούν τα σωστά πεδία.</p></div><div class="max">έως 13</div></div>
+  <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '3. Εμπειρία', 'subtitle_html' => 'Επίλεξε κατηγορία για να εμφανιστούν τα σωστά πεδία.', 'subtitle_attrs' => array('id' => 'experienceSubtitle'), 'cap_html' => 'έως 13')); ?>
     <div id="educatorExperience" class="field-grid hidden">
       <div class="field"><label for="expSdeHours">Διδασκαλία στα ΣΔΕ — ώρες <small>1 μόριο / 200 ώρες, έως 5.</small></label><input id="expSdeHours" type="number" min="0" step="1" value="0" oninput="calculate()"></div>
       <div class="field"><label for="expAdultHours">Εκπαίδευση Ενηλίκων εκτός ΣΔΕ — ώρες <small>0,5 μόριο / 100 ώρες, έως 4.</small></label><input id="expAdultHours" type="number" min="0" step="1" value="0" oninput="calculate()"></div>
@@ -92,8 +89,7 @@
     <div id="careerInconsistency" class="warning hidden"><strong>Σημείωση για το ΦΕΚ:</strong> στο άρθρο 12 §2.1 το λεκτικό αναφέρει «μέγιστο αριθμό μορίων 12», αλλά η στήλη του πίνακα δίνει 7 και η συνολική κατηγορία Επαγγελματικής Εμπειρίας είναι 13, ενώ το §2.2 δίνει 6. Ο υπολογιστής χρησιμοποιεί πλαφόν <strong>7</strong>, ως τη μοναδική τιμή που συμφωνεί εσωτερικά με το άθροισμα 13.</div>
   <?php calculatorCardEnd(); ?>
 
-  <?php calculatorCardStart(); ?>
-    <div class="section-head"><div><h2>4. Άλλα προσόντα</h2><p class="subtitle">Δύο ξένες γλώσσες και γνώσεις Η/Υ.</p></div><div class="max">έως 5</div></div>
+  <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '4. Άλλα προσόντα', 'subtitle_html' => 'Δύο ξένες γλώσσες και γνώσεις Η/Υ.', 'cap_html' => 'έως 5')); ?>
     <div class="field-grid">
       <div class="field"><label for="language1">Ξένη γλώσσα 1</label><select id="language1" onchange="calculate()"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other1">Άλλη</option></select><label class="edu-tools-sr-only" for="languageLevel1">Επίπεδο ξένης γλώσσας 1</label><select id="languageLevel1" class="edu-mt-8" onchange="calculate()"><option value="none">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select></div>
       <div class="field"><label for="language2">Ξένη γλώσσα 2</label><select id="language2" onchange="calculate()"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other2">Άλλη</option></select><label class="edu-tools-sr-only" for="languageLevel2">Επίπεδο ξένης γλώσσας 2</label><select id="languageLevel2" class="edu-mt-8" onchange="calculate()"><option value="none">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select></div>
@@ -101,8 +97,7 @@
     </div>
   <?php calculatorCardEnd(); ?>
 
-  <?php calculatorCardStart(); ?>
-    <div class="section-head"><div><h2>5. Κοινωνικά κριτήρια</h2><p class="subtitle">Οι προσαυξήσεις υπολογίζονται επί της βασικής βαθμολογίας που έχει συγκεντρωθεί.</p></div></div>
+  <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '5. Κοινωνικά κριτήρια', 'subtitle_html' => 'Οι προσαυξήσεις υπολογίζονται επί της βασικής βαθμολογίας που έχει συγκεντρωθεί.')); ?>
     <div class="field-grid">
       <div class="field"><label for="unemploymentMonths">Πλήρεις μήνες ανεργίας <small>+0,5% ανά μήνα, έως 10%.</small></label><input id="unemploymentMonths" type="number" min="0" step="1" value="0" oninput="calculate()"></div>
       <div class="field"><label for="unemploymentExtraDays">Επιπλέον ημέρες <small>15 ημέρες ή περισσότερες λογίζονται ως ένας ακόμη πλήρης μήνας.</small></label><input id="unemploymentExtraDays" type="number" min="0" max="30" step="1" value="0" oninput="calculate()"></div>
@@ -120,14 +115,14 @@
     <div class="role-chip" id="roleChip">Επίλεξε κατηγορία</div><h2>Αποτέλεσμα</h2>
     <div class="big-total"><div class="context">Τελική βαθμολογία με προσαυξήσεις</div><div class="number" id="finalScore">0</div><div class="outof">Βασική βαθμολογία έως 40 + κοινωνικά κριτήρια</div></div>
     <div class="bar"><div id="baseBar"></div></div>
-    <div class="result-row"><span>Εκπαίδευση</span><strong id="educationScore">0 / 22</strong></div>
-    <div class="result-row"><span>Εμπειρία</span><strong id="experienceScore">0 / 13</strong></div>
-    <div class="result-row"><span>Άλλα προσόντα</span><strong id="otherScore">0 / 5</strong></div>
-    <div class="result-row emphasis"><span>Βασική βαθμολογία</span><strong id="baseScore">0 / 40</strong></div>
-    <div class="result-row"><span>Ανεργία</span><strong id="unemploymentScore">+0</strong></div>
-    <div class="result-row"><span>Ειδικές κατηγορίες</span><strong id="specialScore">+0</strong></div>
+    <?php calculatorResultRow(array('label_html' => 'Εκπαίδευση', 'value_html' => '0 / 22', 'value_id' => 'educationScore')); ?>
+    <?php calculatorResultRow(array('label_html' => 'Εμπειρία', 'value_html' => '0 / 13', 'value_id' => 'experienceScore')); ?>
+    <?php calculatorResultRow(array('label_html' => 'Άλλα προσόντα', 'value_html' => '0 / 5', 'value_id' => 'otherScore')); ?>
+    <?php calculatorResultRow(array('class' => 'result-row emphasis', 'label_html' => 'Βασική βαθμολογία', 'value_html' => '0 / 40', 'value_id' => 'baseScore')); ?>
+    <?php calculatorResultRow(array('label_html' => 'Ανεργία', 'value_html' => '+0', 'value_id' => 'unemploymentScore')); ?>
+    <?php calculatorResultRow(array('label_html' => 'Ειδικές κατηγορίες', 'value_html' => '+0', 'value_id' => 'specialScore')); ?>
     <div id="priorityStatus"></div><div id="eligibilityStatus"></div>
-    <div class="actions"><button class="primary" type="button" onclick="copySummary(this)">Αντιγραφή αποτελέσματος</button><button class="secondary" type="button" onclick="resetForm()">Μηδενισμός</button></div>
+    <?php calculatorActions(array(array('attrs' => array('class' => 'primary', 'type' => 'button', 'onclick' => 'copySummary(this)'), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Μηδενισμός'))); ?>
   <?php calculatorCardEnd(); ?>
   <?php calculatorCardStart(); ?><h2>Αναλυτική μοριοδότηση</h2><div id="breakdown" class="subtitle">Επίλεξε κατηγορία και συμπλήρωσε τα στοιχεία.</div><?php calculatorCardEnd(); ?>
   <?php calculatorCardStart(); ?><h2>Δικαιολογητικά / έλεγχοι</h2><div id="checklist" class="subtitle">Θα προσαρμοστεί στις επιλογές σου.</div><?php calculatorCardEnd(); ?>
