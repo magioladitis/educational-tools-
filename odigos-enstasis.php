@@ -4,61 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</title>
-<style>
-body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;padding:30px;color:#222}
-.app-box{max-width:900px;margin:auto;background:#fff;padding:25px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.12)}
-.back-tools{display:inline-block;margin-bottom:18px;color:#1f6feb;font-weight:bold;text-decoration:none}
-.back-tools:hover{text-decoration:underline}
-h1{text-align:center;font-size:26px;margin:0 0 10px;line-height:1.25}
-.intro{text-align:center;color:#555;line-height:1.5;margin-bottom:20px}
-.deadline-card{margin:0 0 22px;padding:16px;border-radius:12px;border:1px solid #d8e2f2;background:#f7faff}
-.deadline-card strong{display:block;font-size:17px;margin-bottom:6px}
-.deadline-line{line-height:1.55}
-.status{margin-top:10px;padding:10px 12px;border-radius:8px;font-weight:bold;line-height:1.5}
-.status.open{background:#e6f4ea;color:#137333}
-.status.before{background:#fff4e5;color:#8a5300}
-.status.closed{background:#fdecea;color:#b3261e}
-.countdown{display:block;margin-top:4px;font-size:15px}
-.question{margin-bottom:18px;padding:14px;background:#fafafa;border:1px solid #ddd;border-radius:10px}
-.question-number{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#1f6feb;color:#fff;font-size:14px;margin-right:7px}
-label{display:block;font-weight:bold;margin-bottom:9px;line-height:1.4}
-select,input[type="text"]{width:100%;padding:11px;border-radius:8px;border:1px solid #ccc;font-size:15px;box-sizing:border-box;background:#fff}
-input[type="text"].valid{border-color:#137333;box-shadow:0 0 0 2px rgba(19,115,51,.08)}
-input[type="text"].invalid{border-color:#b3261e;box-shadow:0 0 0 2px rgba(179,38,30,.08)}
-button{width:100%;margin-top:4px;padding:14px;border:none;border-radius:8px;font-size:17px;font-weight:bold;cursor:pointer;background:#1f6feb;color:white}
-button:hover{background:#1558c0}
-button:disabled{background:#aaa;cursor:not-allowed}
-.hidden{display:none!important}
-.result{display:none;margin-top:24px;padding:18px;border-radius:10px;background:#eef4ff;color:#174ea6;line-height:1.6}
-.result h2{margin-top:0;font-size:21px}
-.result h3{margin:18px 0 7px;font-size:17px}
-.result ul,.result ol{margin:7px 0;padding-left:23px}
-.note-box,.warning-box,.success-box,.danger-box{margin-top:14px;padding:12px;border-radius:8px}
-.note-box{background:rgba(255,255,255,.78);border:1px solid rgba(0,0,0,.08);color:#333}
-.warning-box{background:#fff4e5;color:#8a5300}
-.success-box{background:#e6f4ea;color:#137333}
-.danger-box{background:#fdecea;color:#b3261e}
-.paravolo-summary{margin:14px 0 18px;padding:14px;border-radius:10px;background:#f8f9fa;border:1px solid #ddd;line-height:1.55}
-.paravolo-summary ul{margin:8px 0 0;padding-left:22px}
-.quick-card{margin:0 0 18px;padding:14px;border-radius:10px;border:1px solid #cbd5e1;background:#f8fbff;line-height:1.5}
-.quick-card strong{display:block;margin-bottom:5px;color:#174ea6}
-.inline-link{display:inline-block;margin-top:8px;padding:8px 11px;border:1px solid #b9cbe5;border-radius:7px;background:#fff;color:#174ea6;text-decoration:none;font-weight:bold}
-.inline-link:hover{text-decoration:underline}
-.field-hint{margin-top:7px;font-size:13px;color:#666;line-height:1.45}
-.validation-message{margin-top:8px;padding:9px 11px;border-radius:7px;font-size:14px;line-height:1.45}
-.validation-message.neutral{background:#f1f3f4;color:#555}
-.validation-message.good{background:#e6f4ea;color:#137333}
-.validation-message.bad{background:#fdecea;color:#b3261e}
-.action-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.action-links a{display:inline-block;padding:9px 12px;border-radius:7px;background:#fff;border:1px solid #cbd5e1;color:#174ea6;text-decoration:none;font-weight:bold}
-.action-links a:hover{text-decoration:underline}
-.small-note{margin-top:18px;font-size:13px;color:#666;line-height:1.5;text-align:justify}
-.credits{margin-top:24px;text-align:center;font-size:13px;color:#777}
-@media(max-width:760px){body{padding:16px}.app-box{padding:18px}h1{font-size:23px}.action-links{display:block}.action-links a{display:block;margin-top:8px;text-align:center}}
-</style>
-<link rel="stylesheet" href="assets/common.css">
+<link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
-<body class="edu-ui">
+<body class="edu-ui edu-guide-standard edu-guide-objection">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app-box edu-modernized">
   <section class="hero edu-legacy-hero">
@@ -163,7 +111,7 @@ button:disabled{background:#aaa;cursor:not-allowed}
     </ul>
   </div>
 
-  <button type="button" id="guidanceBtn" onclick="showGuidance()">Εμφάνιση οδηγιών</button>
+  <button class="guide-submit edu-mt-4" type="button" id="guidanceBtn" onclick="showGuidance()">Εμφάνιση οδηγιών</button>
   <div id="result" class="result" role="status" aria-live="polite"></div>
 
   <p class="small-note">Το εργαλείο παρέχει ενδεικτική καθοδήγηση για τις ενστάσεις των προσωρινών πινάκων 1ΓΕ/2026 και 2ΓΕ/2026. Για την υποβολή ισχύουν η επίσημη ανακοίνωση, οι προκηρύξεις και οι οδηγίες της ηλεκτρονικής πλατφόρμας του ΑΣΕΠ.</p>
@@ -502,6 +450,6 @@ updateParavoloUI();
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

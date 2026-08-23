@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Υπολογισμός Μορίων ΔΗΜ.Ω.Σ. 2026-2027</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.9-b1">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 <body class="edu-ui edu-page-dimos-detachment">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -443,6 +443,6 @@
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9-b1"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

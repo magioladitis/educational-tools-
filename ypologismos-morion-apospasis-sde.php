@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων απόσπασης μονίμων εκπαιδευτικών στα Σχολεία Δεύτερης Ευκαιρίας (ΣΔΕ) και έλεγχος αποδεκτών ειδικοτήτων/γραμματισμών σύμφωνα με το ΦΕΚ Β' 4088/03.07.2026.">
   <title>Υπολογισμός μορίων απόσπασης στα ΣΔΕ</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9-b3">
+<link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 <body class="edu-ui edu-calc-sde edu-page-sde-apospasis">
 <main class="page-shell">
@@ -362,6 +362,6 @@
   specialtyChanged();
   calculate();
 </script>
-  <script src="assets/common.js?v=3.20.9-b3"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

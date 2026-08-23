@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<!-- UI consolidation v3.20: shared design system in assets/common.css?v=3.20.9-rc1 -->
-  <meta charset="UTF-8">
+<!-- UI consolidation v3.20: shared design system in assets/common.css?v=3.20.9"UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.9-rc1">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 
 <body class="edu-ui edu-calc-standard edu-calc-asep-main">
@@ -757,6 +756,6 @@
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.4"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

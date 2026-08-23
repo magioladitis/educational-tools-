@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Υπολογισμός μορίων απόσπασης εκπαιδευτικών στα Ευρωπαϊκά Σχολεία με βάση την πρόσκληση 33598/Η2/18-3-2026.">
 <title>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9-b1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 <body class="edu-ui edu-page-european-schools">
 <main class="page-shell">
@@ -21,7 +21,7 @@
 <p class="subtitle">Επίλεξε τη θέση που σε ενδιαφέρει. Ο κλάδος προκύπτει αυτόματα· μόνο όταν μία θέση δέχεται περισσότερους κλάδους θα σου ζητηθεί να επιλέξεις μεταξύ αυτών.</p>
 <div class="field-grid">
 <div class="field full"><label for="position">Θέση της πρόσκλησης 2026<small>Η θέση καθορίζει αυτόματα τον κλάδο. Αν προβλέπονται περισσότεροι κλάδοι, εμφανίζεται μόνο τότε μια σύντομη επιλογή μεταξύ αυτών.</small></label><select id="position"><option value="">— Επίλεξε θέση —</option><option value="pe70_lux2">ΠΕ70 — Ε.Σ. Λουξεμβούργο II</option><option value="pe70_bru3">ΠΕ70 — Ε.Σ. Βρυξέλλες III</option><option value="pe06_bru1">ΠΕ06 — Ε.Σ. Βρυξέλλες I</option><option value="pe06_mol">ΠΕ06 — Ε.Σ. MOL</option><option value="pe02_bru3">ΠΕ02 — Ε.Σ. Βρυξέλλες III</option><option value="history_bru1">Ιστορία (ΠΕ02 ή ΠΕ33) — Ε.Σ. Βρυξέλλες I</option><option value="pe03_bru3">ΠΕ03 — Ε.Σ. Βρυξέλλες III</option><option value="chemistry_bru3">Χημεία (ΠΕ04.02 ή ΠΕ85) — Ε.Σ. Βρυξέλλες III</option><option value="biology_bru3">ΠΕ04.04 — Ε.Σ. Βρυξέλλες III</option><option value="pe08_mol">ΠΕ08 — Ε.Σ. MOL</option><option value="pe11_bru3">ΠΕ11 — Ε.Σ. Βρυξέλλες III</option><option value="librarian_lux2">EL & EN Librarian — Ε.Σ. Λουξεμβούργο II</option></select><div id="positionBranchInfo" class="info hidden edu-mt-10"></div><div id="branchChoiceWrap" class="hidden edu-mt-12"><label for="selectedBranch">Ο κλάδος μου<small>Η θέση δέχεται περισσότερους από έναν κλάδους. Επίλεξε μόνο μεταξύ των κλάδων που προβλέπει η πρόσκληση.</small></label><select id="selectedBranch"><option value="">— Επίλεξε κλάδο —</option></select></div></div>
-<div class="field"><label>Συνολική αναγνωρισμένη διδακτική υπηρεσία<small>Όπως στο Φύλλο Μητρώου: έτη, μήνες και ημέρες. Απαιτούνται τουλάχιστον 4 πλήρη έτη· κάθε πλήρες επιπλέον έτος δίνει 1 μονάδα, έως 9.</small></label><div class="duration-grid"><div><span class="mini-label">Έτη</span><input type="number" id="teachingYears" min="0" step="1" inputmode="numeric" value="" placeholder="π.χ. 12"></div><div><span class="mini-label">Μήνες</span><input type="number" id="teachingMonths" min="0" max="11" step="1" inputmode="numeric" value="" placeholder="0–11"></div><div><span class="mini-label">Ημέρες</span><input type="number" id="teachingDays" min="0" max="31" step="1" inputmode="numeric" value="" placeholder="0–31"></div></div><div id="teachingDurationHint" class="subtitle edu-m-8-0-0"></div></div>
+<div class="field"><label>Συνολική αναγνωρισμένη διδακτική υπηρεσία<small>Όπως στο Φύλλο Μητρώου: έτη, μήνες και ημέρες. Απαιτούνται τουλάχιστον 4 πλήρη έτη· κάθε πλήρες επιπλέον έτος δίνει 1 μονάδα, έως 9.</small></label><div class="duration-grid"><div><span class="mini-label">Έτη</span><input type="number" id="teachingYears" aria-label="Έτη συνολικής αναγνωρισμένης διδακτικής υπηρεσίας" min="0" step="1" inputmode="numeric" value="" placeholder="π.χ. 12"></div><div><span class="mini-label">Μήνες</span><input type="number" id="teachingMonths" aria-label="Μήνες συνολικής αναγνωρισμένης διδακτικής υπηρεσίας" min="0" max="11" step="1" inputmode="numeric" value="" placeholder="0–11"></div><div><span class="mini-label">Ημέρες</span><input type="number" id="teachingDays" aria-label="Ημέρες συνολικής αναγνωρισμένης διδακτικής υπηρεσίας" min="0" max="31" step="1" inputmode="numeric" value="" placeholder="0–31"></div></div><div id="teachingDurationHint" class="subtitle edu-m-8-0-0"></div></div>
 <div class="field"><label for="ictLevel">Πιστοποιημένη γνώση ΤΠΕ<small>Απαιτείται τουλάχιστον Α΄ επίπεδο. Το Β΄ επίπεδο δίνει 2 μονάδες.</small></label><select id="ictLevel"><option value="">— Επίλεξε —</option><option value="none">Δεν διαθέτω Α΄ επίπεδο</option><option value="a">Α΄ επίπεδο — προϋπόθεση, 0 μόρια</option><option value="b">Β΄ επίπεδο — 2 μόρια</option></select></div>
 <div class="field"><label for="blockingIssue">Κώλυμα συμμετοχής / επιλογής</label><select id="blockingIssue"><option value="">— Επίλεξε —</option><option value="no">Όχι</option><option value="yes">Ναι / πιθανόν</option></select></div>
 </div>
@@ -63,7 +63,7 @@
 <div class="source-note"><strong>Πηγές / Νομική βάση:</strong><br><strong>Πηγή:</strong> Πρόσκληση 33598/Η2/18-03-2026 για απόσπαση εκπαιδευτικών στα Ευρωπαϊκά Σχολεία και η αναφερόμενη Υ.Α. 26754/Η2/10-03-2022 (Β΄1165, διόρθωση Β΄1300). Το εργαλείο είναι ενημερωτικό.</div>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
-<script src="includes/european-schools-calculations.js"></script>
+<script src="includes/european-schools-calculations.js?v=3.6"></script>
 <script>
 (function(){'use strict';
 const $=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('el-GR',{maximumFractionDigits:2});
@@ -118,6 +118,6 @@ async function copySummary(){const r=calculate(),p=EuropeanSchools.POSITIONS_202
 function reset(){document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('input[type="number"]').forEach(x=>x.value='');document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);['higherEducationSemesters','innovativePrograms','universityTrainingCount','ministryTrainingHours','publicAdminTrainingHours','eapAnnualUnits','eapSemesterUnits'].forEach(id=>$(id).value='0');['hostLanguageLevel','secondWorkingLevel','thirdWorkingLevel','otherEULevel'].forEach(id=>$(id).value='none');calculate();$('position').focus()}
 normalizeVisibleBranchLabels();ids.forEach(id=>{const e=$(id);if(e){e.addEventListener('input',calculate);e.addEventListener('change',calculate)}});$('copyBtn').addEventListener('click',copySummary);$('resetBtn').addEventListener('click',reset);calculate();})();
 </script>
-  <script src="assets/common.js?v=3.20.9-b1"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

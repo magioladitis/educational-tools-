@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μοριοδότησης για απόσπαση μονίμων εκπαιδευτικών στο Ψηφιακό Φροντιστήριο 2026-2027.">
   <title>Υπολογισμός μορίων απόσπασης στο Ψηφιακό Φροντιστήριο</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.9-b1">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 <body class="edu-ui edu-page-digital-tutoring">
   <main class="page-shell">
@@ -323,6 +323,6 @@
   calculate();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9-b1"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

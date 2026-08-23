@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων 3ΕΑ/2025 και ενδεικτικός έλεγχος ένταξης στον Αξιολογικό Πίνακα Β΄ ή στον Επικουρικό Πίνακα Ειδικής Αγωγής.">
 <title>Υπολογισμός μορίων 3ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9-b2">
+<link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 <body class="edu-ui edu-calc-ea3 edu-page-ea3">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -266,6 +266,6 @@ function trainingProofSummary(){if(!($('training').checked||$('seminar400').chec
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9-b2"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Μετατροπή βαθμού πτυχίου από 10βάθμια σε 20βάθμια κλίμακα και από δεκαδική ή λεκτική μορφή σε ακέραιο μέρος, αριθμητή και παρονομαστή για 1ΓΕ/2026 και 1ΓΤ/2024.">
 <title>Μετατροπή κλίμακας βαθμού πτυχίου</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9-b2">
+<link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 <body class="edu-ui edu-page-grade-converter">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -251,6 +251,6 @@
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9-b2"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

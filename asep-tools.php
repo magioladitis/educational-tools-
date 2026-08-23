@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Χρήσιμα εργαλεία για τις προκηρύξεις 1ΓΕ/2026 και 2ΓΕ/2026</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9-b3">
+<link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 
 <body class="edu-ui edu-asep-tools-hub">
@@ -129,6 +129,6 @@
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9-b3"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

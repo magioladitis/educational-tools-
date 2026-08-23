@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Οδηγός δικαιολογητικών τέκνων και αναπηρίας</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.9-rc1">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 <body class="edu-ui edu-guide-standard edu-guide-children-disability">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -239,6 +239,6 @@ function showDocuments(){
 }
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-<script src="assets/common.js?v=3.20.4"></script>
+<script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

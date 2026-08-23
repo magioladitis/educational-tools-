@@ -4,172 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Έχω Παιδαγωγική και Διδακτική Επάρκεια;</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 30px;
-      color: #222;
-    }
-
-    .app-box {
-      max-width: 860px;
-      margin: auto;
-      background: #ffffff;
-      padding: 25px;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-    }
-
-    .back-tools {
-      display: inline-block;
-      margin-bottom: 18px;
-      color: #1f6feb;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .back-tools:hover {
-      text-decoration: underline;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 26px;
-      margin-bottom: 10px;
-      line-height: 1.25;
-    }
-
-    .intro {
-      text-align: center;
-      color: #555;
-      line-height: 1.5;
-      margin-bottom: 24px;
-    }
-
-    .question {
-      margin-bottom: 18px;
-      padding: 14px;
-      background: #fafafa;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-    }
-
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-
-    select {
-      width: 100%;
-      padding: 11px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-      box-sizing: border-box;
-      background: #fff;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 20px;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #1f6feb;
-      color: white;
-    }
-
-    button:hover {
-      background: #1558c0;
-    }
-
-    .result {
-      display: none;
-      margin-top: 24px;
-      padding: 18px;
-      border-radius: 10px;
-      line-height: 1.6;
-    }
-
-    .result h2 {
-      margin-top: 0;
-      font-size: 20px;
-    }
-
-    .result ul {
-      margin-top: 8px;
-      padding-left: 22px;
-    }
-
-    .positive {
-      background: #e6f4ea;
-      color: #137333;
-    }
-
-    .negative {
-      background: #fdecea;
-      color: #b3261e;
-    }
-
-    .warning {
-      background: #fff4e5;
-      color: #9a5b00;
-    }
-
-    .unknown {
-      background: #eef4ff;
-      color: #174ea6;
-    }
-
-    .note-box {
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.65);
-      border: 1px solid rgba(0,0,0,0.08);
-    }
-
-    .small-note {
-      margin-top: 18px;
-      font-size: 13px;
-      color: #666;
-      line-height: 1.5;
-      text-align: justify;
-    }
-
-    .credits {
-      margin-top: 24px;
-      text-align: center;
-      font-size: 13px;
-      color: #777;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    @media (max-width: 760px) {
-      body {
-        padding: 18px;
-      }
-
-      h1 {
-        font-size: 23px;
-      }
-    }
-  </style>
-  <link rel="stylesheet" href="assets/common.css">
+<link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 
-<body class="edu-ui">
+<body class="edu-ui edu-guide-standard edu-guide-pedagogy">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
 <div class="app-box edu-modernized">
@@ -326,7 +164,7 @@
     </select>
   </div>
 
-  <button type="button" onclick="checkEparkeia()">Έλεγχος Παιδαγωγικής και Διδακτικής Επάρκειας</button>
+  <button class="guide-submit" type="button" onclick="checkEparkeia()">Έλεγχος Παιδαγωγικής και Διδακτικής Επάρκειας</button>
 
   <div id="result" class="result" role="status" aria-live="polite"></div>
 
@@ -828,6 +666,6 @@
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>

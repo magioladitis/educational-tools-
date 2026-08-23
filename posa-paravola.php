@@ -4,188 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Μάθε σε ποια προκήρυξη μπορείς να συμμετέχεις και πόσα παράβολα χρειάζεσαι</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 30px;
-    }
-
-    .app-box {
-      max-width: 520px;
-      margin: auto;
-      background: #ffffff;
-      padding: 25px;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-    }
-
-    .back-tools {
-      display: inline-block;
-      margin-bottom: 18px;
-      color: #1f6feb;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .back-tools:hover {
-      text-decoration: underline;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 26px;
-      margin-bottom: 10px;
-    }
-
-    p {
-      text-align: center;
-      color: #555;
-    }
-
-    label {
-      display: block;
-      margin-top: 18px;
-      font-weight: bold;
-    }
-
-    select {
-      width: 100%;
-      padding: 12px;
-      margin-top: 6px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 24px;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #1f6feb;
-      color: white;
-    }
-
-    button:hover {
-      background: #1558c0;
-    }
-
-    .paravolo-rule {
-      margin-top: 18px;
-      padding: 12px 14px;
-      border-radius: 9px;
-      background: #eef4ff;
-      border: 1px solid #cbdaf5;
-      color: #174ea6;
-      font-weight: bold;
-      line-height: 1.5;
-      text-align: left;
-    }
-
-    .duplicate-warning {
-      display: none;
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 8px;
-      background: #fdecea;
-      color: #b3261e;
-      font-weight: bold;
-      line-height: 1.45;
-    }
-
-    .result {
-      margin-top: 22px;
-      padding: 16px;
-      border-radius: 10px;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      display: none;
-    }
-
-    .one {
-      background: #e6f4ea;
-      color: #137333;
-    }
-
-    .two {
-      background: #fff4e5;
-      color: #b06000;
-    }
-
-    .error {
-      background: #fdecea;
-      color: #b3261e;
-    }
-
-	.credits {
-	  margin-top: 24px;
-	  text-align: center;
-	  font-size: 13px;
-	  color: #777;
-	}
-	
-	.instructions-box {
-	  margin-top: 22px;
-	  border: 1px solid #ddd;
-	  border-radius: 10px;
-	  background: #fafafa;
-	  padding: 14px 16px;
-	}
-
-	.instructions-box summary {
-	  cursor: pointer;
-	  font-weight: bold;
-	  font-size: 16px;
-	  color: #1f6feb;
-	}
-
-	.instructions-content {
-	  margin-top: 14px;
-	  font-size: 15px;
-	  line-height: 1.55;
-	  color: #444;
-	}
-
-	.instructions-content p {
-	  text-align: left;
-	  margin: 10px 0;
-	}
-
-	.path {
-	  background: #eef4ff;
-	  padding: 10px;
-	  border-radius: 8px;
-	  font-weight: bold;
-	  color: #174ea6;
-	}
-
-	.note {
-	  background: #fff4e5;
-	  padding: 10px;
-	  border-radius: 8px;
-	  color: #9a5b00;
-	  font-weight: bold;
-	}
-	
-	.optional {
-	  font-weight: normal;
-	  color: #777;
-	  font-size: 14px;
-	}
-
-  </style>
-  <link rel="stylesheet" href="assets/common.css">
+<link rel="stylesheet" href="assets/common.css?v=3.20.9">
 </head>
 
-<body class="edu-ui">
+<body class="edu-ui edu-guide-standard edu-guide-paravolo">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
   <div class="app-box edu-modernized">
@@ -246,7 +68,7 @@
       βρίσκεται σε κατάσταση <strong>«ΠΛΗΡΩΜΕΝΟ»</strong>, ώστε να δεσμευτεί.
     </p>
 
-    <p class="note">
+    <p class="warning">
       Προσοχή: Πλήρωσε τον ίδιο ακριβώς κωδικό παραβόλου που έχεις αναγράψει
       στην ηλεκτρονική αίτηση και φρόντισε να έχει πληρωθεί πριν την υποβολή της.
     </p>
@@ -406,7 +228,7 @@
 		  Κάθε παράβολο έχει αξία <strong>15 ευρώ</strong>.<br>
 		  Συνολικό κόστος: <strong>${totalCost} ευρώ</strong>.<br><br>
 		  ${proclamationText}<br><br>
-          <span style="font-size:15px;font-weight:normal;line-height:1.45;display:block;">
+          <span class="paravolo-result-note">
             Το παράβολο είναι <strong>ανά προκήρυξη, όχι ανά ειδικότητα</strong>.
           </span>
 		`;
@@ -427,6 +249,6 @@
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js"></script>
+  <script src="assets/common.js?v=3.20.9"></script>
 </body>
 </html>
