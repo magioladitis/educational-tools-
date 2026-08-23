@@ -177,7 +177,7 @@ renderEaeSensoryPriority(array(
 <script src="includes/language-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-language-selector.js?v=3.20.31"></script>
 <script src="includes/academic-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-pe-academic.js?v=3.20.31"></script>
+<script src="includes/asep-pe-academic.js?v=3.20.34"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script>
 (function(){
@@ -212,11 +212,6 @@ renderEaeSensoryPriority(array(
  });
  document.addEventListener('change',e=>{
    sanitizeServiceMonthInput(e.target);
-   if(e.target && e.target.id==='degreeGrade' && e.target.value!==''){
-     let v=Number(String(e.target.value).replace(',', '.'));
-     if(Number.isFinite(v)) e.target.value=String(Math.min(10,Math.max(5,v)));
-     else e.target.value='';
-   }
    render();
  });
  $('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});

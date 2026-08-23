@@ -176,19 +176,6 @@
 
   function getState(containerRef, formatter) { return calculate(containerRef, formatter); }
 
-  function clampDegree(c) {
-    c = getContainer(c);
-    if (!c) return;
-    var degree = byId(degreeId(c));
-    var scale = valueOf(gradeScaleId(c));
-    if (!degree || degree.value === '' || scale === 'te16text') return;
-    var min = scale === '10' ? 5 : 10;
-    var max = scale === '10' ? 10 : 20;
-    var raw = Number(String(degree.value).trim().replace(',', '.'));
-    if (!Number.isFinite(raw)) { degree.value = ''; return; }
-    degree.value = String(Math.min(max, Math.max(min, raw)));
-  }
-
   function trainingWarning(containerRef) {
     var c = getContainer(containerRef);
     return c && global.TrainingProof ? global.TrainingProof.warning(trainingProofId(c)) : '';
@@ -230,18 +217,26 @@
     var branch = byId(branchId(c));
     var scale = byId(gradeScaleId(c));
     var degree = byId(degreeId(c));
+    if (degree && global.EducationCore && global.EducationCore.bindBoundedNumberInput) {
+      global.EducationCore.bindBoundedNumberInput(degree);
+    }
     if (branch) branch.addEventListener('change', function () {
       if (scale) scale.dataset.auto = 'on';
       sync(c);
+      if (degree && global.EducationCore && global.EducationCore.normalizeBoundedInput && valueOf(gradeScaleId(c)) !== 'te16text') {
+        global.EducationCore.normalizeBoundedInput(degree, { phase: 'commit' });
+      }
       emitChange(c);
     });
     if (scale) scale.addEventListener('change', function () {
       scale.dataset.auto = 'off';
       syncGradeUI(c);
+      if (degree && global.EducationCore && global.EducationCore.normalizeBoundedInput && scale.value !== 'te16text') {
+        global.EducationCore.normalizeBoundedInput(degree, { phase: 'commit' });
+      }
       emitChange(c);
     });
     if (degree) degree.addEventListener('change', function () {
-      clampDegree(c);
       emitChange(c);
     });
     sync(c);

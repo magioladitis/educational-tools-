@@ -169,10 +169,10 @@ renderAsepSocialCriteria(array(
 <script src="includes/asep-social-criteria.js?v=3.20.32"></script>
 <script src="includes/language-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-language-selector.js?v=3.20.31"></script>
-<script src="includes/te-academic-calculations.js?v=3.20.31"></script>
+<script src="includes/te-academic-calculations.js?v=3.20.34"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script src="includes/asep-computer-proof.js?v=3.20.27"></script>
-<script src="includes/asep-te-academic.js?v=3.20.31"></script>
+<script src="includes/asep-te-academic.js?v=3.20.34"></script>
 <script>
 (function(){
   "use strict";

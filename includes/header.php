@@ -1,7 +1,7 @@
 <?php
 /** Common header / navigation for Educational Tools — UI v3.20.1. */
 ?>
-<script src="includes/education-core.js?v=3.20.33"></script>
+<script src="includes/education-core.js?v=3.20.34"></script>
 <header class="edu-tools-global-header" aria-label="Πλοήγηση Εργαλειοθήκης Εκπαιδευτικού">
   <div class="edu-tools-global-header__inner">
     <a class="edu-tools-global-header__back" href="ergaleia.php">

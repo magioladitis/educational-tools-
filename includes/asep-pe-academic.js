@@ -101,7 +101,17 @@
     sync(c); if(!(options&&options.silent))emitChange(c);
   }
   function emitChange(c){if(c)c.dispatchEvent(new CustomEvent('asep-pe-academic-change',{bubbles:true,detail:getState(c)}));}
-  function init(c){if(!c||c.dataset.peAcademicReady==='1')return;c.dataset.peAcademicReady='1';var s=byId(specialtyId(c));if(s)s.addEventListener('change',function(){sync(c);emitChange(c);});sync(c);}
+  function init(c){
+    if(!c||c.dataset.peAcademicReady==='1')return;
+    c.dataset.peAcademicReady='1';
+    var s=byId(specialtyId(c));
+    var degree=byId(degreeId(c));
+    if(global.EducationCore&&global.EducationCore.bindBoundedNumberInput&&degree){
+      global.EducationCore.bindBoundedNumberInput(degree,{min:5,max:10});
+    }
+    if(s)s.addEventListener('change',function(){sync(c);emitChange(c);});
+    sync(c);
+  }
   function initAll(){document.querySelectorAll('[data-component="asep-pe-academic"]').forEach(init);}
 
   global.AsepPeAcademic=Object.freeze({initAll:initAll,sync:sync,getState:getState,validate:validate,calculate:calculate,reset:reset,trainingWarning:trainingWarning,trainingSummary:trainingSummary});

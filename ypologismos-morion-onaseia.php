@@ -8,16 +8,17 @@
 </head>
 <body class="edu-ui edu-page-onaseia">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-pe-academic.php'; ?>
 
-<div class="app-box edu-modernized">
-  <section class="hero edu-legacy-hero">
+<?php calculatorContainerStart(array('class' => 'app-box edu-modernized')); ?>
+  <?php calculatorHeroStart(array('class' => 'hero edu-legacy-hero')); ?>
 <h1>Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία</h1>
 <p class="intro">
     Σχολικό έτος <strong>2026-2027</strong>. Ο υπολογισμός βασίζεται στα ακαδημαϊκά προσόντα
     του πίνακα Α.Σ.Ε.Π. και στην αναγνωρισμένη προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία.
   </p>
-</section>
+<?php calculatorHeroEnd(); ?>
 
   <section class="deadline-card onaseia-deadline-card" aria-labelledby="onaseiaDeadlinesTitle">
     <h2 id="onaseiaDeadlinesTitle">📅 Προθεσμίες αιτήσεων ΔΗΜ.Ω.Σ. 2026–2027</h2>
@@ -46,7 +47,7 @@
     με ανώτατο όριο <strong>15 μόρια ανά σχολικό έτος</strong>.
   </div>
 
-  <div class="section">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>1. Κλάδος / ειδικότητα</h2>
 
     <div class="question">
@@ -80,9 +81,9 @@
       Για τους κλάδους ΠΕ γίνεται αναλυτικός υπολογισμός των ακαδημαϊκών προσόντων των 1ΓΕ/2026 και 2ΓΕ/2026.
       Για τον ΤΕ16 χρησιμοποιείται η καταχώριση των ακαδημαϊκών μορίων όπως εμφανίζονται στον πίνακα της 1ΓΤ/2024.
     </p>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="section" id="academicSection">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section', 'id' => 'academicSection')); ?>
     <h2>2. Ακαδημαϊκά Προσόντα Α.Σ.Ε.Π.</h2>
 
     <div class="mode-row" id="modeRow">
@@ -119,9 +120,9 @@ renderAsepPeAcademic(array(
 ));
 ?>
     </div>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="section">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>3. Προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία</h2>
 
     <p class="note">
@@ -133,22 +134,22 @@ renderAsepPeAcademic(array(
     <div id="serviceRows"></div>
 
     <button type="button" class="add-row" onclick="addServiceRow()">+ Προσθήκη σχολικού έτους</button>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="actions">
-    <button type="button" onclick="calculatePoints()">Υπολόγισε τα μόρια ΔΗΜ.Ω.Σ.</button>
-    <button type="button" class="reset-btn" onclick="resetForm()">Καθαρισμός</button>
-  </div>
+  <?php calculatorActions(array(
+    array('label' => 'Υπολόγισε τα μόρια ΔΗΜ.Ω.Σ.', 'attrs' => array('type' => 'button', 'onclick' => 'calculatePoints()')),
+    array('label' => 'Καθαρισμός', 'class' => 'reset-btn', 'attrs' => array('type' => 'button', 'onclick' => 'resetForm()'))
+  )); ?>
 
-  <div id="result" class="result" role="status" aria-live="polite"></div>
-</div>
+  <?php calculatorInlineResult(array('id' => 'result', 'class' => 'result', 'attrs' => array('role' => 'status', 'aria-live' => 'polite'))); ?>
+<?php calculatorContainerEnd(); ?>
 
 <script src="includes/language-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-language-selector.js?v=3.20.31"></script>
 <script src="includes/academic-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-computer-proof.js?v=3.20.25"></script>
 <script src="includes/training-proof.js?v=3.20.25"></script>
-<script src="includes/asep-pe-academic.js?v=3.20.31"></script>
+<script src="includes/asep-pe-academic.js?v=3.20.34"></script>
 <script src="includes/onaseia-calculations.js?v=3.20.31"></script>
 <script>
   let isLiveCalculation = false;

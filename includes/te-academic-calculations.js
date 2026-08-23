@@ -15,8 +15,11 @@
       if (!g) g = 5;
       return cap(g * 2, 20);
     }
-    const g = Math.max(0, Number(numericGrade) || 0);
-    return cap(scale === "10" ? g * 2 : g, 20);
+    const g = Number(numericGrade);
+    if (!Number.isFinite(g)) return 0;
+    if (scale === "10") return g >= 5 && g <= 10 ? g * 2 : 0;
+    if (scale === "20") return g >= 10 && g <= 20 ? g : 0;
+    return 0;
   }
 
   function calculate(options) {

@@ -11,9 +11,10 @@
 
 <body class="edu-ui edu-page-detachment">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
-<div class="app-box edu-modernized">
-<section class="hero edu-legacy-hero">
+<?php calculatorContainerStart(array('class' => 'app-box edu-modernized')); ?>
+<?php calculatorHeroStart(array('class' => 'hero edu-legacy-hero')); ?>
 <h1>Υπολογισμός μορίων απόσπασης εκπαιδευτικών</h1>
 <p class="intro">
     Υπολόγισε <strong>ενδεικτικά</strong> τα μόριά σου για απόσπαση
@@ -21,10 +22,10 @@
     Ορισμένα κριτήρια εξαρτώνται από τη συγκεκριμένη περιοχή που ζητάς,
     γι’ αυτό ο υπολογισμός πρέπει να γίνεται χωριστά για κάθε περιοχή ενδιαφέροντος.
   </p>
-</section>
+<?php calculatorHeroEnd(); ?>
 
 
-  <div class="section">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>Α. Προκαταρκτικός έλεγχος δικαιώματος / κωλύματος</h2>
 
     <div class="question">
@@ -79,9 +80,9 @@
     <p class="note">
       Ο έλεγχος είναι βοηθητικός. Για ΠΕ61/ΠΕ71 η εγκύκλιος επισημαίνει ειδικά ότι δεν είναι δυνατή απόσπαση στη Γενική Εκπαίδευση.
     </p>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="section">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>Β. Έλεγχος πιθανής απόσπασης κατά προτεραιότητα</h2>
 
     <div class="check-row">
@@ -134,9 +135,9 @@
       αν δεν δηλωθεί ως πρώτη προτίμηση το ΠΥΣΠΕ/ΠΥΣΔΕ όπου υπάρχει η συνυπηρέτηση, δεν ισχύει η κατά προτεραιότητα απόσπαση.
       Στην κατά προτεραιότητα διαδικασία Αθήνα και Θεσσαλονίκη <strong>δεν</strong> αντιμετωπίζονται ενιαία.
     </p>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="section">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>Περιοχή για την οποία γίνεται ο υπολογισμός</h2>
 
     <div class="question">
@@ -148,9 +149,9 @@
       Η συνυπηρέτηση, η εντοπιότητα, ορισμένοι λόγοι υγείας γονέων και οι σπουδές
       μπορεί να δίνουν μόρια μόνο για συγκεκριμένο ΠΥΣΠΕ/ΠΥΣΔΕ.
     </p>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="section">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>1. Συνολική υπηρεσία</h2>
 
     <div class="field-grid three">
@@ -179,9 +180,9 @@
       Ο χρόνος συνολικής υπηρεσίας ταυτίζεται με τον χρόνο που υπολογίζεται στις μεταθέσεις.
       Υπόλοιπο <strong>15 ημερών και άνω</strong> υπολογίζεται ως ένας πλήρης μήνας.
     </p>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="section">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>2. Κριτήρια που συνδέονται με την περιοχή απόσπασης</h2>
 
     <h3>Συνυπηρέτηση — 10 μόρια</h3>
@@ -219,9 +220,9 @@
       Στην απλή μοριοδότηση συνυπηρέτησης, Α΄/Β΄/Γ΄/Δ΄ Αθήνας αντιμετωπίζονται ενιαία και αντίστοιχα
       Α΄/Β΄ Θεσσαλονίκης αντιμετωπίζονται ενιαία. Η εντοπιότητα ισχύει σε επίπεδο ΠΥΣΠΕ/ΠΥΣΔΕ.
     </p>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="section">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>3. Οικογενειακοί λόγοι</h2>
 
     <div class="field-grid">
@@ -248,9 +249,9 @@
       στη Γ΄ Λυκείου δικαιούται μόρια ακόμη και αν έχει συμπληρώσει το 18ο έτος και δεν έχει ακόμη
       εγγραφεί σε ανώτερη/ανώτατη δημόσια σχολή.
     </p>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="section">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>4. Σοβαροί λόγοι υγείας</h2>
 
     <h3>Α. Εκπαιδευτικός, τέκνο ή/και σύζυγος</h3>
@@ -312,9 +313,9 @@
       των αρμόδιων υγειονομικών επιτροπών ή ΚΕΠΑ. Για γονέα απαιτούνται επιπλέον τα προβλεπόμενα
       δικαιολογητικά εντοπιότητας και μόνιμης κατοικίας.
     </p>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="section">
+  <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>5. Λοιποί λόγοι — σπουδές</h2>
 
     <div class="question">
@@ -346,14 +347,14 @@
       Εφόσον πληρούνται όλες οι προϋποθέσεις: <strong>2 μόρια</strong>. Τα ΠΥΣΠΕ/ΠΥΣΔΕ Αττικής και Θεσσαλονίκης
       αντιμετωπίζονται ενιαία για το κριτήριο των σπουδών. Δεν δίνονται οι 2 μονάδες για ΕΑΠ ή διδακτορικό.
     </p>
-  </div>
+  <?php calculatorCardEnd(); ?>
 
-  <div class="actions">
-    <button class="primary-btn" type="button" onclick="calculatePoints()">Υπολογισμός μορίων</button>
-    <button class="secondary-btn" type="button" onclick="resetCalculator()">Καθαρισμός</button>
-  </div>
+  <?php calculatorActions(array(
+    array('label' => 'Υπολογισμός μορίων', 'class' => 'primary-btn', 'attrs' => array('type' => 'button', 'onclick' => 'calculatePoints()')),
+    array('label' => 'Καθαρισμός', 'class' => 'secondary-btn', 'attrs' => array('type' => 'button', 'onclick' => 'resetCalculator()'))
+  )); ?>
 
-  <div id="result" class="result" role="status" aria-live="polite"></div>
+  <?php calculatorInlineResult(array('id' => 'result', 'class' => 'result', 'attrs' => array('role' => 'status', 'aria-live' => 'polite'))); ?>
 
 
   <section class="edu-source-card" aria-labelledby="sourcesTitle">
@@ -369,7 +370,7 @@
     έλεγχο ούτε πιστοποιεί την επάρκεια των δικαιολογητικών. Σε περίπτωση διαφοράς ισχύουν αποκλειστικά
     η επίσημη εγκύκλιος, η εφαρμογή ΟΠΣΥΔ και ο έλεγχος των αρμόδιων υπηρεσιών.
   </p>
-</div>
+<?php calculatorContainerEnd(); ?>
 
 <script>
   let isLiveCalculation = false;

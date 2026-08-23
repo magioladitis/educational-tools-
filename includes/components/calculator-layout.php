@@ -63,6 +63,38 @@ if (!function_exists('calculatorLayoutTextOrHtml')) {
     }
 }
 
+
+if (!function_exists('calculatorContainerStart')) {
+    function calculatorContainerStart($config = array()) {
+        $config = is_array($config) ? $config : array();
+        $tag = isset($config['tag']) ? $config['tag'] : 'div';
+        $class = isset($config['class']) ? $config['class'] : '';
+        $id = isset($config['id']) ? $config['id'] : null;
+        $attrs = isset($config['attrs']) ? $config['attrs'] : array();
+        $opened = calculatorLayoutOpenTag($tag, $class, $id, $attrs);
+        calculatorLayoutStackPush('container', array($opened));
+    }
+}
+
+if (!function_exists('calculatorContainerEnd')) {
+    function calculatorContainerEnd() {
+        $tags = calculatorLayoutStackPop('container');
+        foreach (array_reverse($tags) as $tag) echo '</' . $tag . '>';
+    }
+}
+
+if (!function_exists('calculatorInlineResult')) {
+    function calculatorInlineResult($config = array()) {
+        $config = is_array($config) ? $config : array();
+        $tag = isset($config['tag']) ? $config['tag'] : 'div';
+        $class = isset($config['class']) ? $config['class'] : 'result';
+        $id = isset($config['id']) ? $config['id'] : 'result';
+        $attrs = isset($config['attrs']) && is_array($config['attrs']) ? $config['attrs'] : array();
+        calculatorLayoutOpenTag($tag, $class, $id, $attrs);
+        echo '</' . (preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', (string)$tag) ? $tag : 'div') . '>';
+    }
+}
+
 if (!function_exists('calculatorHeroStart')) {
     function calculatorHeroStart($config = array()) {
         $config = is_array($config) ? $config : array();

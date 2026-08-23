@@ -49,7 +49,7 @@ if (!function_exists('renderAsepPeAcademic')) {
 
         $degreeType = $c['degree_input_type'] === 'text' ? 'text' : 'number';
         $degreeExtra = $degreeType === 'text'
-            ? ' inputmode="decimal"'
+            ? ' inputmode="decimal" data-min="5" data-max="10"'
             : ' min="5" max="10" step="0.01"';
         ?>
 <div

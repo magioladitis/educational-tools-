@@ -157,7 +157,7 @@ renderAsepSocialCriteria(array(
 <script src="includes/asep-language-selector.js?v=3.20.31"></script>
 <script src="includes/asep-computer-proof.js?v=3.20.25"></script>
 <script src="includes/training-proof.js?v=3.20.25"></script>
-<script src="includes/asep-pe-academic.js?v=3.20.31"></script>
+<script src="includes/asep-pe-academic.js?v=3.20.34"></script>
 <script src="includes/service-calculations.js?v=3.20.33"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>

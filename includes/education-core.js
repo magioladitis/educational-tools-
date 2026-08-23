@@ -25,6 +25,72 @@
     return Math.min(MAX_SERVICE_MONTHS, Math.max(0, finiteNumber(value)));
   }
 
+  function decimalNumber(value) {
+    var n = Number(String(value == null ? '' : value).trim().replace(',', '.'));
+    return Number.isFinite(n) ? n : NaN;
+  }
+
+  function inputBound(element, name, explicitValue) {
+    if (explicitValue !== undefined && explicitValue !== null && explicitValue !== '') {
+      var explicitNumber = decimalNumber(explicitValue);
+      return Number.isFinite(explicitNumber) ? explicitNumber : null;
+    }
+    if (!element || !element.getAttribute) return null;
+    var raw = element.getAttribute(name);
+    if (raw === null || raw === '') raw = element.getAttribute('data-' + name);
+    var parsed = decimalNumber(raw);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  /*
+   * Normalize a numeric input against its declared bounds.
+   * During typing we clamp only the upper bound: clamping min=10 on the first
+   * keystroke would make it impossible to type values such as 17.
+   * On change/blur (commit phase) both lower and upper bounds are enforced.
+   */
+  function normalizeBoundedInput(element, options) {
+    options = options || {};
+    if (!element) return { empty: true, valid: false, changed: false, value: null };
+
+    var rawText = String(element.value == null ? '' : element.value).trim();
+    if (rawText === '') return { empty: true, valid: true, changed: false, value: null };
+
+    var value = decimalNumber(rawText);
+    var commit = options.phase !== 'input';
+    if (!Number.isFinite(value)) {
+      if (commit) element.value = '';
+      return { empty: false, valid: false, changed: commit, value: null };
+    }
+
+    var min = inputBound(element, 'min', options.min);
+    var max = inputBound(element, 'max', options.max);
+    var normalized = value;
+    if (max !== null && normalized > max) normalized = max;
+    if (commit && min !== null && normalized < min) normalized = min;
+
+    var changed = normalized !== value;
+    if (changed) element.value = String(normalized);
+    return { empty: false, valid: true, changed: changed, value: normalized, min: min, max: max };
+  }
+
+  function bindBoundedNumberInput(element, options) {
+    options = options || {};
+    if (!element || !element.addEventListener) return element;
+    if (element.dataset && element.dataset.eduBoundedNumberReady === '1') return element;
+    if (element.dataset) element.dataset.eduBoundedNumberReady = '1';
+
+    element.addEventListener('input', function () {
+      normalizeBoundedInput(element, Object.assign({}, options, { phase: 'input' }));
+    });
+    element.addEventListener('change', function () {
+      normalizeBoundedInput(element, Object.assign({}, options, { phase: 'commit' }));
+    });
+    element.addEventListener('blur', function () {
+      normalizeBoundedInput(element, Object.assign({}, options, { phase: 'commit' }));
+    });
+    return element;
+  }
+
   function normalizeSpecialtyCode(value) {
     var code = String(value == null ? '' : value)
       .trim()
@@ -67,6 +133,8 @@
     clampServiceYears: clampServiceYears,
     clampServiceMonths: clampServiceMonths,
     finiteNumber: finiteNumber,
+    normalizeBoundedInput: normalizeBoundedInput,
+    bindBoundedNumberInput: bindBoundedNumberInput,
     normalizeSpecialtyCode: normalizeSpecialtyCode,
     toLatinSpecialtyCode: toLatinSpecialtyCode,
     createScoreResult: createScoreResult
