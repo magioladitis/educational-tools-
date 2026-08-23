@@ -1,0 +1,14 @@
+Upload these 4 production files, preserving folders:
+
+1. ypologismos-morion-3ea-2025.php
+2. ypologismos-morion-4ea-2025.php
+3. includes/eae-table-eligibility.js
+4. includes/asep-eae-eligibility.js
+
+No CSS upload is required for this refactor.
+
+New shared architecture:
+- includes/eae-table-eligibility.js = pure eligibility rules / single source of truth
+- includes/asep-eae-eligibility.js = DOM controller for PE/TE profiles
+
+Cache-bust version used by both pages: v3.20.28

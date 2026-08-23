@@ -34,16 +34,18 @@
 </select></div>
 <div class="info">Για ΠΕ61 και ΠΕ71 ο βασικός κλάδος είναι κλάδος Ε.Α.Ε. και οδηγεί στον Αξιολογικό Πίνακα Β΄. Για τους λοιπούς κλάδους απαιτείται προσόν εξειδίκευσης στην Ε.Α.Ε.</div>
 
+<div id="eaeEligibility" data-eae-profile="pe" data-specialty-id="specialty" data-social-id="socialCriteria">
 <h3>Προσόντα για ΚΥΡΙΟ – Αξιολογικό Πίνακα Β΄</h3>
-<div class="check"><input type="checkbox" id="phdEae"><label for="phdEae">Διδακτορικό στην Ε.Α.Ε. ή στη Σχολική Ψυχολογία<small>Αποτελεί κριτήριο ένταξης στον κύριο πίνακα και μοριοδοτείται ως διδακτορικό.</small></label></div>
-<div class="check"><input type="checkbox" id="masterEae"><label for="masterEae">Μεταπτυχιακό στην Ε.Α.Ε. ή στη Σχολική Ψυχολογία<small>Αποτελεί κριτήριο ένταξης στον κύριο πίνακα και μοριοδοτείται ως μεταπτυχιακό.</small></label></div>
-<div class="check"><input type="checkbox" id="didaskaleio"><label for="didaskaleio">Πτυχίο διετούς μετεκπαίδευσης στην Ε.Α.Ε. (Διδασκαλείο)<small>Κριτήριο ένταξης. Η προκήρυξη δεν ορίζει χωριστή πρόσθετη μοριοδότηση γι’ αυτό το πτυχίο στον πίνακα κριτηρίων.</small></label></div>
-<div class="check"><input type="checkbox" id="fiveYearEae"><label for="fiveYearEae">Τουλάχιστον πενταετής αποδεδειγμένη προϋπηρεσία στην Ε.Α.Ε.<small>Χρησιμοποιείται για τον έλεγχο ένταξης. Τους μήνες προϋπηρεσίας τους δηλώνεις χωριστά παρακάτω για τη μοριοδότηση.</small></label></div>
-<div class="check hidden" id="pe11QualWrap"><input type="checkbox" id="pe11Qual"><label for="pe11Qual">ΠΕ11 με προβλεπόμενη κύρια ειδικότητα Ε.Α.Ε. / Ειδικής Φυσικής Αγωγής κ.λπ.<small>Κριτήριο ένταξης και +8 μόρια.</small></label></div>
+<div class="check"><input type="checkbox" id="phdEae" data-eae-main="phd"><label for="phdEae">Διδακτορικό στην Ε.Α.Ε. ή στη Σχολική Ψυχολογία<small>Αποτελεί κριτήριο ένταξης στον κύριο πίνακα και μοριοδοτείται ως διδακτορικό.</small></label></div>
+<div class="check"><input type="checkbox" id="masterEae" data-eae-main="msc"><label for="masterEae">Μεταπτυχιακό στην Ε.Α.Ε. ή στη Σχολική Ψυχολογία<small>Αποτελεί κριτήριο ένταξης στον κύριο πίνακα και μοριοδοτείται ως μεταπτυχιακό.</small></label></div>
+<div class="check"><input type="checkbox" id="didaskaleio" data-eae-main="retraining"><label for="didaskaleio">Πτυχίο διετούς μετεκπαίδευσης στην Ε.Α.Ε. (Διδασκαλείο)<small>Κριτήριο ένταξης. Η προκήρυξη δεν ορίζει χωριστή πρόσθετη μοριοδότηση γι’ αυτό το πτυχίο στον πίνακα κριτηρίων.</small></label></div>
+<div class="check"><input type="checkbox" id="fiveYearEae" data-eae-main="fiveYear"><label for="fiveYearEae">Τουλάχιστον πενταετής αποδεδειγμένη προϋπηρεσία στην Ε.Α.Ε.<small>Χρησιμοποιείται για τον έλεγχο ένταξης. Τους μήνες προϋπηρεσίας τους δηλώνεις χωριστά παρακάτω για τη μοριοδότηση.</small></label></div>
+<div class="check hidden" id="pe11QualWrap"><input type="checkbox" id="pe11Qual" data-eae-main="pe11"><label for="pe11Qual">ΠΕ11 με προβλεπόμενη κύρια ειδικότητα Ε.Α.Ε. / Ειδικής Φυσικής Αγωγής κ.λπ.<small>Κριτήριο ένταξης και +8 μόρια.</small></label></div>
 
 <h3>Προσόντα για ΕΠΙΚΟΥΡΙΚΟ πίνακα</h3>
-<div class="check"><input type="checkbox" id="seminar400"><label for="seminar400">Σεμινάριο εξειδίκευσης Ε.Α.Ε. ≥400 ωρών και ≥7 μηνών<small>Κριτήριο ένταξης στον επικουρικό. Καλύπτει παράλληλα και το γενικό κριτήριο επιμόρφωσης ≥300 ωρών / ≥7 μηνών (+2).</small></label></div>
-<div class="field"><label for="eaeMonths">Αναγνωρισμένοι μήνες προϋπηρεσίας ειδικά στην Ε.Α.Ε.<small>Μόνο για έλεγχο του ορίου των 10 μηνών του επικουρικού· δεν προστίθενται δεύτερη φορά στα μόρια.</small></label><input id="eaeMonths" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+<div class="check"><input type="checkbox" id="seminar400" data-eae-aux="seminar400"><label for="seminar400">Σεμινάριο εξειδίκευσης Ε.Α.Ε. ≥400 ωρών και ≥7 μηνών<small>Κριτήριο ένταξης στον επικουρικό. Καλύπτει παράλληλα και το γενικό κριτήριο επιμόρφωσης ≥300 ωρών / ≥7 μηνών (+2).</small></label></div>
+<div class="field"><label for="eaeMonths">Αναγνωρισμένοι μήνες προϋπηρεσίας ειδικά στην Ε.Α.Ε.<small>Μόνο για έλεγχο του ορίου των 10 μηνών του επικουρικού· δεν προστίθενται δεύτερη φορά στα μόρια.</small></label><input id="eaeMonths" class="service-months" data-eae-aux="months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+</div>
 </section>
 
 <section class="card">
@@ -168,6 +170,8 @@ renderEaeSensoryPriority(array(
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
 <script src="includes/social-calculations.js?v=3.20.26"></script>
 <script src="includes/asep-social-criteria.js?v=3.20.26"></script>
+<script src="includes/eae-table-eligibility.js?v=3.20.28"></script>
+<script src="includes/asep-eae-eligibility.js?v=3.20.28"></script>
 <script src="includes/language-calculations.js?v=3.20.24"></script>
 <script src="includes/asep-language-selector.js?v=3.20.24"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
@@ -202,31 +206,13 @@ renderEaeSensoryPriority(array(
  }
  function calcService(){return AsepServiceController.getState('asepService',fmt).points;}
  function calcSocial(){return AsepSocialCriteria.getState('socialCriteria',fmt);}
- function eligibility(socialResult){
-   const sp=$('specialty').value;
-   if(!sp) return {type:'none',label:'Επίλεξε κλάδο',why:'Δεν έχει επιλεγεί κλάδος / ειδικότητα.'};
-   let mainReasons=[];
-   if(sp==='ΠΕ61'||sp==='ΠΕ71') mainReasons.push(`${sp}: βασικός κλάδος Ε.Α.Ε.`);
-   if($('phdEae').checked) mainReasons.push('διδακτορικό στην Ε.Α.Ε./Σχολική Ψυχολογία');
-   if($('masterEae').checked) mainReasons.push('μεταπτυχιακό στην Ε.Α.Ε./Σχολική Ψυχολογία');
-   if($('didaskaleio').checked) mainReasons.push('διετής μετεκπαίδευση στην Ε.Α.Ε.');
-   if($('fiveYearEae').checked) mainReasons.push('πενταετής αποδεδειγμένη προϋπηρεσία στην Ε.Α.Ε.');
-   if(sp==='ΠΕ11' && $('pe11Qual').checked) mainReasons.push('προβλεπόμενη κύρια ειδικότητα ΠΕ11 στην Ε.Α.Ε.');
-   if(mainReasons.length) return {type:'main',label:'ΚΥΡΙΟΣ – Αξιολογικός Πίνακας Β΄',why:'Κριτήριο/α ένταξης: '+mainReasons.join(', ')+'.'};
-   let auxReasons=[];
-   if($('seminar400').checked) auxReasons.push('σεμινάριο Ε.Α.Ε. ≥400 ωρών / ≥7 μηνών');
-   if(num('eaeMonths')>=10) auxReasons.push('τουλάχιστον 10 μήνες προϋπηρεσίας στην Ε.Α.Ε.');
-   if(socialResult.childDisability67) auxReasons.push('γονέας παιδιού με αναπηρία ≥67%');
-   if(auxReasons.length) return {type:'aux',label:'ΕΠΙΚΟΥΡΙΚΟΣ Πίνακας Ε.Α.Ε.',why:'Κριτήριο/α ένταξης: '+auxReasons.join(', ')+'.'};
-   return {type:'none',label:'Δεν προκύπτει ένταξη',why:'Με τα στοιχεία που δηλώθηκαν δεν προκύπτει προσόν ένταξης ούτε στον Αξιολογικό Πίνακα Β΄ ούτε στον Επικουρικό.'};
- }
  function render(){
    syncSpecial();
    TrainingProof.syncAll();
    const degreeGrade=num('degree');
    const degreeInvalid=degreeGrade>0 && (degreeGrade<5 || degreeGrade>10);
    $('degreeValidation').classList.toggle('hidden', !degreeInvalid);
-   const languages=AsepLanguageSelector.calculate('asepLanguages'), a=calcAcademic(languages), b=calcService(), socialResult=calcSocial(), c=socialResult.total, t=a+b+c, e=eligibility(socialResult);
+   const languages=AsepLanguageSelector.calculate('asepLanguages'), a=calcAcademic(languages), b=calcService(), socialResult=calcSocial(), c=socialResult.total, t=a+b+c, e=AsepEaeEligibility.getState('eaeEligibility',{socialResult:socialResult});
    $('grandTotal').textContent=fmt(t); $('resAcademic').textContent=fmt(a)+' / 120'; $('resService').textContent=fmt(b)+' / 120'; $('resSocial').textContent=fmt(c);
    $('tableStatus').className='status '+e.type; $('tableStatus').textContent=e.label; $('eligibilityWhy').innerHTML='<strong>Έλεγχος ένταξης</strong>'+e.why;
    let p=[]; if($('pde').checked) p.push('Πρόταξη λόγω Παιδαγωγικής & Διδακτικής Επάρκειας'); if($('braille').checked) p.push('Προτεραιότητα Braille για μαθητές με προβλήματα όρασης'); if($('sign').checked) p.push('Προτεραιότητα Ε.Ν.Γ. για κωφούς/βαρήκοους μαθητές');

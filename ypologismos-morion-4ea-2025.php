@@ -78,9 +78,10 @@
         <h2>Ένταξη σε πίνακα Ε.Α.Ε.</h2>
         <p class="cap">Ενδεικτικός έλεγχος των ειδικών κριτηρίων ένταξης της 4ΕΑ/2025.</p>
 
+        <div id="eaeEligibility" data-eae-profile="te" data-specialty-id="branch" data-social-id="socialCriteria">
         <div class="field">
           <label for="mainCriterion">Κριτήριο ένταξης στον Αξιολογικό Πίνακα Β΄ (Κύριος)</label>
-          <select id="mainCriterion">
+          <select id="mainCriterion" data-eae-main-select>
             <option value="none">Δεν διαθέτω κάποιο από τα παρακάτω</option>
             <option value="phd">Διδακτορικό στην Ε.Α.Ε. ή Σχολική Ψυχολογία, με βασικές σπουδές σε Α.Ε.Ι.</option>
             <option value="msc">Μεταπτυχιακό στην Ε.Α.Ε. ή Σχολική Ψυχολογία, με βασικές σπουδές σε Α.Ε.Ι.</option>
@@ -94,7 +95,7 @@
         <div class="note">Για τον Επικουρικό Πίνακα αρκεί <strong>ένα από τα τρία</strong> παρακάτω κριτήρια.</div>
 
         <div class="checkrow">
-          <input type="checkbox" id="auxSeminar400">
+          <input type="checkbox" id="auxSeminar400" data-eae-aux="seminar400">
           <label for="auxSeminar400">Σεμινάριο εξειδίκευσης στην Ε.Α.Ε. ≥400 ωρών και διάρκειας ≥7 μηνών
             <small>Α.Ε.Ι. ή εποπτευόμενος φορέας του δημόσιου τομέα.</small>
           </label>
@@ -104,11 +105,12 @@
           <label for="eaeMonths">Μήνες προϋπηρεσίας στην Ε.Α.Ε.
             <small>Για το κριτήριο του Επικουρικού απαιτούνται τουλάχιστον 10 μήνες.</small>
           </label>
-          <input type="number" id="eaeMonths" min="0" step="1" value="0">
+          <input type="number" id="eaeMonths" data-eae-aux="months" min="0" step="1" value="0">
         </div>
 
         <div class="info-note">
           Το κριτήριο <strong>εκπαιδευτικού γονέα παιδιού με αναπηρία 67% και άνω</strong> ελέγχεται αυτόματα από το ποσοστό αναπηρίας τέκνου που δηλώνεται στα Κοινωνικά Κριτήρια παρακάτω.
+        </div>
         </div>
 
         <?php
@@ -257,6 +259,8 @@ renderAsepSocialCriteria(array(
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/social-calculations.js?v=3.20.26"></script>
 <script src="includes/asep-social-criteria.js?v=3.20.26"></script>
+<script src="includes/eae-table-eligibility.js?v=3.20.28"></script>
+<script src="includes/asep-eae-eligibility.js?v=3.20.28"></script>
 <script src="includes/language-calculations.js?v=3.20.24"></script>
 <script src="includes/asep-language-selector.js?v=3.20.24"></script>
 <script src="includes/te-academic-calculations.js?v=3.20.27"></script>
@@ -267,8 +271,6 @@ renderAsepSocialCriteria(array(
 (function(){
   "use strict";
   const $ = id => document.getElementById(id);
-  const num = id => Math.max(0, Number($(id)?.value || 0));
-  const intNum = id => Math.max(0, Math.floor(Number($(id)?.value || 0)));
   const fmt = v => (Math.round((Number(v)+Number.EPSILON)*100)/100).toLocaleString('el-GR',{minimumFractionDigits:2,maximumFractionDigits:2});
 
   function branchFamily(){
@@ -295,27 +297,8 @@ renderAsepSocialCriteria(array(
     const service=serviceResult();
     const social=socialResult();
 
-    const mainEligible = $('mainCriterion').value !== 'none';
-    const auxReasons=[];
-    if($('auxSeminar400').checked) auxReasons.push('σεμινάριο Ε.Α.Ε. ≥400 ωρών / ≥7 μηνών');
-    if(intNum('eaeMonths') >= 10) auxReasons.push('τουλάχιστον 10 μήνες προϋπηρεσίας στην Ε.Α.Ε.');
-    if(social.childDisability67) auxReasons.push('γονέας παιδιού με αναπηρία ≥67%');
-    const auxEligible=auxReasons.length>0;
-
-    let tableCode='none', tableLabel='Δεν προκύπτει ένταξη', why='';
-    if(!$('branch').value){
-      why='Επίλεξε κλάδο/ειδικότητα για να ολοκληρωθεί ο έλεγχος ένταξης.';
-    } else if(mainEligible){
-      tableCode='main';
-      tableLabel='Αξιολογικός Πίνακας Β΄ (Κύριος)';
-      why='Δηλώθηκε προσόν που θεμελιώνει ένταξη στον Αξιολογικό Πίνακα Β΄.';
-    } else if(auxEligible){
-      tableCode='aux';
-      tableLabel='Επικουρικός Πίνακας';
-      why='Κριτήριο/α Επικουρικού: '+auxReasons.join(' · ')+'.';
-    } else {
-      why='Δεν έχει δηλωθεί προσόν Κύριου Πίνακα ούτε ένα από τα τρία κριτήρια Επικουρικού.';
-    }
+    const eligibility=AsepEaeEligibility.getState('eaeEligibility',{socialResult:social});
+    const tableCode=eligibility.code, tableLabel=eligibility.label, why=eligibility.why;
 
     const total = academicResult.points + service.points + social.total;
 
