@@ -32,6 +32,7 @@ if (!function_exists('renderAsepDigitalTutoringService')) {
   id="<?php echo $h($containerId); ?>"
   class="asep-digital-tutoring-service"
   data-component="asep-digital-tutoring-service"
+  data-service-role="digital-tutoring"
   data-input-class="<?php echo $h($inputClass); ?>"
 >
   <h3><?php echo $h($title); ?></h3>

@@ -30,22 +30,22 @@ if (!function_exists('renderAsepThreeMonthService')) {
   <div class="field-grid">
     <div class="field">
       <label for="<?php echo $ids['regular2020']; ?>">Λοιπές τρίμηνες συμβάσεις — μήνες<small>1,5 μόριο ανά μήνα · έως 8 μήνες · έως 10 μόρια για το σχολικό έτος.</small></label>
-      <input id="<?php echo $ids['regular2020']; ?>" class="<?php echo $inputClass; ?>" type="number" min="0" max="8" step="1" inputmode="numeric" value="0">
+      <input id="<?php echo $ids['regular2020']; ?>" class="<?php echo $inputClass; ?>" data-service-role="three-month-regular-2020" type="number" min="0" max="8" step="1" inputmode="numeric" value="0">
     </div>
     <div class="field">
       <label for="<?php echo $ids['difficult2020']; ?>">Τρίμηνες σε δυσπρόσιτα / καταστήματα κράτησης — μήνες<small>3 μόρια ανά μήνα · έως 8 μήνες · έως 20 μόρια για το σχολικό έτος.</small></label>
-      <input id="<?php echo $ids['difficult2020']; ?>" class="<?php echo $inputClass; ?>" type="number" min="0" max="8" step="1" inputmode="numeric" value="0">
+      <input id="<?php echo $ids['difficult2020']; ?>" class="<?php echo $inputClass; ?>" data-service-role="three-month-difficult-2020" type="number" min="0" max="8" step="1" inputmode="numeric" value="0">
     </div>
   </div>
   <h3>Τρίμηνες συμβάσεις 2021–2022</h3>
   <div class="field-grid">
     <div class="field">
       <label for="<?php echo $ids['regular2021']; ?>">Λοιπές τρίμηνες συμβάσεις — μήνες<small>1,5 μόριο ανά μήνα · έως 7 μήνες · έως 10 μόρια για το σχολικό έτος.</small></label>
-      <input id="<?php echo $ids['regular2021']; ?>" class="<?php echo $inputClass; ?>" type="number" min="0" max="7" step="1" inputmode="numeric" value="0">
+      <input id="<?php echo $ids['regular2021']; ?>" class="<?php echo $inputClass; ?>" data-service-role="three-month-regular-2021" type="number" min="0" max="7" step="1" inputmode="numeric" value="0">
     </div>
     <div class="field">
       <label for="<?php echo $ids['difficult2021']; ?>">Τρίμηνες σε δυσπρόσιτα / καταστήματα κράτησης — μήνες<small>3 μόρια ανά μήνα · έως 7 μήνες · έως 20 μόρια για το σχολικό έτος.</small></label>
-      <input id="<?php echo $ids['difficult2021']; ?>" class="<?php echo $inputClass; ?>" type="number" min="0" max="7" step="1" inputmode="numeric" value="0">
+      <input id="<?php echo $ids['difficult2021']; ?>" class="<?php echo $inputClass; ?>" data-service-role="three-month-difficult-2021" type="number" min="0" max="7" step="1" inputmode="numeric" value="0">
     </div>
   </div>
   <div class="note asep-three-month-note">Οι μήνες των τρίμηνων συμβάσεων δηλώνονται μόνο στα αντίστοιχα πεδία και δεν πρέπει να δηλώνονται ξανά στη λοιπή ή στη δυσπρόσιτη προϋπηρεσία. Τα ανώτατα όρια εφαρμόζονται χωριστά ανά σχολικό έτος.</div>

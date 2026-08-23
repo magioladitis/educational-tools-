@@ -17,6 +17,7 @@ if (!function_exists('renderAsepSocialCriteria')) {
         };
 
         $title = isset($config['title']) ? $config['title'] : 'Κοινωνικά κριτήρια';
+        $containerId = isset($config['container_id']) ? $config['container_id'] : 'socialCriteria';
         $childrenId = isset($config['children_id']) ? $config['children_id'] : 'children';
         $candidateId = isset($config['candidate_id']) ? $config['candidate_id'] : 'candidateDisability';
         $spouseId = isset($config['spouse_id']) ? $config['spouse_id'] : 'spouseDisability';
@@ -35,6 +36,7 @@ if (!function_exists('renderAsepSocialCriteria')) {
         $warningId = isset($config['warning_id']) ? trim((string) $config['warning_id']) : '';
         $subtotalId = isset($config['subtotal_id']) ? trim((string) $config['subtotal_id']) : '';
         $subtotalLabel = isset($config['subtotal_label']) ? $config['subtotal_label'] : 'Σύνολο Κοινωνικών';
+        $warningMode = isset($config['warning_mode']) ? trim((string) $config['warning_mode']) : 'text';
 
         $childNote = 'Από ' . $minDisability . '% και άνω.';
         if ($childExtraNote !== '') {
@@ -44,7 +46,20 @@ if (!function_exists('renderAsepSocialCriteria')) {
             $childNote .= ' ' . $childAuxiliaryNote;
         }
         ?>
-<section class="card asep-social-criteria" data-component="asep-social-criteria">
+<section
+  id="<?php echo $h($containerId); ?>"
+  class="card asep-social-criteria"
+  data-component="asep-social-criteria"
+  data-children-id="<?php echo $h($childrenId); ?>"
+  data-candidate-id="<?php echo $h($candidateId); ?>"
+  data-spouse-id="<?php echo $h($spouseId); ?>"
+  data-child-id="<?php echo $h($childId); ?>"
+  data-marriage-id="<?php echo $h($marriageId); ?>"
+  data-mental-id="<?php echo $h($mentalId); ?>"
+  data-warning-id="<?php echo $h($warningId); ?>"
+  data-subtotal-id="<?php echo $h($subtotalId); ?>"
+  data-warning-mode="<?php echo $h($warningMode); ?>"
+>
   <h2><?php echo $h($title); ?></h2>
 
   <div class="field">

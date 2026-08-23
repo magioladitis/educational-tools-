@@ -179,6 +179,60 @@
     };
   }
 
+  function calculateAsepService(options) {
+    options = options || {};
+
+    const regular = regularPublic(options.regularMonths);
+    const hard = difficult(options.difficultMonths);
+    const regular2020 = threeMonthRegular2020(options.threeMonthRegular2020);
+    const regular2021 = threeMonthRegular2021(options.threeMonthRegular2021);
+    const difficult2020 = threeMonthDifficult2020(options.threeMonthDifficult2020);
+    const difficult2021 = threeMonthDifficult2021(options.threeMonthDifficult2021);
+    const privateResult = privateSchool(options.privateMonths);
+    const digital = options.digitalTutoring && typeof options.digitalTutoring === "object"
+      ? options.digitalTutoring
+      : { points: 0, countedMonths: 0, activeYears: [], warnings: [] };
+
+    const parts = {
+      regular: regular,
+      difficult: hard,
+      threeMonthRegular2020: regular2020,
+      threeMonthRegular2021: regular2021,
+      threeMonthDifficult2020: difficult2020,
+      threeMonthDifficult2021: difficult2021,
+      privateSchool: privateResult,
+      digitalTutoring: digital
+    };
+
+    const pointValues = [
+      regular.points, hard.points,
+      regular2020.points, regular2021.points,
+      difficult2020.points, difficult2021.points,
+      privateResult.points, Number(digital.points) || 0
+    ];
+    const total = cappedTotal(pointValues);
+    const monthsTotal =
+      regular.months + hard.months +
+      regular2020.months + regular2021.months +
+      difficult2020.months + difficult2021.months +
+      privateResult.months + (Number(digital.countedMonths) || 0);
+
+    const warnings = Array.isArray(digital.warnings) ? digital.warnings.slice() : [];
+    if (total.raw > RULES.totalMaxPoints) {
+      warnings.push("Η μοριοδότηση προϋπηρεσίας περιορίστηκε στο ανώτατο όριο των 120 μορίων.");
+    }
+
+    return {
+      parts: parts,
+      raw: total.raw,
+      rawPoints: total.raw,
+      points: total.points,
+      months: monthsTotal,
+      capped: total.raw > RULES.totalMaxPoints,
+      warnings: warnings
+    };
+  }
+
   function cappedTotal(values) {
     const raw = values.reduce((sum, value) => sum + (Number(value) || 0), 0);
     return { raw, points: Math.min(raw, RULES.totalMaxPoints) };
@@ -197,6 +251,7 @@
     privateSchool,
     digitalPerSchoolYear,
     digitalTutoring,
+    calculateAsepService,
     cappedTotal
   });
 })(window);

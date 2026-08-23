@@ -1,0 +1,207 @@
+== TE Academic regression ==
+PASS TE profile counts one language only
+PASS TE good language = 10
+PASS TE duplicate language keeps higher level
+PASS general total 105
+PASS degree 45
+PASS scale stays 20
+PASS TE16 auto scale 10
+PASS TE16 label
+PASS TE16 numeric 7.5 =>45
+PASS TE16 text normalized 13
+PASS TE16 text degree 39
+PASS invalid degree =>0
+PASS invalid warning visible
+PASS aux400 gives training 10
+PASS training+aux still 10
+PASS max academic 120
+PASS text option disabled outside TE16
+PASS Greek TE16 recognized
+PASS text option enabled TE16
+RESULT 19 PASS / 0 FAIL
+
+== TE Academic architecture/render ==
+PASS ypologismos-morion-1gt-2024.php requires shared TE component
+PASS ypologismos-morion-1gt-2024.php loads shared TE controller
+PASS ypologismos-morion-1gt-2024.php no direct TEAcademic.calculate
+PASS ypologismos-morion-1gt-2024.php no direct AsepLanguageSelector.calculate
+PASS ypologismos-morion-1gt-2024.php no local updateBranchUI
+PASS ypologismos-morion-1gt-2024.php no local updateGradeUI
+PASS ypologismos-morion-1gt-2024.php no direct TrainingProof.summary
+PASS ypologismos-morion-1gt-2024.php renders grade-scale part
+PASS ypologismos-morion-1gt-2024.php renders degree-details part
+PASS ypologismos-morion-1gt-2024.php renders qualifications part
+PASS ypologismos-morion-4ea-2025.php requires shared TE component
+PASS ypologismos-morion-4ea-2025.php loads shared TE controller
+PASS ypologismos-morion-4ea-2025.php no direct TEAcademic.calculate
+PASS ypologismos-morion-4ea-2025.php no direct AsepLanguageSelector.calculate
+PASS ypologismos-morion-4ea-2025.php no local updateBranchUI
+PASS ypologismos-morion-4ea-2025.php no local updateGradeUI
+PASS ypologismos-morion-4ea-2025.php no direct TrainingProof.summary
+PASS ypologismos-morion-4ea-2025.php renders grade-scale part
+PASS ypologismos-morion-4ea-2025.php renders degree-details part
+PASS ypologismos-morion-4ea-2025.php renders qualifications part
+PASS 4EA passes auxSeminar400 twice (state + proof)
+PASS 4EA has no local trainingActive
+PASS 1GT PHP render exit 0
+PASS 1GT rendered no duplicate ids
+PASS 1GT one TE academic root
+PASS 1GT language profile TE
+PASS 1GT preserves trainingDates radios
+PASS 1GT training proof trigger is training only
+PASS 4EA PHP render exit 0
+PASS 4EA rendered no duplicate ids
+PASS 4EA one TE academic root
+PASS 4EA language profile TE
+PASS 4EA preserves trainingDates radios
+PASS 4EA training proof triggers training + aux400
+PASS 4EA keeps EAE eligibility between degree and qualifications
+PASS shared component owns TE language selector
+PASS shared component owns computer proof
+PASS shared component owns training proof
+PASS shared controller delegates scoring to TEAcademic
+PASS shared controller recognizes Latin TE16
+PASS shared controller recognizes Greek ΤΕ16
+PASS shared controller supports extra training ids
+RESULT 42 PASS / 0 FAIL
+
+== PE Academic regression ==
+✓ base degree 7.50 × 2.5 = 18.75
+✓ second degree = 7
+✓ PhD = 40
+✓ one MSc = 20
+✓ two MSc = 28 total
+✓ PE06 English excluded
+✓ PE06 cannot bypass exclusion through Other=English
+✓ PE05 French excluded
+✓ PE07 German excluded
+✓ PE34 Italian excluded
+✓ PE40 Spanish excluded
+✓ two distinct excellent languages = 14
+✓ duplicate language counted once at higher level
+✓ PE86 computer gives zero and warning
+✓ non-PE86 computer = 4
+✓ training = 2
+✓ maximum normal PE academic combination = 120
+✓ manual PE minimum 12.50 preserved
+✓ manual TE16 minimum 30 preserved
+✓ manual academic maximum 120 preserved
+
+PASS: 20
+FAIL: 0
+
+== PE Academic architecture ==
+✓ general requires shared PE academic component
+✓ Onaseia requires shared PE academic component
+✓ general renders shared PE academic component
+✓ Onaseia renders shared PE academic component
+✓ general uses AsepPeAcademic.calculate
+✓ Onaseia uses AsepPeAcademic.calculate
+✓ general has no local syncComputerUI
+✓ Onaseia has no local calculateDetailedAcademic
+✓ general has no direct EducationAcademic.calculate
+✓ Onaseia has no direct EducationAcademic.calculate
+✓ general has no direct AsepLanguageSelector.calculate
+✓ Onaseia has no direct AsepLanguageSelector.calculate
+✓ shared component owns language selector
+✓ shared component owns computer proof
+✓ shared component owns training proof
+✓ shared controller owns PE86 UI exclusion
+✓ shared controller delegates scoring to EducationAcademic
+✓ Onaseia still forces TE16 to manual
+✓ Onaseia still validates manual points
+✓ Onaseia still keeps manual mode UI
+✓ Onaseia detailed block remains separate from manual wrapper
+✓ general loads shared controller before inline code
+✓ Onaseia loads shared controller before inline code
+✓ shared component is presentation-only re scoring engine
+
+PASS: 24
+FAIL: 0
+
+== Service/Social regression ==
+PASS regular + difficult
+PASS 2020 regular three-month cap 10
+PASS 2021 difficult three-month cap 20
+PASS private 0.9
+PASS service total cap 120
+PASS digital tutoring included
+PASS missing optional service categories are zero
+PASS social children points
+PASS social highest disability only
+PASS candidate mental-condition exclusion
+PASS spouse marriage rule
+PASS 67 percent EAE flag preserved
+PASS service controller reads data roles
+PASS social controller reads component mapping
+RESULT 14 PASS / 0 FAIL
+
+== Service/Social architecture ==
+PASS ypologismos-morion.php uses service controller
+PASS ypologismos-morion.php uses social controller
+PASS ypologismos-morion.php no direct EducationSocial.calculate
+PASS ypologismos-morion.php no direct service primitives
+PASS ypologismos-morion.php service controller asset
+PASS ypologismos-morion.php social controller asset
+PASS ypologismos-morion-1gt-2024.php uses service controller
+PASS ypologismos-morion-1gt-2024.php uses social controller
+PASS ypologismos-morion-1gt-2024.php no direct EducationSocial.calculate
+PASS ypologismos-morion-1gt-2024.php no direct service primitives
+PASS ypologismos-morion-1gt-2024.php service controller asset
+PASS ypologismos-morion-1gt-2024.php social controller asset
+PASS ypologismos-morion-1ea-2025.php uses service controller
+PASS ypologismos-morion-1ea-2025.php uses social controller
+PASS ypologismos-morion-1ea-2025.php no direct EducationSocial.calculate
+PASS ypologismos-morion-1ea-2025.php no direct service primitives
+PASS ypologismos-morion-1ea-2025.php service controller asset
+PASS ypologismos-morion-1ea-2025.php social controller asset
+PASS ypologismos-morion-2ea-2025.php uses service controller
+PASS ypologismos-morion-2ea-2025.php uses social controller
+PASS ypologismos-morion-2ea-2025.php no direct EducationSocial.calculate
+PASS ypologismos-morion-2ea-2025.php no direct service primitives
+PASS ypologismos-morion-2ea-2025.php service controller asset
+PASS ypologismos-morion-2ea-2025.php social controller asset
+PASS ypologismos-morion-3ea-2025.php uses service controller
+PASS ypologismos-morion-3ea-2025.php uses social controller
+PASS ypologismos-morion-3ea-2025.php no direct EducationSocial.calculate
+PASS ypologismos-morion-3ea-2025.php no direct service primitives
+PASS ypologismos-morion-3ea-2025.php service controller asset
+PASS ypologismos-morion-3ea-2025.php social controller asset
+PASS ypologismos-morion-4ea-2025.php uses service controller
+PASS ypologismos-morion-4ea-2025.php uses social controller
+PASS ypologismos-morion-4ea-2025.php no direct EducationSocial.calculate
+PASS ypologismos-morion-4ea-2025.php no direct service primitives
+PASS ypologismos-morion-4ea-2025.php service controller asset
+PASS ypologismos-morion-4ea-2025.php social controller asset
+PASS ypologismos-morion.php exact service roles
+PASS ypologismos-morion.php one service root
+PASS ypologismos-morion.php one social root
+PASS ypologismos-morion.php social mapping present
+PASS ypologismos-morion-1gt-2024.php exact service roles
+PASS ypologismos-morion-1gt-2024.php one service root
+PASS ypologismos-morion-1gt-2024.php one social root
+PASS ypologismos-morion-1gt-2024.php social mapping present
+PASS ypologismos-morion-1ea-2025.php exact service roles
+PASS ypologismos-morion-1ea-2025.php one service root
+PASS ypologismos-morion-1ea-2025.php one social root
+PASS ypologismos-morion-1ea-2025.php social mapping present
+PASS ypologismos-morion-2ea-2025.php exact service roles
+PASS ypologismos-morion-2ea-2025.php one service root
+PASS ypologismos-morion-2ea-2025.php one social root
+PASS ypologismos-morion-2ea-2025.php social mapping present
+PASS ypologismos-morion-3ea-2025.php exact service roles
+PASS ypologismos-morion-3ea-2025.php one service root
+PASS ypologismos-morion-3ea-2025.php one social root
+PASS ypologismos-morion-3ea-2025.php social mapping present
+PASS ypologismos-morion-4ea-2025.php exact service roles
+PASS ypologismos-morion-4ea-2025.php one service root
+PASS ypologismos-morion-4ea-2025.php one social root
+PASS ypologismos-morion-4ea-2025.php social mapping present
+PASS three-month role three-month-regular-2020
+PASS three-month role three-month-difficult-2020
+PASS three-month role three-month-regular-2021
+PASS three-month role three-month-difficult-2021
+PASS social component default id
+PASS social warning mode supported
+PASS service aggregator exported
+RESULT 67 PASS / 0 FAIL

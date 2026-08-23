@@ -67,15 +67,15 @@ renderAsepPeAcademic(array(
 ?>
       </section>
 
-      <section class="card">
+      <section id="asepService" class="card" data-component="asep-service-criteria" data-subtotal-id="serviceSubtotal" data-subtotal-with-cap="true">
         <h2>Β. Εκπαιδευτική προϋπηρεσία</h2>
         <p class="cap">Μέγιστο κατηγορίας: 120 μόρια</p>
 
         <div class="note">Βάλε κάθε χρονικό διάστημα σε <strong>ένα μόνο</strong> αντίστοιχο πεδίο, ώστε να μη γίνει διπλή μέτρηση.</div>
 
         <div class="field-grid">
-          <div class="field"><label for="normalMonths">Δημόσια εκπαιδευτική προϋπηρεσία<small>1 μόριο/μήνα · έως 120 μήνες</small></label><input type="number" id="normalMonths" min="0" max="120" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
-          <div class="field"><label for="difficultMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–2021<small>2 μόρια/μήνα · έως 60 μήνες</small></label><input type="number" id="difficultMonths" min="0" max="60" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+          <div class="field"><label for="normalMonths">Δημόσια εκπαιδευτική προϋπηρεσία<small>1 μόριο/μήνα · έως 120 μήνες</small></label><input type="number" id="normalMonths" data-service-role="regular" min="0" max="120" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+          <div class="field"><label for="difficultMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–2021<small>2 μόρια/μήνα · έως 60 μήνες</small></label><input type="number" id="difficultMonths" data-service-role="difficult" min="0" max="60" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
         </div>
 
 <?php
@@ -88,7 +88,7 @@ renderAsepThreeMonthService(array(
 ?>
 
         <div class="field-grid">
-          <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+          <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" data-service-role="private" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
         </div>
 
 <?php renderAsepDigitalTutoringService(array('container_id' => 'digitalTutoring', 'input_class' => 'service-months')); ?>
@@ -159,9 +159,11 @@ renderAsepSocialCriteria(array(
 <script src="includes/asep-computer-proof.js?v=3.20.25"></script>
 <script src="includes/training-proof.js?v=3.20.25"></script>
 <script src="includes/asep-pe-academic.js?v=3.20.25"></script>
-<script src="includes/service-calculations.js?v=3.20.22"></script>
+<script src="includes/service-calculations.js?v=3.20.26"></script>
+<script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
-<script src="includes/social-calculations.js"></script>
+<script src="includes/social-calculations.js?v=3.20.26"></script>
+<script src="includes/asep-social-criteria.js?v=3.20.26"></script>
 <script>
   let lastResultText = "";
 
@@ -293,7 +295,7 @@ renderAsepSocialCriteria(array(
     document.querySelectorAll('input[type="number"]').forEach(el => {
       if (el.id !== "degreeGrade") el.value = 0;
     });
-    AsepDigitalTutoring.reset('digitalTutoring', { silent: true });
+    AsepServiceController.reset('asepService', { silent: true });
     document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
     AsepPeAcademic.sync("asepPeAcademic");
 
@@ -334,91 +336,14 @@ renderAsepSocialCriteria(array(
 
     warnings.push(...academic.warnings);
 
-    const normalMonths = EducationService.regularPublic(numberOf("normalMonths"));
-    const difficultMonths = EducationService.difficult(numberOf("difficultMonths"));
-    const threeMonthMonths2020 = EducationService.threeMonthRegular2020(numberOf("threeMonthMonths2020"));
-    const threeMonthMonths2021 = EducationService.threeMonthRegular2021(numberOf("threeMonthMonths2021"));
-    const threeMonthDifficultMonths2020 = EducationService.threeMonthDifficult2020(numberOf("threeMonthDifficultMonths2020"));
-    const threeMonthDifficultMonths2021 = EducationService.threeMonthDifficult2021(numberOf("threeMonthDifficultMonths2021"));
-    const privateMonths = EducationService.privateSchool(numberOf("privateMonths"));
-    const digitalTutoring = AsepDigitalTutoring.getState('digitalTutoring');
+    const service = AsepServiceController.getState("asepService", formatPoints);
+    const serviceTotal = service.points;
+    const serviceDetails = AsepServiceController.details(service, formatPoints);
+    warnings.push(...service.warnings);
 
-    const serviceDetails = [];
-    const serviceParts = [];
-
-    if (normalMonths.months > 0) {
-      serviceParts.push(normalMonths.points);
-      serviceDetails.push("Δημόσια εκπαιδευτική προϋπηρεσία: " + formatPoints(normalMonths.points) + " μόρια");
-    }
-
-    if (difficultMonths.months > 0) {
-      serviceParts.push(difficultMonths.points);
-      serviceDetails.push("Δυσπρόσιτα / καταστήματα κράτησης: " + formatPoints(difficultMonths.points) + " μόρια");
-    }
-
-    if (threeMonthMonths2020.months > 0) {
-      serviceParts.push(threeMonthMonths2020.points);
-      serviceDetails.push("Τρίμηνες συμβάσεις 2020-2021: " + formatPoints(threeMonthMonths2020.points) + " μόρια");
-    }
-
-    if (threeMonthMonths2021.months > 0) {
-      serviceParts.push(threeMonthMonths2021.points);
-      serviceDetails.push("Τρίμηνες συμβάσεις 2021-2022: " + formatPoints(threeMonthMonths2021.points) + " μόρια");
-    }
-
-    if (threeMonthDifficultMonths2020.months > 0) {
-      serviceParts.push(threeMonthDifficultMonths2020.points);
-      serviceDetails.push("Τρίμηνες συμβάσεις σε δυσπρόσιτα 2020-2021: " + formatPoints(threeMonthDifficultMonths2020.points) + " μόρια");
-    }
-
-    if (threeMonthDifficultMonths2021.months > 0) {
-      serviceParts.push(threeMonthDifficultMonths2021.points);
-      serviceDetails.push("Τρίμηνες συμβάσεις σε δυσπρόσιτα 2021-2022: " + formatPoints(threeMonthDifficultMonths2021.points) + " μόρια");
-    }
-
-    if (privateMonths.months > 0) {
-      serviceParts.push(privateMonths.points);
-      serviceDetails.push("Ιδιωτική εκπαίδευση: " + formatPoints(privateMonths.points) + " μόρια");
-    }
-
-    if (digitalTutoring.activeYears.length > 0) {
-      serviceParts.push(digitalTutoring.points);
-      serviceDetails.push(...AsepDigitalTutoring.details('digitalTutoring', formatPoints));
-      warnings.push(...digitalTutoring.warnings);
-    }
-
-    const serviceResult = EducationService.cappedTotal(serviceParts);
-    const serviceRaw = serviceResult.raw;
-    const serviceTotal = serviceResult.points;
-
-    if (serviceRaw > EducationService.RULES.totalMaxPoints) {
-      warnings.push("Στην εκπαιδευτική προϋπηρεσία εφαρμόστηκε ανώτατο όριο 120 μορίων.");
-    }
-
-    const socialResult = EducationSocial.calculate({
-      children: numberOf("children"),
-      candidateDisability: numberOf("candidateDisability"),
-      spouseDisability: numberOf("spouseDisability"),
-      childDisability: numberOf("childDisability"),
-      marriageYears4Plus: document.getElementById("marriageYears4Plus").checked,
-      candidateMentalCondition: document.getElementById("candidateMentalCondition").checked
-    });
-
+    const socialResult = AsepSocialCriteria.getState("socialCriteria", formatPoints);
     const socialTotal = socialResult.total;
-    const socialDetails = [];
-
-    if (socialResult.childrenPoints > 0) {
-      socialDetails.push("Επιλέξιμα τέκνα: " + formatPoints(socialResult.childrenPoints) + " μόρια");
-    }
-
-    if (socialResult.disabilityPoints > 0) {
-      socialDetails.push(
-        "Αναπηρία (" + socialResult.highestLabel + " " +
-        formatPoints(socialResult.highestDisabilityPercent) + "%): " +
-        formatPoints(socialResult.disabilityPoints) + " μόρια"
-      );
-    }
-
+    const socialDetails = AsepSocialCriteria.details(socialResult, formatPoints);
     warnings.push(...socialResult.warnings);
 
     const academicProofWarning = AsepPeAcademic.trainingWarning("asepPeAcademic");

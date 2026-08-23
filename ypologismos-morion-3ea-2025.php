@@ -86,12 +86,12 @@ HTML
 ?>
 </section>
 
-<section class="card">
+<section id="asepService" class="card" data-component="asep-service-criteria">
 <h2>3. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο κατηγορίας Β: 120 μόρια. Δήλωσε τους μήνες χωρίς επικάλυψη μεταξύ των ειδικών κατηγοριών.</p>
 <div class="note"><strong>Σημείωση 3ΕΑ/2025:</strong> Στις γενικές κατηγορίες λαμβάνεται υπόψη η προϋπηρεσία σε ακέραιους μήνες.</div>
 <div class="note">Οι μήνες δυσπρόσιτων, τρίμηνων συμβάσεων και Ψηφιακού Φροντιστηρίου πρέπει να δηλώνονται στις αντίστοιχες ειδικές γραμμές και όχι ξανά ως κανονική δημόσια προϋπηρεσία.</div>
-<div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο ανά μήνα · έως 120 μήνες.</small></label><input id="publicMonths" class="service-months" type="number" min="0" max="120" step="1" inputmode="numeric" value="0"></div>
-<div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια ανά μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" type="number" min="0" max="60" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο ανά μήνα · έως 120 μήνες.</small></label><input id="publicMonths" class="service-months" data-service-role="regular" type="number" min="0" max="120" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια ανά μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" data-service-role="difficult" type="number" min="0" max="60" step="1" inputmode="numeric" value="0"></div>
 
 <?php
 renderAsepThreeMonthService(array(
@@ -102,7 +102,7 @@ renderAsepThreeMonthService(array(
 ));
 ?>
 
-<div class="field"><label for="privateMonths">Ιδιωτική εκπαιδευτική προϋπηρεσία<small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι νόμιμες προϋποθέσεις.</small></label><input id="privateMonths" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="privateMonths">Ιδιωτική εκπαιδευτική προϋπηρεσία<small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι νόμιμες προϋποθέσεις.</small></label><input id="privateMonths" class="service-months" data-service-role="private" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
 <?php renderAsepDigitalTutoringService(array('container_id' => 'digitalTutoring', 'input_class' => 'service-months')); ?>
 </section>
 
@@ -123,6 +123,7 @@ renderAsepSocialCriteria(array(
     'child_extra_note' => '',
     'child_auxiliary_note' => 'Από 67% και άνω μπορεί να θεμελιώνει και ένταξη στον Επικουρικό Πίνακα.',
     'warning_id' => 'socialWarnings',
+    'warning_mode' => 'bullets',
     'subtotal_id' => '',
     'subtotal_label' => 'Σύνολο Κοινωνικών'
 ));
@@ -162,9 +163,11 @@ renderEaeSensoryPriority(array(
   <p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό και δεν υποκαθιστά τον επίσημο έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από το ΑΣΕΠ και τα αρμόδια όργανα.</p>
 </section>
 </div>
-<script src="includes/service-calculations.js?v=3.20.22"></script>
+<script src="includes/service-calculations.js?v=3.20.26"></script>
+<script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
-<script src="includes/social-calculations.js"></script>
+<script src="includes/social-calculations.js?v=3.20.26"></script>
+<script src="includes/asep-social-criteria.js?v=3.20.26"></script>
 <script src="includes/language-calculations.js?v=3.20.24"></script>
 <script src="includes/asep-language-selector.js?v=3.20.24"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
@@ -197,28 +200,8 @@ renderEaeSensoryPriority(array(
    if(hasTraining) pts+=2;
    return cap(pts,120);
  }
- function calcService(){
-   let raw=0;
-   raw += EducationService.regularPublic(num('publicMonths')).points;
-   raw += EducationService.difficult(num('hardMonths')).points;
-   raw += EducationService.threeMonthRegular2020(num('covid2020Months')).points;
-   raw += EducationService.threeMonthRegular2021(num('covid2021Months')).points;
-   raw += EducationService.threeMonthDifficult2020(num('covidHard2020Months')).points;
-   raw += EducationService.threeMonthDifficult2021(num('covidHard2021Months')).points;
-   raw += EducationService.privateSchool(num('privateMonths')).points;
-   raw += AsepDigitalTutoring.getState('digitalTutoring').points;
-   return cap(raw,120);
- }
- function calcSocial(){
-   return EducationSocial.calculate({
-     children:num('children'),
-     candidateDisability:num('candidateDisability'),
-     spouseDisability:num('spouseDisability'),
-     childDisability:num('childDisability'),
-     marriageYears4Plus:$('marriageYears4Plus').checked,
-     candidateMentalCondition:$('candidateMentalCondition').checked
-   });
- }
+ function calcService(){return AsepServiceController.getState('asepService',fmt).points;}
+ function calcSocial(){return AsepSocialCriteria.getState('socialCriteria',fmt);}
  function eligibility(socialResult){
    const sp=$('specialty').value;
    if(!sp) return {type:'none',label:'Επίλεξε κλάδο',why:'Δεν έχει επιλεγεί κλάδος / ειδικότητα.'};
@@ -244,8 +227,6 @@ renderEaeSensoryPriority(array(
    const degreeInvalid=degreeGrade>0 && (degreeGrade<5 || degreeGrade>10);
    $('degreeValidation').classList.toggle('hidden', !degreeInvalid);
    const languages=AsepLanguageSelector.calculate('asepLanguages'), a=calcAcademic(languages), b=calcService(), socialResult=calcSocial(), c=socialResult.total, t=a+b+c, e=eligibility(socialResult);
-   $('socialWarnings').classList.toggle('hidden', socialResult.warnings.length===0);
-   $('socialWarnings').innerHTML=socialResult.warnings.map(w=>'• '+w).join('<br>');
    $('grandTotal').textContent=fmt(t); $('resAcademic').textContent=fmt(a)+' / 120'; $('resService').textContent=fmt(b)+' / 120'; $('resSocial').textContent=fmt(c);
    $('tableStatus').className='status '+e.type; $('tableStatus').textContent=e.label; $('eligibilityWhy').innerHTML='<strong>Έλεγχος ένταξης</strong>'+e.why;
    let p=[]; if($('pde').checked) p.push('Πρόταξη λόγω Παιδαγωγικής & Διδακτικής Επάρκειας'); if($('braille').checked) p.push('Προτεραιότητα Braille για μαθητές με προβλήματα όρασης'); if($('sign').checked) p.push('Προτεραιότητα Ε.Ν.Γ. για κωφούς/βαρήκοους μαθητές');
@@ -280,7 +261,7 @@ renderEaeSensoryPriority(array(
  });
  $('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});
  document.addEventListener('asep-digital-tutoring-change',render);
- $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degree').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepLanguageSelector.reset('asepLanguages',{silent:true});AsepDigitalTutoring.reset('digitalTutoring',{silent:true});render();});
+ $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degree').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepLanguageSelector.reset('asepLanguages',{silent:true});AsepServiceController.reset('asepService',{silent:true});render();});
  render();
 })();
 </script>

@@ -10,9 +10,7 @@
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea4">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
-<?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
-<?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
-<?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-te-academic.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
@@ -64,36 +62,16 @@
               </optgroup>
             </select>
           </div>
-          <div class="field">
-            <label for="gradeScale">Κλίμακα βαθμού τίτλου</label>
-            <select id="gradeScale">
-              <option value="20">Κλίμακα 10–20</option>
-              <option value="10">Κλίμακα 5–10</option>
-              <option value="te16text">ΤΕ16 — περιγραφικός βαθμός</option>
-            </select>
-          </div>
+          <?php renderAsepTeAcademic(array('part' => 'grade-scale')); ?>
         </div>
 
-        <div id="numericGradeWrap" class="field">
-          <label for="degreeGrade">Βαθμός βασικού τίτλου
-            <small>Ο βαθμός ανάγεται σε κλίμακα 20 και πολλαπλασιάζεται ×3. Μέγιστο: 60 μόρια.</small>
-          </label>
-          <input type="number" id="degreeGrade" min="10" max="20" step="0.01" value="" placeholder="π.χ. 15,40">
-        </div>
-
-        <div id="te16TextWrap" class="field hidden">
-          <label for="te16TextGrade">Χαρακτηρισμός βαθμού ΤΕ16</label>
-          <select id="te16TextGrade">
-            <option value="0">Δεν αναγράφεται βαθμολογία → 5,00</option>
-            <option value="5">ΚΑΛΩΣ → 5,00</option>
-            <option value="6.5">ΛΙΑΝ ΚΑΛΩΣ → 6,50</option>
-            <option value="8.5">ΑΡΙΣΤΑ → 8,50</option>
-          </select>
-          <div class="help">Οι τιμές 5,00 / 6,50 / 8,50 αναφέρονται στην κλίμακα 10 και ο υπολογιστής τις ανάγει αυτόματα σε κλίμακα 20.</div>
-        </div>
-
-        <div class="info-note" id="normalizedGradeInfo">Αναγμένος βαθμός: 0,00 / 20 · Μόρια βαθμού: 0,00 / 60</div>
-        <div id="gradeWarning" class="warning hidden">Ο βαθμός δεν βρίσκεται στα επιτρεπτά όρια της επιλεγμένης κλίμακας.</div>
+        <?php renderAsepTeAcademic(array(
+            'part' => 'degree-details',
+            'id' => 'asepTeAcademic',
+            'branch_id' => 'branch',
+            'extra_training_ids' => array('auxSeminar400'),
+            'degree_placeholder_20' => 'π.χ. 15,40'
+        )); ?>
       </section>
 
       <section class="card">
@@ -152,54 +130,17 @@
         </div>
       </section>
 
-      <section class="card">
-        <h2>Α. Ακαδημαϊκά προσόντα</h2>
-        <p class="cap">Μέγιστο κατηγορίας: 120 μόρια</p>
-
-        <div class="checkrow">
-          <input type="checkbox" id="secondTitle">
-          <label for="secondTitle"><span id="secondTitleLabel">Πτυχίο επιπέδου 5 / Ι.Ε.Κ. ίδιας ειδικότητας</span><small>10 μόρια</small></label>
-        </div>
-
-        <?php
-renderAsepLanguageSelector(array(
-    'id' => 'asepLanguages',
-    'profile' => 'te'
+      <?php
+renderAsepTeAcademic(array(
+    'part' => 'qualifications',
+    'id' => 'asepTeAcademic',
+    'training_context' => '4ea-2025-general-300h-or-eae-400h-7m',
+    'extra_training_ids' => array('auxSeminar400'),
+    'training_help_suffix' => 'Το σεμινάριο Ε.Α.Ε. ≥400 ωρών του Επικουρικού καλύπτει και αυτό το κριτήριο.'
 ));
 ?>
 
-        <?php
-renderAsepComputerProof(array(
-    'input_id' => 'computer',
-    'control_type' => 'checkbox',
-    'points_text' => '20 μόρια'
-));
-?>
-
-        <div class="checkrow">
-          <input type="checkbox" id="training">
-          <label for="training">Επιμόρφωση ≥300 ωρών και διάρκειας ≥7 μηνών<small>Α.Ε.Ι. ή εποπτευόμενος δημόσιος φορέας — μοριοδοτείται μία επιμόρφωση — 10 μόρια. Το σεμινάριο Ε.Α.Ε. ≥400 ωρών του Επικουρικού καλύπτει και αυτό το κριτήριο.</small></label>
-        </div>
-
-        <?php
-renderTrainingProof([
-    'id' => 'trainingProof',
-    'radio_name' => 'trainingDates',
-    'yes_id' => 'trainingDatesYes',
-    'no_id' => 'trainingDatesNo',
-    'status_id' => 'trainingDatesStatus',
-    'context' => '4ea-2025-general-300h-or-eae-400h-7m',
-    'input_ids' => array('training', 'auxSeminar400'),
-    'legal_html' => <<<'HTML'
-Σε περίπτωση που στο πιστοποιητικό δεν αναγράφεται η ημεροχρονολογία έναρξης και λήξης του σεμιναρίου, απαιτείται η προσκόμιση σχετικής βεβαίωσης από τον οικείο φορέα. <strong>Πρέπει να προκύπτει ολόκληρο το χρονικό διάστημα των 7 μηνών· 6 μήνες και 29 ημέρες δεν γίνονται δεκτοί.</strong>
-HTML
-]);
-?>
-
-        <div class="subtot"><span>Σύνολο Ακαδημαϊκών</span><span class="pill" id="academicSubtotal">0,00 / 120</span></div>
-      </section>
-
-      <section class="card">
+      <section id="asepService class="card" data-component="asep-service-criteria" data-subtotal-id="serviceSubtotal" data-subtotal-with-cap="true">
         <h2>Β. Εκπαιδευτική προϋπηρεσία</h2>
         <p class="cap">Μέγιστο κατηγορίας: 120 μόρια</p>
 
@@ -215,14 +156,14 @@ HTML
           <label for="regularMonths">Μήνες δημόσιας εκπαιδευτικής προϋπηρεσίας
             <small>1 μόριο ανά μήνα πραγματικής εκπαιδευτικής προϋπηρεσίας · έως 120 μήνες.</small>
           </label>
-          <input type="number" id="regularMonths" min="0" max="120" step="1" value="0">
+          <input type="number" id="regularMonths" data-service-role="regular" min="0" max="120" step="1" value="0">
         </div>
 
         <div class="field">
           <label for="difficultMonths">Δυσπρόσιτα / σχολικές μονάδες σε καταστήματα κράτησης
             <small>Από το σχολικό έτος 2020–2021 και μετά · 2 μόρια ανά μήνα · έως 60 μήνες.</small>
           </label>
-          <input type="number" id="difficultMonths" min="0" max="60" step="1" value="0">
+          <input type="number" id="difficultMonths" data-service-role="difficult" min="0" max="60" step="1" value="0">
         </div>
 
 <?php
@@ -238,7 +179,7 @@ renderAsepThreeMonthService(array(
           <label for="privateMonths">Μήνες προϋπηρεσίας στην ιδιωτική εκπαίδευση
             <small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι ειδικές προϋποθέσεις της προκήρυξης.</small>
           </label>
-          <input type="number" id="privateMonths" min="0" step="1" value="0">
+          <input type="number" id="privateMonths" data-service-role="private" min="0" step="1" value="0">
         </div>
 
         <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
@@ -312,12 +253,16 @@ renderAsepSocialCriteria(array(
   </section>
 </div>
 
-<script src="includes/service-calculations.js?v=3.20.14-rc2"></script>
-<script src="includes/social-calculations.js"></script>
+<script src="includes/service-calculations.js?v=3.20.26"></script>
+<script src="includes/asep-service-controller.js?v=3.20.26"></script>
+<script src="includes/social-calculations.js?v=3.20.26"></script>
+<script src="includes/asep-social-criteria.js?v=3.20.26"></script>
 <script src="includes/language-calculations.js?v=3.20.24"></script>
 <script src="includes/asep-language-selector.js?v=3.20.24"></script>
-<script src="includes/te-academic-calculations.js"></script>
+<script src="includes/te-academic-calculations.js?v=3.20.27"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
+<script src="includes/asep-computer-proof.js?v=3.20.27"></script>
+<script src="includes/asep-te-academic.js?v=3.20.27"></script>
 <script>
 (function(){
   "use strict";
@@ -339,85 +284,14 @@ renderAsepSocialCriteria(array(
     return option && option.value ? option.textContent.trim() : 'κλάδος/ειδικότητα μη επιλεγμένος/η';
   }
 
-  function updateBranchUI(){
-    const family = branchFamily();
-    if(family === 'ΤΕ16'){
-      $('secondTitleLabel').textContent = 'Δεύτερο πτυχίο από το οποίο προκύπτει μουσική ειδίκευση, αναγνωρισμένου μη Ανώτατου Εκπαιδευτικού Ιδρύματος';
-      if($('gradeScale').dataset.auto !== 'off') $('gradeScale').value = '10';
-    } else {
-      $('secondTitleLabel').textContent = 'Πτυχίο επιπέδου 5 / Ι.Ε.Κ. ίδιας ειδικότητας';
-      if($('gradeScale').dataset.auto !== 'off') $('gradeScale').value = '20';
-    }
-    const te16Option = Array.from($('gradeScale').options).find(o=>o.value==='te16text');
-    if(te16Option) te16Option.disabled = family !== 'ΤΕ16';
-    if(family !== 'ΤΕ16' && $('gradeScale').value === 'te16text') $('gradeScale').value='20';
-    updateGradeUI();
-  }
 
-  function updateGradeUI(){
-    const scale = $('gradeScale').value;
-    const textual = scale === 'te16text';
-    $('numericGradeWrap').classList.toggle('hidden', textual);
-    $('te16TextWrap').classList.toggle('hidden', !textual);
-    if(!textual){
-      const minGrade = scale === '10' ? 5 : 10;
-      const maxGrade = scale === '10' ? 10 : 20;
-      $('degreeGrade').min = String(minGrade);
-      $('degreeGrade').max = String(maxGrade);
-      $('degreeGrade').placeholder = scale === '10' ? 'π.χ. 7,50' : 'π.χ. 15,00';
-    }
-  }
+  function socialResult(){return AsepSocialCriteria.getState('socialCriteria',fmt);}
 
-  function trainingActive(){
-    return $('training').checked || $('auxSeminar400').checked;
-  }
-
-  function socialResult(){
-    return EducationSocial.calculate({
-      children:num('children'),
-      candidateDisability:num('candidateDisability'),
-      spouseDisability:num('spouseDisability'),
-      childDisability:num('childDisability'),
-      marriageYears4Plus:$('marriageYears4Plus').checked,
-      candidateMentalCondition:$('candidateMentalCondition').checked
-    });
-  }
-
-  function serviceResult(){
-    const parts=[
-      EducationService.regularPublic(intNum('regularMonths')),
-      EducationService.difficult(intNum('difficultMonths')),
-      EducationService.threeMonthRegular2020(intNum('covid20Regular')),
-      EducationService.threeMonthDifficult2020(intNum('covid20Difficult')),
-      EducationService.threeMonthRegular2021(intNum('covid21Regular')),
-      EducationService.threeMonthDifficult2021(intNum('covid21Difficult')),
-      EducationService.privateSchool(intNum('privateMonths'))
-    ];
-    const raw=parts.reduce((sum,p)=>sum+p.points,0);
-    const months=parts.reduce((sum,p)=>sum+p.months,0);
-    return {raw,points:Math.min(raw,120),months};
-  }
+  function serviceResult(){return AsepServiceController.getState('asepService',fmt);}
 
   function calc(){
-    updateBranchUI();
-    TrainingProof.syncAll();
-
-    const currentScale = $('gradeScale').value;
-    const rawDegreeGrade = num('degreeGrade');
-    const minDegreeGrade = currentScale === '10' ? 5 : (currentScale === '20' ? 10 : 0);
-    const maxDegreeGrade = currentScale === '10' ? 10 : (currentScale === '20' ? 20 : 20);
-    const numericGradeValid = currentScale === 'te16text' || ($('degreeGrade').value!=='' && rawDegreeGrade >= minDegreeGrade && rawDegreeGrade <= maxDegreeGrade);
-
-    const languages=AsepLanguageSelector.calculate('asepLanguages');
-    const academicResult = TEAcademic.calculate({
-      gradeScale: currentScale,
-      degreeGrade: numericGradeValid ? rawDegreeGrade : 0,
-      te16TextGrade: Number($('te16TextGrade').value || 0),
-      secondTitle: $('secondTitle').checked,
-      languagePoints: languages.points,
-      computer: $('computer').checked,
-      training: trainingActive()
-    });
+    const academic=AsepTeAcademic.getState('asepTeAcademic',fmt);
+    const academicResult=academic.result, languages=academic.languages;
     const service=serviceResult();
     const social=socialResult();
 
@@ -445,16 +319,6 @@ renderAsepSocialCriteria(array(
 
     const total = academicResult.points + service.points + social.total;
 
-    if(currentScale !== 'te16text' && $('degreeGrade').value!=='' && !numericGradeValid){
-      $('normalizedGradeInfo').textContent=`Μη έγκυρος βαθμός: επιτρέπεται ${minDegreeGrade}–${maxDegreeGrade}. Δεν υπολογίζονται μόρια βαθμού.`;
-    } else {
-      $('normalizedGradeInfo').textContent=`Αναγμένος βαθμός: ${fmt(academicResult.normalizedGrade)} / 20 · Μόρια βαθμού: ${fmt(academicResult.degreePoints)} / 60`;
-    }
-    $('gradeWarning').classList.toggle('hidden', currentScale==='te16text' || $('degreeGrade').value==='' || numericGradeValid);
-
-    $('academicSubtotal').textContent=`${fmt(academicResult.points)} / 120`;
-    $('serviceSubtotal').textContent=`${fmt(service.points)} / 120`;
-    $('socialSubtotal').textContent=fmt(social.total);
     $('grandTotal').textContent=fmt(total);
     $('resAcademic').textContent=`${fmt(academicResult.points)} / 120`;
     $('resService').textContent=`${fmt(service.points)} / 120`;
@@ -465,9 +329,6 @@ renderAsepSocialCriteria(array(
     $('resDisability').textContent=fmt(social.disabilityPoints);
     $('resTable').textContent=tableLabel;
 
-    const sw=$('socialWarning');
-    sw.textContent=social.warnings.join(' ');
-    sw.classList.toggle('hidden',social.warnings.length===0);
 
     $('tableStatus').classList.toggle('yes',tableCode==='main'||tableCode==='aux');
     $('tableStatus').textContent=tableLabel;
@@ -496,7 +357,7 @@ renderAsepSocialCriteria(array(
       v.why,
       `Παιδαγωγική επάρκεια: ${v.ped?'ΝΑΙ — ΠΡΟΤΑΞΗ':'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
       v.priorities.length?'Προτεραιότητες: '+v.priorities.join(' · '):'',
-      TrainingProof.summary('trainingProof')
+      AsepTeAcademic.trainingSummary('asepTeAcademic')
     ].filter(Boolean).join('\n');
   }
 
@@ -513,26 +374,9 @@ renderAsepSocialCriteria(array(
   document.addEventListener('input',e=>{sanitizeIntegerInput(e.target);calc();});
   document.addEventListener('change',e=>{
     sanitizeIntegerInput(e.target);
-    if(e.target && e.target.id==='gradeScale') $('gradeScale').dataset.auto='off';
     calc();
   });
 
-  $('branch').addEventListener('change',()=>{
-    $('gradeScale').dataset.auto='on';
-    updateBranchUI();
-    calc();
-  });
-
-  $('degreeGrade').addEventListener('change',()=>{
-    if($('degreeGrade').value==='') return;
-    const scale=$('gradeScale').value;
-    if(scale==='te16text') return;
-    const min=scale==='10'?5:10, max=scale==='10'?10:20;
-    const value=Number(String($('degreeGrade').value).replace(',', '.'));
-    if(!Number.isFinite(value)) $('degreeGrade').value='';
-    else $('degreeGrade').value=String(Math.min(max,Math.max(min,value)));
-    calc();
-  });
 
   $('copyBtn').addEventListener('click',async()=>{
     const text=summary(calc());
@@ -551,22 +395,16 @@ renderAsepSocialCriteria(array(
     document.querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked=false);
     document.querySelectorAll('input[name="trainingDates"]').forEach(el=>el.checked=false);
     $('branch').value='';
-    $('gradeScale').dataset.auto='on';
-    $('gradeScale').value='20';
-    AsepLanguageSelector.reset('asepLanguages',{silent:true});
-    $('te16TextGrade').value='0';
     $('mainCriterion').value='none';
-    updateBranchUI();
+    AsepTeAcademic.reset('asepTeAcademic',{silent:true});
     calc();
   });
 
-  $('gradeScale').dataset.auto='on';
-  updateBranchUI();
+  AsepTeAcademic.sync('asepTeAcademic');
   calc();
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
   <script src="includes/eae-sensory-proof.js?v=3.20.23"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
