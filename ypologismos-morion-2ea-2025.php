@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<!-- UI consolidation v3.20: shared design system in assets/common.css?v=3.20.9"UTF-8">
+<!-- UI consolidation v3.20: shared design system in assets/common.css -->
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 2ΕΑ/2025 για μέλη Ειδικού Εκπαιδευτικού Προσωπικού (ΕΕΠ).">
 <title>Υπολογισμός μορίων 2ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9">
+<link rel="stylesheet" href="assets/common.css?v=3.20.10">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea2">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -75,6 +76,6 @@ function summary(r){const branch=$('branch'),branchText=branch.value?branch.opti
 document.addEventListener('input',render);document.addEventListener('change',render);$('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});$('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=x.id==='degreeGrade'?'':'0');document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);eligibilityUiKey='';render();});render();})();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9"></script>
+  <script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

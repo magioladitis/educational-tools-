@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<!-- UI consolidation v3.20: shared design system in assets/common.css?v=3.20.9"UTF-8">
+<!-- UI consolidation v3.20: shared design system in assets/common.css -->
+<meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 4ΕΑ/2025 για εκπαιδευτικούς Ειδικής Αγωγής κατηγορίας ΤΕ (ΤΕ01, ΤΕ02, ΤΕ16).">
   <title>Υπολογισμός μορίων 4ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9">
+<link rel="stylesheet" href="assets/common.css?v=3.20.10">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea4">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -626,6 +627,6 @@
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9"></script>
+  <script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

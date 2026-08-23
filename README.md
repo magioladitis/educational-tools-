@@ -1,11 +1,12 @@
-# Final CSS delta — v3.20.9-rc1
+# v3.20.10 header hotfix
 
-Use this if Batch 1–3 have already been applied.
+Fixes a malformed, unclosed HTML comment introduced in v3.20.9 in five calculator pages. The malformed line caused browsers to treat the remainder of each document as an HTML comment, producing a blank white page even though PHP executed successfully.
 
-Upload these four production files:
-- `dikaioma-symmetoxis.php`
-- `ypologismos-morion.php`
-- `dikaiologitika-tekna-anapiria.php`
-- `assets/common.css`
+Affected files:
+- ypologismos-morion.php
+- ypologismos-morion-1ea-2025.php
+- ypologismos-morion-1gt-2024.php
+- ypologismos-morion-2ea-2025.php
+- ypologismos-morion-4ea-2025.php
 
-The latter two PHP files were discovered by the final 22/22 audit to contain one small residual `<style>` block each.
+No calculation/business logic or CSS content changed. Shared asset query strings are cache-busted to v3.20.10 in the complete production package.
