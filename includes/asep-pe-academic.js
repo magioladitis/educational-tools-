@@ -34,7 +34,7 @@
 
   function sync(containerRef){
     var container=getContainer(containerRef); if(!container)return null;
-    var profile=profileOf(container), specialty=valueOf(specialtyId(container));
+    var profile=profileOf(container), specialty=global.EducationCore.normalizeSpecialtyCode(valueOf(specialtyId(container)));
     var computer=byId(computerId(container));
     if(computer){
       var excluded=specialty==='ΠΕ86'; computer.disabled=excluded;
@@ -55,7 +55,7 @@
     var profile=profileOf(container);
     var languages=global.AsepLanguageSelector?global.AsepLanguageSelector.calculate(languageId(container)):{points:0,details:[],warnings:[]};
     var state={
-      profile:profile, specialty:valueOf(specialtyId(container)), degreeGrade:valueOf(degreeId(container)),
+      profile:profile, specialty:global.EducationCore.normalizeSpecialtyCode(valueOf(specialtyId(container))), degreeGrade:valueOf(degreeId(container)),
       secondDegree:yes(secondDegreeId(container)), phd:yes(phdId(container)),
       mscCount:parseInt(valueOf(mscId(container)),10)||0, languages:languages,
       computer:yes(computerId(container)), training:yes(trainingId(container)), eaePe11Specialization:false

@@ -41,10 +41,10 @@
   }
 
   function branchFamily(value) {
-    var v = String(value || '').toUpperCase();
-    if (v.indexOf('TE16') === 0 || v.indexOf('ΤΕ16') === 0) return 'TE16';
-    if (v.indexOf('TE01') === 0 || v.indexOf('ΤΕ01') === 0) return 'TE01';
-    if (v.indexOf('TE02') === 0 || v.indexOf('ΤΕ02') === 0) return 'TE02';
+    var v = global.EducationCore.normalizeSpecialtyCode(value);
+    if (v.indexOf('ΤΕ16') === 0) return 'TE16';
+    if (v.indexOf('ΤΕ01') === 0) return 'TE01';
+    if (v.indexOf('ΤΕ02') === 0) return 'TE02';
     return '';
   }
 

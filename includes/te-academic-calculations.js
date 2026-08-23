@@ -37,16 +37,17 @@
       computerPoints +
       trainingPoints;
 
-    return {
+    const points = cap(raw, 120);
+    const warnings = raw > 120 ? ['Στα Ακαδημαϊκά Προσόντα εφαρμόστηκε το ανώτατο όριο των 120 μορίων.'] : [];
+    return global.EducationCore.createScoreResult(raw, points, {
       normalizedGrade,
       degreePoints,
       secondTitlePoints,
       languagePoints,
       computerPoints,
       trainingPoints,
-      raw,
-      points: cap(raw, 120)
-    };
+      warnings
+    }, { raw: true });
   }
 
   global.TEAcademic = Object.freeze({

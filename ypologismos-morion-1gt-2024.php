@@ -84,10 +84,10 @@ renderAsepTeAcademic(array(
 
 <?php
 renderAsepThreeMonthService(array(
-    'regular_2020_id' => 'covid20Regular',
-    'difficult_2020_id' => 'covid20Difficult',
-    'regular_2021_id' => 'covid21Regular',
-    'difficult_2021_id' => 'covid21Difficult'
+    'regular_2020_id' => 'threeMonthRegular2020',
+    'difficult_2020_id' => 'threeMonthDifficult2020',
+    'regular_2021_id' => 'threeMonthRegular2021',
+    'difficult_2021_id' => 'threeMonthDifficult2021'
 ));
 ?>
 
@@ -162,16 +162,16 @@ renderAsepSocialCriteria(array(
   <div class="credits">Υλοποίηση / επεξεργασία: Μάριος Μαγιολαδίτης</div>
 </div>
 
-<script src="includes/service-calculations.js?v=3.20.26"></script>
+<script src="includes/service-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
-<script src="includes/social-calculations.js?v=3.20.26"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.26"></script>
-<script src="includes/language-calculations.js?v=3.20.24"></script>
-<script src="includes/asep-language-selector.js?v=3.20.24"></script>
-<script src="includes/te-academic-calculations.js?v=3.20.27"></script>
+<script src="includes/social-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-social-criteria.js?v=3.20.31"></script>
+<script src="includes/language-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-language-selector.js?v=3.20.31"></script>
+<script src="includes/te-academic-calculations.js?v=3.20.31"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script src="includes/asep-computer-proof.js?v=3.20.27"></script>
-<script src="includes/asep-te-academic.js?v=3.20.27"></script>
+<script src="includes/asep-te-academic.js?v=3.20.31"></script>
 <script>
 (function(){
   "use strict";
@@ -188,8 +188,8 @@ renderAsepSocialCriteria(array(
     const academic=AsepTeAcademic.getState('asepTeAcademic',fmt);
     const academicResult=academic.result, languages=academic.languages;
     const service=serviceResult(),social=socialResult();
-    const total=academicResult.points+service.points+social.total;
-    $('grandTotal').textContent=fmt(total);$('resAcademic').textContent=`${fmt(academicResult.points)} / 120`;$('resService').textContent=`${fmt(service.points)} / 120`;$('resSocial').textContent=fmt(social.total);
+    const total=academicResult.points+service.points+social.points;
+    $('grandTotal').textContent=fmt(total);$('resAcademic').textContent=`${fmt(academicResult.points)} / 120`;$('resService').textContent=`${fmt(service.points)} / 120`;$('resSocial').textContent=fmt(social.points);
     $('resDegree').textContent=fmt(academicResult.degreePoints);$('resLanguage').textContent=fmt(languages.points);$('resChildren').textContent=fmt(social.childrenPoints);$('resDisability').textContent=fmt(social.disabilityPoints);
 
 
@@ -200,11 +200,11 @@ renderAsepSocialCriteria(array(
   function languageSummary(v){const item=v.languages.accepted[0];return item?`${item.label} — ${fmt(v.languages.points)} μόρια`:'δεν δηλώθηκε';}
   function summary(v){return[
     'Υπολογισμός μορίων 1ΓΤ/2024',`Σύνολο: ${fmt(v.total)}`,`Ακαδημαϊκά: ${fmt(v.academic.points)} / 120`,`Προϋπηρεσία: ${fmt(v.service.points)} / 120`,
-    `Κοινωνικά: ${fmt(v.social.total)}`,`Ξένη γλώσσα: ${languageSummary(v)}`,`Παιδαγωγική επάρκεια: ${v.ped?'ΝΑΙ — ΠΡΟΤΑΞΗ':'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
+    `Κοινωνικά: ${fmt(v.social.points)}`,`Ξένη γλώσσα: ${languageSummary(v)}`,`Παιδαγωγική επάρκεια: ${v.ped?'ΝΑΙ — ΠΡΟΤΑΞΗ':'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
     AsepTeAcademic.trainingSummary('asepTeAcademic'),'','Ενδεικτικός υπολογισμός βάσει της Προκήρυξης ΑΣΕΠ 1ΓΤ/2024.'
   ].filter((x,i,a)=>x!==''||a[i-1]!=='').join('\n');}
 
-  ['regularMonths','difficultMonths','covid20Regular','covid20Difficult','covid21Regular','covid21Difficult'].forEach(id=>{
+  ['regularMonths','difficultMonths','threeMonthRegular2020','threeMonthDifficult2020','threeMonthRegular2021','threeMonthDifficult2021'].forEach(id=>{
     const el=$(id);el.addEventListener('input',()=>{if(el.value==='')return;let value=Math.max(0,Math.floor(Number(el.value)||0));const max=el.getAttribute('max');if(max!==null&&max!=='')value=Math.min(value,Number(max));el.value=value;});
   });
   document.addEventListener('input',calc);document.addEventListener('change',calc);

@@ -73,7 +73,7 @@
     }
     if (subtotalId) {
       const subtotal = document.getElementById(subtotalId);
-      if (subtotal) subtotal.textContent = fmt(result.total);
+      if (subtotal) subtotal.textContent = fmt(result.points);
     }
     return result;
   }

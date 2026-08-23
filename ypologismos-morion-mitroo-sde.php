@@ -145,7 +145,7 @@
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
-<script src="includes/sde-registry-calculations.js?v=3.20.4"></script>
+<script src="includes/sde-registry-calculations.js?v=3.20.31"></script>
 <script>
 const $=id=>document.getElementById(id); const val=id=>$(id)?.value||''; const checked=id=>!!$(id)?.checked;
 const fmt=x=>Number(x||0).toLocaleString('el-GR',{maximumFractionDigits:2,minimumFractionDigits:Number.isInteger(Number(x||0))?0:1});

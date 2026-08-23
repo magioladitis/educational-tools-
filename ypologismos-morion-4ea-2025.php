@@ -69,7 +69,7 @@
             'part' => 'degree-details',
             'id' => 'asepTeAcademic',
             'branch_id' => 'branch',
-            'extra_training_ids' => array('auxSeminar400'),
+            'extra_training_ids' => array('seminar400'),
             'degree_placeholder_20' => 'π.χ. 15,40'
         )); ?>
       </section>
@@ -95,8 +95,8 @@
         <div class="note">Για τον Επικουρικό Πίνακα αρκεί <strong>ένα από τα τρία</strong> παρακάτω κριτήρια.</div>
 
         <div class="checkrow">
-          <input type="checkbox" id="auxSeminar400" data-eae-aux="seminar400">
-          <label for="auxSeminar400">Σεμινάριο εξειδίκευσης στην Ε.Α.Ε. ≥400 ωρών και διάρκειας ≥7 μηνών
+          <input type="checkbox" id="seminar400" data-eae-aux="seminar400">
+          <label for="seminar400">Σεμινάριο εξειδίκευσης στην Ε.Α.Ε. ≥400 ωρών και διάρκειας ≥7 μηνών
             <small>Α.Ε.Ι. ή εποπτευόμενος φορέας του δημόσιου τομέα.</small>
           </label>
         </div>
@@ -137,7 +137,7 @@ renderAsepTeAcademic(array(
     'part' => 'qualifications',
     'id' => 'asepTeAcademic',
     'training_context' => '4ea-2025-general-300h-or-eae-400h-7m',
-    'extra_training_ids' => array('auxSeminar400'),
+    'extra_training_ids' => array('seminar400'),
     'training_help_suffix' => 'Το σεμινάριο Ε.Α.Ε. ≥400 ωρών του Επικουρικού καλύπτει και αυτό το κριτήριο.'
 ));
 ?>
@@ -170,10 +170,10 @@ renderAsepTeAcademic(array(
 
 <?php
 renderAsepThreeMonthService(array(
-    'regular_2020_id' => 'covid20Regular',
-    'difficult_2020_id' => 'covid20Difficult',
-    'regular_2021_id' => 'covid21Regular',
-    'difficult_2021_id' => 'covid21Difficult'
+    'regular_2020_id' => 'threeMonthRegular2020',
+    'difficult_2020_id' => 'threeMonthDifficult2020',
+    'regular_2021_id' => 'threeMonthRegular2021',
+    'difficult_2021_id' => 'threeMonthDifficult2021'
 ));
 ?>
 
@@ -255,18 +255,18 @@ renderAsepSocialCriteria(array(
   </section>
 </div>
 
-<script src="includes/service-calculations.js?v=3.20.26"></script>
+<script src="includes/service-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
-<script src="includes/social-calculations.js?v=3.20.26"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.26"></script>
-<script src="includes/eae-table-eligibility.js?v=3.20.28"></script>
+<script src="includes/social-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-social-criteria.js?v=3.20.31"></script>
+<script src="includes/eae-table-eligibility.js?v=3.20.31"></script>
 <script src="includes/asep-eae-eligibility.js?v=3.20.28"></script>
-<script src="includes/language-calculations.js?v=3.20.24"></script>
-<script src="includes/asep-language-selector.js?v=3.20.24"></script>
-<script src="includes/te-academic-calculations.js?v=3.20.27"></script>
+<script src="includes/language-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-language-selector.js?v=3.20.31"></script>
+<script src="includes/te-academic-calculations.js?v=3.20.31"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script src="includes/asep-computer-proof.js?v=3.20.27"></script>
-<script src="includes/asep-te-academic.js?v=3.20.27"></script>
+<script src="includes/asep-te-academic.js?v=3.20.31"></script>
 <script>
 (function(){
   "use strict";
@@ -300,12 +300,12 @@ renderAsepSocialCriteria(array(
     const eligibility=AsepEaeEligibility.getState('eaeEligibility',{socialResult:social});
     const tableCode=eligibility.code, tableLabel=eligibility.label, why=eligibility.why;
 
-    const total = academicResult.points + service.points + social.total;
+    const total = academicResult.points + service.points + social.points;
 
     $('grandTotal').textContent=fmt(total);
     $('resAcademic').textContent=`${fmt(academicResult.points)} / 120`;
     $('resService').textContent=`${fmt(service.points)} / 120`;
-    $('resSocial').textContent=fmt(social.total);
+    $('resSocial').textContent=fmt(social.points);
     $('resDegree').textContent=fmt(academicResult.degreePoints);
     $('resLanguage').textContent=fmt(languages.points);
     $('resChildren').textContent=fmt(social.childrenPoints);
@@ -335,7 +335,7 @@ renderAsepSocialCriteria(array(
       `Ακαδημαϊκά: ${fmt(v.academicResult.points)} / 120`,
       `Ξένη γλώσσα: ${fmt(v.languages.points)}`,
       `Προϋπηρεσία: ${fmt(v.service.points)} / 120`,
-      `Κοινωνικά: ${fmt(v.social.total)}`,
+      `Κοινωνικά: ${fmt(v.social.points)}`,
       `Πίνακας Ε.Α.Ε.: ${v.tableLabel}`,
       v.why,
       `Παιδαγωγική επάρκεια: ${v.ped?'ΝΑΙ — ΠΡΟΤΑΞΗ':'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
@@ -346,7 +346,7 @@ renderAsepSocialCriteria(array(
 
   function sanitizeIntegerInput(el){
     if(!el) return;
-    const ids=['regularMonths','difficultMonths','covid20Regular','covid20Difficult','covid21Regular','covid21Difficult','privateMonths','eaeMonths','children'];
+    const ids=['regularMonths','difficultMonths','threeMonthRegular2020','threeMonthDifficult2020','threeMonthRegular2021','threeMonthDifficult2021','privateMonths','eaeMonths','children'];
     if(!ids.includes(el.id) || el.value==='') return;
     let value=Math.max(0,Math.floor(Number(el.value)||0));
     const max=el.getAttribute('max');

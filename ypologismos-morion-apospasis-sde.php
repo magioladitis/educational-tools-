@@ -212,9 +212,9 @@
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
 
-<script src="includes/language-calculations.js?v=3.20.25"></script>
-<script src="includes/asep-language-selector.js?v=3.20.27"></script>
-<script src="includes/sde-calculations.js?v=3.17"></script>
+<script src="includes/language-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-language-selector.js?v=3.20.31"></script>
+<script src="includes/sde-calculations.js?v=3.20.31"></script>
 <script>
   const $ = id => document.getElementById(id);
   const yes = id => $(id).value === 'yes';

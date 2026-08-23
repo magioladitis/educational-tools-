@@ -159,7 +159,8 @@
 
   function calculateOther(data) {
     const languages = calculateLanguages(data);
-    const pe86BasicDegree = data.role === 'educator' && data.specialty === 'PE86';
+    const specialty = global.EducationCore.normalizeSpecialtyCode(data.specialty);
+    const pe86BasicDegree = data.role === 'educator' && specialty === 'ΠΕ86';
     const computer = (!pe86BasicDegree && data.computer) ? 2 : 0;
     const details = languages.details.slice();
     const warnings = languages.warnings.slice();
@@ -198,23 +199,24 @@
   }
 
   function educatorAssignments(specialty) {
+    specialty = global.EducationCore.normalizeSpecialtyCode(specialty);
     const out=[];
     const add=(literacy,assignment)=>out.push({literacy,assignment});
-    if (specialty==='PE02'){add('Ελληνική Γλώσσα','Α΄ ανάθεση');add('Κοινωνική Εκπαίδευση','Β΄ ανάθεση');add('Πολιτισμική–Αισθητική Αγωγή','Β΄ ανάθεση');}
-    if (specialty==='PE03'){add('Μαθηματικά','Α΄ ανάθεση');add('Φυσικές Επιστήμες','Β΄ ανάθεση');}
-    if (['PE04.01','PE04.02','PE04.03','PE04.04','PE04.05'].includes(specialty)){add('Μαθηματικά','Β΄ ανάθεση');add('Φυσικές Επιστήμες','Α΄ ανάθεση');}
-    if (['PE04.01','PE04.02','PE04.03','PE04.04'].includes(specialty)){add('Περιβαλλοντική Εκπαίδευση','Β΄ ανάθεση');}
-    if (specialty==='PE04.05'){add('Περιβαλλοντική Εκπαίδευση','Α΄ ανάθεση');}
-    if (specialty==='PE86'){add('Πληροφορική','Α΄ ανάθεση');add('Μαθηματικά','Β΄ ανάθεση');}
-    if (specialty==='PE06') add('Αγγλική Γλώσσα','Α΄ ανάθεση');
-    if (specialty==='PE78') add('Κοινωνική Εκπαίδευση','Α΄ ανάθεση');
-    if (['PE01','PE80'].includes(specialty)) add('Κοινωνική Εκπαίδευση','Β΄ ανάθεση');
-    if (specialty==='PE85'){add('Φυσικές Επιστήμες','Α΄ ανάθεση');add('Περιβαλλοντική Εκπαίδευση','Β΄ ανάθεση');}
-    if (['PE87.01'].includes(specialty)) add('Φυσικές Επιστήμες','Β΄ ανάθεση');
-    if (specialty==='PE88.01'){add('Φυσικές Επιστήμες','Β΄ ανάθεση');add('Περιβαλλοντική Εκπαίδευση','Α΄ ανάθεση');}
-    if (specialty==='PE88.05') add('Περιβαλλοντική Εκπαίδευση','Α΄ ανάθεση');
-    if (['PE08','PE79.01','PE89.01','PE91'].includes(specialty)) add('Πολιτισμική–Αισθητική Αγωγή','Α΄ ανάθεση');
-    if (specialty==='TE16') add('Πολιτισμική–Αισθητική Αγωγή','Β΄ ανάθεση');
+    if (specialty==='ΠΕ02'){add('Ελληνική Γλώσσα','Α΄ ανάθεση');add('Κοινωνική Εκπαίδευση','Β΄ ανάθεση');add('Πολιτισμική–Αισθητική Αγωγή','Β΄ ανάθεση');}
+    if (specialty==='ΠΕ03'){add('Μαθηματικά','Α΄ ανάθεση');add('Φυσικές Επιστήμες','Β΄ ανάθεση');}
+    if (['ΠΕ04.01','ΠΕ04.02','ΠΕ04.03','ΠΕ04.04','ΠΕ04.05'].includes(specialty)){add('Μαθηματικά','Β΄ ανάθεση');add('Φυσικές Επιστήμες','Α΄ ανάθεση');}
+    if (['ΠΕ04.01','ΠΕ04.02','ΠΕ04.03','ΠΕ04.04'].includes(specialty)){add('Περιβαλλοντική Εκπαίδευση','Β΄ ανάθεση');}
+    if (specialty==='ΠΕ04.05'){add('Περιβαλλοντική Εκπαίδευση','Α΄ ανάθεση');}
+    if (specialty==='ΠΕ86'){add('Πληροφορική','Α΄ ανάθεση');add('Μαθηματικά','Β΄ ανάθεση');}
+    if (specialty==='ΠΕ06') add('Αγγλική Γλώσσα','Α΄ ανάθεση');
+    if (specialty==='ΠΕ78') add('Κοινωνική Εκπαίδευση','Α΄ ανάθεση');
+    if (['ΠΕ01','ΠΕ80'].includes(specialty)) add('Κοινωνική Εκπαίδευση','Β΄ ανάθεση');
+    if (specialty==='ΠΕ85'){add('Φυσικές Επιστήμες','Α΄ ανάθεση');add('Περιβαλλοντική Εκπαίδευση','Β΄ ανάθεση');}
+    if (['ΠΕ87.01'].includes(specialty)) add('Φυσικές Επιστήμες','Β΄ ανάθεση');
+    if (specialty==='ΠΕ88.01'){add('Φυσικές Επιστήμες','Β΄ ανάθεση');add('Περιβαλλοντική Εκπαίδευση','Α΄ ανάθεση');}
+    if (specialty==='ΠΕ88.05') add('Περιβαλλοντική Εκπαίδευση','Α΄ ανάθεση');
+    if (['ΠΕ08','ΠΕ79.01','ΠΕ89.01','ΠΕ91'].includes(specialty)) add('Πολιτισμική–Αισθητική Αγωγή','Α΄ ανάθεση');
+    if (specialty==='ΤΕ16') add('Πολιτισμική–Αισθητική Αγωγή','Β΄ ανάθεση');
     return out;
   }
 

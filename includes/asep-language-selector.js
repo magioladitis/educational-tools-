@@ -163,7 +163,7 @@
 
   function specialtyValue(container) {
     const specialty = byId(container.dataset.specialtyId || '');
-    return specialty ? specialty.value : '';
+    return specialty ? global.EducationCore.normalizeSpecialtyCode(specialty.value) : '';
   }
 
   function ownExcludedLanguage(container) {
@@ -281,7 +281,7 @@
   function calculate(containerRef) {
     const container = getContainer(containerRef);
     if (!container) {
-      return { points: 0, raw: 0, accepted: [], details: [], warnings: [] };
+      return global.EducationCore.createScoreResult(0, 0, { accepted: [], details: [], warnings: [] }, { raw: true });
     }
     return EducationLanguages.calculate(
       container.dataset.profile || 'pe',

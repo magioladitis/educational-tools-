@@ -21,7 +21,7 @@
   }
 
   function manualAcademicMin(specialty) {
-    return specialty === 'ΤΕ16' ? MANUAL_ACADEMIC_MIN_TE16 : MANUAL_ACADEMIC_MIN_PE;
+    return global.EducationCore.normalizeSpecialtyCode(specialty) === 'ΤΕ16' ? MANUAL_ACADEMIC_MIN_TE16 : MANUAL_ACADEMIC_MIN_PE;
   }
 
   function validateManualAcademicPoints(value, specialty) {

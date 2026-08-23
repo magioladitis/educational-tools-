@@ -222,20 +222,17 @@
       warnings.push("Η μοριοδότηση προϋπηρεσίας περιορίστηκε στο ανώτατο όριο των 120 μορίων.");
     }
 
-    return {
+    return global.EducationCore.createScoreResult(total.rawPoints, total.points, {
       parts: parts,
-      raw: total.raw,
-      rawPoints: total.raw,
-      points: total.points,
       months: monthsTotal,
-      capped: total.raw > RULES.totalMaxPoints,
+      capped: total.rawPoints > RULES.totalMaxPoints,
       warnings: warnings
-    };
+    }, { raw: true });
   }
 
   function cappedTotal(values) {
     const raw = values.reduce((sum, value) => sum + (Number(value) || 0), 0);
-    return { raw, points: Math.min(raw, RULES.totalMaxPoints) };
+    return global.EducationCore.createScoreResult(raw, Math.min(raw, RULES.totalMaxPoints), {}, { raw: true });
   }
 
   global.EducationService = Object.freeze({

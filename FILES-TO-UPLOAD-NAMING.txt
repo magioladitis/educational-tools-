@@ -1,0 +1,10 @@
+Naming-consistency normalization — production files to upload
+
+1. ypologismos-morion.php
+2. ypologismos-morion-1ea-2025.php
+3. ypologismos-morion-2ea-2025.php
+4. ypologismos-morion-3ea-2025.php
+5. ypologismos-morion-1gt-2024.php
+6. ypologismos-morion-4ea-2025.php
+
+No shared JS/PHP component and no CSS file changed in this naming-only batch.

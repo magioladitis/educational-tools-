@@ -223,7 +223,7 @@
     </div>
 </main>
 
-  <script src="includes/language-calculations.js"></script>
+  <script src="includes/language-calculations.js?v=3.20.31"></script>
   <script>
     (function(){
       const MAX = {

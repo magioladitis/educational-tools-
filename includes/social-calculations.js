@@ -79,7 +79,8 @@
     const highestDisabilityPercent = highest ? highest.percent : 0;
     const disabilityPoints = highestDisabilityPercent * RULES.disabilityRate;
 
-    return {
+    const totalPoints = childrenPoints + disabilityPoints;
+    return global.EducationCore.createScoreResult(totalPoints, totalPoints, {
       children,
       childrenPoints,
       candidatePercent,
@@ -92,10 +93,9 @@
       highestLabel: highest ? highest.label : "",
       highestDisabilityPercent,
       disabilityPoints,
-      total: childrenPoints + disabilityPoints,
       childDisability67: childPercent >= RULES.auxiliaryChildDisabilityPercent,
       warnings
-    };
+    }, { total: true });
   }
 
   global.EducationSocial = Object.freeze({

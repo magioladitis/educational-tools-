@@ -29,11 +29,11 @@
   });
 
   const OWN_LANGUAGE_BY_SPECIALTY = Object.freeze({
-    'ΠΕ05': 'fr', 'PE05': 'fr',
-    'ΠΕ06': 'en', 'PE06': 'en',
-    'ΠΕ07': 'de', 'PE07': 'de',
-    'ΠΕ34': 'it', 'PE34': 'it',
-    'ΠΕ40': 'es', 'PE40': 'es'
+    'ΠΕ05': 'fr',
+    'ΠΕ06': 'en',
+    'ΠΕ07': 'de',
+    'ΠΕ34': 'it',
+    'ΠΕ40': 'es'
   });
 
   // Prevent bypassing duplicate / branch-language rules through "Άλλη γλώσσα".
@@ -178,15 +178,13 @@
 
     const accepted = Array.from(byLanguage.values());
     const raw = accepted.reduce(function (sum, item) { return sum + item.points; }, 0);
-    return {
-      raw: raw,
-      points: Math.min(raw, cap),
+    return global.EducationCore.createScoreResult(raw, Math.min(raw, cap), {
       accepted: accepted,
       warnings: warnings,
       duplicates: duplicates,
       excludedEntries: excludedEntries,
       missingLanguage: missingLanguage
-    };
+    }, { raw: true });
   }
 
   function getProfile(profileName) {
@@ -213,7 +211,7 @@
   function calculate(profileName, entries, options) {
     const profile = getProfile(profileName);
     const opts = options || {};
-    const specialty = String(opts.specialty || '');
+    const specialty = global.EducationCore.normalizeSpecialtyCode(opts.specialty || '');
     const ownLanguage = profile.excludeOwnSpecialtyLanguage
       ? (OWN_LANGUAGE_BY_SPECIALTY[specialty] || '')
       : '';
@@ -275,12 +273,10 @@
       return positionPrefix + item.label + ' - ' + item.levelLabel + ': ' + item.points + ' μόρια';
     });
 
-    return {
+    return global.EducationCore.createScoreResult(raw, points, {
       profile: String(profileName),
       scoringMode: profile.scoringMode,
       maxLanguages: profile.maxLanguages,
-      raw: raw,
-      points: points,
       accepted: accepted,
       details: details,
       warnings: warnings,
@@ -289,7 +285,7 @@
       missingLanguage: base.missingLanguage,
       ignoredByLimit: ignoredByLimit,
       excludedLanguage: ownLanguage
-    };
+    }, { raw: true });
   }
 
   global.EducationLanguages = Object.freeze({

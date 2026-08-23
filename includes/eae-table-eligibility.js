@@ -43,7 +43,7 @@
   function calculate(config){
     config = config || {};
     const profile = config.profile === 'te' ? 'te' : 'pe';
-    const specialty = text(config.specialty);
+    const specialty = global.EducationCore.normalizeSpecialtyCode(text(config.specialty));
     const main = config.main || {};
     const aux = config.aux || {};
     const ui = labels(profile);

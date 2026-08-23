@@ -199,9 +199,10 @@
 
   function calculateOther(data) {
     const language = calculateLanguages(data);
-    const computer = (data.computer || data.specialty === 'PE86') ? 2 : 0;
+    const specialty = global.EducationCore.normalizeSpecialtyCode(data.specialty);
+    const computer = (data.computer || specialty === 'ΠΕ86') ? 2 : 0;
     const details = language.details.slice();
-    if (computer) details.push({ label: data.specialty === 'PE86' ? 'Γνώσεις Η/Υ (τεκμαίρονται για ΠΕ86)' : 'Γνώσεις χειρισμού Η/Υ / ΤΠΕ Α΄ επιπέδου', points: 2 });
+    if (computer) details.push({ label: specialty === 'ΠΕ86' ? 'Γνώσεις Η/Υ (τεκμαίρονται για ΠΕ86)' : 'Γνώσεις χειρισμού Η/Υ / ΤΠΕ Α΄ επιπέδου', points: 2 });
     return {
       languagePoints: language.points,
       computerPoints: computer,
@@ -212,29 +213,30 @@
   }
 
   function assignmentsFor(specialty, flags) {
+    specialty = global.EducationCore.normalizeSpecialtyCode(specialty);
     flags = flags || {};
     const result = [];
     const add = (literacy, assignment, note) => result.push({ literacy, assignment, note: note || '' });
 
-    if (specialty === 'PE02') {
+    if (specialty === 'ΠΕ02') {
       add('Ελληνική Γλώσσα', 'Α΄ ανάθεση');
       add('Κοινωνική Εκπαίδευση', 'Β΄ ανάθεση');
     }
-    if (specialty === 'PE03') {
+    if (specialty === 'ΠΕ03') {
       add('Μαθηματικά', 'Α΄ ανάθεση');
       add('Επιστημονικός Γραμματισμός', 'Β΄ ανάθεση');
     }
-    if (['PE04.01','PE04.02','PE04.03','PE04.04','PE04.05'].includes(specialty)) {
+    if (['ΠΕ04.01','ΠΕ04.02','ΠΕ04.03','ΠΕ04.04','ΠΕ04.05'].includes(specialty)) {
       if (flags.mathOrInformaticsDegree) {
         add('Μαθηματικά', 'Β΄ ανάθεση', 'Το ΦΕΚ αναφέρει την προϋπόθεση «με πτυχίο Μαθηματικών ή Πληροφορικής».');
       } else {
         add('Μαθηματικά', 'Β΄ ανάθεση υπό προϋπόθεση', 'Απαιτείται η προϋπόθεση πτυχίου που αναγράφεται στο ΦΕΚ.');
       }
       add('Επιστημονικός Γραμματισμός', 'Α΄ ανάθεση');
-      if (specialty === 'PE04.05') add('Περιβαλλοντική Εκπαίδευση', 'Α΄ ανάθεση');
-      if (['PE04.01','PE04.02','PE04.03','PE04.04'].includes(specialty)) add('Περιβαλλοντική Εκπαίδευση', 'Β΄ ανάθεση');
+      if (specialty === 'ΠΕ04.05') add('Περιβαλλοντική Εκπαίδευση', 'Α΄ ανάθεση');
+      if (['ΠΕ04.01','ΠΕ04.02','ΠΕ04.03','ΠΕ04.04'].includes(specialty)) add('Περιβαλλοντική Εκπαίδευση', 'Β΄ ανάθεση');
     }
-    if (specialty === 'PE86') {
+    if (specialty === 'ΠΕ86') {
       add('Πληροφορική', 'Α΄ ανάθεση');
       if (flags.mathOrInformaticsDegree) {
         add('Μαθηματικά', 'Β΄ ανάθεση', 'Το ΦΕΚ αναφέρει την προϋπόθεση «με πτυχίο Μαθηματικών ή Πληροφορικής».');
@@ -242,23 +244,23 @@
         add('Μαθηματικά', 'Β΄ ανάθεση υπό προϋπόθεση', 'Απαιτείται η προϋπόθεση πτυχίου που αναγράφεται στο ΦΕΚ.');
       }
     }
-    if (specialty === 'PE06') add('Αγγλική Γλώσσα', 'Α΄ ανάθεση');
-    if (specialty === 'PE78') add('Κοινωνική Εκπαίδευση', 'Α΄ ανάθεση');
-    if (specialty === 'PE01') add('Κοινωνική Εκπαίδευση', 'Β΄ ανάθεση');
-    if (specialty === 'PE80') {
+    if (specialty === 'ΠΕ06') add('Αγγλική Γλώσσα', 'Α΄ ανάθεση');
+    if (specialty === 'ΠΕ78') add('Κοινωνική Εκπαίδευση', 'Α΄ ανάθεση');
+    if (specialty === 'ΠΕ01') add('Κοινωνική Εκπαίδευση', 'Β΄ ανάθεση');
+    if (specialty === 'ΠΕ80') {
       add('Κοινωνική Εκπαίδευση', 'Β΄ ανάθεση', flags.formerPE09or15 ? 'Προτεραιότητα λόγω πτυχίου που αντιστοιχεί σε πρώην ΠΕ09/ΠΕ15.' : 'Προτεραιότητα δίνεται σε πτυχία που αντιστοιχούν σε πρώην ΠΕ09/ΠΕ15.');
     }
-    if (specialty === 'PE85') {
+    if (specialty === 'ΠΕ85') {
       add('Επιστημονικός Γραμματισμός', 'Α΄ ανάθεση', flags.formerPE1208 ? 'Προτεραιότητα λόγω πτυχίου πρώην ΠΕ12.08.' : 'Προτεραιότητα δίνεται σε πτυχία που αντιστοιχούν σε πρώην ΠΕ12.08.');
       add('Περιβαλλοντική Εκπαίδευση', 'Β΄ ανάθεση', flags.formerPE1208 ? 'Προτεραιότητα λόγω πτυχίου πρώην ΠΕ12.08.' : 'Προτεραιότητα δίνεται σε πτυχία που αντιστοιχούν σε πρώην ΠΕ12.08.');
     }
-    if (specialty === 'PE87.01') add('Επιστημονικός Γραμματισμός', 'Β΄ ανάθεση');
-    if (specialty === 'PE88.01') {
+    if (specialty === 'ΠΕ87.01') add('Επιστημονικός Γραμματισμός', 'Β΄ ανάθεση');
+    if (specialty === 'ΠΕ88.01') {
       add('Επιστημονικός Γραμματισμός', 'Β΄ ανάθεση');
       add('Περιβαλλοντική Εκπαίδευση', 'Α΄ ανάθεση');
     }
-    if (specialty === 'PE88.05') add('Περιβαλλοντική Εκπαίδευση', 'Α΄ ανάθεση');
-    if (specialty === 'PE70') add('Τμήματα προετοιμασίας για απολυτήριο Δημοτικού', 'Ειδική πρόβλεψη άρθρου 5');
+    if (specialty === 'ΠΕ88.05') add('Περιβαλλοντική Εκπαίδευση', 'Α΄ ανάθεση');
+    if (specialty === 'ΠΕ70') add('Τμήματα προετοιμασίας για απολυτήριο Δημοτικού', 'Ειδική πρόβλεψη άρθρου 5');
 
     return result;
   }

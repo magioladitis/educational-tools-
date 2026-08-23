@@ -74,16 +74,16 @@ renderAsepPeAcademic(array(
         <div class="note">Βάλε κάθε χρονικό διάστημα σε <strong>ένα μόνο</strong> αντίστοιχο πεδίο, ώστε να μη γίνει διπλή μέτρηση.</div>
 
         <div class="field-grid">
-          <div class="field"><label for="normalMonths">Δημόσια εκπαιδευτική προϋπηρεσία<small>1 μόριο/μήνα · έως 120 μήνες</small></label><input type="number" id="normalMonths" data-service-role="regular" min="0" max="120" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+          <div class="field"><label for="regularMonths">Δημόσια εκπαιδευτική προϋπηρεσία<small>1 μόριο/μήνα · έως 120 μήνες</small></label><input type="number" id="regularMonths" data-service-role="regular" min="0" max="120" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
           <div class="field"><label for="difficultMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–2021<small>2 μόρια/μήνα · έως 60 μήνες</small></label><input type="number" id="difficultMonths" data-service-role="difficult" min="0" max="60" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
         </div>
 
 <?php
 renderAsepThreeMonthService(array(
-    'regular_2020_id' => 'threeMonthMonths2020',
-    'difficult_2020_id' => 'threeMonthDifficultMonths2020',
-    'regular_2021_id' => 'threeMonthMonths2021',
-    'difficult_2021_id' => 'threeMonthDifficultMonths2021'
+    'regular_2020_id' => 'threeMonthRegular2020',
+    'difficult_2020_id' => 'threeMonthDifficult2020',
+    'regular_2021_id' => 'threeMonthRegular2021',
+    'difficult_2021_id' => 'threeMonthDifficult2021'
 ));
 ?>
 
@@ -153,17 +153,17 @@ renderAsepSocialCriteria(array(
   </section>
 </div>
 
-<script src="includes/academic-calculations.js?v=3.20.24"></script>
-<script src="includes/language-calculations.js?v=3.20.24"></script>
-<script src="includes/asep-language-selector.js?v=3.20.24"></script>
+<script src="includes/academic-calculations.js?v=3.20.31"></script>
+<script src="includes/language-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-language-selector.js?v=3.20.31"></script>
 <script src="includes/asep-computer-proof.js?v=3.20.25"></script>
 <script src="includes/training-proof.js?v=3.20.25"></script>
-<script src="includes/asep-pe-academic.js?v=3.20.25"></script>
-<script src="includes/service-calculations.js?v=3.20.26"></script>
+<script src="includes/asep-pe-academic.js?v=3.20.31"></script>
+<script src="includes/service-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
-<script src="includes/social-calculations.js?v=3.20.26"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.26"></script>
+<script src="includes/social-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-social-criteria.js?v=3.20.31"></script>
 <script>
   let lastResultText = "";
 
@@ -342,7 +342,7 @@ renderAsepSocialCriteria(array(
     warnings.push(...service.warnings);
 
     const socialResult = AsepSocialCriteria.getState("socialCriteria", formatPoints);
-    const socialTotal = socialResult.total;
+    const socialTotal = socialResult.points;
     const socialDetails = AsepSocialCriteria.details(socialResult, formatPoints);
     warnings.push(...socialResult.warnings);
 

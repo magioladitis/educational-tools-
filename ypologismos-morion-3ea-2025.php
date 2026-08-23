@@ -48,12 +48,12 @@
 </div>
 </section>
 
-<section id="asepPeAcademic" class="card" data-component="asep-pe-academic" data-profile="eae" data-degree-required="false" data-specialty-id="specialty" data-degree-id="degree" data-second-degree-id="secondDegree" data-phd-id="phd" data-msc-id="masters" data-language-id="asepLanguages" data-computer-id="computer" data-training-id="training" data-training-proof-id="trainingProof" data-phd-overlay-id="phdEae" data-msc-overlay-id="masterEae" data-training-overlay-id="seminar400" data-eae-pe11-special-id="pe11Qual" data-pe11-wrap-id="pe11QualWrap" data-pe6171-note-id="pe6171Auto">
+<section id="asepPeAcademic" class="card" data-component="asep-pe-academic" data-profile="eae" data-degree-required="false" data-specialty-id="specialty" data-degree-id="degreeGrade" data-second-degree-id="secondDegree" data-phd-id="phd" data-msc-id="mscCount" data-language-id="asepLanguages" data-computer-id="computer" data-training-id="training" data-training-proof-id="trainingProof" data-phd-overlay-id="phdEae" data-msc-overlay-id="masterEae" data-training-overlay-id="seminar400" data-eae-pe11-special-id="pe11Qual" data-pe11-wrap-id="pe11QualWrap" data-pe6171-note-id="pe6171Auto">
 <h2>2. Ακαδημαϊκά προσόντα</h2><p class="cap">Μέγιστο κατηγορίας Α: 120 μόρια.</p><div id="degreeValidation" class="note hidden">Ο βαθμός βασικού πτυχίου πρέπει να είναι από 5,00 έως 10,00.</div>
-<div class="field"><label for="degree">Βαθμός βασικού πτυχίου (5–10)<small>Βαθμός × 2,5 · ανώτατο 25.</small></label><input id="degree" type="number" min="5" max="10" step="0.01" value="" placeholder="π.χ. 7,50"></div>
+<div class="field"><label for="degreeGrade">Βαθμός βασικού πτυχίου (5–10)<small>Βαθμός × 2,5 · ανώτατο 25.</small></label><input id="degreeGrade" type="number" min="5" max="10" step="0.01" value="" placeholder="π.χ. 7,50"></div>
 <div class="check"><input type="checkbox" id="secondDegree"><label for="secondDegree">Δεύτερο πτυχίο ΑΕΙ <small>+7 μόρια, εφόσον δεν αποτελεί τυπικό προσόν διορισμού.</small></label></div>
 <div class="check"><input type="checkbox" id="phd"><label for="phd">Διδακτορικό δίπλωμα <small>+40 μόρια. Αν τσεκάρεις «Διδακτορικό ΕΑΕ» παραπάνω, ενεργοποιείται αυτόματα.</small></label></div>
-<div class="field"><label for="masters">Μεταπτυχιακοί τίτλοι / integrated master<small>1 τίτλος: 20 · 2 ή περισσότεροι: 28 συνολικά. Για ΠΕ61/ΠΕ71 το βασικό πτυχίο δίνει αυτοδικαίως 20 και με επιπλέον μεταπτυχιακό η σχετική μοριοδότηση γίνεται 28.</small></label><select id="masters"><option value="0">Κανένας</option><option value="1">Ένας</option><option value="2">Δύο ή περισσότεροι</option></select></div>
+<div class="field"><label for="mscCount">Μεταπτυχιακοί τίτλοι / integrated master<small>1 τίτλος: 20 · 2 ή περισσότεροι: 28 συνολικά. Για ΠΕ61/ΠΕ71 το βασικό πτυχίο δίνει αυτοδικαίως 20 και με επιπλέον μεταπτυχιακό η σχετική μοριοδότηση γίνεται 28.</small></label><select id="mscCount"><option value="0">Κανένας</option><option value="1">Ένας</option><option value="2">Δύο ή περισσότεροι</option></select></div>
 <div id="pe6171Auto" class="info hidden">ΠΕ61/ΠΕ71: προστίθενται αυτοδικαίως 20 μόρια λόγω βασικού πτυχίου Ειδικής Αγωγής· με έναν ή περισσότερους επιπλέον μεταπτυχιακούς, η συγκεκριμένη μοριοδότηση γίνεται 28.</div>
 
 <?php
@@ -92,15 +92,15 @@ HTML
 <h2>3. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο κατηγορίας Β: 120 μόρια. Δήλωσε τους μήνες χωρίς επικάλυψη μεταξύ των ειδικών κατηγοριών.</p>
 <div class="note"><strong>Σημείωση 3ΕΑ/2025:</strong> Στις γενικές κατηγορίες λαμβάνεται υπόψη η προϋπηρεσία σε ακέραιους μήνες.</div>
 <div class="note">Οι μήνες δυσπρόσιτων, τρίμηνων συμβάσεων και Ψηφιακού Φροντιστηρίου πρέπει να δηλώνονται στις αντίστοιχες ειδικές γραμμές και όχι ξανά ως κανονική δημόσια προϋπηρεσία.</div>
-<div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο ανά μήνα · έως 120 μήνες.</small></label><input id="publicMonths" class="service-months" data-service-role="regular" type="number" min="0" max="120" step="1" inputmode="numeric" value="0"></div>
-<div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια ανά μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" data-service-role="difficult" type="number" min="0" max="60" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="regularMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο ανά μήνα · έως 120 μήνες.</small></label><input id="regularMonths" class="service-months" data-service-role="regular" type="number" min="0" max="120" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="difficultMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια ανά μήνα · έως 60 μήνες.</small></label><input id="difficultMonths" class="service-months" data-service-role="difficult" type="number" min="0" max="60" step="1" inputmode="numeric" value="0"></div>
 
 <?php
 renderAsepThreeMonthService(array(
-    'regular_2020_id' => 'covid2020Months',
-    'difficult_2020_id' => 'covidHard2020Months',
-    'regular_2021_id' => 'covid2021Months',
-    'difficult_2021_id' => 'covidHard2021Months'
+    'regular_2020_id' => 'threeMonthRegular2020',
+    'difficult_2020_id' => 'threeMonthDifficult2020',
+    'regular_2021_id' => 'threeMonthRegular2021',
+    'difficult_2021_id' => 'threeMonthDifficult2021'
 ));
 ?>
 
@@ -133,13 +133,13 @@ renderAsepSocialCriteria(array(
 
 <section class="card">
 <h2>5. Προτάξεις / ειδικές προτεραιότητες</h2>
-<div class="check"><input type="checkbox" id="pde"><label for="pde">Πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια<small>Δεν προσθέτει μόρια· ο υποψήφιος προτάσσεται έναντι υποψηφίων που δεν τη διαθέτουν.</small></label></div>
+<div class="check"><input type="checkbox" id="pedagogical"><label for="pedagogical">Πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια<small>Δεν προσθέτει μόρια· ο υποψήφιος προτάσσεται έναντι υποψηφίων που δεν τη διαθέτουν.</small></label></div>
 <?php
 renderEaeSensoryPriority(array(
     'context' => '3ea-2025',
     'eng_enabled' => true,
     'braille_enabled' => true,
-    'eng_id' => 'sign',
+    'eng_id' => 'signLanguage',
     'braille_id' => 'braille'
 ));
 ?>
@@ -165,17 +165,17 @@ renderEaeSensoryPriority(array(
   <p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό και δεν υποκαθιστά τον επίσημο έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από το ΑΣΕΠ και τα αρμόδια όργανα.</p>
 </section>
 </div>
-<script src="includes/service-calculations.js?v=3.20.26"></script>
+<script src="includes/service-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
-<script src="includes/social-calculations.js?v=3.20.26"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.26"></script>
-<script src="includes/eae-table-eligibility.js?v=3.20.28"></script>
+<script src="includes/social-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-social-criteria.js?v=3.20.31"></script>
+<script src="includes/eae-table-eligibility.js?v=3.20.31"></script>
 <script src="includes/asep-eae-eligibility.js?v=3.20.28"></script>
-<script src="includes/language-calculations.js?v=3.20.24"></script>
-<script src="includes/asep-language-selector.js?v=3.20.24"></script>
-<script src="includes/academic-calculations.js?v=3.20.30"></script>
-<script src="includes/asep-pe-academic.js?v=3.20.30"></script>
+<script src="includes/language-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-language-selector.js?v=3.20.31"></script>
+<script src="includes/academic-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-pe-academic.js?v=3.20.31"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script>
 (function(){
@@ -184,13 +184,13 @@ renderEaeSensoryPriority(array(
  function calcSocial(){return AsepSocialCriteria.getState('socialCriteria',fmt);}
  function render(){
    TrainingProof.syncAll();
-   const degreeGrade=num('degree');
+   const degreeGrade=num('degreeGrade');
    const degreeInvalid=degreeGrade>0 && (degreeGrade<5 || degreeGrade>10);
    $('degreeValidation').classList.toggle('hidden', !degreeInvalid);
-   const academic=AsepPeAcademic.calculate('asepPeAcademic'), a=academic.points, b=calcService(), socialResult=calcSocial(), c=socialResult.total, t=a+b+c, e=AsepEaeEligibility.getState('eaeEligibility',{socialResult:socialResult});
+   const academic=AsepPeAcademic.calculate('asepPeAcademic'), a=academic.points, b=calcService(), socialResult=calcSocial(), c=socialResult.points, t=a+b+c, e=AsepEaeEligibility.getState('eaeEligibility',{socialResult:socialResult});
    $('grandTotal').textContent=fmt(t); $('resAcademic').textContent=fmt(a)+' / 120'; $('resService').textContent=fmt(b)+' / 120'; $('resSocial').textContent=fmt(c);
    $('tableStatus').className='status '+e.type; $('tableStatus').textContent=e.label; $('eligibilityWhy').innerHTML='<strong>Έλεγχος ένταξης</strong>'+e.why;
-   let p=[]; if($('pde').checked) p.push('Πρόταξη λόγω Παιδαγωγικής & Διδακτικής Επάρκειας'); if($('braille').checked) p.push('Προτεραιότητα Braille για μαθητές με προβλήματα όρασης'); if($('sign').checked) p.push('Προτεραιότητα Ε.Ν.Γ. για κωφούς/βαρήκοους μαθητές');
+   let p=[]; if($('pedagogical').checked) p.push('Πρόταξη λόγω Παιδαγωγικής & Διδακτικής Επάρκειας'); if($('braille').checked) p.push('Προτεραιότητα Braille για μαθητές με προβλήματα όρασης'); if($('signLanguage').checked) p.push('Προτεραιότητα Ε.Ν.Γ. για κωφούς/βαρήκοους μαθητές');
    $('priorities').innerHTML=p.map(x=>'<div class="priority">✓ '+x+'</div>').join('');
    return {a,b,c,t,e,p};
  }
@@ -213,7 +213,7 @@ renderEaeSensoryPriority(array(
  });
  document.addEventListener('change',e=>{
    sanitizeServiceMonthInput(e.target);
-   if(e.target && e.target.id==='degree' && e.target.value!==''){
+   if(e.target && e.target.id==='degreeGrade' && e.target.value!==''){
      let v=Number(String(e.target.value).replace(',', '.'));
      if(Number.isFinite(v)) e.target.value=String(Math.min(10,Math.max(5,v)));
      else e.target.value='';
@@ -222,7 +222,7 @@ renderEaeSensoryPriority(array(
  });
  $('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});
  document.addEventListener('asep-digital-tutoring-change',render);
- $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degree').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepPeAcademic.reset('asepPeAcademic',{silent:true});AsepServiceController.reset('asepService',{silent:true});render();});
+ $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degreeGrade').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepPeAcademic.reset('asepPeAcademic',{silent:true});AsepServiceController.reset('asepService',{silent:true});render();});
  render();
 })();
 </script>

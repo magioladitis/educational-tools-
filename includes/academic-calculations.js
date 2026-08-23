@@ -56,7 +56,7 @@
   function calculate(config) {
     config = config || {};
     const profile = normalizeProfile(config.profile);
-    const specialty = config.specialty || "";
+    const specialty = global.EducationCore.normalizeSpecialtyCode(config.specialty || "");
     const degreeGrade = number(config.degreeGrade);
     const degreeValid = degreeGrade >= 5 && degreeGrade <= 10;
     const degreeRequired = config.degreeRequired === undefined ? PROFILES[profile].degreeRequired : normalizeBoolean(config.degreeRequired);
@@ -134,12 +134,12 @@
     const points = Math.min(rawPoints, RULES.maxAcademicPoints);
     if (rawPoints > RULES.maxAcademicPoints) warnings.push("Στα Ακαδημαϊκά Προσόντα εφαρμόστηκε το ανώτατο όριο των 120 μορίων.");
 
-    return {
-      profile, points, rawPoints, degreeGrade, degreeValid, degreePoints, corePoints,
+    return global.EducationCore.createScoreResult(rawPoints, points, {
+      profile, degreeGrade, degreeValid, degreePoints, corePoints,
       mscCount, mscPoints, specialProfilePoints, languagePoints, computerPoints, trainingPoints,
       coreDetails, languageDetails, computerDetails, trainingDetails,
       details: coreDetails.concat(languageDetails, computerDetails, trainingDetails), warnings
-    };
+    }, { raw: true });
   }
 
   global.EducationAcademic = Object.freeze({ RULES, PROFILES, calculate });

@@ -1,0 +1,28 @@
+Core result contract + specialty normalization
+=============================================
+
+Regression / contract
+- PE academic: 20 PASS / 0 FAIL
+- TE academic: 19 PASS / 0 FAIL
+- Service/Social: 14 PASS / 0 FAIL
+- EducationCore/result contract: 43 PASS / 0 FAIL
+- PE controller specialty runtime stub: 5 PASS / 0 FAIL
+- Specialty normalization: 9 PASS / 0 FAIL
+
+Architecture
+- PE academic architecture: 24 PASS / 0 FAIL
+- TE academic architecture: 42 PASS / 0 FAIL
+- Naming contract: 66 PASS / 0 FAIL
+- Service/Social architecture: 67 PASS / 0 FAIL
+
+TOTAL: 309 PASS / 0 FAIL
+
+Syntax / integration
+- PHP: 36/36 PASS
+- JS: 25/25 PASS
+- PHP render: 24/24 PASS
+- Local dependency references: 155 checked, 0 missing
+- EducationCore load order: 0 failures
+- Duplicate real DOM ids: 0
+
+Chromium E2E: not claimed; Chromium itself currently times out in this container due unavailable DBus/system bus. Runtime controller behavior is covered by Node DOM stubs and full render/load-order checks.

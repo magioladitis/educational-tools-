@@ -143,13 +143,13 @@ renderAsepPeAcademic(array(
   <div id="result" class="result" role="status" aria-live="polite"></div>
 </div>
 
-<script src="includes/language-calculations.js?v=3.20.24"></script>
-<script src="includes/asep-language-selector.js?v=3.20.24"></script>
-<script src="includes/academic-calculations.js?v=3.20.24"></script>
+<script src="includes/language-calculations.js?v=3.20.31"></script>
+<script src="includes/asep-language-selector.js?v=3.20.31"></script>
+<script src="includes/academic-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-computer-proof.js?v=3.20.25"></script>
 <script src="includes/training-proof.js?v=3.20.25"></script>
-<script src="includes/asep-pe-academic.js?v=3.20.25"></script>
-<script src="includes/onaseia-calculations.js?v=3.20.4"></script>
+<script src="includes/asep-pe-academic.js?v=3.20.31"></script>
+<script src="includes/onaseia-calculations.js?v=3.20.31"></script>
 <script>
   let isLiveCalculation = false;
   const schoolYears = [];
