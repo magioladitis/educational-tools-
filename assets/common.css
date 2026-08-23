@@ -2581,3 +2581,71 @@ body.edu-ui .asep-computer-proof-note {
   body.edu-ui .asep-computer-proof-panel { padding:12px; }
   body.edu-ui .asep-computer-proof-details ol { margin-left:18px; }
 }
+
+/* EAE sensory priorities and proof checks — v3.20.16 */
+body.edu-ui .eae-sensory-priority { margin-top:10px; }
+body.edu-ui .eae-sensory-controls { align-items:start; }
+body.edu-ui .eae-sensory-control {
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  min-width:0;
+  padding:9px 0;
+}
+body.edu-ui .eae-sensory-control input {
+  width:19px;
+  height:19px;
+  margin-top:2px;
+  flex:0 0 auto;
+}
+body.edu-ui .eae-sensory-control label { margin:0; font-weight:700; }
+body.edu-ui .eae-sensory-panel {
+  min-width:0;
+  margin:10px 0;
+  padding:14px 15px;
+  border:1px solid #d8e2f1;
+  border-radius:12px;
+  background:#f8fbff;
+}
+body.edu-ui .eae-sensory-title {
+  margin-bottom:8px;
+  color:var(--blue-dark,var(--edu-primary-dark));
+  font-weight:800;
+}
+body.edu-ui .eae-sensory-method-label { display:block; margin-bottom:5px; font-weight:700; }
+body.edu-ui .eae-sensory-panel select { width:100%; max-width:100%; min-width:0; }
+body.edu-ui .eae-sensory-status {
+  margin:9px 0;
+  padding:9px 11px;
+  border-radius:10px;
+  font-size:13px;
+  line-height:1.45;
+}
+body.edu-ui .eae-sensory-status.neutral {
+  color:var(--edu-primary-dark);
+  background:var(--edu-primary-soft);
+  border:1px solid #d5e4ff;
+}
+body.edu-ui .eae-sensory-status.success {
+  color:var(--edu-success);
+  background:var(--edu-success-soft);
+  border:1px solid var(--edu-success-border);
+}
+body.edu-ui .eae-sensory-status.warning {
+  color:var(--edu-warning);
+  background:var(--edu-warning-soft);
+  border:1px solid var(--edu-warning-border);
+}
+body.edu-ui .eae-sensory-details { margin-top:9px; padding-top:9px; border-top:1px solid #dfe7f2; }
+body.edu-ui .eae-sensory-details summary { cursor:pointer; color:var(--edu-primary-dark); font-weight:700; }
+body.edu-ui .eae-sensory-details ul { margin:10px 0 4px 20px; padding:0; }
+body.edu-ui .eae-sensory-details li { margin-bottom:8px; line-height:1.5; }
+body.edu-ui .eae-sensory-legal {
+  margin-top:10px;
+  color:var(--edu-muted);
+  font-size:12.5px;
+  line-height:1.5;
+}
+@media (max-width:650px) {
+  body.edu-ui .eae-sensory-panel { padding:12px; }
+}

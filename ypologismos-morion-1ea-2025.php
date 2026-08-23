@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΕΑ/2025 για μέλη Ειδικού Βοηθητικού Προσωπικού (ΕΒΠ) κλάδου ΔΕ01.">
 <title>Υπολογισμός μορίων 1ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.15-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.17">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -14,6 +14,7 @@
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+<?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
 <div class="app">
 <section class="hero">
 <h1>Υπολογισμός μορίων 1ΕΑ/2025</h1>
@@ -105,7 +106,13 @@ renderAsepSocialCriteria(array(
 ?>
 <section class="card">
 <h2>5. Ειδική προτεραιότητα</h2>
-<div class="checkrow"><input type="checkbox" id="signLanguage"><label for="signLanguage">Πιστοποιημένη επάρκεια στην Ελληνική Νοηματική Γλώσσα (ΕΝΓ)<small>Προτεραιότητα για την υποστήριξη κωφών και βαρήκοων μαθητών. Δεν προσθέτει μόρια.</small></label></div>
+<?php
+renderEaeSensoryPriority(array(
+    'eng_enabled' => true,
+    'braille_enabled' => false,
+    'eng_id' => 'signLanguage'
+));
+?>
 </section>
 </main><aside class="results">
 <section class="card"><h2>Αποτέλεσμα</h2><div class="total"><div class="num" id="totalPoints">0,00</div><div class="label">συνολικά μόρια</div></div><div class="result-row"><span>Βαθμός τίτλου</span><strong id="degreePoints">0,00</strong></div><div class="result-row"><span>Ακαδημαϊκά</span><strong id="academicPoints">0,00</strong></div><div class="result-row"><span>Προϋπηρεσία</span><strong id="servicePoints">0,00</strong></div><div class="result-row"><span>Κοινωνικά</span><strong id="socialPoints">0,00</strong></div><div class="result-row"><span>Όριο ακαδημαϊκών</span><strong id="academicCap">64</strong></div><div id="priorityBox" class="priority">Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ</div><div class="actions"><button type="button" id="copyBtn">Αντιγραφή</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div></section>
@@ -134,6 +141,7 @@ document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
+  <script src="includes/eae-sensory-proof.js?v=3.20.16"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

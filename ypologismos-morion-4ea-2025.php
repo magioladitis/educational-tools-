@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 4ΕΑ/2025 για εκπαιδευτικούς Ειδικής Αγωγής κατηγορίας ΤΕ (ΤΕ01, ΤΕ02, ΤΕ16).">
   <title>Υπολογισμός μορίων 4ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.15-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.17">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea4">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -14,6 +14,7 @@
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+<?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
 <div class="app">
 <section class="hero">
     <h1>Υπολογισμός μορίων 4ΕΑ/2025</h1>
@@ -131,16 +132,14 @@
           Το κριτήριο <strong>εκπαιδευτικού γονέα παιδιού με αναπηρία 67% και άνω</strong> ελέγχεται αυτόματα από το ποσοστό αναπηρίας τέκνου που δηλώνεται στα Κοινωνικά Κριτήρια παρακάτω.
         </div>
 
-        <div class="field-grid">
-          <div class="checkrow">
-            <input type="checkbox" id="braille">
-            <label for="braille">Πιστοποιημένη επάρκεια Braille<small>Προτεραιότητα για μαθητές με προβλήματα όρασης.</small></label>
-          </div>
-          <div class="checkrow">
-            <input type="checkbox" id="signLanguage">
-            <label for="signLanguage">Πιστοποιημένη επάρκεια Ε.Ν.Γ.<small>Προτεραιότητα για κωφούς και βαρήκοους μαθητές.</small></label>
-          </div>
-        </div>
+        <?php
+        renderEaeSensoryPriority(array(
+            'eng_enabled' => true,
+            'braille_enabled' => true,
+            'eng_id' => 'signLanguage',
+            'braille_id' => 'braille'
+        ));
+        ?>
 
         <div class="priority" id="tableStatus">Δεν έχει δηλωθεί ακόμη κριτήριο ένταξης.</div>
         <div class="info-note" id="eligibilityWhy">Συμπλήρωσε κλάδο και προσόντα για αναλυτικό έλεγχο ένταξης.</div>
@@ -630,6 +629,7 @@ renderAsepSocialCriteria(array(
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
+  <script src="includes/eae-sensory-proof.js?v=3.20.16"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

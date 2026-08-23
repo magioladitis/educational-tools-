@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 2ΕΑ/2025 για μέλη Ειδικού Εκπαιδευτικού Προσωπικού (ΕΕΠ).">
 <title>Υπολογισμός μορίων 2ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.15-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.17">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea2">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -14,6 +14,7 @@
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+<?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
 <div class="app">
 <section class="hero"><h1>Υπολογισμός μορίων 2ΕΑ/2025</h1><p>Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ1΄ μελών <strong>Ειδικού Εκπαιδευτικού Προσωπικού (Ε.Ε.Π.)</strong>.</p><div class="meta"><span>2ΕΑ/2025</span><span>ΠΕ21–ΠΕ31</span><span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span><span>Έλεγχος πρόταξης</span><span>Άδειες &amp; βεβαιώσεις</span></div></section>
 <div class="layout"><main>
@@ -22,7 +23,14 @@
 <div id="branchNote" class="info">Επίλεξε κλάδο για να εμφανιστούν οι ειδικές επισημάνσεις.</div>
 <div class="checkrow"><input type="checkbox" id="pedagogical"><label for="pedagogical">Πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια<small>Δεν προσθέτει μόρια, αλλά αποτελεί κριτήριο πρόταξης.</small></label></div>
 <div id="pe23Wrap" class="field hidden"><label for="schoolPsych">ΠΕ23 — Εξειδίκευση στη Σχολική Ψυχολογία<small>Προσόν πρόταξης, όχι ξεχωριστή μοριοδότηση από μόνο του.</small></label><select id="schoolPsych"><option value="none">Δεν διαθέτω εξειδίκευση</option><option value="degree">Διδακτορικό ή μεταπτυχιακό στη Σχολική Ψυχολογία</option><option value="experience">Τουλάχιστον 50 μήνες προϋπηρεσίας ως ψυχολόγος στην Π/θμια ή Δ/θμια</option></select><div id="schoolPsychReminder" class="note hidden">Η επιλογή εξειδίκευσης μέσω τίτλου δεν προσθέτει αυτόματα μόρια. Δήλωσε τον αντίστοιχο διδακτορικό/μεταπτυχιακό τίτλο και στην ενότητα Ακαδημαϊκών.</div></div>
-<div class="field-grid"><div class="checkrow"><input type="checkbox" id="braille"><label for="braille">Πιστοποιημένη επάρκεια Braille<small>Ειδική προτεραιότητα για μαθητές με προβλήματα όρασης.</small></label></div><div class="checkrow"><input type="checkbox" id="signLanguage"><label for="signLanguage">Πιστοποιημένη επάρκεια ΕΝΓ<small>Ειδική προτεραιότητα για κωφούς/βαρήκοους μαθητές.</small></label></div></div>
+<?php
+renderEaeSensoryPriority(array(
+    'eng_enabled' => true,
+    'braille_enabled' => true,
+    'eng_id' => 'signLanguage',
+    'braille_id' => 'braille'
+));
+?>
 </section>
 <section class="card" id="licenseCard"><h2>2. Υποχρεωτικές άδειες &amp; βεβαιώσεις συμμετοχής</h2><p class="cap">Δεν μοριοδοτούνται, αλλά όπου προβλέπονται αποτελούν πρόσθετα τυπικά προσόντα ένταξης του κλάδου.</p>
 <div id="licenseIntro" class="info">Επίλεξε κλάδο για να εμφανιστούν τα απαιτούμενα πρόσθετα επαγγελματικά δικαιολογητικά.</div>
@@ -118,6 +126,7 @@ document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
+  <script src="includes/eae-sensory-proof.js?v=3.20.16"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

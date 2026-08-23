@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων 3ΕΑ/2025 και ενδεικτικός έλεγχος ένταξης στον Αξιολογικό Πίνακα Β΄ ή στον Επικουρικό Πίνακα Ειδικής Αγωγής.">
 <title>Υπολογισμός μορίων 3ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.15-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.17">
 </head>
 <body class="edu-ui edu-calc-ea3 edu-page-ea3">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -14,6 +14,7 @@
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+<?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
 <div class="page">
 <section class="hero">
 <h1>Υπολογισμός μορίων 3ΕΑ/2025</h1>
@@ -129,8 +130,14 @@ renderAsepSocialCriteria(array(
 <section class="card">
 <h2>5. Προτάξεις / ειδικές προτεραιότητες</h2>
 <div class="check"><input type="checkbox" id="pde"><label for="pde">Πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια<small>Δεν προσθέτει μόρια· ο υποψήφιος προτάσσεται έναντι υποψηφίων που δεν τη διαθέτουν.</small></label></div>
-<div class="check"><input type="checkbox" id="braille"><label for="braille">Πιστοποιημένη επάρκεια Ελληνικής γραφής Braille<small>Προτεραιότητα για εκπαίδευση μαθητών με προβλήματα όρασης.</small></label></div>
-<div class="check"><input type="checkbox" id="sign"><label for="sign">Πιστοποιημένη επάρκεια Ελληνικής Νοηματικής Γλώσσας (Ε.Ν.Γ.)<small>Προτεραιότητα για εκπαίδευση κωφών και βαρήκοων μαθητών.</small></label></div>
+<?php
+renderEaeSensoryPriority(array(
+    'eng_enabled' => true,
+    'braille_enabled' => true,
+    'eng_id' => 'sign',
+    'braille_id' => 'braille'
+));
+?>
 </section>
 </main>
 
@@ -288,6 +295,7 @@ function trainingProofSummary(){if(!($('training').checked||$('seminar400').chec
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
+  <script src="includes/eae-sensory-proof.js?v=3.20.16"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>
