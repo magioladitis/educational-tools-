@@ -2649,3 +2649,9 @@ body.edu-ui .eae-sensory-legal {
 @media (max-width:650px) {
   body.edu-ui .eae-sensory-panel { padding:12px; }
 }
+
+/* Shared PE academic component: proof panel spans the academic grid in every host page. */
+body.edu-ui .asep-pe-academic > .field-grid > .training-proof {
+  grid-column: 1 / -1;
+  margin-top: 2px;
+}

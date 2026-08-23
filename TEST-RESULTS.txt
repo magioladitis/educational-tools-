@@ -1,21 +1,7 @@
-=== Digital Tutoring regression ===
-✓ 2024-2025 limit
-✓ 2025-2026 limit
-✓ 9m16d stays 9 scored months
-✓ 8m2d stays 8 scored months
-✓ days carry across years
-✓ current real maxima together
-✓ 2024 over-limit clamps
-✓ 2025 over-limit clamps
-✓ duplicate year counted once
-✓ legacy digitalPerSchoolYear preserved
+Language scoring/regression: 21 PASS / 0 FAIL
+Integration/static architecture: 20 PASS / 0 FAIL
+Inline JavaScript syntax: 7 PASS / 0 FAIL
+PHP lint: 8 PASS / 0 FAIL
+Shared JavaScript syntax: 3 PASS / 0 FAIL
 
-PASS: 10
-FAIL: 0
-
-=== JavaScript syntax ===
-PASS service-calculations.js
-PASS asep-digital-tutoring.js
-
-=== PHP syntax ===
-No syntax errors detected in /mnt/data/digital-tutoring-refactor/includes/components/asep-digital-tutoring-service.php
+TOTAL: 59 PASS / 0 FAIL

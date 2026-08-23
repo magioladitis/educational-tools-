@@ -23,6 +23,7 @@ if (!function_exists('renderAsepComputerProof')) {
         $proofId = isset($config['proof_id']) ? (string) $config['proof_id'] : 'computerProof';
         $methodId = isset($config['method_id']) ? (string) $config['method_id'] : 'computerProofMethod';
         $statusId = isset($config['status_id']) ? (string) $config['status_id'] : 'computerProofStatus';
+        $fieldClass = isset($config['field_class']) ? trim((string) $config['field_class']) : 'field';
 
         $flags = ENT_QUOTES;
         if (defined('ENT_SUBSTITUTE')) {
@@ -42,7 +43,7 @@ if (!function_exists('renderAsepComputerProof')) {
         ?>
 <div class="asep-computer-proof" data-component="asep-computer-proof" data-input-id="<?php echo $h($inputId); ?>">
 <?php if ($controlType === 'select'): ?>
-  <div class="field asep-computer-control">
+  <div class="<?php echo $h($fieldClass); ?> asep-computer-control">
     <label for="<?php echo $h($inputId); ?>">Γνώση πληροφορικής ή χειρισμού Η/Υ
       <small><?php echo $h($small); ?></small>
     </label>

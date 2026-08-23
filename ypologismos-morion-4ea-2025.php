@@ -11,6 +11,7 @@
 <body class="edu-ui edu-calc-standard edu-page-ea4">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
@@ -160,36 +161,12 @@
           <label for="secondTitle"><span id="secondTitleLabel">Πτυχίο επιπέδου 5 / Ι.Ε.Κ. ίδιας ειδικότητας</span><small>10 μόρια</small></label>
         </div>
 
-        <h3>Ξένη γλώσσα — μοριοδοτείται μία</h3>
-        <div class="info-note">Επίλεξε <strong>ποια γλώσσα</strong> και το επίπεδό της. Η 4ΕΑ/2025 μοριοδοτεί μία μόνο ξένη γλώσσα.</div>
-        <div class="field-grid">
-          <div class="field">
-            <label for="langName">Ξένη γλώσσα</label>
-            <select id="langName">
-              <option value="">— Επιλογή γλώσσας —</option>
-              <option value="en">Αγγλική</option>
-              <option value="fr">Γαλλική</option>
-              <option value="de">Γερμανική</option>
-              <option value="it">Ιταλική</option>
-              <option value="es">Ισπανική</option>
-              <option value="other">Άλλη ξένη γλώσσα</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="langLevel">Επίπεδο</label>
-            <select id="langLevel">
-              <option value="0">Καμία / χωρίς μόρια</option>
-              <option value="10">Καλή γνώση — 10 μόρια</option>
-              <option value="15">Πολύ καλή γνώση — 15 μόρια</option>
-              <option value="20">Άριστη γνώση — 20 μόρια</option>
-            </select>
-          </div>
-          <div class="field hidden" id="langOtherWrap">
-            <label for="langOther">Ονομασία άλλης ξένης γλώσσας</label>
-            <input id="langOther" type="text" placeholder="π.χ. Πορτογαλική">
-          </div>
-        </div>
-        <div id="languageWarning" class="note hidden"></div>
+        <?php
+renderAsepLanguageSelector(array(
+    'id' => 'asepLanguages',
+    'profile' => 'te'
+));
+?>
 
         <?php
 renderAsepComputerProof(array(
@@ -337,7 +314,8 @@ renderAsepSocialCriteria(array(
 
 <script src="includes/service-calculations.js?v=3.20.14-rc2"></script>
 <script src="includes/social-calculations.js"></script>
-<script src="includes/language-calculations.js"></script>
+<script src="includes/language-calculations.js?v=3.20.24"></script>
+<script src="includes/asep-language-selector.js?v=3.20.24"></script>
 <script src="includes/te-academic-calculations.js"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script>
@@ -390,19 +368,6 @@ renderAsepSocialCriteria(array(
     }
   }
 
-  function syncLanguageUI(){
-    $('langOtherWrap').classList.toggle('hidden', $('langName').value !== 'other');
-  }
-
-  function languageResult(){
-    syncLanguageUI();
-    return EducationLanguages.calculatePair([{
-      language:$('langName').value,
-      otherText:$('langOther').value,
-      points:num('langLevel')
-    }],{cap:20});
-  }
-
   function trainingActive(){
     return $('training').checked || $('auxSeminar400').checked;
   }
@@ -435,7 +400,6 @@ renderAsepSocialCriteria(array(
 
   function calc(){
     updateBranchUI();
-    syncLanguageUI();
     TrainingProof.syncAll();
 
     const currentScale = $('gradeScale').value;
@@ -444,7 +408,7 @@ renderAsepSocialCriteria(array(
     const maxDegreeGrade = currentScale === '10' ? 10 : (currentScale === '20' ? 20 : 20);
     const numericGradeValid = currentScale === 'te16text' || ($('degreeGrade').value!=='' && rawDegreeGrade >= minDegreeGrade && rawDegreeGrade <= maxDegreeGrade);
 
-    const languages=languageResult();
+    const languages=AsepLanguageSelector.calculate('asepLanguages');
     const academicResult = TEAcademic.calculate({
       gradeScale: currentScale,
       degreeGrade: numericGradeValid ? rawDegreeGrade : 0,
@@ -501,9 +465,6 @@ renderAsepSocialCriteria(array(
     $('resDisability').textContent=fmt(social.disabilityPoints);
     $('resTable').textContent=tableLabel;
 
-    const lw=$('languageWarning');
-    lw.textContent=languages.warnings.join(' ');
-    lw.classList.toggle('hidden',languages.warnings.length===0);
     const sw=$('socialWarning');
     sw.textContent=social.warnings.join(' ');
     sw.classList.toggle('hidden',social.warnings.length===0);
@@ -592,8 +553,7 @@ renderAsepSocialCriteria(array(
     $('branch').value='';
     $('gradeScale').dataset.auto='on';
     $('gradeScale').value='20';
-    $('langName').value='';
-    $('langLevel').value='0';
+    AsepLanguageSelector.reset('asepLanguages',{silent:true});
     $('te16TextGrade').value='0';
     $('mainCriterion').value='none';
     updateBranchUI();

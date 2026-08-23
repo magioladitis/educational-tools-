@@ -11,6 +11,7 @@
 <body class="edu-ui edu-calc-standard edu-page-gt1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
@@ -80,32 +81,12 @@
           <label for="secondTitle"><span id="secondTitleLabel">Πτυχίο επιπέδου 5 / Ι.Ε.Κ. ίδιας ειδικότητας</span><small>10 μόρια</small></label>
         </div>
 
-        <h3>Ξένη γλώσσα — μοριοδοτείται μία</h3>
-        <div class="info-note">Επίλεξε <strong>ποια γλώσσα</strong> και το επίπεδό της. Η 1ΓΤ/2024 μοριοδοτεί μία μόνο ξένη γλώσσα και, αν υπάρχουν περισσότεροι τίτλοι της ίδιας γλώσσας, λαμβάνεται μόνο ο ανώτερος.</div>
-        <div class="field-grid">
-          <div class="field">
-            <label for="langName">Ξένη γλώσσα</label>
-            <select id="langName">
-              <option value="">— Επιλογή γλώσσας —</option>
-              <option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option>
-              <option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="langLevel">Επίπεδο</label>
-            <select id="langLevel">
-              <option value="0">Καμία / χωρίς μόρια</option>
-              <option value="10">Καλή γνώση — 10 μόρια</option>
-              <option value="15">Πολύ καλή γνώση — 15 μόρια</option>
-              <option value="20">Άριστη γνώση — 20 μόρια</option>
-            </select>
-          </div>
-          <div class="field hidden" id="langOtherWrap">
-            <label for="langOther">Ονομασία άλλης ξένης γλώσσας</label>
-            <input id="langOther" type="text" placeholder="π.χ. Πορτογαλική">
-          </div>
-        </div>
-        <div id="languageWarning" class="note hidden"></div>
+        <?php
+renderAsepLanguageSelector(array(
+    'id' => 'asepLanguages',
+    'profile' => 'te'
+));
+?>
 
         <?php
 renderAsepComputerProof(array(
@@ -245,7 +226,8 @@ renderAsepSocialCriteria(array(
 
 <script src="includes/service-calculations.js?v=3.20.14-rc2"></script>
 <script src="includes/social-calculations.js"></script>
-<script src="includes/language-calculations.js"></script>
+<script src="includes/language-calculations.js?v=3.20.24"></script>
+<script src="includes/asep-language-selector.js?v=3.20.24"></script>
 <script src="includes/te-academic-calculations.js"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script>
@@ -283,12 +265,6 @@ renderAsepSocialCriteria(array(
     }
   }
 
-  function syncLanguageUI(){ $('langOtherWrap').classList.toggle('hidden',$('langName').value!=='other'); }
-  function languageResult(){
-    syncLanguageUI();
-    return EducationLanguages.calculatePair([{language:$('langName').value,otherText:$('langOther').value,points:num('langLevel')}],{cap:20});
-  }
-
   function socialResult(){return EducationSocial.calculate({
     children:num('children'),candidateDisability:num('candidateDisability'),spouseDisability:num('spouseDisability'),childDisability:num('childDisability'),
     marriageYears4Plus:$('marriageYears4Plus').checked,candidateMentalCondition:$('candidateMentalCondition').checked
@@ -302,11 +278,11 @@ renderAsepSocialCriteria(array(
   }
 
   function calc(){
-    updateBranchUI();syncLanguageUI();TrainingProof.syncAll();
+    updateBranchUI();TrainingProof.syncAll();
     const scale=$('gradeScale').value,rawGrade=num('degreeGrade');
     const min=scale==='10'?5:(scale==='20'?10:0),max=scale==='10'?10:20;
     const valid=scale==='te16text'||($('degreeGrade').value!==''&&rawGrade>=min&&rawGrade<=max);
-    const languages=languageResult();
+    const languages=AsepLanguageSelector.calculate('asepLanguages');
     const academicResult=TEAcademic.calculate({gradeScale:scale,degreeGrade:valid?rawGrade:0,te16TextGrade:Number($('te16TextGrade').value||0),
       secondTitle:$('secondTitle').checked,languagePoints:languages.points,computer:$('computer').checked,training:$('training').checked});
     const service=serviceResult(),social=socialResult();
@@ -323,7 +299,6 @@ renderAsepSocialCriteria(array(
     $('grandTotal').textContent=fmt(total);$('resAcademic').textContent=`${fmt(academicResult.points)} / 120`;$('resService').textContent=`${fmt(service.points)} / 120`;$('resSocial').textContent=fmt(social.total);
     $('resDegree').textContent=fmt(academicResult.degreePoints);$('resLanguage').textContent=fmt(languages.points);$('resChildren').textContent=fmt(social.childrenPoints);$('resDisability').textContent=fmt(social.disabilityPoints);
 
-    const lw=$('languageWarning');lw.textContent=languages.warnings.join(' ');lw.classList.toggle('hidden',languages.warnings.length===0);
     const sw=$('socialWarning');sw.textContent=social.warnings.join(' ');sw.classList.toggle('hidden',social.warnings.length===0);
 
     const ped=$('pedagogical').checked;$('priorityBox').classList.toggle('yes',ped);$('priorityBox').textContent=ped?'ΠΡΟΤΑΞΗ λόγω Παιδαγωγικής & Διδακτικής Επάρκειας':'Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.';
@@ -347,7 +322,7 @@ renderAsepSocialCriteria(array(
   $('resetBtn').addEventListener('click',()=>{
     document.querySelectorAll('input[type="number"]').forEach(el=>el.value='0');$('degreeGrade').value='';
     document.querySelectorAll('input[type="text"]').forEach(el=>el.value='');document.querySelectorAll('input[type="checkbox"],input[type="radio"]').forEach(el=>el.checked=false);
-    $('branch').value='te01';$('gradeScale').dataset.auto='on';$('gradeScale').value='20';$('langName').value='';$('langLevel').value='0';$('te16TextGrade').value='0';updateBranchUI();calc();
+    $('branch').value='te01';$('gradeScale').dataset.auto='on';$('gradeScale').value='20';AsepLanguageSelector.reset('asepLanguages',{silent:true});$('te16TextGrade').value='0';updateBranchUI();calc();
   });
   $('copyBtn').addEventListener('click',async()=>{const text=summary(calc());try{await navigator.clipboard.writeText(text);const old=$('copyBtn').textContent;$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent=old,1400);}catch(e){alert(text);}});
   $('gradeScale').dataset.auto='on';updateBranchUI();calc();

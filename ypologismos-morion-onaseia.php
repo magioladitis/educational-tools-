@@ -8,6 +8,7 @@
 </head>
 <body class="edu-ui edu-page-onaseia">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-pe-academic.php'; ?>
 
 <div class="app-box edu-modernized">
   <section class="hero edu-legacy-hero">
@@ -108,122 +109,15 @@
     </div>
 
     <div id="detailedAcademic">
-      <h3>Τίτλοι σπουδών</h3>
-      <div class="field-grid">
-        <div class="question">
-          <label for="degreeGrade">Βαθμός βασικού τίτλου σπουδών <small>Έγκυρος βαθμός: 5,00–10,00.</small></label>
-          <input type="text" inputmode="decimal" id="degreeGrade" placeholder="π.χ. 7,50">
-        </div>
-
-        <div class="question">
-          <label for="secondDegree">Δεύτερο πτυχίο Α.Ε.Ι.</label>
-          <select id="secondDegree">
-            <option value="no">Όχι</option>
-            <option value="yes">Ναι</option>
-          </select>
-        </div>
-
-        <div class="question">
-          <label for="phd">Διδακτορικό δίπλωμα</label>
-          <select id="phd">
-            <option value="no">Όχι</option>
-            <option value="yes">Ναι</option>
-          </select>
-        </div>
-
-        <div class="question">
-          <label for="mscCount">Μεταπτυχιακός τίτλος / integrated master</label>
-          <select id="mscCount">
-            <option value="0">Κανένας</option>
-            <option value="1">Ένας τίτλος</option>
-            <option value="2">Δύο τίτλοι</option>
-          </select>
-        </div>
-      </div>
-
-      <p class="note">
-        Βασικός τίτλος: βαθμός × 2,5 · Δεύτερο πτυχίο: 7 · Διδακτορικό: 40 ·
-        1ος μεταπτυχιακός / integrated master: 20 · 2ος: 8 μόρια.
-      </p>
-
-      <h3>Ξένες γλώσσες</h3>
-      <div class="field-grid">
-        <div class="question">
-          <label for="language1">1η ξένη γλώσσα</label>
-          <select id="language1">
-            <option value="">-- Καμία --</option>
-            <option value="en">Αγγλική</option>
-            <option value="fr">Γαλλική</option>
-            <option value="de">Γερμανική</option>
-            <option value="it">Ιταλική</option>
-            <option value="es">Ισπανική</option>
-            <option value="other">Άλλη ξένη γλώσσα</option>
-          </select>
-        </div>
-
-        <div class="question">
-          <label for="level1">Επίπεδο 1ης γλώσσας</label>
-          <select id="level1">
-            <option value="none">-- Κανένα --</option>
-            <option value="excellent">Άριστη γνώση</option>
-            <option value="very_good">Πολύ καλή γνώση</option>
-            <option value="good">Καλή γνώση</option>
-          </select>
-        </div>
-
-        <div class="question">
-          <label for="language2">2η ξένη γλώσσα</label>
-          <select id="language2">
-            <option value="">-- Καμία --</option>
-            <option value="en">Αγγλική</option>
-            <option value="fr">Γαλλική</option>
-            <option value="de">Γερμανική</option>
-            <option value="it">Ιταλική</option>
-            <option value="es">Ισπανική</option>
-            <option value="other2">Άλλη ξένη γλώσσα</option>
-          </select>
-        </div>
-
-        <div class="question">
-          <label for="level2">Επίπεδο 2ης γλώσσας</label>
-          <select id="level2">
-            <option value="none">-- Κανένα --</option>
-            <option value="excellent">Άριστη γνώση</option>
-            <option value="very_good">Πολύ καλή γνώση</option>
-            <option value="good">Καλή γνώση</option>
-          </select>
-        </div>
-      </div>
-
-      <p class="note">
-        Μοριοδοτούνται έως δύο ξένες γλώσσες: άριστη 7, πολύ καλή 5, καλή 3 μόρια.
-        Η ίδια κατονομασμένη γλώσσα δεν μπορεί να επιλεγεί και στα δύο πεδία.
-        Η Γαλλική δεν μοριοδοτείται στον ΠΕ05, η Αγγλική στον ΠΕ06 και η Γερμανική στον ΠΕ07.
-      </p>
-
-      <h3>Λοιπά ακαδημαϊκά προσόντα</h3>
-      <div class="field-grid">
-        <div class="question">
-          <label for="computer">Πιστοποιημένη γνώση Η/Υ / ΤΠΕ Α' επιπέδου</label>
-          <select id="computer">
-            <option value="no">Όχι</option>
-            <option value="yes">Ναι</option>
-          </select>
-        </div>
-
-        <div class="question">
-          <label for="training">Επιμόρφωση τουλάχιστον 300 ωρών και 7 μηνών</label>
-          <select id="training">
-            <option value="no">Όχι</option>
-            <option value="yes">Ναι</option>
-          </select>
-        </div>
-      </div>
-
-      <p class="note">
-        Γνώση Η/Υ: 4 μόρια (δεν μοριοδοτείται στον ΠΕ86) · Επιμόρφωση: 2 μόρια.
-        Το σύνολο των Ακαδημαϊκών Προσόντων δεν μπορεί να υπερβεί τις 120 μονάδες.
-      </p>
+<?php
+renderAsepPeAcademic(array(
+    'id' => 'asepPeAcademic',
+    'specialty_id' => 'specialty',
+    'field_class' => 'question',
+    'degree_input_type' => 'text',
+    'show_subtotal' => false
+));
+?>
     </div>
   </div>
 
@@ -249,7 +143,12 @@
   <div id="result" class="result" role="status" aria-live="polite"></div>
 </div>
 
-<script src="includes/academic-calculations.js?v=3.20.4"></script>
+<script src="includes/language-calculations.js?v=3.20.24"></script>
+<script src="includes/asep-language-selector.js?v=3.20.24"></script>
+<script src="includes/academic-calculations.js?v=3.20.24"></script>
+<script src="includes/asep-computer-proof.js?v=3.20.25"></script>
+<script src="includes/training-proof.js?v=3.20.25"></script>
+<script src="includes/asep-pe-academic.js?v=3.20.25"></script>
 <script src="includes/onaseia-calculations.js?v=3.20.4"></script>
 <script>
   let isLiveCalculation = false;
@@ -260,10 +159,6 @@
 
   function valueOf(id) {
     return document.getElementById(id).value;
-  }
-
-  function yes(id) {
-    return valueOf(id) === "yes";
   }
 
   function greekNumber(value) {
@@ -321,6 +216,7 @@
     document.getElementById("manualAcademicRange").textContent = `${formatPoints(manualMin)}–120`;
     document.getElementById("manualAcademicPoints").setAttribute("data-min", String(manualMin));
     document.getElementById("manualAcademicPoints").setAttribute("data-max", "120");
+    AsepPeAcademic.sync("asepPeAcademic");
   }
 
   document.querySelectorAll('input[name="academicMode"]').forEach(el => {
@@ -329,54 +225,6 @@
 
   document.getElementById("specialty").addEventListener("change", updateAcademicMode);
 
-  const onaseiaNamedLanguages = new Set(["en", "fr", "de", "it", "es"]);
-
-  function syncOnaseiaLanguageOptions(changedId = "") {
-    const language1 = document.getElementById("language1");
-    const language2 = document.getElementById("language2");
-    const level1 = document.getElementById("level1");
-    const level2 = document.getElementById("level2");
-
-    if (onaseiaNamedLanguages.has(language1.value) && language1.value === language2.value) {
-      if (changedId === "language2") {
-        language1.value = "";
-        level1.value = "none";
-      } else {
-        language2.value = "";
-        level2.value = "none";
-      }
-    }
-
-    Array.from(language1.options).forEach(option => {
-      option.disabled = onaseiaNamedLanguages.has(option.value) && option.value === language2.value;
-    });
-    Array.from(language2.options).forEach(option => {
-      option.disabled = onaseiaNamedLanguages.has(option.value) && option.value === language1.value;
-    });
-  }
-
-  document.getElementById("language1").addEventListener("change", () => syncOnaseiaLanguageOptions("language1"));
-  document.getElementById("language2").addEventListener("change", () => syncOnaseiaLanguageOptions("language2"));
-  syncOnaseiaLanguageOptions();
-
-  function calculateDetailedAcademic(specialty, warnings) {
-    const academic = EducationAcademic.calculate({
-      specialty: specialty,
-      degreeGrade: valueOf("degreeGrade"),
-      secondDegree: yes("secondDegree"),
-      phd: yes("phd"),
-      mscCount: parseInt(valueOf("mscCount"), 10) || 0,
-      languages: [
-        { language: valueOf("language1"), level: valueOf("level1") },
-        { language: valueOf("language2"), level: valueOf("level2") }
-      ],
-      computer: yes("computer"),
-      training: yes("training")
-    });
-
-    warnings.push(...academic.warnings);
-    return academic;
-  }
 
   function serviceYearOptions(selectedYear = "") {
     return schoolYears.map(y =>
@@ -472,7 +320,10 @@
         academicPoints = manualCheck.points;
         academicDetails.push("Καταχώριση από τον πίνακα Α.Σ.Ε.Π.");
       } else {
-        const academic = calculateDetailedAcademic(specialty, warnings);
+        const academic = AsepPeAcademic.calculate("asepPeAcademic");
+        warnings.push(...academic.warnings);
+        const academicProofWarning = AsepPeAcademic.trainingWarning("asepPeAcademic");
+        if (academicProofWarning) warnings.push(academicProofWarning);
         academicPoints = academic.points;
         academicDetails = academic.details;
       }
@@ -539,8 +390,8 @@
       const check = OnaseiaAcademic.validateManualAcademicPoints(valueOf("manualAcademicPoints"), specialty);
       if (!check.valid) { clearLiveResult(); return; }
     } else {
-      const grade = greekNumber(valueOf("degreeGrade"));
-      if (!grade || grade < 5 || grade > 10) { clearLiveResult(); return; }
+      const academicCheck = AsepPeAcademic.validate("asepPeAcademic");
+      if (!academicCheck.valid) { clearLiveResult(); return; }
     }
 
     isLiveCalculation = true;
@@ -552,17 +403,7 @@
     document.querySelector('input[name="academicMode"][value="detailed"]').checked = true;
     document.querySelector('input[name="academicMode"][value="detailed"]').disabled = false;
     document.getElementById("manualAcademicPoints").value = "";
-    document.getElementById("degreeGrade").value = "";
-    document.getElementById("secondDegree").value = "no";
-    document.getElementById("phd").value = "no";
-    document.getElementById("mscCount").value = "0";
-    document.getElementById("language1").value = "";
-    document.getElementById("level1").value = "none";
-    document.getElementById("language2").value = "";
-    document.getElementById("level2").value = "none";
-    syncOnaseiaLanguageOptions();
-    document.getElementById("computer").value = "no";
-    document.getElementById("training").value = "no";
+    AsepPeAcademic.reset("asepPeAcademic", { silent: true });
     document.getElementById("serviceRows").innerHTML = "";
     addServiceRow("2025-2026");
     addServiceRow("2024-2025");
@@ -575,6 +416,7 @@
   addServiceRow("2024-2025");
   addServiceRow("2023-2024");
   updateAcademicMode();
+  AsepPeAcademic.sync("asepPeAcademic");
   const onaseiaDeadlines = [
     { id: "onaseiaGeneralDeadlineStatus", end: new Date("2026-08-24T15:00:00+03:00") },
     { id: "onaseiaEaeDeadlineStatus", end: new Date("2026-08-31T15:00:00+03:00") }

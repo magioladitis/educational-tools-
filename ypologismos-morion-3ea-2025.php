@@ -11,6 +11,7 @@
 <body class="edu-ui edu-calc-ea3 edu-page-ea3">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
@@ -53,15 +54,13 @@
 <div class="field"><label for="masters">Μεταπτυχιακοί τίτλοι / integrated master<small>1 τίτλος: 20 · 2 ή περισσότεροι: 28 συνολικά. Για ΠΕ61/ΠΕ71 το βασικό πτυχίο δίνει αυτοδικαίως 20 και με επιπλέον μεταπτυχιακό η σχετική μοριοδότηση γίνεται 28.</small></label><select id="masters"><option value="0">Κανένας</option><option value="1">Ένας</option><option value="2">Δύο ή περισσότεροι</option></select></div>
 <div id="pe6171Auto" class="info hidden">ΠΕ61/ΠΕ71: προστίθενται αυτοδικαίως 20 μόρια λόγω βασικού πτυχίου Ειδικής Αγωγής· με έναν ή περισσότερους επιπλέον μεταπτυχιακούς, η συγκεκριμένη μοριοδότηση γίνεται 28.</div>
 
-<h3>Ξένες γλώσσες — έως δύο</h3>
-<div class="info">Επίλεξε <strong>γλώσσα + επίπεδο</strong>. Η ίδια γλώσσα υπολογίζεται μόνο μία φορά στο ανώτερο επίπεδο. Για ΠΕ05, ΠΕ06, ΠΕ07, ΠΕ34 και ΠΕ40 η γλώσσα του κλάδου αποκλείεται αυτόματα από τη μοριοδότηση.</div>
-<div class="field"><label for="langName1">1η ξένη γλώσσα</label><select id="langName1"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select></div>
-<div class="field"><label for="lang1">Επίπεδο 1ης γλώσσας</label><select id="lang1"><option value="0">Καμία / χωρίς μόρια</option><option value="3">Καλή (Β2) — 3</option><option value="5">Πολύ καλή (Γ1) — 5</option><option value="7">Άριστη (Γ2) — 7</option></select></div>
-<div class="field hidden" id="langOther1Wrap"><label for="langOther1">Ονομασία άλλης 1ης γλώσσας</label><input id="langOther1" type="text" placeholder="π.χ. Πορτογαλική"></div>
-<div class="field"><label for="langName2">2η ξένη γλώσσα</label><select id="langName2"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select></div>
-<div class="field"><label for="lang2">Επίπεδο 2ης γλώσσας</label><select id="lang2"><option value="0">Καμία / χωρίς μόρια</option><option value="3">Καλή (Β2) — 3</option><option value="5">Πολύ καλή (Γ1) — 5</option><option value="7">Άριστη (Γ2) — 7</option></select></div>
-<div class="field hidden" id="langOther2Wrap"><label for="langOther2">Ονομασία άλλης 2ης γλώσσας</label><input id="langOther2" type="text" placeholder="π.χ. Πορτογαλική"></div>
-<div id="languageWarning" class="note hidden"></div>
+<?php
+renderAsepLanguageSelector(array(
+    'id' => 'asepLanguages',
+    'profile' => 'pe',
+    'specialty_id' => 'specialty'
+));
+?>
 <?php
 renderAsepComputerProof(array(
     'input_id' => 'computer',
@@ -166,29 +165,19 @@ renderEaeSensoryPriority(array(
 <script src="includes/service-calculations.js?v=3.20.22"></script>
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
 <script src="includes/social-calculations.js"></script>
-<script src="includes/language-calculations.js"></script>
+<script src="includes/language-calculations.js?v=3.20.24"></script>
+<script src="includes/asep-language-selector.js?v=3.20.24"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script>
 (function(){
  const $=id=>document.getElementById(id); const num=id=>Math.max(0,Number($(id)?.value||0)); const cap=(v,m)=>Math.min(v,m); const fmt=v=>(Math.round((v+Number.EPSILON)*100)/100).toFixed(2);
- const languageOwn={"ΠΕ05":"fr","ΠΕ06":"en","ΠΕ07":"de","ΠΕ34":"it","ΠΕ40":"es"};
  function syncSpecial(){
    const sp=$('specialty').value;
    $('pe11QualWrap').classList.toggle('hidden',sp!=='ΠΕ11');
    $('pe6171Auto').classList.toggle('hidden',!(sp==='ΠΕ61'||sp==='ΠΕ71'));
    $('computer').disabled=(sp==='ΠΕ86'); if(sp==='ΠΕ86') $('computer').checked=false;
-   syncLanguageUI();
+   AsepLanguageSelector.sync('asepLanguages');
  }
- function syncLanguageUI(){
-   const sp=$('specialty').value,excluded=languageOwn[sp]||''; const s1=$('langName1'),s2=$('langName2');
-   $('langOther1Wrap').classList.toggle('hidden',s1.value!=='other'); $('langOther2Wrap').classList.toggle('hidden',s2.value!=='other');
-   [s1,s2].forEach(s=>Array.from(s.options).forEach(o=>o.disabled=false));
-   [s1,s2].forEach(s=>{if(excluded){const o=Array.from(s.options).find(x=>x.value===excluded);if(o)o.disabled=true;}});
-   if(s1.value&&s1.value!=='other'){const o=Array.from(s2.options).find(x=>x.value===s1.value);if(o)o.disabled=true;}
-   if(s2.value&&s2.value!=='other'){const o=Array.from(s1.options).find(x=>x.value===s2.value);if(o)o.disabled=true;}
- }
- function calcLanguages(){const sp=$('specialty').value;return EducationLanguages.calculatePair([{language:$('langName1').value,otherText:$('langOther1').value,points:num('lang1')},{language:$('langName2').value,otherText:$('langOther2').value,points:num('lang2')}],{excluded:languageOwn[sp]?[languageOwn[sp]]:[]});}
-
  function calcAcademic(languages){
    const sp=$('specialty').value;
    const hasPhd = $('phd').checked || $('phdEae').checked;
@@ -254,8 +243,7 @@ renderEaeSensoryPriority(array(
    const degreeGrade=num('degree');
    const degreeInvalid=degreeGrade>0 && (degreeGrade<5 || degreeGrade>10);
    $('degreeValidation').classList.toggle('hidden', !degreeInvalid);
-   const languages=calcLanguages(), a=calcAcademic(languages), b=calcService(), socialResult=calcSocial(), c=socialResult.total, t=a+b+c, e=eligibility(socialResult);
-   const languageMessages=[]; const own=languageOwn[$('specialty').value]; if(own) languageMessages.push(`Στον ${$('specialty').value} δεν μοριοδοτείται η ${EducationLanguages.LABELS[own]} γλώσσα που αποτελεί προσόν του κλάδου.`); languageMessages.push(...languages.warnings); $('languageWarning').textContent=languageMessages.join(' '); $('languageWarning').classList.toggle('hidden',languageMessages.length===0);
+   const languages=AsepLanguageSelector.calculate('asepLanguages'), a=calcAcademic(languages), b=calcService(), socialResult=calcSocial(), c=socialResult.total, t=a+b+c, e=eligibility(socialResult);
    $('socialWarnings').classList.toggle('hidden', socialResult.warnings.length===0);
    $('socialWarnings').innerHTML=socialResult.warnings.map(w=>'• '+w).join('<br>');
    $('grandTotal').textContent=fmt(t); $('resAcademic').textContent=fmt(a)+' / 120'; $('resService').textContent=fmt(b)+' / 120'; $('resSocial').textContent=fmt(c);
@@ -292,7 +280,7 @@ renderEaeSensoryPriority(array(
  });
  $('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});
  document.addEventListener('asep-digital-tutoring-change',render);
- $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degree').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepDigitalTutoring.reset('digitalTutoring',{silent:true});render();});
+ $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degree').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepLanguageSelector.reset('asepLanguages',{silent:true});AsepDigitalTutoring.reset('digitalTutoring',{silent:true});render();});
  render();
 })();
 </script>
