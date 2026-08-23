@@ -10,7 +10,6 @@
 </head>
 <body class="edu-ui edu-calc-standard edu-page-gt1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
-<?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
 <div class="app">
 <section class="hero">
     <h1>Υπολογισμός μορίων 1ΓΤ/2024</h1>
@@ -114,19 +113,16 @@
           <label for="training">Επιμόρφωση ≥300 ωρών και διάρκειας ≥7 μηνών<small>Α.Ε.Ι. ή εποπτευόμενος δημόσιος φορέας — μοριοδοτείται μία επιμόρφωση — 10 μόρια</small></label>
         </div>
 
-        <?php
-renderTrainingProof([
-    'id' => 'trainingProof',
-    'radio_name' => 'trainingDates',
-    'yes_id' => 'trainingDatesYes',
-    'no_id' => 'trainingDatesNo',
-    'status_id' => 'trainingDatesStatus',
-    'context' => '1gt-2024-300h-7m',
-    'legal_html' => <<<'HTML'
-Σε περίπτωση που στο πιστοποιητικό δεν αναγράφεται η ημεροχρονολογία έναρξης και λήξης του σεμιναρίου, απαιτείται η προσκόμιση σχετικής βεβαίωσης από τον οικείο φορέα. <strong>Πρέπει να προκύπτει ολόκληρο το χρονικό διάστημα των 7 μηνών· 6 μήνες και 29 ημέρες δεν γίνονται δεκτοί.</strong>
-HTML
-]);
-?>
+        <div class="training-proof hidden" id="trainingProof">
+          <div class="training-proof-title">Έλεγχος πιστοποιητικού σεμιναρίου</div>
+          <div class="training-proof-question">Στο πιστοποιητικό αναγράφονται η ημερομηνία έναρξης και η ημερομηνία λήξης του σεμιναρίου;</div>
+          <div class="segmented-choice" role="radiogroup" aria-label="Ημερομηνίες έναρξης και λήξης στο πιστοποιητικό">
+            <label><input type="radio" name="trainingDates" id="trainingDatesYes" value="yes"><span>✓ Ναι</span></label>
+            <label><input type="radio" name="trainingDates" id="trainingDatesNo" value="no"><span>Όχι</span></label>
+          </div>
+          <div class="training-proof-status neutral" id="trainingDatesStatus">Έλεγξε το πιστοποιητικό πριν την υποβολή των δικαιολογητικών.</div>
+          <small class="training-proof-legal">Σε περίπτωση που στο πιστοποιητικό δεν αναγράφεται η ημεροχρονολογία έναρξης και λήξης του σεμιναρίου, απαιτείται η προσκόμιση σχετικής βεβαίωσης από τον οικείο φορέα. <strong>Πρέπει να προκύπτει ολόκληρο το χρονικό διάστημα των 7 μηνών· 6 μήνες και 29 ημέρες δεν γίνονται δεκτοί.</strong></small>
+        </div>
 
         <div class="subtot"><span>Σύνολο Ακαδημαϊκών</span><span class="pill" id="academicSubtotal">0,00 / 120</span></div>
       </section>

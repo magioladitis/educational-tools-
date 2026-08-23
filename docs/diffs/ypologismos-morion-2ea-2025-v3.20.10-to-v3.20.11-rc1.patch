@@ -1,0 +1,40 @@
+--- /mnt/data/asep-toolkit-v3.20.10-production/ypologismos-morion-2ea-2025.php	2026-08-23 09:44:25.727534763 +0000
++++ /mnt/data/asep-toolkit-v3.20.11-rc1-production/ypologismos-morion-2ea-2025.php	2026-08-23 10:08:03.758572181 +0000
+@@ -10,6 +10,7 @@
+ </head>
+ <body class="edu-ui edu-calc-standard edu-page-ea2">
+ <?php require_once __DIR__ . '/includes/header.php'; ?>
++<?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+ <div class="app">
+ <section class="hero"><h1>Υπολογισμός μορίων 2ΕΑ/2025</h1><p>Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ1΄ μελών <strong>Ειδικού Εκπαιδευτικού Προσωπικού (Ε.Ε.Π.)</strong>.</p><div class="meta"><span>2ΕΑ/2025</span><span>ΠΕ21–ΠΕ31</span><span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span><span>Έλεγχος πρόταξης</span><span>Άδειες &amp; βεβαιώσεις</span></div></section>
+ <div class="layout"><main>
+@@ -35,16 +36,19 @@
+ <div id="formalMasterNote" class="note hidden"><strong>Προσοχή:</strong> για ΠΕ21, ΠΕ22 και ΠΕ31, όταν μεταπτυχιακός τίτλος αποτελεί τυπικό προσόν διορισμού στη συγκεκριμένη διαδρομή ένταξης, ο τίτλος αυτός δεν μοριοδοτείται. Δήλωσε παραπάνω μόνο τους τίτλους που πράγματι μοριοδοτούνται.</div>
+ <h3>Ξένες γλώσσες — έως δύο</h3><div class="info">Επίλεξε <strong>ποια γλώσσα</strong> και το επίπεδό της. Αν δηλωθεί η ίδια γλώσσα δύο φορές, μοριοδοτείται αυτόματα μόνο το ανώτερο επίπεδο.</div><div class="field-grid"><div class="field"><label for="langName1">1η ξένη γλώσσα</label><select id="langName1"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select></div><div class="field"><label for="lang1">Επίπεδο 1ης γλώσσας</label><select id="lang1"><option value="0">Καμία / χωρίς μόρια</option><option value="3">Καλή — 3</option><option value="5">Πολύ καλή — 5</option><option value="7">Άριστη — 7</option></select></div><div class="field hidden" id="langOther1Wrap"><label for="langOther1">Ονομασία άλλης 1ης γλώσσας</label><input id="langOther1" type="text" placeholder="π.χ. Πορτογαλική"></div><div class="field"><label for="langName2">2η ξένη γλώσσα</label><select id="langName2"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select></div><div class="field"><label for="lang2">Επίπεδο 2ης γλώσσας</label><select id="lang2"><option value="0">Καμία / χωρίς μόρια</option><option value="3">Καλή — 3</option><option value="5">Πολύ καλή — 5</option><option value="7">Άριστη — 7</option></select></div><div class="field hidden" id="langOther2Wrap"><label for="langOther2">Ονομασία άλλης 2ης γλώσσας</label><input id="langOther2" type="text" placeholder="π.χ. Πορτογαλική"></div></div><div id="languageWarning" class="note hidden"></div>
+ <div class="checkrow"><input type="checkbox" id="computer"><label for="computer">Πιστοποιημένη γνώση χειρισμού Η/Υ Α΄ επιπέδου<small>+4 μόρια.</small></label></div><div class="checkrow"><input type="checkbox" id="training"><label for="training">Επιμόρφωση ≥300 ωρών και ≥7 μηνών<small>+2 μόρια · μοριοδοτείται μία επιμόρφωση.</small></label></div>
+-<div class="training-proof hidden" id="trainingProof">
+-<div class="training-proof-title">Έλεγχος πιστοποιητικού σεμιναρίου</div>
+-<div class="training-proof-question">Στο πιστοποιητικό αναγράφονται η ημερομηνία έναρξης και η ημερομηνία λήξης του σεμιναρίου;</div>
+-<div class="segmented-choice" role="radiogroup" aria-label="Ημερομηνίες έναρξης και λήξης στο πιστοποιητικό">
+-<label><input type="radio" name="trainingDates" id="trainingDatesYes" value="yes"><span>✓ Ναι</span></label>
+-<label><input type="radio" name="trainingDates" id="trainingDatesNo" value="no"><span>Όχι</span></label>
+-</div>
+-<div class="training-proof-status neutral" id="trainingDatesStatus">Έλεγξε το πιστοποιητικό πριν την υποβολή των δικαιολογητικών.</div>
+-<small class="training-proof-legal">Σε περίπτωση που στο πιστοποιητικό δεν αναγράφεται η ημεροχρονολογία έναρξης και λήξης του σεμιναρίου, απαιτείται η προσκόμιση σχετικής βεβαίωσης από τον οικείο φορέα. <strong>Σε κάθε περίπτωση πρέπει να προκύπτει ολόκληρο το χρονικό διάστημα των 7 μηνών (6 μήνες και 29 ημέρες δεν γίνεται δεκτό).</strong></small>
+-</div>
++<?php
++renderTrainingProof([
++    'id' => 'trainingProof',
++    'radio_name' => 'trainingDates',
++    'yes_id' => 'trainingDatesYes',
++    'no_id' => 'trainingDatesNo',
++    'status_id' => 'trainingDatesStatus',
++    'context' => '2ea-2025-300h-7m',
++    'legal_html' => <<<'HTML'
++Σε περίπτωση που στο πιστοποιητικό δεν αναγράφεται η ημεροχρονολογία έναρξης και λήξης του σεμιναρίου, απαιτείται η προσκόμιση σχετικής βεβαίωσης από τον οικείο φορέα. <strong>Σε κάθε περίπτωση πρέπει να προκύπτει ολόκληρο το χρονικό διάστημα των 7 μηνών (6 μήνες και 29 ημέρες δεν γίνεται δεκτό).</strong>
++HTML
++]);
++?>
+ <div class="subtot"><span>Ακαδημαϊκά</span><span class="pill" id="academicSubtotal">0,00</span></div></section>
+ <section class="card"><h2>4. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο 120 μόρια. Μην δηλώνεις τον ίδιο μήνα σε περισσότερα από ένα πεδία.</p>
+ <div class="field-grid"><div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο/μήνα.</small></label><input id="publicMonths" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια/μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" type="number" min="0" max="60" step="1" value="0"></div></div>

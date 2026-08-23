@@ -1,12 +1,12 @@
-# v3.20.10 header hotfix
+# Training proof component — v3.20.11-rc2
 
-Fixes a malformed, unclosed HTML comment introduced in v3.20.9 in five calculator pages. The malformed line caused browsers to treat the remainder of each document as an HTML comment, producing a blank white page even though PHP executed successfully.
+Hotfix over rc1 for PHP compatibility on older hosting environments.
 
-Affected files:
-- ypologismos-morion.php
-- ypologismos-morion-1ea-2025.php
-- ypologismos-morion-1gt-2024.php
-- ypologismos-morion-2ea-2025.php
-- ypologismos-morion-4ea-2025.php
+## Cause fixed
+The rc1 component used a PHP arrow function (`fn`), which requires PHP 7.4+. On a server running an older PHP version this can cause a fatal parse error immediately after `header.php`, leaving the rest of the page blank.
 
-No calculation/business logic or CSS content changed. Shared asset query strings are cache-busted to v3.20.10 in the complete production package.
+## What changed
+Only `includes/components/training-proof.php` changed. It now uses conservative PHP syntax (no arrow functions and no return type declaration). The rendered HTML contract and all page-specific scoring/eligibility logic are unchanged.
+
+## Safety boundary
+The component remains presentation-only. It contains no 300h/400h/7-month/EAE/scoring rules. Those remain in each calculator.
