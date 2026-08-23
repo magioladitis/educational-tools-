@@ -1,0 +1,295 @@
+--- v3.20.13/ypologismos-morion.php
++++ v3.20.14-rc1/ypologismos-morion.php
+@@ -12,6 +12,7 @@
+ <?php require_once __DIR__ . '/includes/header.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
++<?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+ 
+ <div class="app">
+ <section class="hero">
+@@ -147,15 +148,21 @@
+         <div class="field-grid">
+           <div class="field"><label for="normalMonths">Δημόσια εκπαιδευτική προϋπηρεσία<small>1 μόριο/μήνα</small></label><input type="number" id="normalMonths" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+           <div class="field"><label for="difficultMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–2021<small>2 μόρια/μήνα · έως 60 μήνες</small></label><input type="number" id="difficultMonths" min="0" max="60" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+-          <div class="field"><label for="threeMonthMonths2020">Τρίμηνες συμβάσεις 2020–2021<small>έως 8 μήνες · 1,5 μόριο/μήνα</small></label><input type="number" id="threeMonthMonths2020" min="0" max="8" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+-          <div class="field"><label for="threeMonthDifficultMonths2020">Τρίμηνες σε δυσπρόσιτα 2020–2021<small>έως 8 μήνες · 3 μόρια/μήνα</small></label><input type="number" id="threeMonthDifficultMonths2020" min="0" max="8" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+-          <div class="field"><label for="threeMonthMonths2021">Τρίμηνες συμβάσεις 2021–2022<small>έως 7 μήνες · 1,5 μόριο/μήνα</small></label><input type="number" id="threeMonthMonths2021" min="0" max="7" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+-          <div class="field"><label for="threeMonthDifficultMonths2021">Τρίμηνες σε δυσπρόσιτα 2021–2022<small>έως 7 μήνες · 3 μόρια/μήνα</small></label><input type="number" id="threeMonthDifficultMonths2021" min="0" max="7" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
++        </div>
++
++<?php
++renderAsepThreeMonthService(array(
++    'regular_2020_id' => 'threeMonthMonths2020',
++    'difficult_2020_id' => 'threeMonthDifficultMonths2020',
++    'regular_2021_id' => 'threeMonthMonths2021',
++    'difficult_2021_id' => 'threeMonthDifficultMonths2021'
++));
++?>
++
++        <div class="field-grid">
+           <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+           <div class="field"><label for="digitalMonths">Ψηφιακό Φροντιστήριο<small>1,5 μόριο/μήνα · έως 10 μήνες</small></label><input type="number" id="digitalMonths" min="0" max="10" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+         </div>
+-
+-        <div class="note">Στις τρίμηνες συμβάσεις εφαρμόζονται χωριστά ετήσια ανώτατα όρια: έως 10 μόρια/έτος για τις λοιπές και έως 20 μόρια/έτος για τις δυσπρόσιτες.</div>
+         <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
+       </section>
+ 
+--- v3.20.13/ypologismos-morion-1gt-2024.php
++++ v3.20.14-rc1/ypologismos-morion-1gt-2024.php
+@@ -12,6 +12,7 @@
+ <?php require_once __DIR__ . '/includes/header.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
++<?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+ <div class="app">
+ <section class="hero">
+     <h1>Υπολογισμός μορίων 1ΓΤ/2024</h1>
+@@ -158,29 +159,14 @@
+           <input type="number" id="difficultMonths" min="0" max="60" step="1" value="0">
+         </div>
+ 
+-        <h3>Τρίμηνες συμβάσεις 2020–2021</h3>
+-        <div class="field-grid">
+-          <div class="field">
+-            <label for="covid20Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 8 μήνες · έως 10 μόρια στο έτος</small></label>
+-            <input type="number" id="covid20Regular" min="0" max="8" step="1" value="0">
+-          </div>
+-          <div class="field">
+-            <label for="covid20Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 8 μήνες · έως 20 μόρια στο έτος</small></label>
+-            <input type="number" id="covid20Difficult" min="0" max="8" step="1" value="0">
+-          </div>
+-        </div>
+-
+-        <h3>Τρίμηνες συμβάσεις 2021–2022</h3>
+-        <div class="field-grid">
+-          <div class="field">
+-            <label for="covid21Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 7 μήνες · έως 10 μόρια στο έτος</small></label>
+-            <input type="number" id="covid21Regular" min="0" max="7" step="1" value="0">
+-          </div>
+-          <div class="field">
+-            <label for="covid21Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 7 μήνες · έως 20 μόρια στο έτος</small></label>
+-            <input type="number" id="covid21Difficult" min="0" max="7" step="1" value="0">
+-          </div>
+-        </div>
++<?php
++renderAsepThreeMonthService(array(
++    'regular_2020_id' => 'covid20Regular',
++    'difficult_2020_id' => 'covid20Difficult',
++    'regular_2021_id' => 'covid21Regular',
++    'difficult_2021_id' => 'covid21Difficult'
++));
++?>
+ 
+         <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
+       </section>
+--- v3.20.13/ypologismos-morion-1ea-2025.php
++++ v3.20.14-rc1/ypologismos-morion-1ea-2025.php
+@@ -12,6 +12,7 @@
+ <?php require_once __DIR__ . '/includes/header.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
++<?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+ <div class="app">
+ <section class="hero">
+ <h1>Υπολογισμός μορίων 1ΕΑ/2025</h1>
+@@ -62,8 +63,14 @@
+ <section class="card">
+ <h2>3. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο 120 μόρια. Μην δηλώνεις τον ίδιο μήνα σε περισσότερα από ένα πεδία.</p>
+ <div class="field-grid"><div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο/μήνα.</small></label><input id="publicMonths" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια/μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" type="number" min="0" max="60" step="1" value="0"></div></div>
+-<h3>Τρίμηνες συμβάσεις 2020–2021 και 2021–2022</h3>
+-<div class="field-grid"><div class="field"><label for="covid2020">Κανονικές 2020–2021<small>1,5/μήνα · έως 10 μόρια έτους.</small></label><input id="covid2020" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="covid2021">Κανονικές 2021–2022<small>1,5/μήνα · έως 10 μόρια έτους.</small></label><input id="covid2021" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="covidHard2020">Δυσπρόσιτες 2020–2021<small>3/μήνα · έως 20 μόρια έτους.</small></label><input id="covidHard2020" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="covidHard2021">Δυσπρόσιτες 2021–2022<small>3/μήνα · έως 20 μόρια έτους.</small></label><input id="covidHard2021" class="service-months" type="number" min="0" step="1" value="0"></div></div>
++<?php
++renderAsepThreeMonthService(array(
++    'regular_2020_id' => 'covid2020',
++    'difficult_2020_id' => 'covidHard2020',
++    'regular_2021_id' => 'covid2021',
++    'difficult_2021_id' => 'covidHard2021'
++));
++?>
+ <div class="info">Η προϋπηρεσία αναπληρωτή ΤΕ01.30 Βοηθών Βρεφοκόμων–Παιδοκόμων προσμετράται και στον ΔΕ01-ΕΒΠ. Η ειδική μοριοδότηση ιδιωτικής σχολικής προϋπηρεσίας με συντελεστή 0,9 <strong>δεν αφορά τα μέλη ΕΕΠ-ΕΒΠ</strong>.</div>
+ <div id="serviceWarning" class="note hidden"></div>
+ <div class="subtot"><span>Προϋπηρεσία</span><span class="pill" id="serviceSubtotal">0,00</span></div>
+@@ -111,7 +118,7 @@
+ function updateTrainingProofUI(){const proof=$('trainingProof'),status=$('trainingDatesStatus');if(!proof||!status)return;const active=$('training').checked;proof.classList.toggle('hidden',!active);if(!active)return;const value=trainingDatesSelection();status.className='training-proof-status '+(value==='yes'?'success':value==='no'?'warning':'neutral');if(value==='yes')status.textContent='✓ Οι ημερομηνίες έναρξης και λήξης αναγράφονται στο πιστοποιητικό.';else if(value==='no')status.textContent='⚠️ Απαιτείται πρόσθετη βεβαίωση από τον οικείο φορέα με την ημερομηνία έναρξης και λήξης.';else status.textContent='Έλεγξε το πιστοποιητικό πριν την υποβολή των δικαιολογητικών.';}
+ function trainingProofSummary(){if(!$('training').checked)return'';const value=trainingDatesSelection();if(value==='yes')return'Πιστοποιητικό σεμιναρίου: αναγράφονται ημερομηνία έναρξης και λήξης.';if(value==='no')return'ΔΙΚΑΙΟΛΟΓΗΤΙΚΟ: απαιτείται βεβαίωση φορέα με ημερομηνία έναρξης και λήξης του σεμιναρίου.';return'Έλεγχος πιστοποιητικού σεμιναρίου: εκκρεμεί ο έλεγχος ημερομηνίας έναρξης και λήξης.';}
+ function academic(){syncLanguageUI();const languages=languageResult();const type=$('titleType').value;const grade=n('degreeGrade');const valid=$('degreeGrade').value!==''&&grade>=10&&grade<=20;const rate=type==='postsecondary'?7.2:4;const cap=type==='postsecondary'?96:64;const degree=valid?round2(Math.max(0,grade-10)*rate):0;const raw=degree+($('secondTitle').checked?10:0)+languages.points+($('computer').checked?4:0)+($('training').checked?2:0);return{degree,raw,points:Math.min(raw,cap),cap,valid,languages};}
+-function service(){const m=v=>Math.max(0,Math.floor(Number(v)||0));const tri=(v,rate,cap)=>({months:m(v),points:Math.min(m(v)*rate,cap)});const parts=[EducationService.regularPublic(n('publicMonths')),EducationService.difficult(n('hardMonths')),tri(n('covid2020'),1.5,10),tri(n('covid2021'),1.5,10),tri(n('covidHard2020'),3,20),tri(n('covidHard2021'),3,20)];const raw=parts.reduce((s,x)=>s+x.points,0);const months=parts.reduce((s,x)=>s+x.months,0);return{raw,points:Math.min(raw,120),months};}
++function service(){const parts=[EducationService.regularPublic(n('publicMonths')),EducationService.difficult(n('hardMonths')),EducationService.threeMonthRegular2020(n('covid2020')),EducationService.threeMonthRegular2021(n('covid2021')),EducationService.threeMonthDifficult2020(n('covidHard2020')),EducationService.threeMonthDifficult2021(n('covidHard2021'))];const raw=parts.reduce((s,x)=>s+x.points,0),months=parts.reduce((s,x)=>s+x.months,0);return{raw,points:Math.min(raw,120),months};}
+ function social(){return EducationSocial.calculate({children:n('children'),candidateDisability:n('candidateDisability'),spouseDisability:n('spouseDisability'),childDisability:n('childDisability'),candidateMentalCondition:$('mental').checked,marriageYears4Plus:$('marriage4').checked});}
+ function render(){updateTrainingProofUI();const a=academic(),s=service(),c=social(),total=a.points+s.points+c.total;const post=$('titleType').value==='postsecondary';$('gradeInfo').innerHTML=post?'Τίτλος μεταδευτεροβάθμιας: <strong>7,2 μόρια</strong> για κάθε βαθμό πάνω από 10 · ακαδημαϊκό όριο <strong>96</strong>.':'Τίτλος δευτεροβάθμιας: <strong>4 μόρια</strong> για κάθε βαθμό πάνω από 10 · ακαδημαϊκό όριο <strong>64</strong>.';$('gradeWarning').classList.toggle('hidden',$('degreeGrade').value===''||a.valid);$('academicSubtotal').textContent=fmt(a.points);$('serviceSubtotal').textContent=fmt(s.points);$('socialSubtotal').textContent=fmt(c.total);$('totalPoints').textContent=fmt(total);$('degreePoints').textContent=fmt(a.degree);$('academicPoints').textContent=fmt(a.points)+(a.raw>a.cap?' (όριο '+a.cap+')':'');$('servicePoints').textContent=fmt(s.points)+(s.raw>120?' (όριο 120)':'');$('socialPoints').textContent=fmt(c.total);$('academicCap').textContent=a.cap;const sw=$('serviceWarning');const msgs=[];if(s.months>120)msgs.push('Έχουν δηλωθεί '+s.months+' μήνες σε ξεχωριστές κατηγορίες. Έλεγξε ότι δεν έχει δηλωθεί ο ίδιος μήνας δύο φορές και ότι η συνολική πραγματική προϋπηρεσία δεν υπερβαίνει τους 120 μήνες που λαμβάνονται υπόψη.');if(s.raw>120)msgs.push('Η μοριοδότηση προϋπηρεσίας περιορίστηκε στο ανώτατο όριο των 120 μορίων.');sw.textContent=msgs.join(' ');sw.classList.toggle('hidden',msgs.length===0);const soc=$('socialWarning');soc.textContent=c.warnings.join(' ');soc.classList.toggle('hidden',c.warnings.length===0);const lw=$('languageWarning');lw.textContent=a.languages.warnings.join(' ');lw.classList.toggle('hidden',a.languages.warnings.length===0);const pb=$('priorityBox');pb.className='priority'+($('signLanguage').checked?' yes':'');pb.textContent=$('signLanguage').checked?'Ειδική προτεραιότητα ΕΝΓ για υποστήριξη κωφών/βαρήκοων μαθητών':'Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ';return{a,s,c,total};}
+ function summary(r){return[`Υπολογισμός μορίων 1ΕΑ/2025 — ΔΕ01 ΕΒΠ`,`Βαθμός τίτλου: ${fmt(r.a.degree)}`,`Ακαδημαϊκά: ${fmt(r.a.points)}`,`Προϋπηρεσία: ${fmt(r.s.points)}`,`Κοινωνικά: ${fmt(r.c.total)}`,`ΣΥΝΟΛΟ: ${fmt(r.total)}`,$('signLanguage').checked?'ΕΝΓ: δηλώθηκε ειδική προτεραιότητα':'ΕΝΓ: δεν δηλώθηκε',trainingProofSummary()].filter(Boolean).join('\n');}
+--- v3.20.13/ypologismos-morion-2ea-2025.php
++++ v3.20.14-rc1/ypologismos-morion-2ea-2025.php
+@@ -12,6 +12,7 @@
+ <?php require_once __DIR__ . '/includes/header.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
++<?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+ <div class="app">
+ <section class="hero"><h1>Υπολογισμός μορίων 2ΕΑ/2025</h1><p>Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ1΄ μελών <strong>Ειδικού Εκπαιδευτικού Προσωπικού (Ε.Ε.Π.)</strong>.</p><div class="meta"><span>2ΕΑ/2025</span><span>ΠΕ21–ΠΕ31</span><span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span><span>Έλεγχος πρόταξης</span><span>Άδειες &amp; βεβαιώσεις</span></div></section>
+ <div class="layout"><main>
+@@ -53,7 +54,14 @@
+ <div class="subtot"><span>Ακαδημαϊκά</span><span class="pill" id="academicSubtotal">0,00</span></div></section>
+ <section class="card"><h2>4. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο 120 μόρια. Μην δηλώνεις τον ίδιο μήνα σε περισσότερα από ένα πεδία.</p>
+ <div class="field-grid"><div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο/μήνα.</small></label><input id="publicMonths" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια/μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" type="number" min="0" max="60" step="1" value="0"></div></div>
+-<h3>Τρίμηνες συμβάσεις 2020–2021 και 2021–2022</h3><div class="field-grid"><div class="field"><label for="covid2020">Κανονικές 2020–2021<small>1,5/μήνα · έως 10 μόρια έτους.</small></label><input id="covid2020" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="covid2021">Κανονικές 2021–2022<small>1,5/μήνα · έως 10 μόρια έτους.</small></label><input id="covid2021" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="covidHard2020">Δυσπρόσιτες 2020–2021<small>3/μήνα · έως 20 μόρια έτους.</small></label><input id="covidHard2020" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="covidHard2021">Δυσπρόσιτες 2021–2022<small>3/μήνα · έως 20 μόρια έτους.</small></label><input id="covidHard2021" class="service-months" type="number" min="0" step="1" value="0"></div></div>
++<?php
++renderAsepThreeMonthService(array(
++    'regular_2020_id' => 'covid2020',
++    'difficult_2020_id' => 'covidHard2020',
++    'regular_2021_id' => 'covid2021',
++    'difficult_2021_id' => 'covidHard2021'
++));
++?>
+ <div id="serviceBranchNote" class="info">Η ειδική μοριοδότηση ιδιωτικής σχολικής προϋπηρεσίας με συντελεστή 0,9 δεν αφορά τα μέλη ΕΕΠ-ΕΒΠ.</div><div id="serviceWarning" class="note hidden"></div><div class="subtot"><span>Προϋπηρεσία</span><span class="pill" id="serviceSubtotal">0,00</span></div></section>
+ <?php
+ renderAsepSocialCriteria(array(
+@@ -87,7 +95,7 @@
+ function updateTrainingProofUI(){const proof=$('trainingProof'),status=$('trainingDatesStatus');if(!proof||!status)return;const active=$('training').checked;proof.classList.toggle('hidden',!active);if(!active)return;const value=trainingDatesSelection();status.className='training-proof-status '+(value==='yes'?'success':value==='no'?'warning':'neutral');if(value==='yes')status.textContent='✓ Οι ημερομηνίες έναρξης και λήξης αναγράφονται στο πιστοποιητικό.';else if(value==='no')status.textContent='⚠️ Απαιτείται πρόσθετη βεβαίωση από τον οικείο φορέα με την ημερομηνία έναρξης και λήξης.';else status.textContent='Έλεγξε το πιστοποιητικό πριν την υποβολή των δικαιολογητικών.';}
+ function trainingProofSummary(){if(!$('training').checked)return'';const value=trainingDatesSelection();if(value==='yes')return'Πιστοποιητικό σεμιναρίου: αναγράφονται ημερομηνία έναρξης και λήξης.';if(value==='no')return'ΔΙΚΑΙΟΛΟΓΗΤΙΚΟ: απαιτείται βεβαίωση φορέα με ημερομηνία έναρξης και λήξης του σεμιναρίου.';return'Έλεγχος πιστοποιητικού σεμιναρίου: εκκρεμεί ο έλεγχος ημερομηνίας έναρξης και λήξης.';}
+ function academic(){syncLanguageUI();const languages=languageResult();const grade=n('degreeGrade');const valid=$('degreeGrade').value!==''&&grade>=5&&grade<=10;const degree=valid?Math.round(grade*2.5*100)/100:0;const masters=n('masters')===1?20:n('masters')>=2?28:0;const raw=degree+($('secondDegree').checked?7:0)+($('phd').checked?40:0)+masters+languages.points+($('computer').checked?4:0)+($('training').checked?2:0);return{degree,raw,points:Math.min(raw,120),valid,masters,languages};}
+-function service(){const m=v=>Math.max(0,Math.floor(Number(v)||0));const tri=(v,rate,cap)=>({months:m(v),points:Math.min(m(v)*rate,cap)});const parts=[EducationService.regularPublic(n('publicMonths')),EducationService.difficult(n('hardMonths')),tri(n('covid2020'),1.5,10),tri(n('covid2021'),1.5,10),tri(n('covidHard2020'),3,20),tri(n('covidHard2021'),3,20)];const raw=parts.reduce((s,x)=>s+x.points,0),months=parts.reduce((s,x)=>s+x.months,0);return{raw,points:Math.min(raw,120),months};}
++function service(){const parts=[EducationService.regularPublic(n('publicMonths')),EducationService.difficult(n('hardMonths')),EducationService.threeMonthRegular2020(n('covid2020')),EducationService.threeMonthRegular2021(n('covid2021')),EducationService.threeMonthDifficult2020(n('covidHard2020')),EducationService.threeMonthDifficult2021(n('covidHard2021'))];const raw=parts.reduce((s,x)=>s+x.points,0),months=parts.reduce((s,x)=>s+x.months,0);return{raw,points:Math.min(raw,120),months};}
+ function social(){return EducationSocial.calculate({children:n('children'),candidateDisability:n('candidateDisability'),spouseDisability:n('spouseDisability'),childDisability:n('childDisability'),candidateMentalCondition:$('mental').checked,marriageYears4Plus:$('marriage4').checked});}
+ let eligibilityUiKey='';
+ function selectedEligibilityIds(){return Array.from(document.querySelectorAll('#licenseRequirements input[data-license-id]:checked')).map(x=>x.dataset.licenseId);}
+--- v3.20.13/ypologismos-morion-3ea-2025.php
++++ v3.20.14-rc1/ypologismos-morion-3ea-2025.php
+@@ -12,6 +12,7 @@
+ <?php require_once __DIR__ . '/includes/header.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
++<?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+ <div class="page">
+ <section class="hero">
+ <h1>Υπολογισμός μορίων 3ΕΑ/2025</h1>
+@@ -82,13 +83,14 @@
+ <div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο ανά μήνα.</small></label><input id="publicMonths" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+ <div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια ανά μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" type="number" min="0" max="60" step="1" inputmode="numeric" value="0"></div>
+ 
+-<h3>Τρίμηνες συμβάσεις — κανονική προϋπηρεσία</h3>
+-<div class="field"><label for="covid2020Months">Τρίμηνες συμβάσεις 2020–2021<small>1,5 μόριο ανά μήνα · έως 8 μήνες · έως 10 μόρια για το σχολικό έτος.</small></label><input id="covid2020Months" class="service-months" type="number" min="0" max="8" step="1" inputmode="numeric" value="0"></div>
+-<div class="field"><label for="covid2021Months">Τρίμηνες συμβάσεις 2021–2022<small>1,5 μόριο ανά μήνα · έως 7 μήνες · έως 10 μόρια για το σχολικό έτος.</small></label><input id="covid2021Months" class="service-months" type="number" min="0" max="7" step="1" inputmode="numeric" value="0"></div>
+-
+-<h3>Τρίμηνες συμβάσεις σε δυσπρόσιτα / καταστήματα κράτησης</h3>
+-<div class="field"><label for="covidHard2020Months">Τρίμηνες σε δυσπρόσιτα 2020–2021<small>3 μόρια ανά μήνα · έως 8 μήνες · έως 20 μόρια για το σχολικό έτος.</small></label><input id="covidHard2020Months" class="service-months" type="number" min="0" max="8" step="1" inputmode="numeric" value="0"></div>
+-<div class="field"><label for="covidHard2021Months">Τρίμηνες σε δυσπρόσιτα 2021–2022<small>3 μόρια ανά μήνα · έως 7 μήνες · έως 20 μόρια για το σχολικό έτος.</small></label><input id="covidHard2021Months" class="service-months" type="number" min="0" max="7" step="1" inputmode="numeric" value="0"></div>
++<?php
++renderAsepThreeMonthService(array(
++    'regular_2020_id' => 'covid2020Months',
++    'difficult_2020_id' => 'covidHard2020Months',
++    'regular_2021_id' => 'covid2021Months',
++    'difficult_2021_id' => 'covidHard2021Months'
++));
++?>
+ 
+ <div class="field"><label for="privateMonths">Ιδιωτική εκπαιδευτική προϋπηρεσία<small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι νόμιμες προϋποθέσεις.</small></label><input id="privateMonths" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+ <div class="field"><label for="digitalMonths">Ψηφιακό Φροντιστήριο<small>1,5 μόριο ανά μήνα · έως 15 μόρια ανά σχολικό έτος.</small></label><input id="digitalMonths" class="service-months" type="number" min="0" max="10" step="1" inputmode="numeric" value="0"></div>
+--- v3.20.13/ypologismos-morion-4ea-2025.php
++++ v3.20.14-rc1/ypologismos-morion-4ea-2025.php
+@@ -12,6 +12,7 @@
+ <?php require_once __DIR__ . '/includes/header.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+ <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
++<?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+ <div class="app">
+ <section class="hero">
+     <h1>Υπολογισμός μορίων 4ΕΑ/2025</h1>
+@@ -242,29 +243,14 @@
+           <input type="number" id="difficultMonths" min="0" max="60" step="1" value="0">
+         </div>
+ 
+-        <h3>Τρίμηνες συμβάσεις 2020–2021</h3>
+-        <div class="field-grid">
+-          <div class="field">
+-            <label for="covid20Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 8 μήνες · έως 10 μόρια στο έτος</small></label>
+-            <input type="number" id="covid20Regular" min="0" max="8" step="1" value="0">
+-          </div>
+-          <div class="field">
+-            <label for="covid20Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 8 μήνες · έως 20 μόρια στο έτος</small></label>
+-            <input type="number" id="covid20Difficult" min="0" max="8" step="1" value="0">
+-          </div>
+-        </div>
+-
+-        <h3>Τρίμηνες συμβάσεις 2021–2022</h3>
+-        <div class="field-grid">
+-          <div class="field">
+-            <label for="covid21Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 7 μήνες · έως 10 μόρια στο έτος</small></label>
+-            <input type="number" id="covid21Regular" min="0" max="7" step="1" value="0">
+-          </div>
+-          <div class="field">
+-            <label for="covid21Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 7 μήνες · έως 20 μόρια στο έτος</small></label>
+-            <input type="number" id="covid21Difficult" min="0" max="7" step="1" value="0">
+-          </div>
+-        </div>
++<?php
++renderAsepThreeMonthService(array(
++    'regular_2020_id' => 'covid20Regular',
++    'difficult_2020_id' => 'covid20Difficult',
++    'regular_2021_id' => 'covid21Regular',
++    'difficult_2021_id' => 'covid21Difficult'
++));
++?>
+ 
+         <div class="field">
+           <label for="privateMonths">Μήνες προϋπηρεσίας στην ιδιωτική εκπαίδευση
+--- /dev/null
++++ v3.20.14-rc1/includes/components/asep-three-month-service.php
+@@ -0,0 +1,55 @@
++<?php
++/**
++ * Shared presentation for the historical ASEP three-month service contracts
++ * of school years 2020–2021 and 2021–2022.
++ * Calculation remains in includes/service-calculations.js.
++ */
++if (!function_exists('renderAsepThreeMonthService')) {
++    function renderAsepThreeMonthService($config)
++    {
++        $required = array('regular_2020_id', 'difficult_2020_id', 'regular_2021_id', 'difficult_2021_id');
++        foreach ($required as $key) {
++            if (!isset($config[$key]) || $config[$key] === '') {
++                return;
++            }
++        }
++        $escape = function ($value) {
++            return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
++        };
++        $ids = array(
++            'regular2020' => $escape($config['regular_2020_id']),
++            'difficult2020' => $escape($config['difficult_2020_id']),
++            'regular2021' => $escape($config['regular_2021_id']),
++            'difficult2021' => $escape($config['difficult_2021_id'])
++        );
++        $inputClass = isset($config['input_class']) ? trim((string) $config['input_class']) : 'service-months';
++        $inputClass = $escape($inputClass);
++        ?>
++<div class="asep-three-month-service" data-component="asep-three-month-service">
++  <h3>Τρίμηνες συμβάσεις 2020–2021</h3>
++  <div class="field-grid">
++    <div class="field">
++      <label for="<?php echo $ids['regular2020']; ?>">Λοιπές τρίμηνες συμβάσεις — μήνες<small>1,5 μόριο ανά μήνα · έως 8 μήνες · έως 10 μόρια για το σχολικό έτος.</small></label>
++      <input id="<?php echo $ids['regular2020']; ?>" class="<?php echo $inputClass; ?>" type="number" min="0" max="8" step="1" inputmode="numeric" value="0">
++    </div>
++    <div class="field">
++      <label for="<?php echo $ids['difficult2020']; ?>">Τρίμηνες σε δυσπρόσιτα / καταστήματα κράτησης — μήνες<small>3 μόρια ανά μήνα · έως 8 μήνες · έως 20 μόρια για το σχολικό έτος.</small></label>
++      <input id="<?php echo $ids['difficult2020']; ?>" class="<?php echo $inputClass; ?>" type="number" min="0" max="8" step="1" inputmode="numeric" value="0">
++    </div>
++  </div>
++  <h3>Τρίμηνες συμβάσεις 2021–2022</h3>
++  <div class="field-grid">
++    <div class="field">
++      <label for="<?php echo $ids['regular2021']; ?>">Λοιπές τρίμηνες συμβάσεις — μήνες<small>1,5 μόριο ανά μήνα · έως 7 μήνες · έως 10 μόρια για το σχολικό έτος.</small></label>
++      <input id="<?php echo $ids['regular2021']; ?>" class="<?php echo $inputClass; ?>" type="number" min="0" max="7" step="1" inputmode="numeric" value="0">
++    </div>
++    <div class="field">
++      <label for="<?php echo $ids['difficult2021']; ?>">Τρίμηνες σε δυσπρόσιτα / καταστήματα κράτησης — μήνες<small>3 μόρια ανά μήνα · έως 7 μήνες · έως 20 μόρια για το σχολικό έτος.</small></label>
++      <input id="<?php echo $ids['difficult2021']; ?>" class="<?php echo $inputClass; ?>" type="number" min="0" max="7" step="1" inputmode="numeric" value="0">
++    </div>
++  </div>
++  <div class="note asep-three-month-note">Οι μήνες των τρίμηνων συμβάσεων δηλώνονται μόνο στα αντίστοιχα πεδία και δεν πρέπει να δηλώνονται ξανά στη λοιπή ή στη δυσπρόσιτη προϋπηρεσία. Τα ανώτατα όρια εφαρμόζονται χωριστά ανά σχολικό έτος.</div>
++</div>
++<?php
++    }
++}

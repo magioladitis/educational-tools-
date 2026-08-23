@@ -12,6 +12,7 @@
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <div class="app">
 <section class="hero">
     <h1>Υπολογισμός μορίων 1ΓΤ/2024</h1>
@@ -146,9 +147,9 @@ HTML
 
         <div class="field">
           <label for="regularMonths">Λοιπή αναγνωρισμένη εκπαιδευτική προϋπηρεσία
-            <small>1 μόριο ανά μήνα. Εδώ μπορεί να συμπεριληφθεί και αναγνωρισμένη ιδιωτική προϋπηρεσία που πληροί τις προϋποθέσεις της προκήρυξης.</small>
+            <small>1 μόριο ανά μήνα · έως 120 μήνες. Εδώ μπορεί να συμπεριληφθεί και αναγνωρισμένη ιδιωτική προϋπηρεσία που πληροί τις προϋποθέσεις της προκήρυξης.</small>
           </label>
-          <input type="number" id="regularMonths" min="0" step="1" value="0">
+          <input type="number" id="regularMonths" min="0" max="120" step="1" value="0">
         </div>
 
         <div class="field">
@@ -158,29 +159,14 @@ HTML
           <input type="number" id="difficultMonths" min="0" max="60" step="1" value="0">
         </div>
 
-        <h3>Τρίμηνες συμβάσεις 2020–2021</h3>
-        <div class="field-grid">
-          <div class="field">
-            <label for="covid20Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 8 μήνες · έως 10 μόρια στο έτος</small></label>
-            <input type="number" id="covid20Regular" min="0" max="8" step="1" value="0">
-          </div>
-          <div class="field">
-            <label for="covid20Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 8 μήνες · έως 20 μόρια στο έτος</small></label>
-            <input type="number" id="covid20Difficult" min="0" max="8" step="1" value="0">
-          </div>
-        </div>
-
-        <h3>Τρίμηνες συμβάσεις 2021–2022</h3>
-        <div class="field-grid">
-          <div class="field">
-            <label for="covid21Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 7 μήνες · έως 10 μόρια στο έτος</small></label>
-            <input type="number" id="covid21Regular" min="0" max="7" step="1" value="0">
-          </div>
-          <div class="field">
-            <label for="covid21Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 7 μήνες · έως 20 μόρια στο έτος</small></label>
-            <input type="number" id="covid21Difficult" min="0" max="7" step="1" value="0">
-          </div>
-        </div>
+<?php
+renderAsepThreeMonthService(array(
+    'regular_2020_id' => 'covid20Regular',
+    'difficult_2020_id' => 'covid20Difficult',
+    'regular_2021_id' => 'covid21Regular',
+    'difficult_2021_id' => 'covid21Difficult'
+));
+?>
 
         <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
       </section>
@@ -253,7 +239,7 @@ renderAsepSocialCriteria(array(
   <div class="credits">Υλοποίηση / επεξεργασία: Μάριος Μαγιολαδίτης</div>
 </div>
 
-<script src="includes/service-calculations.js"></script>
+<script src="includes/service-calculations.js?v=3.20.14-rc2"></script>
 <script src="includes/social-calculations.js"></script>
 <script src="includes/language-calculations.js"></script>
 <script src="includes/te-academic-calculations.js"></script>
@@ -366,7 +352,7 @@ renderAsepSocialCriteria(array(
   ].filter((x,i,a)=>x!==''||a[i-1]!=='').join('\n');}
 
   ['regularMonths','difficultMonths','covid20Regular','covid20Difficult','covid21Regular','covid21Difficult'].forEach(id=>{
-    const el=$(id);el.addEventListener('input',()=>{if(el.value==='')return;el.value=Math.max(0,Math.floor(Number(el.value)||0));});
+    const el=$(id);el.addEventListener('input',()=>{if(el.value==='')return;let value=Math.max(0,Math.floor(Number(el.value)||0));const max=el.getAttribute('max');if(max!==null&&max!=='')value=Math.min(value,Number(max));el.value=value;});
   });
   document.addEventListener('input',calc);document.addEventListener('change',calc);
   $('branch').addEventListener('change',()=>{$('gradeScale').dataset.auto='on';updateBranchUI();calc();});

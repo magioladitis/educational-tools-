@@ -1,19 +1,7 @@
-Αρχεία για ανέβασμα στο server (8 συνολικά):
-
-1. ypologismos-morion.php
-2. ypologismos-morion-1gt-2024.php
-3. ypologismos-morion-1ea-2025.php
-4. ypologismos-morion-2ea-2025.php
-5. ypologismos-morion-3ea-2025.php
-6. ypologismos-morion-4ea-2025.php
-7. assets/common.css
-8. includes/components/asep-social-criteria.php
-
-ΔΕΝ χρειάζεται αλλαγή σε:
-- includes/social-calculations.js
-- includes/service-calculations.js
-- includes/academic-calculations.js
-- includes/te-academic-calculations.js
-- includes/language-calculations.js
-- assets/common.js
-- includes/components/training-proof.php
+ypologismos-morion.php
+ypologismos-morion-1gt-2024.php
+ypologismos-morion-1ea-2025.php
+ypologismos-morion-2ea-2025.php
+ypologismos-morion-3ea-2025.php
+ypologismos-morion-4ea-2025.php
+includes/service-calculations.js

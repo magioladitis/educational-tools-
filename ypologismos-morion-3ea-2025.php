@@ -12,6 +12,7 @@
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <div class="page">
 <section class="hero">
 <h1>Υπολογισμός μορίων 3ΕΑ/2025</h1>
@@ -79,16 +80,17 @@ HTML
 <h2>3. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο κατηγορίας Β: 120 μόρια. Δήλωσε τους μήνες χωρίς επικάλυψη μεταξύ των ειδικών κατηγοριών.</p>
 <div class="note"><strong>Σημείωση 3ΕΑ/2025:</strong> Λαμβάνεται υπόψη η εκπαιδευτική προϋπηρεσία σε <strong>μήνες</strong>, χωρίς να υπολογίζονται τα υπόλοιπα ημερών. Για τον λόγο αυτό όλα τα πεδία προϋπηρεσίας δέχονται μόνο ακέραιους μήνες.</div>
 <div class="note">Οι μήνες δυσπρόσιτων, τρίμηνων συμβάσεων και Ψηφιακού Φροντιστηρίου πρέπει να δηλώνονται στις αντίστοιχες ειδικές γραμμές και όχι ξανά ως κανονική δημόσια προϋπηρεσία.</div>
-<div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο ανά μήνα.</small></label><input id="publicMonths" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο ανά μήνα · έως 120 μήνες.</small></label><input id="publicMonths" class="service-months" type="number" min="0" max="120" step="1" inputmode="numeric" value="0"></div>
 <div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια ανά μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" type="number" min="0" max="60" step="1" inputmode="numeric" value="0"></div>
 
-<h3>Τρίμηνες συμβάσεις — κανονική προϋπηρεσία</h3>
-<div class="field"><label for="covid2020Months">Τρίμηνες συμβάσεις 2020–2021<small>1,5 μόριο ανά μήνα · έως 8 μήνες · έως 10 μόρια για το σχολικό έτος.</small></label><input id="covid2020Months" class="service-months" type="number" min="0" max="8" step="1" inputmode="numeric" value="0"></div>
-<div class="field"><label for="covid2021Months">Τρίμηνες συμβάσεις 2021–2022<small>1,5 μόριο ανά μήνα · έως 7 μήνες · έως 10 μόρια για το σχολικό έτος.</small></label><input id="covid2021Months" class="service-months" type="number" min="0" max="7" step="1" inputmode="numeric" value="0"></div>
-
-<h3>Τρίμηνες συμβάσεις σε δυσπρόσιτα / καταστήματα κράτησης</h3>
-<div class="field"><label for="covidHard2020Months">Τρίμηνες σε δυσπρόσιτα 2020–2021<small>3 μόρια ανά μήνα · έως 8 μήνες · έως 20 μόρια για το σχολικό έτος.</small></label><input id="covidHard2020Months" class="service-months" type="number" min="0" max="8" step="1" inputmode="numeric" value="0"></div>
-<div class="field"><label for="covidHard2021Months">Τρίμηνες σε δυσπρόσιτα 2021–2022<small>3 μόρια ανά μήνα · έως 7 μήνες · έως 20 μόρια για το σχολικό έτος.</small></label><input id="covidHard2021Months" class="service-months" type="number" min="0" max="7" step="1" inputmode="numeric" value="0"></div>
+<?php
+renderAsepThreeMonthService(array(
+    'regular_2020_id' => 'covid2020Months',
+    'difficult_2020_id' => 'covidHard2020Months',
+    'regular_2021_id' => 'covid2021Months',
+    'difficult_2021_id' => 'covidHard2021Months'
+));
+?>
 
 <div class="field"><label for="privateMonths">Ιδιωτική εκπαιδευτική προϋπηρεσία<small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι νόμιμες προϋποθέσεις.</small></label><input id="privateMonths" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
 <div class="field"><label for="digitalMonths">Ψηφιακό Φροντιστήριο<small>1,5 μόριο ανά μήνα · έως 15 μόρια ανά σχολικό έτος.</small></label><input id="digitalMonths" class="service-months" type="number" min="0" max="10" step="1" inputmode="numeric" value="0"></div>
@@ -143,7 +145,7 @@ renderAsepSocialCriteria(array(
   <p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό και δεν υποκαθιστά τον επίσημο έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από το ΑΣΕΠ και τα αρμόδια όργανα.</p>
 </section>
 </div>
-<script src="includes/service-calculations.js"></script>
+<script src="includes/service-calculations.js?v=3.20.14-rc2"></script>
 <script src="includes/social-calculations.js"></script>
 <script src="includes/language-calculations.js"></script>
 <script>

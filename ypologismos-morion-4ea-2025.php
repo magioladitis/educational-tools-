@@ -12,6 +12,7 @@
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <div class="app">
 <section class="hero">
     <h1>Υπολογισμός μορίων 4ΕΑ/2025</h1>
@@ -230,9 +231,9 @@ HTML
 
         <div class="field">
           <label for="regularMonths">Μήνες δημόσιας εκπαιδευτικής προϋπηρεσίας
-            <small>1 μόριο ανά μήνα πραγματικής εκπαιδευτικής προϋπηρεσίας.</small>
+            <small>1 μόριο ανά μήνα πραγματικής εκπαιδευτικής προϋπηρεσίας · έως 120 μήνες.</small>
           </label>
-          <input type="number" id="regularMonths" min="0" step="1" value="0">
+          <input type="number" id="regularMonths" min="0" max="120" step="1" value="0">
         </div>
 
         <div class="field">
@@ -242,29 +243,14 @@ HTML
           <input type="number" id="difficultMonths" min="0" max="60" step="1" value="0">
         </div>
 
-        <h3>Τρίμηνες συμβάσεις 2020–2021</h3>
-        <div class="field-grid">
-          <div class="field">
-            <label for="covid20Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 8 μήνες · έως 10 μόρια στο έτος</small></label>
-            <input type="number" id="covid20Regular" min="0" max="8" step="1" value="0">
-          </div>
-          <div class="field">
-            <label for="covid20Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 8 μήνες · έως 20 μόρια στο έτος</small></label>
-            <input type="number" id="covid20Difficult" min="0" max="8" step="1" value="0">
-          </div>
-        </div>
-
-        <h3>Τρίμηνες συμβάσεις 2021–2022</h3>
-        <div class="field-grid">
-          <div class="field">
-            <label for="covid21Regular">Λοιπές τρίμηνες — μήνες<small>1,5 μόριο/μήνα · έως 7 μήνες · έως 10 μόρια στο έτος</small></label>
-            <input type="number" id="covid21Regular" min="0" max="7" step="1" value="0">
-          </div>
-          <div class="field">
-            <label for="covid21Difficult">Δυσπρόσιτες τρίμηνες — μήνες<small>3 μόρια/μήνα · έως 7 μήνες · έως 20 μόρια στο έτος</small></label>
-            <input type="number" id="covid21Difficult" min="0" max="7" step="1" value="0">
-          </div>
-        </div>
+<?php
+renderAsepThreeMonthService(array(
+    'regular_2020_id' => 'covid20Regular',
+    'difficult_2020_id' => 'covid20Difficult',
+    'regular_2021_id' => 'covid21Regular',
+    'difficult_2021_id' => 'covid21Difficult'
+));
+?>
 
         <div class="field">
           <label for="privateMonths">Μήνες προϋπηρεσίας στην ιδιωτική εκπαίδευση
@@ -344,7 +330,7 @@ renderAsepSocialCriteria(array(
   </section>
 </div>
 
-<script src="includes/service-calculations.js"></script>
+<script src="includes/service-calculations.js?v=3.20.14-rc2"></script>
 <script src="includes/social-calculations.js"></script>
 <script src="includes/language-calculations.js"></script>
 <script src="includes/te-academic-calculations.js"></script>

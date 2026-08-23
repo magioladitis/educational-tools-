@@ -12,6 +12,7 @@
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 
 <div class="app">
 <section class="hero">
@@ -145,17 +146,23 @@ HTML
         <div class="note">Βάλε κάθε μήνα σε <strong>ένα μόνο</strong> αντίστοιχο πεδίο, ώστε να μη γίνει διπλή μέτρηση. Λαμβάνονται υπόψη ακέραιοι μήνες χωρίς υπόλοιπα ημερών.</div>
 
         <div class="field-grid">
-          <div class="field"><label for="normalMonths">Δημόσια εκπαιδευτική προϋπηρεσία<small>1 μόριο/μήνα</small></label><input type="number" id="normalMonths" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+          <div class="field"><label for="normalMonths">Δημόσια εκπαιδευτική προϋπηρεσία<small>1 μόριο/μήνα · έως 120 μήνες</small></label><input type="number" id="normalMonths" min="0" max="120" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
           <div class="field"><label for="difficultMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–2021<small>2 μόρια/μήνα · έως 60 μήνες</small></label><input type="number" id="difficultMonths" min="0" max="60" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
-          <div class="field"><label for="threeMonthMonths2020">Τρίμηνες συμβάσεις 2020–2021<small>έως 8 μήνες · 1,5 μόριο/μήνα</small></label><input type="number" id="threeMonthMonths2020" min="0" max="8" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
-          <div class="field"><label for="threeMonthDifficultMonths2020">Τρίμηνες σε δυσπρόσιτα 2020–2021<small>έως 8 μήνες · 3 μόρια/μήνα</small></label><input type="number" id="threeMonthDifficultMonths2020" min="0" max="8" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
-          <div class="field"><label for="threeMonthMonths2021">Τρίμηνες συμβάσεις 2021–2022<small>έως 7 μήνες · 1,5 μόριο/μήνα</small></label><input type="number" id="threeMonthMonths2021" min="0" max="7" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
-          <div class="field"><label for="threeMonthDifficultMonths2021">Τρίμηνες σε δυσπρόσιτα 2021–2022<small>έως 7 μήνες · 3 μόρια/μήνα</small></label><input type="number" id="threeMonthDifficultMonths2021" min="0" max="7" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+        </div>
+
+<?php
+renderAsepThreeMonthService(array(
+    'regular_2020_id' => 'threeMonthMonths2020',
+    'difficult_2020_id' => 'threeMonthDifficultMonths2020',
+    'regular_2021_id' => 'threeMonthMonths2021',
+    'difficult_2021_id' => 'threeMonthDifficultMonths2021'
+));
+?>
+
+        <div class="field-grid">
           <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
           <div class="field"><label for="digitalMonths">Ψηφιακό Φροντιστήριο<small>1,5 μόριο/μήνα · έως 10 μήνες</small></label><input type="number" id="digitalMonths" min="0" max="10" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
         </div>
-
-        <div class="note">Στις τρίμηνες συμβάσεις εφαρμόζονται χωριστά ετήσια ανώτατα όρια: έως 10 μόρια/έτος για τις λοιπές και έως 20 μόρια/έτος για τις δυσπρόσιτες.</div>
         <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
       </section>
 
@@ -219,7 +226,7 @@ renderAsepSocialCriteria(array(
 
 <script src="includes/academic-calculations.js"></script>
 <script src="includes/language-calculations.js"></script>
-<script src="includes/service-calculations.js"></script>
+<script src="includes/service-calculations.js?v=3.20.14-rc2"></script>
 <script src="includes/social-calculations.js"></script>
 <script>
   let lastResultText = "";
@@ -274,7 +281,10 @@ renderAsepSocialCriteria(array(
       input.value = "";
       return;
     }
-    input.value = Math.max(0, parseInt(value, 10));
+    let parsed = Math.max(0, parseInt(value, 10));
+    const max = input.getAttribute("max");
+    if (max !== null && max !== "") parsed = Math.min(parsed, Number(max));
+    input.value = parsed;
   }
 
   function numberOf(id) {
