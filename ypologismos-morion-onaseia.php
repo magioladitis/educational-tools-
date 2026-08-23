@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία 2026-2027</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.13">
 </head>
 <body class="edu-ui edu-page-onaseia">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -632,6 +632,6 @@
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.10"></script>
+  <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

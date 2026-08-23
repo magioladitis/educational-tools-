@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Υπολογισμός μορίων απόσπασης εκπαιδευτικών στα Ευρωπαϊκά Σχολεία με βάση την πρόσκληση 33598/Η2/18-3-2026.">
 <title>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.13">
 </head>
 <body class="edu-ui edu-page-european-schools">
 <main class="page-shell">
@@ -118,6 +118,6 @@ async function copySummary(){const r=calculate(),p=EuropeanSchools.POSITIONS_202
 function reset(){document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('input[type="number"]').forEach(x=>x.value='');document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);['higherEducationSemesters','innovativePrograms','universityTrainingCount','ministryTrainingHours','publicAdminTrainingHours','eapAnnualUnits','eapSemesterUnits'].forEach(id=>$(id).value='0');['hostLanguageLevel','secondWorkingLevel','thirdWorkingLevel','otherEULevel'].forEach(id=>$(id).value='none');calculate();$('position').focus()}
 normalizeVisibleBranchLabels();ids.forEach(id=>{const e=$(id);if(e){e.addEventListener('input',calculate);e.addEventListener('change',calculate)}});$('copyBtn').addEventListener('click',copySummary);$('resetBtn').addEventListener('click',reset);calculate();})();
 </script>
-  <script src="assets/common.js?v=3.20.10"></script>
+  <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

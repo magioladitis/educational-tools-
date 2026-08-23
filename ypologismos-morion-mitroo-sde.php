@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων Μητρώου ΣΔΕ για ωρομίσθιο εκπαιδευτικό προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας βάσει της Υ.Α. 75975/Κ1, ΦΕΚ Β' 3224/25.06.2025.">
   <title>Μόρια Μητρώου ΣΔΕ</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.13">
 </head>
 <body class="edu-ui edu-calc-sde edu-page-sde-registry">
 <main class="page-shell">
@@ -191,5 +191,5 @@ function copySummary(btn){const d=data(),r=SDERegistryCalc.calculateAll(d);let t
 function resetForm(){document.querySelectorAll('input[type="number"]').forEach(x=>x.value='0');document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);$('fppBefore1993').value='no';$('eoppepAdultTrainer').value='no';roleChanged();psychFppChanged();}
 fillSpecialties();roleChanged();
 </script>
-<script src="assets/common.js?v=3.20.10"></script>
+<script src="assets/common.js?v=3.20.13"></script>
 </body></html>

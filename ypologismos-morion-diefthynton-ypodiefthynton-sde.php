@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (ΣΔΕ) βάσει της Υ.Α. 70621/Κ1, ΦΕΚ Β' 3037/19.06.2025.">
   <title>Μόρια Διευθυντών & Υποδιευθυντών ΣΔΕ</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.13">
 </head>
 <body class="edu-ui edu-calc-sde edu-page-sde-leadership">
 <main class="page-shell">
@@ -342,6 +342,6 @@
 
   roleChanged();
 </script>
-<script src="assets/common.js?v=3.20.10"></script>
+<script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

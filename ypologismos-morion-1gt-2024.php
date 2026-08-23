@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΓΤ/2024 για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16.">
   <title>Υπολογισμός μορίων 1ΓΤ/2024</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.13">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-gt1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -382,6 +382,6 @@ renderAsepSocialCriteria(array(
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.10"></script>
+  <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="Εργαλειοθήκη Εκπαιδευτικού: δωρεάν εργαλεία για ΑΣΕΠ, αναπληρωτές, αποσπάσεις και Δημόσια Ωνάσεια Σχολεία." name="description"/>
 <title>Εργαλειοθήκη Εκπαιδευτικού</title>
-<link href="assets/common.css?v=3.20.9" rel="stylesheet"/>
+<link href="assets/common.css?v=3.20.13" rel="stylesheet"/>
 </head>
 <body class="edu-ui edu-tools-directory">
 <main class="page-shell">
@@ -374,6 +374,6 @@
     })();
   </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9"></script>
+  <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

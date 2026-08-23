@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων και βασικός έλεγχος δικαιώματος για απόσπαση εκπαιδευτικών σε ελληνόγλωσσες εκπαιδευτικές μονάδες του εξωτερικού.">
   <title>Μόρια Απόσπασης στο Εξωτερικό</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.13">
 </head>
 <body class="edu-ui edu-page-abroad">
 <main class="page-shell">
@@ -783,6 +783,6 @@
   calculate();
 })();
 </script>
-  <script src="assets/common.js?v=3.20.10"></script>
+  <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>
