@@ -42,7 +42,7 @@
           </div>
           <div class="field">
             <label for="educationalServiceYears">Συνολική εκπαιδευτική υπηρεσία <small id="serviceRequirement">Επίλεξε θέση για να εμφανιστεί το ελάχιστο.</small></label>
-            <input type="number" id="educationalServiceYears" min="0" step="0.01" placeholder="π.χ. 12" oninput="calculate()">
+            <input type="number" id="educationalServiceYears" min="0" max="40" step="0.01" placeholder="π.χ. 12" oninput="calculate()">
           </div>
           <div class="field hidden" id="tertiaryDegreeWrap">
             <label for="tertiaryDegree">Πτυχίο τριτοβάθμιας εκπαίδευσης ή ισότιμος τίτλος</label>
@@ -112,7 +112,7 @@
         <div class="field-grid">
           <div class="field">
             <label for="sdeTeachingYears">Διδακτικό έργο στα ΣΔΕ — πλήρη έτη <small>Μην περιλαμβάνεις εδώ χρόνο διοικητικής θητείας που παίρνει μόρια στην ενότητα 4.</small></label>
-            <input type="number" id="sdeTeachingYears" min="0" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="sdeTeachingYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
           </div>
           <div class="field">
             <label for="sdeTeachingHours">Διδακτικό έργο στα ΣΔΕ — ώρες ωρομίσθιας απασχόλησης</label>
@@ -120,7 +120,7 @@
           </div>
           <div class="field">
             <label for="sdeTransferredYears">Έτη διοικητικής θητείας σε ΣΔΕ που δεν πήραν διοικητικά μόρια λόγω πλαφόν <small>Χρησιμοποίησέ το μόνο αν ο συγκεκριμένος χρόνος επιτρέπεται να μεταφερθεί στη διδακτική εμπειρία.</small></label>
-            <input type="number" id="sdeTransferredYears" min="0" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="sdeTransferredYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
           </div>
           <div class="field">
             <label for="adultNonformalHours">Μη τυπική εκπαίδευση ενηλίκων — ώρες <small>ΝΕΛΕ, ΚΕΕ, ΚΔΒΜ, ΚΕΔΙΒΙΜ, ΚΕΚ, ΠΕΚ, ΠΕΚΕΣ, ΕΚΔΔΑ. 0,5 μόριο ανά 100 ώρες.</small></label>
@@ -128,7 +128,7 @@
           </div>
           <div class="field">
             <label for="schoolTeachingYears">Π/θμια – Δ/θμια – ΣΑΕΚ – ΕΣΚ — πλήρη διδακτικά έτη <small>Χωρίς περίοδο διοικητικής θητείας που μοριοδοτείται στην ενότητα 4.</small></label>
-            <input type="number" id="schoolTeachingYears" min="0" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="schoolTeachingYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
           </div>
           <div class="field">
             <label for="schoolTeachingHours">Π/θμια – Δ/θμια – ΣΑΕΚ – ΕΣΚ — ώρες ωρομίσθιας απασχόλησης</label>
@@ -136,7 +136,7 @@
           </div>
           <div class="field full">
             <label for="schoolTransferredYears">Έτη διοικητικής θητείας που δεν πήραν διοικητικά μόρια λόγω πλαφόν και μπορούν να προσμετρηθούν ως διδακτικά <small>Μην δηλώσεις χρόνο που έχει ήδη μοριοδοτηθεί διοικητικά.</small></label>
-            <input type="number" id="schoolTransferredYears" min="0" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="schoolTransferredYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
           </div>
         </div>
         <div class="warning">Δεν προσμετράται χρόνος άδειας άνευ αποδοχών, εκπαιδευτικής άδειας ή απόσπασης σε θέση με διοικητικά καθήκοντα, ούτε προϋπηρεσία που αναγνωρίστηκε κατά τον διορισμό στην τυπική εκπαίδευση. Το διδακτικό έργο στην τριτοβάθμια εκπαίδευση δεν θεωρείται διδακτικό έργο στην Εκπαίδευση Ενηλίκων.</div>
@@ -147,15 +147,15 @@
         <div class="field-grid">
           <div class="field">
             <label for="sdeDirectorYears">Στα ΣΔΕ ως Διευθυντής — σχολικά έτη <small>2 μόρια ανά έτος.</small></label>
-            <input type="number" id="sdeDirectorYears" min="0" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="sdeDirectorYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
           </div>
           <div class="field">
             <label for="sdeDeputyYears">Στα ΣΔΕ ως Υποδιευθυντής — σχολικά έτη <small>1 μόριο ανά έτος.</small></label>
-            <input type="number" id="sdeDeputyYears" min="0" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="sdeDeputyYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
           </div>
           <div class="field full">
             <label for="otherAdminYears">Σε σχολικές μονάδες Π/θμιας ή Δ/θμιας, ΣΑΕΚ ή ΕΣΚ ως Διευθυντής/Υποδιευθυντής — σχολικά έτη <small>1 μόριο ανά έτος.</small></label>
-            <input type="number" id="otherAdminYears" min="0" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="otherAdminYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
           </div>
         </div>
         <div class="overflow-box" id="overflowHint">Επίλεξε θέση για να υπολογιστούν τα επιμέρους πλαφόν και τυχόν διοικητικός χρόνος που μένει εκτός μοριοδότησης.</div>
@@ -197,11 +197,21 @@
   <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Πηγή:</strong> Υ.Α. 70621/Κ1, ΦΕΚ Β΄ 3037/19.06.2025 «Καθορισμός κριτηρίων και διαδικασίας επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (Σ.Δ.Ε.)».</p><p class="source-disclaimer">Το εργαλείο παρέχει ενδεικτικό υπολογισμό· η τελική κρίση ανήκει στην αρμόδια Επιτροπή Επιλογής.</p></section>
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
-<script src="includes/sde-leadership-calculations.js?v=3.15"></script>
+<script src="includes/sde-leadership-calculations.js?v=3.20.32"></script>
 <script>
   const $ = id => document.getElementById(id);
   const val = id => $(id).value;
   const num = id => Math.max(0, Number($(id).value || 0));
+  const EXPERIENCE_YEAR_MAX = 40;
+  const boundedYears = (id, preserveBlank = false) => {
+    const el = $(id);
+    if (!el || el.value === '') return preserveBlank ? '' : 0;
+    let value = Number(el.value);
+    if (!Number.isFinite(value)) value = 0;
+    value = Math.min(EXPERIENCE_YEAR_MAX, Math.max(0, value));
+    if (String(value) !== el.value) el.value = String(value);
+    return value;
+  };
   const yes = id => val(id) === 'yes';
   const fmt = value => {
     const x = Number(value || 0);
@@ -210,16 +220,16 @@
 
   function collectData(){
     return {
-      role: val('role'), permanentTeacher: val('permanentTeacher'), educationalServiceYears: val('educationalServiceYears'),
+      role: val('role'), permanentTeacher: val('permanentTeacher'), educationalServiceYears: boundedYears('educationalServiceYears', true),
       tertiaryDegree: val('tertiaryDegree'), assignmentEligible: val('assignmentEligible'),
       computerKnowledge: val('computerKnowledge') === 'pe86' ? 'yes' : val('computerKnowledge'),
       adultEducationExperience: val('adultEducationExperience'), adminQualifications: val('adminQualifications'), blockingIssue: val('blockingIssue'),
       phd: val('phd'), master: val('master'), esdda: yes('esdda'), secondDegree: yes('secondDegree'),
       language1: val('language1'), languageLevel1: val('languageLevel1'), languageAppointment1: yes('languageAppointment1'),
       language2: val('language2'), languageLevel2: val('languageLevel2'), languageAppointment2: yes('languageAppointment2'),
-      sdeTeachingYears: num('sdeTeachingYears'), sdeTeachingHours: num('sdeTeachingHours'), sdeTransferredYears: num('sdeTransferredYears'),
-      adultNonformalHours: num('adultNonformalHours'), schoolTeachingYears: num('schoolTeachingYears'), schoolTeachingHours: num('schoolTeachingHours'), schoolTransferredYears: num('schoolTransferredYears'),
-      sdeDirectorYears: num('sdeDirectorYears'), sdeDeputyYears: num('sdeDeputyYears'), otherAdminYears: num('otherAdminYears'), trainingHours: num('trainingHours'),
+      sdeTeachingYears: boundedYears('sdeTeachingYears'), sdeTeachingHours: num('sdeTeachingHours'), sdeTransferredYears: boundedYears('sdeTransferredYears'),
+      adultNonformalHours: num('adultNonformalHours'), schoolTeachingYears: boundedYears('schoolTeachingYears'), schoolTeachingHours: num('schoolTeachingHours'), schoolTransferredYears: boundedYears('schoolTransferredYears'),
+      sdeDirectorYears: boundedYears('sdeDirectorYears'), sdeDeputyYears: boundedYears('sdeDeputyYears'), otherAdminYears: boundedYears('otherAdminYears'), trainingHours: num('trainingHours'),
       interviewScore: val('interviewScore')
     };
   }

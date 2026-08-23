@@ -238,7 +238,7 @@
       </div>
       <div class="question">
         <label for="eligibleChildren">Αριθμός τέκνων που μοριοδοτούνται</label>
-        <input type="number" id="eligibleChildren" min="0" step="1" value="0">
+        <input type="number" id="eligibleChildren" min="0" max="20" step="1" value="0">
       </div>
     </div>
 
@@ -577,8 +577,8 @@
     if (!Number.isInteger(months) || months < 0 || months > 11) return showError("Οι μήνες συνολικής υπηρεσίας πρέπει να είναι από 0 έως 11.");
     if (!Number.isInteger(days) || days < 0 || days > 30) return showError("Οι ημέρες πρέπει να είναι από 0 έως 30.");
 
-    const children = numberOf("eligibleChildren");
-    if (!Number.isInteger(children) || children < 0) return showError("Ο αριθμός τέκνων πρέπει να είναι μη αρνητικός ακέραιος αριθμός.");
+    const children = Math.min(20, numberOf("eligibleChildren"));
+    if (!Number.isInteger(children) || children < 0) return showError("Ο αριθμός τέκνων πρέπει να είναι ακέραιος από 0 έως 20.");
 
     const requestedArea = valueOf("requestedArea").trim();
     const eligibility = evaluatePriorityAndObstacles(warnings);
@@ -735,6 +735,10 @@
   }
 
   document.addEventListener("input", event => {
+    if (event.target && event.target.id === "eligibleChildren" && event.target.value !== "") {
+      const value = Math.min(20, Math.max(0, Math.floor(Number(event.target.value) || 0)));
+      event.target.value = String(value);
+    }
     if (event.target && event.target.matches("input, select")) liveCalculatePoints();
   });
   document.addEventListener("change", event => {

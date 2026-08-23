@@ -10,7 +10,8 @@
     minDisabilityPercent: 50,
     disabilityRate: 0.4,
     spouseMinMarriageYears: 4,
-    auxiliaryChildDisabilityPercent: 67
+    auxiliaryChildDisabilityPercent: 67,
+    maxChildren: 20
   });
 
   function number(value) {
@@ -26,8 +27,13 @@
     return Math.max(0, Math.floor(number(value)));
   }
 
+  function clampChildren(value) {
+    return Math.min(RULES.maxChildren, nonNegativeInteger(value));
+  }
+
   function calculate(options = {}) {
-    const children = nonNegativeInteger(options.children);
+    const rawChildren = nonNegativeInteger(options.children);
+    const children = clampChildren(rawChildren);
     const childrenPoints = children * RULES.childPoints;
 
     const candidatePercent = clampPercent(options.candidateDisability);
@@ -38,6 +44,9 @@
     const marriageYears4Plus = Boolean(options.marriageYears4Plus);
 
     const warnings = [];
+    if (rawChildren > RULES.maxChildren) {
+      warnings.push("Ο αριθμός τέκνων περιορίστηκε στο ανώτατο όριο των 20.");
+    }
     const eligibleDisabilities = [];
 
     const candidateEligible =
@@ -102,6 +111,7 @@
     RULES,
     calculate,
     clampPercent,
-    nonNegativeInteger
+    nonNegativeInteger,
+    clampChildren
   });
 })(window);

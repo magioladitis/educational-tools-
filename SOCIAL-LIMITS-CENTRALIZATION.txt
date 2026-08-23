@@ -1,0 +1,17 @@
+Centralized ASEP social safety limits
+
+Removed redundant page-local children clamps from:
+- ypologismos-morion.php
+- ypologismos-morion-3ea-2025.php
+
+Canonical enforcement now lives only in:
+- includes/components/asep-social-criteria.php
+  * children max=20
+  * disability fields max=100
+- includes/asep-social-criteria.js
+  * generic live min/max clamp from field attributes
+- includes/social-calculations.js
+  * defensive engine clamp: children <=20, disabilities <=100
+
+All six main ASEP calculators use the same shared social component/controller.
+The separate ypologismos-morion-apospasis.php keeps its own limits because it is not an ASEP social calculator.

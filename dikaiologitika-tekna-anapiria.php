@@ -134,6 +134,16 @@ function updateVisibility(){
   if(c==="disability"||c==="both") show("disabilityQuestions");
   updateDisabilityPersonUI();
 }
+const disabilityPercentInput=document.getElementById("disabilityPercent");
+if(disabilityPercentInput){
+  disabilityPercentInput.addEventListener("input",function(){
+    if(this.value==="") return;
+    let value=Number(this.value);
+    if(!Number.isFinite(value)) value=0;
+    this.value=String(Math.min(100,Math.max(0,value)));
+  });
+}
+
 function updateDisabilityPersonUI(){
   const p=valueOf("disabilityPerson");
   hide("spouseMarriageQuestion");

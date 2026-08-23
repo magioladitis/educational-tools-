@@ -25,6 +25,7 @@ if (!function_exists('renderAsepSocialCriteria')) {
         $marriageId = isset($config['marriage_id']) ? $config['marriage_id'] : 'marriageYears4Plus';
         $mentalId = isset($config['mental_id']) ? $config['mental_id'] : 'candidateMentalCondition';
         $inputStep = isset($config['input_step']) ? $config['input_step'] : '0.01';
+        $maxChildren = isset($config['max_children']) ? $config['max_children'] : 20;
 
         $childPoints = isset($config['child_points']) ? $config['child_points'] : '';
         $minDisability = isset($config['min_disability_percent']) ? $config['min_disability_percent'] : '';
@@ -66,7 +67,7 @@ if (!function_exists('renderAsepSocialCriteria')) {
     <label for="<?php echo $h($childrenId); ?>">Αριθμός επιλέξιμων τέκνων
       <small><?php echo $h($childPoints); ?> μόρια ανά τέκνο.</small>
     </label>
-    <input id="<?php echo $h($childrenId); ?>" type="number" min="0" step="1" value="0">
+    <input id="<?php echo $h($childrenId); ?>" type="number" min="0" max="<?php echo $h($maxChildren); ?>" step="1" value="0">
   </div>
 
   <h3>Αναπηρία — λαμβάνεται μόνο το υψηλότερο επιλέξιμο ποσοστό</h3>

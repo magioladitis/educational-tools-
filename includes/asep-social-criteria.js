@@ -37,6 +37,31 @@
     };
   }
 
+
+  function clampInputElement(root, el) {
+    if (!root || !el || el.type !== "number") return;
+    if (el.value === "") return;
+    let value = Number(el.value);
+    if (!Number.isFinite(value)) value = 0;
+    const minAttr = el.getAttribute("min");
+    const maxAttr = el.getAttribute("max");
+    if (minAttr !== null && minAttr !== "") value = Math.max(Number(minAttr), value);
+    if (maxAttr !== null && maxAttr !== "") value = Math.min(Number(maxAttr), value);
+    if (el === byConfiguredId(root, "children")) value = Math.floor(value);
+    const normalized = String(value);
+    if (el.value !== normalized) el.value = normalized;
+  }
+
+  if (typeof document !== "undefined" && document.addEventListener) {
+    document.addEventListener("input", function (event) {
+      const el = event.target;
+      if (!el || el.type !== "number") return;
+      const root = el.closest ? el.closest('[data-component="asep-social-criteria"]') : null;
+      if (!root) return;
+      clampInputElement(root, el);
+    });
+  }
+
   function calculate(ref) {
     if (!global.EducationSocial || !global.EducationSocial.calculate) {
       throw new Error("Δεν φορτώθηκε η κοινή μηχανή κοινωνικών κριτηρίων.");
@@ -103,6 +128,7 @@
     getState: getState,
     details: details,
     sync: sync,
-    reset: reset
+    reset: reset,
+    clampInputElement: clampInputElement
   });
 })(window);

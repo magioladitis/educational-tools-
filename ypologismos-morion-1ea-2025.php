@@ -119,8 +119,8 @@ renderEaeSensoryPriority(array(
 </div>
 <script src="includes/service-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
-<script src="includes/social-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.31"></script>
+<script src="includes/social-calculations.js?v=3.20.32"></script>
+<script src="includes/asep-social-criteria.js?v=3.20.32"></script>
 <script src="includes/language-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-language-selector.js?v=3.20.31"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>

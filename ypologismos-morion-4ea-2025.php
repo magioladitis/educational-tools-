@@ -257,8 +257,8 @@ renderAsepSocialCriteria(array(
 
 <script src="includes/service-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
-<script src="includes/social-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.31"></script>
+<script src="includes/social-calculations.js?v=3.20.32"></script>
+<script src="includes/asep-social-criteria.js?v=3.20.32"></script>
 <script src="includes/eae-table-eligibility.js?v=3.20.31"></script>
 <script src="includes/asep-eae-eligibility.js?v=3.20.28"></script>
 <script src="includes/language-calculations.js?v=3.20.31"></script>

@@ -27,6 +27,7 @@
   const FIRST_LANGUAGE_POINTS = Object.freeze({ B2: 1, C1: 2, C2: 3 });
   const SECOND_LANGUAGE_POINTS = Object.freeze({ B2: 0.5, C1: 1, C2: 2 });
   const LEVEL_RANK = Object.freeze({ B2: 1, C1: 2, C2: 3 });
+  const MAX_EXPERIENCE_YEARS = 40;
 
   function n(value) {
     const x = Number(value);
@@ -35,6 +36,10 @@
 
   function cap(value, max) {
     return Math.min(Math.max(n(value), 0), max);
+  }
+
+  function experienceYears(value) {
+    return Math.min(MAX_EXPERIENCE_YEARS, n(value));
   }
 
   function round2(value) {
@@ -138,9 +143,9 @@
     const cfg = roleConfig(role);
     if (!cfg) return { total: 0, details: [], overflow: { sdeDirector: 0, sdeDeputy: 0, other: 0 } };
 
-    const yearsDirector = n(data.sdeDirectorYears);
-    const yearsDeputy = n(data.sdeDeputyYears);
-    const yearsOther = n(data.otherAdminYears);
+    const yearsDirector = experienceYears(data.sdeDirectorYears);
+    const yearsDeputy = experienceYears(data.sdeDeputyYears);
+    const yearsOther = experienceYears(data.otherAdminYears);
 
     const pDirector = Math.min(yearsDirector * 2, cfg.admin.sdeDirector);
     const pDeputy = Math.min(yearsDeputy, cfg.admin.sdeDeputy);
@@ -170,13 +175,13 @@
     const cfg = roleConfig(role);
     if (!cfg) return { total: 0, details: [], sde: 0, adult: 0, school: 0 };
 
-    const sdeYears = n(data.sdeTeachingYears) + n(data.sdeTransferredYears);
+    const sdeYears = experienceYears(data.sdeTeachingYears) + experienceYears(data.sdeTransferredYears);
     const sdeHours = n(data.sdeTeachingHours);
     const sde = Math.min(sdeYears + sdeHours / 650, cfg.teaching.sde);
 
     const adult = Math.min(n(data.adultNonformalHours) / 100 * 0.5, cfg.teaching.adult);
 
-    const schoolYears = n(data.schoolTeachingYears) + n(data.schoolTransferredYears);
+    const schoolYears = experienceYears(data.schoolTeachingYears) + experienceYears(data.schoolTransferredYears);
     const schoolHours = n(data.schoolTeachingHours);
     const school = Math.min(schoolYears + schoolHours / 650, cfg.teaching.school);
 
@@ -225,7 +230,7 @@
     }
 
     const serviceRaw = String(data.educationalServiceYears ?? '');
-    const serviceYears = n(data.educationalServiceYears);
+    const serviceYears = experienceYears(data.educationalServiceYears);
     if (serviceRaw === '') missing.push('Συνολική εκπαιδευτική υπηρεσία');
 
     if (data.permanentTeacher === 'no') issues.push('Απαιτείται να είσαι εν ενεργεία μόνιμος/η εκπαιδευτικός Πρωτοβάθμιας ή Δευτεροβάθμιας Εκπαίδευσης.');
@@ -282,6 +287,8 @@
     calculateTraining,
     calculateLanguages,
     evaluateEligibility,
-    round2
+    round2,
+    MAX_EXPERIENCE_YEARS,
+    experienceYears
   });
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -162,8 +162,8 @@ renderAsepSocialCriteria(array(
 <script src="includes/service-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
-<script src="includes/social-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.31"></script>
+<script src="includes/social-calculations.js?v=3.20.32"></script>
+<script src="includes/asep-social-criteria.js?v=3.20.32"></script>
 <script>
   let lastResultText = "";
 
@@ -278,14 +278,6 @@ renderAsepSocialCriteria(array(
       return;
     }
     calculatePoints();
-  }
-
-  const childrenInput = document.getElementById("children");
-  if (childrenInput) {
-    childrenInput.addEventListener("input", function () {
-      if (this.value === "") return;
-      this.value = Math.max(0, Math.floor(Number(this.value) || 0));
-    });
   }
 
   function resetCalculator() {
