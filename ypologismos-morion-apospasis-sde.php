@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
 <!doctype html>
 <html lang="el">
 <head>
@@ -168,23 +169,18 @@
 
       <section class="card">
         <div class="section-head"><div><h2>4. Άλλα προσόντα</h2><p class="subtitle">Έως δύο ξένες γλώσσες και γνώση χειρισμού Η/Υ.</p></div><div class="max">έως 5</div></div>
+        <?php renderAsepLanguageSelector(array(
+          'id' => 'sdeLanguages',
+          'profile' => 'sde_secondment',
+          'specialty_id' => 'specialty',
+          'field_class' => 'field'
+        )); ?>
         <div class="field-grid">
-          <div class="field">
-            <label for="language1">Ξένη γλώσσα 1</label>
-            <select id="language1" onchange="calculate()"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other1">Άλλη γλώσσα</option></select>
-            <label for="languageLevel1" class="edu-tools-sr-only">Επίπεδο ξένης γλώσσας 1</label><select id="languageLevel1" class="sde-language-level" onchange="calculate()"><option value="none">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select>
-          </div>
-          <div class="field">
-            <label for="language2">Ξένη γλώσσα 2</label>
-            <select id="language2" onchange="calculate()"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other2">Άλλη γλώσσα</option></select>
-            <label for="languageLevel2" class="edu-tools-sr-only">Επίπεδο ξένης γλώσσας 2</label><select id="languageLevel2" class="sde-language-level" onchange="calculate()"><option value="none">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select>
-          </div>
           <div class="field full">
             <label for="computer">Πιστοποιημένη γνώση Η/Υ / ΤΠΕ Α΄ επιπέδου ή πιστοποιητικό γνώσης Η/Υ σύμφωνα με ΑΣΕΠ <small>+2 μόρια. Για ΠΕ86 η γνώση τεκμαίρεται και τα μόρια αποδίδονται αυτόματα.</small></label>
             <select id="computer" onchange="calculate()"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
           </div>
         </div>
-        <div class="note">Το εργαλείο κατατάσσει αυτόματα την ισχυρότερη από τις δύο γλώσσες ως «1η ξένη γλώσσα». Για εκπαιδευτικό ΠΕ06 δεν προσμετρά την Αγγλική.</div>
       </section>
     </div>
 
@@ -216,7 +212,9 @@
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
 
-<script src="includes/sde-calculations.js?v=3.16"></script>
+<script src="includes/language-calculations.js?v=3.20.25"></script>
+<script src="includes/asep-language-selector.js?v=3.20.27"></script>
+<script src="includes/sde-calculations.js?v=3.17"></script>
 <script>
   const $ = id => document.getElementById(id);
   const yes = id => $(id).value === 'yes';
@@ -267,10 +265,7 @@
       adultEducationHours: numberValue('adultEducationHours'),
       formalEducationYears: numberValue('formalEducationYears'),
       eligibilitySchoolYears: numberValue('eligibilitySchoolYears'),
-      language1: value('language1'),
-      languageLevel1: value('languageLevel1'),
-      language2: value('language2'),
-      languageLevel2: value('languageLevel2'),
+      languages: AsepLanguageSelector.readEntries('sdeLanguages'),
       computer: yes('computer'),
       flags: {
         mathOrInformaticsDegree: yes('mathInfoDegree'),
@@ -356,8 +351,11 @@
       if (el.id === 'teleEducation' || el.id === 'blockingIssue') el.value = '';
       else el.selectedIndex = 0;
     });
+    AsepLanguageSelector.reset('sdeLanguages', { silent: true });
     specialtyChanged(); calculate();
   }
+
+  document.addEventListener('asep-language-change', calculate);
 
   specialtyChanged();
   calculate();

@@ -1,5 +1,5 @@
 /*
- * Shared ASEP foreign-language UI/controller.
+ * Shared foreign-language UI/controller.
  * Business rules are read exclusively from EducationLanguages.PROFILES.
  */
 (function (global) {
@@ -34,10 +34,13 @@
 
   function levelOptions(profile) {
     return LEVEL_ORDER.map(function (key) {
-      const points = profile.levelPoints[key] || 0;
       if (key === 'none') {
         return '<option value="none">Καμία / χωρίς μόρια</option>';
       }
+      if (profile.scoringMode === 'ranked') {
+        return '<option value="' + key + '">' + EducationLanguages.LEVEL_LABELS[key] + '</option>';
+      }
+      const points = profile.levelPoints[key] || 0;
       return '<option value="' + key + '">' +
         EducationLanguages.LEVEL_LABELS[key] + ' — ' + formatPoints(points) +
         (points === 1 ? ' μόριο' : ' μόρια') + '</option>';
@@ -45,6 +48,23 @@
   }
 
   function ruleIntro(profile) {
+    if (profile.scoringMode === 'ranked') {
+      const first = profile.positionLevelPoints[0];
+      const second = profile.positionLevelPoints[1] || null;
+      let text = '<strong>Μοριοδοτούνται έως δύο ξένες γλώσσες με κατάταξη.</strong> ' +
+        'Η ισχυρότερη δηλωμένη γλώσσα υπολογίζεται ως 1η: ' +
+        'Άριστη ' + formatPoints(first.excellent) + ' · Πολύ καλή ' + formatPoints(first.very_good) +
+        ' · Καλή ' + formatPoints(first.good) + '.';
+      if (second) {
+        text += ' Η επόμενη υπολογίζεται ως 2η: Άριστη ' + formatPoints(second.excellent) +
+          ' · Πολύ καλή ' + formatPoints(second.very_good) + ' · Καλή ' + formatPoints(second.good) + '.';
+      }
+      if (profile.excludeOwnSpecialtyLanguage) {
+        text += ' Η γλώσσα του κλάδου δεν μοριοδοτείται.';
+      }
+      return text;
+    }
+
     const scoreText = [
       'Άριστη: ' + formatPoints(profile.levelPoints.excellent),
       'Πολύ καλή: ' + formatPoints(profile.levelPoints.very_good),
@@ -129,7 +149,9 @@
     return Array.from(container.querySelectorAll('[data-language-row]'));
   }
 
-  function selectedEntries(container) {
+  function selectedEntries(containerRef) {
+    const container = getContainer(containerRef);
+    if (!container) return [];
     return rows(container).map(function (row) {
       return {
         language: row.querySelector('[data-language-name]').value,
@@ -307,7 +329,8 @@
     calculate: calculate,
     getState: calculate,
     reset: reset,
-    summary: summary
+    summary: summary,
+    readEntries: selectedEntries
   });
 
   // Components are above the script on all calculator pages, so initialize now.

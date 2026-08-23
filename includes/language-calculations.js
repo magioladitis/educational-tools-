@@ -1,9 +1,9 @@
 /*
- * Ενιαία λογική μοριοδότησης ξένων γλωσσών για τις προκηρύξεις Α.Σ.Ε.Π.
+ * Ενιαία λογική μοριοδότησης ξένων γλωσσών για εργαλεία εκπαιδευτικών.
  *
  * Single source of truth:
  * - πλήθος γλωσσών που μοριοδοτούνται ανά προφίλ,
- * - μόρια ανά επίπεδο,
+ * - μόρια ανά επίπεδο ή/και θέση κατάταξης,
  * - εξαίρεση της γλώσσας του κλάδου ΠΕ05/ΠΕ06/ΠΕ07/ΠΕ34/ΠΕ40,
  * - διπλοεγγραφές ίδιας γλώσσας.
  *
@@ -29,11 +29,11 @@
   });
 
   const OWN_LANGUAGE_BY_SPECIALTY = Object.freeze({
-    'ΠΕ05': 'fr',
-    'ΠΕ06': 'en',
-    'ΠΕ07': 'de',
-    'ΠΕ34': 'it',
-    'ΠΕ40': 'es'
+    'ΠΕ05': 'fr', 'PE05': 'fr',
+    'ΠΕ06': 'en', 'PE06': 'en',
+    'ΠΕ07': 'de', 'PE07': 'de',
+    'ΠΕ34': 'it', 'PE34': 'it',
+    'ΠΕ40': 'es', 'PE40': 'es'
   });
 
   // Prevent bypassing duplicate / branch-language rules through "Άλλη γλώσσα".
@@ -55,7 +55,28 @@
         very_good: points.very_good,
         excellent: points.excellent
       }),
-      excludeOwnSpecialtyLanguage: Boolean(excludeOwnSpecialtyLanguage)
+      excludeOwnSpecialtyLanguage: Boolean(excludeOwnSpecialtyLanguage),
+      scoringMode: 'uniform'
+    });
+  }
+
+  function freezeRankedProfile(positionPoints, excludeOwnSpecialtyLanguage) {
+    const positions = (positionPoints || []).map(function (points) {
+      return Object.freeze({
+        none: 0,
+        good: Number(points.good) || 0,
+        very_good: Number(points.very_good) || 0,
+        excellent: Number(points.excellent) || 0
+      });
+    });
+    if (!positions.length) throw new Error('Απαιτείται τουλάχιστον μία θέση μοριοδότησης ξένης γλώσσας.');
+    return Object.freeze({
+      maxLanguages: positions.length,
+      // levelPoints παραμένει διαθέσιμο για συμβατότητα/UI fallback.
+      levelPoints: positions[0],
+      positionLevelPoints: Object.freeze(positions),
+      excludeOwnSpecialtyLanguage: Boolean(excludeOwnSpecialtyLanguage),
+      scoringMode: 'ranked'
     });
   }
 
@@ -70,7 +91,15 @@
     ebp: freezeProfile(2, { good: 4, very_good: 6, excellent: 8 }, false),
 
     // 1ΓΤ/2024 και 4ΕΑ/2025 (κατηγορία ΤΕ): μοριοδοτείται μία μόνο γλώσσα.
-    te: freezeProfile(1, { good: 10, very_good: 15, excellent: 20 }, false)
+    te: freezeProfile(1, { good: 10, very_good: 15, excellent: 20 }, false),
+
+    // Απόσπαση εκπαιδευτικών στα ΣΔΕ 2026-2027: η ισχυρότερη γλώσσα
+    // μοριοδοτείται ως 1η (1 / 1,5 / 2) και η επόμενη ως 2η
+    // (0,5 / 0,75 / 1). Η γλώσσα του κλάδου δεν μοριοδοτείται.
+    sde_secondment: freezeRankedProfile([
+      { good: 1, very_good: 1.5, excellent: 2 },
+      { good: 0.5, very_good: 0.75, excellent: 1 }
+    ], true)
   });
 
   function normalizeText(value) {
@@ -189,12 +218,17 @@
       ? (OWN_LANGUAGE_BY_SPECIALTY[specialty] || '')
       : '';
 
+    const rankedMode = profile.scoringMode === 'ranked';
+    const LEVEL_RANK = { none: 0, good: 1, very_good: 2, excellent: 3 };
+    const RANK_LEVEL = { 1: 'good', 2: 'very_good', 3: 'excellent' };
+
     const pointEntries = (entries || []).map(function (entry) {
       const level = String((entry && entry.level) || 'none');
       return {
         language: entry && entry.language,
         otherText: entry && entry.otherText,
-        points: profile.levelPoints[level] || 0
+        // Στα ranked profiles το προσωρινό points είναι μόνο βαθμίδα ταξινόμησης.
+        points: rankedMode ? (LEVEL_RANK[level] || 0) : (profile.levelPoints[level] || 0)
       };
     });
 
@@ -206,13 +240,21 @@
       if (b.points !== a.points) return b.points - a.points;
       return a.index - b.index;
     });
-    const accepted = sorted.slice(0, profile.maxLanguages).map(function (item) {
-      const level = pointsToLevel(profile, item.points);
-      return Object.assign({}, item, {
+
+    const accepted = sorted.slice(0, profile.maxLanguages).map(function (item, positionIndex) {
+      const level = rankedMode ? (RANK_LEVEL[item.points] || 'none') : pointsToLevel(profile, item.points);
+      const actualPoints = rankedMode
+        ? ((profile.positionLevelPoints[positionIndex] || {})[level] || 0)
+        : item.points;
+      const extra = {
+        points: actualPoints,
         level: level,
         levelLabel: LEVEL_LABELS[level] || level
-      });
+      };
+      if (rankedMode) extra.position = positionIndex + 1;
+      return Object.assign({}, item, extra);
     });
+
     const ignoredByLimit = sorted.slice(profile.maxLanguages);
     const warnings = base.warnings.slice();
 
@@ -224,14 +266,18 @@
       );
     }
 
-    const raw = sorted.reduce(function (sum, item) { return sum + item.points; }, 0);
+    const raw = rankedMode
+      ? accepted.reduce(function (sum, item) { return sum + item.points; }, 0)
+      : sorted.reduce(function (sum, item) { return sum + item.points; }, 0);
     const points = accepted.reduce(function (sum, item) { return sum + item.points; }, 0);
     const details = accepted.map(function (item) {
-      return item.label + ' - ' + item.levelLabel + ': ' + item.points + ' μόρια';
+      const positionPrefix = rankedMode ? (item.position + 'η ξένη γλώσσα — ') : '';
+      return positionPrefix + item.label + ' - ' + item.levelLabel + ': ' + item.points + ' μόρια';
     });
 
     return {
       profile: String(profileName),
+      scoringMode: profile.scoringMode,
       maxLanguages: profile.maxLanguages,
       raw: raw,
       points: points,

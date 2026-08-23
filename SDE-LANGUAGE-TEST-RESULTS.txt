@@ -1,0 +1,20 @@
+SDE LANGUAGE UNIFICATION
+========================
+Existing language profiles parity: 21,952 PASS / 0 FAIL
+SDE old-vs-new scoring parity:      1,568 PASS / 0 FAIL
+SDE edge-rule locks:                    8 PASS / 0 FAIL
+-----------------------------------------------
+Dedicated language total:          23,528 PASS / 0 FAIL
+
+Cross-regression:
+PE Academic numeric: 20/20 PASS
+PE Academic architecture: 24/24 PASS
+TE Academic numeric: 19/19 PASS
+TE Academic architecture: 42/42 PASS
+Service/Social numeric: 14/14 PASS
+Service/Social architecture: 67/67 PASS
+EAE eligibility parity: 2,747/2,747 PASS
+PHP syntax: 36/36 PASS
+JavaScript syntax: 28/28 PASS
+SDE PHP render: PASS
+Rendered duplicate ids: 0

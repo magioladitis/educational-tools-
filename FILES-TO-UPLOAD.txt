@@ -1,20 +1,11 @@
-Upload these 11 production files, preserving folders:
+SDE LANGUAGE RUNTIME HOTFIX
 
-1. ypologismos-morion.php
-2. ypologismos-morion-1gt-2024.php
-3. ypologismos-morion-1ea-2025.php
-4. ypologismos-morion-2ea-2025.php
-5. ypologismos-morion-3ea-2025.php
-6. ypologismos-morion-4ea-2025.php
-7. ypologismos-morion-onaseia.php
-8. includes/language-calculations.js
-9. includes/academic-calculations.js
-10. includes/asep-language-selector.js
-11. includes/components/asep-language-selector.php
+Upload these 2 files preserving folders:
+1. ypologismos-morion-apospasis-sde.php
+2. includes/asep-language-selector.js
 
-Cache/version note:
-- language-calculations.js: v3.20.24 on the unified ASEP pages
-- asep-language-selector.js: v3.20.24
-- academic-calculations.js: v3.20.24 where used by 1ΓΕ/2ΓΕ and Ωνάσεια
+Why both files:
+- asep-language-selector.js fixes readEntries() so it accepts a component id string, consistently with getState/reset/summary.
+- ypologismos-morion-apospasis-sde.php bumps the selector cache-bust to v=3.20.27 so browsers do not keep the broken cached controller.
 
-Do not upload the tests/ directory; it is included only in the full development package.
+No CSS or scoring-engine change is required.

@@ -137,48 +137,64 @@
     };
   }
 
-  const LANGUAGE_LEVEL = Object.freeze({ none: 0, B2: 1, C1: 2, C2: 3 });
-  const FIRST_LANGUAGE_POINTS = Object.freeze({ 1: 1, 2: 1.5, 3: 2 });
-  const SECOND_LANGUAGE_POINTS = Object.freeze({ 1: 0.5, 2: 0.75, 3: 1 });
+  const LEGACY_LANGUAGE_CODES = Object.freeze({
+    english: 'en',
+    french: 'fr',
+    german: 'de',
+    italian: 'it',
+    spanish: 'es',
+    other1: 'other',
+    other2: 'other'
+  });
+
+  const LEGACY_LANGUAGE_LEVELS = Object.freeze({
+    none: 'none',
+    B2: 'good',
+    C1: 'very_good',
+    C2: 'excellent'
+  });
+
+  function languageEntries(data) {
+    if (Array.isArray(data.languages)) return data.languages;
+    // Backwards-compatible adapter for older callers/tests. Scoring remains
+    // exclusively in EducationLanguages.
+    return [
+      {
+        language: LEGACY_LANGUAGE_CODES[data.language1] || data.language1 || '',
+        otherText: data.languageOther1 || (data.language1 === 'other1' ? 'Άλλη γλώσσα 1' : ''),
+        level: LEGACY_LANGUAGE_LEVELS[data.languageLevel1] || data.languageLevel1 || 'none'
+      },
+      {
+        language: LEGACY_LANGUAGE_CODES[data.language2] || data.language2 || '',
+        otherText: data.languageOther2 || (data.language2 === 'other2' ? 'Άλλη γλώσσα 2' : ''),
+        level: LEGACY_LANGUAGE_LEVELS[data.languageLevel2] || data.languageLevel2 || 'none'
+      }
+    ];
+  }
 
   function calculateLanguages(data) {
-    const entries = [
-      { language: data.language1 || '', level: data.languageLevel1 || 'none' },
-      { language: data.language2 || '', level: data.languageLevel2 || 'none' }
-    ];
-    const warnings = [];
-    const byLanguage = new Map();
-
-    entries.forEach(entry => {
-      const levelRank = LANGUAGE_LEVEL[entry.level] || 0;
-      if (!entry.language || !levelRank) return;
-
-      if (data.specialty === 'PE06' && entry.language === 'english') {
-        warnings.push('Για τον κλάδο ΠΕ06 δεν μοριοδοτείται η Αγγλική, επειδή είναι η γλώσσα που διδάσκει.');
-        return;
-      }
-
-      const existing = byLanguage.get(entry.language);
-      if (!existing || levelRank > existing.levelRank) {
-        byLanguage.set(entry.language, { language: entry.language, levelRank, level: entry.level });
-      }
-    });
-
-    const ordered = Array.from(byLanguage.values()).sort((a, b) => b.levelRank - a.levelRank).slice(0, 2);
-    let points = 0;
-    const details = [];
-    if (ordered[0]) {
-      const p = FIRST_LANGUAGE_POINTS[ordered[0].levelRank] || 0;
-      points += p;
-      details.push({ label: '1η ξένη γλώσσα (' + ordered[0].level + ')', points: p });
-    }
-    if (ordered[1]) {
-      const p = SECOND_LANGUAGE_POINTS[ordered[1].levelRank] || 0;
-      points += p;
-      details.push({ label: '2η ξένη γλώσσα (' + ordered[1].level + ')', points: p });
+    if (!global.EducationLanguages || typeof global.EducationLanguages.calculate !== 'function') {
+      throw new Error('Το κοινό module language-calculations.js πρέπει να φορτωθεί πριν από το sde-calculations.js.');
     }
 
-    return { points, details, warnings };
+    const result = global.EducationLanguages.calculate(
+      'sde_secondment',
+      languageEntries(data || {}),
+      { specialty: (data && data.specialty) || '' }
+    );
+    const LEVEL_CODES = { good: 'B2', very_good: 'C1', excellent: 'C2' };
+    return {
+      points: result.points,
+      details: result.accepted.map(function (item) {
+        return {
+          label: item.position + 'η ξένη γλώσσα (' + (LEVEL_CODES[item.level] || item.level) + ')',
+          points: item.points
+        };
+      }),
+      warnings: result.warnings,
+      accepted: result.accepted,
+      excludedLanguage: result.excludedLanguage
+    };
   }
 
   function calculateOther(data) {
