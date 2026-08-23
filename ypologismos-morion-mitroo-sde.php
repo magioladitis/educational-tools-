@@ -10,18 +10,19 @@
 <body class="edu-ui edu-calc-sde edu-page-sde-registry">
 <main class="page-shell">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
-<section class="hero">
+<?php calculatorHeroStart(); ?>
   <h1>Μόρια Μητρώου ΣΔΕ</h1>
   <p>Ενιαίος υπολογιστής για ωρομίσθιο Εκπαιδευτικό Προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας στα Σχολεία Δεύτερης Ευκαιρίας.</p>
   <div class="hero-meta">
     <span>3 κατηγορίες υποψηφίων</span><span>Βασική βαθμολογία έως 40</span><span>Κοινωνικές προσαυξήσεις</span><span>Live υπολογισμός</span><span>ΦΕΚ Β΄ 3224/25.06.2025</span>
   </div>
-</section>
+<?php calculatorHeroEnd(); ?>
 
-<div class="layout">
-<div>
-  <section class="card">
+<?php calculatorColumnsStart(); ?>
+<?php calculatorMainStart(); ?>
+  <?php calculatorCardStart(); ?>
     <div class="section-head"><div><h2>1. Κατηγορία &amp; προϋποθέσεις ένταξης</h2><p class="subtitle">Η επιλογή κατηγορίας αλλάζει αυτόματα τα απαιτούμενα προσόντα, τις επιμορφώσεις και την εμπειρία που μοριοδοτείται.</p></div></div>
     <div class="field-grid">
       <div class="field full"><label for="role">Κατηγορία υποψηφίου</label><select id="role" onchange="roleChanged()"><option value="">— Επίλεξε —</option><option value="educator">Εκπαιδευτικό Προσωπικό</option><option value="psychologist">Σύμβουλος Ψυχολόγος</option><option value="career">Σύμβουλος Σταδιοδρομίας</option></select></div>
@@ -51,9 +52,9 @@
       </div>
     </div>
     <div id="eligibilityInline"></div>
-  </section>
+  <?php calculatorCardEnd(); ?>
 
-  <section class="card">
+  <?php calculatorCardStart(); ?>
     <div class="section-head"><div><h2>2. Εκπαίδευση</h2><p class="subtitle">Τυπικά προσόντα έως 18 μόρια + επιμόρφωση έως 4 μόρια.</p></div><div class="max">έως 22</div></div>
     <h3>Τυπικά προσόντα</h3>
     <div class="field-grid">
@@ -75,9 +76,9 @@
     <div class="warning">Μοριοδοτούνται μόνο ολοκληρωμένες επιμορφώσεις. <strong>Κάθε επιμέρους επιμόρφωση κάτω από 15 ώρες λαμβάνει 0 μόρια.</strong> Καταχώρισε μόνο επιλέξιμες ώρες. Δεν μοριοδοτούνται ημερίδες, διημερίδες ή συνέδρια.</div>
     <div class="danger hidden" id="trainingMinimumWarning" aria-live="polite"></div>
     <div class="warning hidden" id="educatorTrainingProof">Για το Εκπαιδευτικό Προσωπικό, το δικαιολογητικό πρέπει να αναφέρει σαφώς φορέα, αντικείμενο, χρονικό διάστημα και διάρκεια αποκλειστικά σε ώρες. Αν δεν αναφέρονται ώρες, μπορούν να αποδειχθούν με το πρόγραμμα της επιμόρφωσης· Υπεύθυνη Δήλωση του υποψηφίου δεν γίνεται αποδεκτή.</div>
-  </section>
+  <?php calculatorCardEnd(); ?>
 
-  <section class="card">
+  <?php calculatorCardStart(); ?>
     <div class="section-head"><div><h2>3. Εμπειρία</h2><p class="subtitle" id="experienceSubtitle">Επίλεξε κατηγορία για να εμφανιστούν τα σωστά πεδία.</p></div><div class="max">έως 13</div></div>
     <div id="educatorExperience" class="field-grid hidden">
       <div class="field"><label for="expSdeHours">Διδασκαλία στα ΣΔΕ — ώρες <small>1 μόριο / 200 ώρες, έως 5.</small></label><input id="expSdeHours" type="number" min="0" step="1" value="0" oninput="calculate()"></div>
@@ -89,18 +90,18 @@
       <div class="field"><label for="expAdultCounsellingMonths" id="expAdultCounsellingLabel">Συμβουλευτικές υπηρεσίες σε ενήλικες — μήνες</label><input id="expAdultCounsellingMonths" type="number" min="0" max="480" step="1" value="0" oninput="calculate()"></div>
     </div>
     <div id="careerInconsistency" class="warning hidden"><strong>Σημείωση για το ΦΕΚ:</strong> στο άρθρο 12 §2.1 το λεκτικό αναφέρει «μέγιστο αριθμό μορίων 12», αλλά η στήλη του πίνακα δίνει 7 και η συνολική κατηγορία Επαγγελματικής Εμπειρίας είναι 13, ενώ το §2.2 δίνει 6. Ο υπολογιστής χρησιμοποιεί πλαφόν <strong>7</strong>, ως τη μοναδική τιμή που συμφωνεί εσωτερικά με το άθροισμα 13.</div>
-  </section>
+  <?php calculatorCardEnd(); ?>
 
-  <section class="card">
+  <?php calculatorCardStart(); ?>
     <div class="section-head"><div><h2>4. Άλλα προσόντα</h2><p class="subtitle">Δύο ξένες γλώσσες και γνώσεις Η/Υ.</p></div><div class="max">έως 5</div></div>
     <div class="field-grid">
       <div class="field"><label for="language1">Ξένη γλώσσα 1</label><select id="language1" onchange="calculate()"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other1">Άλλη</option></select><label class="edu-tools-sr-only" for="languageLevel1">Επίπεδο ξένης γλώσσας 1</label><select id="languageLevel1" class="edu-mt-8" onchange="calculate()"><option value="none">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select></div>
       <div class="field"><label for="language2">Ξένη γλώσσα 2</label><select id="language2" onchange="calculate()"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other2">Άλλη</option></select><label class="edu-tools-sr-only" for="languageLevel2">Επίπεδο ξένης γλώσσας 2</label><select id="languageLevel2" class="edu-mt-8" onchange="calculate()"><option value="none">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select></div>
       <div class="field full" id="computerField"><div class="check-row"><input id="computer" type="checkbox" onchange="calculate()"><label for="computer" id="computerLabel">Πιστοποιημένη επιμόρφωση ΤΠΕ επιπέδου 1 ΥΠΑΙΘΑ ή αποδεικτικό γνώσης Η/Υ σύμφωνα με την Πρόσκληση — 2 μόρια</label></div><div id="computerPe86Note" class="warning hidden"><strong>ΠΕ86 Πληροφορικής:</strong> όταν το πτυχίο Πληροφορικής χρησιμοποιείται ως βασικό πτυχίο ένταξης στο Μητρώο, το πεδίο «Γνώση Χειρισμού Η/Υ» δεν αξιολογείται και δεν προσθέτει 2 μόρια.</div></div>
     </div>
-  </section>
+  <?php calculatorCardEnd(); ?>
 
-  <section class="card">
+  <?php calculatorCardStart(); ?>
     <div class="section-head"><div><h2>5. Κοινωνικά κριτήρια</h2><p class="subtitle">Οι προσαυξήσεις υπολογίζονται επί της βασικής βαθμολογίας που έχει συγκεντρωθεί.</p></div></div>
     <div class="field-grid">
       <div class="field"><label for="unemploymentMonths">Πλήρεις μήνες ανεργίας <small>+0,5% ανά μήνα, έως 10%.</small></label><input id="unemploymentMonths" type="number" min="0" step="1" value="0" oninput="calculate()"></div>
@@ -111,11 +112,11 @@
       <div class="field"><div class="check-row"><input id="disability" type="checkbox" onchange="calculate()"><label for="disability">ΑμεΑ ≥50% υποψηφίου/τέκνου/συζύγου, με τις προβλεπόμενες προϋποθέσεις — +10%</label></div></div>
     </div>
     <div class="note">Το ΦΕΚ διατυπώνει κάθε ειδική κατηγορία ως προσαύξηση 10% επί της βαθμολογίας. Το εργαλείο προσθέτει κάθε κατηγορία που δηλώνεται ως εφαρμοζόμενη και εμφανίζει αναλυτικά την επίδρασή της.</div>
-  </section>
-</div>
+  <?php calculatorCardEnd(); ?>
+<?php calculatorMainEnd(); ?>
 
-<aside class="results" aria-live="polite">
-  <section class="card">
+<?php calculatorResultsStart(array('class' => 'results', 'attrs' => array('aria-live' => 'polite'))); ?>
+  <?php calculatorCardStart(); ?>
     <div class="role-chip" id="roleChip">Επίλεξε κατηγορία</div><h2>Αποτέλεσμα</h2>
     <div class="big-total"><div class="context">Τελική βαθμολογία με προσαυξήσεις</div><div class="number" id="finalScore">0</div><div class="outof">Βασική βαθμολογία έως 40 + κοινωνικά κριτήρια</div></div>
     <div class="bar"><div id="baseBar"></div></div>
@@ -127,12 +128,12 @@
     <div class="result-row"><span>Ειδικές κατηγορίες</span><strong id="specialScore">+0</strong></div>
     <div id="priorityStatus"></div><div id="eligibilityStatus"></div>
     <div class="actions"><button class="primary" type="button" onclick="copySummary(this)">Αντιγραφή αποτελέσματος</button><button class="secondary" type="button" onclick="resetForm()">Μηδενισμός</button></div>
-  </section>
-  <section class="card"><h2>Αναλυτική μοριοδότηση</h2><div id="breakdown" class="subtitle">Επίλεξε κατηγορία και συμπλήρωσε τα στοιχεία.</div></section>
-  <section class="card"><h2>Δικαιολογητικά / έλεγχοι</h2><div id="checklist" class="subtitle">Θα προσαρμοστεί στις επιλογές σου.</div></section>
-  <section class="card"><h2>Ισοβαθμία</h2><p class="subtitle">Προηγείται ο υποψήφιος με διδακτορικό, έπειτα ο κάτοχος μεταπτυχιακού και τέλος ο κάτοχος πτυχίου κατά βαθμό πτυχίου. Αν παραμένει ισοβαθμία, προβλέπεται δημόσια κλήρωση.</p></section>
-</aside>
-</div>
+  <?php calculatorCardEnd(); ?>
+  <?php calculatorCardStart(); ?><h2>Αναλυτική μοριοδότηση</h2><div id="breakdown" class="subtitle">Επίλεξε κατηγορία και συμπλήρωσε τα στοιχεία.</div><?php calculatorCardEnd(); ?>
+  <?php calculatorCardStart(); ?><h2>Δικαιολογητικά / έλεγχοι</h2><div id="checklist" class="subtitle">Θα προσαρμοστεί στις επιλογές σου.</div><?php calculatorCardEnd(); ?>
+  <?php calculatorCardStart(); ?><h2>Ισοβαθμία</h2><p class="subtitle">Προηγείται ο υποψήφιος με διδακτορικό, έπειτα ο κάτοχος μεταπτυχιακού και τέλος ο κάτοχος πτυχίου κατά βαθμό πτυχίου. Αν παραμένει ισοβαθμία, προβλέπεται δημόσια κλήρωση.</p><?php calculatorCardEnd(); ?>
+<?php calculatorResultsEnd(); ?>
+<?php calculatorColumnsEnd(); ?>
 
 <section class="edu-source-card" aria-labelledby="sourcesTitle">
   <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>

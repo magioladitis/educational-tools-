@@ -10,6 +10,7 @@
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea2">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
@@ -17,9 +18,9 @@
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
 <div class="app">
-<section class="hero"><h1>Υπολογισμός μορίων 2ΕΑ/2025</h1><p>Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ1΄ μελών <strong>Ειδικού Εκπαιδευτικού Προσωπικού (Ε.Ε.Π.)</strong>.</p><div class="meta"><span>2ΕΑ/2025</span><span>ΠΕ21–ΠΕ31</span><span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span><span>Έλεγχος πρόταξης</span><span>Άδειες &amp; βεβαιώσεις</span></div></section>
-<div class="layout"><main>
-<section class="card"><h2>1. Κλάδος και πρόταξη</h2><p class="cap">Ο κλάδος δεν αλλάζει τον βασικό πίνακα μοριοδότησης, αλλά ενεργοποιεί ειδικές επισημάνσεις και κανόνες πρόταξης.</p>
+<?php calculatorHeroStart(); ?><h1>Υπολογισμός μορίων 2ΕΑ/2025</h1><p>Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ1΄ μελών <strong>Ειδικού Εκπαιδευτικού Προσωπικού (Ε.Ε.Π.)</strong>.</p><div class="meta"><span>2ΕΑ/2025</span><span>ΠΕ21–ΠΕ31</span><span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span><span>Έλεγχος πρόταξης</span><span>Άδειες &amp; βεβαιώσεις</span></div><?php calculatorHeroEnd(); ?>
+<?php calculatorColumnsStart(); ?><?php calculatorMainStart(array('tag' => 'main')); ?>
+<?php calculatorCardStart(); ?><h2>1. Κλάδος και πρόταξη</h2><p class="cap">Ο κλάδος δεν αλλάζει τον βασικό πίνακα μοριοδότησης, αλλά ενεργοποιεί ειδικές επισημάνσεις και κανόνες πρόταξης.</p>
 <div class="field"><label for="branch">Κλάδος ΕΕΠ</label><select id="branch"><option value="">— Επιλογή —</option><option value="PE21">ΠΕ21 — Θεραπευτών Λόγου</option><option value="PE22">ΠΕ22 — Επαγγελματικών Συμβούλων</option><option value="PE23">ΠΕ23 — Ψυχολόγων</option><option value="PE25">ΠΕ25 — Σχολικών Νοσηλευτών</option><option value="PE28">ΠΕ28 — Φυσιοθεραπευτών</option><option value="PE29">ΠΕ29 — Εργασιοθεραπευτών–Εργοθεραπευτών</option><option value="PE30">ΠΕ30 — Κοινωνικών Λειτουργών</option><option value="PE31">ΠΕ31 — Εξειδικευμένου</option></select></div>
 <div id="branchNote" class="info">Επίλεξε κλάδο για να εμφανιστούν οι ειδικές επισημάνσεις.</div>
 <div class="checkrow"><input type="checkbox" id="pedagogical"><label for="pedagogical">Πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια<small>Δεν προσθέτει μόρια, αλλά αποτελεί κριτήριο πρόταξης.</small></label></div>
@@ -33,15 +34,15 @@ renderEaeSensoryPriority(array(
     'braille_id' => 'braille'
 ));
 ?>
-</section>
-<section class="card" id="licenseCard"><h2>2. Υποχρεωτικές άδειες &amp; βεβαιώσεις συμμετοχής</h2><p class="cap">Δεν μοριοδοτούνται, αλλά όπου προβλέπονται αποτελούν πρόσθετα τυπικά προσόντα ένταξης του κλάδου.</p>
+<?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(array('id' => 'licenseCard')); ?><h2>2. Υποχρεωτικές άδειες &amp; βεβαιώσεις συμμετοχής</h2><p class="cap">Δεν μοριοδοτούνται, αλλά όπου προβλέπονται αποτελούν πρόσθετα τυπικά προσόντα ένταξης του κλάδου.</p>
 <div id="licenseIntro" class="info">Επίλεξε κλάδο για να εμφανιστούν τα απαιτούμενα πρόσθετα επαγγελματικά δικαιολογητικά.</div>
 <div id="pe25RouteWrap" class="field hidden"><label for="pe25Route">ΠΕ25 — Διαδρομή βασικού επαγγελματικού τίτλου<small>Η απαιτούμενη άδεια και η επαγγελματική εγγραφή διαφέρουν ανάλογα με τον τίτλο.</small></label><select id="pe25Route"><option value="">— Επιλογή διαδρομής —</option><option value="nursing">Τίτλος Νοσηλευτικής</option><option value="health_visitor">Τίτλος Επισκέπτη/Επισκέπτριας Υγείας</option></select></div>
 <div id="licenseRequirements"></div>
 <div id="licenseStatus" class="priority">Δεν έχει επιλεγεί κλάδος.</div>
 <div class="note"><strong>Σημαντικό:</strong> ο έλεγχος αυτός αφορά μόνο τις ειδικές άδειες, βεβαιώσεις και εγγραφές σε επαγγελματικούς φορείς. Δεν επιβεβαιώνει τον βασικό τίτλο σπουδών ή όλα τα λοιπά τυπικά προσόντα της προκήρυξης. Τα απαιτούμενα προσόντα πρέπει να υφίστανται έως τη λήξη της προθεσμίας των αιτήσεων.</div>
-</section>
-<section id="asepPeAcademic" class="card" data-component="asep-pe-academic" data-profile="eep" data-degree-required="false" data-specialty-id="branch" data-degree-id="degreeGrade" data-second-degree-id="secondDegree" data-phd-id="phd" data-msc-id="mscCount" data-language-id="asepLanguages" data-computer-id="computer" data-training-id="training" data-training-proof-id="trainingProof"><h2>3. Ακαδημαϊκά προσόντα</h2><p class="cap">Μέγιστο κατηγορίας Α: 120 μόρια.</p>
+<?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(array('id' => 'asepPeAcademic', 'attrs' => array('data-component' => 'asep-pe-academic', 'data-profile' => 'eep', 'data-degree-required' => 'false', 'data-specialty-id' => 'branch', 'data-degree-id' => 'degreeGrade', 'data-second-degree-id' => 'secondDegree', 'data-phd-id' => 'phd', 'data-msc-id' => 'mscCount', 'data-language-id' => 'asepLanguages', 'data-computer-id' => 'computer', 'data-training-id' => 'training', 'data-training-proof-id' => 'trainingProof'))); ?><h2>3. Ακαδημαϊκά προσόντα</h2><p class="cap">Μέγιστο κατηγορίας Α: 120 μόρια.</p>
 <div class="field"><label for="degreeGrade">Βαθμός βασικού πτυχίου (5–10)<small>Βαθμός × 2,5 · ανώτατο 25. Αν η κλίμακα είναι διαφορετική, γίνεται αναγωγή στην 10βάθμια.</small></label><input id="degreeGrade" type="number" min="5" max="10" step="0.01" inputmode="decimal" placeholder="π.χ. 7,84"></div><div id="gradeWarning" class="warning hidden">Ο βαθμός πρέπει να είναι από 5,00 έως 10,00.</div>
 <div class="checkrow"><input type="checkbox" id="secondDegree"><label for="secondDegree">Δεύτερο πτυχίο ΑΕΙ<small>+7 μόρια, εφόσον δεν αποτελεί τυπικό προσόν διορισμού.</small></label></div>
 <div class="checkrow"><input type="checkbox" id="phd"><label for="phd">Μοριοδοτούμενο διδακτορικό δίπλωμα<small>+40 μόρια.</small></label></div>
@@ -73,8 +74,8 @@ renderTrainingProof([
 HTML
 ]);
 ?>
-<div class="subtot"><span>Ακαδημαϊκά</span><span class="pill" id="academicSubtotal">0,00</span></div></section>
-<section id="asepService" class="card" data-component="asep-service-criteria" data-warning-id="serviceWarning" data-subtotal-id="serviceSubtotal" data-warn-months="true"><h2>4. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο 120 μόρια. Μην δηλώνεις τον ίδιο μήνα σε περισσότερα από ένα πεδία.</p>
+<div class="subtot"><span>Ακαδημαϊκά</span><span class="pill" id="academicSubtotal">0,00</span></div><?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(array('id' => 'asepService', 'attrs' => array('data-component' => 'asep-service-criteria', 'data-warning-id' => 'serviceWarning', 'data-subtotal-id' => 'serviceSubtotal', 'data-warn-months' => 'true'))); ?><h2>4. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο 120 μόρια. Μην δηλώνεις τον ίδιο μήνα σε περισσότερα από ένα πεδία.</p>
 <div class="field-grid"><div class="field"><label for="regularMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο/μήνα · έως 120 μήνες.</small></label><input id="regularMonths" class="service-months" data-service-role="regular" type="number" min="0" max="120" step="1" value="0"></div><div class="field"><label for="difficultMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια/μήνα · έως 60 μήνες.</small></label><input id="difficultMonths" class="service-months" data-service-role="difficult" type="number" min="0" max="60" step="1" value="0"></div></div>
 <?php
 renderAsepThreeMonthService(array(
@@ -84,7 +85,7 @@ renderAsepThreeMonthService(array(
     'difficult_2021_id' => 'threeMonthDifficult2021'
 ));
 ?>
-<div id="serviceBranchNote" class="info">Η ειδική μοριοδότηση ιδιωτικής σχολικής προϋπηρεσίας με συντελεστή 0,9 δεν αφορά τα μέλη ΕΕΠ-ΕΒΠ.</div><div id="serviceWarning" class="note hidden"></div><div class="subtot"><span>Προϋπηρεσία</span><span class="pill" id="serviceSubtotal">0,00</span></div></section>
+<div id="serviceBranchNote" class="info">Η ειδική μοριοδότηση ιδιωτικής σχολικής προϋπηρεσίας με συντελεστή 0,9 δεν αφορά τα μέλη ΕΕΠ-ΕΒΠ.</div><div id="serviceWarning" class="note hidden"></div><div class="subtot"><span>Προϋπηρεσία</span><span class="pill" id="serviceSubtotal">0,00</span></div><?php calculatorCardEnd(); ?>
 <?php
 renderAsepSocialCriteria(array(
     'title' => '5. Κοινωνικά κριτήρια',
@@ -106,7 +107,7 @@ renderAsepSocialCriteria(array(
     'subtotal_label' => 'Σύνολο Κοινωνικών'
 ));
 ?>
-</main><aside class="results"><section class="card"><h2>Αποτέλεσμα</h2><div class="total"><div class="num" id="totalPoints">0,00</div><div class="label">συνολικά μόρια</div></div><div class="result-row"><span>Βαθμός πτυχίου</span><strong id="degreePoints">0,00</strong></div><div class="result-row"><span>Ακαδημαϊκά</span><strong id="academicPoints">0,00</strong></div><div class="result-row"><span>Προϋπηρεσία</span><strong id="servicePoints">0,00</strong></div><div class="result-row"><span>Κοινωνικά</span><strong id="socialPoints">0,00</strong></div><div class="result-row"><span>Άδειες / βεβαιώσεις</span><strong id="licenseResult">—</strong></div><div id="priorityBox" class="priority">Επίλεξε κλάδο για έλεγχο πρόταξης</div><div id="specialPriorityBox" class="priority hidden"></div><div class="actions"><button type="button" id="copyBtn">Αντιγραφή</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div></section></aside></div>
+<?php calculatorMainEnd(); ?><?php calculatorResultsStart(array('class' => 'results')); ?><?php calculatorCardStart(); ?><h2>Αποτέλεσμα</h2><div class="total"><div class="num" id="totalPoints">0,00</div><div class="label">συνολικά μόρια</div></div><div class="result-row"><span>Βαθμός πτυχίου</span><strong id="degreePoints">0,00</strong></div><div class="result-row"><span>Ακαδημαϊκά</span><strong id="academicPoints">0,00</strong></div><div class="result-row"><span>Προϋπηρεσία</span><strong id="servicePoints">0,00</strong></div><div class="result-row"><span>Κοινωνικά</span><strong id="socialPoints">0,00</strong></div><div class="result-row"><span>Άδειες / βεβαιώσεις</span><strong id="licenseResult">—</strong></div><div id="priorityBox" class="priority">Επίλεξε κλάδο για έλεγχο πρόταξης</div><div id="specialPriorityBox" class="priority hidden"></div><div class="actions"><button type="button" id="copyBtn">Αντιγραφή</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div><?php calculatorCardEnd(); ?><?php calculatorResultsEnd(); ?><?php calculatorColumnsEnd(); ?>
 <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Βάση υπολογισμού:</strong> Προκήρυξη ΑΣΕΠ 2ΕΑ/2025, Κεφάλαιο Β΄ — τυπικά προσόντα ένταξης, Κεφάλαιο Δ΄ παρ. 10 — Άδειες και Βεβαιώσεις, και Κεφάλαιο Γ΄ — κριτήρια αξιολογικού πίνακα Γ1΄ ΕΕΠ.</p><div class="source-links"><a href="https://info.asep.gr/node/76177" target="_blank" rel="noopener noreferrer">2ΕΑ/2025 — ΑΣΕΠ ↗</a></div><p class="source-disclaimer">Οι ενδείξεις «πρόταξης» είναι βοηθητικές και δεν αποτελούν επιπλέον μόρια.</p></section><div class="credits">Εργαλείο υπολογισμού μορίων · 2ΕΑ/2025</div></div>
 <script src="includes/service-calculations.js?v=3.20.33"></script><script src="includes/asep-service-controller.js?v=3.20.26"></script><script src="includes/social-calculations.js?v=3.20.32"></script><script src="includes/asep-social-criteria.js?v=3.20.32"></script><script src="includes/language-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-language-selector.js?v=3.20.31"></script><script src="includes/academic-calculations.js?v=3.20.31"></script><script src="includes/asep-pe-academic.js?v=3.20.31"></script><script src="includes/eep-eligibility-calculations.js"></script><script src="includes/training-proof.js?v=3.20.18"></script>

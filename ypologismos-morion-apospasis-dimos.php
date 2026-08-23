@@ -8,16 +8,17 @@
 </head>
 <body class="edu-ui edu-page-dimos-detachment">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
   <main class="dimos-calc" id="dimosCalc">
-    <section class="hero">
+    <?php calculatorHeroStart(); ?>
       <h1>Υπολογισμός Μορίων ΔΗΜ.Ω.Σ. 2026–2027</h1>
       <p>Ενημερωτικός υπολογιστής μοριοδότησης για απόσπαση μόνιμων εκπαιδευτικών σε Δημόσια Ωνάσεια Σχολεία.</p>
       <p><strong>Μέγιστο σύνολο: 53 μόρια</strong> · Α: 29 · Β: 13 · Γ: 11</p>
-    </section>
+    <?php calculatorHeroEnd(); ?>
 
-    <div class="grid">
-      <div>
-        <section class="card">
+    <?php calculatorColumnsStart(array('class' => 'grid')); ?>
+      <?php calculatorMainStart(); ?>
+        <?php calculatorCardStart(); ?>
           <h2>Α. Επιστημονική, παιδαγωγική συγκρότηση και κατάρτιση</h2>
           <p class="cap">Μέγιστο κατηγορίας: 29 μόρια</p>
 
@@ -117,9 +118,9 @@
             <span>Σύνολο Α</span>
             <span class="pill" id="categoryA">0.00 / 29</span>
           </div>
-        </section>
+        <?php calculatorCardEnd(); ?>
 
-        <section class="card">
+        <?php calculatorCardStart(); ?>
           <h2>Β. Επιστημονικό – συγγραφικό έργο</h2>
           <p class="cap">Μέγιστο κατηγορίας: 13 μόρια</p>
 
@@ -166,9 +167,9 @@
             <span>Σύνολο Β</span>
             <span class="pill" id="categoryB">0.00 / 13</span>
           </div>
-        </section>
+        <?php calculatorCardEnd(); ?>
 
-        <section class="card">
+        <?php calculatorCardStart(); ?>
           <h2>Γ. Καινοτόμο εκπαιδευτικό έργο και συμβολή στην ανάπτυξη του σχολείου</h2>
           <p class="cap">Μέγιστο κατηγορίας: 11 μόρια</p>
 
@@ -193,10 +194,10 @@
             <span>Σύνολο Γ</span>
             <span class="pill" id="categoryC">0.00 / 11</span>
           </div>
-        </section>
-      </div>
+        <?php calculatorCardEnd(); ?>
+      <?php calculatorMainEnd(); ?>
 
-      <aside class="card results" aria-live="polite">
+      <?php calculatorResultsStart(array('attrs' => array('aria-live' => 'polite'))); ?>
         <div class="total">
           <span class="num" id="grandTotal">0.00</span>
           <div class="outof">από 53 μόρια</div>
@@ -219,8 +220,8 @@
         <div class="note edu-mt-14">
           Το εργαλείο είναι βοηθητικό. Η τελική αποτίμηση γίνεται από τα αρμόδια όργανα και προϋποθέτει τα σωστά δικαιολογητικά στα αντίστοιχα πεδία.
         </div>
-      </aside>
-    </div>
+      <?php calculatorResultsEnd(); ?>
+    <?php calculatorColumnsEnd(); ?>
 </main>
 
   <script src="includes/language-calculations.js?v=3.20.31"></script>

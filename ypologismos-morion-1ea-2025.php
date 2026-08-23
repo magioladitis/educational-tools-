@@ -10,6 +10,7 @@
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
@@ -17,21 +18,21 @@
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
 <div class="app">
-<section class="hero">
+<?php calculatorHeroStart(); ?>
 <h1>Υπολογισμός μορίων 1ΕΑ/2025</h1>
 <p>Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ2΄ μελών <strong>Ειδικού Βοηθητικού Προσωπικού (Ε.Β.Π.) — ΔΕ01</strong>.</p>
 <div class="meta"><span>1ΕΑ/2025</span><span>ΔΕ01 — ΕΒΠ</span><span>Ακαδημαϊκά έως 64 ή 96</span><span>Προϋπηρεσία έως 120</span></div>
-</section>
-<div class="layout"><main>
-<section class="card">
+<?php calculatorHeroEnd(); ?>
+<?php calculatorColumnsStart(); ?><?php calculatorMainStart(array('tag' => 'main')); ?>
+<?php calculatorCardStart(); ?>
 <h2>1. Βασικός τίτλος σπουδών</h2>
 <p class="cap">Ο τύπος τίτλου αλλάζει τόσο τον συντελεστή του βαθμού όσο και το ανώτατο όριο των ακαδημαϊκών μορίων.</p>
 <div class="field"><label for="titleType">Τύπος βασικού τίτλου</label><select id="titleType"><option value="secondary">Πτυχίο ΕΠΑΛ / ΤΕΕ Β΄ κύκλου / ΤΕΛ / ΕΠΛ</option><option value="postsecondary">Δίπλωμα ΙΕΚ / Τάξη Μαθητείας ΕΠΑΛ</option></select></div>
 <div class="field"><label for="degreeGrade">Βαθμός τίτλου σε 20βάθμια κλίμακα<small>Αν ο τίτλος έχει διαφορετική κλίμακα, απαιτείται προηγουμένως αναγωγή στην 20βάθμια.</small></label><input id="degreeGrade" type="number" min="10" max="20" step="0.01" inputmode="decimal" placeholder="π.χ. 17,25"></div>
 <div id="gradeInfo" class="info">Τίτλος δευτεροβάθμιας: 4 μόρια για κάθε βαθμό πάνω από 10 · ακαδημαϊκό όριο 64.</div>
 <div id="gradeWarning" class="warning hidden">Ο βαθμός πρέπει να είναι από 10,00 έως 20,00.</div>
-</section>
-<section class="card">
+<?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(); ?>
 <h2>2. Ακαδημαϊκά προσόντα</h2>
 <p class="cap">Το συνολικό όριο είναι 64 μόρια για τίτλο δευτεροβάθμιας και 96 για τίτλο μεταδευτεροβάθμιας εκπαίδευσης.</p>
 <div class="checkrow"><input type="checkbox" id="secondTitle"><label for="secondTitle">Δεύτερος τίτλος σπουδών<small>+10 μόρια.</small></label></div>
@@ -63,8 +64,8 @@ HTML
 ]);
 ?>
 <div class="subtot"><span>Ακαδημαϊκά</span><span class="pill" id="academicSubtotal">0,00</span></div>
-</section>
-<section id="asepService" class="card" data-component="asep-service-criteria" data-warning-id="serviceWarning" data-subtotal-id="serviceSubtotal" data-warn-months="true">
+<?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(array('id' => 'asepService', 'attrs' => array('data-component' => 'asep-service-criteria', 'data-warning-id' => 'serviceWarning', 'data-subtotal-id' => 'serviceSubtotal', 'data-warn-months' => 'true'))); ?>
 <h2>3. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο 120 μόρια. Μην δηλώνεις τον ίδιο μήνα σε περισσότερα από ένα πεδία.</p>
 <div class="field-grid"><div class="field"><label for="regularMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο/μήνα · έως 120 μήνες.</small></label><input id="regularMonths" class="service-months" data-service-role="regular" type="number" min="0" max="120" step="1" value="0"></div><div class="field"><label for="difficultMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια/μήνα · έως 60 μήνες.</small></label><input id="difficultMonths" class="service-months" data-service-role="difficult" type="number" min="0" max="60" step="1" value="0"></div></div>
 <?php
@@ -78,7 +79,7 @@ renderAsepThreeMonthService(array(
 <div class="info">Η προϋπηρεσία αναπληρωτή ΤΕ01.30 Βοηθών Βρεφοκόμων–Παιδοκόμων προσμετράται και στον ΔΕ01-ΕΒΠ. Η ειδική μοριοδότηση ιδιωτικής σχολικής προϋπηρεσίας με συντελεστή 0,9 <strong>δεν αφορά τα μέλη ΕΕΠ-ΕΒΠ</strong>.</div>
 <div id="serviceWarning" class="note hidden"></div>
 <div class="subtot"><span>Προϋπηρεσία</span><span class="pill" id="serviceSubtotal">0,00</span></div>
-</section>
+<?php calculatorCardEnd(); ?>
 <?php
 renderAsepSocialCriteria(array(
     'title' => '4. Κοινωνικά κριτήρια',
@@ -100,7 +101,7 @@ renderAsepSocialCriteria(array(
     'subtotal_label' => 'Σύνολο Κοινωνικών'
 ));
 ?>
-<section class="card">
+<?php calculatorCardStart(); ?>
 <h2>5. Ειδική προτεραιότητα</h2>
 <?php
 renderEaeSensoryPriority(array(
@@ -110,10 +111,10 @@ renderEaeSensoryPriority(array(
     'eng_id' => 'signLanguage'
 ));
 ?>
-</section>
-</main><aside class="results">
-<section class="card"><h2>Αποτέλεσμα</h2><div class="total"><div class="num" id="totalPoints">0,00</div><div class="label">συνολικά μόρια</div></div><div class="result-row"><span>Βαθμός τίτλου</span><strong id="degreePoints">0,00</strong></div><div class="result-row"><span>Ακαδημαϊκά</span><strong id="academicPoints">0,00</strong></div><div class="result-row"><span>Προϋπηρεσία</span><strong id="servicePoints">0,00</strong></div><div class="result-row"><span>Κοινωνικά</span><strong id="socialPoints">0,00</strong></div><div class="result-row"><span>Όριο ακαδημαϊκών</span><strong id="academicCap">64</strong></div><div id="priorityBox" class="priority">Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ</div><div class="actions"><button type="button" id="copyBtn">Αντιγραφή</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div></section>
-</aside></div>
+<?php calculatorCardEnd(); ?>
+<?php calculatorMainEnd(); ?><?php calculatorResultsStart(array('class' => 'results')); ?>
+<?php calculatorCardStart(); ?><h2>Αποτέλεσμα</h2><div class="total"><div class="num" id="totalPoints">0,00</div><div class="label">συνολικά μόρια</div></div><div class="result-row"><span>Βαθμός τίτλου</span><strong id="degreePoints">0,00</strong></div><div class="result-row"><span>Ακαδημαϊκά</span><strong id="academicPoints">0,00</strong></div><div class="result-row"><span>Προϋπηρεσία</span><strong id="servicePoints">0,00</strong></div><div class="result-row"><span>Κοινωνικά</span><strong id="socialPoints">0,00</strong></div><div class="result-row"><span>Όριο ακαδημαϊκών</span><strong id="academicCap">64</strong></div><div id="priorityBox" class="priority">Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ</div><div class="actions"><button type="button" id="copyBtn">Αντιγραφή</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div><?php calculatorCardEnd(); ?>
+<?php calculatorResultsEnd(); ?><?php calculatorColumnsEnd(); ?>
 <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Βάση υπολογισμού:</strong> Προκήρυξη ΑΣΕΠ 1ΕΑ/2025, Κεφάλαιο Γ΄ — κριτήρια αξιολογικού πίνακα Γ2΄ ΕΒΠ.</p><div class="source-links"><a href="https://info.asep.gr/node/76176" target="_blank" rel="noopener noreferrer">1ΕΑ/2025 — ΑΣΕΠ ↗</a></div><p class="source-disclaimer">Το εργαλείο είναι βοηθητικό και δεν υποκαθιστά τον επίσημο έλεγχο ΑΣΕΠ/ΟΠΣΥΔ.</p></section>
 <div class="credits">Εργαλείο υπολογισμού μορίων · 1ΕΑ/2025</div>
 </div>

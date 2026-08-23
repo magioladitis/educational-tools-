@@ -10,22 +10,23 @@
 </head>
 <body class="edu-ui edu-calc-standard edu-page-gt1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-te-academic.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <div class="app">
-<section class="hero">
+<?php calculatorHeroStart(); ?>
     <h1>Υπολογισμός μορίων 1ΓΤ/2024</h1>
     <p>Ενδεικτικός υπολογισμός για τους αξιολογικούς πίνακες Γενικής Εκπαίδευσης κατηγορίας Τ.Ε.</p>
     <div class="meta">
       <span>ΤΕ01</span><span>ΤΕ02</span><span>ΤΕ16</span>
       <span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span>
     </div>
-  </section>
+  <?php calculatorHeroEnd(); ?>
 
-  <div class="layout">
-    <div>
-      <section class="card">
+  <?php calculatorColumnsStart(); ?>
+    <?php calculatorMainStart(); ?>
+      <?php calculatorCardStart(); ?>
         <h2>Κλάδος και βασικός τίτλος</h2>
         <p class="cap">Ο κλάδος επηρεάζει κυρίως τον τρόπο περιγραφής του δεύτερου τίτλου και τη βοήθεια για τον βαθμό ΤΕ16.</p>
 
@@ -46,7 +47,7 @@
             'id' => 'asepTeAcademic',
             'branch_id' => 'branch'
         )); ?>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
       <?php
 renderAsepTeAcademic(array(
@@ -116,16 +117,16 @@ renderAsepSocialCriteria(array(
 ));
 ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <h2>Παιδαγωγική και Διδακτική Επάρκεια</h2>
         <div class="checkrow">
           <input type="checkbox" id="pedagogical">
           <label for="pedagogical">Διαθέτω πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια ή την προβλεπόμενη βεβαίωση τρίμηνης παιδαγωγικής επιμόρφωσης Α.Σ.ΠΑΙ.Τ.Ε.<small>Δεν προσθέτει μόρια. Δίνει πρόταξη έναντι υποψηφίων που δεν τη διαθέτουν.</small></label>
         </div>
-      </section>
-    </div>
+      <?php calculatorCardEnd(); ?>
+    <?php calculatorMainEnd(); ?>
 
-    <aside class="card results">
+    <?php calculatorResultsStart(); ?>
       <div class="total">
         <div class="num" id="grandTotal">0,00</div>
         <div class="label">συνολικά μόρια</div>
@@ -149,8 +150,8 @@ renderAsepSocialCriteria(array(
       <div class="info-note edu-mt-14">
         Σε ισοβαθμία προηγούνται κατά σειρά: περισσότερα κοινωνικά μόρια (και ειδικότερα αναπηρία), έπειτα περισσότερα ακαδημαϊκά / μεγαλύτερος βαθμός πτυχίου και τέλος περισσότερη προϋπηρεσία.
       </div>
-    </aside>
-  </div>
+    <?php calculatorResultsEnd(); ?>
+  <?php calculatorColumnsEnd(); ?>
 
   <section class="edu-source-card" aria-labelledby="sourcesTitle">
     <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>

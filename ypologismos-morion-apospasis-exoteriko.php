@@ -10,8 +10,9 @@
 <body class="edu-ui edu-page-abroad">
 <main class="page-shell">
   <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
-  <section class="hero">
+  <?php calculatorHeroStart(); ?>
     <h1>Μόρια Απόσπασης στο Εξωτερικό</h1>
     <p>Ενδεικτικός υπολογισμός μορίων και βασικός έλεγχος δικαιώματος για απόσπαση σε ελληνόγλωσσες εκπαιδευτικές μονάδες του εξωτερικού.</p>
     <div class="hero-meta">
@@ -22,12 +23,12 @@
       <span>Παράρτημα ΙΙΙ 2026-2027 ενσωματωμένο</span>
       <span>Παράρτημα V · επιμίσθια ενσωματωμένα</span>
     </div>
-  </section>
+  <?php calculatorHeroEnd(); ?>
 
-  <div class="layout">
-    <div>
+  <?php calculatorColumnsStart(); ?>
+    <?php calculatorMainStart(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <h2>1. Βασικός έλεγχος δικαιώματος</h2>
         <p class="subtitle">Τα πεδία ξεκινούν ουδέτερα ώστε το εργαλείο να μη θεωρεί καμία κρίσιμη προϋπόθεση ως δεδομένη.</p>
 
@@ -157,9 +158,9 @@
           </ul>
           <div class="note">Ο παραπάνω κατάλογος είναι συνοπτικός. Για οριακή περίπτωση απαιτείται έλεγχος του πλήρους κειμένου της εκάστοτε πρόσκλησης.</div>
         </details>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <h2>2. Τίτλοι σπουδών</h2>
         <p class="subtitle">Οι τίτλοι μοριοδοτούνται αθροιστικά σύμφωνα με τον πίνακα του άρθρου 3.</p>
 
@@ -179,9 +180,9 @@
           <input type="checkbox" id="secondDegree">
           <label for="secondDegree">Δεύτερο πτυχίο Α.Ε.Ι. <small>15 μόρια</small></label>
         </div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <h2>3. Γλωσσομάθεια αξιολογικού πίνακα</h2>
         <p class="subtitle">Το Β2 είναι το ελάχιστο επίπεδο συμμετοχής και δεν μοριοδοτείται.</p>
 
@@ -228,9 +229,9 @@
         </div>
 
         <div id="primaryLanguageHelp" class="note">Επίλεξε πρώτα Βασικό ή Εναλλακτικό Πίνακα.</div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <h2>4. Δεύτερη ξένη γλώσσα</h2>
         <p class="subtitle">Πρόκειται για πρόσθετη, διαφορετική ξένη γλώσσα από εκείνη που χρησιμοποιείται για την κατάταξη στον πίνακα.</p>
 
@@ -254,9 +255,9 @@
             </select>
           </div>
         </div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <h2>5. Κριτήρια ισοβαθμίας</h2>
         <p class="subtitle">Δεν προσθέτουν μόρια. Εφαρμόζονται με την ακόλουθη σειρά όταν υπάρχει ισοβαθμία στον ίδιο πίνακα.</p>
         <ol class="criteria-list">
@@ -270,11 +271,11 @@
           <li>Συνολική υπηρεσία από το ΦΕΚ διορισμού.</li>
         </ol>
         <div class="note">Αν εξακολουθεί η ισοβαθμία, λαμβάνονται υπόψη η ημερομηνία και η σειρά δημοσίευσης του διορισμού στο ΦΕΚ.</div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-    </div>
+    <?php calculatorMainEnd(); ?>
 
-    <aside class="card results" aria-live="polite">
+    <?php calculatorResultsStart(array('attrs' => array('aria-live' => 'polite'))); ?>
       <h2>Αποτέλεσμα</h2>
 
       <div class="big-total">
@@ -299,8 +300,8 @@
       <div class="note">
         *Τα 185/165 είναι το θεωρητικό άθροισμα των επιμέρους μοριοδοτούμενων κριτηρίων του ΦΕΚ και όχι ξεχωριστό συνολικό πλαφόν που αναγράφεται στην απόφαση.
       </div>
-    </aside>
-  </div>
+    <?php calculatorResultsEnd(); ?>
+  <?php calculatorColumnsEnd(); ?>
 
   <section class="edu-source-card" aria-labelledby="sourcesTitle">
     <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>

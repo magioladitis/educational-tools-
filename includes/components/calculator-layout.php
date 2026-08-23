@@ -63,6 +63,24 @@ if (!function_exists('calculatorLayoutTextOrHtml')) {
     }
 }
 
+if (!function_exists('calculatorHeroStart')) {
+    function calculatorHeroStart($config = array()) {
+        $config = is_array($config) ? $config : array();
+        $class = isset($config['class']) ? $config['class'] : 'hero';
+        $id = isset($config['id']) ? $config['id'] : null;
+        $attrs = isset($config['attrs']) ? $config['attrs'] : array();
+        $opened = calculatorLayoutOpenTag('section', $class, $id, $attrs);
+        calculatorLayoutStackPush('hero', array($opened));
+    }
+}
+
+if (!function_exists('calculatorHeroEnd')) {
+    function calculatorHeroEnd() {
+        $tags = calculatorLayoutStackPop('hero');
+        foreach (array_reverse($tags) as $tag) echo '</' . $tag . '>';
+    }
+}
+
 if (!function_exists('calculatorHero')) {
     function calculatorHero($config = array()) {
         $config = is_array($config) ? $config : array();

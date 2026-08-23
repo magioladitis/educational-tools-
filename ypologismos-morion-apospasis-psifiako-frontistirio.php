@@ -10,8 +10,9 @@
 <body class="edu-ui edu-page-digital-tutoring">
   <main class="page-shell">
     <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
-    <section class="hero">
+    <?php calculatorHeroStart(); ?>
       <h1>Υπολογισμός μορίων απόσπασης στο Ψηφιακό Φροντιστήριο</h1>
       <p>Ενδεικτικός υπολογισμός για την πρόσκληση αποσπάσεων μονίμων εκπαιδευτικών για το σχολικό έτος 2026–2027.</p>
       <div class="hero-meta">
@@ -19,11 +20,11 @@
         <span>Β + Γ πριν από τη συνέντευξη: έως 65</span>
         <span>Βιντεοσκοπημένο μάθημα: βάση 20/35</span>
       </div>
-    </section>
+    <?php calculatorHeroEnd(); ?>
 
-    <div class="layout">
-      <div>
-        <section class="card">
+    <?php calculatorColumnsStart(); ?>
+      <?php calculatorMainStart(); ?>
+        <?php calculatorCardStart(); ?>
           <h2>Προϋποθέσεις που επηρεάζουν τη διαδικασία</h2>
           <p class="subtitle">Δεν μοριοδοτούνται, αλλά μπορεί να επηρεάσουν το αν η αίτηση είναι παραδεκτή ή αν συνεχίζεις στη διαδικασία.</p>
           <div class="field-grid">
@@ -68,9 +69,9 @@
             </div>
           </div>
           <div class="warning">Η πρόσκληση προβλέπει και επιπλέον κωλύματα/προϋποθέσεις απόσπασης. Το παρόν εργαλείο δεν αντικαθιστά τον πλήρη έλεγχο της πρόσκλησης και του ΠΥΜ.</div>
-        </section>
+        <?php calculatorCardEnd(); ?>
 
-        <section class="card">
+        <?php calculatorCardStart(); ?>
           <div class="criterion-head">
             <div>
               <h2>Α. Γενική παρουσία</h2>
@@ -87,9 +88,9 @@
             <input type="number" id="a2" min="0" max="15" step="0.1" value="0" oninput="calculate()">
           </div>
           <div class="info">Αν δεν έχει πραγματοποιηθεί ακόμη η συνέντευξη, άφησε τα Α1 και Α2 στο 0. Το εργαλείο θα σου δείξει ξεχωριστά τη βαθμολογία Β + Γ που χρησιμοποιείται πριν από τη συνέντευξη.</div>
-        </section>
+        <?php calculatorCardEnd(); ?>
 
-        <section class="card">
+        <?php calculatorCardStart(); ?>
           <div class="criterion-head">
             <div>
               <h2>Β. Επιστημονική κατάρτιση – εμπειρία</h2>
@@ -139,9 +140,9 @@
               <option value="2">Β ή Β2 — 2</option>
             </select>
           </div>
-        </section>
+        <?php calculatorCardEnd(); ?>
 
-        <section class="card">
+        <?php calculatorCardStart(); ?>
           <div class="criterion-head">
             <div>
               <h2>Γ. Βιντεοσκοπημένο μάθημα</h2>
@@ -154,11 +155,11 @@
             <input type="number" id="videoScore" min="0" max="35" step="0.1" value="" placeholder="0–35" oninput="calculate()">
           </div>
           <div class="note">Για την κλήση σε συνέντευξη λαμβάνονται υπόψη οι περισσότεροι βαθμοί στις κατηγορίες <strong>Β + Γ</strong>, με απαραίτητη βάση τουλάχιστον <strong>20 μονάδων στη Γ</strong>. Η πρόσκληση προβλέπει κλήση κατά ανώτατο όριο του τριπλάσιου αριθμού υποψηφίων σε σχέση με τις θέσεις.</div>
-        </section>
-      </div>
+        <?php calculatorCardEnd(); ?>
+      <?php calculatorMainEnd(); ?>
 
-      <aside class="results" aria-live="polite">
-        <section class="card">
+      <?php calculatorResultsStart(array('class' => 'results', 'attrs' => array('aria-live' => 'polite'))); ?>
+        <?php calculatorCardStart(); ?>
           <div class="big-total">
             <div class="number" id="totalScore">0</div>
             <div class="outof">/ 100 μονάδες</div>
@@ -180,18 +181,18 @@
             <button class="primary" type="button" onclick="calculate()">Υπολογισμός</button>
             <button class="secondary" type="button" onclick="resetForm()">Καθαρισμός</button>
           </div>
-        </section>
+        <?php calculatorCardEnd(); ?>
 
-        <section class="card">
+        <?php calculatorCardStart(); ?>
           <h2>Ανάλυση Β</h2>
           <div class="result-row"><span>Β1. Διδακτορικό</span><strong id="b1Result">0</strong></div>
           <div class="result-row"><span>Β2. Μεταπτυχιακό</span><strong id="b2Result">0</strong></div>
           <div class="result-row"><span>Β3. Πανελλαδικές</span><strong id="b3Result">0</strong></div>
           <div class="result-row"><span>Β4. Πρόσθετη προϋπηρεσία</span><strong id="b4Result">0</strong></div>
           <div class="result-row"><span>Β5. Τ.Π.Ε.</span><strong id="b5Result">0</strong></div>
-        </section>
-      </aside>
-    </div>
+        <?php calculatorCardEnd(); ?>
+      <?php calculatorResultsEnd(); ?>
+    <?php calculatorColumnsEnd(); ?>
 
     <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Πηγή:</strong> Πρόσκληση 86300/Δ7/29.06.2026 για αποσπάσεις μονίμων εκπαιδευτικών στο Ψηφιακό Φροντιστήριο για το σχολικό έτος 2026–2027.</p><div class="source-links"><a href="https://diavgeia.gov.gr/doc/934%CE%9946%CE%9D%CE%9A%CE%A0%CE%94-80%CE%9C?inline=true" target="_blank" rel="noopener noreferrer">Πρόσκληση Ψηφιακού Φροντιστηρίου — Διαύγεια (ΑΔΑ 934Ι46ΝΚΠΔ-80Μ) ↗</a></div><p class="source-disclaimer">Το εργαλείο παρέχει ενδεικτικό υπολογισμό και δεν αντικαθιστά την επίσημη πρόσκληση, τα δικαιολογητικά και την κρίση της αρμόδιας επιτροπής.</p></section>
 </main>

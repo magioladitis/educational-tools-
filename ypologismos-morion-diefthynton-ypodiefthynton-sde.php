@@ -10,8 +10,9 @@
 <body class="edu-ui edu-calc-sde edu-page-sde-leadership">
 <main class="page-shell">
   <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
-  <section class="hero">
+  <?php calculatorHeroStart(); ?>
     <h1>Μόρια Διευθυντών &amp; Υποδιευθυντών ΣΔΕ</h1>
     <p>Υπολόγισε τα μόρια επιλογής για θέσεις ευθύνης στα Σχολεία Δεύτερης Ευκαιρίας και κάνε βασικό έλεγχο των προϋποθέσεων συμμετοχής.</p>
     <div class="hero-meta">
@@ -21,11 +22,11 @@
       <span>Συνέντευξη: μόνο Διευθυντές, έως 25</span>
       <span>ΦΕΚ Β΄ 3037/19.06.2025</span>
     </div>
-  </section>
+  <?php calculatorHeroEnd(); ?>
 
-  <div class="layout">
-    <div>
-      <section class="card">
+  <?php calculatorColumnsStart(); ?>
+    <?php calculatorMainStart(); ?>
+      <?php calculatorCardStart(); ?>
         <div class="section-head"><div><h2>1. Θέση &amp; βασικές προϋποθέσεις</h2><p class="subtitle">Η θέση αλλάζει αυτόματα τα ελάχιστα έτη υπηρεσίας, τις απαιτούμενες ώρες διδακτικού έργου και τα επιμέρους πλαφόν.</p></div></div>
         <div class="field-grid">
           <div class="field full">
@@ -70,9 +71,9 @@
             <details><summary>Ενδεικτικά κωλύματα</summary><ul class="criteria-list"><li>δοκιμαστική υπηρεσία, διαθεσιμότητα ή αργία,</li><li>ορισμένες τελεσίδικες ποινικές ή πειθαρχικές καταδίκες,</li><li>υποχρεωτική υπηρεσία / απαγόρευση υπηρεσιακών μεταβολών,</li><li>θητεία σε άλλη θέση που λήγει μετά την έναρξη της νέας θητείας,</li><li>ορισμένες περιπτώσεις πρόσφατης ανάκλησης/διακοπής απόσπασης,</li><li>υποχρεωτική αποχώρηση λόγω συνταξιοδότησης εντός του προβλεπόμενου έτους.</li></ul></details>
           </div>
         </div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <div class="section-head"><div><h2>2. Τυπικά προσόντα</h2><p class="subtitle">Οι συναφείς μεταπτυχιακές σπουδές σε Εκπαίδευση Ενηλίκων, Συνεχιζόμενη Εκπαίδευση, Διά Βίου Μάθηση ή Διοίκηση Εκπαιδευτικών Μονάδων λαμβάνουν το μέγιστο.</p></div><div class="max">έως 25</div></div>
         <div class="field-grid">
           <div class="field">
@@ -105,9 +106,9 @@
           </div>
         </div>
         <div class="note">Το εργαλείο ταξινομεί αυτόματα τις δύο επιλέξιμες γλώσσες ώστε η ισχυρότερη να μοριοδοτείται ως 1η. Η ίδια γλώσσα λαμβάνεται μόνο μία φορά, στο ανώτερο επίπεδο.</div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <div class="section-head"><div><h2>3. Διδακτική εμπειρία</h2><p class="subtitle">Τα όρια αλλάζουν ανά θέση. Στην ωρομίσθια απασχόληση στα ΣΔΕ και στις σχολικές μονάδες/ΣΑΕΚ/ΕΣΚ, 650 ώρες αντιστοιχούν σε ένα έτος.</p></div><div class="max" id="teachingMax">έως —</div></div>
         <div class="field-grid">
           <div class="field">
@@ -140,9 +141,9 @@
           </div>
         </div>
         <div class="warning">Δεν προσμετράται χρόνος άδειας άνευ αποδοχών, εκπαιδευτικής άδειας ή απόσπασης σε θέση με διοικητικά καθήκοντα, ούτε προϋπηρεσία που αναγνωρίστηκε κατά τον διορισμό στην τυπική εκπαίδευση. Το διδακτικό έργο στην τριτοβάθμια εκπαίδευση δεν θεωρείται διδακτικό έργο στην Εκπαίδευση Ενηλίκων.</div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <div class="section-head"><div><h2>4. Διοικητική εμπειρία</h2><p class="subtitle">Η ίδια χρονική περίοδος δεν μπορεί να μοριοδοτηθεί και ως διοικητική και ως διδακτική εμπειρία.</p></div><div class="max" id="adminMax">έως —</div></div>
         <div class="field-grid">
           <div class="field">
@@ -159,21 +160,21 @@
           </div>
         </div>
         <div class="overflow-box" id="overflowHint">Επίλεξε θέση για να υπολογιστούν τα επιμέρους πλαφόν και τυχόν διοικητικός χρόνος που μένει εκτός μοριοδότησης.</div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <div class="section-head"><div><h2>5. Επιμόρφωση</h2><p class="subtitle">Επιμόρφωση στις αρχές Εκπαίδευσης Ενηλίκων, σε θέματα ΣΔΕ ή στη Διοίκηση Εκπαιδευτικών Μονάδων από φορείς του δημόσιου ή ευρύτερου δημόσιου τομέα.</p></div><div class="max">έως 5</div></div>
         <div class="field-grid"><div class="field full"><label for="trainingHours">Συνολικές επιλέξιμες ώρες ολοκληρωμένων επιμορφώσεων <small>0,5 μόρια ανά 100 ώρες. Κάθε επιμέρους επιμόρφωση κάτω των 15 ωρών λαμβάνει 0 μόρια. Μην συμπεριλαμβάνεις ημερίδες, διημερίδες ή συνέδρια.</small></label><input type="number" id="trainingHours" min="0" step="1" value="0" oninput="calculate()"></div></div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card hidden" id="interviewCard">
+      <?php calculatorCardStart(array('id' => 'interviewCard', 'class' => 'card hidden')); ?>
         <div class="section-head"><div><h2>6. Συνέντευξη</h2><p class="subtitle">Μόνο για τους υποψήφιους Διευθυντές. Αν δεν έχει πραγματοποιηθεί ακόμη, άφησε το πεδίο κενό για να δεις το σύνολο πριν από τη συνέντευξη.</p></div><div class="max">έως 25</div></div>
         <div class="field-grid"><div class="field full"><label for="interviewScore">Βαθμολογία συνέντευξης</label><input type="number" id="interviewScore" min="0" max="25" step="0.01" placeholder="0–25" oninput="calculate()"></div></div>
-      </section>
-    </div>
+      <?php calculatorCardEnd(); ?>
+    <?php calculatorMainEnd(); ?>
 
-    <aside class="results" aria-live="polite">
-      <section class="card">
+    <?php calculatorResultsStart(array('class' => 'results', 'attrs' => array('aria-live' => 'polite'))); ?>
+      <?php calculatorCardStart(); ?>
         <div class="role-chip" id="roleChip">Επίλεξε θέση</div>
         <h2>Αποτέλεσμα</h2>
         <div class="big-total"><div class="context" id="totalContext">Μόρια κριτηρίων</div><div class="number" id="totalScore">0</div><div class="outof" id="totalOutOf">από 75 μόρια</div></div>
@@ -186,13 +187,13 @@
         <div class="result-row emphasis" id="criteriaRow"><span>Σύνολο πριν συνέντευξη</span><strong id="criteriaScore">0 / 75</strong></div>
         <div id="eligibilityStatus" role="status" aria-live="polite"></div>
         <div class="actions"><button class="primary" type="button" onclick="copySummary(this)">Αντιγραφή αποτελέσματος</button><button class="secondary" type="button" onclick="resetForm()">Μηδενισμός</button></div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card"><h2>Ανάλυση μορίων</h2><div id="breakdown" class="subtitle">Συμπλήρωσε τα στοιχεία σου.</div></section>
-      <section class="card"><h2>Σημαντικός κανόνας</h2><p class="subtitle">Χρόνος Διευθυντή/Υποδιευθυντή που λογίζεται και ως διδακτικός δεν μοριοδοτείται και στις δύο κατηγορίες για την ίδια περίοδο. Αν διοικητικός χρόνος μένει εκτός λόγω πλαφόν, μπορεί να προσμετρηθεί στο αντίστοιχο πεδίο διδακτικής εμπειρίας όπου προβλέπεται.</p></section>
-      <section class="card"><h2>Σε περίπτωση ισοβαθμίας</h2><p class="subtitle">Στον τελικό πίνακα προηγείται ο υποψήφιος με περισσότερες μονάδες στη συνέντευξη, όπου αυτή προβλέπεται. Αν εξακολουθεί η ισοβαθμία ή δεν προβλέπεται συνέντευξη, εξετάζονται τα κριτήρια με τη σειρά που αναγράφονται στο άρθρο 4.</p></section>
-    </aside>
-  </div>
+      <?php calculatorCardStart(); ?><h2>Ανάλυση μορίων</h2><div id="breakdown" class="subtitle">Συμπλήρωσε τα στοιχεία σου.</div><?php calculatorCardEnd(); ?>
+      <?php calculatorCardStart(); ?><h2>Σημαντικός κανόνας</h2><p class="subtitle">Χρόνος Διευθυντή/Υποδιευθυντή που λογίζεται και ως διδακτικός δεν μοριοδοτείται και στις δύο κατηγορίες για την ίδια περίοδο. Αν διοικητικός χρόνος μένει εκτός λόγω πλαφόν, μπορεί να προσμετρηθεί στο αντίστοιχο πεδίο διδακτικής εμπειρίας όπου προβλέπεται.</p><?php calculatorCardEnd(); ?>
+      <?php calculatorCardStart(); ?><h2>Σε περίπτωση ισοβαθμίας</h2><p class="subtitle">Στον τελικό πίνακα προηγείται ο υποψήφιος με περισσότερες μονάδες στη συνέντευξη, όπου αυτή προβλέπεται. Αν εξακολουθεί η ισοβαθμία ή δεν προβλέπεται συνέντευξη, εξετάζονται τα κριτήρια με τη σειρά που αναγράφονται στο άρθρο 4.</p><?php calculatorCardEnd(); ?>
+    <?php calculatorResultsEnd(); ?>
+  <?php calculatorColumnsEnd(); ?>
 
   <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Πηγή:</strong> Υ.Α. 70621/Κ1, ΦΕΚ Β΄ 3037/19.06.2025 «Καθορισμός κριτηρίων και διαδικασίας επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (Σ.Δ.Ε.)».</p><p class="source-disclaimer">Το εργαλείο παρέχει ενδεικτικό υπολογισμό· η τελική κρίση ανήκει στην αρμόδια Επιτροπή Επιλογής.</p></section>
   <?php require_once __DIR__ . '/includes/footer.php'; ?>

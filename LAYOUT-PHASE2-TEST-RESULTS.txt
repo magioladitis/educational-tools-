@@ -1,0 +1,62 @@
+Layout Phase 2 test results — 2026-08-24
+
+Scope
+- 9 Phase-2 migrated calculators
+- 13/15 calculator pages now use includes/components/calculator-layout.php
+- 2 legacy pages intentionally deferred: ypologismos-morion-onaseia.php, ypologismos-morion-apospasis.php
+
+Rendered DOM parity (Phase 1 baseline -> Phase 2)
+PASS 9/9
+- ypologismos-morion-1ea-2025.php
+- ypologismos-morion-1gt-2024.php
+- ypologismos-morion-2ea-2025.php
+- ypologismos-morion-4ea-2025.php
+- ypologismos-morion-apospasis-dimos.php
+- ypologismos-morion-apospasis-exoteriko.php
+- ypologismos-morion-apospasis-psifiako-frontistirio.php
+- ypologismos-morion-diefthynton-ypodiefthynton-sde.php
+- ypologismos-morion-mitroo-sde.php
+
+Parity comparison includes:
+- tag structure
+- attributes
+- IDs
+- data-* attributes
+- visible text
+- script src attributes and inline script text (whitespace-normalized)
+- no duplicate IDs
+
+Layout contract suite
+PASS 127/127
+
+Existing regression suites
+PASS 309/309
+- PE Academic: 20/20 + architecture 24/24
+- TE Academic: 19/19 + architecture 42/42
+- Education Core contract: 43/43
+- PE controller specialty runtime: 5/5
+- Service/Social regression: 14/14 + architecture 67/67
+- Specialty normalization: 9/9
+- Naming contract: 66/66
+
+Combined regression/contract checks
+PASS 436/436
+
+Syntax
+PHP: 37/37 PASS
+JavaScript: 25/25 PASS
+
+Dependencies
+272 local PHP/JS/CSS/PHP-link references checked
+0 missing
+
+Architecture
+- 13/15 calculators use calculator-layout.php
+- 67 card wrappers are produced through calculatorCardStart()/End()
+- All 13 non-legacy calculators use shared hero, columns/main and results helpers
+- calculator-layout.php remains presentation-only; no scoring engine or business-rule dependency
+- 0 business JS files changed in Phase 2
+- 0 CSS files changed in Phase 2
+
+Browser note
+A new Chromium E2E pass is not claimed for Phase 2 because Chromium in this container currently fails to start reliably due to DBus/runtime restrictions. This does not affect the 9/9 rendered-DOM parity result: the browser-facing DOM and script contracts are identical before/after for every migrated page.
