@@ -247,6 +247,7 @@ renderAsepSocialCriteria(array(
 <script src="includes/social-calculations.js"></script>
 <script src="includes/language-calculations.js"></script>
 <script src="includes/te-academic-calculations.js"></script>
+<script src="includes/training-proof.js?v=3.20.18"></script>
 <script>
 (function(){
   "use strict";
@@ -288,25 +289,6 @@ renderAsepSocialCriteria(array(
     return EducationLanguages.calculatePair([{language:$('langName').value,otherText:$('langOther').value,points:num('langLevel')}],{cap:20});
   }
 
-  function trainingDatesSelection(){const x=document.querySelector('input[name="trainingDates"]:checked');return x?x.value:'';}
-  function updateTrainingProofUI(){
-    const active=$('training').checked;
-    $('trainingProof').classList.toggle('hidden',!active);
-    if(!active)return;
-    const value=trainingDatesSelection(),status=$('trainingDatesStatus');
-    status.className='training-proof-status '+(value==='yes'?'success':value==='no'?'warning':'neutral');
-    if(value==='yes')status.textContent='✓ Οι ημερομηνίες έναρξης και λήξης αναγράφονται στο πιστοποιητικό.';
-    else if(value==='no')status.textContent='⚠️ Απαιτείται πρόσθετη βεβαίωση από τον οικείο φορέα με την ημερομηνία έναρξης και λήξης.';
-    else status.textContent='Έλεγξε το πιστοποιητικό πριν την υποβολή των δικαιολογητικών.';
-  }
-  function trainingProofSummary(){
-    if(!$('training').checked)return'';
-    const value=trainingDatesSelection();
-    if(value==='yes')return'Πιστοποιητικό σεμιναρίου: αναγράφονται ημερομηνία έναρξης και λήξης.';
-    if(value==='no')return'ΔΙΚΑΙΟΛΟΓΗΤΙΚΟ: απαιτείται βεβαίωση φορέα με ημερομηνία έναρξης και λήξης του σεμιναρίου.';
-    return'Έλεγχος πιστοποιητικού σεμιναρίου: εκκρεμεί ο έλεγχος ημερομηνίας έναρξης και λήξης.';
-  }
-
   function socialResult(){return EducationSocial.calculate({
     children:num('children'),candidateDisability:num('candidateDisability'),spouseDisability:num('spouseDisability'),childDisability:num('childDisability'),
     marriageYears4Plus:$('marriageYears4Plus').checked,candidateMentalCondition:$('candidateMentalCondition').checked
@@ -320,7 +302,7 @@ renderAsepSocialCriteria(array(
   }
 
   function calc(){
-    updateBranchUI();syncLanguageUI();updateTrainingProofUI();
+    updateBranchUI();syncLanguageUI();TrainingProof.syncAll();
     const scale=$('gradeScale').value,rawGrade=num('degreeGrade');
     const min=scale==='10'?5:(scale==='20'?10:0),max=scale==='10'?10:20;
     const valid=scale==='te16text'||($('degreeGrade').value!==''&&rawGrade>=min&&rawGrade<=max);
@@ -352,7 +334,7 @@ renderAsepSocialCriteria(array(
   function summary(v){return[
     'Υπολογισμός μορίων 1ΓΤ/2024',`Σύνολο: ${fmt(v.total)}`,`Ακαδημαϊκά: ${fmt(v.academic.points)} / 120`,`Προϋπηρεσία: ${fmt(v.service.points)} / 120`,
     `Κοινωνικά: ${fmt(v.social.total)}`,`Ξένη γλώσσα: ${languageSummary(v)}`,`Παιδαγωγική επάρκεια: ${v.ped?'ΝΑΙ — ΠΡΟΤΑΞΗ':'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
-    trainingProofSummary(),'','Ενδεικτικός υπολογισμός βάσει της Προκήρυξης ΑΣΕΠ 1ΓΤ/2024.'
+    TrainingProof.summary('trainingProof'),'','Ενδεικτικός υπολογισμός βάσει της Προκήρυξης ΑΣΕΠ 1ΓΤ/2024.'
   ].filter((x,i,a)=>x!==''||a[i-1]!=='').join('\n');}
 
   ['regularMonths','difficultMonths','covid20Regular','covid20Difficult','covid21Regular','covid21Difficult'].forEach(id=>{

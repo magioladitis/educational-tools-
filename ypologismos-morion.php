@@ -14,6 +14,7 @@
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-digital-tutoring-php56.php'; ?>
 
 <div class="app">
 <section class="hero">
@@ -148,7 +149,7 @@ HTML
         <h2>Β. Εκπαιδευτική προϋπηρεσία</h2>
         <p class="cap">Μέγιστο κατηγορίας: 120 μόρια</p>
 
-        <div class="note">Βάλε κάθε μήνα σε <strong>ένα μόνο</strong> αντίστοιχο πεδίο, ώστε να μη γίνει διπλή μέτρηση. Λαμβάνονται υπόψη ακέραιοι μήνες χωρίς υπόλοιπα ημερών.</div>
+        <div class="note">Βάλε κάθε χρονικό διάστημα σε <strong>ένα μόνο</strong> αντίστοιχο πεδίο, ώστε να μη γίνει διπλή μέτρηση. Στο Ψηφιακό Φροντιστήριο τα υπόλοιπα ημερών καταχωρίζονται ανά σχολικό έτος, αθροίζονται και μετατρέπονται ανά 30 σε επιπλέον μήνα.</div>
 
         <div class="field-grid">
           <div class="field"><label for="normalMonths">Δημόσια εκπαιδευτική προϋπηρεσία<small>1 μόριο/μήνα · έως 120 μήνες</small></label><input type="number" id="normalMonths" min="0" max="120" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
@@ -166,8 +167,9 @@ renderAsepThreeMonthService(array(
 
         <div class="field-grid">
           <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
-          <div class="field"><label for="digitalMonths">Ψηφιακό Φροντιστήριο<small>1,5 μόριο/μήνα · έως 10 μήνες</small></label><input type="number" id="digitalMonths" min="0" max="10" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
         </div>
+
+<?php renderAsepDigitalTutoring(array('id' => 'digitalTutoring')); ?>
         <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
       </section>
 
@@ -231,8 +233,10 @@ renderAsepSocialCriteria(array(
 
 <script src="includes/academic-calculations.js"></script>
 <script src="includes/language-calculations.js"></script>
-<script src="includes/service-calculations.js?v=3.20.14-rc2"></script>
+<script src="includes/service-calculations.js?v=3.20.21"></script>
+<script src="includes/asep-digital-tutoring.js?v=3.20.21"></script>
 <script src="includes/social-calculations.js"></script>
+<script src="includes/training-proof.js?v=3.20.18"></script>
 <script>
   let lastResultText = "";
 
@@ -427,31 +431,6 @@ renderAsepSocialCriteria(array(
     if (window.AsepComputerProof) window.AsepComputerProof.syncAll();
   }
 
-  function trainingDatesSelection() {
-    const selected = document.querySelector('input[name="trainingDates"]:checked');
-    return selected ? selected.value : "";
-  }
-
-  function updateTrainingProofUI() {
-    const proof = document.getElementById("trainingProof");
-    const status = document.getElementById("trainingDatesStatus");
-    if (!proof || !status) return;
-
-    const active = yes("training");
-    proof.classList.toggle("hidden", !active);
-    if (!active) return;
-
-    const value = trainingDatesSelection();
-    status.className = "training-proof-status " + (value === "yes" ? "success" : value === "no" ? "warning" : "neutral");
-    if (value === "yes") {
-      status.textContent = "✓ Οι ημερομηνίες έναρξης και λήξης αναγράφονται στο πιστοποιητικό.";
-    } else if (value === "no") {
-      status.textContent = "⚠️ Απαιτείται πρόσθετη βεβαίωση από τον οικείο φορέα με την ημερομηνία έναρξης και λήξης.";
-    } else {
-      status.textContent = "Έλεγξε το πιστοποιητικό πριν την υποβολή των δικαιολογητικών.";
-    }
-  }
-
   function clearLiveCalculationState(message) {
     const result = document.getElementById("result");
     result.style.display = "none";
@@ -465,7 +444,7 @@ renderAsepSocialCriteria(array(
   }
 
   function liveCalculatePoints() {
-    updateTrainingProofUI();
+    TrainingProof.syncAll();
     syncComputerUI();
     syncLanguageUI();
     const specialty = valueOf("specialty");
@@ -503,9 +482,10 @@ renderAsepSocialCriteria(array(
     document.querySelectorAll('input[type="number"]').forEach(el => {
       if (el.id !== "degreeGrade") el.value = 0;
     });
+    AsepDigitalTutoring.reset('digitalTutoring', { silent: true });
     document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
     document.querySelectorAll('input[name="trainingDates"]').forEach(el => el.checked = false);
-    updateTrainingProofUI();
+    TrainingProof.syncAll();
     syncComputerUI();
     syncLanguageUI();
 
@@ -584,7 +564,7 @@ renderAsepSocialCriteria(array(
     const threeMonthDifficultMonths2020 = EducationService.threeMonthDifficult2020(numberOf("threeMonthDifficultMonths2020"));
     const threeMonthDifficultMonths2021 = EducationService.threeMonthDifficult2021(numberOf("threeMonthDifficultMonths2021"));
     const privateMonths = EducationService.privateSchool(numberOf("privateMonths"));
-    const digitalMonths = EducationService.digitalPerSchoolYear(numberOf("digitalMonths"));
+    const digitalTutoring = AsepDigitalTutoring.getState('digitalTutoring');
 
     const serviceDetails = [];
     const serviceParts = [];
@@ -624,9 +604,42 @@ renderAsepSocialCriteria(array(
       serviceDetails.push("Ιδιωτική εκπαίδευση: " + formatPoints(privateMonths.points) + " μόρια");
     }
 
-    if (digitalMonths.months > 0) {
-      serviceParts.push(digitalMonths.points);
-      serviceDetails.push("Ψηφιακό Φροντιστήριο: " + formatPoints(digitalMonths.points) + " μόρια");
+    if (digitalTutoring.activeYears.length > 0) {
+      serviceParts.push(digitalTutoring.points);
+
+      digitalTutoring.activeYears.forEach(year => {
+        let detail = "Ψηφιακό Φροντιστήριο — " + year.label + ": " +
+          year.months + " " + (year.months === 1 ? "μήνας" : "μήνες") +
+          " και " + year.days + " " + (year.days === 1 ? "ημέρα" : "ημέρες") +
+          " · " + formatPoints(year.basePoints) + " μόρια από τους πλήρεις μήνες";
+        serviceDetails.push(detail);
+
+      if (year.durationCapped) {
+        warnings.push("Στο Ψηφιακό Φροντιστήριο — " + year.label + " εφαρμόστηκε η μέγιστη επιτρεπόμενη διάρκεια του σχολικού έτους.");
+      }
+
+      if (year.capped) {
+          warnings.push("Στο Ψηφιακό Φροντιστήριο — " + year.label + " εφαρμόστηκε το ανώτατο όριο των 15 μορίων για το σχολικό έτος.");
+        }
+      });
+
+      if (digitalTutoring.totalDays > 0) {
+        let daysDetail = "Ψηφιακό Φροντιστήριο — άθροισμα υπολοίπων ημερών: " +
+          digitalTutoring.totalDays + " " + (digitalTutoring.totalDays === 1 ? "ημέρα" : "ημέρες") +
+          " → " + digitalTutoring.convertedMonths + " " +
+          (digitalTutoring.convertedMonths === 1 ? "επιπλέον μήνας" : "επιπλέον μήνες") +
+          " = " + formatPoints(digitalTutoring.convertedPoints) + " μόρια";
+
+        if (digitalTutoring.remainingDays > 0) {
+          daysDetail += " · τελικό υπόλοιπο " + digitalTutoring.remainingDays + " " +
+            (digitalTutoring.remainingDays === 1 ? "ημέρα" : "ημέρες") + " χωρίς μοριοδότηση";
+        }
+        serviceDetails.push(daysDetail);
+      }
+
+      if (digitalTutoring.convertedPoints < digitalTutoring.convertedRawPoints) {
+        warnings.push("Στη μετατροπή των υπολοίπων ημερών του Ψηφιακού Φροντιστηρίου εφαρμόστηκε το ανώτατο όριο των 15 μορίων ανά σχολικό έτος.");
+      }
     }
 
     const serviceResult = EducationService.cappedTotal(serviceParts);
@@ -664,7 +677,7 @@ renderAsepSocialCriteria(array(
     warnings.push(...socialResult.warnings);
 
     if (yes("training")) {
-      const trainingDates = trainingDatesSelection();
+      const trainingDates = TrainingProof.getState('trainingProof').value;
       if (trainingDates === "no") {
         warnings.push("Για το σεμινάριο απαιτείται πρόσθετη βεβαίωση από τον οικείο φορέα, επειδή στο πιστοποιητικό δεν αναγράφονται η ημερομηνία έναρξης και λήξης.");
       } else if (!trainingDates) {
@@ -768,8 +781,10 @@ renderAsepSocialCriteria(array(
       "Κοινωνικά: " + formatPoints(socialTotal),
       "Βαθμός βασικού τίτλου: " + formatPoints(degreeGrade)
     ];
+    const digitalTutoringSummary = AsepDigitalTutoring.summary('digitalTutoring', formatPoints);
+    if (digitalTutoringSummary) summaryLines.push(digitalTutoringSummary);
     if (yes("training")) {
-      const trainingDates = trainingDatesSelection();
+      const trainingDates = TrainingProof.getState('trainingProof').value;
       if (trainingDates === "yes") {
         summaryLines.push("Πιστοποιητικό σεμιναρίου: αναγράφονται ημερομηνία έναρξης και λήξης.");
       } else if (trainingDates === "no") {
@@ -788,7 +803,10 @@ renderAsepSocialCriteria(array(
     el.addEventListener('input', liveCalculatePoints);
     el.addEventListener('change', liveCalculatePoints);
   });
-  updateTrainingProofUI();
+  document.getElementById('digitalTutoring').addEventListener('input', liveCalculatePoints);
+  document.getElementById('digitalTutoring').addEventListener('change', liveCalculatePoints);
+  document.addEventListener('asep-digital-tutoring-change', liveCalculatePoints);
+  TrainingProof.syncAll();
   syncComputerUI();
   syncLanguageUI();
 </script>

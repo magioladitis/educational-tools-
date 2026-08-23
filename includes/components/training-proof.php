@@ -18,6 +18,7 @@ if (!function_exists('renderTrainingProof')) {
 
         $defaults = array(
             'id' => 'trainingProof',
+            'input_ids' => array('training'),
             'context' => '',
             'hidden' => true,
             'title' => 'Έλεγχος πιστοποιητικού σεμιναρίου',
@@ -34,6 +35,13 @@ if (!function_exists('renderTrainingProof')) {
         );
 
         $c = array_merge($defaults, $config);
+        if (isset($c['input_id']) && $c['input_id'] !== '') {
+            $c['input_ids'] = array($c['input_id']);
+        }
+        if (!is_array($c['input_ids']) || count($c['input_ids']) === 0) {
+            $c['input_ids'] = array('training');
+        }
+        $inputIds = implode(' ', array_map('strval', $c['input_ids']));
         $flags = ENT_QUOTES;
         if (defined('ENT_SUBSTITUTE')) {
             $flags = $flags | ENT_SUBSTITUTE;
@@ -43,7 +51,7 @@ if (!function_exists('renderTrainingProof')) {
         };
         $classes = 'training-proof' . ($c['hidden'] ? ' hidden' : '');
         ?>
-<div class="<?= $e($classes) ?>" id="<?= $e($c['id']) ?>"<?= $c['context'] !== '' ? ' data-training-context="' . $e($c['context']) . '"' : '' ?>>
+<div class="<?= $e($classes) ?>" id="<?= $e($c['id']) ?>" data-component="training-proof" data-input-ids="<?= $e($inputIds) ?>" aria-hidden="<?= $c['hidden'] ? 'true' : 'false' ?>"<?= $c['context'] !== '' ? ' data-training-context="' . $e($c['context']) . '"' : '' ?>>
   <div class="training-proof-title"><?= $e($c['title']) ?></div>
   <div class="training-proof-question"><?= $e($c['question']) ?></div>
   <div class="segmented-choice" role="radiogroup" aria-label="<?= $e($c['aria_label']) ?>">

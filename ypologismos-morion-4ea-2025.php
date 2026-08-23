@@ -211,6 +211,7 @@ renderTrainingProof([
     'no_id' => 'trainingDatesNo',
     'status_id' => 'trainingDatesStatus',
     'context' => '4ea-2025-general-300h-or-eae-400h-7m',
+    'input_ids' => array('training', 'auxSeminar400'),
     'legal_html' => <<<'HTML'
 Σε περίπτωση που στο πιστοποιητικό δεν αναγράφεται η ημεροχρονολογία έναρξης και λήξης του σεμιναρίου, απαιτείται η προσκόμιση σχετικής βεβαίωσης από τον οικείο φορέα. <strong>Πρέπει να προκύπτει ολόκληρο το χρονικό διάστημα των 7 μηνών· 6 μήνες και 29 ημέρες δεν γίνονται δεκτοί.</strong>
 HTML
@@ -337,6 +338,7 @@ renderAsepSocialCriteria(array(
 <script src="includes/social-calculations.js"></script>
 <script src="includes/language-calculations.js"></script>
 <script src="includes/te-academic-calculations.js"></script>
+<script src="includes/training-proof.js?v=3.20.18"></script>
 <script>
 (function(){
   "use strict";
@@ -400,33 +402,8 @@ renderAsepSocialCriteria(array(
     }],{cap:20});
   }
 
-  function trainingDatesSelection(){
-    const selected=document.querySelector('input[name="trainingDates"]:checked');
-    return selected?selected.value:'';
-  }
-
   function trainingActive(){
     return $('training').checked || $('auxSeminar400').checked;
-  }
-
-  function updateTrainingProofUI(){
-    const active=trainingActive();
-    $('trainingProof').classList.toggle('hidden',!active);
-    if(!active) return;
-    const value=trainingDatesSelection();
-    const status=$('trainingDatesStatus');
-    status.className='training-proof-status '+(value==='yes'?'success':value==='no'?'warning':'neutral');
-    if(value==='yes') status.textContent='✓ Οι ημερομηνίες έναρξης και λήξης αναγράφονται στο πιστοποιητικό.';
-    else if(value==='no') status.textContent='⚠️ Απαιτείται πρόσθετη βεβαίωση από τον οικείο φορέα με την ημερομηνία έναρξης και λήξης.';
-    else status.textContent='Έλεγξε το πιστοποιητικό πριν την υποβολή των δικαιολογητικών.';
-  }
-
-  function trainingProofSummary(){
-    if(!trainingActive()) return '';
-    const value=trainingDatesSelection();
-    if(value==='yes') return 'Πιστοποιητικό σεμιναρίου: αναγράφονται ημερομηνία έναρξης και λήξης.';
-    if(value==='no') return 'ΔΙΚΑΙΟΛΟΓΗΤΙΚΟ: απαιτείται βεβαίωση φορέα με ημερομηνία έναρξης και λήξης του σεμιναρίου.';
-    return 'Έλεγχος πιστοποιητικού σεμιναρίου: εκκρεμεί ο έλεγχος ημερομηνίας έναρξης και λήξης.';
   }
 
   function socialResult(){
@@ -458,7 +435,7 @@ renderAsepSocialCriteria(array(
   function calc(){
     updateBranchUI();
     syncLanguageUI();
-    updateTrainingProofUI();
+    TrainingProof.syncAll();
 
     const currentScale = $('gradeScale').value;
     const rawDegreeGrade = num('degreeGrade');
@@ -557,7 +534,7 @@ renderAsepSocialCriteria(array(
       v.why,
       `Παιδαγωγική επάρκεια: ${v.ped?'ΝΑΙ — ΠΡΟΤΑΞΗ':'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
       v.priorities.length?'Προτεραιότητες: '+v.priorities.join(' · '):'',
-      trainingProofSummary()
+      TrainingProof.summary('trainingProof')
     ].filter(Boolean).join('\n');
   }
 
