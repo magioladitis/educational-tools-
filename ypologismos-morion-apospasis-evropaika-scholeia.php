@@ -68,7 +68,13 @@
 (function(){'use strict';
 const $=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('el-GR',{maximumFractionDigits:2});
 const ids=['position','selectedBranch','teachingYears','teachingMonths','teachingDays','ictLevel','blockingIssue','positionLanguageRequirementMet','librarianQualification','phd','master','secondPhd','secondMaster','secondDegree','retrainingDegree','hostLanguageKey','hostLanguageLevel','secondWorkingLanguage','secondWorkingLevel','thirdWorkingLanguage','thirdWorkingLevel','otherEULanguage','otherEULevel','higherEducationSemesters','innovativePrograms','annualTraining','universityTrainingCount','ministryTrainingHours','publicAdminTrainingHours','eapAnnualUnits','eapSemesterUnits','majorTraining','oralPrerequisiteLanguage','oralWorkingLanguage1','oralWorkingLanguage2','thoughtSpeech','interculturalInnovation','curriculumKnowledge'];
-function normalize(){['teachingYears','higherEducationSemesters','innovativePrograms','universityTrainingCount','ministryTrainingHours','publicAdminTrainingHours','eapAnnualUnits','eapSemesterUnits'].forEach(id=>{const e=$(id);if(e.value!=='')e.value=String(Math.max(0,Math.floor(Number(e.value)||0)));});if($('teachingMonths').value!=='')$('teachingMonths').value=String(Math.min(11,Math.max(0,Math.floor(Number($('teachingMonths').value)||0))));if($('teachingDays').value!=='')$('teachingDays').value=String(Math.min(31,Math.max(0,Math.floor(Number($('teachingDays').value)||0))));}
+function normalize(){
+  ['teachingYears','higherEducationSemesters','innovativePrograms','universityTrainingCount','ministryTrainingHours','publicAdminTrainingHours','eapAnnualUnits','eapSemesterUnits'].forEach(id=>{const e=$(id);if(e.value!=='')e.value=String(Math.max(0,Math.floor(Number(e.value)||0)));});
+  if($('teachingMonths').value!=='')$('teachingMonths').value=String(Math.min(11,Math.max(0,Math.floor(Number($('teachingMonths').value)||0))));
+  if($('teachingDays').value!=='')$('teachingDays').value=String(Math.min(31,Math.max(0,Math.floor(Number($('teachingDays').value)||0))));
+  const interviewLimits={oralPrerequisiteLanguage:10,oralWorkingLanguage1:5,oralWorkingLanguage2:5,thoughtSpeech:5,interculturalInnovation:5,curriculumKnowledge:10};
+  Object.keys(interviewLimits).forEach(id=>{const e=$(id);if(!e||e.value==='')return;let value=Number(e.value);if(!Number.isFinite(value)){e.value='';return;}value=Math.min(interviewLimits[id],Math.max(0,value));e.value=String(Math.round(value*10)/10);});
+}
 function normalizeBranchLabel(value){return String(value||'').replace(/^PE(?=\d)/,'ΠΕ').replace(/^PΕ(?=\d)/,'ΠΕ').replace(/^ΠE(?=\d)/,'ΠΕ');}
 function normalizeVisibleBranchLabels(){document.querySelectorAll('#position option').forEach(o=>{o.textContent=o.textContent.replace(/\bPE(?=\d)/g,'ΠΕ').replace(/\bPΕ(?=\d)/g,'ΠΕ').replace(/\bΠE(?=\d)/g,'ΠΕ');});}
 function languageLabel(key){return EuropeanSchools.LANGUAGE_LABELS[key]||key||'—'}
