@@ -1,7 +1,14 @@
-ypologismos-morion.php
-ypologismos-morion-1gt-2024.php
-ypologismos-morion-1ea-2025.php
-ypologismos-morion-2ea-2025.php
-ypologismos-morion-3ea-2025.php
-ypologismos-morion-4ea-2025.php
-includes/service-calculations.js
+Upload preserving folders:
+
+1. includes/service-calculations.js
+2. includes/asep-digital-tutoring.js
+3. includes/components/asep-digital-tutoring-service.php
+
+Then update the two current server-side pages according to DIGITAL-TUTORING-INTEGRATION.md:
+- ypologismos-morion.php
+- ypologismos-morion-3ea-2025.php
+
+Remove/retire:
+- includes/components/asep-digital-tutoring-php56.php
+
+Do NOT replace the current two calculator PHP pages with older snapshots.

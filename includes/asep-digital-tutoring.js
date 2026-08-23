@@ -1,229 +1,326 @@
-/* Κοινή συμπεριφορά Ψηφιακού Φροντιστηρίου για προκηρύξεις ΑΣΕΠ. */
 (function (global) {
   "use strict";
 
-  function rootFor(id) {
-    return typeof id === "string" ? document.getElementById(id) : id;
+  function rootOf(ref) {
+    if (!ref) return null;
+    if (typeof ref === "string") return document.getElementById(ref);
+    return ref;
   }
 
-  function rulesFor(root) {
-    try {
-      return JSON.parse(root.dataset.schoolYears || "{}");
-    } catch (error) {
-      return {};
-    }
+  function rules() {
+    if (!global.EducationService || !global.EducationService.RULES) return {};
+    return global.EducationService.RULES.digitalSchoolYears || {};
   }
 
-  function rowsFor(root) {
-    return Array.from(root.querySelectorAll("[data-digital-row]"));
+  function schoolYears() {
+    return Object.keys(rules());
   }
 
-  function nonNegativeInteger(value) {
-    return Math.max(0, Math.floor(Number(value) || 0));
+  function integer(value) {
+    var n = Math.floor(Number(value) || 0);
+    return Math.max(0, n);
   }
 
-  function sanitize(input, max) {
-    const value = Math.min(nonNegativeInteger(input.value), max);
-    if (String(value) !== input.value) input.value = String(value);
-    return value;
+  function formatDefault(value) {
+    var rounded = Math.round((Number(value) || 0) * 100) / 100;
+    return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2).replace(".", ",");
   }
 
-  function optionMarkup(rules, selectedYear) {
-    return Object.keys(rules).map(year =>
-      `<option value="${year}"${year === selectedYear ? " selected" : ""}>${year}</option>`
-    ).join("");
-  }
-
-  function limitFor(rules, year) {
-    const value = rules[year];
-    if (value && typeof value === "object") {
-      return {
-        months: nonNegativeInteger(value.months),
-        days: Math.min(29, nonNegativeInteger(value.days))
-      };
-    }
-    return { months: nonNegativeInteger(value), days: 29 };
-  }
-
-  function renumber(root) {
-    rowsFor(root).forEach((row, index) => {
-      const number = index + 1;
-      const caption = row.querySelector("[data-digital-year-caption]");
-      const year = row.querySelector("[data-digital-year]");
-      const months = row.querySelector("[data-digital-months]");
-      const days = row.querySelector("[data-digital-days]");
-      const monthsCaption = row.querySelector("[data-digital-months-caption]");
-      const daysCaption = row.querySelector("[data-digital-days-caption]");
-      if (caption) caption.textContent = number + "ο σχολικό έτος";
-      if (year) {
-        year.id = root.id + "Year" + number;
-        caption.htmlFor = year.id;
-      }
-      if (months) {
-        months.id = root.id + "Months" + number;
-        monthsCaption.htmlFor = months.id;
-      }
-      if (days) {
-        days.id = root.id + "Days" + number;
-        daysCaption.htmlFor = days.id;
-      }
+  function selectedYears(root, exceptSelect) {
+    var used = {};
+    root.querySelectorAll("[data-digital-year]").forEach(function (select) {
+      if (select !== exceptSelect && select.value) used[select.value] = true;
     });
+    return used;
   }
 
-  function sync(root) {
-    const rules = rulesFor(root);
-    const rows = rowsFor(root);
-    const selects = rows.map(row => row.querySelector("[data-digital-year]"));
-    const selectedYears = selects.map(select => select.value).filter(Boolean);
-
-    rows.forEach((row, index) => {
-      const select = selects[index];
-      const limit = limitFor(rules, select.value);
-      const months = row.querySelector("[data-digital-months]");
-      const days = row.querySelector("[data-digital-days]");
-      const monthsCaption = row.querySelector("[data-digital-months-caption] small");
-      const daysCaption = row.querySelector("[data-digital-days-caption] small");
-
-      Array.from(select.options).forEach(option => {
-        option.disabled = option.value !== select.value && selectedYears.includes(option.value);
+  function syncYearOptions(root) {
+    var selects = root.querySelectorAll("[data-digital-year]");
+    selects.forEach(function (select) {
+      var used = selectedYears(root, select);
+      Array.prototype.forEach.call(select.options, function (option) {
+        if (!option.value) return;
+        option.disabled = !!used[option.value];
       });
-
-      months.max = String(limit.months);
-      const acceptedMonths = sanitize(months, limit.months);
-      const maxDays = acceptedMonths === limit.months ? limit.days : 29;
-      days.max = String(maxDays);
-      sanitize(days, maxDays);
-      if (monthsCaption) monthsCaption.textContent = `Μέγιστη διάρκεια έτους: ${limit.months} μήνες και ${limit.days} ημέρες`;
-      if (daysCaption) daysCaption.textContent = `Έως ${limit.days} ημέρες όταν δηλωθούν ${limit.months} μήνες`;
     });
 
-    const addButton = root.querySelector("[data-digital-add]");
-    if (addButton) addButton.disabled = rows.length >= Object.keys(rules).length;
-    renumber(root);
+    var add = root.querySelector("[data-digital-tutoring-add]");
+    if (add) add.disabled = selects.length >= schoolYears().length;
   }
 
-  function notify(root) {
-    root.dispatchEvent(new CustomEvent("asep-digital-tutoring-change", {
-      bubbles: true,
-      detail: { id: root.id }
-    }));
+  function rowLimit(year) {
+    return rules()[year] || null;
   }
 
-  function addYear(root) {
-    const rules = rulesFor(root);
-    const rows = rowsFor(root);
-    if (rows.length >= Object.keys(rules).length) return;
+  function syncRow(row) {
+    var select = row.querySelector("[data-digital-year]");
+    var monthsInput = row.querySelector("[data-digital-months]");
+    var daysInput = row.querySelector("[data-digital-days]");
+    var monthsNote = row.querySelector("[data-digital-months-note]");
+    var daysNote = row.querySelector("[data-digital-days-note]");
+    if (!select || !monthsInput || !daysInput) return;
 
-    const selected = rows.map(row => row.querySelector("[data-digital-year]").value);
-    const nextYear = Object.keys(rules).find(year => !selected.includes(year));
-    if (!nextYear) return;
-
-    const row = document.createElement("div");
-    row.className = "digital-school-year edu-mt-14";
-    row.setAttribute("data-digital-row", "");
-    row.innerHTML = `
-      <div class="field-grid">
-        <div class="field">
-          <label data-digital-year-caption></label>
-          <select class="digital-year-label" data-digital-year>${optionMarkup(rules, nextYear)}</select>
-        </div>
-        <div class="field">
-          <label data-digital-months-caption>Πλήρεις μήνες<small></small></label>
-          <input class="digital-months service-months" data-digital-months type="number" min="0" step="1" value="0" inputmode="numeric">
-        </div>
-        <div class="field">
-          <label data-digital-days-caption>Υπόλοιπο ημερών<small></small></label>
-          <input class="digital-days service-months" data-digital-days type="number" min="0" max="29" step="1" value="0" inputmode="numeric">
-        </div>
-      </div>
-      <div class="actions">
-        <button type="button" class="secondary" data-digital-remove>Αφαίρεση σχολικού έτους</button>
-      </div>
-    `;
-    root.querySelector("[data-digital-rows]").appendChild(row);
-    sync(root);
-    row.querySelector("[data-digital-year]").focus();
-    notify(root);
-  }
-
-  function removeYear(root, button) {
-    if (rowsFor(root).length === 1) return;
-    const row = button.closest("[data-digital-row]");
-    if (!row) return;
-    row.remove();
-    sync(root);
-    notify(root);
-  }
-
-  function getState(id) {
-    const root = rootFor(id);
-    if (!root || !global.EducationService) {
-      return { activeYears: [], totalDays: 0, convertedMonths: 0, remainingDays: 0, basePoints: 0, convertedRawPoints: 0, convertedPoints: 0, maxPoints: 0, points: 0 };
+    var limit = rowLimit(select.value);
+    if (!limit) {
+      monthsInput.max = "0";
+      daysInput.max = "0";
+      monthsInput.value = "0";
+      daysInput.value = "0";
+      if (monthsNote) monthsNote.textContent = "Επίλεξε σχολικό έτος";
+      if (daysNote) daysNote.textContent = "Επίλεξε σχολικό έτος";
+      return;
     }
 
-    const rules = rulesFor(root);
-    const entries = rowsFor(root).map((row, index) => {
-      const year = row.querySelector("[data-digital-year]").value;
-      const limit = limitFor(rules, year);
+    var months = Math.min(integer(monthsInput.value), limit.maxMonths);
+    monthsInput.max = String(limit.maxMonths);
+    monthsInput.value = String(months);
+
+    var maxDays = months >= limit.maxMonths ? limit.maxDaysAtMaxMonths : 29;
+    var days = Math.min(integer(daysInput.value), maxDays);
+    daysInput.max = String(maxDays);
+    daysInput.value = String(days);
+
+    if (monthsNote) {
+      monthsNote.textContent = "Μέγιστη διάρκεια έτους: " + limit.maxMonths + " μήνες και " + limit.maxDaysAtMaxMonths + " ημέρες";
+    }
+    if (daysNote) {
+      daysNote.textContent = months >= limit.maxMonths
+        ? "Έως " + limit.maxDaysAtMaxMonths + " ημέρες όταν δηλωθούν " + limit.maxMonths + " μήνες"
+        : "Έως 29 ημέρες πριν συμπληρωθεί επόμενος πλήρης μήνας";
+    }
+  }
+
+  function ordinal(index) {
+    return index === 0 ? "1ο" : (index === 1 ? "2ο" : String(index + 1) + "ο");
+  }
+
+  function updateTitles(root) {
+    root.querySelectorAll("[data-digital-tutoring-row]").forEach(function (row, index) {
+      var title = row.querySelector("[data-digital-row-title]");
+      if (title) title.textContent = ordinal(index) + " σχολικό έτος";
+      var remove = row.querySelector("[data-digital-remove]");
+      if (remove) remove.classList.toggle("hidden", index === 0 && root.querySelectorAll("[data-digital-tutoring-row]").length === 1);
+    });
+  }
+
+  function makeRow(root, preferredYear) {
+    var row = document.createElement("div");
+    row.className = "asep-digital-tutoring-row";
+    row.setAttribute("data-digital-tutoring-row", "");
+
+    var inputClass = root.getAttribute("data-input-class") || "service-months";
+    var years = schoolYears();
+    var used = selectedYears(root, null);
+    var firstAvailable = preferredYear || years.find(function (year) { return !used[year]; }) || "";
+
+    var options = '<option value="">— Επιλογή σχολικού έτους —</option>';
+    years.forEach(function (year) {
+      var label = year.replace("-", "–");
+      options += '<option value="' + year + '"' + (year === firstAvailable ? ' selected' : '') + '>' + label + '</option>';
+    });
+
+    row.innerHTML =
+      '<h4 data-digital-row-title></h4>' +
+      '<div class="field-grid">' +
+        '<div class="field">' +
+          '<label>Σχολικό έτος</label>' +
+          '<select data-digital-year>' + options + '</select>' +
+        '</div>' +
+        '<div class="field">' +
+          '<label>Πλήρεις μήνες<small data-digital-months-note></small></label>' +
+          '<input class="' + inputClass + '" data-digital-months type="number" min="0" step="1" inputmode="numeric" value="0">' +
+        '</div>' +
+        '<div class="field">' +
+          '<label>Υπόλοιπο ημερών<small data-digital-days-note></small></label>' +
+          '<input data-digital-days type="number" min="0" step="1" inputmode="numeric" value="0">' +
+        '</div>' +
+      '</div>' +
+      '<div class="actions"><button type="button" class="secondary" data-digital-remove>Αφαίρεση σχολικού έτους</button></div>';
+
+    root.querySelector("[data-digital-tutoring-rows]").appendChild(row);
+    syncRow(row);
+    updateTitles(root);
+    syncYearOptions(root);
+    return row;
+  }
+
+  function emit(root) {
+    var event;
+    try {
+      event = new CustomEvent("asep-digital-tutoring-change", { bubbles: true });
+    } catch (e) {
+      event = document.createEvent("CustomEvent");
+      event.initCustomEvent("asep-digital-tutoring-change", true, false, null);
+    }
+    root.dispatchEvent(event);
+  }
+
+  function readEntries(ref) {
+    var root = rootOf(ref);
+    if (!root) return [];
+    var entries = [];
+    root.querySelectorAll("[data-digital-tutoring-row]").forEach(function (row) {
+      var year = row.querySelector("[data-digital-year]");
+      var months = row.querySelector("[data-digital-months]");
+      var days = row.querySelector("[data-digital-days]");
+      if (!year || !year.value) return;
+      entries.push({
+        schoolYear: year.value,
+        months: integer(months ? months.value : 0),
+        days: integer(days ? days.value : 0)
+      });
+    });
+    return entries;
+  }
+
+  function calculate(ref) {
+    if (!global.EducationService || typeof global.EducationService.digitalTutoring !== "function") {
       return {
-        label: year || ((index + 1) + "ο σχολικό έτος"),
-        months: row.querySelector("[data-digital-months]").value,
-        days: row.querySelector("[data-digital-days]").value,
-        maxMonths: limit.months,
-        maxDaysAtMaxMonths: limit.days
+        entries: [], activeYears: [], fullMonths: 0, totalDays: 0,
+        convertedMonths: 0, extraMonths: 0, remainingDays: 0,
+        basePoints: 0, convertedRawPoints: 0, convertedPoints: 0,
+        rawPoints: 0, points: 0, warnings: []
       };
-    });
-    return global.EducationService.digitalAcrossSchoolYears(entries);
+    }
+    return global.EducationService.digitalTutoring(readEntries(ref));
   }
 
-  function reset(id, options) {
-    const root = rootFor(id);
-    if (!root) return;
-    const rows = rowsFor(root);
-    rows.slice(1).forEach(row => row.remove());
-    const first = rowsFor(root)[0];
-    const firstYear = Object.keys(rulesFor(root))[0] || "";
-    first.querySelector("[data-digital-year]").value = firstYear;
-    first.querySelector("[data-digital-months]").value = "0";
-    first.querySelector("[data-digital-days]").value = "0";
-    sync(root);
-    if (!options || !options.silent) notify(root);
-  }
+  function details(ref, formatter) {
+    var result = calculate(ref);
+    var format = typeof formatter === "function" ? formatter : formatDefault;
+    var lines = [];
 
-  function summary(id, formatPoints) {
-    const state = getState(id);
-    if (!state.activeYears.length) return "";
-    const format = typeof formatPoints === "function" ? formatPoints : value => String(value);
-    return "Ψηφιακό Φροντιστήριο: " + format(state.points) + " μόρια (" +
-      state.convertedMonths + " επιπλέον " + (state.convertedMonths === 1 ? "μήνας" : "μήνες") +
-      " από το άθροισμα ημερών, υπόλοιπο " + state.remainingDays + " ημέρες)";
-  }
+    result.activeYears.forEach(function (year) {
+      lines.push(
+        "Ψηφιακό Φροντιστήριο — " + year.label + ": " +
+        year.months + " " + (year.months === 1 ? "μήνας" : "μήνες") +
+        " και " + year.days + " " + (year.days === 1 ? "ημέρα" : "ημέρες") +
+        " · " + format(year.basePoints) + " μόρια από τους πλήρεις μήνες"
+      );
+    });
 
-  function init(root) {
-    if (!root || root.dataset.digitalTutoringReady === "1") return;
-    root.dataset.digitalTutoringReady = "1";
-    root.addEventListener("input", event => {
-      if (event.target.matches("[data-digital-months], [data-digital-days]")) sync(root);
-    });
-    root.addEventListener("change", event => {
-      if (event.target.matches("[data-digital-year]")) sync(root);
-    });
-    root.addEventListener("click", event => {
-      const addButton = event.target.closest("[data-digital-add]");
-      if (addButton) {
-        addYear(root);
-        return;
+    if (result.totalDays > 0) {
+      var daysLine = "Ψηφιακό Φροντιστήριο — άθροισμα υπολοίπων ημερών: " +
+        result.totalDays + " " + (result.totalDays === 1 ? "ημέρα" : "ημέρες") +
+        " → " + result.convertedMonths + " " +
+        (result.convertedMonths === 1 ? "επιπλέον μήνας" : "επιπλέον μήνες") +
+        " = " + format(result.convertedPoints) + " μόρια";
+      if (result.remainingDays > 0) {
+        daysLine += " · τελικό υπόλοιπο " + result.remainingDays + " " +
+          (result.remainingDays === 1 ? "ημέρα" : "ημέρες") + " χωρίς μοριοδότηση";
       }
-      const removeButton = event.target.closest("[data-digital-remove]");
-      if (removeButton) removeYear(root, removeButton);
+      lines.push(daysLine);
+    }
+
+    return lines;
+  }
+
+  function summary(ref, formatter) {
+    var result = calculate(ref);
+    if (!result.activeYears.length) return "";
+    var format = typeof formatter === "function" ? formatter : formatDefault;
+    var parts = result.activeYears.map(function (year) {
+      return year.label + ": " + year.months + "μ " + year.days + "η";
     });
-    sync(root);
+    var text = "Ψηφιακό Φροντιστήριο: " + parts.join(" · ");
+    if (result.totalDays > 0) {
+      text += " · ημέρες " + result.totalDays + " → " + result.convertedMonths + " επιπλέον μήνας/μήνες";
+      if (result.remainingDays > 0) text += " + " + result.remainingDays + " ημέρες υπόλοιπο";
+    }
+    text += " · σύνολο " + format(result.points) + " μόρια";
+    return text;
+  }
+
+  function updateStatus(root) {
+    var status = root.querySelector("[data-digital-tutoring-status]");
+    if (!status) return;
+    var result = calculate(root);
+    var parts = [];
+    if (result.convertedMonths > 0 || result.remainingDays > 0) {
+      parts.push(
+        "Υπόλοιπα ημερών: " + result.totalDays + " → " + result.convertedMonths +
+        " επιπλέον μήνας/μήνες" +
+        (result.remainingDays ? " και " + result.remainingDays + " ημέρες υπόλοιπο" : "") + "."
+      );
+    }
+    if (result.warnings && result.warnings.length) parts = parts.concat(result.warnings);
+    status.textContent = parts.join(" ");
+    status.classList.toggle("hidden", parts.length === 0);
+  }
+
+  function reset(ref, options) {
+    var root = rootOf(ref);
+    if (!root) return;
+    var rows = root.querySelector("[data-digital-tutoring-rows]");
+    if (!rows) return;
+    rows.innerHTML = "";
+    makeRow(root, schoolYears()[0] || "");
+    updateStatus(root);
+    if (!options || !options.silent) emit(root);
+  }
+
+  function initRoot(root) {
+    if (!root || root.getAttribute("data-digital-tutoring-ready") === "1") return;
+    root.setAttribute("data-digital-tutoring-ready", "1");
+
+    var add = root.querySelector("[data-digital-tutoring-add]");
+    if (add) {
+      add.addEventListener("click", function () {
+        if (root.querySelectorAll("[data-digital-tutoring-row]").length >= schoolYears().length) return;
+        makeRow(root, "");
+        updateStatus(root);
+        emit(root);
+      });
+    }
+
+    root.addEventListener("change", function (event) {
+      var row = event.target.closest ? event.target.closest("[data-digital-tutoring-row]") : null;
+      if (row && event.target.matches("[data-digital-year]")) {
+        syncRow(row);
+        syncYearOptions(root);
+      }
+      updateStatus(root);
+      emit(root);
+    });
+
+    root.addEventListener("input", function (event) {
+      var row = event.target.closest ? event.target.closest("[data-digital-tutoring-row]") : null;
+      if (row && (event.target.matches("[data-digital-months]") || event.target.matches("[data-digital-days]"))) {
+        syncRow(row);
+      }
+      updateStatus(root);
+      emit(root);
+    });
+
+    root.addEventListener("click", function (event) {
+      if (!event.target.matches("[data-digital-remove]")) return;
+      var row = event.target.closest("[data-digital-tutoring-row]");
+      if (row) row.remove();
+      if (!root.querySelector("[data-digital-tutoring-row]")) makeRow(root, schoolYears()[0] || "");
+      updateTitles(root);
+      syncYearOptions(root);
+      updateStatus(root);
+      emit(root);
+    });
+
+    makeRow(root, schoolYears()[0] || "");
+    updateStatus(root);
   }
 
   function initAll() {
-    document.querySelectorAll("[data-digital-tutoring]").forEach(init);
+    document.querySelectorAll('[data-component="asep-digital-tutoring-service"]').forEach(initRoot);
   }
 
-  global.AsepDigitalTutoring = Object.freeze({ init, initAll, sync, getState, reset, summary });
-  initAll();
+  global.AsepDigitalTutoring = Object.freeze({
+    initAll: initAll,
+    readEntries: readEntries,
+    calculate: calculate,
+    getState: calculate,
+    details: details,
+    summary: summary,
+    reset: reset
+  });
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initAll);
+  else initAll();
 })(window);

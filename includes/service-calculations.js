@@ -6,12 +6,9 @@
  * 2020-2021: έως 8 μήνες
  * 2021-2022: έως 7 μήνες
  *
- * Ανώτατα όρια μορίων:
- * κανονικές τρίμηνες: 10 μόρια/έτος
- * δυσπρόσιτες τρίμηνες: 20 μόρια/έτος
- * Ψηφιακό Φροντιστήριο: 15 μόρια/σχολικό έτος· έως 9 μήνες
- * και 16 ημέρες το 2024-2025, έως 8 μήνες και 2 ημέρες το
- * 2025-2026. Τα υπόλοιπα ημερών μετατρέπονται ανά 30 σε μήνα.
+ * Ψηφιακό Φροντιστήριο:
+ * Όλα τα όρια ανά σχολικό έτος και η μετατροπή υπολοίπων ημερών
+ * βρίσκονται αποκλειστικά σε αυτό το module.
  */
 (function (global) {
   "use strict";
@@ -29,7 +26,12 @@
     difficultRate: 2,
     privateRate: 0.9,
     digitalRate: 1.5,
-    digitalMaxPointsPerSchoolYear: 15
+    digitalMaxMonthsPerSchoolYear: 10,
+    digitalMaxPointsPerSchoolYear: 15,
+    digitalSchoolYears: Object.freeze({
+      "2024-2025": Object.freeze({ maxMonths: 9, maxDaysAtMaxMonths: 16 }),
+      "2025-2026": Object.freeze({ maxMonths: 8, maxDaysAtMaxMonths: 2 })
+    })
   });
 
   function nonNegativeInteger(value) {
@@ -77,61 +79,103 @@
     return { months: m, points: m * RULES.privateRate };
   }
 
+  // Legacy API kept for older calculators that still pass one school year as months only.
   function digitalPerSchoolYear(value) {
-    const m = months(value);
+    const m = months(value, RULES.digitalMaxMonthsPerSchoolYear);
     return { months: m, points: Math.min(m * RULES.digitalRate, RULES.digitalMaxPointsPerSchoolYear) };
   }
 
-  function digitalAcrossSchoolYears(entries) {
-    const activeYears = (Array.isArray(entries) ? entries : []).map((entry, index) => {
-      const submittedMonths = months(entry && entry.months);
-      const submittedDays = Math.min(29, nonNegativeInteger(entry && entry.days));
-      const maxMonths = entry && entry.maxMonths !== undefined
-        ? nonNegativeInteger(entry.maxMonths)
-        : null;
-      const maxDaysAtMaxMonths = entry && entry.maxDaysAtMaxMonths !== undefined
-        ? Math.min(29, nonNegativeInteger(entry.maxDaysAtMaxMonths))
-        : 29;
-      const submittedDurationDays = submittedMonths * 30 + submittedDays;
-      const maxDurationDays = maxMonths === null
-        ? submittedDurationDays
-        : maxMonths * 30 + maxDaysAtMaxMonths;
-      const acceptedDurationDays = Math.min(submittedDurationDays, maxDurationDays);
-      const m = Math.floor(acceptedDurationDays / 30);
-      const d = acceptedDurationDays % 30;
-      const basePoints = Math.min(m * RULES.digitalRate, RULES.digitalMaxPointsPerSchoolYear);
-      return {
-        label: entry && entry.label ? String(entry.label) : ((index + 1) + "ο σχολικό έτος"),
+  function digitalTutoring(entries) {
+    const source = Array.isArray(entries) ? entries : [];
+    const activeYears = [];
+    const warnings = [];
+    const usedYears = Object.create(null);
+
+    source.forEach(function (entry) {
+      if (!entry || !entry.schoolYear) return;
+
+      const schoolYear = String(entry.schoolYear);
+      const limit = RULES.digitalSchoolYears[schoolYear];
+      if (!limit) {
+        warnings.push("Το σχολικό έτος " + schoolYear + " δεν υποστηρίζεται στον υπολογισμό του Ψηφιακού Φροντιστηρίου.");
+        return;
+      }
+      if (usedYears[schoolYear]) {
+        warnings.push("Το σχολικό έτος " + schoolYear + " δηλώθηκε περισσότερες από μία φορές και υπολογίστηκε μόνο η πρώτη εγγραφή.");
+        return;
+      }
+      usedYears[schoolYear] = true;
+
+      const enteredMonths = nonNegativeInteger(entry.months);
+      const m = Math.min(enteredMonths, limit.maxMonths);
+      const monthsCapped = enteredMonths > limit.maxMonths;
+
+      const enteredDays = nonNegativeInteger(entry.days);
+      const maxDays = m >= limit.maxMonths ? limit.maxDaysAtMaxMonths : 29;
+      const d = Math.min(enteredDays, maxDays);
+      const daysCapped = enteredDays > maxDays;
+      const durationCapped = monthsCapped || daysCapped;
+
+      if (monthsCapped) {
+        warnings.push("Στο Ψηφιακό Φροντιστήριο — " + schoolYear.replace("-", "–") + " εφαρμόστηκε το μέγιστο των " + limit.maxMonths + " μηνών.");
+      }
+      if (daysCapped) {
+        warnings.push("Στο Ψηφιακό Φροντιστήριο — " + schoolYear.replace("-", "–") + " εφαρμόστηκε το μέγιστο των " + maxDays + " υπολοίπων ημερών για τους δηλωμένους μήνες.");
+      }
+
+      if (m === 0 && d === 0) return;
+
+      const baseRawPoints = m * RULES.digitalRate;
+      const basePoints = Math.min(baseRawPoints, RULES.digitalMaxPointsPerSchoolYear);
+      const capped = baseRawPoints > basePoints;
+
+      activeYears.push({
+        schoolYear: schoolYear,
+        label: schoolYear.replace("-", "–"),
         months: m,
         days: d,
-        submittedMonths,
-        submittedDays,
-        maxMonths,
-        maxDaysAtMaxMonths,
-        durationCapped: acceptedDurationDays < submittedDurationDays,
-        basePoints,
-        capped: m * RULES.digitalRate > RULES.digitalMaxPointsPerSchoolYear
-      };
-    }).filter(entry => entry.months > 0 || entry.days > 0);
+        maxMonths: limit.maxMonths,
+        maxDaysAtMaxMonths: limit.maxDaysAtMaxMonths,
+        baseRawPoints: baseRawPoints,
+        basePoints: basePoints,
+        durationCapped: durationCapped,
+        capped: capped
+      });
+    });
 
-    const totalDays = activeYears.reduce((sum, entry) => sum + entry.days, 0);
+    const fullMonths = activeYears.reduce(function (sum, entry) { return sum + entry.months; }, 0);
+    const totalDays = activeYears.reduce(function (sum, entry) { return sum + entry.days; }, 0);
     const convertedMonths = Math.floor(totalDays / 30);
     const remainingDays = totalDays % 30;
-    const basePoints = activeYears.reduce((sum, entry) => sum + entry.basePoints, 0);
-    const maxPoints = activeYears.length * RULES.digitalMaxPointsPerSchoolYear;
+    const basePoints = activeYears.reduce(function (sum, entry) { return sum + entry.basePoints; }, 0);
     const convertedRawPoints = convertedMonths * RULES.digitalRate;
-    const convertedPoints = Math.min(convertedRawPoints, Math.max(0, maxPoints - basePoints));
+    const maxPoints = activeYears.length * RULES.digitalMaxPointsPerSchoolYear;
+    const remainingPointCapacity = Math.max(0, maxPoints - basePoints);
+    const convertedPoints = Math.min(convertedRawPoints, remainingPointCapacity);
+    const rawPoints = basePoints + convertedRawPoints;
+    const points = basePoints + convertedPoints;
+
+    if (convertedRawPoints > convertedPoints && activeYears.length > 0) {
+      warnings.push("Στη μετατροπή των υπολοίπων ημερών του Ψηφιακού Φροντιστηρίου εφαρμόστηκε το ανώτατο όριο των 15 μορίων ανά σχολικό έτος.");
+    }
 
     return {
-      activeYears,
-      totalDays,
-      convertedMonths,
-      remainingDays,
-      basePoints,
-      convertedRawPoints,
-      convertedPoints,
-      maxPoints,
-      points: basePoints + convertedPoints
+      entries: activeYears,
+      activeYears: activeYears,
+      fullMonths: fullMonths,
+      totalDays: totalDays,
+      remainderDays: totalDays,
+      convertedMonths: convertedMonths,
+      extraMonths: convertedMonths,
+      remainingDays: remainingDays,
+      countedMonths: fullMonths + convertedMonths,
+      basePoints: basePoints,
+      convertedRawPoints: convertedRawPoints,
+      convertedPoints: convertedPoints,
+      rawPoints: rawPoints,
+      maxPoints: maxPoints,
+      points: points,
+      warnings: warnings
     };
   }
 
@@ -152,7 +196,7 @@
     threeMonthDifficult2021,
     privateSchool,
     digitalPerSchoolYear,
-    digitalAcrossSchoolYears,
+    digitalTutoring,
     cappedTotal
   });
 })(window);

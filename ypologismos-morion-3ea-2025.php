@@ -15,7 +15,7 @@
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
-<?php require_once __DIR__ . '/includes/components/asep-digital-tutoring-php56.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-digital-tutoring-service.php'; ?>
 <div class="page">
 <section class="hero">
 <h1>Υπολογισμός μορίων 3ΕΑ/2025</h1>
@@ -89,7 +89,7 @@ HTML
 
 <section class="card">
 <h2>3. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο κατηγορίας Β: 120 μόρια. Δήλωσε τους μήνες χωρίς επικάλυψη μεταξύ των ειδικών κατηγοριών.</p>
-<div class="note"><strong>Σημείωση 3ΕΑ/2025:</strong> Στις γενικές κατηγορίες λαμβάνεται υπόψη η προϋπηρεσία σε ακέραιους μήνες. Στο Ψηφιακό Φροντιστήριο τα υπόλοιπα ημερών καταχωρίζονται ανά σχολικό έτος, αθροίζονται και κάθε 30 ημέρες μετατρέπονται σε έναν επιπλέον μήνα.</div>
+<div class="note"><strong>Σημείωση 3ΕΑ/2025:</strong> Στις γενικές κατηγορίες λαμβάνεται υπόψη η προϋπηρεσία σε ακέραιους μήνες.</div>
 <div class="note">Οι μήνες δυσπρόσιτων, τρίμηνων συμβάσεων και Ψηφιακού Φροντιστηρίου πρέπει να δηλώνονται στις αντίστοιχες ειδικές γραμμές και όχι ξανά ως κανονική δημόσια προϋπηρεσία.</div>
 <div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο ανά μήνα · έως 120 μήνες.</small></label><input id="publicMonths" class="service-months" type="number" min="0" max="120" step="1" inputmode="numeric" value="0"></div>
 <div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια ανά μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" type="number" min="0" max="60" step="1" inputmode="numeric" value="0"></div>
@@ -104,7 +104,7 @@ renderAsepThreeMonthService(array(
 ?>
 
 <div class="field"><label for="privateMonths">Ιδιωτική εκπαιδευτική προϋπηρεσία<small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι νόμιμες προϋποθέσεις.</small></label><input id="privateMonths" class="service-months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
-<?php renderAsepDigitalTutoring(array('id' => 'digitalTutoring')); ?>
+<?php renderAsepDigitalTutoringService(array('container_id' => 'digitalTutoring', 'input_class' => 'service-months')); ?>
 </section>
 
 <?php
@@ -162,8 +162,8 @@ renderEaeSensoryPriority(array(
   <p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό και δεν υποκαθιστά τον επίσημο έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από το ΑΣΕΠ και τα αρμόδια όργανα.</p>
 </section>
 </div>
-<script src="includes/service-calculations.js?v=3.20.21"></script>
-<script src="includes/asep-digital-tutoring.js?v=3.20.21"></script>
+<script src="includes/service-calculations.js?v=3.20.22"></script>
+<script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
 <script src="includes/social-calculations.js"></script>
 <script src="includes/language-calculations.js"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
