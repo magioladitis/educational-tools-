@@ -629,7 +629,7 @@ renderAsepSocialCriteria(array(
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="includes/asep-computer-proof.js?v=3.20.15-rc1"></script>
+  <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

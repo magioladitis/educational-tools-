@@ -133,7 +133,7 @@ function sanitizeServiceMonthInput(el){if(!el||!el.classList.contains('service-m
 document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render();});document.addEventListener('change',render);$('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});$('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=x.id==='degreeGrade'?'':'0');document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);render();});render();})();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="includes/asep-computer-proof.js?v=3.20.15-rc1"></script>
+  <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

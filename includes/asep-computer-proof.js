@@ -20,7 +20,14 @@
     var active = isActive(input);
     panel.classList.toggle('hidden', !active);
     panel.setAttribute('aria-hidden', active ? 'false' : 'true');
-    if (!active) return;
+    if (!active) {
+      method.value = '';
+      status.className = 'asep-computer-proof-status neutral';
+      status.textContent = input.disabled
+        ? 'Η γνώση Η/Υ δεν μοριοδοτείται για τον επιλεγμένο κλάδο.'
+        : 'Επίλεξε τον τρόπο απόδειξης που διαθέτεις.';
+      return;
+    }
 
     if (method.value) {
       status.className = 'asep-computer-proof-status success';
@@ -37,6 +44,9 @@
 
   function init() {
     syncAll();
+    document.addEventListener('input', function () {
+      window.setTimeout(syncAll, 0);
+    });
     document.addEventListener('change', function () {
       window.setTimeout(syncAll, 0);
     });

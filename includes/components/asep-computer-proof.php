@@ -61,7 +61,7 @@ if (!function_exists('renderAsepComputerProof')) {
 <?php endif; ?>
 
   <div class="asep-computer-proof-panel hidden" id="<?php echo $h($proofId); ?>" data-computer-proof-panel aria-hidden="true">
-    <div class="asep-computer-proof-title">Γρήγορος έλεγχος τρόπου απόδειξης</div>
+    <div class="asep-computer-proof-title">Γνώση πληροφορικής ή χειρισμού Η/Υ — τρόπος απόδειξης</div>
     <div class="asep-computer-proof-question">Με ποιον από τους παρακάτω τρόπους αποδεικνύεις τη γνώση πληροφορικής ή χειρισμού Η/Υ;</div>
     <label class="asep-computer-proof-method-label" for="<?php echo $h($methodId); ?>">Τρόπος απόδειξης</label>
     <select id="<?php echo $h($methodId); ?>" data-computer-proof-method>

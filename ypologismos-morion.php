@@ -418,6 +418,15 @@ renderAsepSocialCriteria(array(
     warning.classList.toggle("hidden", messages.length === 0);
   }
 
+  function syncComputerUI() {
+    const computer = document.getElementById("computer");
+    const isPe86 = valueOf("specialty") === "ΠΕ86";
+    if (!computer) return;
+    computer.disabled = isPe86;
+    if (isPe86) computer.value = "no";
+    if (window.AsepComputerProof) window.AsepComputerProof.syncAll();
+  }
+
   function trainingDatesSelection() {
     const selected = document.querySelector('input[name="trainingDates"]:checked');
     return selected ? selected.value : "";
@@ -457,6 +466,7 @@ renderAsepSocialCriteria(array(
 
   function liveCalculatePoints() {
     updateTrainingProofUI();
+    syncComputerUI();
     syncLanguageUI();
     const specialty = valueOf("specialty");
     const degreeGrade = numberOf("degreeGrade");
@@ -496,6 +506,7 @@ renderAsepSocialCriteria(array(
     document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
     document.querySelectorAll('input[name="trainingDates"]').forEach(el => el.checked = false);
     updateTrainingProofUI();
+    syncComputerUI();
     syncLanguageUI();
 
     const result = document.getElementById("result");
@@ -778,11 +789,12 @@ renderAsepSocialCriteria(array(
     el.addEventListener('change', liveCalculatePoints);
   });
   updateTrainingProofUI();
+  syncComputerUI();
   syncLanguageUI();
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="includes/asep-computer-proof.js?v=3.20.15-rc1"></script>
+  <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>
