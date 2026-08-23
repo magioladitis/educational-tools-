@@ -6,11 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΕΑ/2025 για μέλη Ειδικού Βοηθητικού Προσωπικού (ΕΒΠ) κλάδου ΔΕ01.">
 <title>Υπολογισμός μορίων 1ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.13-rc1">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <div class="app">
 <section class="hero">
 <h1>Υπολογισμός μορίων 1ΕΑ/2025</h1>
@@ -67,15 +68,27 @@ HTML
 <div id="serviceWarning" class="note hidden"></div>
 <div class="subtot"><span>Προϋπηρεσία</span><span class="pill" id="serviceSubtotal">0,00</span></div>
 </section>
-<section class="card">
-<h2>4. Κοινωνικά κριτήρια</h2>
-<div class="field"><label for="children">Αριθμός μοριοδοτούμενων τέκνων<small>3 μόρια ανά τέκνο.</small></label><input id="children" type="number" min="0" step="1" value="0"></div>
-<h3>Αναπηρία — λαμβάνεται μόνο το μεγαλύτερο επιλέξιμο ποσοστό</h3>
-<div class="field-grid"><div class="field"><label for="candidateDisability">Υποψήφιος/α (%)</label><input id="candidateDisability" type="number" min="0" max="100" step="0.01" value="0"></div><div class="field"><label for="spouseDisability">Σύζυγος (%)</label><input id="spouseDisability" type="number" min="0" max="100" step="0.01" value="0"></div><div class="field"><label for="childDisability">Τέκνο (%)</label><input id="childDisability" type="number" min="0" max="100" step="0.01" value="0"></div></div>
-<div class="checkrow"><input type="checkbox" id="marriage4"><label for="marriage4">Έγγαμος βίος τουλάχιστον 4 έτη<small>Απαιτείται για μοριοδότηση αναπηρίας συζύγου.</small></label></div>
-<div class="checkrow"><input type="checkbox" id="mental"><label for="mental">Η αναπηρία του/της υποψηφίου οφείλεται, έστω κατά ποσοστό, σε ψυχική πάθηση<small>Σε αυτή την περίπτωση δεν μοριοδοτείται η αναπηρία του/της υποψηφίου.</small></label></div>
-<div id="socialWarning" class="note hidden"></div><div class="subtot"><span>Κοινωνικά</span><span class="pill" id="socialSubtotal">0,00</span></div>
-</section>
+<?php
+renderAsepSocialCriteria(array(
+    'title' => '4. Κοινωνικά κριτήρια',
+    'children_id' => 'children',
+    'candidate_id' => 'candidateDisability',
+    'spouse_id' => 'spouseDisability',
+    'child_id' => 'childDisability',
+    'marriage_id' => 'marriage4',
+    'mental_id' => 'mental',
+    'input_step' => '0.01',
+    'child_points' => 3,
+    'min_disability_percent' => 50,
+    'disability_rate' => '0,4',
+    'spouse_min_marriage_years' => 4,
+    'child_extra_note' => '',
+    'child_auxiliary_note' => '',
+    'warning_id' => 'socialWarning',
+    'subtotal_id' => 'socialSubtotal',
+    'subtotal_label' => 'Σύνολο Κοινωνικών'
+));
+?>
 <section class="card">
 <h2>5. Ειδική προτεραιότητα</h2>
 <div class="checkrow"><input type="checkbox" id="signLanguage"><label for="signLanguage">Πιστοποιημένη επάρκεια στην Ελληνική Νοηματική Γλώσσα (ΕΝΓ)<small>Προτεραιότητα για την υποστήριξη κωφών και βαρήκοων μαθητών. Δεν προσθέτει μόρια.</small></label></div>

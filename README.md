@@ -1,12 +1,22 @@
-# Training proof component — v3.20.11-rc2
+# ASEP Social Criteria UI refactor — v3.20.13-rc1
 
-Hotfix over rc1 for PHP compatibility on older hosting environments.
+Candidate refactor για κοινή εμφάνιση και κοινές περιγραφές της καρτέλας «Κοινωνικά κριτήρια» στους υπολογιστές προκηρύξεων ΑΣΕΠ.
 
-## Cause fixed
-The rc1 component used a PHP arrow function (`fn`), which requires PHP 7.4+. On a server running an older PHP version this can cause a fatal parse error immediately after `header.php`, leaving the rest of the page blank.
+## Περιλαμβάνει
 
-## What changed
-Only `includes/components/training-proof.php` changed. It now uses conservative PHP syntax (no arrow functions and no return type declaration). The rendered HTML contract and all page-specific scoring/eligibility logic are unchanged.
+- Νέο `includes/components/asep-social-criteria.php`.
+- Εφαρμογή μόνο σε 6 calculators: 1ΓΕ/2ΓΕ, 1ΓΤ/2024, 1ΕΑ/2025, 2ΕΑ/2025, 3ΕΑ/2025, 4ΕΑ/2025.
+- Κοινή ορολογία για τέκνα και αναπηρία.
+- Κοινό responsive layout.
+- Ρητή παραμετροποίηση των κανόνων από κάθε σελίδα.
+- Ειδική αναφορά 67% μόνο στις 3ΕΑ/4ΕΑ.
 
-## Safety boundary
-The component remains presentation-only. It contains no 300h/400h/7-month/EAE/scoring rules. Those remain in each calculator.
+## Εκτός scope
+
+ΣΔΕ, Ωνάσεια, αποσπάσεις, Ψηφιακό Φροντιστήριο, Ευρωπαϊκά Σχολεία, απόσπαση εξωτερικού κ.λπ. δεν χρησιμοποιούν το component.
+
+## Safety
+
+Το component δεν εκτελεί καμία μοριοδότηση. Τα calculation modules και τα inline JavaScript των 6 calculators παραμένουν αμετάβλητα.
+
+Η σύνταξη του partial είναι συντηρητική: χωρίς PHP arrow functions, null-coalescing operator ή return/scalar type declarations.

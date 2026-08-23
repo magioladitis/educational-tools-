@@ -2435,3 +2435,65 @@ body.edu-ui.edu-calc-asep-main .warning {
   border:1px solid var(--edu-warning-border)!important; font-weight:700;
 }
 body.edu-ui.edu-guide-children-disability .question > .small-note { margin-bottom:0; }
+
+
+/* ASEP social criteria component v3.20.13 — presentation only. */
+body.edu-ui .asep-social-criteria .asep-social-disability-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+body.edu-ui .asep-social-criteria .field {
+  display: block;
+  min-width: 0;
+  padding: 0;
+  border-top: 0;
+}
+body.edu-ui .asep-social-criteria > .field {
+  margin-bottom: 14px;
+}
+body.edu-ui .asep-social-criteria .field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+body.edu-ui .asep-social-criteria .field small,
+body.edu-ui .asep-social-criteria .checkrow small {
+  display: block;
+  margin-top: 3px;
+  color: var(--edu-muted, var(--muted));
+  font-weight: 400;
+  line-height: 1.4;
+}
+body.edu-ui .asep-social-criteria .field input {
+  width: 100%;
+  min-width: 0;
+}
+body.edu-ui .asep-social-criteria .checkrow {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+}
+body.edu-ui .asep-social-criteria .checkrow input {
+  width: 19px;
+  height: 19px;
+  margin-top: 2px;
+  flex: 0 0 auto;
+}
+body.edu-ui .asep-social-criteria .checkrow label {
+  margin: 0;
+  font-weight: 700;
+}
+body.edu-ui .asep-social-criteria .asep-social-rule-note {
+  padding: 11px 12px;
+  border-radius: 11px;
+  background: #eef4ff;
+  color: var(--blue-dark, #173a6b);
+  border: 1px solid #d6e4ff;
+  font-size: 13px;
+  margin: 10px 0;
+}
+@media (max-width: 650px) {
+  body.edu-ui .asep-social-criteria .asep-social-disability-grid {
+    grid-template-columns: 1fr;
+  }
+}

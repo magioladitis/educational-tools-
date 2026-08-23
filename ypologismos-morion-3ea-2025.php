@@ -6,11 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων 3ΕΑ/2025 και ενδεικτικός έλεγχος ένταξης στον Αξιολογικό Πίνακα Β΄ ή στον Επικουρικό Πίνακα Ειδικής Αγωγής.">
 <title>Υπολογισμός μορίων 3ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.13-rc1">
 </head>
 <body class="edu-ui edu-calc-ea3 edu-page-ea3">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <div class="page">
 <section class="hero">
 <h1>Υπολογισμός μορίων 3ΕΑ/2025</h1>
@@ -93,18 +94,27 @@ HTML
 <div class="field"><label for="digitalMonths">Ψηφιακό Φροντιστήριο<small>1,5 μόριο ανά μήνα · έως 15 μόρια ανά σχολικό έτος.</small></label><input id="digitalMonths" class="service-months" type="number" min="0" max="10" step="1" inputmode="numeric" value="0"></div>
 </section>
 
-<section class="card">
-<h2>4. Κοινωνικά κριτήρια</h2>
-<div class="field"><label for="children">Αριθμός επιλέξιμων τέκνων<small>3 μόρια ανά τέκνο.</small></label><input id="children" type="number" min="0" step="1" value="0"></div>
-<div class="field"><label for="candidateDisability">Αναπηρία υποψηφίου (%)<small>Μοριοδοτείται από 50% και άνω, εφόσον πληρούνται οι προϋποθέσεις της προκήρυξης.</small></label><input id="candidateDisability" type="number" min="0" max="100" step="1" value="0"></div>
-<div class="field"><label for="spouseDisability">Αναπηρία συζύγου (%)<small>Από 50% και άνω και με έγγαμο βίο τουλάχιστον 4 ετών.</small></label><input id="spouseDisability" type="number" min="0" max="100" step="1" value="0"></div>
-<div class="field"><label for="childDisability">Υψηλότερο ποσοστό αναπηρίας τέκνου (%)<small>Από 50% και άνω. Αν είναι ≥67%, μπορεί να θεμελιώνει και ένταξη στον επικουρικό πίνακα.</small></label><input id="childDisability" type="number" min="0" max="100" step="1" value="0"></div>
-<div class="info">Για τη μοριοδότηση αναπηρίας λαμβάνεται μόνο το υψηλότερο επιλέξιμο ποσοστό και υπολογίζεται ως ποσοστό × 0,4.</div>
-<div class="check"><input id="marriageYears4Plus" type="checkbox"><label for="marriageYears4Plus">Ο έγγαμος βίος έχει διαρκέσει τουλάχιστον 4 έτη<small>Απαιτείται για τη μοριοδότηση αναπηρίας συζύγου.</small></label></div>
-<div class="check"><input id="candidateMentalCondition" type="checkbox"><label for="candidateMentalCondition">Η αναπηρία του/της υποψηφίου οφείλεται, έστω και κατά ποσοστό, σε ψυχική πάθηση<small>Αν επιλεγεί, η αναπηρία του/της υποψηφίου δεν μοριοδοτείται.</small></label></div>
-
-<div id="socialWarnings" class="note hidden"></div>
-</section>
+<?php
+renderAsepSocialCriteria(array(
+    'title' => '4. Κοινωνικά κριτήρια',
+    'children_id' => 'children',
+    'candidate_id' => 'candidateDisability',
+    'spouse_id' => 'spouseDisability',
+    'child_id' => 'childDisability',
+    'marriage_id' => 'marriageYears4Plus',
+    'mental_id' => 'candidateMentalCondition',
+    'input_step' => '1',
+    'child_points' => 3,
+    'min_disability_percent' => 50,
+    'disability_rate' => '0,4',
+    'spouse_min_marriage_years' => 4,
+    'child_extra_note' => '',
+    'child_auxiliary_note' => 'Από 67% και άνω μπορεί να θεμελιώνει και ένταξη στον Επικουρικό Πίνακα.',
+    'warning_id' => 'socialWarnings',
+    'subtotal_id' => '',
+    'subtotal_label' => 'Σύνολο Κοινωνικών'
+));
+?>
 
 <section class="card">
 <h2>5. Προτάξεις / ειδικές προτεραιότητες</h2>

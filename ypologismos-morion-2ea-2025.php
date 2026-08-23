@@ -6,11 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 2ΕΑ/2025 για μέλη Ειδικού Εκπαιδευτικού Προσωπικού (ΕΕΠ).">
 <title>Υπολογισμός μορίων 2ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.13-rc1">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea2">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <div class="app">
 <section class="hero"><h1>Υπολογισμός μορίων 2ΕΑ/2025</h1><p>Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ1΄ μελών <strong>Ειδικού Εκπαιδευτικού Προσωπικού (Ε.Ε.Π.)</strong>.</p><div class="meta"><span>2ΕΑ/2025</span><span>ΠΕ21–ΠΕ31</span><span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span><span>Έλεγχος πρόταξης</span><span>Άδειες &amp; βεβαιώσεις</span></div></section>
 <div class="layout"><main>
@@ -54,7 +55,27 @@ HTML
 <div class="field-grid"><div class="field"><label for="publicMonths">Κανονική δημόσια προϋπηρεσία<small>1 μόριο/μήνα.</small></label><input id="publicMonths" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="hardMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–21<small>2 μόρια/μήνα · έως 60 μήνες.</small></label><input id="hardMonths" class="service-months" type="number" min="0" max="60" step="1" value="0"></div></div>
 <h3>Τρίμηνες συμβάσεις 2020–2021 και 2021–2022</h3><div class="field-grid"><div class="field"><label for="covid2020">Κανονικές 2020–2021<small>1,5/μήνα · έως 10 μόρια έτους.</small></label><input id="covid2020" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="covid2021">Κανονικές 2021–2022<small>1,5/μήνα · έως 10 μόρια έτους.</small></label><input id="covid2021" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="covidHard2020">Δυσπρόσιτες 2020–2021<small>3/μήνα · έως 20 μόρια έτους.</small></label><input id="covidHard2020" class="service-months" type="number" min="0" step="1" value="0"></div><div class="field"><label for="covidHard2021">Δυσπρόσιτες 2021–2022<small>3/μήνα · έως 20 μόρια έτους.</small></label><input id="covidHard2021" class="service-months" type="number" min="0" step="1" value="0"></div></div>
 <div id="serviceBranchNote" class="info">Η ειδική μοριοδότηση ιδιωτικής σχολικής προϋπηρεσίας με συντελεστή 0,9 δεν αφορά τα μέλη ΕΕΠ-ΕΒΠ.</div><div id="serviceWarning" class="note hidden"></div><div class="subtot"><span>Προϋπηρεσία</span><span class="pill" id="serviceSubtotal">0,00</span></div></section>
-<section class="card"><h2>5. Κοινωνικά κριτήρια</h2><div class="field"><label for="children">Αριθμός μοριοδοτούμενων τέκνων<small>3 μόρια ανά τέκνο.</small></label><input id="children" type="number" min="0" step="1" value="0"></div><h3>Αναπηρία — λαμβάνεται μόνο το μεγαλύτερο επιλέξιμο ποσοστό</h3><div class="field-grid"><div class="field"><label for="candidateDisability">Υποψήφιος/α (%)</label><input id="candidateDisability" type="number" min="0" max="100" step="0.01" value="0"></div><div class="field"><label for="spouseDisability">Σύζυγος (%)</label><input id="spouseDisability" type="number" min="0" max="100" step="0.01" value="0"></div><div class="field"><label for="childDisability">Τέκνο (%)</label><input id="childDisability" type="number" min="0" max="100" step="0.01" value="0"></div></div><div class="checkrow"><input type="checkbox" id="marriage4"><label for="marriage4">Έγγαμος βίος τουλάχιστον 4 έτη<small>Απαιτείται για μοριοδότηση αναπηρίας συζύγου.</small></label></div><div class="checkrow"><input type="checkbox" id="mental"><label for="mental">Η αναπηρία του/της υποψηφίου οφείλεται, έστω κατά ποσοστό, σε ψυχική πάθηση<small>Σε αυτή την περίπτωση δεν μοριοδοτείται η αναπηρία του/της υποψηφίου.</small></label></div><div id="socialWarning" class="note hidden"></div><div class="subtot"><span>Κοινωνικά</span><span class="pill" id="socialSubtotal">0,00</span></div></section>
+<?php
+renderAsepSocialCriteria(array(
+    'title' => '5. Κοινωνικά κριτήρια',
+    'children_id' => 'children',
+    'candidate_id' => 'candidateDisability',
+    'spouse_id' => 'spouseDisability',
+    'child_id' => 'childDisability',
+    'marriage_id' => 'marriage4',
+    'mental_id' => 'mental',
+    'input_step' => '0.01',
+    'child_points' => 3,
+    'min_disability_percent' => 50,
+    'disability_rate' => '0,4',
+    'spouse_min_marriage_years' => 4,
+    'child_extra_note' => '',
+    'child_auxiliary_note' => '',
+    'warning_id' => 'socialWarning',
+    'subtotal_id' => 'socialSubtotal',
+    'subtotal_label' => 'Σύνολο Κοινωνικών'
+));
+?>
 </main><aside class="results"><section class="card"><h2>Αποτέλεσμα</h2><div class="total"><div class="num" id="totalPoints">0,00</div><div class="label">συνολικά μόρια</div></div><div class="result-row"><span>Βαθμός πτυχίου</span><strong id="degreePoints">0,00</strong></div><div class="result-row"><span>Ακαδημαϊκά</span><strong id="academicPoints">0,00</strong></div><div class="result-row"><span>Προϋπηρεσία</span><strong id="servicePoints">0,00</strong></div><div class="result-row"><span>Κοινωνικά</span><strong id="socialPoints">0,00</strong></div><div class="result-row"><span>Άδειες / βεβαιώσεις</span><strong id="licenseResult">—</strong></div><div id="priorityBox" class="priority">Επίλεξε κλάδο για έλεγχο πρόταξης</div><div id="specialPriorityBox" class="priority hidden"></div><div class="actions"><button type="button" id="copyBtn">Αντιγραφή</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div></section></aside></div>
 <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Βάση υπολογισμού:</strong> Προκήρυξη ΑΣΕΠ 2ΕΑ/2025, Κεφάλαιο Β΄ — τυπικά προσόντα ένταξης, Κεφάλαιο Δ΄ παρ. 10 — Άδειες και Βεβαιώσεις, και Κεφάλαιο Γ΄ — κριτήρια αξιολογικού πίνακα Γ1΄ ΕΕΠ.</p><div class="source-links"><a href="https://info.asep.gr/node/76177" target="_blank" rel="noopener noreferrer">2ΕΑ/2025 — ΑΣΕΠ ↗</a></div><p class="source-disclaimer">Οι ενδείξεις «πρόταξης» είναι βοηθητικές και δεν αποτελούν επιπλέον μόρια.</p></section><div class="credits">Εργαλείο υπολογισμού μορίων · 2ΕΑ/2025</div></div>
 <script src="includes/service-calculations.js"></script><script src="includes/social-calculations.js"></script><script src="includes/language-calculations.js"></script><script src="includes/eep-eligibility-calculations.js"></script>

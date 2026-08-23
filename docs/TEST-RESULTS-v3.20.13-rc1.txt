@@ -1,0 +1,16 @@
+v3.20.13-rc1 — ASEP Social Criteria regression
+
+ASEP social component v3.20.13: PASS 159 / FAIL 0
+PHP lint: PASS 29
+Runtime render: PASS 24/24
+DOM contracts: PASS 150 checks / 24 pages
+CSS integrity: PASS 919 qualified rules / 0 duplicate selector contexts
+Inline JS syntax: PASS 23
+ASEP golden regression: PASS 71/71
+2EA eligibility: PASS 10/10
+Boundary regression: PASS 26/26
+SDE registry: PASS 13/13
+Onaseia: PASS 30/30
+New module regressions: PASS 10/10
+
+Browser E2E: NOT RUN / NOT CLAIMED

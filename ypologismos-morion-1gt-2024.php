@@ -6,11 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΓΤ/2024 για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16.">
   <title>Υπολογισμός μορίων 1ΓΤ/2024</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
+<link rel="stylesheet" href="assets/common.css?v=3.20.13-rc1">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-gt1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <div class="app">
 <section class="hero">
     <h1>Υπολογισμός μορίων 1ΓΤ/2024</h1>
@@ -184,21 +185,27 @@ HTML
         <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
       </section>
 
-      <section class="card">
-        <h2>Γ. Κοινωνικά κριτήρια</h2>
-        <div class="field"><label for="children">Αριθμός επιλέξιμων τέκνων<small>3 μόρια ανά τέκνο.</small></label><input id="children" type="number" min="0" step="1" value="0"></div>
-        <h3>Αναπηρία — λαμβάνεται μόνο το υψηλότερο επιλέξιμο ποσοστό</h3>
-        <div class="field-grid">
-          <div class="field"><label for="candidateDisability">Αναπηρία υποψηφίου (%)<small>Από 50% και άνω, εφόσον δεν οφείλεται έστω κατά ποσοστό σε ψυχική πάθηση.</small></label><input id="candidateDisability" type="number" min="0" max="100" step="0.01" value="0"></div>
-          <div class="field"><label for="spouseDisability">Αναπηρία συζύγου (%)<small>Από 50% και άνω, με έγγαμο βίο τουλάχιστον 4 ετών.</small></label><input id="spouseDisability" type="number" min="0" max="100" step="0.01" value="0"></div>
-          <div class="field"><label for="childDisability">Υψηλότερο ποσοστό αναπηρίας τέκνου (%)<small>Από 50% και άνω, ανεξαρτήτως ηλικίας.</small></label><input id="childDisability" type="number" min="0" max="100" step="0.01" value="0"></div>
-        </div>
-        <div class="info-note">Αν υπάρχουν περισσότερα επιλέξιμα πρόσωπα, λαμβάνεται αυτόματα μόνο το υψηλότερο ποσοστό. Μόρια αναπηρίας = ποσοστό × 0,4.</div>
-        <div class="checkrow"><input id="marriageYears4Plus" type="checkbox"><label for="marriageYears4Plus">Ο έγγαμος βίος έχει διαρκέσει τουλάχιστον 4 έτη<small>Απαιτείται για τη μοριοδότηση αναπηρίας συζύγου.</small></label></div>
-        <div class="checkrow"><input id="candidateMentalCondition" type="checkbox"><label for="candidateMentalCondition">Η αναπηρία του/της υποψηφίου οφείλεται, έστω και κατά ποσοστό, σε ψυχική πάθηση<small>Αν επιλεγεί, η αναπηρία του/της υποψηφίου δεν μοριοδοτείται.</small></label></div>
-        <div id="socialWarning" class="note hidden"></div>
-        <div class="subtot"><span>Σύνολο Κοινωνικών</span><span class="pill" id="socialSubtotal">0,00</span></div>
-      </section>
+<?php
+renderAsepSocialCriteria(array(
+    'title' => 'Γ. Κοινωνικά κριτήρια',
+    'children_id' => 'children',
+    'candidate_id' => 'candidateDisability',
+    'spouse_id' => 'spouseDisability',
+    'child_id' => 'childDisability',
+    'marriage_id' => 'marriageYears4Plus',
+    'mental_id' => 'candidateMentalCondition',
+    'input_step' => '0.01',
+    'child_points' => 3,
+    'min_disability_percent' => 50,
+    'disability_rate' => '0,4',
+    'spouse_min_marriage_years' => 4,
+    'child_extra_note' => 'Ανεξαρτήτως ηλικίας.',
+    'child_auxiliary_note' => '',
+    'warning_id' => 'socialWarning',
+    'subtotal_id' => 'socialSubtotal',
+    'subtotal_label' => 'Σύνολο Κοινωνικών'
+));
+?>
 
       <section class="card">
         <h2>Παιδαγωγική και Διδακτική Επάρκεια</h2>
