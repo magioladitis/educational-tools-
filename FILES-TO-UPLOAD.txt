@@ -1,11 +1,27 @@
-SDE LANGUAGE RUNTIME HOTFIX
+Upload these production files, preserving folders:
 
-Upload these 2 files preserving folders:
-1. ypologismos-morion-apospasis-sde.php
-2. includes/asep-language-selector.js
+1. includes/abroad-calculations.js
+2. includes/eae-table-eligibility.js
+3. includes/education-core.js
+4. includes/european-schools-calculations.js
+5. includes/header.php
+6. includes/sde-calculations.js
+7. includes/sde-registry-calculations.js
+8. includes/service-calculations.js
+9. ypologismos-morion-1ea-2025.php
+10. ypologismos-morion-1gt-2024.php
+11. ypologismos-morion-2ea-2025.php
+12. ypologismos-morion-3ea-2025.php
+13. ypologismos-morion-4ea-2025.php
+14. ypologismos-morion-apospasis-evropaika-scholeia.php
+15. ypologismos-morion-apospasis-exoteriko.php
+16. ypologismos-morion-apospasis-psifiako-frontistirio.php
+17. ypologismos-morion-apospasis-sde.php
+18. ypologismos-morion-apospasis.php
+19. ypologismos-morion-mitroo-sde.php
+20. ypologismos-morion-onaseia.php
+21. ypologismos-morion.php
 
-Why both files:
-- asep-language-selector.js fixes readEntries() so it accepts a component id string, consistently with getState/reset/summary.
-- ypologismos-morion-apospasis-sde.php bumps the selector cache-bust to v=3.20.27 so browsers do not keep the broken cached controller.
-
-No CSS or scoring-engine change is required.
+Audit-only files (do not need upload to server):
+- INPUT-LIMITS-AUDIT-2026-08-23.md
+- NUMERIC-INPUT-INVENTORY-2026-08-23.csv

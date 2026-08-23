@@ -124,7 +124,7 @@
             </div>
             <div>
               <label for="extraYears" class="edu-font-13">Πλήρη επιπλέον έτη</label>
-              <input type="number" id="extraYears" min="0" step="1" value="0" oninput="normalizeInteger(this);calculate()">
+              <input type="number" id="extraYears" min="0" max="38" step="1" value="0" oninput="normalizeInteger(this,38);calculate()">
               <label for="extraMonths" class="edu-font-13 edu-mt-8">Υπόλοιπο μηνών (0–11)</label>
               <input type="number" id="extraMonths" min="0" max="11" step="1" value="0" oninput="normalizeInteger(this,11);calculate()">
             </div>
@@ -231,7 +231,7 @@
     const b2 = n('master');
     const b3 = n('examExperience');
 
-    const years = Math.max(0,Math.floor(n('extraYears')));
+    const years = Math.min(38,Math.max(0,Math.floor(n('extraYears'))));
     const months = clamp(Math.floor(n('extraMonths')),0,11);
     const b4 = Math.min(6, years * 2 + Math.floor(months / 4));
 

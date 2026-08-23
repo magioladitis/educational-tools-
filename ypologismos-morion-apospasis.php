@@ -156,7 +156,7 @@
     <div class="field-grid three">
       <div class="question">
         <label for="serviceYears">Έτη</label>
-        <input type="number" id="serviceYears" min="0" step="1" value="0">
+        <input type="number" id="serviceYears" min="0" max="40" step="1" value="0">
       </div>
       <div class="question">
         <label for="serviceMonths">Μήνες</label>
@@ -412,6 +412,7 @@
   }
 
   function calculateServicePoints(years, months, days) {
+    years = Math.min(40, Math.max(0, Math.floor(Number(years) || 0)));
     let totalMonths = (years * 12) + months;
     if (days >= 15) totalMonths += 1;
 
@@ -735,8 +736,10 @@
   }
 
   document.addEventListener("input", event => {
-    if (event.target && event.target.id === "eligibleChildren" && event.target.value !== "") {
-      const value = Math.min(20, Math.max(0, Math.floor(Number(event.target.value) || 0)));
+    if (event.target && ["serviceYears","serviceMonths","serviceDays","eligibleChildren"].includes(event.target.id) && event.target.value !== "") {
+      let value = Math.max(0, Math.floor(Number(event.target.value) || 0));
+      const max = event.target.getAttribute("max");
+      if (max !== null && max !== "") value = Math.min(value, Number(max));
       event.target.value = String(value);
     }
     if (event.target && event.target.matches("input, select")) liveCalculatePoints();

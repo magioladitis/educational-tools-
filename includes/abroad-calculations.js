@@ -62,8 +62,8 @@
 
   function calculate(options = {}) {
     const tableType = options.tableType || "";
-    const educationYears = nonNegativeInteger(options.educationYears);
-    const teachingYears = nonNegativeInteger(options.teachingYears);
+    const educationYears = Math.min(global.EducationCore.MAX_SERVICE_YEARS, nonNegativeInteger(options.educationYears));
+    const teachingYears = Math.min(global.EducationCore.MAX_SERVICE_YEARS, nonNegativeInteger(options.teachingYears));
     const branchAllowed = options.branchAllowed || "";
     const blockingIssue = options.blockingIssue || "";
     const bilingualPosition = options.bilingualPosition || "";

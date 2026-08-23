@@ -162,7 +162,7 @@ renderAsepSocialCriteria(array(
   <div class="credits">Υλοποίηση / επεξεργασία: Μάριος Μαγιολαδίτης</div>
 </div>
 
-<script src="includes/service-calculations.js?v=3.20.31"></script>
+<script src="includes/service-calculations.js?v=3.20.33"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/social-calculations.js?v=3.20.32"></script>
 <script src="includes/asep-social-criteria.js?v=3.20.32"></script>

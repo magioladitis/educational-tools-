@@ -110,7 +110,7 @@
   }
 
   function serviceDuration(o={}){
-    const years=int(o.teachingYears!==undefined?o.teachingYears:o.totalTeachingYears);
+    const years=Math.min(global.EducationCore.MAX_SERVICE_YEARS,int(o.teachingYears!==undefined?o.teachingYears:o.totalTeachingYears));
     const months=clamp(int(o.teachingMonths),0,11);
     const days=clamp(int(o.teachingDays),0,31);
     return {years,months,days};

@@ -85,8 +85,8 @@
       <div class="field full"><label for="expFormalHours">Τυπική εκπαίδευση ή επαγγελματική κατάρτιση — ώρες <small>Π/θμια, Δ/θμια, Τριτοβάθμια ή Επαγγελματική Κατάρτιση. 1 μόριο / 200 ώρες, έως 4.</small></label><input id="expFormalHours" type="number" min="0" step="1" value="0" oninput="calculate()"></div>
     </div>
     <div id="advisorExperience" class="field-grid hidden">
-      <div class="field"><label for="expSdeMonths" id="expSdeMonthsLabel">Εμπειρία στα ΣΔΕ — μήνες</label><input id="expSdeMonths" type="number" min="0" step="1" value="0" oninput="calculate()"></div>
-      <div class="field"><label for="expAdultCounsellingMonths" id="expAdultCounsellingLabel">Συμβουλευτικές υπηρεσίες σε ενήλικες — μήνες</label><input id="expAdultCounsellingMonths" type="number" min="0" step="1" value="0" oninput="calculate()"></div>
+      <div class="field"><label for="expSdeMonths" id="expSdeMonthsLabel">Εμπειρία στα ΣΔΕ — μήνες</label><input id="expSdeMonths" type="number" min="0" max="480" step="1" value="0" oninput="calculate()"></div>
+      <div class="field"><label for="expAdultCounsellingMonths" id="expAdultCounsellingLabel">Συμβουλευτικές υπηρεσίες σε ενήλικες — μήνες</label><input id="expAdultCounsellingMonths" type="number" min="0" max="480" step="1" value="0" oninput="calculate()"></div>
     </div>
     <div id="careerInconsistency" class="warning hidden"><strong>Σημείωση για το ΦΕΚ:</strong> στο άρθρο 12 §2.1 το λεκτικό αναφέρει «μέγιστο αριθμό μορίων 12», αλλά η στήλη του πίνακα δίνει 7 και η συνολική κατηγορία Επαγγελματικής Εμπειρίας είναι 13, ενώ το §2.2 δίνει 6. Ο υπολογιστής χρησιμοποιεί πλαφόν <strong>7</strong>, ως τη μοναδική τιμή που συμφωνεί εσωτερικά με το άθροισμα 13.</div>
   </section>
@@ -145,7 +145,7 @@
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
-<script src="includes/sde-registry-calculations.js?v=3.20.31"></script>
+<script src="includes/sde-registry-calculations.js?v=3.20.33"></script>
 <script>
 const $=id=>document.getElementById(id); const val=id=>$(id)?.value||''; const checked=id=>!!$(id)?.checked;
 const fmt=x=>Number(x||0).toLocaleString('el-GR',{maximumFractionDigits:2,minimumFractionDigits:Number.isInteger(Number(x||0))?0:1});
@@ -189,6 +189,7 @@ function renderChecklist(r,d){let a=[];if(d.role==='educator'){a.push('Τίτλ�
 function calculate(){const d=data(),r=SDERegistryCalc.calculateAll(d);$('roleChip').textContent=SDERegistryCalc.ROLE[d.role]||'Επίλεξε κατηγορία';$('educationScore').textContent=fmt(r.education.total)+' / 22';$('experienceScore').textContent=fmt(r.experience.total)+' / 13';$('otherScore').textContent=fmt(r.other.total)+' / 5';$('baseScore').textContent=fmt(r.base)+' / 40';$('finalScore').textContent=fmt(r.final);$('unemploymentScore').textContent='+'+fmt(r.social.unemploymentPoints)+' ('+fmt(r.social.unemploymentPercent)+'%)';$('specialScore').textContent='+'+fmt(r.social.specialPoints)+' ('+r.social.specialPercent+'%)';$('baseBar').style.width=Math.min(100,r.base/40*100)+'%';renderAssignments(r);renderEligibility(r);renderTrainingMinimumWarning(d);renderBreakdown(r);renderChecklist(r,d);$('priorityStatus').innerHTML=r.eoppepPriority?'<div class="priority"><strong>Προτεραιότητα ΕΟΠΠΕΠ:</strong> δηλώθηκε πιστοποίηση εκπαιδευτικής επάρκειας Εκπαιδευτή Ενηλίκων. Η απόφαση προβλέπει προτεραιότητα των πιστοποιημένων εκπαιδευτών.</div>':'';}
 function copySummary(btn){const d=data(),r=SDERegistryCalc.calculateAll(d);let t='Μόρια Μητρώου ΣΔΕ\nΚατηγορία: '+(SDERegistryCalc.ROLE[d.role]||'—')+'\nΕκπαίδευση: '+fmt(r.education.total)+'/22\nΕμπειρία: '+fmt(r.experience.total)+'/13\nΆλλα προσόντα: '+fmt(r.other.total)+'/5\nΒασική βαθμολογία: '+fmt(r.base)+'/40\nΑνεργία: +'+fmt(r.social.unemploymentPoints)+' ('+fmt(r.social.unemploymentPercent)+'%)\nΕιδικές κατηγορίες: +'+fmt(r.social.specialPoints)+' ('+r.social.specialPercent+'%)\nΤελικό: '+fmt(r.final);navigator.clipboard?.writeText(t).then(()=>{const old=btn.textContent;btn.textContent='Αντιγράφηκε ✓';setTimeout(()=>btn.textContent=old,1400);});}
 function resetForm(){document.querySelectorAll('input[type="number"]').forEach(x=>x.value='0');document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);$('fppBefore1993').value='no';$('eoppepAdultTrainer').value='no';roleChanged();psychFppChanged();}
+document.addEventListener('input',function(event){const el=event.target;if(!el||el.tagName!=='INPUT'||el.type!=='number'||el.value==='')return;let value=Number(el.value);if(!Number.isFinite(value))return;const min=el.getAttribute('min'),max=el.getAttribute('max');if(min!==null&&min!=='')value=Math.max(Number(min),value);if(max!==null&&max!=='')value=Math.min(Number(max),value);if(value!==Number(el.value))el.value=String(value);});
 fillSpecialties();roleChanged();
 </script>
 <script src="assets/common.js?v=3.20.13"></script>

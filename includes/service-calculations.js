@@ -14,7 +14,9 @@
   "use strict";
 
   const RULES = Object.freeze({
+    publicMaxMonths: 120,
     difficultMaxMonths: 60,
+    privateMaxMonths: 480,
     totalMaxPoints: 120,
     threeMonth2020MaxMonths: 8,
     threeMonth2021MaxMonths: 7,
@@ -45,7 +47,7 @@
   }
 
   function regularPublic(value) {
-    const m = months(value);
+    const m = months(value, RULES.publicMaxMonths);
     return { months: m, points: m * RULES.publicRate };
   }
 
@@ -75,7 +77,7 @@
   }
 
   function privateSchool(value) {
-    const m = months(value);
+    const m = months(value, RULES.privateMaxMonths);
     return { months: m, points: m * RULES.privateRate };
   }
 

@@ -9,9 +9,20 @@
 (function (global) {
   'use strict';
 
+  var MAX_SERVICE_YEARS = 40;
+  var MAX_SERVICE_MONTHS = MAX_SERVICE_YEARS * 12;
+
   function finiteNumber(value) {
     var n = Number(value);
     return Number.isFinite(n) ? n : 0;
+  }
+
+  function clampServiceYears(value) {
+    return Math.min(MAX_SERVICE_YEARS, Math.max(0, finiteNumber(value)));
+  }
+
+  function clampServiceMonths(value) {
+    return Math.min(MAX_SERVICE_MONTHS, Math.max(0, finiteNumber(value)));
   }
 
   function normalizeSpecialtyCode(value) {
@@ -51,6 +62,10 @@
   }
 
   global.EducationCore = Object.freeze({
+    MAX_SERVICE_YEARS: MAX_SERVICE_YEARS,
+    MAX_SERVICE_MONTHS: MAX_SERVICE_MONTHS,
+    clampServiceYears: clampServiceYears,
+    clampServiceMonths: clampServiceMonths,
     finiteNumber: finiteNumber,
     normalizeSpecialtyCode: normalizeSpecialtyCode,
     toLatinSpecialtyCode: toLatinSpecialtyCode,

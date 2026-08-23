@@ -99,14 +99,14 @@
             <label for="educationYears">Συνολικά έτη εκπαιδευτικής υπηρεσίας
               <small>Απαιτούνται τουλάχιστον 5 έτη.</small>
             </label>
-            <input type="number" id="educationYears" min="0" step="1" inputmode="numeric" value="" placeholder="π.χ. 12">
+            <input type="number" id="educationYears" min="0" max="40" step="1" inputmode="numeric" value="" placeholder="π.χ. 12">
           </div>
 
           <div class="field">
             <label for="teachingYears">Έτη διδακτικής υπηρεσίας μετά το ΦΕΚ διορισμού
               <small>Απαιτούνται τουλάχιστον 3 έτη σε σχολεία Πρωτοβάθμιας ή Δευτεροβάθμιας Εκπαίδευσης.</small>
             </label>
-            <input type="number" id="teachingYears" min="0" step="1" inputmode="numeric" value="" placeholder="π.χ. 8">
+            <input type="number" id="teachingYears" min="0" max="40" step="1" inputmode="numeric" value="" placeholder="π.χ. 8">
           </div>
 
           <div class="field">
@@ -321,7 +321,7 @@
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
 
-<script src="includes/abroad-calculations.js?v=3.2"></script>
+<script src="includes/abroad-calculations.js?v=3.20.33"></script>
 <script>
 (function(){
   "use strict";
@@ -435,7 +435,7 @@
   function normalizeYears(id){
     const el = $(id);
     if(!el || el.value === '') return;
-    el.value = String(Math.max(0, Math.floor(Number(el.value) || 0)));
+    el.value = String(Math.min(40, Math.max(0, Math.floor(Number(el.value) || 0))));
   }
 
   function eligibleDestinations(specialty){

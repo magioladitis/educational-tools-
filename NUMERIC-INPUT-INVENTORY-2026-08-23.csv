@@ -1,0 +1,95 @@
+﻿file,id,type,inputmode,min,max,step,label
+dikaiologitika-tekna-anapiria.php,disabilityPercent,number,,0,100,1,Ποσοστό αναπηρίας (%)
+dikaioma-symmetoxis.php,birthYear,number,,1900,2026,,Έτος γέννησης υποψηφίου/ας
+metatropi-klimakas.php,decimalGrade,text,decimal,,,,Βαθμός σε 10βάθμια κλίμακα
+odigos-enstasis.php,paravoloCode,text,numeric,,,,4 Έλεγχος μορφής κωδικού e-Παραβόλου
+ypologismos-morion-1ea-2025.php,degreeGrade,number,decimal,10,20,0.01,"Βαθμός τίτλου σε 20βάθμια κλίμακα Αν ο τίτλος έχει διαφορετική κλίμακα, απαιτείται προηγουμένως αναγωγή στην 20βάθμια."
+ypologismos-morion-1ea-2025.php,regularMonths,number,,0,120,1,Κανονική δημόσια προϋπηρεσία 1 μόριο/μήνα · έως 120 μήνες.
+ypologismos-morion-1ea-2025.php,difficultMonths,number,,0,60,1,Δυσπρόσιτα / καταστήματα κράτησης από 2020–21 2 μόρια/μήνα · έως 60 μήνες.
+ypologismos-morion-1gt-2024.php,regularMonths,number,,0,120,1,Λοιπή αναγνωρισμένη εκπαιδευτική προϋπηρεσία 1 μόριο ανά μήνα · έως 120 μήνες. Εδώ μπορεί να συμπεριληφθεί και αναγνωρισμένη ιδιωτική προϋπηρεσία που πληροί τις προϋποθέσεις της προκήρυξης.
+ypologismos-morion-1gt-2024.php,difficultMonths,number,,0,60,1,Δυσπρόσιτα / σχολικές μονάδες σε καταστήματα κράτησης Από το σχολικό έτος 2020–2021 και μετά · 2 μόρια ανά μήνα · έως 60 μήνες.
+ypologismos-morion-2ea-2025.php,degreeGrade,number,decimal,5,10,0.01,"Βαθμός βασικού πτυχίου (5–10) Βαθμός × 2,5 · ανώτατο 25. Αν η κλίμακα είναι διαφορετική, γίνεται αναγωγή στην 10βάθμια."
+ypologismos-morion-2ea-2025.php,regularMonths,number,,0,120,1,Κανονική δημόσια προϋπηρεσία 1 μόριο/μήνα · έως 120 μήνες.
+ypologismos-morion-2ea-2025.php,difficultMonths,number,,0,60,1,Δυσπρόσιτα / καταστήματα κράτησης από 2020–21 2 μόρια/μήνα · έως 60 μήνες.
+ypologismos-morion-3ea-2025.php,eaeMonths,number,numeric,0,480,1,Αναγνωρισμένοι μήνες προϋπηρεσίας ειδικά στην Ε.Α.Ε. Μόνο για έλεγχο του ορίου των 10 μηνών του επικουρικού· δεν προστίθενται δεύτερη φορά στα μόρια.
+ypologismos-morion-3ea-2025.php,degreeGrade,number,,5,10,0.01,"Βαθμός βασικού πτυχίου (5–10) Βαθμός × 2,5 · ανώτατο 25."
+ypologismos-morion-3ea-2025.php,regularMonths,number,numeric,0,120,1,Κανονική δημόσια προϋπηρεσία 1 μόριο ανά μήνα · έως 120 μήνες.
+ypologismos-morion-3ea-2025.php,difficultMonths,number,numeric,0,60,1,Δυσπρόσιτα / καταστήματα κράτησης από 2020–21 2 μόρια ανά μήνα · έως 60 μήνες.
+ypologismos-morion-3ea-2025.php,privateMonths,number,numeric,0,480,1,"Ιδιωτική εκπαιδευτική προϋπηρεσία 0,9 μόρια ανά μήνα, εφόσον πληρούνται οι νόμιμες προϋποθέσεις."
+ypologismos-morion-4ea-2025.php,eaeMonths,number,,0,480,1,Μήνες προϋπηρεσίας στην Ε.Α.Ε. Για το κριτήριο του Επικουρικού απαιτούνται τουλάχιστον 10 μήνες.
+ypologismos-morion-4ea-2025.php,regularMonths,number,,0,120,1,Μήνες δημόσιας εκπαιδευτικής προϋπηρεσίας 1 μόριο ανά μήνα πραγματικής εκπαιδευτικής προϋπηρεσίας · έως 120 μήνες.
+ypologismos-morion-4ea-2025.php,difficultMonths,number,,0,60,1,Δυσπρόσιτα / σχολικές μονάδες σε καταστήματα κράτησης Από το σχολικό έτος 2020–2021 και μετά · 2 μόρια ανά μήνα · έως 60 μήνες.
+ypologismos-morion-4ea-2025.php,privateMonths,number,,0,480,1,"Μήνες προϋπηρεσίας στην ιδιωτική εκπαίδευση 0,9 μόρια ανά μήνα, εφόσον πληρούνται οι ειδικές προϋποθέσεις της προκήρυξης."
+ypologismos-morion-apospasis-dimos.php,aeiPrograms,number,,0,,1,"Προγράμματα Α.Ε.Ι. ≥300 ωρών ή ≥9 μηνών 1 μόριο ανά πρόγραμμα, έως 2"
+ypologismos-morion-apospasis-dimos.php,pekHours,number,,0,,1,"Π.Ε.Κ. ώρες επιμόρφωσης 0,1 ανά πλήρες 10ωρο, έως 1. Η εισαγωγική επιμόρφωση νεοδιόριστων δεν μοριοδοτείται."
+ypologismos-morion-apospasis-dimos.php,iepHours,number,,0,,1,"Ι.Ε.Π. / Π.Ι. / φορείς ΥΠΑΙΘΑ ώρες 0,1 ανά πλήρες 10ωρο, έως 1"
+ypologismos-morion-apospasis-dimos.php,eapAnnual,number,,0,,1,"Ε.Α.Π. ετήσιες θεματικές ενότητες 0,80 ανά ενότητα, υποκριτήριο έως 0,80"
+ypologismos-morion-apospasis-dimos.php,eapSemester,number,,0,,1,"Ε.Α.Π. εξαμηνιαίες θεματικές ενότητες 0,40 ανά ενότητα, υποκριτήριο έως 0,80"
+ypologismos-morion-apospasis-dimos.php,ekddaHours,number,,0,,1,"Ε.Κ.Δ.Δ.Α. ώρες επιμόρφωσης 0,1 ανά πλήρες 10ωρο, έως 1"
+ypologismos-morion-apospasis-dimos.php,researchPrograms,number,,0,,1,Συμμετοχές σε ερευνητικά προγράμματα / ομάδες έργου 1 μόριο ανά συμμετοχή
+ypologismos-morion-apospasis-dimos.php,awards,number,,0,,1,Συναφείς διακρίσεις 1 μόριο ανά διάκριση
+ypologismos-morion-apospasis-dimos.php,selfAssessmentActions,number,,0,,1,"Δράσεις κοινού ενδιαφέροντος στο πλαίσιο αυτοαξιολόγησης σχολικής μονάδας 0,50 ανά δράση, έως 2"
+ypologismos-morion-apospasis-dimos.php,innovativePublished,number,,0,,1,"Καινοτόμα διδακτική πρακτική / έρευνα δράσης / ενδοσχολική επιμόρφωση με δημοσίευση σε περιοδικό ή πρακτικά με κριτές 1 ανά δράση, έως 2"
+ypologismos-morion-apospasis-dimos.php,innovativePrograms,number,,0,,1,"Καινοτόμα εκπαιδευτικά προγράμματα ή δράσεις π.χ. Erasmus+, eTwinning, MUN, περιβαλλοντικά, πολιτιστικά, αγωγής υγείας · 0,50 ανά πρόγραμμα/δράση, έως 4"
+ypologismos-morion-apospasis-dimos.php,clubs,number,,0,,1,"Όμιλοι, Σύνολα ή εξωδιδακτικές δραστηριότητες 0,50 ανά δράση, έως 3"
+ypologismos-morion-apospasis-evropaika-scholeia.php,teachingYears,number,numeric,0,40,1,"Συνολική αναγνωρισμένη διδακτική υπηρεσία Όπως στο Φύλλο Μητρώου: έτη, μήνες και ημέρες. Απαιτούνται τουλάχιστον 4 πλήρη έτη· κάθε πλήρες επιπλέον έτος δίνει 1 μονάδα, έως 9."
+ypologismos-morion-apospasis-evropaika-scholeia.php,teachingMonths,number,numeric,0,11,1,"Συνολική αναγνωρισμένη διδακτική υπηρεσία Όπως στο Φύλλο Μητρώου: έτη, μήνες και ημέρες. Απαιτούνται τουλάχιστον 4 πλήρη έτη· κάθε πλήρες επιπλέον έτος δίνει 1 μονάδα, έως 9."
+ypologismos-morion-apospasis-evropaika-scholeia.php,teachingDays,number,numeric,0,31,1,"Συνολική αναγνωρισμένη διδακτική υπηρεσία Όπως στο Φύλλο Μητρώου: έτη, μήνες και ημέρες. Απαιτούνται τουλάχιστον 4 πλήρη έτη· κάθε πλήρες επιπλέον έτος δίνει 1 μονάδα, έως 9."
+ypologismos-morion-apospasis-evropaika-scholeia.php,higherEducationSemesters,number,,0,,1,"Ακαδημαϊκά εξάμηνα αυτοδύναμου διδακτικού έργου σε ΑΕΙ 0,50 ανά εξάμηνο · έως 2."
+ypologismos-morion-apospasis-evropaika-scholeia.php,innovativePrograms,number,,0,,1,Καινοτόμα ευρωπαϊκά / διεθνή προγράμματα 1 ανά πρόγραμμα · έως 3.
+ypologismos-morion-apospasis-evropaika-scholeia.php,universityTrainingCount,number,,0,,1,Προγράμματα ΑΕΙ ≥300 ωρών ή ≥9 μηνών 1 ανά πρόγραμμα · έως 2.
+ypologismos-morion-apospasis-evropaika-scholeia.php,ministryTrainingHours,number,,0,,1,"Ώρες ΠΕΚΕΣ/ΠΕΚ/ΙΕΠ/ΠΙ/ΟΕΠΕΚ/ΥΠΑΙΘ 0,10 ανά 10 ώρες · έως 1."
+ypologismos-morion-apospasis-evropaika-scholeia.php,publicAdminTrainingHours,number,,0,,1,"Ώρες ΕΚΔΔΑ / ΙΠΕΜ-ΔΟΕ / ΚΕΜΕΤΕ-ΟΛΜΕ 0,10 ανά 10 ώρες · έως 1."
+ypologismos-morion-apospasis-evropaika-scholeia.php,eapAnnualUnits,number,,0,,1,Ετήσιες θεματικές ενότητες ΕΑΠ
+ypologismos-morion-apospasis-evropaika-scholeia.php,eapSemesterUnits,number,,0,,1,Εξαμηνιαίες θεματικές ενότητες ΕΑΠ
+ypologismos-morion-apospasis-evropaika-scholeia.php,oralPrerequisiteLanguage,number,,0,10,0.1,Προαπαιτούμενη ξένη γλώσσα — προφορικός λόγος 0–10 · βάση 5.
+ypologismos-morion-apospasis-evropaika-scholeia.php,oralWorkingLanguage1,number,,0,5,0.1,Άλλη γλώσσα εργασίας 1 0–5.
+ypologismos-morion-apospasis-evropaika-scholeia.php,oralWorkingLanguage2,number,,0,5,0.1,Άλλη γλώσσα εργασίας 2 0–5.
+ypologismos-morion-apospasis-evropaika-scholeia.php,thoughtSpeech,number,,0,5,0.1,Συγκρότηση σκέψης & λόγου 0–5.
+ypologismos-morion-apospasis-evropaika-scholeia.php,interculturalInnovation,number,,0,5,0.1,"Έκφραση, διαπολιτισμική επικοινωνία & καινοτόμες δράσεις 0–5."
+ypologismos-morion-apospasis-evropaika-scholeia.php,curriculumKnowledge,number,,0,10,0.1,Ενημέρωση & γνώση προγράμματος σπουδών Ευρωπαϊκών Σχολείων 0–10.
+ypologismos-morion-apospasis-exoteriko.php,educationYears,number,numeric,0,40,1,Συνολικά έτη εκπαιδευτικής υπηρεσίας Απαιτούνται τουλάχιστον 5 έτη.
+ypologismos-morion-apospasis-exoteriko.php,teachingYears,number,numeric,0,40,1,Έτη διδακτικής υπηρεσίας μετά το ΦΕΚ διορισμού Απαιτούνται τουλάχιστον 3 έτη σε σχολεία Πρωτοβάθμιας ή Δευτεροβάθμιας Εκπαίδευσης.
+ypologismos-morion-apospasis-psifiako-frontistirio.php,a1,number,,0,20,0.1,Α1. Συγκρότηση σκέψης – λόγου Μέγιστο 20 · βάση επιλογής 12
+ypologismos-morion-apospasis-psifiako-frontistirio.php,a2,number,,0,15,0.1,Α2. Επικοινωνιακές δεξιότητες Μέγιστο 15 · βάση επιλογής 8
+ypologismos-morion-apospasis-psifiako-frontistirio.php,extraYears,number,,0,38,1,Πλήρη επιπλέον έτη
+ypologismos-morion-apospasis-psifiako-frontistirio.php,extraMonths,number,,0,11,1,Πλήρη επιπλέον έτη
+ypologismos-morion-apospasis-psifiako-frontistirio.php,videoScore,number,,0,35,0.1,Γ1. Βαθμολογία βιντεοσκοπημένου μαθήματος Μέγιστο 35 · βάση επιλογής 20
+ypologismos-morion-apospasis-sde.php,eligibilitySchoolYears,number,decimal,0,40,0.01,Διδακτική υπηρεσία σε σχολεία Πρωτοβάθμιας ή Δευτεροβάθμιας Εκπαίδευσης Για δικαίωμα αίτησης απαιτούνται τουλάχιστον 2 χρόνια. Το πεδίο αυτό χρησιμοποιείται μόνο για τον έλεγχο επιλεξιμότητας.
+ypologismos-morion-apospasis-sde.php,formalEducationYears,number,numeric,0,40,1,"Συνολικά πλήρη σχολικά έτη διδακτικού έργου στην τυπική εκπαίδευση Πρωτοβάθμια / Δευτεροβάθμια / Τριτοβάθμια. Με τη διόρθωση Β΄ 4199/2026: 1 μόριο από το 1ο πλήρες σχολικό έτος, έως 4."
+ypologismos-morion-apospasis-sde.php,sdeTrainingHours,number,,0,,1,"Ώρες ολοκληρωμένης επιμόρφωσης σε θέματα ΣΔΕ 0,25 μόρια ανά 100 ώρες, έως 2. Κάθε επιμέρους επιμόρφωση κάτω των 15 ωρών λαμβάνει 0 μόρια."
+ypologismos-morion-apospasis-sde.php,adultTrainingHours,number,,0,,1,"Ώρες ολοκληρωμένης επιμόρφωσης στις αρχές Εκπαίδευσης Ενηλίκων 0,25 μόρια ανά 100 ώρες, έως 2. Κάθε επιμέρους επιμόρφωση κάτω των 15 ωρών λαμβάνει 0 μόρια."
+ypologismos-morion-apospasis-sde.php,sdeYears,number,,0,40,1,"Πλήρη σχολικά έτη διδακτικής εμπειρίας σε ΣΔΕ 1 μόριο ανά σχολικό έτος, έως 5."
+ypologismos-morion-apospasis-sde.php,sdeHourlyHours,number,,0,,1,Ώρες ωρομίσθιας απασχόλησης σε ΣΔΕ 650 ώρες = 1 έτος = 1 μόριο. Μην καταχωρίζεις εδώ χρόνο που έχεις ήδη δηλώσει ως πλήρες έτος.
+ypologismos-morion-apospasis-sde.php,adultEducationHours,number,,0,,1,"Ώρες διδακτικού έργου στην Εκπαίδευση Ενηλίκων εκτός ΣΔΕ 0,5 μόριο ανά 100 ώρες, έως 4."
+ypologismos-morion-apospasis.php,serviceYears,number,,0,40,1,Έτη
+ypologismos-morion-apospasis.php,serviceMonths,number,,0,11,1,Μήνες
+ypologismos-morion-apospasis.php,serviceDays,number,,0,30,1,Υπόλοιπο ημερών
+ypologismos-morion-apospasis.php,eligibleChildren,number,,0,20,1,Αριθμός τέκνων που μοριοδοτούνται
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,educationalServiceYears,number,,0,40,0.01,Συνολική εκπαιδευτική υπηρεσία Επίλεξε θέση για να εμφανιστεί το ελάχιστο.
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,sdeTeachingYears,number,,0,40,0.01,Διδακτικό έργο στα ΣΔΕ — πλήρη έτη Μην περιλαμβάνεις εδώ χρόνο διοικητικής θητείας που παίρνει μόρια στην ενότητα 4.
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,sdeTeachingHours,number,,0,,1,Διδακτικό έργο στα ΣΔΕ — ώρες ωρομίσθιας απασχόλησης
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,sdeTransferredYears,number,,0,40,0.01,Έτη διοικητικής θητείας σε ΣΔΕ που δεν πήραν διοικητικά μόρια λόγω πλαφόν Χρησιμοποίησέ το μόνο αν ο συγκεκριμένος χρόνος επιτρέπεται να μεταφερθεί στη διδακτική εμπειρία.
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,adultNonformalHours,number,,0,,1,"Μη τυπική εκπαίδευση ενηλίκων — ώρες ΝΕΛΕ, ΚΕΕ, ΚΔΒΜ, ΚΕΔΙΒΙΜ, ΚΕΚ, ΠΕΚ, ΠΕΚΕΣ, ΕΚΔΔΑ. 0,5 μόριο ανά 100 ώρες."
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,schoolTeachingYears,number,,0,40,0.01,Π/θμια – Δ/θμια – ΣΑΕΚ – ΕΣΚ — πλήρη διδακτικά έτη Χωρίς περίοδο διοικητικής θητείας που μοριοδοτείται στην ενότητα 4.
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,schoolTeachingHours,number,,0,,1,Π/θμια – Δ/θμια – ΣΑΕΚ – ΕΣΚ — ώρες ωρομίσθιας απασχόλησης
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,schoolTransferredYears,number,,0,40,0.01,Έτη διοικητικής θητείας που δεν πήραν διοικητικά μόρια λόγω πλαφόν και μπορούν να προσμετρηθούν ως διδακτικά Μην δηλώσεις χρόνο που έχει ήδη μοριοδοτηθεί διοικητικά.
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,sdeDirectorYears,number,,0,40,0.01,Στα ΣΔΕ ως Διευθυντής — σχολικά έτη 2 μόρια ανά έτος.
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,sdeDeputyYears,number,,0,40,0.01,Στα ΣΔΕ ως Υποδιευθυντής — σχολικά έτη 1 μόριο ανά έτος.
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,otherAdminYears,number,,0,40,0.01,"Σε σχολικές μονάδες Π/θμιας ή Δ/θμιας, ΣΑΕΚ ή ΕΣΚ ως Διευθυντής/Υποδιευθυντής — σχολικά έτη 1 μόριο ανά έτος."
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,trainingHours,number,,0,,1,"Συνολικές επιλέξιμες ώρες ολοκληρωμένων επιμορφώσεων 0,5 μόρια ανά 100 ώρες. Κάθε επιμέρους επιμόρφωση κάτω των 15 ωρών λαμβάνει 0 μόρια. Μην συμπεριλαμβάνεις ημερίδες, διημερίδες ή συνέδρια."
+ypologismos-morion-diefthynton-ypodiefthynton-sde.php,interviewScore,number,,0,25,0.01,Βαθμολογία συνέντευξης
+ypologismos-morion-mitroo-sde.php,trainingSdeHours,number,,0,,1,"Σε θέματα ΣΔΕ — ώρες 0,25 / 100 ώρες"
+ypologismos-morion-mitroo-sde.php,trainingAdultHours,number,,0,,1,"Στις αρχές Εκπαίδευσης Ενηλίκων — ώρες 0,25 / 100 ώρες"
+ypologismos-morion-mitroo-sde.php,trainingThematicHours,number,,0,,1,Θεματική επιμόρφωση — ώρες
+ypologismos-morion-mitroo-sde.php,expSdeHours,number,,0,,1,"Διδασκαλία στα ΣΔΕ — ώρες 1 μόριο / 200 ώρες, έως 5."
+ypologismos-morion-mitroo-sde.php,expAdultHours,number,,0,,1,"Εκπαίδευση Ενηλίκων εκτός ΣΔΕ — ώρες 0,5 μόριο / 100 ώρες, έως 4."
+ypologismos-morion-mitroo-sde.php,expFormalHours,number,,0,,1,"Τυπική εκπαίδευση ή επαγγελματική κατάρτιση — ώρες Π/θμια, Δ/θμια, Τριτοβάθμια ή Επαγγελματική Κατάρτιση. 1 μόριο / 200 ώρες, έως 4."
+ypologismos-morion-mitroo-sde.php,expSdeMonths,number,,0,480,1,Εμπειρία στα ΣΔΕ — μήνες
+ypologismos-morion-mitroo-sde.php,expAdultCounsellingMonths,number,,0,480,1,Συμβουλευτικές υπηρεσίες σε ενήλικες — μήνες
+ypologismos-morion-mitroo-sde.php,unemploymentMonths,number,,0,,1,"Πλήρεις μήνες ανεργίας +0,5% ανά μήνα, έως 10%."
+ypologismos-morion-mitroo-sde.php,unemploymentExtraDays,number,,0,30,1,Επιπλέον ημέρες 15 ημέρες ή περισσότερες λογίζονται ως ένας ακόμη πλήρης μήνας.
+ypologismos-morion-onaseia.php,manualAcademicPoints,text,decimal,,,,"Ακαδημαϊκά μόρια Α.Σ.Ε.Π. ( 12,50–120 )"
+ypologismos-morion.php,regularMonths,number,numeric,0,120,1,Δημόσια εκπαιδευτική προϋπηρεσία 1 μόριο/μήνα · έως 120 μήνες
+ypologismos-morion.php,difficultMonths,number,numeric,0,60,1,Δυσπρόσιτα / καταστήματα κράτησης από 2020–2021 2 μόρια/μήνα · έως 60 μήνες
+ypologismos-morion.php,privateMonths,number,numeric,0,480,1,"Ιδιωτική εκπαίδευση 0,9 μόρια/μήνα"

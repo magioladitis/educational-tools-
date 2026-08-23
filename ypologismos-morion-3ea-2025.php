@@ -44,7 +44,7 @@
 
 <h3>Προσόντα για ΕΠΙΚΟΥΡΙΚΟ πίνακα</h3>
 <div class="check"><input type="checkbox" id="seminar400" data-eae-aux="seminar400"><label for="seminar400">Σεμινάριο εξειδίκευσης Ε.Α.Ε. ≥400 ωρών και ≥7 μηνών<small>Κριτήριο ένταξης στον επικουρικό. Καλύπτει παράλληλα και το γενικό κριτήριο επιμόρφωσης ≥300 ωρών / ≥7 μηνών (+2).</small></label></div>
-<div class="field"><label for="eaeMonths">Αναγνωρισμένοι μήνες προϋπηρεσίας ειδικά στην Ε.Α.Ε.<small>Μόνο για έλεγχο του ορίου των 10 μηνών του επικουρικού· δεν προστίθενται δεύτερη φορά στα μόρια.</small></label><input id="eaeMonths" class="service-months" data-eae-aux="months" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="eaeMonths">Αναγνωρισμένοι μήνες προϋπηρεσίας ειδικά στην Ε.Α.Ε.<small>Μόνο για έλεγχο του ορίου των 10 μηνών του επικουρικού· δεν προστίθενται δεύτερη φορά στα μόρια.</small></label><input id="eaeMonths" class="service-months" data-eae-aux="months" type="number" min="0" max="480" step="1" inputmode="numeric" value="0"></div>
 </div>
 </section>
 
@@ -104,7 +104,7 @@ renderAsepThreeMonthService(array(
 ));
 ?>
 
-<div class="field"><label for="privateMonths">Ιδιωτική εκπαιδευτική προϋπηρεσία<small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι νόμιμες προϋποθέσεις.</small></label><input id="privateMonths" class="service-months" data-service-role="private" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+<div class="field"><label for="privateMonths">Ιδιωτική εκπαιδευτική προϋπηρεσία<small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι νόμιμες προϋποθέσεις.</small></label><input id="privateMonths" class="service-months" data-service-role="private" type="number" min="0" max="480" step="1" inputmode="numeric" value="0"></div>
 <?php renderAsepDigitalTutoringService(array('container_id' => 'digitalTutoring', 'input_class' => 'service-months')); ?>
 </section>
 
@@ -165,12 +165,12 @@ renderEaeSensoryPriority(array(
   <p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό και δεν υποκαθιστά τον επίσημο έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από το ΑΣΕΠ και τα αρμόδια όργανα.</p>
 </section>
 </div>
-<script src="includes/service-calculations.js?v=3.20.31"></script>
+<script src="includes/service-calculations.js?v=3.20.33"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
 <script src="includes/social-calculations.js?v=3.20.32"></script>
 <script src="includes/asep-social-criteria.js?v=3.20.32"></script>
-<script src="includes/eae-table-eligibility.js?v=3.20.31"></script>
+<script src="includes/eae-table-eligibility.js?v=3.20.33"></script>
 <script src="includes/asep-eae-eligibility.js?v=3.20.28"></script>
 <script src="includes/language-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-language-selector.js?v=3.20.31"></script>

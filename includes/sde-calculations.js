@@ -113,7 +113,7 @@
   function calculateExperience(data) {
     const details = [];
 
-    const sdeYears = num(data.sdeYears);
+    const sdeYears = Math.min(global.EducationCore.MAX_SERVICE_YEARS, num(data.sdeYears));
     const sdeHourlyHours = num(data.sdeHourlyHours);
     const sdePoints = Math.min(sdeYears + sdeHourlyHours / 650, 5);
     if (sdePoints > 0) details.push({ label: 'Διδακτική εμπειρία σε ΣΔΕ', points: sdePoints });
@@ -122,7 +122,7 @@
     const adultPoints = Math.min(adultHours / 100 * 0.5, 4);
     if (adultPoints > 0) details.push({ label: 'Εκπαίδευση Ενηλίκων εκτός ΣΔΕ', points: adultPoints });
 
-    const formalYearsTotal = Math.floor(num(data.formalEducationYears));
+    const formalYearsTotal = Math.min(global.EducationCore.MAX_SERVICE_YEARS, Math.floor(num(data.formalEducationYears)));
     const formalPoints = Math.min(formalYearsTotal, 4);
     if (formalPoints > 0) details.push({ label: 'Διδακτική εμπειρία στην τυπική εκπαίδευση', points: formalPoints });
 
@@ -276,8 +276,8 @@
       other,
       total: Math.min(raw, MAX.total),
       assignments: assignmentsFor(data.specialty, data.flags || {}),
-      eligibilitySchoolYears: num(data.eligibilitySchoolYears),
-      eligibleByTwoYears: num(data.eligibilitySchoolYears) >= 2,
+      eligibilitySchoolYears: Math.min(global.EducationCore.MAX_SERVICE_YEARS, num(data.eligibilitySchoolYears)),
+      eligibleByTwoYears: Math.min(global.EducationCore.MAX_SERVICE_YEARS, num(data.eligibilitySchoolYears)) >= 2,
       max: MAX
     };
   }

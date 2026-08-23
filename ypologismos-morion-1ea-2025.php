@@ -117,7 +117,7 @@ renderEaeSensoryPriority(array(
 <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Βάση υπολογισμού:</strong> Προκήρυξη ΑΣΕΠ 1ΕΑ/2025, Κεφάλαιο Γ΄ — κριτήρια αξιολογικού πίνακα Γ2΄ ΕΒΠ.</p><div class="source-links"><a href="https://info.asep.gr/node/76176" target="_blank" rel="noopener noreferrer">1ΕΑ/2025 — ΑΣΕΠ ↗</a></div><p class="source-disclaimer">Το εργαλείο είναι βοηθητικό και δεν υποκαθιστά τον επίσημο έλεγχο ΑΣΕΠ/ΟΠΣΥΔ.</p></section>
 <div class="credits">Εργαλείο υπολογισμού μορίων · 1ΕΑ/2025</div>
 </div>
-<script src="includes/service-calculations.js?v=3.20.31"></script>
+<script src="includes/service-calculations.js?v=3.20.33"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/social-calculations.js?v=3.20.32"></script>
 <script src="includes/asep-social-criteria.js?v=3.20.32"></script>

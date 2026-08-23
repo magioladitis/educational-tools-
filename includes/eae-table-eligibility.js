@@ -74,8 +74,9 @@
     if(profile === 'pe' && specialty === RULES.pe11Specialty && bool(main.pe11)) mainReasons.push(MAIN_REASONS.pe11);
 
     const auxReasons = [];
+    const eaeMonths = Math.min(global.EducationCore.MAX_SERVICE_MONTHS, number(aux.eaeMonths));
     if(bool(aux.seminar400)) auxReasons.push('σεμινάριο Ε.Α.Ε. ≥' + RULES.auxiliarySeminarHours + ' ωρών / ≥' + RULES.auxiliarySeminarMonths + ' μηνών');
-    if(number(aux.eaeMonths) >= RULES.auxiliaryEaeMonths) auxReasons.push('τουλάχιστον ' + RULES.auxiliaryEaeMonths + ' μήνες προϋπηρεσίας στην Ε.Α.Ε.');
+    if(eaeMonths >= RULES.auxiliaryEaeMonths) auxReasons.push('τουλάχιστον ' + RULES.auxiliaryEaeMonths + ' μήνες προϋπηρεσίας στην Ε.Α.Ε.');
     if(bool(aux.childDisability67)) auxReasons.push('γονέας παιδιού με αναπηρία ≥' + RULES.auxiliaryChildDisabilityPercent + '%');
 
     if(mainReasons.length){

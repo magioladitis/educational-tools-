@@ -88,7 +88,7 @@ renderAsepThreeMonthService(array(
 ?>
 
         <div class="field-grid">
-          <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" data-service-role="private" min="0" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+          <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" data-service-role="private" min="0" max="480" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
         </div>
 
 <?php renderAsepDigitalTutoringService(array('container_id' => 'digitalTutoring', 'input_class' => 'service-months')); ?>
@@ -159,7 +159,7 @@ renderAsepSocialCriteria(array(
 <script src="includes/asep-computer-proof.js?v=3.20.25"></script>
 <script src="includes/training-proof.js?v=3.20.25"></script>
 <script src="includes/asep-pe-academic.js?v=3.20.31"></script>
-<script src="includes/service-calculations.js?v=3.20.31"></script>
+<script src="includes/service-calculations.js?v=3.20.33"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
 <script src="includes/social-calculations.js?v=3.20.32"></script>

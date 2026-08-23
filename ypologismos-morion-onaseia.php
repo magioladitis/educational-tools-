@@ -249,7 +249,7 @@ renderAsepPeAcademic(array(
       </div>
       <div class="question">
         <label for="serviceMonths_${serviceRowCounter}">Αναγνωρισμένοι μήνες</label>
-        <input class="service-months" id="serviceMonths_${serviceRowCounter}" type="text" inputmode="decimal" value="${months}" placeholder="0 έως 10">
+        <input class="service-months" id="serviceMonths_${serviceRowCounter}" type="text" inputmode="decimal" data-min="0" data-max="10" value="${months}" placeholder="0 έως 10">
       </div>
       <button type="button" class="remove-row" aria-label="Αφαίρεση γραμμής προϋπηρεσίας" onclick="this.parentElement.remove()">Αφαίρεση</button>
     `;
@@ -280,15 +280,15 @@ renderAsepPeAcademic(array(
     const details = [];
 
     Object.keys(totalsByYear).sort().reverse().forEach(year => {
-      const months = totalsByYear[year];
-      const rawPoints = months * 1.5;
-      const points = Math.min(rawPoints, 15);
+      const enteredMonths = totalsByYear[year];
+      const months = Math.min(10, enteredMonths);
+      const points = months * 1.5;
       totalPoints += points;
 
       details.push(`${year}: ${formatPoints(months)} μήνες → ${formatPoints(points)} μόρια`);
 
-      if (months > 10) {
-        warnings.push(`${year}: δηλώθηκαν ${formatPoints(months)} μήνες. Εφαρμόστηκε το ετήσιο πλαφόν των 15 μορίων.`);
+      if (enteredMonths > 10) {
+        warnings.push(`${year}: δηλώθηκαν ${formatPoints(enteredMonths)} μήνες. Υπολογίστηκαν έως 10 μήνες / 15 μόρια για το σχολικό έτος.`);
       }
     });
 
@@ -457,6 +457,13 @@ renderAsepPeAcademic(array(
   setInterval(updateOnaseiaDeadlines, 1000);
 
   document.addEventListener("input", event => {
+    if (event.target && event.target.classList && event.target.classList.contains("service-months") && event.target.value !== "") {
+      const parsed = greekNumber(event.target.value);
+      if (Number.isFinite(parsed)) {
+        if (parsed < 0) event.target.value = "0";
+        if (parsed > 10) event.target.value = "10";
+      }
+    }
     if (event.target && event.target.matches("input, select")) liveCalculatePoints();
   });
   document.addEventListener("change", event => {

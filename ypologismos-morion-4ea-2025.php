@@ -105,7 +105,7 @@
           <label for="eaeMonths">Μήνες προϋπηρεσίας στην Ε.Α.Ε.
             <small>Για το κριτήριο του Επικουρικού απαιτούνται τουλάχιστον 10 μήνες.</small>
           </label>
-          <input type="number" id="eaeMonths" data-eae-aux="months" min="0" step="1" value="0">
+          <input type="number" id="eaeMonths" data-eae-aux="months" min="0" max="480" step="1" value="0">
         </div>
 
         <div class="info-note">
@@ -181,7 +181,7 @@ renderAsepThreeMonthService(array(
           <label for="privateMonths">Μήνες προϋπηρεσίας στην ιδιωτική εκπαίδευση
             <small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι ειδικές προϋποθέσεις της προκήρυξης.</small>
           </label>
-          <input type="number" id="privateMonths" data-service-role="private" min="0" step="1" value="0">
+          <input type="number" id="privateMonths" data-service-role="private" min="0" max="480" step="1" value="0">
         </div>
 
         <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
@@ -255,11 +255,11 @@ renderAsepSocialCriteria(array(
   </section>
 </div>
 
-<script src="includes/service-calculations.js?v=3.20.31"></script>
+<script src="includes/service-calculations.js?v=3.20.33"></script>
 <script src="includes/asep-service-controller.js?v=3.20.26"></script>
 <script src="includes/social-calculations.js?v=3.20.32"></script>
 <script src="includes/asep-social-criteria.js?v=3.20.32"></script>
-<script src="includes/eae-table-eligibility.js?v=3.20.31"></script>
+<script src="includes/eae-table-eligibility.js?v=3.20.33"></script>
 <script src="includes/asep-eae-eligibility.js?v=3.20.28"></script>
 <script src="includes/language-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-language-selector.js?v=3.20.31"></script>
