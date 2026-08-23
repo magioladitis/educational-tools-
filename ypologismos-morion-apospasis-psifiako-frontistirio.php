@@ -81,11 +81,11 @@
           </div>
           <div class="score-row">
             <label for="a1"><strong>Α1. Συγκρότηση σκέψης – λόγου</strong><small>Μέγιστο 20 · βάση επιλογής 12</small></label>
-            <input type="number" id="a1" min="0" max="20" step="0.1" value="0" oninput="calculate()">
+            <input type="number" id="a1" min="0" max="20" step="0.1" value="0" oninput="normalizeBoundedNumber(this);calculate()">
           </div>
           <div class="score-row">
             <label for="a2"><strong>Α2. Επικοινωνιακές δεξιότητες</strong><small>Μέγιστο 15 · βάση επιλογής 8</small></label>
-            <input type="number" id="a2" min="0" max="15" step="0.1" value="0" oninput="calculate()">
+            <input type="number" id="a2" min="0" max="15" step="0.1" value="0" oninput="normalizeBoundedNumber(this);calculate()">
           </div>
           <div class="info">Αν δεν έχει πραγματοποιηθεί ακόμη η συνέντευξη, άφησε τα Α1 και Α2 στο 0. Το εργαλείο θα σου δείξει ξεχωριστά τη βαθμολογία Β + Γ που χρησιμοποιείται πριν από τη συνέντευξη.</div>
         <?php calculatorCardEnd(); ?>
@@ -152,7 +152,7 @@
           </div>
           <div class="score-row">
             <label for="videoScore"><strong>Γ1. Βαθμολογία βιντεοσκοπημένου μαθήματος</strong><small>Μέγιστο 35 · βάση επιλογής 20</small></label>
-            <input type="number" id="videoScore" min="0" max="35" step="0.1" value="" placeholder="0–35" oninput="calculate()">
+            <input type="number" id="videoScore" min="0" max="35" step="0.1" value="" placeholder="0–35" oninput="normalizeBoundedNumber(this);calculate()">
           </div>
           <div class="note">Για την κλήση σε συνέντευξη λαμβάνονται υπόψη οι περισσότεροι βαθμοί στις κατηγορίες <strong>Β + Γ</strong>, με απαραίτητη βάση τουλάχιστον <strong>20 μονάδων στη Γ</strong>. Η πρόσκληση προβλέπει κλήση κατά ανώτατο όριο του τριπλάσιου αριθμού υποψηφίων σε σχέση με τις θέσεις.</div>
         <?php calculatorCardEnd(); ?>
@@ -214,6 +214,19 @@
     let value = Math.floor(Number(input.value || 0));
     value = Math.max(0,value);
     if(max !== null) value = Math.min(max,value);
+    input.value = value;
+  }
+
+  function normalizeBoundedNumber(input){
+    if(input.value === '') return;
+    let value = Number(input.value);
+    if(!Number.isFinite(value)){
+      input.value = '';
+      return;
+    }
+    if(input.min !== '') value = Math.max(Number(input.min), value);
+    if(input.max !== '') value = Math.min(Number(input.max), value);
+    if(input.step === '0.1') value = Math.round(value * 10) / 10;
     input.value = value;
   }
 

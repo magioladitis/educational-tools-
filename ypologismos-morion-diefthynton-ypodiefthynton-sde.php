@@ -169,7 +169,7 @@
 
       <?php calculatorCardStart(array('id' => 'interviewCard', 'class' => 'card hidden')); ?>
         <div class="section-head"><div><h2>6. Συνέντευξη</h2><p class="subtitle">Μόνο για τους υποψήφιους Διευθυντές. Αν δεν έχει πραγματοποιηθεί ακόμη, άφησε το πεδίο κενό για να δεις το σύνολο πριν από τη συνέντευξη.</p></div><div class="max">έως 25</div></div>
-        <div class="field-grid"><div class="field full"><label for="interviewScore">Βαθμολογία συνέντευξης</label><input type="number" id="interviewScore" min="0" max="25" step="0.01" placeholder="0–25" oninput="calculate()"></div></div>
+        <div class="field-grid"><div class="field full"><label for="interviewScore">Βαθμολογία συνέντευξης</label><input type="number" id="interviewScore" min="0" max="25" step="0.01" placeholder="0–25" oninput="normalizeBoundedScore(this);calculate()"></div></div>
       <?php calculatorCardEnd(); ?>
     <?php calculatorMainEnd(); ?>
 
@@ -212,6 +212,15 @@
     value = Math.min(EXPERIENCE_YEAR_MAX, Math.max(0, value));
     if (String(value) !== el.value) el.value = String(value);
     return value;
+  };
+  const normalizeBoundedScore = el => {
+    if (!el || el.value === '') return;
+    let value = Number(el.value);
+    if (!Number.isFinite(value)) { el.value = ''; return; }
+    const min = el.min !== '' ? Number(el.min) : 0;
+    const max = el.max !== '' ? Number(el.max) : Infinity;
+    value = Math.min(max, Math.max(min, value));
+    el.value = String(Math.round(value * 100) / 100);
   };
   const yes = id => val(id) === 'yes';
   const fmt = value => {

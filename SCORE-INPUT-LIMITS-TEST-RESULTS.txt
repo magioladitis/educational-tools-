@@ -1,0 +1,17 @@
+Score input safety limits — 2026-08-24
+
+Live normalizer tests: 8/8 PASS
+- Digital Tutoring A1 99 -> 20
+- Digital Tutoring A2 99 -> 15
+- Digital Tutoring Video 99 -> 35
+- Digital Tutoring negative -> 0
+- Digital Tutoring decimal step normalization -> PASS
+- SDE interview 99 -> 25
+- SDE interview negative -> 0
+- SDE interview decimal normalization -> PASS
+
+Contract checks: 11/11 PASS
+SDE engine clamp: PASS (99 -> 25)
+PHP syntax: 37/37 PASS
+JavaScript syntax: 31/31 PASS
+Chromium integration: not claimed; container Chromium stalled.
