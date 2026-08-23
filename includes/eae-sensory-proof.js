@@ -2,6 +2,12 @@
 (function (global) {
   'use strict';
 
+  function emptyMessage(panel) {
+    return panel.getAttribute('data-kind') === 'braille'
+      ? 'Επίλεξε τον φορέα ή τον τρόπο απόδειξης που διαθέτεις.'
+      : 'Επίλεξε τον φορέα έκδοσης του πιστοποιητικού ή της βεβαίωσης.';
+  }
+
   function sync(panel) {
     var input = document.getElementById(panel.getAttribute('data-input-id') || '');
     var method = panel.querySelector('[data-eae-sensory-method]');
@@ -14,13 +20,13 @@
     if (!active) {
       method.value = '';
       status.className = 'eae-sensory-status neutral';
-      status.textContent = 'Επίλεξε τον φορέα έκδοσης του πιστοποιητικού ή της βεβαίωσης.';
+      status.textContent = emptyMessage(panel);
       return;
     }
 
     if (!method.value) {
       status.className = 'eae-sensory-status neutral';
-      status.textContent = 'Επίλεξε τον φορέα έκδοσης του πιστοποιητικού ή της βεβαίωσης.';
+      status.textContent = emptyMessage(panel);
     } else if (method.value === 'other') {
       status.className = 'eae-sensory-status warning';
       status.textContent = '⚠ Ο φορέας δεν περιλαμβάνεται ρητά στους αποδεκτούς τρόπους απόδειξης της προκήρυξης. Απαιτείται επίσημος έλεγχος.';

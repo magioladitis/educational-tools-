@@ -1,0 +1,48 @@
+=== Final package audit ===
+PHP files: 33
+JS files: 18
+CSS files: 1
+
+PHP lint: 0 failures
+JS syntax: 0 failures
+
+=== Local dependency audit ===
+Checked local references: 214
+Missing local references: 0
+
+=== Ergaleia link coverage ===
+Local PHP tool links: 23
+Missing targets: 0
+
+=== EAE sensory regression ===
+PASS 1EA: ENG yes / Braille no
+PASS 2EA: ENG + Braille
+PASS 3EA: ENG + Braille
+PASS 4EA: ENG + Braille
+PASS ypologismos-morion-1ea-2025.php: shared proof JS
+PASS ypologismos-morion-2ea-2025.php: shared proof JS
+PASS ypologismos-morion-3ea-2025.php: shared proof JS
+PASS ypologismos-morion-4ea-2025.php: shared proof JS
+PASS Proof route OMKE
+PASS Proof route Patras
+PASS Proof route KEAT
+PASS Proof route Ilios
+PASS Proof route UTH Braille
+PASS Proof route UoM Braille
+PASS 1EA legal priority basis
+PASS 2EA legal priority basis
+PASS 3EA/4EA legal priority basis
+PASS Per-call proof references
+PASS Braille-specific neutral message
+PASS Shared CSS
+Result: 20/20 PASS
+
+=== Digital Tutoring cleanup ===
+PASS obsolete component names absent
+Canonical component: asep-digital-tutoring-service.php
+
+=== Digital Tutoring smoke ===
+PASS 2024-2025 = 9m16d
+PASS 2025-2026 = 8m2d
+PASS maxima total 25.5 points
+PASS remaining days 18

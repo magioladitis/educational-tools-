@@ -134,6 +134,7 @@ renderAsepSocialCriteria(array(
 <div class="check"><input type="checkbox" id="pde"><label for="pde">Πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια<small>Δεν προσθέτει μόρια· ο υποψήφιος προτάσσεται έναντι υποψηφίων που δεν τη διαθέτουν.</small></label></div>
 <?php
 renderEaeSensoryPriority(array(
+    'context' => '3ea-2025',
     'eng_enabled' => true,
     'braille_enabled' => true,
     'eng_id' => 'sign',
@@ -297,7 +298,7 @@ renderEaeSensoryPriority(array(
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
-  <script src="includes/eae-sensory-proof.js?v=3.20.16"></script>
+  <script src="includes/eae-sensory-proof.js?v=3.20.23"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

@@ -25,6 +25,7 @@
 <div id="pe23Wrap" class="field hidden"><label for="schoolPsych">ΠΕ23 — Εξειδίκευση στη Σχολική Ψυχολογία<small>Προσόν πρόταξης, όχι ξεχωριστή μοριοδότηση από μόνο του.</small></label><select id="schoolPsych"><option value="none">Δεν διαθέτω εξειδίκευση</option><option value="degree">Διδακτορικό ή μεταπτυχιακό στη Σχολική Ψυχολογία</option><option value="experience">Τουλάχιστον 50 μήνες προϋπηρεσίας ως ψυχολόγος στην Π/θμια ή Δ/θμια</option></select><div id="schoolPsychReminder" class="note hidden">Η επιλογή εξειδίκευσης μέσω τίτλου δεν προσθέτει αυτόματα μόρια. Δήλωσε τον αντίστοιχο διδακτορικό/μεταπτυχιακό τίτλο και στην ενότητα Ακαδημαϊκών.</div></div>
 <?php
 renderEaeSensoryPriority(array(
+    'context' => '2ea-2025',
     'eng_enabled' => true,
     'braille_enabled' => true,
     'eng_id' => 'signLanguage',
@@ -123,7 +124,7 @@ document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
-  <script src="includes/eae-sensory-proof.js?v=3.20.16"></script>
+  <script src="includes/eae-sensory-proof.js?v=3.20.23"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

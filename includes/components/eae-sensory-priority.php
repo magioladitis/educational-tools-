@@ -17,6 +17,23 @@ if (!function_exists('renderEaeSensoryPriority')) {
         $brailleId = isset($config['braille_id']) ? (string) $config['braille_id'] : 'braille';
         $engPanelId = isset($config['eng_panel_id']) ? (string) $config['eng_panel_id'] : $engId . 'Proof';
         $braillePanelId = isset($config['braille_panel_id']) ? (string) $config['braille_panel_id'] : $brailleId . 'Proof';
+        $context = isset($config['context']) ? (string) $config['context'] : '';
+
+        $priorityLegal = '';
+        $proofLegal = 'Αποδεκτοί τρόποι απόδειξης επάρκειας: έλεγξε την αντίστοιχη προκήρυξη Α.Σ.Ε.Π.';
+        if ($context === '1ea-2025') {
+            $priorityLegal = 'Προτεραιότητα Ε.Β.Π. για την υποστήριξη κωφών και βαρήκοων μαθητών: παρ. 2 άρθρου 60 ν. 4589/2019.';
+            $proofLegal = 'Αποδεκτοί τρόποι απόδειξης ΕΝΓ: Κεφάλαιο Δ΄, σημείο 4 της 1ΕΑ/2025.';
+        } elseif ($context === '2ea-2025') {
+            $priorityLegal = 'Προτεραιότητα μελών Ε.Ε.Π. για μαθητές με προβλήματα όρασης ή κωφούς/βαρήκοους μαθητές: παρ. 1 άρθρου 59 ν. 4589/2019.';
+            $proofLegal = 'Αποδεκτοί τρόποι απόδειξης ΕΝΓ/ΕΓΒ: Κεφάλαιο Δ΄, σημείο 6 της 2ΕΑ/2025.';
+        } elseif ($context === '3ea-2025') {
+            $priorityLegal = 'Προτεραιότητα εκπαιδευτικών Ε.Α.Ε. για μαθητές με προβλήματα όρασης ή κωφούς/βαρήκοους μαθητές: παρ. 3 άρθρου 7 ν. 3699/2008.';
+            $proofLegal = 'Αποδεκτοί τρόποι απόδειξης ΕΝΓ/ΕΓΒ: Κεφάλαιο Δ΄, σημείο 7 της 3ΕΑ/2025.';
+        } elseif ($context === '4ea-2025') {
+            $priorityLegal = 'Προτεραιότητα εκπαιδευτικών Ε.Α.Ε. για μαθητές με προβλήματα όρασης ή κωφούς/βαρήκοους μαθητές: παρ. 3 άρθρου 7 ν. 3699/2008.';
+            $proofLegal = 'Αποδεκτοί τρόποι απόδειξης ΕΝΓ/ΕΓΒ: Κεφάλαιο Δ΄, σημείο 7 της 4ΕΑ/2025.';
+        }
 
         $flags = ENT_QUOTES;
         if (defined('ENT_SUBSTITUTE')) {
@@ -92,7 +109,12 @@ if (!function_exists('renderEaeSensoryPriority')) {
   </div>
 <?php endif; ?>
 
-  <div class="eae-sensory-legal">Νομική βάση: παρ. 3 άρθρου 7 ν. 3699/2008, όπως αντικαταστάθηκε με την παρ. 10 άρθρου 28 ν. 4186/2013 και συμπληρώθηκε με την παρ. 2 άρθρου 11 ν. 4452/2017. Ο έλεγχος είναι ενημερωτικός και δεν υποκαθιστά τον επίσημο έλεγχο των δικαιολογητικών.</div>
+  <div class="eae-sensory-legal">
+<?php if ($priorityLegal !== ''): ?>
+    <strong><?php echo $h($priorityLegal); ?></strong><br>
+<?php endif; ?>
+    <?php echo $h($proofLegal); ?> Η επάρκεια ΕΝΓ/ΕΓΒ ρυθμίζεται στην παρ. 3 άρθρου 7 ν. 3699/2008, όπως αντικαταστάθηκε με την παρ. 10 άρθρου 28 ν. 4186/2013 και συμπληρώθηκε με την παρ. 2 άρθρου 11 ν. 4452/2017. Ο έλεγχος είναι ενημερωτικός και δεν υποκαθιστά τον επίσημο έλεγχο των δικαιολογητικών.
+  </div>
 </div>
         <?php
     }

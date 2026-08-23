@@ -108,6 +108,7 @@ renderAsepSocialCriteria(array(
 <h2>5. Ειδική προτεραιότητα</h2>
 <?php
 renderEaeSensoryPriority(array(
+    'context' => '1ea-2025',
     'eng_enabled' => true,
     'braille_enabled' => false,
     'eng_id' => 'signLanguage'
@@ -139,7 +140,7 @@ document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
-  <script src="includes/eae-sensory-proof.js?v=3.20.16"></script>
+  <script src="includes/eae-sensory-proof.js?v=3.20.23"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>
