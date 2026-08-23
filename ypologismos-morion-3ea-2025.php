@@ -48,7 +48,7 @@
 </div>
 </section>
 
-<section class="card">
+<section id="asepPeAcademic" class="card" data-component="asep-pe-academic" data-profile="eae" data-degree-required="false" data-specialty-id="specialty" data-degree-id="degree" data-second-degree-id="secondDegree" data-phd-id="phd" data-msc-id="masters" data-language-id="asepLanguages" data-computer-id="computer" data-training-id="training" data-training-proof-id="trainingProof" data-phd-overlay-id="phdEae" data-msc-overlay-id="masterEae" data-training-overlay-id="seminar400" data-eae-pe11-special-id="pe11Qual" data-pe11-wrap-id="pe11QualWrap" data-pe6171-note-id="pe6171Auto">
 <h2>2. Ακαδημαϊκά προσόντα</h2><p class="cap">Μέγιστο κατηγορίας Α: 120 μόρια.</p><div id="degreeValidation" class="note hidden">Ο βαθμός βασικού πτυχίου πρέπει να είναι από 5,00 έως 10,00.</div>
 <div class="field"><label for="degree">Βαθμός βασικού πτυχίου (5–10)<small>Βαθμός × 2,5 · ανώτατο 25.</small></label><input id="degree" type="number" min="5" max="10" step="0.01" value="" placeholder="π.χ. 7,50"></div>
 <div class="check"><input type="checkbox" id="secondDegree"><label for="secondDegree">Δεύτερο πτυχίο ΑΕΙ <small>+7 μόρια, εφόσον δεν αποτελεί τυπικό προσόν διορισμού.</small></label></div>
@@ -174,45 +174,20 @@ renderEaeSensoryPriority(array(
 <script src="includes/asep-eae-eligibility.js?v=3.20.28"></script>
 <script src="includes/language-calculations.js?v=3.20.24"></script>
 <script src="includes/asep-language-selector.js?v=3.20.24"></script>
+<script src="includes/academic-calculations.js?v=3.20.30"></script>
+<script src="includes/asep-pe-academic.js?v=3.20.30"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script>
 (function(){
  const $=id=>document.getElementById(id); const num=id=>Math.max(0,Number($(id)?.value||0)); const cap=(v,m)=>Math.min(v,m); const fmt=v=>(Math.round((v+Number.EPSILON)*100)/100).toFixed(2);
- function syncSpecial(){
-   const sp=$('specialty').value;
-   $('pe11QualWrap').classList.toggle('hidden',sp!=='ΠΕ11');
-   $('pe6171Auto').classList.toggle('hidden',!(sp==='ΠΕ61'||sp==='ΠΕ71'));
-   $('computer').disabled=(sp==='ΠΕ86'); if(sp==='ΠΕ86') $('computer').checked=false;
-   AsepLanguageSelector.sync('asepLanguages');
- }
- function calcAcademic(languages){
-   const sp=$('specialty').value;
-   const hasPhd = $('phd').checked || $('phdEae').checked;
-   const selectedMasters = Number($('masters').value||0);
-   const masters = Math.max(selectedMasters, $('masterEae').checked ? 1 : 0);
-   const hasTraining = $('training').checked || $('seminar400').checked;
-   const degreeGrade=num('degree');
-   const validDegreeGrade=degreeGrade>=5 && degreeGrade<=10;
-   let pts=validDegreeGrade ? cap(degreeGrade*2.5,25) : 0;
-   if($('secondDegree').checked) pts+=7;
-   if(hasPhd) pts+=40;
-   if(sp==='ΠΕ61'||sp==='ΠΕ71') pts += masters>=1 ? 28 : 20;
-   else pts += masters===1?20:(masters>=2?28:0);
-   if(sp==='ΠΕ11' && $('pe11Qual').checked) pts+=8;
-   pts += languages.points;
-   if($('computer').checked && sp!=='ΠΕ86') pts+=4;
-   if(hasTraining) pts+=2;
-   return cap(pts,120);
- }
  function calcService(){return AsepServiceController.getState('asepService',fmt).points;}
  function calcSocial(){return AsepSocialCriteria.getState('socialCriteria',fmt);}
  function render(){
-   syncSpecial();
    TrainingProof.syncAll();
    const degreeGrade=num('degree');
    const degreeInvalid=degreeGrade>0 && (degreeGrade<5 || degreeGrade>10);
    $('degreeValidation').classList.toggle('hidden', !degreeInvalid);
-   const languages=AsepLanguageSelector.calculate('asepLanguages'), a=calcAcademic(languages), b=calcService(), socialResult=calcSocial(), c=socialResult.total, t=a+b+c, e=AsepEaeEligibility.getState('eaeEligibility',{socialResult:socialResult});
+   const academic=AsepPeAcademic.calculate('asepPeAcademic'), a=academic.points, b=calcService(), socialResult=calcSocial(), c=socialResult.total, t=a+b+c, e=AsepEaeEligibility.getState('eaeEligibility',{socialResult:socialResult});
    $('grandTotal').textContent=fmt(t); $('resAcademic').textContent=fmt(a)+' / 120'; $('resService').textContent=fmt(b)+' / 120'; $('resSocial').textContent=fmt(c);
    $('tableStatus').className='status '+e.type; $('tableStatus').textContent=e.label; $('eligibilityWhy').innerHTML='<strong>Έλεγχος ένταξης</strong>'+e.why;
    let p=[]; if($('pde').checked) p.push('Πρόταξη λόγω Παιδαγωγικής & Διδακτικής Επάρκειας'); if($('braille').checked) p.push('Προτεραιότητα Braille για μαθητές με προβλήματα όρασης'); if($('sign').checked) p.push('Προτεραιότητα Ε.Ν.Γ. για κωφούς/βαρήκοους μαθητές');
@@ -247,7 +222,7 @@ renderEaeSensoryPriority(array(
  });
  $('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});
  document.addEventListener('asep-digital-tutoring-change',render);
- $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degree').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepLanguageSelector.reset('asepLanguages',{silent:true});AsepServiceController.reset('asepService',{silent:true});render();});
+ $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degree').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepPeAcademic.reset('asepPeAcademic',{silent:true});AsepServiceController.reset('asepService',{silent:true});render();});
  render();
 })();
 </script>

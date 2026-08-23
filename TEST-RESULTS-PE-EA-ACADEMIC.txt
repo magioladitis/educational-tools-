@@ -1,0 +1,22 @@
+PE Academic profiles — 2EA/2025 + 3EA/2025
+
+Business-logic parity (EEP/EAE): 117316 PASS / 0 FAIL
+General-profile parity: 2880 PASS / 0 FAIL
+Browser runtime: 16 PASS / 0 FAIL
+Architecture: 17 PASS / 0 FAIL
+PHP syntax: 36/36 PASS
+JS syntax: 28/28 PASS
+Dependencies: 250 refs / 0 missing
+Rendered duplicate actual HTML ids: 0
+
+Runtime locked cases:
+PASS 2EA academic = 108.00 for degree 8 + 7 + 40 + 28 + language 7 + computer 4 + training 2
+PASS 2EA invalid degree excluded while other academic criteria continue
+PASS 3EA PE61 base = 20
+PASS 3EA PE61 + MSc = 28
+PASS 3EA PE61 + masterEae overlay = 28
+PASS 3EA PE11 special = 8
+PASS 3EA phdEae overlay = +40
+PASS 3EA seminar400 -> training = +2 once
+PASS 3EA PE86 computer disabled/reset
+PASS no browser JavaScript exceptions
