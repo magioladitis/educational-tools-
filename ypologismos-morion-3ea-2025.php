@@ -6,11 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων 3ΕΑ/2025 και ενδεικτικός έλεγχος ένταξης στον Αξιολογικό Πίνακα Β΄ ή στον Επικουρικό Πίνακα Ειδικής Αγωγής.">
 <title>Υπολογισμός μορίων 3ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="assets/common.css?v=3.20.15-rc1">
 </head>
 <body class="edu-ui edu-calc-ea3 edu-page-ea3">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <div class="page">
@@ -59,7 +60,14 @@
 <div class="field"><label for="lang2">Επίπεδο 2ης γλώσσας</label><select id="lang2"><option value="0">Καμία / χωρίς μόρια</option><option value="3">Καλή (Β2) — 3</option><option value="5">Πολύ καλή (Γ1) — 5</option><option value="7">Άριστη (Γ2) — 7</option></select></div>
 <div class="field hidden" id="langOther2Wrap"><label for="langOther2">Ονομασία άλλης 2ης γλώσσας</label><input id="langOther2" type="text" placeholder="π.χ. Πορτογαλική"></div>
 <div id="languageWarning" class="note hidden"></div>
-<div class="check"><input type="checkbox" id="computer"><label for="computer">Πιστοποιημένη γνώση Η/Υ <small>+4 μόρια. Δεν μοριοδοτείται στον ΠΕ86.</small></label></div>
+<?php
+renderAsepComputerProof(array(
+    'input_id' => 'computer',
+    'control_type' => 'checkbox',
+    'points_text' => '4 μόρια',
+    'restriction_note' => 'Δεν μοριοδοτείται στον ΠΕ86.'
+));
+?>
 <div class="check"><input type="checkbox" id="training"><label for="training">Επιμόρφωση ≥300 ωρών και ≥7 μηνών <small>+2 μόρια. Μοριοδοτείται μόνο μία επιμόρφωση. Το 400ωρο ΕΑΕ του επικουρικού καλύπτει αυτό το κριτήριο.</small></label></div>
 <?php
 renderTrainingProof([
@@ -279,6 +287,7 @@ function trainingProofSummary(){if(!($('training').checked||$('seminar400').chec
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="includes/asep-computer-proof.js?v=3.20.15-rc1"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

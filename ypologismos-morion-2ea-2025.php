@@ -6,11 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 2ΕΑ/2025 για μέλη Ειδικού Εκπαιδευτικού Προσωπικού (ΕΕΠ).">
 <title>Υπολογισμός μορίων 2ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="assets/common.css?v=3.20.15-rc1">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea2">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <div class="app">
@@ -37,7 +38,13 @@
 <div class="field"><label for="masters">Μοριοδοτούμενοι μεταπτυχιακοί τίτλοι / integrated master<small>1 τίτλος: 20 · 2 ή περισσότεροι: 28 συνολικά. Μην συμπεριλάβεις τίτλο που αποτελεί τυπικό προσόν διορισμού.</small></label><select id="masters"><option value="0">Κανένας — 0</option><option value="1">Ένας — 20</option><option value="2">Δύο ή περισσότεροι — 28</option></select></div>
 <div id="formalMasterNote" class="note hidden"><strong>Προσοχή:</strong> για ΠΕ21, ΠΕ22 και ΠΕ31, όταν μεταπτυχιακός τίτλος αποτελεί τυπικό προσόν διορισμού στη συγκεκριμένη διαδρομή ένταξης, ο τίτλος αυτός δεν μοριοδοτείται. Δήλωσε παραπάνω μόνο τους τίτλους που πράγματι μοριοδοτούνται.</div>
 <h3>Ξένες γλώσσες — έως δύο</h3><div class="info">Επίλεξε <strong>ποια γλώσσα</strong> και το επίπεδό της. Αν δηλωθεί η ίδια γλώσσα δύο φορές, μοριοδοτείται αυτόματα μόνο το ανώτερο επίπεδο.</div><div class="field-grid"><div class="field"><label for="langName1">1η ξένη γλώσσα</label><select id="langName1"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select></div><div class="field"><label for="lang1">Επίπεδο 1ης γλώσσας</label><select id="lang1"><option value="0">Καμία / χωρίς μόρια</option><option value="3">Καλή — 3</option><option value="5">Πολύ καλή — 5</option><option value="7">Άριστη — 7</option></select></div><div class="field hidden" id="langOther1Wrap"><label for="langOther1">Ονομασία άλλης 1ης γλώσσας</label><input id="langOther1" type="text" placeholder="π.χ. Πορτογαλική"></div><div class="field"><label for="langName2">2η ξένη γλώσσα</label><select id="langName2"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select></div><div class="field"><label for="lang2">Επίπεδο 2ης γλώσσας</label><select id="lang2"><option value="0">Καμία / χωρίς μόρια</option><option value="3">Καλή — 3</option><option value="5">Πολύ καλή — 5</option><option value="7">Άριστη — 7</option></select></div><div class="field hidden" id="langOther2Wrap"><label for="langOther2">Ονομασία άλλης 2ης γλώσσας</label><input id="langOther2" type="text" placeholder="π.χ. Πορτογαλική"></div></div><div id="languageWarning" class="note hidden"></div>
-<div class="checkrow"><input type="checkbox" id="computer"><label for="computer">Πιστοποιημένη γνώση χειρισμού Η/Υ Α΄ επιπέδου<small>+4 μόρια.</small></label></div><div class="checkrow"><input type="checkbox" id="training"><label for="training">Επιμόρφωση ≥300 ωρών και ≥7 μηνών<small>+2 μόρια · μοριοδοτείται μία επιμόρφωση.</small></label></div>
+<?php
+renderAsepComputerProof(array(
+    'input_id' => 'computer',
+    'control_type' => 'checkbox',
+    'points_text' => '4 μόρια'
+));
+?><div class="checkrow"><input type="checkbox" id="training"><label for="training">Επιμόρφωση ≥300 ωρών και ≥7 μηνών<small>+2 μόρια · μοριοδοτείται μία επιμόρφωση.</small></label></div>
 <?php
 renderTrainingProof([
     'id' => 'trainingProof',
@@ -110,6 +117,7 @@ function sanitizeServiceMonthInput(el){if(!el||!el.classList.contains('service-m
 document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render();});document.addEventListener('change',render);$('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});$('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=x.id==='degreeGrade'?'':'0');document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);eligibilityUiKey='';render();});render();})();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="includes/asep-computer-proof.js?v=3.20.15-rc1"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

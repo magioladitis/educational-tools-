@@ -6,11 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΓΤ/2024 για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16.">
   <title>Υπολογισμός μορίων 1ΓΤ/2024</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="assets/common.css?v=3.20.15-rc1">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-gt1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <div class="app">
@@ -106,10 +107,13 @@
         </div>
         <div id="languageWarning" class="note hidden"></div>
 
-        <div class="checkrow">
-          <input type="checkbox" id="computer">
-          <label for="computer">Πιστοποιημένη γνώση χειρισμού Η/Υ Α΄ επιπέδου<small>Επεξεργασία κειμένου, υπολογιστικά φύλλα και υπηρεσίες διαδικτύου — 20 μόρια</small></label>
-        </div>
+        <?php
+renderAsepComputerProof(array(
+    'input_id' => 'computer',
+    'control_type' => 'checkbox',
+    'points_text' => '20 μόρια'
+));
+?>
 
         <div class="checkrow">
           <input type="checkbox" id="training">
@@ -368,6 +372,7 @@ renderAsepSocialCriteria(array(
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="includes/asep-computer-proof.js?v=3.20.15-rc1"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>

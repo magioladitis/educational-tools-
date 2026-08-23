@@ -5,12 +5,13 @@
 <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.13">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.15-rc1">
 </head>
 
 <body class="edu-ui edu-calc-standard edu-calc-asep-main">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 
@@ -112,10 +113,14 @@
 
         <h3>Λοιπά ακαδημαϊκά προσόντα</h3>
         <div class="field-grid">
-          <div class="field">
-            <label for="computer">Πιστοποιημένη γνώση Η/Υ ή ΤΠΕ Α΄ επιπέδου<small>4 μόρια · δεν μοριοδοτείται στον ΠΕ86</small></label>
-            <select id="computer"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
-          </div>
+          <?php
+renderAsepComputerProof(array(
+    'input_id' => 'computer',
+    'control_type' => 'select',
+    'points_text' => '4 μόρια',
+    'restriction_note' => 'Δεν μοριοδοτείται στον ΠΕ86.'
+));
+?>
           <div class="field">
             <label for="training">Επιμόρφωση ≥300 ωρών και διάρκειας ≥7 μηνών<small>2 μόρια · μοριοδοτείται μία επιμόρφωση</small></label>
             <select id="training"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
@@ -777,6 +782,7 @@ renderAsepSocialCriteria(array(
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="includes/asep-computer-proof.js?v=3.20.15-rc1"></script>
   <script src="assets/common.js?v=3.20.13"></script>
 </body>
 </html>
