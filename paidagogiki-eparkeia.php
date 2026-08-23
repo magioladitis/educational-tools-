@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Έχω Παιδαγωγική και Διδακτική Επάρκεια;</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9">
+<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 
 <body class="edu-ui edu-guide-standard edu-guide-pedagogy">
@@ -662,10 +662,10 @@
 <section class="edu-source-card" aria-labelledby="sourcesTitle">
   <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
   <p>Προκηρύξεις Α.Σ.Ε.Π. <strong>1ΓΕ/2026</strong> και <strong>2ΓΕ/2026</strong>, με βάση τις προβλεπόμενες κατηγορίες αποδεικτικών Παιδαγωγικής και Διδακτικής Επάρκειας του <strong>Παραρτήματος Ε΄</strong> και τις σχετικές νομοθετικές παραπομπές που περιλαμβάνονται σε αυτό.</p>
-  <p class="source-links"><a href="https://info.asep.gr/node/78700" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 — ΑΣΕΠ ↗</a> · <a href="https://info.asep.gr/node/78701" target="_blank" rel="noopener noreferrer">2ΓΕ/2026 — ΑΣΕΠ ↗</a></p>
+  <div class="source-links"><a href="https://info.asep.gr/node/78700" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 — ΑΣΕΠ ↗</a> <a href="https://info.asep.gr/node/78701" target="_blank" rel="noopener noreferrer">2ΓΕ/2026 — ΑΣΕΠ ↗</a></div>
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9"></script>
+  <script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

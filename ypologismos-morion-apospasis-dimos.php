@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Υπολογισμός Μορίων ΔΗΜ.Ω.Σ. 2026-2027</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.9">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 <body class="edu-ui edu-page-dimos-detachment">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -439,10 +439,10 @@
 <section class="edu-source-card" aria-labelledby="sourcesTitle">
   <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
   <p><strong>28/ΔΕΔΗΜΩΣ/26-06-2026</strong>, «Πρόσκληση εκδήλωσης ενδιαφέροντος για πλήρωση λειτουργικών κενών στα Δημόσια Ωνάσεια Σχολεία με απόσπαση μόνιμων εκπαιδευτικών Δ.Ε. διάρκειας ενός διδακτικού έτους, 2026-2027» (ΑΔΑ: Ρ0ΦΛ46ΝΚΠΔ-Σ02). Η διαδικασία παραπέμπει επίσης στις Υ.Α. 81473/Δ6/03-07-2025 (Β΄ 3528) και 169485/Δ6/30-12-2025 (Β΄ 7259), όπως ισχύουν.</p>
-  <p class="source-links"><a href="https://www.minedu.gov.gr/news/65393-29-06-26-prosklisi-apospaseon-sta-dimos" target="_blank" rel="noopener noreferrer">Επίσημη πρόσκληση — ΥΠΑΙΘΑ ↗</a> · <a href="https://apps.espa.minedu.gov.gr/apospaseisdimos/" target="_blank" rel="noopener noreferrer">Επίσημη πλατφόρμα αιτήσεων ↗</a></p>
+  <div class="source-links"><a href="https://www.minedu.gov.gr/news/65393-29-06-26-prosklisi-apospaseon-sta-dimos" target="_blank" rel="noopener noreferrer">Επίσημη πρόσκληση — ΥΠΑΙΘΑ ↗</a> <a href="https://apps.espa.minedu.gov.gr/apospaseisdimos/" target="_blank" rel="noopener noreferrer">Επίσημη πλατφόρμα αιτήσεων ↗</a></div>
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9"></script>
+  <script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

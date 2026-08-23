@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Μετατροπή βαθμού πτυχίου από 10βάθμια σε 20βάθμια κλίμακα και από δεκαδική ή λεκτική μορφή σε ακέραιο μέρος, αριθμητή και παρονομαστή για 1ΓΕ/2026 και 1ΓΤ/2024.">
 <title>Μετατροπή κλίμακας βαθμού πτυχίου</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9">
+<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 <body class="edu-ui edu-page-grade-converter">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -247,10 +247,10 @@
 <section class="edu-source-card" aria-labelledby="sourcesTitle">
   <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
   <p>Για την <strong>1ΓΕ/2026</strong> χρησιμοποιείται η 10βάθμια κλίμακα του βαθμού πτυχίου και η αντίστοιχη μοριοδότηση του Κεφαλαίου Γ΄. Για την <strong>1ΓΤ/2024</strong> εφαρμόζεται η αναγωγή στην 20βάθμια κλίμακα και η καταχώριση του βαθμού σύμφωνα με την οικεία προκήρυξη. Η μετατροπή σε ακέραιο μέρος/αριθμητή/παρονομαστή είναι αριθμητική απεικόνιση για τα πεδία της αίτησης.</p>
-  <p class="source-links"><a href="https://info.asep.gr/node/78700" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 — ΑΣΕΠ ↗</a> · <a href="https://info.asep.gr/node/73068" target="_blank" rel="noopener noreferrer">1ΓΤ/2024 — ΑΣΕΠ ↗</a></p>
+  <div class="source-links"><a href="https://info.asep.gr/node/78700" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 — ΑΣΕΠ ↗</a> <a href="https://info.asep.gr/node/73068" target="_blank" rel="noopener noreferrer">1ΓΤ/2024 — ΑΣΕΠ ↗</a></div>
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9"></script>
+  <script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

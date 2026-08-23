@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων και βασικός έλεγχος δικαιώματος για απόσπαση εκπαιδευτικών σε ελληνόγλωσσες εκπαιδευτικές μονάδες του εξωτερικού.">
   <title>Μόρια Απόσπασης στο Εξωτερικό</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.9">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 <body class="edu-ui edu-page-abroad">
 <main class="page-shell">
@@ -302,20 +302,21 @@
     </aside>
   </div>
 
-  <div class="source-note">
-    <strong>Πηγή:</strong> Υ.Α. 83046/Η2/30-06-2020, ΦΕΚ Β΄ 2687/01.07.2020, ιδίως άρθρα 2–3.
-    Η πρόσκληση 11771/Η2/30-01-2026 για το σχολικό έτος 2026-2027 και το 2027 Νοτίου Ημισφαιρίου εξακολουθεί να χρησιμοποιεί την παραπάνω Υ.Α. για την κατάρτιση των πινάκων και τη μοριοδότηση.
-    Ο πίνακας χωρών/ειδικοτήτων έχει ενσωματωθεί από το <strong>Παράρτημα ΙΙΙ</strong> και τα μηνιαία επιμίσθια από το <strong>Παράρτημα V</strong> της πρόσκλησης 11771/Η2/30-01-2026 (ΑΔΑ: 9Η5Ο46ΝΚΠΔ-Λ91).
-    Στο Παράρτημα V τα ποσά αναγράφονται σε ευρώ και σημειώνεται ότι το επιμίσθιο είναι <strong>αφορολόγητο από 01-01-2012</strong> (ν. 4038/2012). Ο ισχύων Κώδικας Φορολογίας Εισοδήματος εξαιρεί επίσης το επίδομα αλλοδαπής των λοιπών δημόσιων πολιτικών υπηρεσιών από το εισόδημα μισθωτής εργασίας (άρθρο 14 παρ. 1γ ν. 4172/2013).
-    Ως προς τις ειδικές κρατήσεις, η παλαιά εισφορά <strong>1% υπέρ ΤΠΔΥ έχει καταργηθεί</strong> με το άρθρο 84 ν. 4997/2022, ενώ η ειδική εισφορά αλληλεγγύης για την καταπολέμηση της ανεργίας <strong>2%</strong> της παρ. 2α του άρθρου 38 ν. 3986/2011 εξακολουθεί να ισχύει. Επειδή το Παράρτημα V της πρόσκλησης 2026 αναφέρει το αφορολόγητο αλλά δεν επαναλαμβάνει αναλυτικό πίνακα κρατήσεων, το εργαλείο εμφανίζει το 98% ως <strong>ενδεικτικό ποσό μετά τη νόμιμη κράτηση 2%</strong> και όχι ως δεσμευτική εκκαθάριση μισθοδοσίας.
-    Το «ενδεικτικό 12μηνο» είναι απλός πολλαπλασιασμός του μηνιαίου ποσού × 12. Τυχόν φορολογικές υποχρεώσεις στη χώρα υποδοχής, τραπεζικά έξοδα ή άλλες προσωπικές/τοπικές επιβαρύνσεις δεν περιλαμβάνονται.
-    Το εργαλείο αφορά τις ελληνόγλωσσες εκπαιδευτικές μονάδες εξωτερικού και δεν υποκαθιστά τον έλεγχο της πρόσκλησης, της μισθοδοτικής εκκαθάρισης και των ειδικών τοπικών προϋποθέσεων.
-    <a href="https://www.minedu.gov.gr/news/63949-30-01-26-prosklisi-ekdilosis-endiaferontos-ekpaideftikon-gia-apospasi-sto-eksoteriko-apo-to-sxoliko-etos-2026-2027-kai-apo-to-etos-2027-notiou-imisfairiou" target="_blank" rel="noopener">Επίσημη ανακοίνωση ΥΠΑΙΘΑ</a> ·
-    <a href="https://www.minedu.gov.gr/publications/docs2026/9%CE%975%CE%9F46%CE%9D%CE%9A%CE%A0%CE%94-%CE%9B91_%CE%A0%CE%A1%CE%9F%CE%A3%CE%9A%CE%9B%CE%97%CE%A3%CE%97_%CE%95%CE%9D%CE%94%CE%99%CE%91%CE%A6%CE%95%CE%A1%CE%9F%CE%9D%CE%A4%CE%9F%CE%A3_%CE%93%CE%99%CE%91_%CE%A3%CE%A7_%CE%95%CE%A4%CE%9F%CE%A3_2026-2027-%CE%9D.%CE%97_2027.pdf" target="_blank" rel="noopener">Πρόσκληση — Παράρτημα V (PDF)</a> ·
-    <a href="https://elib.aade.gr/elib/printview?d=%2Fgr%2Fact%2F2013%2F4172%2Fmain%2Fsec%2F1%2Fpart%2F6%2Fart%2F67%2F" target="_blank" rel="noopener">ΚΦΕ — άρθρο 14 παρ. 1γ</a> ·
-    <a href="https://www.efka.gov.gr/el/menoy/sychnes-eroteseis/asphalisi-eisphores/asphalismenoi/misthotoi-demosioy-tomea/epistrophe-achreostetos-katabletheison-eisphoron/epistrophe-tes-eidikes-eisphoras-1-yper-tpdy" target="_blank" rel="noopener">e-ΕΦΚΑ — κατάργηση 1% ΤΠΔΥ</a> ·
-    <a href="https://www.e-nomothesia.gr/kat-oikonomia/n-3986-2011.html" target="_blank" rel="noopener">ν. 3986/2011 — άρθρο 38</a>.
-  </div>
+  <section class="edu-source-card" aria-labelledby="sourcesTitle">
+    <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+    <p><strong>Πηγή:</strong> Υ.Α. 83046/Η2/30-06-2020, ΦΕΚ Β΄ 2687/01.07.2020, ιδίως άρθρα 2–3. Η πρόσκληση 11771/Η2/30-01-2026 για το σχολικό έτος 2026-2027 και το 2027 Νοτίου Ημισφαιρίου εξακολουθεί να χρησιμοποιεί την παραπάνω Υ.Α. για την κατάρτιση των πινάκων και τη μοριοδότηση. Ο πίνακας χωρών/ειδικοτήτων έχει ενσωματωθεί από το <strong>Παράρτημα ΙΙΙ</strong> και τα μηνιαία επιμίσθια από το <strong>Παράρτημα V</strong> της πρόσκλησης 11771/Η2/30-01-2026 (ΑΔΑ: 9Η5Ο46ΝΚΠΔ-Λ91).</p>
+    <p>Στο Παράρτημα V τα ποσά αναγράφονται σε ευρώ και σημειώνεται ότι το επιμίσθιο είναι <strong>αφορολόγητο από 01-01-2012</strong> (ν. 4038/2012). Ο ισχύων Κώδικας Φορολογίας Εισοδήματος εξαιρεί επίσης το επίδομα αλλοδαπής των λοιπών δημόσιων πολιτικών υπηρεσιών από το εισόδημα μισθωτής εργασίας (άρθρο 14 παρ. 1γ ν. 4172/2013).</p>
+    <p>Ως προς τις ειδικές κρατήσεις, η παλαιά εισφορά <strong>1% υπέρ ΤΠΔΥ έχει καταργηθεί</strong> με το άρθρο 84 ν. 4997/2022, ενώ η ειδική εισφορά αλληλεγγύης για την καταπολέμηση της ανεργίας <strong>2%</strong> της παρ. 2α του άρθρου 38 ν. 3986/2011 εξακολουθεί να ισχύει. Επειδή το Παράρτημα V της πρόσκλησης 2026 αναφέρει το αφορολόγητο αλλά δεν επαναλαμβάνει αναλυτικό πίνακα κρατήσεων, το εργαλείο εμφανίζει το 98% ως <strong>ενδεικτικό ποσό μετά τη νόμιμη κράτηση 2%</strong> και όχι ως δεσμευτική εκκαθάριση μισθοδοσίας.</p>
+    <p>Το «ενδεικτικό 12μηνο» είναι απλός πολλαπλασιασμός του μηνιαίου ποσού × 12. Τυχόν φορολογικές υποχρεώσεις στη χώρα υποδοχής, τραπεζικά έξοδα ή άλλες προσωπικές/τοπικές επιβαρύνσεις δεν περιλαμβάνονται.</p>
+    <div class="source-links">
+<a href="https://www.minedu.gov.gr/news/63949-30-01-26-prosklisi-ekdilosis-endiaferontos-ekpaideftikon-gia-apospasi-sto-eksoteriko-apo-to-sxoliko-etos-2026-2027-kai-apo-to-etos-2027-notiou-imisfairiou" target="_blank" rel="noopener noreferrer">Επίσημη ανακοίνωση ΥΠΑΙΘΑ</a>
+    <a href="https://www.minedu.gov.gr/publications/docs2026/9%CE%975%CE%9F46%CE%9D%CE%9A%CE%A0%CE%94-%CE%9B91_%CE%A0%CE%A1%CE%9F%CE%A3%CE%9A%CE%9B%CE%97%CE%A3%CE%97_%CE%95%CE%9D%CE%94%CE%99%CE%91%CE%A6%CE%95%CE%A1%CE%9F%CE%9D%CE%A4%CE%9F%CE%A3_%CE%93%CE%99%CE%91_%CE%A3%CE%A7_%CE%95%CE%A4%CE%9F%CE%A3_2026-2027-%CE%9D.%CE%97_2027.pdf" target="_blank" rel="noopener noreferrer">Πρόσκληση — Παράρτημα V (PDF)</a>
+    <a href="https://elib.aade.gr/elib/printview?d=%2Fgr%2Fact%2F2013%2F4172%2Fmain%2Fsec%2F1%2Fpart%2F6%2Fart%2F67%2F" target="_blank" rel="noopener noreferrer">ΚΦΕ — άρθρο 14 παρ. 1γ</a>
+    <a href="https://www.efka.gov.gr/el/menoy/sychnes-eroteseis/asphalisi-eisphores/asphalismenoi/misthotoi-demosioy-tomea/epistrophe-achreostetos-katabletheison-eisphoron/epistrophe-tes-eidikes-eisphoras-1-yper-tpdy" target="_blank" rel="noopener noreferrer">e-ΕΦΚΑ — κατάργηση 1% ΤΠΔΥ</a>
+    <a href="https://www.e-nomothesia.gr/kat-oikonomia/n-3986-2011.html" target="_blank" rel="noopener noreferrer">ν. 3986/2011 — άρθρο 38</a>
+    </div>
+    <p class="source-disclaimer">Το εργαλείο αφορά τις ελληνόγλωσσες εκπαιδευτικές μονάδες εξωτερικού και δεν υποκαθιστά τον έλεγχο της πρόσκλησης, της μισθοδοτικής εκκαθάρισης και των ειδικών τοπικών προϋποθέσεων.</p>
+  </section>
 
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
@@ -782,6 +783,6 @@
   calculate();
 })();
 </script>
-  <script src="assets/common.js?v=3.20.9"></script>
+  <script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

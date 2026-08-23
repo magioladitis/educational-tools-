@@ -6,7 +6,7 @@
   <meta name="description" content="Ενδεικτικός υπολογισμός μορίων απόσπασης εκπαιδευτικών από ΠΥΣΠΕ/ΠΥΣΔΕ σε ΠΥΣΠΕ/ΠΥΣΔΕ για το διδακτικό έτος 2026-2027.">
   <title>Υπολογισμός μορίων απόσπασης εκπαιδευτικών</title>
 
-  <link rel="stylesheet" href="assets/common.css?v=3.20.9">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 
 <body class="edu-ui edu-page-detachment">
@@ -23,16 +23,6 @@
   </p>
 </section>
 
-  <div class="official-note">
-    <strong>Πηγές / Νομική βάση:</strong><br>
-    <strong>Βάση υπολογισμού:</strong> Εγκύκλιος Υ.ΠΑΙ.Θ.Α. 41297/Ε2/02-04-2026
-    για τις αποσπάσεις εκπαιδευτικών του διδακτικού έτους 2026-2027.
-    Ο υπολογιστής αφορά την <strong>Ενότητα Α – Αποσπάσεις με κριτήρια μοριοδότησης</strong>
-    και δεν υποκαθιστά τον επίσημο έλεγχο της αίτησης.
-    <br>
-    <a href="https://www.minedu.gov.gr/site/64683-02-04-26-prosklisi-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-gia-ypovoli-aitiseon-apospaseon-apo-pyspe-pysde-se-pyspe-pysde-se-domes-e-a-e-ke-d-a-s-y-mousika-kai-kallitexnika-sxoleia-gia-to-didaktiko-etos-2026-2027"
-       target="_blank" rel="noopener noreferrer">Επίσημη πρόσκληση Υ.ΠΑΙ.Θ.Α.</a>
-  </div>
 
   <div class="section">
     <h2>Α. Προκαταρκτικός έλεγχος δικαιώματος / κωλύματος</h2>
@@ -364,6 +354,14 @@
   </div>
 
   <div id="result" class="result" role="status" aria-live="polite"></div>
+
+
+  <section class="edu-source-card" aria-labelledby="sourcesTitle">
+    <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+    <p><strong>Βάση υπολογισμού:</strong> Εγκύκλιος Υ.ΠΑΙ.Θ.Α. 41297/Ε2/02-04-2026 για τις αποσπάσεις εκπαιδευτικών του διδακτικού έτους 2026-2027. Ο υπολογιστής αφορά την <strong>Ενότητα Α – Αποσπάσεις με κριτήρια μοριοδότησης</strong>.</p>
+    <div class="source-links"><a href="https://www.minedu.gov.gr/site/64683-02-04-26-prosklisi-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-gia-ypovoli-aitiseon-apospaseon-apo-pyspe-pysde-se-pyspe-pysde-se-domes-e-a-e-ke-d-a-s-y-mousika-kai-kallitexnika-sxoleia-gia-to-didaktiko-etos-2026-2027" target="_blank" rel="noopener noreferrer">Επίσημη πρόσκληση — Υ.ΠΑΙ.Θ.Α. ↗</a></div>
+    <p class="source-disclaimer">Δεν υποκαθιστά τον επίσημο έλεγχο της αίτησης.</p>
+  </section>
 
   <p class="small-note">
     <strong>Σημαντικό:</strong> Το αποτέλεσμα είναι ενδεικτικό. Η εφαρμογή κάνει βοηθητικό έλεγχο ορισμένων
@@ -745,6 +743,6 @@
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9"></script>
+  <script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

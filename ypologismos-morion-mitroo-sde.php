@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων Μητρώου ΣΔΕ για ωρομίσθιο εκπαιδευτικό προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας βάσει της Υ.Α. 75975/Κ1, ΦΕΚ Β' 3224/25.06.2025.">
   <title>Μόρια Μητρώου ΣΔΕ</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9">
+<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 <body class="edu-ui edu-calc-sde edu-page-sde-registry">
 <main class="page-shell">
@@ -134,12 +134,13 @@
 </aside>
 </div>
 
-<section class="source-card edu-source-card">
-  <h2>Πηγές / Νομική βάση</h2>
+<section class="edu-source-card" aria-labelledby="sourcesTitle">
+  <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
   <p><strong>Υ.Α. 75975/Κ1 — ΦΕΚ Β΄ 3224/25.06.2025</strong>, «Κανονισμός Διαχείρισης του Μητρώου Ωρομίσθιου Εκπαιδευτικού Προσωπικού, Συμβούλων Σταδιοδρομίας και Συμβούλων Ψυχολόγων στα Σχολεία Δεύτερης Ευκαιρίας (Σ.Δ.Ε.) — Καθορισμός της διαδικασίας και των κριτηρίων επιλογής και μοριοδότησης».</p>
   <p><strong>Άρθρο 3:</strong> προϋποθέσεις ένταξης και κλάδοι εκπαιδευτικού προσωπικού. <strong>Άρθρα 10–12:</strong> μοριοδότηση Εκπαιδευτικού Προσωπικού, Συμβούλων Ψυχολόγων και Συμβούλων Σταδιοδρομίας. <strong>Άρθρο 14:</strong> προτεραιότητα πιστοποιημένων Εκπαιδευτών Ενηλίκων ΕΟΠΠΕΠ.</p>
   <p><strong>Πρόσκληση Μητρώου ΣΔΕ 2025–2026, Κεφάλαιο Γ §9:</strong> οι υποψήφιοι ΠΕ86 που χρησιμοποιούν πτυχίο Πληροφορικής ως βασικό πτυχίο ένταξης δεν αξιολογούνται στο πεδίο «Γνώση Χειρισμού Η/Υ».</p>
-  <p class="small">Ο υπολογισμός είναι ενημερωτικός. Ειδικά για την ασυμφωνία του άρθρου 12 §2.1, το εργαλείο χρησιμοποιεί το πλαφόν 7 μορίων που συμφωνεί με τη στήλη του πίνακα και με το συνολικό όριο των 13 μορίων της κατηγορίας.</p>
+  <div class="source-links"><a href="https://gsvetlly.minedu.gov.gr/publications/docs2023/DELTIA_TYPOU/2025/%CE%91%CE%A0%CE%9F%CE%A6%CE%91%CE%A3%CE%97_%CE%93%CE%99%CE%91_%CE%A3%CE%94%CE%95_%CE%A6%CE%95%CE%9A_3224%CE%92-25.06.2025.pdf" target="_blank" rel="noopener noreferrer">Υ.Α. 75975/Κ1 — ΦΕΚ Β΄ 3224/2025 (ΥΠΑΙΘΑ) ↗</a> <a href="https://gsvetlly.minedu.gov.gr/nea-anakoinoseis/512-prosklese-ekdeloses-endiapherontos-ypoboles-aiteses-entaxes-kai-epikairopoieses-prosthekes-stoicheion-sto-metroo-oromisthiou-ekpaideutikou-prosopikou-symboulon-stadiodromias-kai-symboulon-psychologon-ton-scholeion-deuteres-eukairias-metroo-s-d-e-1o-stadio" target="_blank" rel="noopener noreferrer">Πρόσκληση Μητρώου ΣΔΕ 2025–2026 — ΥΠΑΙΘΑ ↗</a></div>
+  <p class="source-disclaimer">Ο υπολογισμός είναι ενημερωτικός. Ειδικά για την ασυμφωνία του άρθρου 12 §2.1, το εργαλείο χρησιμοποιεί το πλαφόν 7 μορίων που συμφωνεί με τη στήλη του πίνακα και με το συνολικό όριο των 13 μορίων της κατηγορίας.</p>
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
@@ -190,5 +191,5 @@ function copySummary(btn){const d=data(),r=SDERegistryCalc.calculateAll(d);let t
 function resetForm(){document.querySelectorAll('input[type="number"]').forEach(x=>x.value='0');document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);$('fppBefore1993').value='no';$('eoppepAdultTrainer').value='no';roleChanged();psychFppChanged();}
 fillSpecialties();roleChanged();
 </script>
-<script src="assets/common.js?v=3.20.9"></script>
+<script src="assets/common.js?v=3.20.10"></script>
 </body></html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Υπολογισμός μορίων απόσπασης εκπαιδευτικών στα Ευρωπαϊκά Σχολεία με βάση την πρόσκληση 33598/Η2/18-3-2026.">
 <title>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9">
+<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 <body class="edu-ui edu-page-european-schools">
 <main class="page-shell">
@@ -60,7 +60,7 @@
 </div>
 <aside class="card results" aria-live="polite"><h2>Αποτέλεσμα</h2><div class="stage"><div class="stage-label">1ο στάδιο · πριν τη συνέντευξη</div><div class="stage-number"><span id="preInterviewTotal">0</span> <small class="edu-stage-suffix">/ 50</small></div></div><div class="result-row"><span>Α. Κατάρτιση</span><strong id="academicResult">0 / 32</strong></div><div class="result-row"><span>Β. Υπηρεσία / εμπειρία</span><strong id="serviceResult">0 / 18</strong></div><div class="result-row"><span>Γ. Συνέντευξη</span><strong id="interviewResult">— / 40</strong></div><details class="breakdown-box"><summary>Αναλυτική κατανομή μορίων</summary><div id="academicBreakdown" class="breakdown-list"></div><div id="serviceBreakdown" class="breakdown-list"></div></details><div class="stage"><div class="stage-label">Τελική βαθμολογία</div><div class="stage-number final" id="finalTotal">—</div><div id="finalHelp" class="edu-small-muted">Συμπλήρωσε όλα τα πεδία της συνέντευξης για τελικό /90.</div></div><div id="eligibilityStatus" role="status" aria-live="polite"></div><div class="actions"><button type="button" class="primary" id="copyBtn">Αντιγραφή σύνοψης</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div></aside>
 </div>
-<div class="source-note"><strong>Πηγές / Νομική βάση:</strong><br><strong>Πηγή:</strong> Πρόσκληση 33598/Η2/18-03-2026 για απόσπαση εκπαιδευτικών στα Ευρωπαϊκά Σχολεία και η αναφερόμενη Υ.Α. 26754/Η2/10-03-2022 (Β΄1165, διόρθωση Β΄1300). Το εργαλείο είναι ενημερωτικό.</div>
+<section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Πηγή:</strong> Πρόσκληση 33598/Η2/18-03-2026 για απόσπαση εκπαιδευτικών στα Ευρωπαϊκά Σχολεία και η αναφερόμενη Υ.Α. 26754/Η2/10-03-2022 (Β΄1165, διόρθωση Β΄1300).</p><p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό.</p></section>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
 <script src="includes/european-schools-calculations.js?v=3.6"></script>
@@ -118,6 +118,6 @@ async function copySummary(){const r=calculate(),p=EuropeanSchools.POSITIONS_202
 function reset(){document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('input[type="number"]').forEach(x=>x.value='');document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);['higherEducationSemesters','innovativePrograms','universityTrainingCount','ministryTrainingHours','publicAdminTrainingHours','eapAnnualUnits','eapSemesterUnits'].forEach(id=>$(id).value='0');['hostLanguageLevel','secondWorkingLevel','thirdWorkingLevel','otherEULevel'].forEach(id=>$(id).value='none');calculate();$('position').focus()}
 normalizeVisibleBranchLabels();ids.forEach(id=>{const e=$(id);if(e){e.addEventListener('input',calculate);e.addEventListener('change',calculate)}});$('copyBtn').addEventListener('click',copySummary);$('resetBtn').addEventListener('click',reset);calculate();})();
 </script>
-  <script src="assets/common.js?v=3.20.9"></script>
+  <script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

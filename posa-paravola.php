@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Μάθε σε ποια προκήρυξη μπορείς να συμμετέχεις και πόσα παράβολα χρειάζεσαι</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9">
+<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 
 <body class="edu-ui edu-guide-standard edu-guide-paravolo">
@@ -245,10 +245,10 @@
 <section class="edu-source-card" aria-labelledby="sourcesTitle">
   <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
   <p>Προκηρύξεις Α.Σ.Ε.Π. <strong>1ΓΕ/2026</strong> και <strong>2ΓΕ/2026</strong>. Η υποχρέωση έκδοσης e-Παραβόλου και το ποσό των <strong>15 € ανά προκήρυξη</strong> προκύπτουν από τους όρους υποβολής της αντίστοιχης αίτησης.</p>
-  <p class="source-links"><a href="https://info.asep.gr/node/78737" target="_blank" rel="noopener noreferrer">Έκδοση ΦΕΚ 1ΓΕ/2026 &amp; 2ΓΕ/2026 — ΑΣΕΠ ↗</a> · <a href="https://info.asep.gr/node/78799" target="_blank" rel="noopener noreferrer">Υποβολή αιτήσεων — ΑΣΕΠ ↗</a></p>
+  <div class="source-links"><a href="https://info.asep.gr/node/78737" target="_blank" rel="noopener noreferrer">Έκδοση ΦΕΚ 1ΓΕ/2026 &amp; 2ΓΕ/2026 — ΑΣΕΠ ↗</a> <a href="https://info.asep.gr/node/78799" target="_blank" rel="noopener noreferrer">Υποβολή αιτήσεων — ΑΣΕΠ ↗</a></div>
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.9"></script>
+  <script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

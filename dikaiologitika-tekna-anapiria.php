@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Οδηγός δικαιολογητικών τέκνων και αναπηρίας</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.9">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 <body class="edu-ui edu-guide-standard edu-guide-children-disability">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -118,7 +118,7 @@
 <section class="edu-source-card" aria-labelledby="sourcesTitle">
   <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
   <p>Προκηρύξεις Α.Σ.Ε.Π. <strong>1ΓΕ/2026</strong> και <strong>2ΓΕ/2026</strong>, κοινωνικά κριτήρια και δικαιολογητικά για τέκνα και αναπηρία.</p>
-  <p class="source-links"><a href="https://info.asep.gr/node/78700" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 — ΑΣΕΠ ↗</a> · <a href="https://info.asep.gr/node/78701" target="_blank" rel="noopener noreferrer">2ΓΕ/2026 — ΑΣΕΠ ↗</a></p>
+  <div class="source-links"><a href="https://info.asep.gr/node/78700" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 — ΑΣΕΠ ↗</a> <a href="https://info.asep.gr/node/78701" target="_blank" rel="noopener noreferrer">2ΓΕ/2026 — ΑΣΕΠ ↗</a></div>
 </section>
 </div>
 
@@ -239,6 +239,6 @@ function showDocuments(){
 }
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-<script src="assets/common.js?v=3.20.9"></script>
+<script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

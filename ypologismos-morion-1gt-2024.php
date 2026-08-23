@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΓΤ/2024 για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16.">
   <title>Υπολογισμός μορίων 1ΓΤ/2024</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.10">
+<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-gt1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -236,9 +236,11 @@ HTML
     </aside>
   </div>
 
-  <section class="source">
-    <strong>Πηγή:</strong> Προκήρυξη ΑΣΕΠ 1ΓΤ/2024, ΦΕΚ Α.Σ.Ε.Π. 25/10.07.2024, Κεφάλαιο Γ΄ «Κριτήρια Κατάταξης».<br>
-    Το εργαλείο είναι ενημερωτικό. Η τελική μοριοδότηση προκύπτει από τον έλεγχο της αίτησης και των δικαιολογητικών από τα αρμόδια όργανα.
+  <section class="edu-source-card" aria-labelledby="sourcesTitle">
+    <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+    <p><strong>Πηγή:</strong> Προκήρυξη ΑΣΕΠ 1ΓΤ/2024, ΦΕΚ Α.Σ.Ε.Π. 25/10.07.2024, Κεφάλαιο Γ΄ «Κριτήρια Κατάταξης».</p>
+    <div class="source-links"><a href="https://info.asep.gr/node/73068" target="_blank" rel="noopener noreferrer">1ΓΤ/2024 — ΑΣΕΠ ↗</a></div>
+    <p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό. Η τελική μοριοδότηση προκύπτει από τον έλεγχο της αίτησης και των δικαιολογητικών από τα αρμόδια όργανα.</p>
   </section>
 
   <div class="credits">Υλοποίηση / επεξεργασία: Μάριος Μαγιολαδίτης</div>

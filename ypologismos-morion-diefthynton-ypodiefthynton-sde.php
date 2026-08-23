@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (ΣΔΕ) βάσει της Υ.Α. 70621/Κ1, ΦΕΚ Β' 3037/19.06.2025.">
   <title>Μόρια Διευθυντών & Υποδιευθυντών ΣΔΕ</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.9">
+<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 <body class="edu-ui edu-calc-sde edu-page-sde-leadership">
 <main class="page-shell">
@@ -194,7 +194,7 @@
     </aside>
   </div>
 
-  <p class="source-note"><strong>Πηγές / Νομική βάση:</strong><br><strong>Πηγή:</strong> Υ.Α. 70621/Κ1, ΦΕΚ Β΄ 3037/19.06.2025 «Καθορισμός κριτηρίων και διαδικασίας επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (Σ.Δ.Ε.)». Το εργαλείο παρέχει ενδεικτικό υπολογισμό· η τελική κρίση ανήκει στην αρμόδια Επιτροπή Επιλογής.</p>
+  <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Πηγή:</strong> Υ.Α. 70621/Κ1, ΦΕΚ Β΄ 3037/19.06.2025 «Καθορισμός κριτηρίων και διαδικασίας επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (Σ.Δ.Ε.)».</p><p class="source-disclaimer">Το εργαλείο παρέχει ενδεικτικό υπολογισμό· η τελική κρίση ανήκει στην αρμόδια Επιτροπή Επιλογής.</p></section>
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
 <script src="includes/sde-leadership-calculations.js?v=3.15"></script>
@@ -342,6 +342,6 @@
 
   roleChanged();
 </script>
-<script src="assets/common.js?v=3.20.9"></script>
+<script src="assets/common.js?v=3.20.10"></script>
 </body>
 </html>

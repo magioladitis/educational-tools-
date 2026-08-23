@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 4ΕΑ/2025 για εκπαιδευτικούς Ειδικής Αγωγής κατηγορίας ΤΕ (ΤΕ01, ΤΕ02, ΤΕ16).">
   <title>Υπολογισμός μορίων 4ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.10">
+<link rel="stylesheet" href="assets/common.css?v=3.20.12-rc1">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea4">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -329,10 +329,11 @@ HTML
     </aside>
   </div>
 
-  <section class="source">
-    <strong>Πηγές / Νομική βάση:</strong> Προκήρυξη ΑΣΕΠ <strong>4ΕΑ/2025</strong>, <strong>ΦΕΚ Α.Σ.Ε.Π. 42/18.08.2025</strong>, ιδίως Κεφάλαια Β΄, Γ΄ και Δ΄.<br>
-    <a href="https://info.asep.gr/node/77020" target="_blank" rel="noopener noreferrer">Επίσημη σελίδα 4ΕΑ/2025 στο ΑΣΕΠ ↗</a><br>
-    Το εργαλείο είναι ενημερωτικό. Η τελική ένταξη σε πίνακα και η μοριοδότηση προκύπτουν από τον έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από τα αρμόδια όργανα.
+  <section class="edu-source-card" aria-labelledby="sourcesTitle">
+    <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+    <p>Προκήρυξη ΑΣΕΠ <strong>4ΕΑ/2025</strong>, <strong>ΦΕΚ Α.Σ.Ε.Π. 42/18.08.2025</strong>, ιδίως Κεφάλαια Β΄, Γ΄ και Δ΄.</p>
+    <div class="source-links"><a href="https://info.asep.gr/node/77020" target="_blank" rel="noopener noreferrer">Επίσημη σελίδα 4ΕΑ/2025 στο ΑΣΕΠ ↗</a></div>
+    <p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό. Η τελική ένταξη σε πίνακα και η μοριοδότηση προκύπτουν από τον έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από τα αρμόδια όργανα.</p>
   </section>
 </div>
 
