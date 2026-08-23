@@ -10,24 +10,23 @@
 
 <body class="edu-ui edu-calc-standard edu-calc-asep-main">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-pe-academic.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-digital-tutoring-service.php'; ?>
 
 <div class="app">
-<section class="hero">
-    <h1>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</h1>
-    <p>Ενδεικτικός υπολογισμός για τους αξιολογικούς πίνακες Γενικής Εκπαίδευσης κατηγορίας Π.Ε.</p>
-    <div class="meta">
-      <span>1ΓΕ/2026</span><span>2ΓΕ/2026</span>
-      <span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span>
-    </div>
-  </section>
+<?php calculatorHero(array(
+    'title_html' => 'Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026',
+    'intro' => 'Ενδεικτικός υπολογισμός για τους αξιολογικούς πίνακες Γενικής Εκπαίδευσης κατηγορίας Π.Ε.',
+    'meta_class' => 'meta',
+    'badges' => array('1ΓΕ/2026', '2ΓΕ/2026', 'Ακαδημαϊκά έως 120', 'Προϋπηρεσία έως 120')
+)); ?>
 
-  <div class="layout">
-    <div>
-      <section class="card">
+  <?php calculatorColumnsStart(); ?>
+    <?php calculatorMainStart(); ?>
+      <?php calculatorCardStart(); ?>
         <h2>Κλάδος / ειδικότητα</h2>
         <p class="cap">Ο κλάδος εφαρμόζει τους ειδικούς κανόνες της προκήρυξης, όπως τις εξαιρέσεις ξένων γλωσσών και τη μη μοριοδότηση Η/Υ στον ΠΕ86.</p>
 
@@ -50,9 +49,9 @@
             </select>
           </div>
         </div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <h2>Α. Ακαδημαϊκά προσόντα</h2>
         <p class="cap">Μέγιστο κατηγορίας: 120 μόρια</p>
 <?php
@@ -65,9 +64,9 @@ renderAsepPeAcademic(array(
     'subtotal_id' => 'academicSubtotal'
 ));
 ?>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section id="asepService" class="card" data-component="asep-service-criteria" data-subtotal-id="serviceSubtotal" data-subtotal-with-cap="true">
+      <?php calculatorCardStart(array('id' => 'asepService', 'attrs' => array('data-component' => 'asep-service-criteria', 'data-subtotal-id' => 'serviceSubtotal', 'data-subtotal-with-cap' => 'true'))); ?>
         <h2>Β. Εκπαιδευτική προϋπηρεσία</h2>
         <p class="cap">Μέγιστο κατηγορίας: 120 μόρια</p>
 
@@ -93,7 +92,7 @@ renderAsepThreeMonthService(array(
 
 <?php renderAsepDigitalTutoringService(array('container_id' => 'digitalTutoring', 'input_class' => 'service-months')); ?>
         <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
 <?php
 renderAsepSocialCriteria(array(
@@ -118,9 +117,9 @@ renderAsepSocialCriteria(array(
 ?>
 
       <p class="small-note">Το αποτέλεσμα είναι ενδεικτικό και δεν αντικαθιστά την επίσημη προκήρυξη, τον έλεγχο του Α.Σ.Ε.Π., τον Ο.Π.ΣΥ.Δ. ή τον επίσημο πίνακα κατάταξης.</p>
-    </div>
+    <?php calculatorMainEnd(); ?>
 
-    <aside class="card results" aria-live="polite">
+    <?php calculatorResultsStart(array('class' => 'card results', 'aria_live' => 'polite')); ?>
       <div class="total">
         <div class="num" id="grandTotal">0,00</div>
         <div class="label">συνολικά μόρια</div>
@@ -140,8 +139,8 @@ renderAsepSocialCriteria(array(
       </div>
 
       <div class="info-note edu-mt-14">Η τελική σειρά κατάταξης εξαρτάται από τους κανόνες της αντίστοιχης προκήρυξης και τον επίσημο έλεγχο των δικαιολογητικών.</div>
-    </aside>
-  </div>
+    <?php calculatorResultsEnd(); ?>
+  <?php calculatorColumnsEnd(); ?>
 
   <div id="result" class="result" role="status" aria-live="polite"></div>
 

@@ -11,23 +11,20 @@
 <body class="edu-ui edu-calc-sde edu-page-sde-apospasis">
 <main class="page-shell">
   <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
-  <section class="hero">
-    <h1>Υπολογισμός μορίων απόσπασης στα ΣΔΕ</h1>
-    <p>Ενδεικτικός υπολογισμός μορίων και έλεγχος αποδεκτής ειδικότητας/γραμματισμού για απόσπαση μονίμων εκπαιδευτικών στα Σχολεία Δεύτερης Ευκαιρίας.</p>
-    <div class="hero-meta">
-      <span>Σύνολο: 40 μόρια</span>
-      <span>Εκπαίδευση: 22</span>
-      <span>Διδακτική εμπειρία: 13</span>
-      <span>Άλλα προσόντα: 5</span>
-    </div>
-  </section>
+  <?php calculatorHero(array(
+    'title' => 'Υπολογισμός μορίων απόσπασης στα ΣΔΕ',
+    'intro' => 'Ενδεικτικός υπολογισμός μορίων και έλεγχος αποδεκτής ειδικότητας/γραμματισμού για απόσπαση μονίμων εκπαιδευτικών στα Σχολεία Δεύτερης Ευκαιρίας.',
+    'meta_class' => 'hero-meta',
+    'badges' => array('Σύνολο: 40 μόρια', 'Εκπαίδευση: 22', 'Διδακτική εμπειρία: 13', 'Άλλα προσόντα: 5')
+)); ?>
 
   <div class="success sde-update-banner"><strong>Ενημερωμένος πίνακας μοριοδότησης:</strong> ο υπολογισμός εφαρμόζει τη Διόρθωση Σφάλματος του ΦΕΚ Β΄ 4199/10.07.2026 (Εκπαίδευση 22, Άλλα προσόντα 5, Η/Υ 2 και μοριοδότηση τυπικής εκπαίδευσης από το 1ο έτος).</div>
 
-  <div class="layout">
-    <div>
-      <section class="card">
+  <?php calculatorColumnsStart(); ?>
+    <?php calculatorMainStart(); ?>
+      <?php calculatorCardStart(); ?>
         <div class="section-head">
           <div><h2>1. Ειδικότητα &amp; αποδεκτοί γραμματισμοί</h2><p class="subtitle">Επίλεξε τον κλάδο σου για να εμφανιστούν οι Α΄/Β΄ αναθέσεις που προβλέπονται στο άρθρο 5.</p></div>
         </div>
@@ -106,9 +103,9 @@
             </table>
           </div>
         </details>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <div class="section-head"><div><h2>2. Εκπαίδευση</h2><p class="subtitle">Τυπικά προσόντα έως 18 + επιμόρφωση έως 4.</p></div><div class="max">έως 22</div></div>
         <div class="field-grid">
           <div class="field">
@@ -142,9 +139,9 @@
         </div>
         <div class="note"><strong>Επιμόρφωση:</strong> δήλωσε μόνο ολοκληρωμένες επιμορφώσεις από δημόσιους ή ιδιωτικούς φορείς εκπαίδευσης. Δεν μοριοδοτούνται επιμορφώσεις κάτω των 15 ωρών, ημερίδες/διημερίδες/συνέδρια ούτε επιμόρφωση που ήταν προαπαιτούμενη για πιστοποίηση εκπαιδευτών Μητρώου ΕΟΠΠΕΠ/ΕΚΕΠΙΣ.</div>
         <div class="warning">Δεν μοριοδοτείται τίτλος σπουδών που αποτέλεσε προσόν διορισμού. Αν υπάρχει διδακτορικό και μεταπτυχιακός τίτλος, το ΦΕΚ ορίζει ότι μοριοδοτείται μόνο το διδακτορικό. Το εργαλείο δεν προσμετρά τον πρώτο μεταπτυχιακό όταν δηλώνεται διδακτορικό. Το «δεύτερο μεταπτυχιακό» παραμένει ξεχωριστό πεδίο, όπως στον πίνακα του ΦΕΚ.</div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <div class="section-head"><div><h2>3. Διδακτική εμπειρία</h2><p class="subtitle">Μοριοδοτείται μόνο διδακτική εμπειρία σύμφωνα με τους ειδικούς κανόνες του άρθρου 6.</p></div><div class="max">έως 13</div></div>
         <div class="field-grid">
           <div class="field">
@@ -165,9 +162,9 @@
           </div>
         </div>
         <div class="note">Δεν προσμετράται χρόνος άδειας άνευ αποδοχών, εκπαιδευτικής άδειας ή απόσπασης σε θέση με διοικητικά καθήκοντα. Επίσης δεν μοριοδοτείται προϋπηρεσία που αναγνωρίστηκε κατά τον διορισμό στην τυπική εκπαίδευση.</div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <div class="section-head"><div><h2>4. Άλλα προσόντα</h2><p class="subtitle">Έως δύο ξένες γλώσσες και γνώση χειρισμού Η/Υ.</p></div><div class="max">έως 5</div></div>
         <?php renderAsepLanguageSelector(array(
           'id' => 'sdeLanguages',
@@ -181,11 +178,11 @@
             <select id="computer" onchange="calculate()"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
           </div>
         </div>
-      </section>
-    </div>
+      <?php calculatorCardEnd(); ?>
+    <?php calculatorMainEnd(); ?>
 
-    <aside class="results" aria-live="polite">
-      <section class="card">
+    <?php calculatorResultsStart(array('class' => 'results', 'aria_live' => 'polite')); ?>
+      <?php calculatorCardStart(); ?>
         <h2>Αποτέλεσμα</h2>
         <div class="big-total"><div class="number" id="totalScore">0</div><div class="outof">από 40 μόρια</div></div>
         <div class="bar"><div id="totalBar"></div></div>
@@ -194,19 +191,19 @@
         <div class="result-row"><span>Άλλα προσόντα</span><strong id="otherScore">0 / 5</strong></div>
         <div id="eligibilityStatus" role="status" aria-live="polite"></div>
         <div class="actions"><button class="primary" type="button" onclick="calculate()">Υπολογισμός</button><button class="secondary" type="button" onclick="resetForm()">Καθαρισμός</button></div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <h2>Αποδεκτοί γραμματισμοί</h2>
         <div id="assignmentResult" class="subtitle">Επίλεξε ειδικότητα.</div>
-      </section>
+      <?php calculatorCardEnd(); ?>
 
-      <section class="card">
+      <?php calculatorCardStart(); ?>
         <h2>Ανάλυση μορίων</h2>
         <div id="breakdown" class="subtitle">Συμπλήρωσε τα στοιχεία σου.</div>
-      </section>
-    </aside>
-  </div>
+      <?php calculatorCardEnd(); ?>
+    <?php calculatorResultsEnd(); ?>
+  <?php calculatorColumnsEnd(); ?>
 
   <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Πηγή:</strong> Υ.Α. 88422/Κ1, ΦΕΚ Β΄ 4088/03.07.2026, <strong>όπως διορθώθηκε με τη Διόρθωση Σφάλματος ΦΕΚ Β΄ 4199/10.07.2026</strong>.</p><p class="source-disclaimer">Το εργαλείο είναι ενδεικτικό. Οι τελικοί πίνακες καταρτίζονται από την αρμόδια Επιτροπή και ισχύουν οι όροι της εκάστοτε πρόσκλησης.</p></section>
   <?php require_once __DIR__ . '/includes/footer.php'; ?>

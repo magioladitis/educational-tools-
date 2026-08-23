@@ -10,13 +10,15 @@
 <body class="edu-ui edu-page-european-schools">
 <main class="page-shell">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
-<section class="hero">
-<h1>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</h1>
-<p>Υπολόγισε τα μόρια τυπικών προσόντων και διδακτικής εμπειρίας πριν από τη συνέντευξη και, όταν είναι διαθέσιμες οι βαθμολογίες της προφορικής διαδικασίας, το τελικό σύνολο.</p>
-<div class="hero-meta"><span>Α + Β: έως 50</span><span>Συνέντευξη: έως 40</span><span>Τελικό: έως 90</span><span>Πρόσκληση 33598/Η2/18-3-2026</span></div>
-</section>
-<div class="layout"><div>
-<section class="card">
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php calculatorHero(array(
+    'title' => 'Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία',
+    'intro' => 'Υπολόγισε τα μόρια τυπικών προσόντων και διδακτικής εμπειρίας πριν από τη συνέντευξη και, όταν είναι διαθέσιμες οι βαθμολογίες της προφορικής διαδικασίας, το τελικό σύνολο.',
+    'meta_class' => 'hero-meta',
+    'badges' => array('Α + Β: έως 50', 'Συνέντευξη: έως 40', 'Τελικό: έως 90', 'Πρόσκληση 33598/Η2/18-3-2026')
+)); ?>
+<?php calculatorColumnsStart(); ?><?php calculatorMainStart(); ?>
+<?php calculatorCardStart(); ?>
 <h2>1. Θέση & βασικές προϋποθέσεις</h2>
 <p class="subtitle">Επίλεξε τη θέση που σε ενδιαφέρει. Ο κλάδος προκύπτει αυτόματα· μόνο όταν μία θέση δέχεται περισσότερους κλάδους θα σου ζητηθεί να επιλέξεις μεταξύ αυτών.</p>
 <div class="field-grid">
@@ -28,8 +30,8 @@
 <div id="positionRequirementWrap" class="field hidden edu-mt-13"><label for="positionLanguageRequirementMet" id="positionRequirementLabel">Γλωσσική προϋπόθεση θέσης</label><select id="positionLanguageRequirementMet"><option value="">— Επίλεξε —</option><option value="yes">Ναι, την καλύπτω</option><option value="no">Όχι</option></select></div>
 <div id="librarianWrap" class="field hidden edu-mt-13"><label for="librarianQualification">Διαθέτω το προβλεπόμενο προσόν Βιβλιοθηκονομίας;</label><select id="librarianQualification"><option value="">— Επίλεξε —</option><option value="yes">Ναι</option><option value="no">Όχι</option></select></div>
 <details><summary>Ειδικές γλωσσικές απαιτήσεις θέσεων 2026</summary><ul class="criteria"><li>ΠΕ70 Λουξεμβούργο II / Βρυξέλλες III, ΠΕ02 Βρυξέλλες III, ΠΕ03, Χημεία, Βιολογία και ΠΕ11 Βρυξέλλες III: Γ2 σε Αγγλικά, Γαλλικά ή Γερμανικά.</li><li>Ιστορία Βρυξέλλες I και ΠΕ08 MOL: Γ2 Αγγλικά.</li><li>Librarian Λουξεμβούργο II: προσόν Βιβλιοθηκονομίας και Γ2 Αγγλικά.</li></ul></details>
-</section>
-<section class="card">
+<?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(); ?>
 <h2>2. Α. Επιστημονική & παιδαγωγική κατάρτιση</h2>
 <div class="check"><input type="checkbox" id="phd"><label for="phd">Διδακτορικό δίπλωμα <small>5 μονάδες</small></label></div><div class="check"><input type="checkbox" id="master"><label for="master">Μεταπτυχιακό δίπλωμα ειδίκευσης <small>3 μονάδες</small></label></div><div class="check"><input type="checkbox" id="secondPhd"><label for="secondPhd">Δεύτερο διδακτορικό <small>3 μονάδες</small></label></div><div class="check"><input type="checkbox" id="secondMaster"><label for="secondMaster">Δεύτερο μεταπτυχιακό <small>1 μονάδα</small></label></div><div class="check"><input type="checkbox" id="secondDegree"><label for="secondDegree">Δεύτερο πανεπιστημιακό πτυχίο <small>2 μονάδες</small></label></div><div class="check"><input type="checkbox" id="retrainingDegree"><label for="retrainingDegree">Τίτλος Διδασκαλείου μετεκπαίδευσης <small>2 μονάδες</small></label></div>
 <h3>Γλωσσομάθεια</h3>
@@ -42,24 +44,24 @@
 <div class="field"><label for="thirdWorkingLevel">Επίπεδο τρίτης γλώσσας<small>Γ2: 3 · Γ1: 2 · Β2: 1</small></label><select id="thirdWorkingLevel"><option value="none">Δεν δηλώνω</option><option value="b2">Β2 — 1</option><option value="c1">Γ1 — 2</option><option value="c2">Γ2 — 3</option></select></div>
 <div class="field"><label for="otherEULanguage">Άλλη γλώσσα της Ε.Ε.<small>Επιλέγονται μόνο λοιπές επίσημες γλώσσες της Ε.Ε. και αποκλείεται αυτόματα όποια έχει δηλωθεί ήδη.</small></label><select id="otherEULanguage"><option value="">Δεν δηλώνω</option></select></div><div class="field"><label for="otherEULevel">Επίπεδο άλλης γλώσσας Ε.Ε.<small>Γ2: 2 · Γ1: 1 · Β2: 0,5</small></label><select id="otherEULevel"><option value="none">Δεν δηλώνω</option><option value="b2">Β2 — 0,5</option><option value="c1">Γ1 — 1</option><option value="c2">Γ2 — 2</option></select></div>
 </div><div class="note"><strong>Αυτόματος έλεγχος γλωσσών:</strong> η χώρα της θέσης περιορίζει τις διαθέσιμες επίσημες γλώσσες και η ίδια γλώσσα δεν μπορεί να μοριοδοτηθεί δεύτερη φορά σε άλλη κατηγορία.</div><div class="subtot"><span>Σύνολο Α</span><span class="pill" id="academicSubtotal">0 / 32</span></div>
-</section>
-<section class="card">
+<?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(); ?>
 <h2>3. Β. Υπηρεσιακή κατάσταση & διδακτική εμπειρία</h2>
 <div class="field-grid"><div class="field"><label for="higherEducationSemesters">Ακαδημαϊκά εξάμηνα αυτοδύναμου διδακτικού έργου σε ΑΕΙ<small>0,50 ανά εξάμηνο · έως 2.</small></label><input type="number" id="higherEducationSemesters" min="0" step="1" value="0"></div><div class="field"><label for="innovativePrograms">Καινοτόμα ευρωπαϊκά / διεθνή προγράμματα<small>1 ανά πρόγραμμα · έως 3.</small></label><input type="number" id="innovativePrograms" min="0" step="1" value="0"></div></div>
 <h3>Επιμόρφωση — έως 4 μονάδες</h3><div class="check"><input type="checkbox" id="annualTraining"><label for="annualTraining">Ετήσια επιμόρφωση ΣΕΛΜΕ/ΣΕΛΔΕ/ΑΣΠΑΙΤΕ/ΣΕΛΕΤΕ, εφόσον δεν αποτέλεσε προσόν διορισμού <small>1 μονάδα</small></label></div>
 <div class="field-grid edu-mt-10"><div class="field"><label for="universityTrainingCount">Προγράμματα ΑΕΙ ≥300 ωρών ή ≥9 μηνών<small>1 ανά πρόγραμμα · έως 2.</small></label><input type="number" id="universityTrainingCount" min="0" step="1" value="0"></div><div class="field"><label for="ministryTrainingHours">Ώρες ΠΕΚΕΣ/ΠΕΚ/ΙΕΠ/ΠΙ/ΟΕΠΕΚ/ΥΠΑΙΘ<small>0,10 ανά 10 ώρες · έως 1.</small></label><input type="number" id="ministryTrainingHours" min="0" step="1" value="0"></div><div class="field"><label for="publicAdminTrainingHours">Ώρες ΕΚΔΔΑ / ΙΠΕΜ-ΔΟΕ / ΚΕΜΕΤΕ-ΟΛΜΕ<small>0,10 ανά 10 ώρες · έως 1.</small></label><input type="number" id="publicAdminTrainingHours" min="0" step="1" value="0"></div><div class="field"><label for="eapAnnualUnits">Ετήσιες θεματικές ενότητες ΕΑΠ</label><input type="number" id="eapAnnualUnits" min="0" step="1" value="0"></div><div class="field"><label for="eapSemesterUnits">Εξαμηνιαίες θεματικές ενότητες ΕΑΠ</label><input type="number" id="eapSemesterUnits" min="0" step="1" value="0"></div></div><div class="check"><input type="checkbox" id="majorTraining"><label for="majorTraining">Μείζον Πρόγραμμα Επιμόρφωσης ή κατάλογος επιμορφωτών Α΄/Β΄ επιπέδου <small>1 μονάδα</small></label></div><div class="subtot"><span>Σύνολο Β</span><span class="pill" id="serviceSubtotal">0 / 18</span></div>
-</section>
-<section class="card">
+<?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(); ?>
 <h2>4. Δυναμικό checklist δικαιολογητικών</h2><p class="subtitle">Η λίστα προσαρμόζεται στα προσόντα και στις επιλογές που δηλώνεις παραπάνω. Δεν υποκαθιστά τον τελικό έλεγχο της επίσημης πρόσκλησης.</p><ul id="documentsChecklist" class="document-checklist"></ul><div class="note">Η πρόσκληση απαιτεί τα δηλούμενα δικαιολογητικά να έχουν αναρτηθεί πριν από την οριστική καταχώριση της αίτησης.</div>
-</section>
-<section class="card">
+<?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(); ?>
 <h2>5. Γ. Προφορική εξέταση & συνέντευξη</h2><p class="subtitle">Συμπλήρωσέ τα μόνο όταν γνωρίζεις τις βαθμολογίες. Η βάση στην προαπαιτούμενη ξένη γλώσσα είναι 5/10.</p>
 <div class="field-grid"><div class="field"><label for="oralPrerequisiteLanguage">Προαπαιτούμενη ξένη γλώσσα — προφορικός λόγος<small>0–10 · βάση 5.</small></label><input type="number" id="oralPrerequisiteLanguage" min="0" max="10" step="0.1" value="" placeholder="0–10"></div><div class="field"><label for="oralWorkingLanguage1">Άλλη γλώσσα εργασίας 1<small>0–5.</small></label><input type="number" id="oralWorkingLanguage1" min="0" max="5" step="0.1" value="" placeholder="0–5"></div><div class="field"><label for="oralWorkingLanguage2">Άλλη γλώσσα εργασίας 2<small>0–5.</small></label><input type="number" id="oralWorkingLanguage2" min="0" max="5" step="0.1" value="" placeholder="0–5"></div><div class="field"><label for="thoughtSpeech">Συγκρότηση σκέψης & λόγου<small>0–5.</small></label><input type="number" id="thoughtSpeech" min="0" max="5" step="0.1" value="" placeholder="0–5"></div><div class="field"><label for="interculturalInnovation">Έκφραση, διαπολιτισμική επικοινωνία & καινοτόμες δράσεις<small>0–5.</small></label><input type="number" id="interculturalInnovation" min="0" max="5" step="0.1" value="" placeholder="0–5"></div><div class="field"><label for="curriculumKnowledge">Ενημέρωση & γνώση προγράμματος σπουδών Ευρωπαϊκών Σχολείων<small>0–10.</small></label><input type="number" id="curriculumKnowledge" min="0" max="10" step="0.1" value="" placeholder="0–10"></div></div>
 <div class="note">Στη συνέντευξη καλείται το 50% των υποψηφίων με τα υψηλότερα μόρια του 1ου σταδίου, με στρογγυλοποίηση στην πλησιέστερη ακέραιη μονάδα και αριθμό τουλάχιστον τριπλάσιο των θέσεων. Δεν υπάρχει σταθερό όριο μορίων.</div><div class="subtot"><span>Σύνολο Γ</span><span class="pill" id="interviewSubtotal">— / 40</span></div>
-</section>
-</div>
-<aside class="card results" aria-live="polite"><h2>Αποτέλεσμα</h2><div class="stage"><div class="stage-label">1ο στάδιο · πριν τη συνέντευξη</div><div class="stage-number"><span id="preInterviewTotal">0</span> <small class="edu-stage-suffix">/ 50</small></div></div><div class="result-row"><span>Α. Κατάρτιση</span><strong id="academicResult">0 / 32</strong></div><div class="result-row"><span>Β. Υπηρεσία / εμπειρία</span><strong id="serviceResult">0 / 18</strong></div><div class="result-row"><span>Γ. Συνέντευξη</span><strong id="interviewResult">— / 40</strong></div><details class="breakdown-box"><summary>Αναλυτική κατανομή μορίων</summary><div id="academicBreakdown" class="breakdown-list"></div><div id="serviceBreakdown" class="breakdown-list"></div></details><div class="stage"><div class="stage-label">Τελική βαθμολογία</div><div class="stage-number final" id="finalTotal">—</div><div id="finalHelp" class="edu-small-muted">Συμπλήρωσε όλα τα πεδία της συνέντευξης για τελικό /90.</div></div><div id="eligibilityStatus" role="status" aria-live="polite"></div><div class="actions"><button type="button" class="primary" id="copyBtn">Αντιγραφή σύνοψης</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div></aside>
-</div>
+<?php calculatorCardEnd(); ?>
+<?php calculatorMainEnd(); ?>
+<?php calculatorResultsStart(array('class' => 'card results', 'aria_live' => 'polite')); ?><h2>Αποτέλεσμα</h2><div class="stage"><div class="stage-label">1ο στάδιο · πριν τη συνέντευξη</div><div class="stage-number"><span id="preInterviewTotal">0</span> <small class="edu-stage-suffix">/ 50</small></div></div><div class="result-row"><span>Α. Κατάρτιση</span><strong id="academicResult">0 / 32</strong></div><div class="result-row"><span>Β. Υπηρεσία / εμπειρία</span><strong id="serviceResult">0 / 18</strong></div><div class="result-row"><span>Γ. Συνέντευξη</span><strong id="interviewResult">— / 40</strong></div><details class="breakdown-box"><summary>Αναλυτική κατανομή μορίων</summary><div id="academicBreakdown" class="breakdown-list"></div><div id="serviceBreakdown" class="breakdown-list"></div></details><div class="stage"><div class="stage-label">Τελική βαθμολογία</div><div class="stage-number final" id="finalTotal">—</div><div id="finalHelp" class="edu-small-muted">Συμπλήρωσε όλα τα πεδία της συνέντευξης για τελικό /90.</div></div><div id="eligibilityStatus" role="status" aria-live="polite"></div><div class="actions"><button type="button" class="primary" id="copyBtn">Αντιγραφή σύνοψης</button><button type="button" class="secondary" id="resetBtn">Μηδενισμός</button></div><?php calculatorResultsEnd(); ?>
+<?php calculatorColumnsEnd(); ?>
 <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Πηγή:</strong> Πρόσκληση 33598/Η2/18-03-2026 για απόσπαση εκπαιδευτικών στα Ευρωπαϊκά Σχολεία και η αναφερόμενη Υ.Α. 26754/Η2/10-03-2022 (Β΄1165, διόρθωση Β΄1300).</p><p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό.</p></section>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
