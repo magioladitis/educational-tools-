@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!doctype html>
 <html lang="el">
 <head>
@@ -5,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων Μητρώου ΣΔΕ για ωρομίσθιο εκπαιδευτικό προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας βάσει της Υ.Α. 75975/Κ1, ΦΕΚ Β' 3224/25.06.2025.">
   <title>Μόρια Μητρώου ΣΔΕ</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-sde edu-page-sde-registry">
 <main class="page-shell">
@@ -130,18 +131,17 @@
 <?php calculatorResultsEnd(); ?>
 <?php calculatorColumnsEnd(); ?>
 
-<section class="edu-source-card" aria-labelledby="sourcesTitle">
-  <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+<?php sourceCardStart(); ?>
   <p><strong>Υ.Α. 75975/Κ1 — ΦΕΚ Β΄ 3224/25.06.2025</strong>, «Κανονισμός Διαχείρισης του Μητρώου Ωρομίσθιου Εκπαιδευτικού Προσωπικού, Συμβούλων Σταδιοδρομίας και Συμβούλων Ψυχολόγων στα Σχολεία Δεύτερης Ευκαιρίας (Σ.Δ.Ε.) — Καθορισμός της διαδικασίας και των κριτηρίων επιλογής και μοριοδότησης».</p>
   <p><strong>Άρθρο 3:</strong> προϋποθέσεις ένταξης και κλάδοι εκπαιδευτικού προσωπικού. <strong>Άρθρα 10–12:</strong> μοριοδότηση Εκπαιδευτικού Προσωπικού, Συμβούλων Ψυχολόγων και Συμβούλων Σταδιοδρομίας. <strong>Άρθρο 14:</strong> προτεραιότητα πιστοποιημένων Εκπαιδευτών Ενηλίκων ΕΟΠΠΕΠ.</p>
   <p><strong>Πρόσκληση Μητρώου ΣΔΕ 2025–2026, Κεφάλαιο Γ §9:</strong> οι υποψήφιοι ΠΕ86 που χρησιμοποιούν πτυχίο Πληροφορικής ως βασικό πτυχίο ένταξης δεν αξιολογούνται στο πεδίο «Γνώση Χειρισμού Η/Υ».</p>
-  <div class="source-links"><a href="https://gsvetlly.minedu.gov.gr/publications/docs2023/DELTIA_TYPOU/2025/%CE%91%CE%A0%CE%9F%CE%A6%CE%91%CE%A3%CE%97_%CE%93%CE%99%CE%91_%CE%A3%CE%94%CE%95_%CE%A6%CE%95%CE%9A_3224%CE%92-25.06.2025.pdf" target="_blank" rel="noopener noreferrer">Υ.Α. 75975/Κ1 — ΦΕΚ Β΄ 3224/2025 (ΥΠΑΙΘΑ) ↗</a> <a href="https://gsvetlly.minedu.gov.gr/nea-anakoinoseis/512-prosklese-ekdeloses-endiapherontos-ypoboles-aiteses-entaxes-kai-epikairopoieses-prosthekes-stoicheion-sto-metroo-oromisthiou-ekpaideutikou-prosopikou-symboulon-stadiodromias-kai-symboulon-psychologon-ton-scholeion-deuteres-eukairias-metroo-s-d-e-1o-stadio" target="_blank" rel="noopener noreferrer">Πρόσκληση Μητρώου ΣΔΕ 2025–2026 — ΥΠΑΙΘΑ ↗</a></div>
-  <p class="source-disclaimer">Ο υπολογισμός είναι ενημερωτικός. Ειδικά για την ασυμφωνία του άρθρου 12 §2.1, το εργαλείο χρησιμοποιεί το πλαφόν 7 μορίων που συμφωνεί με τη στήλη του πίνακα και με το συνολικό όριο των 13 μορίων της κατηγορίας.</p>
-</section>
+  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://gsvetlly.minedu.gov.gr/publications/docs2023/DELTIA_TYPOU/2025/%CE%91%CE%A0%CE%9F%CE%A6%CE%91%CE%A3%CE%97_%CE%93%CE%99%CE%91_%CE%A3%CE%94%CE%95_%CE%A6%CE%95%CE%9A_3224%CE%92-25.06.2025.pdf', 'Υ.Α. 75975/Κ1 — ΦΕΚ Β΄ 3224/2025 (ΥΠΑΙΘΑ) ↗'); ?><?php sourceCardLink('https://gsvetlly.minedu.gov.gr/nea-anakoinoseis/512-prosklese-ekdeloses-endiapherontos-ypoboles-aiteses-entaxes-kai-epikairopoieses-prosthekes-stoicheion-sto-metroo-oromisthiou-ekpaideutikou-prosopikou-symboulon-stadiodromias-kai-symboulon-psychologon-ton-scholeion-deuteres-eukairias-metroo-s-d-e-1o-stadio', 'Πρόσκληση Μητρώου ΣΔΕ 2025–2026 — ΥΠΑΙΘΑ ↗'); ?><?php sourceCardLinksEnd(); ?>
+  <?php sourceCardDisclaimerStart(); ?>Ο υπολογισμός είναι ενημερωτικός. Ειδικά για την ασυμφωνία του άρθρου 12 §2.1, το εργαλείο χρησιμοποιεί το πλαφόν 7 μορίων που συμφωνεί με τη στήλη του πίνακα και με το συνολικό όριο των 13 μορίων της κατηγορίας.<?php sourceCardDisclaimerEnd(); ?>
+<?php sourceCardEnd(); ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
-<script src="includes/sde-registry-calculations.js?v=3.20.33"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/sde-registry-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
 const $=id=>document.getElementById(id); const val=id=>$(id)?.value||''; const checked=id=>!!$(id)?.checked;
 const fmt=x=>Number(x||0).toLocaleString('el-GR',{maximumFractionDigits:2,minimumFractionDigits:Number.isInteger(Number(x||0))?0:1});
@@ -188,5 +188,5 @@ function resetForm(){document.querySelectorAll('input[type="number"]').forEach(x
 document.addEventListener('input',function(event){const el=event.target;if(!el||el.tagName!=='INPUT'||el.type!=='number'||el.value==='')return;let value=Number(el.value);if(!Number.isFinite(value))return;const min=el.getAttribute('min'),max=el.getAttribute('max');if(min!==null&&min!=='')value=Math.max(Number(min),value);if(max!==null&&max!=='')value=Math.min(Number(max),value);if(value!==Number(el.value))el.value=String(value);});
 fillSpecialties();roleChanged();
 </script>
-<script src="assets/common.js?v=3.20.13"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body></html>

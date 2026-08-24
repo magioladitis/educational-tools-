@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!doctype html>
 <html lang="el">
 <head>
@@ -5,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Υπολογισμός μορίων απόσπασης εκπαιδευτικών στα Ευρωπαϊκά Σχολεία με βάση την πρόσκληση 33598/Η2/18-3-2026.">
 <title>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-page-european-schools">
 <main class="page-shell">
@@ -62,10 +63,10 @@
 <?php calculatorMainEnd(); ?>
 <?php calculatorResultsStart(array('class' => 'card results', 'aria_live' => 'polite')); ?><h2>Αποτέλεσμα</h2><div class="stage"><div class="stage-label">1ο στάδιο · πριν τη συνέντευξη</div><div class="stage-number"><span id="preInterviewTotal">0</span> <small class="edu-stage-suffix">/ 50</small></div></div><?php calculatorResultRow(array('label_html' => 'Α. Κατάρτιση', 'value_html' => '0 / 32', 'value_id' => 'academicResult')); ?><?php calculatorResultRow(array('label_html' => 'Β. Υπηρεσία / εμπειρία', 'value_html' => '0 / 18', 'value_id' => 'serviceResult')); ?><?php calculatorResultRow(array('label_html' => 'Γ. Συνέντευξη', 'value_html' => '— / 40', 'value_id' => 'interviewResult')); ?><details class="breakdown-box"><summary>Αναλυτική κατανομή μορίων</summary><div id="academicBreakdown" class="breakdown-list"></div><div id="serviceBreakdown" class="breakdown-list"></div></details><div class="stage"><div class="stage-label">Τελική βαθμολογία</div><div class="stage-number final" id="finalTotal">—</div><div id="finalHelp" class="edu-small-muted">Συμπλήρωσε όλα τα πεδία της συνέντευξης για τελικό /90.</div></div><div id="eligibilityStatus" role="status" aria-live="polite"></div><?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'primary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή σύνοψης'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?><?php calculatorResultsEnd(); ?>
 <?php calculatorColumnsEnd(); ?>
-<section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Πηγή:</strong> Πρόσκληση 33598/Η2/18-03-2026 για απόσπαση εκπαιδευτικών στα Ευρωπαϊκά Σχολεία και η αναφερόμενη Υ.Α. 26754/Η2/10-03-2022 (Β΄1165, διόρθωση Β΄1300).</p><p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό.</p></section>
+<?php sourceCardStart(); ?><p><strong>Πηγή:</strong> Πρόσκληση 33598/Η2/18-03-2026 για απόσπαση εκπαιδευτικών στα Ευρωπαϊκά Σχολεία και η αναφερόμενη Υ.Α. 26754/Η2/10-03-2022 (Β΄1165, διόρθωση Β΄1300).</p><?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενημερωτικό.<?php sourceCardDisclaimerEnd(); ?><?php sourceCardEnd(); ?>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
-<script src="includes/european-schools-calculations.js?v=3.20.33"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/european-schools-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
 (function(){'use strict';
 const $=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('el-GR',{maximumFractionDigits:2});
@@ -126,6 +127,6 @@ async function copySummary(){const r=calculate(),p=EuropeanSchools.POSITIONS_202
 function reset(){document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('input[type="number"]').forEach(x=>x.value='');document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);['higherEducationSemesters','innovativePrograms','universityTrainingCount','ministryTrainingHours','publicAdminTrainingHours','eapAnnualUnits','eapSemesterUnits'].forEach(id=>$(id).value='0');['hostLanguageLevel','secondWorkingLevel','thirdWorkingLevel','otherEULevel'].forEach(id=>$(id).value='none');calculate();$('position').focus()}
 normalizeVisibleBranchLabels();ids.forEach(id=>{const e=$(id);if(e){e.addEventListener('input',calculate);e.addEventListener('change',calculate)}});$('copyBtn').addEventListener('click',copySummary);$('resetBtn').addEventListener('click',reset);calculate();})();
 </script>
-  <script src="assets/common.js?v=3.20.13"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

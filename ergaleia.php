@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!DOCTYPE html>
 
 <html lang="el">
@@ -6,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="Εργαλειοθήκη Εκπαιδευτικού: δωρεάν εργαλεία για ΑΣΕΠ, αναπληρωτές, αποσπάσεις και Δημόσια Ωνάσεια Σχολεία." name="description"/>
 <title>Εργαλειοθήκη Εκπαιδευτικού</title>
-<link href="assets/common.css?v=3.20.37" rel="stylesheet"/>
+<link href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>" rel="stylesheet"/>
 </head>
 <body class="edu-ui edu-tools-directory">
 <?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
@@ -444,6 +445,6 @@ renderDeadlineCard(array(
     })();
   </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.36"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

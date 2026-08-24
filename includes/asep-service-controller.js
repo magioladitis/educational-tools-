@@ -25,8 +25,53 @@
     return document.querySelector('[data-component="asep-service-criteria"]');
   }
 
+  const boundRoots = typeof WeakSet === "function" ? new WeakSet() : null;
+
+  function isServiceInput(el) {
+    return !!(el && el.nodeType === 1 && el.matches &&
+      el.matches('[data-service-role]:not([data-service-role="digital-tutoring"])'));
+  }
+
+  function sanitizeInput(el) {
+    if (!isServiceInput(el) || !("value" in el) || el.value === "") return false;
+    let value = Math.max(0, Math.floor(Number(el.value) || 0));
+    const max = el.getAttribute("max");
+    if (max !== null && max !== "" && Number.isFinite(Number(max))) {
+      value = Math.min(value, Number(max));
+    }
+    const normalized = String(value);
+    const changed = el.value !== normalized;
+    if (changed) el.value = normalized;
+    return changed;
+  }
+
+  function sanitize(ref) {
+    const root = resolveRoot(ref);
+    if (!root) return null;
+    root.querySelectorAll('[data-service-role]:not([data-service-role="digital-tutoring"])').forEach(sanitizeInput);
+    return root;
+  }
+
+  function bind(ref) {
+    const root = resolveRoot(ref);
+    if (!root) return null;
+    if (boundRoots && boundRoots.has(root)) return root;
+    if (!boundRoots && root.getAttribute("data-service-sanitizer-bound") === "true") return root;
+    const handler = function (event) { sanitizeInput(event.target); };
+    root.addEventListener("input", handler);
+    root.addEventListener("change", handler);
+    if (boundRoots) boundRoots.add(root);
+    else root.setAttribute("data-service-sanitizer-bound", "true");
+    return root;
+  }
+
+  function bindAll() {
+    document.querySelectorAll('[data-component="asep-service-criteria"]').forEach(function (root) { bind(root); });
+  }
+
   function numberValue(el) {
     if (!el) return 0;
+    sanitizeInput(el);
     const n = Number(el.value);
     return Number.isFinite(n) ? n : 0;
   }
@@ -34,6 +79,7 @@
   function read(ref) {
     const root = resolveRoot(ref);
     if (!root) throw new Error("Δεν βρέθηκε το κοινό τμήμα προϋπηρεσίας ΑΣΕΠ.");
+    sanitize(root);
     const options = {};
     Object.keys(ROLE_TO_OPTION).forEach(function (role) {
       const el = root.querySelector('[data-service-role="' + role + '"]');
@@ -124,6 +170,13 @@
     getState: getState,
     details: details,
     sync: sync,
+    sanitizeInput: sanitizeInput,
+    sanitize: sanitize,
+    bind: bind,
+    bindAll: bindAll,
     reset: reset
   });
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindAll);
+  else bindAll();
 })(window);

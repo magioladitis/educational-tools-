@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -6,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 4ΕΑ/2025 για εκπαιδευτικούς Ειδικής Αγωγής κατηγορίας ΤΕ (ΤΕ01, ΤΕ02, ΤΕ16).">
   <title>Υπολογισμός μορίων 4ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.38">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea4">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -136,9 +137,7 @@ renderDeadlineCard(array(
         renderEaeSensoryPriority(array(
     'context' => '4ea-2025',
             'eng_enabled' => true,
-            'braille_enabled' => true,
-            'eng_id' => 'signLanguage',
-            'braille_id' => 'braille'
+            'braille_enabled' => true
         ));
         ?>
 
@@ -161,7 +160,7 @@ renderAsepTeAcademic(array(
 ));
 ?>
 
-      <section id="asepService class="card" data-component="asep-service-criteria" data-subtotal-id="serviceSubtotal" data-subtotal-with-cap="true">
+      <section id="asepService" class="card" data-component="asep-service-criteria" data-subtotal-id="serviceSubtotal" data-subtotal-with-cap="true">
         <h2>Β. Εκπαιδευτική προϋπηρεσία</h2>
         <p class="cap">Μέγιστο κατηγορίας: 120 μόρια</p>
 
@@ -263,27 +262,27 @@ renderAsepSocialCriteria(array(
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 
-  <section class="edu-source-card" aria-labelledby="sourcesTitle">
-    <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+  <?php sourceCardStart(); ?>
     <p>Προκήρυξη ΑΣΕΠ <strong>4ΕΑ/2025</strong>, <strong>ΦΕΚ Α.Σ.Ε.Π. 42/18.08.2025</strong>, ιδίως Κεφάλαια Β΄, Γ΄ και Δ΄.</p>
-    <div class="source-links"><a href="https://info.asep.gr/node/77020" target="_blank" rel="noopener noreferrer">Επίσημη σελίδα 4ΕΑ/2025 στο ΑΣΕΠ ↗</a></div>
-    <p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό. Η τελική ένταξη σε πίνακα και η μοριοδότηση προκύπτουν από τον έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από τα αρμόδια όργανα.</p>
-  </section>
+    <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/77020', 'Επίσημη σελίδα 4ΕΑ/2025 στο ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
+    <?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενημερωτικό. Η τελική ένταξη σε πίνακα και η μοριοδότηση προκύπτουν από τον έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από τα αρμόδια όργανα.<?php sourceCardDisclaimerEnd(); ?>
+  <?php sourceCardEnd(); ?>
 </div>
 
-<script src="includes/service-calculations.js?v=3.20.33"></script>
-<script src="includes/asep-service-controller.js?v=3.20.26"></script>
-<script src="includes/social-calculations.js?v=3.20.32"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.32"></script>
-<script src="includes/eae-table-eligibility.js?v=3.20.33"></script>
-<script src="includes/asep-eae-eligibility.js?v=3.20.28"></script>
-<script src="includes/language-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-language-selector.js?v=3.20.31"></script>
-<script src="includes/te-academic-calculations.js?v=3.20.34"></script>
-<script src="includes/training-proof.js?v=3.20.18"></script>
-<script src="includes/asep-computer-proof.js?v=3.20.27"></script>
-<script src="includes/asep-te-academic.js?v=3.20.34"></script>
-<script src="includes/asep-pedagogical-proof.js?v=3.20.38"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/service-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-service-controller.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/social-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-social-criteria.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/eae-table-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-eae-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-language-selector.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/te-academic-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/training-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-computer-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-te-academic.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-pedagogical-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/eae-sensory-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
 (function(){
   "use strict";
@@ -337,8 +336,7 @@ renderAsepSocialCriteria(array(
     const ped=$('pedagogical').checked;
     const priorities=[];
     if(ped) priorities.push('ΠΡΟΤΑΞΗ λόγω Παιδαγωγικής και Διδακτικής Επάρκειας');
-    if($('braille').checked) priorities.push('Braille — προτεραιότητα για μαθητές με προβλήματα όρασης');
-    if($('signLanguage').checked) priorities.push('Ε.Ν.Γ. — προτεραιότητα για κωφούς/βαρήκοους μαθητές');
+    priorities.push.apply(priorities,EaeSensoryProof.priorityLabels());
     $('priorityBox').classList.toggle('yes',priorities.length>0);
     $('priorityBox').textContent=priorities.length?priorities.join(' · '):'Χωρίς δηλωμένη ειδική πρόταξη / προτεραιότητα';
 
@@ -357,13 +355,14 @@ renderAsepSocialCriteria(array(
       v.why,
       AsepPedagogicalProof.summary('pedagogical'),
       v.priorities.length?'Προτεραιότητες: '+v.priorities.join(' · '):'',
+      EaeSensoryProof.summary(),
       AsepTeAcademic.trainingSummary('asepTeAcademic')
     ].filter(Boolean).join('\n');
   }
 
   function sanitizeIntegerInput(el){
     if(!el) return;
-    const ids=['regularMonths','difficultMonths','threeMonthRegular2020','threeMonthDifficult2020','threeMonthRegular2021','threeMonthDifficult2021','privateMonths','eaeMonths','children'];
+    const ids=['eaeMonths','children'];
     if(!ids.includes(el.id) || el.value==='') return;
     let value=Math.max(0,Math.floor(Number(el.value)||0));
     const max=el.getAttribute('max');
@@ -396,8 +395,10 @@ renderAsepSocialCriteria(array(
     document.querySelectorAll('input[name="trainingDates"]').forEach(el=>el.checked=false);
     $('branch').value='';
     $('mainCriterion').value='none';
+    AsepServiceController.reset('asepService',{silent:true});
     AsepTeAcademic.reset('asepTeAcademic',{silent:true});
     AsepPedagogicalProof.reset('pedagogical');
+    EaeSensoryProof.reset();
     calc();
   });
 
@@ -406,7 +407,6 @@ renderAsepSocialCriteria(array(
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="includes/eae-sensory-proof.js?v=3.20.23"></script>
-  <script src="assets/common.js?v=3.20.36"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

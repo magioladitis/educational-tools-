@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -6,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΓΤ/2024 για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16.">
   <title>Υπολογισμός μορίων 1ΓΤ/2024</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.38">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-gt1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -75,7 +76,7 @@ renderAsepTeAcademic(array(
 ));
 ?>
 
-      <section id="asepService class="card" data-component="asep-service-criteria" data-subtotal-id="serviceSubtotal" data-subtotal-with-cap="true">
+      <section id="asepService" class="card" data-component="asep-service-criteria" data-subtotal-id="serviceSubtotal" data-subtotal-with-cap="true">
         <h2>Β. Εκπαιδευτική προϋπηρεσία</h2>
         <p class="cap">Μέγιστο κατηγορίας: 120 μόρια</p>
 
@@ -168,27 +169,26 @@ renderAsepSocialCriteria(array(
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 
-  <section class="edu-source-card" aria-labelledby="sourcesTitle">
-    <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+  <?php sourceCardStart(); ?>
     <p><strong>Πηγή:</strong> Προκήρυξη ΑΣΕΠ 1ΓΤ/2024, ΦΕΚ Α.Σ.Ε.Π. 25/10.07.2024, Κεφάλαιο Γ΄ «Κριτήρια Κατάταξης».</p>
-    <div class="source-links"><a href="https://info.asep.gr/node/73068" target="_blank" rel="noopener noreferrer">1ΓΤ/2024 — ΑΣΕΠ ↗</a></div>
-    <p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό. Η τελική μοριοδότηση προκύπτει από τον έλεγχο της αίτησης και των δικαιολογητικών από τα αρμόδια όργανα.</p>
-  </section>
+    <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/73068', '1ΓΤ/2024 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
+    <?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενημερωτικό. Η τελική μοριοδότηση προκύπτει από τον έλεγχο της αίτησης και των δικαιολογητικών από τα αρμόδια όργανα.<?php sourceCardDisclaimerEnd(); ?>
+  <?php sourceCardEnd(); ?>
 
   <div class="credits">Υλοποίηση / επεξεργασία: Μάριος Μαγιολαδίτης</div>
 </div>
 
-<script src="includes/service-calculations.js?v=3.20.33"></script>
-<script src="includes/asep-service-controller.js?v=3.20.26"></script>
-<script src="includes/social-calculations.js?v=3.20.32"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.32"></script>
-<script src="includes/language-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-language-selector.js?v=3.20.31"></script>
-<script src="includes/te-academic-calculations.js?v=3.20.34"></script>
-<script src="includes/training-proof.js?v=3.20.18"></script>
-<script src="includes/asep-computer-proof.js?v=3.20.27"></script>
-<script src="includes/asep-te-academic.js?v=3.20.34"></script>
-<script src="includes/asep-pedagogical-proof.js?v=3.20.38"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/service-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-service-controller.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/social-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-social-criteria.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-language-selector.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/te-academic-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/training-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-computer-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-te-academic.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-pedagogical-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
 (function(){
   "use strict";
@@ -221,20 +221,17 @@ renderAsepSocialCriteria(array(
     AsepTeAcademic.trainingSummary('asepTeAcademic'),'','Ενδεικτικός υπολογισμός βάσει της Προκήρυξης ΑΣΕΠ 1ΓΤ/2024.'
   ].filter((x,i,a)=>x!==''||a[i-1]!=='').join('\n');}
 
-  ['regularMonths','difficultMonths','threeMonthRegular2020','threeMonthDifficult2020','threeMonthRegular2021','threeMonthDifficult2021'].forEach(id=>{
-    const el=$(id);el.addEventListener('input',()=>{if(el.value==='')return;let value=Math.max(0,Math.floor(Number(el.value)||0));const max=el.getAttribute('max');if(max!==null&&max!=='')value=Math.min(value,Number(max));el.value=value;});
-  });
   document.addEventListener('input',calc);document.addEventListener('change',calc);
   $('resetBtn').addEventListener('click',()=>{
     document.querySelectorAll('input[type="number"]').forEach(el=>el.value='0');$('degreeGrade').value='';
     document.querySelectorAll('input[type="text"]').forEach(el=>el.value='');document.querySelectorAll('input[type="checkbox"],input[type="radio"]').forEach(el=>el.checked=false);
-    $('branch').value='te01';AsepTeAcademic.reset('asepTeAcademic',{silent:true});AsepPedagogicalProof.reset('pedagogical');calc();
+    $('branch').value='te01';AsepServiceController.reset('asepService',{silent:true});AsepTeAcademic.reset('asepTeAcademic',{silent:true});AsepPedagogicalProof.reset('pedagogical');calc();
   });
   $('copyBtn').addEventListener('click',async()=>{const text=summary(calc());try{await navigator.clipboard.writeText(text);const old=$('copyBtn').textContent;$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent=old,1400);}catch(e){alert(text);}});
   AsepTeAcademic.sync('asepTeAcademic');calc();
 })();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.36"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

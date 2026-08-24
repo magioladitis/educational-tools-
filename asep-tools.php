@@ -1,10 +1,11 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Χρήσιμα εργαλεία για τις προκηρύξεις 1ΓΕ/2026 και 2ΓΕ/2026</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 
 <body class="edu-ui edu-asep-tools-hub">
@@ -129,6 +130,6 @@
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.13"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -5,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Μετατροπή βαθμού πτυχίου από 10βάθμια σε 20βάθμια κλίμακα και από δεκαδική ή λεκτική μορφή σε ακέραιο μέρος, αριθμητή και παρονομαστή για 1ΓΕ/2026 και 1ΓΤ/2024.">
 <title>Μετατροπή κλίμακας βαθμού πτυχίου</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-page-grade-converter">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -244,13 +245,12 @@
 })();
 </script>
 
-<section class="edu-source-card" aria-labelledby="sourcesTitle">
-  <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+<?php sourceCardStart(); ?>
   <p>Για την <strong>1ΓΕ/2026</strong> χρησιμοποιείται η 10βάθμια κλίμακα του βαθμού πτυχίου και η αντίστοιχη μοριοδότηση του Κεφαλαίου Γ΄. Για την <strong>1ΓΤ/2024</strong> εφαρμόζεται η αναγωγή στην 20βάθμια κλίμακα και η καταχώριση του βαθμού σύμφωνα με την οικεία προκήρυξη. Η μετατροπή σε ακέραιο μέρος/αριθμητή/παρονομαστή είναι αριθμητική απεικόνιση για τα πεδία της αίτησης.</p>
-  <div class="source-links"><a href="https://info.asep.gr/node/78700" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 — ΑΣΕΠ ↗</a> <a href="https://info.asep.gr/node/73068" target="_blank" rel="noopener noreferrer">1ΓΤ/2024 — ΑΣΕΠ ↗</a></div>
-</section>
+  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/78700', '1ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLink('https://info.asep.gr/node/73068', '1ΓΤ/2024 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
+<?php sourceCardEnd(); ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.13"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

@@ -1,10 +1,11 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία 2026-2027</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.36">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-page-onaseia">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -149,13 +150,13 @@ renderAsepPeAcademic(array(
   <?php calculatorInlineResult(array('id' => 'result', 'class' => 'result', 'attrs' => array('role' => 'status', 'aria-live' => 'polite'))); ?>
 <?php calculatorContainerEnd(); ?>
 
-<script src="includes/language-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-language-selector.js?v=3.20.31"></script>
-<script src="includes/academic-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-computer-proof.js?v=3.20.25"></script>
-<script src="includes/training-proof.js?v=3.20.25"></script>
-<script src="includes/asep-pe-academic.js?v=3.20.34"></script>
-<script src="includes/onaseia-calculations.js?v=3.20.31"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-language-selector.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/academic-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-computer-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/training-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-pe-academic.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/onaseia-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
   let isLiveCalculation = false;
   const schoolYears = [];
@@ -440,15 +441,14 @@ renderAsepPeAcademic(array(
 </script>
 
 
-<section class="edu-source-card" aria-labelledby="sourcesTitle">
-  <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+<?php sourceCardStart(); ?>
   <p>Η κατάταξη στα ΔΗΜ.Ω.Σ. συνδυάζει τη μοριοδότηση των ακαδημαϊκών προσόντων όπως έχει διαμορφωθεί στον αντίστοιχο πίνακα Α.Σ.Ε.Π. με την αναγνωρισμένη προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία.</p>
   <p><strong>Φετινές προσκλήσεις πρόσληψης 2026–2027:</strong></p>
-  <div class="source-links"><a href="https://diavgeia.gov.gr/doc/%CE%957%CE%98%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%9C%CE%98?inline=true" target="_blank" rel="noopener noreferrer">14/08/2026 — Γενική πρόσκληση ΔΗΜ.Ω.Σ. για αναπληρωτές — ΑΔΑ Ε7ΘΑ46ΝΚΠΔ-ΡΜΘ ↗</a> <a href="https://diavgeia.gov.gr/doc/%CE%A1%CE%A4%CE%91%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%932%CE%97?inline=true" target="_blank" rel="noopener noreferrer">20/08/2026 — Ειδική πρόσκληση ΕΑΕ για Τμήματα Ένταξης ΔΗΜ.Ω.Σ. — ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗</a></div>
-  <div class="source-links"><a href="https://www.minedu.gov.gr/news?catid=1183&id=63940%3A30-01-26-prokiryksi-diadikasias-katataksis-ekpaideftikon-vvathmias-ekpaidefsis-me-seira-proteraiotitas-kata-klado-kai-eidikotita-ypopsifion-gia-tin-plirosi-kenon-theseon-thiteias-sta-dimosia-onaseia-sxoleia&view=article" target="_blank" rel="noopener noreferrer">Προκήρυξη διαδικασίας κατάταξης ΔΗΜ.Ω.Σ. — ΥΠΑΙΘΑ ↗</a> <a href="https://info.asep.gr/node/78737" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 &amp; 2ΓΕ/2026 — ΑΣΕΠ ↗</a></div>
-</section>
+  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://diavgeia.gov.gr/doc/%CE%957%CE%98%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%9C%CE%98?inline=true', '14/08/2026 — Γενική πρόσκληση ΔΗΜ.Ω.Σ. για αναπληρωτές — ΑΔΑ Ε7ΘΑ46ΝΚΠΔ-ΡΜΘ ↗'); ?><?php sourceCardLink('https://diavgeia.gov.gr/doc/%CE%A1%CE%A4%CE%91%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%932%CE%97?inline=true', '20/08/2026 — Ειδική πρόσκληση ΕΑΕ για Τμήματα Ένταξης ΔΗΜ.Ω.Σ. — ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗'); ?><?php sourceCardLinksEnd(); ?>
+  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://www.minedu.gov.gr/news?catid=1183&id=63940%3A30-01-26-prokiryksi-diadikasias-katataksis-ekpaideftikon-vvathmias-ekpaidefsis-me-seira-proteraiotitas-kata-klado-kai-eidikotita-ypopsifion-gia-tin-plirosi-kenon-theseon-thiteias-sta-dimosia-onaseia-sxoleia&view=article', 'Προκήρυξη διαδικασίας κατάταξης ΔΗΜ.Ω.Σ. — ΥΠΑΙΘΑ ↗'); ?><?php sourceCardLink('https://info.asep.gr/node/78737', '1ΓΕ/2026 & 2ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
+<?php sourceCardEnd(); ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.36"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

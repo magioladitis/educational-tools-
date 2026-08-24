@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -6,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΕΑ/2025 για μέλη Ειδικού Βοηθητικού Προσωπικού (ΕΒΠ) κλάδου ΔΕ01.">
 <title>Υπολογισμός μορίων 1ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.36">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -123,38 +124,36 @@ renderAsepSocialCriteria(array(
 renderEaeSensoryPriority(array(
     'context' => '1ea-2025',
     'eng_enabled' => true,
-    'braille_enabled' => false,
-    'eng_id' => 'signLanguage'
+    'braille_enabled' => false
 ));
 ?>
 <?php calculatorCardEnd(); ?>
 <?php calculatorMainEnd(); ?><?php calculatorResultsStart(array('class' => 'results')); ?>
 <?php calculatorCardStart(); ?><h2>Αποτέλεσμα</h2><div class="total"><div class="num" id="totalPoints">0,00</div><div class="label">συνολικά μόρια</div></div><?php calculatorResultRow(array('label_html' => 'Βαθμός τίτλου', 'value_html' => '0,00', 'value_id' => 'degreePoints')); ?><?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά', 'value_html' => '0,00', 'value_id' => 'academicPoints')); ?><?php calculatorResultRow(array('label_html' => 'Προϋπηρεσία', 'value_html' => '0,00', 'value_id' => 'servicePoints')); ?><?php calculatorResultRow(array('label_html' => 'Κοινωνικά', 'value_html' => '0,00', 'value_id' => 'socialPoints')); ?><?php calculatorResultRow(array('label_html' => 'Όριο ακαδημαϊκών', 'value_html' => '64', 'value_id' => 'academicCap')); ?><div id="priorityBox" class="priority">Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ</div><?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?><?php calculatorCardEnd(); ?>
 <?php calculatorResultsEnd(); ?><?php calculatorColumnsEnd(); ?>
-<section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Βάση υπολογισμού:</strong> Προκήρυξη ΑΣΕΠ 1ΕΑ/2025, Κεφάλαιο Γ΄ — κριτήρια αξιολογικού πίνακα Γ2΄ ΕΒΠ.</p><div class="source-links"><a href="https://info.asep.gr/node/76176" target="_blank" rel="noopener noreferrer">1ΕΑ/2025 — ΑΣΕΠ ↗</a></div><p class="source-disclaimer">Το εργαλείο είναι βοηθητικό και δεν υποκαθιστά τον επίσημο έλεγχο ΑΣΕΠ/ΟΠΣΥΔ.</p></section>
+<?php sourceCardStart(); ?><p><strong>Βάση υπολογισμού:</strong> Προκήρυξη ΑΣΕΠ 1ΕΑ/2025, Κεφάλαιο Γ΄ — κριτήρια αξιολογικού πίνακα Γ2΄ ΕΒΠ.</p><?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/76176', '1ΕΑ/2025 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?><?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι βοηθητικό και δεν υποκαθιστά τον επίσημο έλεγχο ΑΣΕΠ/ΟΠΣΥΔ.<?php sourceCardDisclaimerEnd(); ?><?php sourceCardEnd(); ?>
 <div class="credits">Εργαλείο υπολογισμού μορίων · 1ΕΑ/2025</div>
 </div>
-<script src="includes/service-calculations.js?v=3.20.33"></script>
-<script src="includes/asep-service-controller.js?v=3.20.26"></script>
-<script src="includes/social-calculations.js?v=3.20.32"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.32"></script>
-<script src="includes/language-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-language-selector.js?v=3.20.31"></script>
-<script src="includes/training-proof.js?v=3.20.18"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/service-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-service-controller.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/social-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-social-criteria.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-language-selector.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/training-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/eae-sensory-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
 (function(){"use strict";const $=id=>document.getElementById(id);const n=id=>Number($(id).value)||0;const fmt=v=>(Math.round((Number(v)||0)*100)/100).toLocaleString('el-GR',{minimumFractionDigits:2,maximumFractionDigits:2});const round2=v=>Math.round((v+Number.EPSILON)*100)/100;
 function academic(){const languages=AsepLanguageSelector.calculate('asepLanguages');const type=$('titleType').value;const grade=n('degreeGrade');const valid=$('degreeGrade').value!==''&&grade>=10&&grade<=20;const rate=type==='postsecondary'?7.2:4;const cap=type==='postsecondary'?96:64;const degree=valid?round2(Math.max(0,grade-10)*rate):0;const raw=degree+($('secondTitle').checked?10:0)+languages.points+($('computer').checked?4:0)+($('training').checked?2:0);return{degree,raw,points:Math.min(raw,cap),cap,valid,languages};}
 function service(){return AsepServiceController.getState('asepService',fmt);}
 function social(){return AsepSocialCriteria.getState('socialCriteria',fmt);}
-function render(){TrainingProof.syncAll();const a=academic(),s=service(),c=social(),total=a.points+s.points+c.points;const post=$('titleType').value==='postsecondary';$('gradeInfo').innerHTML=post?'Τίτλος μεταδευτεροβάθμιας: <strong>7,2 μόρια</strong> για κάθε βαθμό πάνω από 10 · ακαδημαϊκό όριο <strong>96</strong>.':'Τίτλος δευτεροβάθμιας: <strong>4 μόρια</strong> για κάθε βαθμό πάνω από 10 · ακαδημαϊκό όριο <strong>64</strong>.';$('gradeWarning').classList.toggle('hidden',$('degreeGrade').value===''||a.valid);$('academicSubtotal').textContent=fmt(a.points);$('totalPoints').textContent=fmt(total);$('degreePoints').textContent=fmt(a.degree);$('academicPoints').textContent=fmt(a.points)+(a.raw>a.cap?' (όριο '+a.cap+')':'');$('servicePoints').textContent=fmt(s.points)+(s.rawPoints>120?' (όριο 120)':'');$('socialPoints').textContent=fmt(c.points);$('academicCap').textContent=a.cap;const pb=$('priorityBox');pb.className='priority'+($('signLanguage').checked?' yes':'');pb.textContent=$('signLanguage').checked?'Ειδική προτεραιότητα ΕΝΓ για υποστήριξη κωφών/βαρήκοων μαθητών':'Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ';return{a,s,c,total};}
-function summary(r){return[`Υπολογισμός μορίων 1ΕΑ/2025 — ΔΕ01 ΕΒΠ`,`Βαθμός τίτλου: ${fmt(r.a.degree)}`,`Ακαδημαϊκά: ${fmt(r.a.points)}`,`Προϋπηρεσία: ${fmt(r.s.points)}`,`Κοινωνικά: ${fmt(r.c.points)}`,`ΣΥΝΟΛΟ: ${fmt(r.total)}`,$('signLanguage').checked?'ΕΝΓ: δηλώθηκε ειδική προτεραιότητα':'ΕΝΓ: δεν δηλώθηκε',TrainingProof.summary('trainingProof')].filter(Boolean).join('\n');}
-function sanitizeServiceMonthInput(el){if(!el||!el.classList.contains('service-months')||el.value==='')return;let value=Math.max(0,Math.floor(Number(el.value)||0));const max=el.getAttribute('max');if(max!==null&&max!=='')value=Math.min(value,Number(max));el.value=String(value);}
+function render(){TrainingProof.syncAll();const a=academic(),s=service(),c=social(),total=a.points+s.points+c.points;const post=$('titleType').value==='postsecondary';$('gradeInfo').innerHTML=post?'Τίτλος μεταδευτεροβάθμιας: <strong>7,2 μόρια</strong> για κάθε βαθμό πάνω από 10 · ακαδημαϊκό όριο <strong>96</strong>.':'Τίτλος δευτεροβάθμιας: <strong>4 μόρια</strong> για κάθε βαθμό πάνω από 10 · ακαδημαϊκό όριο <strong>64</strong>.';$('gradeWarning').classList.toggle('hidden',$('degreeGrade').value===''||a.valid);$('academicSubtotal').textContent=fmt(a.points);$('totalPoints').textContent=fmt(total);$('degreePoints').textContent=fmt(a.degree);$('academicPoints').textContent=fmt(a.points)+(a.raw>a.cap?' (όριο '+a.cap+')':'');$('servicePoints').textContent=fmt(s.points)+(s.rawPoints>120?' (όριο 120)':'');$('socialPoints').textContent=fmt(c.points);$('academicCap').textContent=a.cap;const sensory=EaeSensoryProof.getState(),eng=!!(sensory.eng&&sensory.eng.selected),pb=$('priorityBox');pb.className='priority'+(eng?' yes':'');pb.textContent=eng?'Ειδική προτεραιότητα ΕΝΓ για υποστήριξη κωφών/βαρήκοων μαθητών':'Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ';return{a,s,c,total};}
+function summary(r){return[`Υπολογισμός μορίων 1ΕΑ/2025 — ΔΕ01 ΕΒΠ`,`Βαθμός τίτλου: ${fmt(r.a.degree)}`,`Ακαδημαϊκά: ${fmt(r.a.points)}`,`Προϋπηρεσία: ${fmt(r.s.points)}`,`Κοινωνικά: ${fmt(r.c.points)}`,`ΣΥΝΟΛΟ: ${fmt(r.total)}`,EaeSensoryProof.summary(),TrainingProof.summary('trainingProof')].filter(Boolean).join('\n');}
 EducationCore.bindBoundedNumberInput($('degreeGrade'),{min:10,max:20});
-document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render();});document.addEventListener('change',render);$('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});$('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=x.id==='degreeGrade'?'':'0');document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepLanguageSelector.reset('asepLanguages',{silent:true});render();});render();})();
+document.addEventListener('input',render);document.addEventListener('change',render);$('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});$('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=x.id==='degreeGrade'?'':'0');document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepServiceController.reset('asepService',{silent:true});AsepLanguageSelector.reset('asepLanguages',{silent:true});EaeSensoryProof.reset();render();});render();})();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
-  <script src="includes/eae-sensory-proof.js?v=3.20.23"></script>
-  <script src="assets/common.js?v=3.20.36"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-computer-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

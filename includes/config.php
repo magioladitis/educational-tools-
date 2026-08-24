@@ -18,3 +18,15 @@ if (!defined('EDU_TOOLS_AUTHOR_ROLES')) {
 if (!defined('EDU_TOOLS_YEAR')) {
     define('EDU_TOOLS_YEAR', '2026');
 }
+
+if (!defined('EDU_TOOLS_VERSION')) {
+    define('EDU_TOOLS_VERSION', '3.20.40');
+}
+if (!function_exists('edu_asset_url')) {
+    function edu_asset_url($path)
+    {
+        $path = (string) $path;
+        $sep = (strpos($path, '?') === false) ? '?' : '&';
+        return $path . $sep . 'v=' . rawurlencode(EDU_TOOLS_VERSION);
+    }
+}

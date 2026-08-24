@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
 <!doctype html>
 <html lang="el">
@@ -6,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων απόσπασης μονίμων εκπαιδευτικών στα Σχολεία Δεύτερης Ευκαιρίας (ΣΔΕ) και έλεγχος αποδεκτών ειδικοτήτων/γραμματισμών σύμφωνα με το ΦΕΚ Β' 4088/03.07.2026.">
   <title>Υπολογισμός μορίων απόσπασης στα ΣΔΕ</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.36">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-sde edu-page-sde-apospasis">
 <main class="page-shell">
@@ -217,13 +218,13 @@ renderDeadlineCard(array(
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 
-  <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Νομική βάση:</strong> Υ.Α. 88422/Κ1, ΦΕΚ Β΄ 4088/03.07.2026, <strong>όπως διορθώθηκε με τη Διόρθωση Σφάλματος ΦΕΚ Β΄ 4199/10.07.2026</strong>.</p><p><strong>Πρόσκληση 2026–2027:</strong> 94386/Κ1/13.07.2026 — αιτήσεις από 14 έως και 20 Ιουλίου 2026.</p><div class="source-links"><a href="https://www.gsvetlly.minedu.gov.gr/nea-anakoinoseis/809-prosklese-ekdeloses-endiapherontos-gia-ten-ypobole-aiteseon-apospases-monimon-ekpaideutikon-protobathmias-kai-deuterobathmias-ekpaideuses-sta-scholeia-deuteres-eukairias-gia-to-scholiko-etos-2026-2027" target="_blank" rel="noopener noreferrer">Επίσημη πρόσκληση απόσπασης στα ΣΔΕ 2026–2027 — Γ.Γ.Ε.Ε.Κ. &amp; Δ.Β.Μ. ↗</a></div><p class="source-disclaimer">Το εργαλείο είναι ενδεικτικό. Οι τελικοί πίνακες καταρτίζονται από την αρμόδια Επιτροπή και ισχύουν οι όροι της εκάστοτε πρόσκλησης.</p></section>
+  <?php sourceCardStart(); ?><p><strong>Νομική βάση:</strong> Υ.Α. 88422/Κ1, ΦΕΚ Β΄ 4088/03.07.2026, <strong>όπως διορθώθηκε με τη Διόρθωση Σφάλματος ΦΕΚ Β΄ 4199/10.07.2026</strong>.</p><p><strong>Πρόσκληση 2026–2027:</strong> 94386/Κ1/13.07.2026 — αιτήσεις από 14 έως και 20 Ιουλίου 2026.</p><?php sourceCardLinksStart(); ?><?php sourceCardLink('https://www.gsvetlly.minedu.gov.gr/nea-anakoinoseis/809-prosklese-ekdeloses-endiapherontos-gia-ten-ypobole-aiteseon-apospases-monimon-ekpaideutikon-protobathmias-kai-deuterobathmias-ekpaideuses-sta-scholeia-deuteres-eukairias-gia-to-scholiko-etos-2026-2027', 'Επίσημη πρόσκληση απόσπασης στα ΣΔΕ 2026–2027 — Γ.Γ.Ε.Ε.Κ. & Δ.Β.Μ. ↗'); ?><?php sourceCardLinksEnd(); ?><?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενδεικτικό. Οι τελικοί πίνακες καταρτίζονται από την αρμόδια Επιτροπή και ισχύουν οι όροι της εκάστοτε πρόσκλησης.<?php sourceCardDisclaimerEnd(); ?><?php sourceCardEnd(); ?>
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
 
-<script src="includes/language-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-language-selector.js?v=3.20.31"></script>
-<script src="includes/sde-calculations.js?v=3.20.33"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-language-selector.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/sde-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
   const $ = id => document.getElementById(id);
   const yes = id => $(id).value === 'yes';
@@ -376,6 +377,6 @@ renderDeadlineCard(array(
   specialtyChanged();
   calculate();
 </script>
-  <script src="assets/common.js?v=3.20.36"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

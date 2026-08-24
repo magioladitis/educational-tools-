@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -5,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Οδηγός δικαιολογητικών τέκνων και αναπηρίας</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.13">
+  <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-guide-standard edu-guide-children-disability">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -115,11 +116,10 @@
 <div id="result" class="result"></div>
 
 <p class="small-note">Το εργαλείο παρέχει ενδεικτική καθοδήγηση και δεν αντικαθιστά την επίσημη προκήρυξη, τις οδηγίες του Α.Σ.Ε.Π., τον έλεγχο του Ο.Π.ΣΥ.Δ. ή τον έλεγχο των αρμόδιων υπηρεσιών.</p>
-<section class="edu-source-card" aria-labelledby="sourcesTitle">
-  <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+<?php sourceCardStart(); ?>
   <p>Προκηρύξεις Α.Σ.Ε.Π. <strong>1ΓΕ/2026</strong> και <strong>2ΓΕ/2026</strong>, κοινωνικά κριτήρια και δικαιολογητικά για τέκνα και αναπηρία.</p>
-  <div class="source-links"><a href="https://info.asep.gr/node/78700" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 — ΑΣΕΠ ↗</a> <a href="https://info.asep.gr/node/78701" target="_blank" rel="noopener noreferrer">2ΓΕ/2026 — ΑΣΕΠ ↗</a></div>
-</section>
+  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/78700', '1ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLink('https://info.asep.gr/node/78701', '2ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
+<?php sourceCardEnd(); ?>
 </div>
 
 <script>
@@ -249,6 +249,6 @@ function showDocuments(){
 }
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-<script src="assets/common.js?v=3.20.13"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

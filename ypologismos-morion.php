@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -5,7 +6,7 @@
 <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.38">
+  <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 
 <body class="edu-ui edu-calc-standard edu-calc-asep-main">
@@ -91,8 +92,8 @@ renderAsepPeAcademic(array(
         <div class="note">Βάλε κάθε χρονικό διάστημα σε <strong>ένα μόνο</strong> αντίστοιχο πεδίο, ώστε να μη γίνει διπλή μέτρηση.</div>
 
         <div class="field-grid">
-          <div class="field"><label for="regularMonths">Δημόσια εκπαιδευτική προϋπηρεσία<small>1 μόριο/μήνα · έως 120 μήνες</small></label><input type="number" id="regularMonths" data-service-role="regular" min="0" max="120" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
-          <div class="field"><label for="difficultMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–2021<small>2 μόρια/μήνα · έως 60 μήνες</small></label><input type="number" id="difficultMonths" data-service-role="difficult" min="0" max="60" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+          <div class="field"><label for="regularMonths">Δημόσια εκπαιδευτική προϋπηρεσία<small>1 μόριο/μήνα · έως 120 μήνες</small></label><input type="number" id="regularMonths" data-service-role="regular" min="0" max="120" step="1" value="0" inputmode="numeric"></div>
+          <div class="field"><label for="difficultMonths">Δυσπρόσιτα / καταστήματα κράτησης από 2020–2021<small>2 μόρια/μήνα · έως 60 μήνες</small></label><input type="number" id="difficultMonths" data-service-role="difficult" min="0" max="60" step="1" value="0" inputmode="numeric"></div>
         </div>
 
 <?php
@@ -105,7 +106,7 @@ renderAsepThreeMonthService(array(
 ?>
 
         <div class="field-grid">
-          <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" data-service-role="private" min="0" max="480" step="1" value="0" inputmode="numeric" oninput="limitIntegerMonth(this)"></div>
+          <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" data-service-role="private" min="0" max="480" step="1" value="0" inputmode="numeric"></div>
         </div>
 
 <?php renderAsepDigitalTutoringService(array('container_id' => 'digitalTutoring', 'input_class' => 'service-months')); ?>
@@ -169,26 +170,25 @@ renderAsepSocialCriteria(array(
 
   <div id="result" class="result" role="status" aria-live="polite"></div>
 
-  <section class="edu-source-card" aria-labelledby="sourcesTitle">
-    <h2 id="sourcesTitle">Πηγές / Νομική βάση</h2>
+  <?php sourceCardStart(); ?>
     <p>Προκηρύξεις Α.Σ.Ε.Π. <strong>1ΓΕ/2026</strong> (ΦΕΚ 21/29.04.2026) και <strong>2ΓΕ/2026</strong> (ΦΕΚ 22/29.04.2026), ιδίως το Κεφάλαιο Γ΄ «Κριτήρια Κατάταξης».</p>
-    <div class="source-links"><a href="https://info.asep.gr/node/78700" target="_blank" rel="noopener noreferrer">1ΓΕ/2026 — ΑΣΕΠ ↗</a> <a href="https://info.asep.gr/node/78701" target="_blank" rel="noopener noreferrer">2ΓΕ/2026 — ΑΣΕΠ ↗</a></div>
-    <p class="source-disclaimer">Το εργαλείο είναι ενημερωτικό. Η τελική μοριοδότηση προκύπτει από τον επίσημο έλεγχο της αίτησης και των δικαιολογητικών.</p>
-  </section>
+    <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/78700', '1ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLink('https://info.asep.gr/node/78701', '2ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
+    <?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενημερωτικό. Η τελική μοριοδότηση προκύπτει από τον επίσημο έλεγχο της αίτησης και των δικαιολογητικών.<?php sourceCardDisclaimerEnd(); ?>
+  <?php sourceCardEnd(); ?>
 </div>
 
-<script src="includes/academic-calculations.js?v=3.20.31"></script>
-<script src="includes/language-calculations.js?v=3.20.31"></script>
-<script src="includes/asep-language-selector.js?v=3.20.31"></script>
-<script src="includes/asep-computer-proof.js?v=3.20.25"></script>
-<script src="includes/training-proof.js?v=3.20.25"></script>
-<script src="includes/asep-pe-academic.js?v=3.20.34"></script>
-<script src="includes/service-calculations.js?v=3.20.33"></script>
-<script src="includes/asep-service-controller.js?v=3.20.26"></script>
-<script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
-<script src="includes/social-calculations.js?v=3.20.32"></script>
-<script src="includes/asep-social-criteria.js?v=3.20.32"></script>
-<script src="includes/asep-pedagogical-proof.js?v=3.20.38"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/academic-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-language-selector.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-computer-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/training-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-pe-academic.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/service-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-service-controller.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-digital-tutoring.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/social-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-social-criteria.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-pedagogical-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
   let lastResultText = "";
 
@@ -236,17 +236,6 @@ renderAsepSocialCriteria(array(
     setTimeout(() => { btn.textContent = old; }, 1400);
   }
 
-  function limitIntegerMonth(input) {
-    let value = String(input.value).replace(/[^0-9]/g, "");
-    if (value === "") {
-      input.value = "";
-      return;
-    }
-    let parsed = Math.max(0, parseInt(value, 10));
-    const max = input.getAttribute("max");
-    if (max !== null && max !== "") parsed = Math.min(parsed, Number(max));
-    input.value = parsed;
-  }
 
   function numberOf(id) {
     const value = parseFloat(valueOf(id));
@@ -488,6 +477,6 @@ renderAsepSocialCriteria(array(
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.36"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

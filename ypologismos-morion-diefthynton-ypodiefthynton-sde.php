@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/includes/config.php'; ?>
 <!doctype html>
 <html lang="el">
 <head>
@@ -5,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (ΣΔΕ) βάσει της Υ.Α. 70621/Κ1, ΦΕΚ Β' 3037/19.06.2025.">
   <title>Μόρια Διευθυντών & Υποδιευθυντών ΣΔΕ</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-sde edu-page-sde-leadership">
 <main class="page-shell">
@@ -189,10 +190,10 @@
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 
-  <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Πηγή:</strong> Υ.Α. 70621/Κ1, ΦΕΚ Β΄ 3037/19.06.2025 «Καθορισμός κριτηρίων και διαδικασίας επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (Σ.Δ.Ε.)».</p><p class="source-disclaimer">Το εργαλείο παρέχει ενδεικτικό υπολογισμό· η τελική κρίση ανήκει στην αρμόδια Επιτροπή Επιλογής.</p></section>
+  <?php sourceCardStart(); ?><p><strong>Πηγή:</strong> Υ.Α. 70621/Κ1, ΦΕΚ Β΄ 3037/19.06.2025 «Καθορισμός κριτηρίων και διαδικασίας επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (Σ.Δ.Ε.)».</p><?php sourceCardDisclaimerStart(); ?>Το εργαλείο παρέχει ενδεικτικό υπολογισμό· η τελική κρίση ανήκει στην αρμόδια Επιτροπή Επιλογής.<?php sourceCardDisclaimerEnd(); ?><?php sourceCardEnd(); ?>
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
-<script src="includes/sde-leadership-calculations.js?v=3.20.32"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/sde-leadership-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
   const $ = id => document.getElementById(id);
   const val = id => $(id).value;
@@ -356,6 +357,6 @@
 
   roleChanged();
 </script>
-<script src="assets/common.js?v=3.20.13"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>
