@@ -24,6 +24,8 @@ if (!function_exists('renderAsepComputerProof')) {
         $methodId = isset($config['method_id']) ? (string) $config['method_id'] : 'computerProofMethod';
         $statusId = isset($config['status_id']) ? (string) $config['status_id'] : 'computerProofStatus';
         $fieldClass = isset($config['field_class']) ? trim((string) $config['field_class']) : 'field';
+        $context = isset($config['context']) ? trim((string) $config['context']) : 'current';
+        $historical5ea2022 = ($context === '5ea-2022');
 
         $flags = ENT_QUOTES;
         if (defined('ENT_SUBSTITUTE')) {
@@ -70,13 +72,29 @@ if (!function_exists('renderAsepComputerProof')) {
       <option value="certificate">1. Πιστοποιητικό γνώσης πληροφορικής ή χειρισμού Η/Υ</option>
       <option value="informatics-title">2. Τίτλος σπουδών ειδικότητας Πληροφορικής / γνώσης χειρισμού Η/Υ</option>
       <option value="four-courses">3. Τίτλος σπουδών με τουλάχιστον 4 σχετικά μαθήματα</option>
+<?php if ($historical5ea2022): ?>
+      <option value="foreign-certificate">4. Πιστοποιητικό φορέα αλλοδαπής με απόφαση αντιστοίχισης Ε.Ο.Π.Π.Ε.Π.</option>
+      <option value="tpe-a">5. Πιστοποίηση εκπαιδευτικών Τ.Π.Ε. Α΄ επιπέδου</option>
+<?php else: ?>
       <option value="state-certificate">4. Κρατικό Πιστοποιητικό Πληροφορικής</option>
       <option value="esdda">5. Πιστοποιητικό αποφοίτησης από την Ε.Σ.Δ.Δ.Α.</option>
       <option value="tpe-a">6. Πιστοποίηση εκπαιδευτικών Τ.Π.Ε. Α΄ επιπέδου</option>
+<?php endif; ?>
     </select>
     <div class="asep-computer-proof-status neutral" id="<?php echo $h($statusId); ?>" data-computer-proof-status>Επίλεξε τον τρόπο απόδειξης που διαθέτεις.</div>
 
     <details class="asep-computer-proof-details">
+<?php if ($historical5ea2022): ?>
+      <summary>Δες αναλυτικά τους 5 αποδεκτούς τρόπους απόδειξης της 5ΕΑ/2022</summary>
+      <ol>
+        <li>Με πιστοποιητικά Πληροφορικής ή γνώσης χειρισμού Η/Υ από πιστοποιημένους φορείς, για τα τρία απαιτούμενα αντικείμενα.</li>
+        <li>Με τίτλους σπουδών τριτοβάθμιας, μεταδευτεροβάθμιας ή δευτεροβάθμιας εκπαίδευσης ειδικότητας Πληροφορικής ή γνώσης χειρισμού Η/Υ, σύμφωνα με το τότε ισχύον Π.Δ. 50/2001.</li>
+        <li>Με τίτλους σπουδών από την αναλυτική βαθμολογία των οποίων προκύπτουν τουλάχιστον τέσσερα μαθήματα Πληροφορικής ή γνώσης χειρισμού Η/Υ· γίνονται δεκτές και σχετικές βεβαιώσεις τμημάτων ΑΕΙ/ΤΕΙ.</li>
+        <li>Με πιστοποιητικό φορέα της αλλοδαπής, εφόσον συνοδεύεται από απόφαση του Δ.Σ. του Ε.Ο.Π.Π.Ε.Π. περί αντιστοίχισης.</li>
+        <li>Με βεβαίωση πιστοποίησης δεξιοτήτων και γνώσεων Τ.Π.Ε. Α΄ επιπέδου του Υπουργείου Παιδείας και Θρησκευμάτων.</li>
+      </ol>
+      <div class="asep-computer-proof-note">Ιστορικό πλαίσιο: το Παράρτημα Β΄ της 5ΕΑ/2022 παραπέμπει στο Π.Δ. 50/2001, όπως ίσχυε τότε. Δεν εφαρμόζονται εδώ μεταγενέστερες διατυπώσεις νεότερου προσοντολογίου.</div>
+<?php else: ?>
       <summary>Δες αναλυτικά τους 6 αποδεκτούς τρόπους απόδειξης</summary>
       <ol>
         <li>Με πιστοποιητικά γνώσης πληροφορικής ή χειρισμού Η/Υ.</li>
@@ -86,6 +104,7 @@ if (!function_exists('renderAsepComputerProof')) {
         <li>Με πιστοποιητικό αποφοίτησης από την Εθνική Σχολή Δημόσιας Διοίκησης και Αυτοδιοίκησης (Ε.Σ.Δ.Δ.Α.).</li>
         <li>Με βεβαίωση πιστοποίησης δεξιοτήτων και γνώσεων στις Τεχνολογίες Πληροφορίας και Επικοινωνιών (Τ.Π.Ε.) Α΄ επιπέδου του Υπουργείου Παιδείας, Θρησκευμάτων και Αθλητισμού.</li>
       </ol>
+<?php endif; ?>
     </details>
     <div class="asep-computer-proof-note">Ο γρήγορος έλεγχος αφορά μόνο τον <strong>τρόπο απόδειξης</strong>. Η μοριοδότηση και τυχόν ειδικοί περιορισμοί της προκήρυξης εφαρμόζονται χωριστά — για παράδειγμα, όπου προβλέπεται, η γνώση Η/Υ δεν μοριοδοτείται στον ΠΕ86.</div>
   </div>

@@ -93,18 +93,18 @@
           </div>
           <div class="field">
             <label for="language1">Ξένη γλώσσα 1</label>
-            <select id="language1" onchange="languageChanged()"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other1">Άλλη</option></select>
+            <select id="language1" onchange="languageChanged(this)"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other1">Άλλη</option></select>
             <label class="edu-tools-sr-only" for="languageLevel1">Επίπεδο γλώσσας 1</label><select id="languageLevel1" onchange="calculate()" class="edu-mt-8"><option value="">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select>
             <label class="edu-tools-sr-only" for="languageAppointment1">Προσόν διορισμού γλώσσας 1</label><select id="languageAppointment1" onchange="calculate()" class="edu-mt-8"><option value="no">Δεν αποτέλεσε προσόν διορισμού</option><option value="yes">Αποτέλεσε προσόν διορισμού — 0 μόρια</option></select>
           </div>
           <div class="field">
             <label for="language2">Ξένη γλώσσα 2</label>
-            <select id="language2" onchange="languageChanged()"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other2">Άλλη</option></select>
+            <select id="language2" onchange="languageChanged(this)"><option value="">— Καμία —</option><option value="english">Αγγλικά</option><option value="french">Γαλλικά</option><option value="german">Γερμανικά</option><option value="italian">Ιταλικά</option><option value="spanish">Ισπανικά</option><option value="other2">Άλλη</option></select>
             <label class="edu-tools-sr-only" for="languageLevel2">Επίπεδο γλώσσας 2</label><select id="languageLevel2" onchange="calculate()" class="edu-mt-8"><option value="">— Επίπεδο —</option><option value="B2">Β2 — Καλή</option><option value="C1">C1 — Πολύ καλή</option><option value="C2">C2 — Άριστη</option></select>
             <label class="edu-tools-sr-only" for="languageAppointment2">Προσόν διορισμού γλώσσας 2</label><select id="languageAppointment2" onchange="calculate()" class="edu-mt-8"><option value="no">Δεν αποτέλεσε προσόν διορισμού</option><option value="yes">Αποτέλεσε προσόν διορισμού — 0 μόρια</option></select>
           </div>
         </div>
-        <div class="note">Το εργαλείο ταξινομεί αυτόματα τις δύο επιλέξιμες γλώσσες ώστε η ισχυρότερη να μοριοδοτείται ως 1η. Η ίδια γλώσσα λαμβάνεται μόνο μία φορά, στο ανώτερο επίπεδο.</div>
+        <div class="note">Το εργαλείο ταξινομεί αυτόματα τις δύο επιλέξιμες γλώσσες ώστε η ισχυρότερη να μοριοδοτείται ως 1η. Η ίδια κατονομασμένη γλώσσα δεν μπορεί να επιλεγεί δύο φορές. Η επιλογή «Άλλη» παραμένει διαθέσιμη και στα δύο πεδία, επειδή μπορεί να αφορά διαφορετικές γλώσσες.</div>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '3. Διδακτική εμπειρία', 'subtitle_html' => 'Τα όρια αλλάζουν ανά θέση. Στην ωρομίσθια απασχόληση στα ΣΔΕ και στις σχολικές μονάδες/ΣΑΕΚ/ΕΣΚ, 650 ώρες αντιστοιχούν σε ένα έτος.', 'cap_html' => 'έως —', 'cap_attrs' => array('id' => 'teachingMax'))); ?>
@@ -193,6 +193,8 @@
   <?php sourceCardStart(); ?><p><strong>Πηγή:</strong> Υ.Α. 70621/Κ1, ΦΕΚ Β΄ 3037/19.06.2025 «Καθορισμός κριτηρίων και διαδικασίας επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (Σ.Δ.Ε.)».</p><?php sourceCardDisclaimerStart(); ?>Το εργαλείο παρέχει ενδεικτικό υπολογισμό· η τελική κρίση ανήκει στην αρμόδια Επιτροπή Επιλογής.<?php sourceCardDisclaimerEnd(); ?><?php sourceCardEnd(); ?>
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-pair-lock.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/sde-leadership-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
   const $ = id => document.getElementById(id);
@@ -260,12 +262,19 @@
     calculate();
   }
 
+  const LANGUAGE_PAIR_OPTIONS = {
+    first: 'language1',
+    second: 'language2',
+    relatedFirst: ['languageLevel1', 'languageAppointment1'],
+    relatedSecond: ['languageLevel2', 'languageAppointment2']
+  };
+
+  function syncLanguageChoices(){
+    return LanguagePairLock.sync(LANGUAGE_PAIR_OPTIONS);
+  }
+
   function languageChanged(){
-    const l1 = val('language1'); const l2 = val('language2');
-    if (l1 && l2 && l1 === l2 && !l1.startsWith('other')) {
-      $('language2').value = '';
-      $('languageLevel2').value = '';
-    }
+    syncLanguageChoices();
     calculate();
   }
 
@@ -352,9 +361,11 @@
       else if (['esdda','secondDegree','languageAppointment1','languageAppointment2'].includes(s.id)) s.value='no';
       else s.selectedIndex=0;
     });
+    syncLanguageChoices();
     roleChanged(); window.scrollTo({top:0,behavior:'smooth'});
   }
 
+  syncLanguageChoices();
   roleChanged();
 </script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

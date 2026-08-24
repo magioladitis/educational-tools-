@@ -9,7 +9,7 @@
 
   function mainState(root, profile){
     const result = { phd:false, msc:false, retraining:false, fiveYear:false, pe11:false };
-    if(profile === 'te'){
+    if(profile === 'te' || profile === 'de'){
       const select = root.querySelector('[data-eae-main-select]');
       const selected = value(select);
       if(selected === 'phd') result.phd = true;
@@ -42,7 +42,8 @@
     if(!global.EaeTableEligibility || typeof global.EaeTableEligibility.calculate !== 'function'){
       throw new Error('Δεν έχει φορτωθεί το EaeTableEligibility.');
     }
-    const profile = root.getAttribute('data-eae-profile') === 'te' ? 'te' : 'pe';
+    const rawProfile = root.getAttribute('data-eae-profile');
+    const profile = rawProfile === 'de' ? 'de' : (rawProfile === 'te' ? 'te' : 'pe');
     const specialtyId = root.getAttribute('data-specialty-id') || '';
     const seminar = root.querySelector('[data-eae-aux="seminar400"]');
     const months = root.querySelector('[data-eae-aux="months"]');

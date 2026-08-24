@@ -46,16 +46,28 @@ if (!function_exists('renderAsepPedagogicalProof')) {
                 'aei_cutoff' => '2022–2023',
                 'allow_three_month' => true,
                 'legal' => 'Κεφάλαιο Δ΄ και Παράρτημα Ε΄ της 1ΓΤ/2024. Για κλάδους ΤΕ–ΔΕ προβλέπεται και βεβαίωση τρίμηνης παιδαγωγικής επιμόρφωσης ΑΣΠΑΙΤΕ/πρώην ΠΑΤΕΣ–ΣΕΛΕΤΕ.'
+            ),
+            '5ea-2022' => array(
+                'label' => '5ΕΑ/2022',
+                'aei_cutoff' => '',
+                'allow_three_month' => true,
+                'allow_article99' => false,
+                'aei_warning' => 'Η βεβαίωση Α.Ε.Ι. προβλέπεται στην 5ΕΑ/2022. Έλεγξε τις μεταβατικές διατάξεις του άρθρου 66 ν. 4589/2019 και το Παράρτημα Ε΄ της ίδιας προκήρυξης· δεν εφαρμόζονται εδώ μεταγενέστερα χρονικά όρια προκηρύξεων 2025/2026.',
+                'aei_detail' => 'Η 5ΕΑ/2022 παραπέμπει στις μεταβατικές διατάξεις του άρθρου 66 ν. 4589/2019: διαφορετική μεταχείριση για εισαγωγή πριν από το 2013–2014, ειδική εξαίρεση για καθηγητικές σχολές 2013–2014/2014–2015 και απαλλαγές παλαιών τίτλων. Έλεγξε το Παράρτημα Ε΄ της 5ΕΑ/2022.',
+                'legal' => 'Κεφάλαιο Δ΄ και Παράρτημα Ε΄ της 5ΕΑ/2022. Για κλάδους ΔΕ προβλέπεται και βεβαίωση τρίμηνης παιδαγωγικής επιμόρφωσης ΑΣΠΑΙΤΕ/πρώην ΠΑΤΕΣ–ΣΕΛΕΤΕ.'
             )
         );
         if (!isset($profiles[$context])) $context = 'general-pe-2026';
         $profile = $profiles[$context];
+        $allowArticle99 = !isset($profile['allow_article99']) || (bool) $profile['allow_article99'];
+        $aeiWarning = isset($profile['aei_warning']) ? (string) $profile['aei_warning'] : '';
+        $aeiDetail = isset($profile['aei_detail']) ? (string) $profile['aei_detail'] : '';
 
         $flags = ENT_QUOTES;
         if (defined('ENT_SUBSTITUTE')) $flags = $flags | ENT_SUBSTITUTE;
         $h = function ($value) use ($flags) { return htmlspecialchars((string) $value, $flags, 'UTF-8'); };
         ?>
-<div class="asep-pedagogical-proof" data-component="asep-pedagogical-proof" data-input-id="<?php echo $h($inputId); ?>" data-context="<?php echo $h($context); ?>" data-aei-cutoff="<?php echo $h($profile['aei_cutoff']); ?>">
+<div class="asep-pedagogical-proof" data-component="asep-pedagogical-proof" data-input-id="<?php echo $h($inputId); ?>" data-context="<?php echo $h($context); ?>" data-aei-cutoff="<?php echo $h($profile['aei_cutoff']); ?>" data-aei-warning="<?php echo $h($aeiWarning); ?>">
   <div class="checkrow check asep-pedagogical-control">
     <input type="checkbox" id="<?php echo $h($inputId); ?>">
     <label for="<?php echo $h($inputId); ?>">Πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια
@@ -78,7 +90,9 @@ if (!function_exists('renderAsepPedagogicalProof')) {
 <?php if ($profile['allow_three_month']): ?>
       <option value="aspaite-three-month">Βεβαίωση τρίμηνης Παιδαγωγικής Επιμόρφωσης Α.Σ.ΠΑΙ.Τ.Ε. / πρώην ΠΑΤΕΣ–ΣΕΛΕΤΕ</option>
 <?php endif; ?>
+<?php if ($allowArticle99): ?>
       <option value="article99">Πιστοποιητικό Π.Δ.Ε. άρθρου 99 ν. 4957/2022</option>
+<?php endif; ?>
       <option value="epath">Πτυχίο Ε.Π.Α.Θ.</option>
       <option value="professor-school">Πτυχίο πρώην καθηγητικής σχολής</option>
       <option value="other">Άλλο / δεν είμαι βέβαιος για την κατηγορία</option>
@@ -88,7 +102,11 @@ if (!function_exists('renderAsepPedagogicalProof')) {
     <details class="asep-pedagogical-proof-details">
       <summary>Χρονικές προϋποθέσεις και σημεία προσοχής</summary>
       <ul>
+<?php if ($aeiDetail !== ''): ?>
+        <li><strong>Βεβαίωση Α.Ε.Ι.:</strong> <?php echo $h($aeiDetail); ?></li>
+<?php else: ?>
         <li><strong>Βεβαίωση Α.Ε.Ι.:</strong> για το συγκεκριμένο πλαίσιο, η μεταβατική δυνατότητα αφορά αποφοίτους που είχαν εισαχθεί έως και το ακαδημαϊκό έτος <strong><?php echo $h($profile['aei_cutoff']); ?></strong> σε Τμήμα/Σχολή που χορηγούσε την πιστοποίηση κατά τον χρόνο εισαγωγής.</li>
+<?php endif; ?>
         <li><strong>Ε.Π.Α.Θ.:</strong> η σχετική περίπτωση απαιτεί ημερομηνία κτήσης πριν από <strong>12/06/2018</strong>.</li>
         <li><strong>Πρώην καθηγητική σχολή:</strong> η a priori Π.Δ.Ε. συνδέεται με εισαγωγή έως <strong>2014–2015</strong> ή κτήση πτυχίου έως <strong>2017–2018</strong>. Για μεταγενέστερες περιπτώσεις χρειάζεται άλλο αποδεικτικό.</li>
 <?php if ($profile['allow_three_month']): ?>

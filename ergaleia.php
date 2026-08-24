@@ -19,7 +19,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
 <div class="hero-meta">
-<span>22 διαθέσιμα εργαλεία</span>
+<span>23 διαθέσιμα εργαλεία</span>
 <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
 <span>Αναπληρωτές</span>
 <span>Αποσπάσεις</span>
@@ -111,12 +111,12 @@ renderDeadlineCard(array(
 <button aria-pressed="false" class="filter-btn" data-filter="sde" type="button">ΣΔΕ</button>
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 22 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 23 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
 <div class="card-top">
-<span class="tool-number">01</span>
+<span class="tool-number">1</span>
 <span class="category-tag">ΑΣΕΠ</span>
 </div>
 <h2>Έχω δικαίωμα συμμετοχής;</h2>
@@ -128,7 +128,7 @@ renderDeadlineCard(array(
 </a>
 <a class="tool-card" data-category="asep" data-search="παράβολα παράβολο κόστος ειδικότητα 1ΓΕ 2ΓΕ ΑΣΕΠ" href="posa-paravola.php">
 <div class="card-top">
-<span class="tool-number">02</span>
+<span class="tool-number">2</span>
 <span class="category-tag">ΑΣΕΠ</span>
 </div>
 <h2>Πόσα παράβολα χρειάζομαι;</h2>
@@ -140,7 +140,7 @@ renderDeadlineCard(array(
 </a>
 <a class="tool-card" data-category="asep" data-search="δικαιολογητικά τίτλοι σπουδών μεταπτυχιακό διδακτορικό integrated master αλλοδαπή ΔΟΑΤΑΠ" href="dikaiologitika-titlon-spoudon.php">
 <div class="card-top">
-<span class="tool-number">03</span>
+<span class="tool-number">3</span>
 <span class="category-tag">ΑΣΕΠ</span>
 </div>
 <h2>Τι δικαιολογητικά χρειάζομαι;</h2>
@@ -152,7 +152,7 @@ renderDeadlineCard(array(
 </a>
 <a class="tool-card" data-category="asep anaplirotes" data-search="υπολογισμός μορίων ΑΣΕΠ αναπληρωτές 1ΓΕ 2ΓΕ ακαδημαϊκά ξένες γλώσσες προϋπηρεσία κοινωνικά κριτήρια" href="ypologismos-morion.php">
 <div class="card-top">
-<span class="tool-number">04</span>
+<span class="tool-number">4</span>
 <span class="category-tag green">ΑΣΕΠ / Αναπληρωτές</span>
 </div>
 <h2>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</h2>
@@ -165,7 +165,7 @@ renderDeadlineCard(array(
 <a class="tool-card" data-category="asep anaplirotes" data-search="1ΓΤ 2024 1GT ΤΕ01 ΤΕ02 ΤΕ16 τεχνική εκπαίδευση μουσικής μη ανώτατων ιδρυμάτων υπολογισμός μόρια ΑΣΕΠ προϋπηρεσία κοινωνικά ακαδημαϊκά" href="ypologismos-morion-1gt-2024.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">05</span>
+<span class="tool-number">5</span>
 <span class="category-tag green">ΑΣΕΠ / Τ.Ε.</span>
 </div>
 <h2>Υπολογισμός μορίων 1ΓΤ/2024</h2>
@@ -177,7 +177,7 @@ renderDeadlineCard(array(
 </a>
 <a class="tool-card" data-category="asep" data-search="παιδαγωγική διδακτική επάρκεια ΠΔΕ πρόταξη ΑΣΕΠ" href="paidagogiki-eparkeia.php">
 <div class="card-top">
-<span class="tool-number">06</span>
+<span class="tool-number">6</span>
 <span class="category-tag">ΑΣΕΠ</span>
 </div>
 <h2>Έχω Παιδαγωγική και Διδακτική Επάρκεια;</h2>
@@ -190,7 +190,7 @@ renderDeadlineCard(array(
 <a class="tool-card" data-category="anaplirotes onaseia" data-search="Ωνάσεια ΔΗΜΩΣ Δημόσια Ωνάσεια Σχολεία μόρια αναπληρωτή Πρότυπα Πειραματικά ακαδημαϊκά προσόντα" href="ypologismos-morion-onaseia.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">07</span>
+<span class="tool-number">7</span>
 <span class="category-tag purple">Ωνάσεια</span>
 </div>
 <h2>Μόρια Αναπληρωτή στα Ωνάσεια</h2>
@@ -203,7 +203,7 @@ renderDeadlineCard(array(
 <a class="tool-card" data-category="apospaseis onaseia" data-search="ΔΗΜΩΣ Ωνάσεια Δημόσια Ωνάσεια Σχολεία απόσπαση μόνιμων εκπαιδευτικών 53 μόρια επιστημονική παιδαγωγική συγγραφικό καινοτόμο έργο" href="ypologismos-morion-apospasis-dimos.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">08</span>
+<span class="tool-number">8</span>
 <span class="category-tag purple">Ωνάσεια / Αποσπάσεις</span>
 </div>
 <h2>Μόρια Απόσπασης στα ΔΗΜ.Ω.Σ.</h2>
@@ -215,7 +215,7 @@ renderDeadlineCard(array(
 </a>
 <a class="tool-card" data-category="apospaseis" data-search="υπολογισμός μόρια απόσπασης εκπαιδευτικών συνυπηρέτηση εντοπιότητα οικογενειακοί λόγοι υπηρεσία" href="ypologismos-morion-apospasis.php">
 <div class="card-top">
-<span class="tool-number">09</span>
+<span class="tool-number">9</span>
 <span class="category-tag orange">Αποσπάσεις</span>
 </div>
 <h2>Υπολογισμός μορίων απόσπασης</h2>
@@ -277,10 +277,22 @@ renderDeadlineCard(array(
         </p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a>
+<a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="5ΕΑ 2022 ειδική αγωγή ΕΑΕ ΔΕ01 ΔΕ02 ΔΕ01.05 ΔΕ01.13 ΔΕ01.14 ΔΕ01.15 ΔΕ01.17 ΔΕ02.01 ΔΕ02.02 ιστορική προκήρυξη μόρια ΑΣΕΠ 123 αιτήσεις" href="ypologismos-morion-5ea-2022.php">
+<div class="card-top">
+<span class="tool-number">14</span>
+<span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
+</div>
+<h2>Υπολογισμός μορίων 5ΕΑ/2022</h2>
+<p>
+          Η «μικρή» ιστορική προκήρυξη ΔΕ Ειδικής Αγωγής: 7 ειδικότητες ΔΕ01/ΔΕ02,
+          μόλις 123 αιτήσεις, με έλεγχο Κύριου/Επικουρικού Πίνακα και ειδικούς κανόνες ΔΕ.
+        </p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
 <a class="tool-card" data-category="asep" data-search="ένσταση ενστάσεις ΑΣΕΠ 1ΓΕ 2ΓΕ 2026 προσωρινοί πίνακες προσωρινών πινάκων e-παράβολο eparavolo παράβολο 50 ευρώ 20ψήφιο 20 ψηφία κωδικός επανυποβολή ανάκληση προθεσμία countdown δικαιολογητικά" href="odigos-enstasis.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">14</span>
+<span class="tool-number">15</span>
 <span class="category-tag">ΑΣΕΠ</span>
 </div>
 <h2>Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</h2>
@@ -293,7 +305,7 @@ renderDeadlineCard(array(
 <a class="tool-card" data-category="asep anaplirotes" data-search="δικαιολογητικά τέκνα αναπηρία κοινωνικά κριτήρια ΑΣΕΠ 1ΓΕ 2ΓΕ μοριοδοτούμενα τέκνα αναπηρία ιδίου συζύγου τέκνου" href="dikaiologitika-tekna-anapiria.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">15</span>
+<span class="tool-number">16</span>
 <span class="category-tag green">ΑΣΕΠ / Αναπληρωτές</span>
 </div>
 <h2>Δικαιολογητικά τέκνων &amp; αναπηρίας</h2>
@@ -306,7 +318,7 @@ renderDeadlineCard(array(
 <a class="tool-card" data-category="apospaseis" data-search="ψηφιακό φροντιστήριο απόσπαση αποσπάσεις μόρια μοριοδότηση μόνιμοι εκπαιδευτικοί βιντεοσκοπημένο μάθημα συνέντευξη πανελλαδικές ΤΠΕ" href="ypologismos-morion-apospasis-psifiako-frontistirio.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">16</span>
+<span class="tool-number">17</span>
 <span class="category-tag orange">Αποσπάσεις</span>
 </div>
 <h2>Μόρια Απόσπασης στο Ψηφιακό Φροντιστήριο</h2>
@@ -319,7 +331,7 @@ renderDeadlineCard(array(
 <a class="tool-card" data-category="apospaseis sde" data-search="ΣΔΕ Σχολεία Δεύτερης Ευκαιρίας απόσπαση αποσπάσεις μόρια μοριοδότηση μόνιμοι εκπαιδευτικοί γραμματισμοί ειδικότητες εκπαίδευση ενηλίκων" href="ypologismos-morion-apospasis-sde.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">17</span>
+<span class="tool-number">18</span>
 <span class="category-tag orange">ΣΔΕ / Αποσπάσεις</span>
 </div>
 <h2>Μόρια Απόσπασης στα ΣΔΕ</h2>
@@ -332,7 +344,7 @@ renderDeadlineCard(array(
 <a class="tool-card" data-category="apospaseis" data-search="εξωτερικό απόσπαση αποσπάσεις εκπαιδευτικών μόρια μοριοδότηση γλωσσομάθεια βασικός πίνακας εναλλακτικός πίνακας ΔΙΠΟΔΕ ελληνόγλωσση εκπαίδευση" href="ypologismos-morion-apospasis-exoteriko.php">
 <span class="new-badge">ΝΕΟ</span>
 <div class="card-top">
-<span class="tool-number">18</span>
+<span class="tool-number">19</span>
 <span class="category-tag orange">Αποσπάσεις</span>
 </div>
 <h2>Μόρια Απόσπασης στο Εξωτερικό</h2>
@@ -342,24 +354,24 @@ renderDeadlineCard(array(
         </p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a>
-<a class="tool-card" data-category="apospaseis" data-search="ευρωπαϊκά σχολεία Ευρωπαϊκά Σχολεία απόσπαση αποσπάσεις μόρια μοριοδότηση συνέντευξη γλωσσομάθεια ΤΠΕ διδασκαλία" href="ypologismos-morion-apospasis-evropaika-scholeia.php"><span class="new-badge">ΝΕΟ</span><div class="card-top"><span class="tool-number">19</span><span class="category-tag orange">Αποσπάσεις</span></div><h2>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</h2><p>Υπολόγισε τα μόρια τυπικών προσόντων και εμπειρίας πριν από τη συνέντευξη και το τελικό σύνολο μετά την προφορική διαδικασία.</p><span class="button-like">Άνοιγμα εργαλείου →</span></a>
+<a class="tool-card" data-category="apospaseis" data-search="ευρωπαϊκά σχολεία Ευρωπαϊκά Σχολεία απόσπαση αποσπάσεις μόρια μοριοδότηση συνέντευξη γλωσσομάθεια ΤΠΕ διδασκαλία" href="ypologismos-morion-apospasis-evropaika-scholeia.php"><span class="new-badge">ΝΕΟ</span><div class="card-top"><span class="tool-number">20</span><span class="category-tag orange">Αποσπάσεις</span></div><h2>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</h2><p>Υπολόγισε τα μόρια τυπικών προσόντων και εμπειρίας πριν από τη συνέντευξη και το τελικό σύνολο μετά την προφορική διαδικασία.</p><span class="button-like">Άνοιγμα εργαλείου →</span></a>
 <a class="tool-card" data-category="asep" data-search="μετατροπή κλίμακας βαθμός πτυχίου 10βάθμια 20βάθμια 1ΓΕ 2026 1ΓΤ 2024 λεκτική ΚΑΛΩΣ ΛΙΑΝ ΚΑΛΩΣ ΑΡΙΣΤΑ ακέραιο μέρος αριθμητής παρονομαστής κλάσμα δεκαδικός" href="metatropi-klimakas.php">
 <span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">20</span><span class="category-tag">ΑΣΕΠ</span></div>
+<div class="card-top"><span class="tool-number">21</span><span class="category-tag">ΑΣΕΠ</span></div>
 <h2>Μετατροπή κλίμακας βαθμού</h2>
 <p>Μετέτρεψε βαθμό από 10βάθμια σε 20βάθμια κλίμακα ή από λεκτική μορφή και πάρε έτοιμα τα πεδία Ακέραιο μέρος – Αριθμητής – Παρονομαστής.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a>
 <a class="tool-card" data-category="sde" data-search="ΣΔΕ Σχολεία Δεύτερης Ευκαιρίας Διευθυντές Υποδιευθυντές διευθυντής υποδιευθυντής θέσεις ευθύνης μόρια μοριοδότηση διοικητική εμπειρία διδακτική εμπειρία εκπαίδευση ενηλίκων συνέντευξη" href="ypologismos-morion-diefthynton-ypodiefthynton-sde.php">
 <span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">21</span><span class="category-tag orange">ΣΔΕ / Θέσεις Ευθύνης</span></div>
+<div class="card-top"><span class="tool-number">22</span><span class="category-tag orange">ΣΔΕ / Θέσεις Ευθύνης</span></div>
 <h2>Μόρια Διευθυντών &amp; Υποδιευθυντών ΣΔΕ</h2>
 <p>Υπολόγισε τα μόρια για θέσεις Διευθυντή ή Υποδιευθυντή ΣΔΕ, με τυπικά προσόντα, διδακτική και διοικητική εμπειρία, επιμόρφωση και συνέντευξη όπου προβλέπεται.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a>
 <a class="tool-card" data-category="sde" data-search="ΣΔΕ Μητρώο ωρομίσθιο εκπαιδευτικό προσωπικό εκπαιδευτές Σύμβουλοι Ψυχολόγοι Σύμβουλοι Σταδιοδρομίας μόρια μοριοδότηση ανεργία κοινωνικά κριτήρια ΕΟΠΠΕΠ" href="ypologismos-morion-mitroo-sde.php">
 <span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">22</span><span class="category-tag orange">ΣΔΕ / Μητρώο</span></div>
+<div class="card-top"><span class="tool-number">23</span><span class="category-tag orange">ΣΔΕ / Μητρώο</span></div>
 <h2>Μόρια Μητρώου ΣΔΕ</h2>
 <p>Ενιαίος υπολογιστής για Εκπαιδευτικό Προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας, με δυναμικά κριτήρια και κοινωνικές προσαυξήσεις.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>

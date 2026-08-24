@@ -33,6 +33,7 @@
     if (!component) return;
     var inputId = component.getAttribute('data-input-id') || 'pedagogical';
     var cutoff = component.getAttribute('data-aei-cutoff') || '';
+    var aeiWarning = component.getAttribute('data-aei-warning') || '';
     var input = document.getElementById(inputId);
     var panel = component.querySelector('[data-pedagogical-proof-panel]');
     var method = component.querySelector('[data-pedagogical-proof-method]');
@@ -52,7 +53,7 @@
     if (!value) {
       setStatus(status, 'neutral', 'Δήλωσες Π.Δ.Ε. — επίλεξε τώρα το αποδεικτικό που τη θεμελιώνει.');
     } else if (value === 'aei-certificate') {
-      setStatus(status, 'warning', 'Η κατηγορία προβλέπεται. Έλεγξε ειδικά ότι πληρούται η μεταβατική προϋπόθεση εισαγωγής έως και ' + cutoff + ' και ότι το Τμήμα/Σχολή χορηγούσε την πιστοποίηση κατά τον χρόνο εισαγωγής.');
+      setStatus(status, 'warning', aeiWarning || ('Η κατηγορία προβλέπεται. Έλεγξε ειδικά ότι πληρούται η μεταβατική προϋπόθεση εισαγωγής έως και ' + cutoff + ' και ότι το Τμήμα/Σχολή χορηγούσε την πιστοποίηση κατά τον χρόνο εισαγωγής.'));
     } else if (value === 'epath') {
       setStatus(status, 'warning', 'Η κατηγορία προβλέπεται μόνο με πτυχίο Ε.Π.Α.Θ. που αποκτήθηκε πριν από 12/06/2018.');
     } else if (value === 'professor-school') {

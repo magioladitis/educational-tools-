@@ -24,7 +24,7 @@
   function text(value){ return String(value == null ? '' : value).trim(); }
 
   function labels(profile){
-    if(profile === 'te'){
+    if(profile === 'te' || profile === 'de'){
       return {
         main: 'Αξιολογικός Πίνακας Β΄ (Κύριος)',
         aux: 'Επικουρικός Πίνακας',
@@ -42,7 +42,7 @@
 
   function calculate(config){
     config = config || {};
-    const profile = config.profile === 'te' ? 'te' : 'pe';
+    const profile = config.profile === 'de' ? 'de' : (config.profile === 'te' ? 'te' : 'pe');
     const specialty = global.EducationCore.normalizeSpecialtyCode(text(config.specialty));
     const main = config.main || {};
     const aux = config.aux || {};
@@ -54,7 +54,7 @@
         code: 'none',
         type: 'none',
         label: ui.missingSpecialty,
-        why: profile === 'te'
+        why: (profile === 'te' || profile === 'de')
           ? 'Επίλεξε κλάδο/ειδικότητα για να ολοκληρωθεί ο έλεγχος ένταξης.'
           : 'Δεν έχει επιλεγεί κλάδος / ειδικότητα.',
         mainReasons: [],
@@ -85,7 +85,7 @@
         code: 'main',
         type: 'main',
         label: ui.main,
-        why: profile === 'te'
+        why: (profile === 'te' || profile === 'de')
           ? 'Δηλώθηκε προσόν που θεμελιώνει ένταξη στον Αξιολογικό Πίνακα Β΄.'
           : 'Κριτήριο/α ένταξης: ' + mainReasons.join(', ') + '.',
         mainReasons,
@@ -100,7 +100,7 @@
         code: 'aux',
         type: 'aux',
         label: ui.aux,
-        why: profile === 'te'
+        why: (profile === 'te' || profile === 'de')
           ? 'Κριτήριο/α Επικουρικού: ' + auxReasons.join(' · ') + '.'
           : 'Κριτήριο/α ένταξης: ' + auxReasons.join(', ') + '.',
         mainReasons,
@@ -114,7 +114,7 @@
       code: 'none',
       type: 'none',
       label: ui.none,
-      why: profile === 'te'
+      why: (profile === 'te' || profile === 'de')
         ? 'Δεν έχει δηλωθεί προσόν Κύριου Πίνακα ούτε ένα από τα τρία κριτήρια Επικουρικού.'
         : 'Με τα στοιχεία που δηλώθηκαν δεν προκύπτει προσόν ένταξης ούτε στον Αξιολογικό Πίνακα Β΄ ούτε στον Επικουρικό.',
       mainReasons,

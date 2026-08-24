@@ -131,30 +131,32 @@
     return {total:round(Math.min(a+b+c, MAX.experience)), a:round(a), b:round(b), c:round(c), details};
   }
 
-  const LEVEL = Object.freeze({none:0,B2:1,C1:2,C2:3});
-  const FIRST = Object.freeze({1:1,2:1.5,3:2});
-  const SECOND = Object.freeze({1:0.5,2:0.75,3:1});
-
   function calculateLanguages(data) {
-    const entries = [
+    if (!global.EducationLanguages || typeof global.EducationLanguages.calculate !== 'function') {
+      throw new Error('Απαιτείται το κοινό EducationLanguages πριν από το SDERegistryCalc.');
+    }
+
+    const shared = global.EducationLanguages.calculate('sde_registry', [
       {language:data.language1 || '', level:data.languageLevel1 || 'none'},
       {language:data.language2 || '', level:data.languageLevel2 || 'none'}
-    ];
-    const byLang = new Map();
-    const warnings = [];
-    entries.forEach(e => {
-      const r = LEVEL[e.level] || 0;
-      if (!e.language || !r) return;
-      const old = byLang.get(e.language);
-      if (!old || r > old.rank) byLang.set(e.language, {language:e.language, level:e.level, rank:r});
-      else warnings.push('Η ίδια ξένη γλώσσα δηλώθηκε περισσότερες από μία φορές και λήφθηκε μόνο το ανώτερο επίπεδο.');
+    ], {
+      specialty: data.role === 'educator' ? (data.specialty || '') : ''
     });
-    const ordered = Array.from(byLang.values()).sort((x,y)=>y.rank-x.rank).slice(0,2);
-    const details = [];
-    let points = 0;
-    if (ordered[0]) { const p=FIRST[ordered[0].rank]||0; points+=p; details.push({label:'1η ξένη γλώσσα ('+ordered[0].level+')',points:p}); }
-    if (ordered[1]) { const p=SECOND[ordered[1].rank]||0; points+=p; details.push({label:'2η ξένη γλώσσα ('+ordered[1].level+')',points:p}); }
-    return {points:round(points),details,warnings};
+
+    const levelCode = { good: 'B2', very_good: 'C1', excellent: 'C2' };
+    const details = (shared.detailItems || []).map(function (item) {
+      return {
+        label: String(item.position || '') + 'η ξένη γλώσσα (' + (levelCode[item.level] || item.levelLabel || '') + ')',
+        points: item.points
+      };
+    });
+
+    return {
+      points: round(shared.points),
+      details: details,
+      warnings: (shared.warnings || []).slice(),
+      shared: shared
+    };
   }
 
   function calculateOther(data) {
@@ -262,5 +264,5 @@
     };
   }
 
-  global.SDERegistryCalc={MAX,ROLE,SPECIALTIES,calculateFormal,calculateTraining,calculateEducation,calculateExperience,calculateOther,calculateSocial,educatorAssignments,eligibility,calculateAll};
+  global.SDERegistryCalc={MAX,ROLE,SPECIALTIES,calculateFormal,calculateTraining,calculateEducation,calculateExperience,calculateLanguages,calculateOther,calculateSocial,educatorAssignments,eligibility,calculateAll};
 })(typeof window!=='undefined'?window:globalThis);

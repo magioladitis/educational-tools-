@@ -24,9 +24,6 @@
     })
   });
 
-  const FIRST_LANGUAGE_POINTS = Object.freeze({ B2: 1, C1: 2, C2: 3 });
-  const SECOND_LANGUAGE_POINTS = Object.freeze({ B2: 0.5, C1: 1, C2: 2 });
-  const LEVEL_RANK = Object.freeze({ B2: 1, C1: 2, C2: 3 });
   const MAX_EXPERIENCE_YEARS = 40;
 
   function n(value) {
@@ -57,62 +54,39 @@
   }
 
   function calculateLanguages(data) {
-    const raw = [
+    if (!global.EducationLanguages || typeof global.EducationLanguages.calculate !== 'function') {
+      throw new Error('Απαιτείται το κοινό EducationLanguages πριν από το SDELeadershipCalc.');
+    }
+
+    const shared = global.EducationLanguages.calculate('sde_leadership', [
       {
         language: data.language1 || '',
-        level: data.languageLevel1 || '',
-        appointment: !!data.languageAppointment1
+        level: data.languageLevel1 || 'none',
+        excluded: !!data.languageAppointment1,
+        exclusionWarning: 'Μία δηλωμένη ξένη γλώσσα δεν μοριοδοτήθηκε επειδή αποτέλεσε προσόν διορισμού.'
       },
       {
         language: data.language2 || '',
-        level: data.languageLevel2 || '',
-        appointment: !!data.languageAppointment2
+        level: data.languageLevel2 || 'none',
+        excluded: !!data.languageAppointment2,
+        exclusionWarning: 'Μία δηλωμένη ξένη γλώσσα δεν μοριοδοτήθηκε επειδή αποτέλεσε προσόν διορισμού.'
       }
-    ];
+    ]);
 
-    const warnings = [];
-    const grouped = new Map();
-
-    raw.forEach((entry) => {
-      if (!entry.language || !LEVEL_RANK[entry.level]) return;
-      const current = grouped.get(entry.language);
-      if (!current) {
-        grouped.set(entry.language, { ...entry, rank: LEVEL_RANK[entry.level] });
-        return;
-      }
-      const appointment = current.appointment || entry.appointment;
-      const better = LEVEL_RANK[entry.level] > current.rank ? entry : current;
-      grouped.set(entry.language, { ...better, appointment, rank: Math.max(current.rank, LEVEL_RANK[entry.level]) });
-      warnings.push('Η ίδια ξένη γλώσσα δηλώθηκε περισσότερες από μία φορές· κρατήθηκε μόνο το ανώτερο επίπεδο.');
+    const levelCode = { good: 'B2', very_good: 'C1', excellent: 'C2' };
+    const details = (shared.detailItems || []).map(function (item) {
+      return {
+        label: String(item.position || '') + 'η ξένη γλώσσα (' + (levelCode[item.level] || item.levelLabel || '') + ')',
+        points: item.points
+      };
     });
 
-    const eligible = [];
-    grouped.forEach((entry) => {
-      if (entry.appointment) {
-        warnings.push('Μία δηλωμένη ξένη γλώσσα δεν μοριοδοτήθηκε επειδή αποτέλεσε προσόν διορισμού.');
-      } else {
-        eligible.push(entry);
-      }
-    });
-
-    eligible.sort((a, b) => b.rank - a.rank);
-    const first = eligible[0] || null;
-    const second = eligible[1] || null;
-    const details = [];
-    let points = 0;
-
-    if (first) {
-      const p = FIRST_LANGUAGE_POINTS[first.level] || 0;
-      points += p;
-      details.push({ label: '1η ξένη γλώσσα (' + first.level + ')', points: p });
-    }
-    if (second) {
-      const p = SECOND_LANGUAGE_POINTS[second.level] || 0;
-      points += p;
-      details.push({ label: '2η ξένη γλώσσα (' + second.level + ')', points: p });
-    }
-
-    return { points: round2(points), details, warnings };
+    return {
+      points: round2(shared.points),
+      details: details,
+      warnings: (shared.warnings || []).slice(),
+      shared: shared
+    };
   }
 
   function calculateFormal(data) {

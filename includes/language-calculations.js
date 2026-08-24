@@ -80,6 +80,16 @@
     });
   }
 
+  const SDE_STANDARD_RANKED_PROFILE = freezeRankedProfile([
+    { good: 1, very_good: 1.5, excellent: 2 },
+    { good: 0.5, very_good: 0.75, excellent: 1 }
+  ], true);
+
+  const SDE_LEADERSHIP_RANKED_PROFILE = freezeRankedProfile([
+    { good: 1, very_good: 2, excellent: 3 },
+    { good: 0.5, very_good: 1, excellent: 2 }
+  ], false);
+
   const PROFILES = Object.freeze({
     // 1ΓΕ/2026, 2ΓΕ/2026 και 3ΕΑ/2025 (κλάδοι ΠΕ).
     pe: freezeProfile(2, { good: 3, very_good: 5, excellent: 7 }, true),
@@ -93,13 +103,19 @@
     // 1ΓΤ/2024 και 4ΕΑ/2025 (κατηγορία ΤΕ): μοριοδοτείται μία μόνο γλώσσα.
     te: freezeProfile(1, { good: 10, very_good: 15, excellent: 20 }, false),
 
-    // Απόσπαση εκπαιδευτικών στα ΣΔΕ 2026-2027: η ισχυρότερη γλώσσα
-    // μοριοδοτείται ως 1η (1 / 1,5 / 2) και η επόμενη ως 2η
-    // (0,5 / 0,75 / 1). Η γλώσσα του κλάδου δεν μοριοδοτείται.
-    sde_secondment: freezeRankedProfile([
-      { good: 1, very_good: 1.5, excellent: 2 },
-      { good: 0.5, very_good: 0.75, excellent: 1 }
-    ], true)
+    // 5ΕΑ/2022 (κατηγορία ΔΕ): ίδια κλίμακα, αλλά ξεχωριστό σημασιολογικό profile.
+    de: freezeProfile(1, { good: 10, very_good: 15, excellent: 20 }, false),
+
+    // Απόσπαση εκπαιδευτικών στα ΣΔΕ 2026-2027.
+    sde_secondment: SDE_STANDARD_RANKED_PROFILE,
+
+    // Μητρώο Ωρομίσθιου Προσωπικού ΣΔΕ: ίδια ranked κλίμακα με την απόσπαση.
+    // Η γλώσσα του κλάδου δεν μοριοδοτείται (στην τρέχουσα πρόσκληση αφορά ΠΕ06/Αγγλικά).
+    sde_registry: SDE_STANDARD_RANKED_PROFILE,
+
+    // Διευθυντές / Υποδιευθυντές ΣΔΕ: διαφορετική κλίμακα 1ης/2ης γλώσσας.
+    // Η εξαίρεση προσόντος διορισμού περνά ανά εγγραφή μέσω entry.excluded.
+    sde_leadership: SDE_LEADERSHIP_RANKED_PROFILE
   });
 
   function normalizeText(value) {
@@ -124,7 +140,18 @@
       }
       return { key: 'other:' + normalized, label: label };
     }
+    const knownCode = KNOWN_LANGUAGE_ALIASES[normalizeText(code)] || '';
+    if (knownCode) return { key: knownCode, label: LABELS[knownCode], knownAlias: true };
     return { key: code, label: LABELS[code] || code };
+  }
+
+  function normalizeLevel(value) {
+    const raw = String(value || 'none').trim();
+    const normalized = raw.toLowerCase().replace(/[\s_-]+/g, '');
+    if (normalized === 'b2' || normalized === 'good' || normalized === 'καλη') return 'good';
+    if (normalized === 'c1' || normalized === 'verygood' || normalized === 'πολυκαλη') return 'very_good';
+    if (normalized === 'c2' || normalized === 'excellent' || normalized === 'αριστη') return 'excellent';
+    return 'none';
   }
 
   /*
@@ -140,10 +167,26 @@
     const duplicates = [];
     const excludedEntries = [];
     const missingLanguage = [];
+    const prepared = [];
+    const entryExcluded = new Map();
+    const warnedExcluded = new Set();
 
     (entries || []).forEach(function (entry, index) {
       const points = Math.max(0, Number(entry && entry.points) || 0);
       const resolved = resolveLanguage(entry && entry.language, entry && entry.otherText);
+      prepared.push({ entry: entry || {}, index: index, points: points, resolved: resolved });
+      if (resolved.key && points > 0 && entry && entry.excluded) {
+        if (!entryExcluded.has(resolved.key)) {
+          entryExcluded.set(resolved.key, String(entry.exclusionWarning || '').trim());
+        }
+      }
+    });
+
+    prepared.forEach(function (item) {
+      const entry = item.entry;
+      const index = item.index;
+      const points = item.points;
+      const resolved = item.resolved;
 
       if (points > 0 && !resolved.key) {
         missingLanguage.push(index);
@@ -154,7 +197,19 @@
 
       if (excluded.has(resolved.key)) {
         excludedEntries.push(index);
-        warnings.push(resolved.label + ': δεν μοριοδοτείται επειδή αποτελεί προσόν διορισμού για τον κλάδο.');
+        if (!warnedExcluded.has('profile:' + resolved.key)) {
+          warnings.push(resolved.label + ': δεν μοριοδοτείται επειδή αποτελεί προσόν διορισμού για τον κλάδο.');
+          warnedExcluded.add('profile:' + resolved.key);
+        }
+        return;
+      }
+
+      if (entryExcluded.has(resolved.key)) {
+        excludedEntries.push(index);
+        if (!warnedExcluded.has('entry:' + resolved.key)) {
+          warnings.push(entryExcluded.get(resolved.key) || (resolved.label + ': δεν μοριοδοτείται επειδή αποτέλεσε προσόν διορισμού.'));
+          warnedExcluded.add('entry:' + resolved.key);
+        }
         return;
       }
 
@@ -221,10 +276,12 @@
     const RANK_LEVEL = { 1: 'good', 2: 'very_good', 3: 'excellent' };
 
     const pointEntries = (entries || []).map(function (entry) {
-      const level = String((entry && entry.level) || 'none');
+      const level = normalizeLevel(entry && entry.level);
       return {
         language: entry && entry.language,
         otherText: entry && entry.otherText,
+        excluded: Boolean(entry && entry.excluded),
+        exclusionWarning: entry && entry.exclusionWarning,
         // Στα ranked profiles το προσωρινό points είναι μόνο βαθμίδα ταξινόμησης.
         points: rankedMode ? (LEVEL_RANK[level] || 0) : (profile.levelPoints[level] || 0)
       };
@@ -268,7 +325,17 @@
       ? accepted.reduce(function (sum, item) { return sum + item.points; }, 0)
       : sorted.reduce(function (sum, item) { return sum + item.points; }, 0);
     const points = accepted.reduce(function (sum, item) { return sum + item.points; }, 0);
-    const details = accepted.map(function (item) {
+    const detailItems = accepted.map(function (item) {
+      return {
+        position: rankedMode ? item.position : null,
+        language: item.key,
+        label: item.label,
+        level: item.level,
+        levelLabel: item.levelLabel,
+        points: item.points
+      };
+    });
+    const details = detailItems.map(function (item) {
       const positionPrefix = rankedMode ? (item.position + 'η ξένη γλώσσα — ') : '';
       return positionPrefix + item.label + ' - ' + item.levelLabel + ': ' + item.points + ' μόρια';
     });
@@ -279,6 +346,7 @@
       maxLanguages: profile.maxLanguages,
       accepted: accepted,
       details: details,
+      detailItems: detailItems,
       warnings: warnings,
       duplicates: base.duplicates,
       excludedEntries: base.excludedEntries,
@@ -295,6 +363,7 @@
     KNOWN_LANGUAGE_ALIASES: KNOWN_LANGUAGE_ALIASES,
     PROFILES: PROFILES,
     normalizeText: normalizeText,
+    normalizeLevel: normalizeLevel,
     resolveLanguage: resolveLanguage,
     getProfile: getProfile,
     calculatePair: calculatePair,
