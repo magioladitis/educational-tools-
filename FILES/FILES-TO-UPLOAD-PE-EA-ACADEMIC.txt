@@ -1,8 +1,0 @@
-Upload these 4 production files, preserving folders:
-
-1. ypologismos-morion-2ea-2025.php
-2. ypologismos-morion-3ea-2025.php
-3. includes/academic-calculations.js
-4. includes/asep-pe-academic.js
-
-No CSS file needs to be uploaded for this refactor.

@@ -1,9 +1,0 @@
-Upload these 5 production files, preserving folders:
-
-1. ypologismos-morion.php
-2. ypologismos-morion-apospasis-sde.php
-3. ypologismos-morion-apospasis-evropaika-scholeia.php
-4. ypologismos-morion-3ea-2025.php
-5. includes/components/calculator-layout.php
-
-No CSS or JavaScript production file changed in Phase 1.

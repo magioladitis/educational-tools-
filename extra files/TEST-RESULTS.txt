@@ -1,7 +1,0 @@
-Language scoring/regression: 21 PASS / 0 FAIL
-Integration/static architecture: 20 PASS / 0 FAIL
-Inline JavaScript syntax: 7 PASS / 0 FAIL
-PHP lint: 8 PASS / 0 FAIL
-Shared JavaScript syntax: 3 PASS / 0 FAIL
-
-TOTAL: 59 PASS / 0 FAIL
