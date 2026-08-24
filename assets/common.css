@@ -39,6 +39,12 @@
   --edu-radius-lg: 18px;
   --edu-control-height: 44px;
 
+  /* Result-box rhythm (Variant A/B). */
+  --edu-result-row-gap: 12px;
+  --edu-result-row-pad-y: 9px;
+  --edu-result-row-separator: #edf1f5;
+  --edu-result-section-gap: 14px;
+
   /* Public compatibility aliases: retained for older pages/extensions. */
   --edu-tools-blue: var(--edu-primary);
   --edu-tools-blue-dark: var(--edu-primary-dark);
@@ -948,11 +954,23 @@ body.edu-ui.edu-calc-standard .pill {
   color:var(--blue-dark); font-variant-numeric:tabular-nums; white-space:nowrap;
 }
 body.edu-ui.edu-calc-standard .results { position:sticky; top:16px; }
-body.edu-ui.edu-calc-standard .result-row {
-  display:flex; justify-content:space-between; gap:12px; padding:9px 0;
-  border-top:1px solid #edf1f5; font-size:14px;
+/* Canonical summary rows for result-box Variants A/B (Phase R2). */
+body.edu-ui.edu-calc-standard .result-row,
+body.edu-ui.edu-calc-ea3 .result-row,
+body.edu-ui.edu-page-dimos-detachment .result-row,
+body.edu-ui.edu-page-digital-tutoring .result-row,
+body.edu-ui.edu-page-sde-apospasis .result-row {
+  display:flex; justify-content:space-between; gap:var(--edu-result-row-gap);
+  padding:var(--edu-result-row-pad-y) 0;
+  border-top:1px solid var(--edu-result-row-separator); font-size:14px;
 }
-body.edu-ui.edu-calc-standard .result-row strong { text-align:right; font-variant-numeric:tabular-nums; }
+body.edu-ui.edu-calc-standard .result-row strong,
+body.edu-ui.edu-calc-ea3 .result-row strong,
+body.edu-ui.edu-page-dimos-detachment .result-row strong,
+body.edu-ui.edu-page-digital-tutoring .result-row strong,
+body.edu-ui.edu-page-sde-apospasis .result-row strong {
+  text-align:right; font-variant-numeric:tabular-nums;
+}
 body.edu-ui.edu-calc-standard .priority {
   margin:14px 0 4px; padding:11px; border-radius:10px; background:#f8fafc;
   border:1px solid var(--border); text-align:center; font-weight:700; color:var(--muted);
@@ -964,7 +982,7 @@ body.edu-ui.edu-calc-standard .priority.special {
   background:#f1edff; border-color:#d8cdf7; color:#6941c6;
 }
 body.edu-ui.edu-calc-standard .actions {
-  display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px;
+  display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:var(--edu-result-section-gap);
 }
 body.edu-ui.edu-calc-standard .actions button { width:100%; margin-top:0; padding:11px; font-size:14px; font-weight:700; border:0; }
 body.edu-ui.edu-calc-standard .source {
@@ -1308,7 +1326,7 @@ body.edu-page-european-schools .result-row strong {font-variant-numeric:tabular-
 body.edu-page-european-schools .actions,
 body.edu-page-abroad .actions,
 body.edu-page-digital-tutoring .actions,
-body.edu-ui.edu-calc-sde .actions {display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+body.edu-ui.edu-calc-sde .actions {display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:var(--edu-result-section-gap)}
 body.edu-page-european-schools button,
 body.edu-page-abroad button,
 body.edu-page-digital-tutoring button {border:0;border-radius:10px;padding:11px 12px;font-weight:bold;cursor:pointer;font-size:14px}
@@ -1410,8 +1428,8 @@ body.edu-ui.edu-calc-sde .bar {height:11px;background:#e5e7eb;border-radius:999p
 body.edu-page-abroad .bar div,
 body.edu-page-digital-tutoring .bar div {height:100%;width:0;background:linear-gradient(90deg,#1f6feb,#6941c6);transition:width .2s ease}
 body.edu-page-abroad .result-row,
-body.edu-page-digital-tutoring .result-row,
-body.edu-ui.edu-calc-sde .result-row {display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #edf0f4;font-size:14px}
+body.edu-page-sde-leadership .result-row,
+body.edu-page-sde-registry .result-row {display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #edf0f4;font-size:14px}
 body.edu-page-abroad .result-row strong {font-variant-numeric:tabular-nums}
 
 body.edu-page-abroad details {margin-top:12px}
@@ -1837,17 +1855,10 @@ body.edu-page-dimos-detachment .bar > div {height:100%;
       background:linear-gradient(90deg,var(--accent),var(--accent2));
       border-radius:999px;
       transition:width .2s ease;}
-body.edu-page-dimos-detachment .result-row {display:flex;
-      justify-content:space-between;
-      gap:10px;
-      padding:9px 0;
-      border-top:1px solid #eef1f6;
-      font-size:.96rem;}
-body.edu-page-dimos-detachment .result-row strong {font-variant-numeric:tabular-nums}
 body.edu-page-dimos-detachment .actions {display:grid;
       grid-template-columns:1fr 1fr;
       gap:8px;
-      margin-top:12px;}
+      margin-top:var(--edu-result-section-gap);}
 body.edu-page-dimos-detachment button {border:0;
       border-radius:12px;
       padding:11px 12px;
@@ -2080,15 +2091,12 @@ body.edu-calc-ea3 .check label{font-weight:700}
 body.edu-calc-ea3 .note{padding:11px 12px;border-radius:11px;background:var(--orange-soft);color:#7b4900;border:1px solid #f0d4a8;font-size:13px;margin:10px 0}
 body.edu-calc-ea3 .info{padding:11px 12px;border-radius:11px;background:#eef4ff;color:var(--blue-dark);border:1px solid #d6e4ff;font-size:13px;margin:10px 0}
 body.edu-calc-ea3 .result-card{position:sticky;top:15px}
-body.edu-calc-ea3 .table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
-body.edu-calc-ea3 .table td{padding:8px 4px;border-top:1px solid #edf0f4}
-body.edu-calc-ea3 .table td:last-child{text-align:right;font-weight:700}
 body.edu-calc-ea3 .status{padding:14px;border-radius:12px;text-align:center;font-weight:800;margin:10px 0}
 body.edu-calc-ea3 .status.main{background:var(--green-soft);color:var(--green);border:1px solid #b9e3ca}
 body.edu-calc-ea3 .status.aux{background:var(--purple-soft);color:var(--purple);border:1px solid #d8cdf7}
 body.edu-calc-ea3 .status.none{background:var(--red-soft);color:var(--red);border:1px solid #f3c4bf}
 body.edu-calc-ea3 .priority{margin-top:10px;padding:10px;border-radius:10px;background:#eef4ff;color:var(--blue-dark);font-size:13px}
-body.edu-calc-ea3 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+body.edu-calc-ea3 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:var(--edu-result-section-gap)}
 body.edu-calc-ea3 .actions button{border:0;border-radius:10px;padding:11px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff}
 body.edu-calc-ea3 .actions button.secondary{background:#e8edf4;color:#263445}
 body.edu-calc-ea3 .footer{text-align:center;color:#7a8490;font-size:13px;margin-top:22px}
