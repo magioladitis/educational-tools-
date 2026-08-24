@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</title>
-  <link rel="stylesheet" href="assets/common.css?v=3.20.36">
+  <link rel="stylesheet" href="assets/common.css?v=3.20.38">
 </head>
 
 <body class="edu-ui edu-calc-standard edu-calc-asep-main">
@@ -16,6 +16,7 @@
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-digital-tutoring-service.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-pedagogical-proof.php'; ?>
 
 <div class="app">
 <?php calculatorHero(array(
@@ -133,6 +134,15 @@ renderAsepSocialCriteria(array(
 ));
 ?>
 
+      <?php calculatorCardStart(); ?>
+        <h2>Δ. Πρόταξη — Παιδαγωγική και Διδακτική Επάρκεια</h2>
+        <p class="cap">Η Π.Δ.Ε. δεν προσθέτει από μόνη της μόρια, αλλά επηρεάζει τη σειρά κατάταξης.</p>
+<?php renderAsepPedagogicalProof(array(
+    'context' => 'general-pe-2026',
+    'input_id' => 'pedagogical'
+)); ?>
+      <?php calculatorCardEnd(); ?>
+
       <p class="small-note">Το αποτέλεσμα είναι ενδεικτικό και δεν αντικαθιστά την επίσημη προκήρυξη, τον έλεγχο του Α.Σ.Ε.Π., τον Ο.Π.ΣΥ.Δ. ή τον επίσημο πίνακα κατάταξης.</p>
     <?php calculatorMainEnd(); ?>
 
@@ -147,6 +157,7 @@ renderAsepSocialCriteria(array(
       <?php calculatorResultRow(array('label_html' => 'Κοινωνικά', 'value_html' => '0,00', 'value_id' => 'resSocial')); ?>
       <?php calculatorResultRow(array('label_html' => 'Βαθμός τίτλου', 'value_html' => '0,00', 'value_id' => 'resDegree')); ?>
 
+      <div class="priority" id="pedagogicalPriorityBox">Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.</div>
       <div class="priority" id="sidebarStatus">Συμπλήρωσε κλάδο και βαθμό τίτλου· στη συνέχεια τα μόρια ενημερώνονται αυτόματα.</div>
 
       <button type="button" class="calculate-primary" onclick="calculatePoints()">Υπολογισμός μορίων</button>
@@ -177,6 +188,7 @@ renderAsepSocialCriteria(array(
 <script src="includes/asep-digital-tutoring.js?v=3.20.22"></script>
 <script src="includes/social-calculations.js?v=3.20.32"></script>
 <script src="includes/asep-social-criteria.js?v=3.20.32"></script>
+<script src="includes/asep-pedagogical-proof.js?v=3.20.38"></script>
 <script>
   let lastResultText = "";
 
@@ -302,6 +314,7 @@ renderAsepSocialCriteria(array(
     });
     AsepServiceController.reset('asepService', { silent: true });
     document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+    AsepPedagogicalProof.reset("pedagogical");
     AsepPeAcademic.sync("asepPeAcademic");
 
     const result = document.getElementById("result");
@@ -353,6 +366,11 @@ renderAsepSocialCriteria(array(
 
     const academicProofWarning = AsepPeAcademic.trainingWarning("asepPeAcademic");
     if (academicProofWarning) warnings.push(academicProofWarning);
+
+    const pedagogical = document.getElementById("pedagogical").checked;
+    const pedagogicalBox = document.getElementById("pedagogicalPriorityBox");
+    pedagogicalBox.className = "priority" + (pedagogical ? " yes" : "");
+    pedagogicalBox.textContent = pedagogical ? "ΠΡΟΤΑΞΗ λόγω Παιδαγωγικής & Διδακτικής Επάρκειας" : "Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.";
 
     const total =
       academic.points +
@@ -448,7 +466,8 @@ renderAsepSocialCriteria(array(
       "Ακαδημαϊκά: " + formatPoints(academic.points) + " / 120",
       "Προϋπηρεσία: " + formatPoints(serviceTotal) + " / 120",
       "Κοινωνικά: " + formatPoints(socialTotal),
-      "Βαθμός βασικού τίτλου: " + formatPoints(degreeGrade)
+      "Βαθμός βασικού τίτλου: " + formatPoints(degreeGrade),
+      AsepPedagogicalProof.summary("pedagogical")
     ];
     const digitalTutoringSummary = AsepDigitalTutoring.summary('digitalTutoring', formatPoints);
     if (digitalTutoringSummary) summaryLines.push(digitalTutoringSummary);

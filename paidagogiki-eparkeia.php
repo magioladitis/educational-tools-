@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Έχω Παιδαγωγική και Διδακτική Επάρκεια;</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.36">
+<link rel="stylesheet" href="assets/common.css?v=3.20.38">
 </head>
 
 <body class="edu-ui edu-guide-standard edu-guide-pedagogy">
@@ -97,6 +97,10 @@ renderDeadlineCard(array(
 
       <option value="aspaite">
         Πτυχίο Α.Σ.ΠΑΙ.Τ.Ε.
+      </option>
+
+      <option value="aspaite_eppaik">
+        Πιστοποιητικό ΕΠΠΑΙΚ Α.Σ.ΠΑΙ.Τ.Ε. / πρώην ΠΑΤΕΣ–ΣΕΛΕΤΕ
       </option>
 
       <option value="article99">
@@ -271,6 +275,7 @@ renderDeadlineCard(array(
     if (proofType === "aei_certificate") {
       documents.push("Βεβαίωση Παιδαγωγικής και Διδακτικής Επάρκειας από Τμήμα Α.Ε.Ι. ή από συνεργαζόμενα Τμήματα Α.Ε.Ι.");
       documents.push("Η βεβαίωση πρέπει να προκύπτει μετά από παρακολούθηση ομάδας μαθημάτων ή ειδικού προγράμματος σπουδών.");
+      notes.push("Στις 1ΓΕ/2026 και 2ΓΕ/2026 η σχετική μεταβατική δυνατότητα αφορά αποφοίτους που είχαν εισαχθεί έως και το ακαδημαϊκό έτος 2026-2027 σε Τμήμα/Σχολή που χορηγούσε την πιστοποίηση κατά τον χρόνο εισαγωγής.");
 
       showResult(
         "positive",
@@ -425,6 +430,21 @@ renderDeadlineCard(array(
             <strong>Προσοχή:</strong>
             ${makeList(notes)}
           </div>
+        `
+      );
+      return;
+    }
+
+    if (proofType === "aspaite_eppaik") {
+      documents.push("Πιστοποιητικό Παιδαγωγικής και Διδακτικής Επάρκειας του Ετήσιου Προγράμματος Παιδαγωγικής Κατάρτισης (ΕΠΠΑΙΚ) της Α.Σ.ΠΑΙ.Τ.Ε. / πρώην ΠΑΤΕΣ–ΣΕΛΕΤΕ.");
+
+      showResult(
+        "positive",
+        `
+          <h2>Φαίνεται ότι διαθέτεις Παιδαγωγική και Διδακτική Επάρκεια</h2>
+          <p>Δήλωσες πιστοποιητικό ΕΠΠΑΙΚ της Α.Σ.ΠΑΙ.Τ.Ε., το οποίο αποτελεί αποδεικτικό Π.Δ.Ε.</p>
+          <div class="note-box"><strong>Ενδεικτικό δικαιολογητικό:</strong>${makeList(documents)}</div>
+          <div class="note-box"><strong>Προσοχή:</strong>${makeList(notes)}</div>
         `
       );
       return;

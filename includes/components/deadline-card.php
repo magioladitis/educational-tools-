@@ -18,6 +18,8 @@ if (!function_exists('renderDeadlineCard')) {
         $noteHtml = isset($config['note_html']) ? (string) $config['note_html'] : '';
         $extraClass = isset($config['class']) ? trim((string) $config['class']) : '';
         $headingId = isset($config['heading_id']) ? trim((string) $config['heading_id']) : '';
+        $collapsible = !empty($config['collapsible']);
+        $expanded = !isset($config['expanded']) || !empty($config['expanded']);
 
         if ($headingId === '') {
             static $deadlineCardCounter = 0;
@@ -38,8 +40,17 @@ if (!function_exists('renderDeadlineCard')) {
             $classes .= ' ' . $extraClass;
         }
         ?>
-<section class="<?php echo $h($classes); ?>" aria-labelledby="<?php echo $h($headingId); ?>">
-  <h2 id="<?php echo $h($headingId); ?>"><?php echo $h($title); ?></h2>
+<section class="<?php echo $h($classes); ?><?php echo $collapsible ? ' is-collapsible' : ''; ?>" aria-labelledby="<?php echo $h($headingId); ?>">
+  <?php if ($collapsible) { ?>
+  <details class="edu-deadline-details"<?php echo $expanded ? ' open' : ''; ?>>
+    <summary class="edu-deadline-summary">
+      <span id="<?php echo $h($headingId); ?>" class="edu-deadline-heading" role="heading" aria-level="2"><?php echo $h($title); ?></span>
+      <span class="edu-deadline-chevron" aria-hidden="true">▾</span>
+    </summary>
+    <div class="edu-deadline-body">
+  <?php } else { ?>
+    <h2 id="<?php echo $h($headingId); ?>"><?php echo $h($title); ?></h2>
+  <?php } ?>
   <?php if ($intro !== '') { ?>
     <p class="edu-deadline-intro"><?php echo $intro; ?></p>
   <?php } ?>
@@ -89,6 +100,10 @@ if (!function_exists('renderDeadlineCard')) {
   </div>
   <?php if ($noteHtml !== '') { ?>
     <p class="edu-deadline-note"><?php echo $noteHtml; ?></p>
+  <?php } ?>
+  <?php if ($collapsible) { ?>
+    </div>
+  </details>
   <?php } ?>
 </section>
         <?php

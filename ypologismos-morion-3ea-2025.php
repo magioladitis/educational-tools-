@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων 3ΕΑ/2025 και ενδεικτικός έλεγχος ένταξης στον Αξιολογικό Πίνακα Β΄ ή στον Επικουρικό Πίνακα Ειδικής Αγωγής.">
 <title>Υπολογισμός μορίων 3ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.36">
+<link rel="stylesheet" href="assets/common.css?v=3.20.38">
 </head>
 <body class="edu-ui edu-calc-ea3 edu-page-ea3">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -19,6 +19,7 @@
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-digital-tutoring-service.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-pedagogical-proof.php'; ?>
 <div class="page">
 <?php calculatorHero(array(
     'title' => 'Υπολογισμός μορίων 3ΕΑ/2025',
@@ -152,7 +153,10 @@ renderAsepSocialCriteria(array(
 
 <?php calculatorCardStart(); ?>
 <h2>5. Προτάξεις / ειδικές προτεραιότητες</h2>
-<div class="check"><input type="checkbox" id="pedagogical"><label for="pedagogical">Πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια<small>Δεν προσθέτει μόρια· ο υποψήφιος προτάσσεται έναντι υποψηφίων που δεν τη διαθέτουν.</small></label></div>
+<?php renderAsepPedagogicalProof(array(
+    'context' => '3ea-2025',
+    'input_id' => 'pedagogical'
+)); ?>
 <?php
 renderEaeSensoryPriority(array(
     'context' => '3ea-2025',
@@ -196,6 +200,7 @@ renderEaeSensoryPriority(array(
 <script src="includes/academic-calculations.js?v=3.20.31"></script>
 <script src="includes/asep-pe-academic.js?v=3.20.34"></script>
 <script src="includes/training-proof.js?v=3.20.18"></script>
+<script src="includes/asep-pedagogical-proof.js?v=3.20.38"></script>
 <script>
 (function(){
  const $=id=>document.getElementById(id); const num=id=>Math.max(0,Number($(id)?.value||0)); const cap=(v,m)=>Math.min(v,m); const fmt=v=>(Math.round((v+Number.EPSILON)*100)/100).toFixed(2);
@@ -213,7 +218,7 @@ renderEaeSensoryPriority(array(
    $('priorities').innerHTML=p.map(x=>'<div class="priority">✓ '+x+'</div>').join('');
    return {a,b,c,t,e,p};
  }
- function summary(v){return ['Υπολογισμός μορίων 3ΕΑ/2025',`Πίνακας: ${v.e.label}`,v.e.why,`Ακαδημαϊκά: ${fmt(v.a)} / 120`,`Προϋπηρεσία: ${fmt(v.b)} / 120`,`Κοινωνικά: ${fmt(v.c)}`,`ΣΥΝΟΛΟ: ${fmt(v.t)}`,AsepDigitalTutoring.summary('digitalTutoring',fmt),v.p.length?'Προτάξεις/προτεραιότητες: '+v.p.join(' · '):'',TrainingProof.summary('trainingProof')].filter(Boolean).join('\n');}
+ function summary(v){return ['Υπολογισμός μορίων 3ΕΑ/2025',`Πίνακας: ${v.e.label}`,v.e.why,`Ακαδημαϊκά: ${fmt(v.a)} / 120`,`Προϋπηρεσία: ${fmt(v.b)} / 120`,`Κοινωνικά: ${fmt(v.c)}`,`ΣΥΝΟΛΟ: ${fmt(v.t)}`,AsepDigitalTutoring.summary('digitalTutoring',fmt),v.p.length?'Προτάξεις/προτεραιότητες: '+v.p.join(' · '):'',AsepPedagogicalProof.summary('pedagogical'),TrainingProof.summary('trainingProof')].filter(Boolean).join('\n');}
  function sanitizeServiceMonthInput(el){
    if(!el || !el.classList.contains('service-months')) return;
    const maxAttr=el.getAttribute('max');
@@ -233,7 +238,7 @@ renderEaeSensoryPriority(array(
  });
  $('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});
  document.addEventListener('asep-digital-tutoring-change',render);
- $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degreeGrade').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepPeAcademic.reset('asepPeAcademic',{silent:true});AsepServiceController.reset('asepService',{silent:true});render();});
+ $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degreeGrade').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepPeAcademic.reset('asepPeAcademic',{silent:true});AsepServiceController.reset('asepService',{silent:true});AsepPedagogicalProof.reset('pedagogical');render();});
  render();
 })();
 </script>

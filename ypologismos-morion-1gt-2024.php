@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΓΤ/2024 για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16.">
   <title>Υπολογισμός μορίων 1ΓΤ/2024</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.36">
+<link rel="stylesheet" href="assets/common.css?v=3.20.38">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-gt1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -15,6 +15,7 @@
 <?php require_once __DIR__ . '/includes/components/asep-te-academic.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-pedagogical-proof.php'; ?>
 <div class="app">
 <?php calculatorHeroStart(); ?>
     <h1>Υπολογισμός μορίων 1ΓΤ/2024</h1>
@@ -136,10 +137,10 @@ renderAsepSocialCriteria(array(
 
       <?php calculatorCardStart(); ?>
         <h2>Παιδαγωγική και Διδακτική Επάρκεια</h2>
-        <div class="checkrow">
-          <input type="checkbox" id="pedagogical">
-          <label for="pedagogical">Διαθέτω πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια ή την προβλεπόμενη βεβαίωση τρίμηνης παιδαγωγικής επιμόρφωσης Α.Σ.ΠΑΙ.Τ.Ε.<small>Δεν προσθέτει μόρια. Δίνει πρόταξη έναντι υποψηφίων που δεν τη διαθέτουν.</small></label>
-        </div>
+<?php renderAsepPedagogicalProof(array(
+    'context' => '1gt-2024',
+    'input_id' => 'pedagogical'
+)); ?>
       <?php calculatorCardEnd(); ?>
     <?php calculatorMainEnd(); ?>
 
@@ -187,6 +188,7 @@ renderAsepSocialCriteria(array(
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script src="includes/asep-computer-proof.js?v=3.20.27"></script>
 <script src="includes/asep-te-academic.js?v=3.20.34"></script>
+<script src="includes/asep-pedagogical-proof.js?v=3.20.38"></script>
 <script>
 (function(){
   "use strict";
@@ -215,7 +217,7 @@ renderAsepSocialCriteria(array(
   function languageSummary(v){const item=v.languages.accepted[0];return item?`${item.label} — ${fmt(v.languages.points)} μόρια`:'δεν δηλώθηκε';}
   function summary(v){return[
     'Υπολογισμός μορίων 1ΓΤ/2024',`Σύνολο: ${fmt(v.total)}`,`Ακαδημαϊκά: ${fmt(v.academic.points)} / 120`,`Προϋπηρεσία: ${fmt(v.service.points)} / 120`,
-    `Κοινωνικά: ${fmt(v.social.points)}`,`Ξένη γλώσσα: ${languageSummary(v)}`,`Παιδαγωγική επάρκεια: ${v.ped?'ΝΑΙ — ΠΡΟΤΑΞΗ':'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
+    `Κοινωνικά: ${fmt(v.social.points)}`,`Ξένη γλώσσα: ${languageSummary(v)}`,AsepPedagogicalProof.summary('pedagogical'),
     AsepTeAcademic.trainingSummary('asepTeAcademic'),'','Ενδεικτικός υπολογισμός βάσει της Προκήρυξης ΑΣΕΠ 1ΓΤ/2024.'
   ].filter((x,i,a)=>x!==''||a[i-1]!=='').join('\n');}
 
@@ -226,7 +228,7 @@ renderAsepSocialCriteria(array(
   $('resetBtn').addEventListener('click',()=>{
     document.querySelectorAll('input[type="number"]').forEach(el=>el.value='0');$('degreeGrade').value='';
     document.querySelectorAll('input[type="text"]').forEach(el=>el.value='');document.querySelectorAll('input[type="checkbox"],input[type="radio"]').forEach(el=>el.checked=false);
-    $('branch').value='te01';AsepTeAcademic.reset('asepTeAcademic',{silent:true});calc();
+    $('branch').value='te01';AsepTeAcademic.reset('asepTeAcademic',{silent:true});AsepPedagogicalProof.reset('pedagogical');calc();
   });
   $('copyBtn').addEventListener('click',async()=>{const text=summary(calc());try{await navigator.clipboard.writeText(text);const old=$('copyBtn').textContent;$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent=old,1400);}catch(e){alert(text);}});
   AsepTeAcademic.sync('asepTeAcademic');calc();

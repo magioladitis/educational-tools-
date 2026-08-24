@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 4ΕΑ/2025 για εκπαιδευτικούς Ειδικής Αγωγής κατηγορίας ΤΕ (ΤΕ01, ΤΕ02, ΤΕ16).">
   <title>Υπολογισμός μορίων 4ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.36">
+<link rel="stylesheet" href="assets/common.css?v=3.20.38">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea4">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -16,6 +16,7 @@
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
+<?php require_once __DIR__ . '/includes/components/asep-pedagogical-proof.php'; ?>
 <div class="app">
 <?php calculatorHeroStart(); ?>
     <h1>Υπολογισμός μορίων 4ΕΑ/2025</h1>
@@ -229,10 +230,10 @@ renderAsepSocialCriteria(array(
 
       <?php calculatorCardStart(); ?>
         <h2>Παιδαγωγική και Διδακτική Επάρκεια</h2>
-        <div class="checkrow">
-          <input type="checkbox" id="pedagogical">
-          <label for="pedagogical">Διαθέτω πιστοποιημένη Παιδαγωγική και Διδακτική Επάρκεια ή την προβλεπόμενη βεβαίωση τρίμηνης παιδαγωγικής επιμόρφωσης Α.Σ.ΠΑΙ.Τ.Ε.<small>Δεν προσθέτει μόρια. Δίνει πρόταξη έναντι υποψηφίων που δεν τη διαθέτουν.</small></label>
-        </div>
+<?php renderAsepPedagogicalProof(array(
+    'context' => '4ea-2025',
+    'input_id' => 'pedagogical'
+)); ?>
       <?php calculatorCardEnd(); ?>
     <?php calculatorMainEnd(); ?>
 
@@ -282,6 +283,7 @@ renderAsepSocialCriteria(array(
 <script src="includes/training-proof.js?v=3.20.18"></script>
 <script src="includes/asep-computer-proof.js?v=3.20.27"></script>
 <script src="includes/asep-te-academic.js?v=3.20.34"></script>
+<script src="includes/asep-pedagogical-proof.js?v=3.20.38"></script>
 <script>
 (function(){
   "use strict";
@@ -353,7 +355,7 @@ renderAsepSocialCriteria(array(
       `Κοινωνικά: ${fmt(v.social.points)}`,
       `Πίνακας Ε.Α.Ε.: ${v.tableLabel}`,
       v.why,
-      `Παιδαγωγική επάρκεια: ${v.ped?'ΝΑΙ — ΠΡΟΤΑΞΗ':'ΟΧΙ / ΔΕΝ ΔΗΛΩΘΗΚΕ'}`,
+      AsepPedagogicalProof.summary('pedagogical'),
       v.priorities.length?'Προτεραιότητες: '+v.priorities.join(' · '):'',
       AsepTeAcademic.trainingSummary('asepTeAcademic')
     ].filter(Boolean).join('\n');
@@ -395,6 +397,7 @@ renderAsepSocialCriteria(array(
     $('branch').value='';
     $('mainCriterion').value='none';
     AsepTeAcademic.reset('asepTeAcademic',{silent:true});
+    AsepPedagogicalProof.reset('pedagogical');
     calc();
   });
 

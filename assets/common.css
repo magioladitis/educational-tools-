@@ -2682,6 +2682,95 @@ body.edu-ui .edu-deadline-countdown { display: block; margin-top: 4px; }
 body.edu-ui .edu-deadline-links { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 9px; }
 body.edu-ui .edu-deadline-links a { font-weight: 700; }
 body.edu-ui .edu-deadline-note { margin: 12px 0 0; font-size: 12.5px; color: #667085; line-height: 1.5; }
+body.edu-ui .edu-deadline-card.is-collapsible { padding: 0; overflow: hidden; }
+body.edu-ui .edu-deadline-card.is-collapsible .edu-deadline-details { margin: 0; }
+body.edu-ui .edu-deadline-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+body.edu-ui .edu-deadline-summary::-webkit-details-marker { display: none; }
+body.edu-ui .edu-deadline-summary::marker { content: ''; }
+body.edu-ui .edu-deadline-heading {
+  font-size: 1.5em;
+  line-height: 1.2;
+  font-weight: 700;
+  color: inherit;
+}
+body.edu-ui .edu-deadline-chevron {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #eef4fb;
+  color: var(--edu-primary, #1a4f8b);
+  font-size: 20px;
+  line-height: 1;
+  transform: rotate(-90deg);
+  transition: transform .18s ease, background-color .18s ease;
+}
+body.edu-ui .edu-deadline-details[open] .edu-deadline-chevron { transform: rotate(0deg); }
+body.edu-ui .edu-deadline-summary:hover .edu-deadline-chevron,
+body.edu-ui .edu-deadline-summary:focus-visible .edu-deadline-chevron { background: #dfeaf8; }
+body.edu-ui .edu-deadline-summary:focus-visible { outline: 3px solid rgba(26, 79, 139, .18); outline-offset: -3px; }
+body.edu-ui .edu-deadline-body { padding: 0 18px 18px; }
+@media (prefers-reduced-motion: reduce) {
+  body.edu-ui .edu-deadline-chevron { transition: none; }
+}
 @media (max-width: 760px) {
   body.edu-ui .edu-deadline-grid { grid-template-columns: 1fr; }
+}
+
+/* Shared ASEP Pedagogical & Teaching Competence proof panel */
+body.edu-ui .asep-pedagogical-proof { margin-top:8px; }
+body.edu-ui .asep-pedagogical-control { margin-bottom:0; }
+body.edu-ui .asep-pedagogical-proof-panel {
+  margin-top:10px;
+  padding:14px;
+  border:1px solid #d8e2ef;
+  border-radius:12px;
+  background:#f8fbff;
+}
+body.edu-ui .asep-pedagogical-proof-title {
+  margin-bottom:6px;
+  font-weight:800;
+  color:var(--edu-primary-dark);
+}
+body.edu-ui .asep-pedagogical-proof-question { margin-bottom:10px; line-height:1.5; }
+body.edu-ui .asep-pedagogical-proof-method-label { display:block; margin-bottom:5px; font-weight:700; }
+body.edu-ui .asep-pedagogical-proof-panel select { width:100%; max-width:100%; min-width:0; }
+body.edu-ui .asep-pedagogical-proof-status {
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:10px;
+  line-height:1.45;
+  font-weight:650;
+}
+body.edu-ui .asep-pedagogical-proof-status.neutral { background:#f1f5f9; color:#475569; }
+body.edu-ui .asep-pedagogical-proof-status.success { background:#ecfdf3; color:#166534; }
+body.edu-ui .asep-pedagogical-proof-status.warning { background:#fff7ed; color:#9a3412; }
+body.edu-ui .asep-pedagogical-proof-details { margin-top:10px; padding-top:10px; border-top:1px solid #dfe7f2; }
+body.edu-ui .asep-pedagogical-proof-details summary { cursor:pointer; color:var(--edu-primary-dark); font-weight:700; }
+body.edu-ui .asep-pedagogical-proof-details ul { margin:10px 0 4px 20px; padding:0; }
+body.edu-ui .asep-pedagogical-proof-details li { margin-bottom:8px; line-height:1.5; }
+body.edu-ui .asep-pedagogical-proof-legal {
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid #dfe7f2;
+  color:#475569;
+  font-size:.9rem;
+  line-height:1.5;
+}
+body.edu-ui .asep-pedagogical-proof-guide { margin-top:10px; }
+body.edu-ui .asep-pedagogical-proof-guide a { font-weight:700; }
+@media (max-width:640px) {
+  body.edu-ui .asep-pedagogical-proof-panel { padding:12px; }
 }
