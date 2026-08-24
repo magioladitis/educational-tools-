@@ -2,7 +2,7 @@
 /**
  * Shared ASEP TE academic presentation for 1GT/2024 and 4EA/2025.
  *
- * The page-specific branch selector remains outside the component.
+ * The page-specific specialty/branch selector remains outside the component.
  * The component is intentionally split into render parts so 4EA can keep
  * its EAE table-eligibility block between degree controls and qualifications.
  *
@@ -22,7 +22,7 @@ if (!function_exists('renderAsepTeAcademic')) {
         $defaults = array(
             'part' => 'qualifications',
             'id' => 'asepTeAcademic',
-            'branch_id' => 'branch',
+            'specialty_id' => 'specialty',
             'grade_scale_id' => 'gradeScale',
             'degree_id' => 'degreeGrade',
             'text_grade_id' => 'te16TextGrade',
@@ -34,10 +34,10 @@ if (!function_exists('renderAsepTeAcademic')) {
             'computer_id' => 'computer',
             'training_id' => 'training',
             'training_proof_id' => 'trainingProof',
-            'training_radio_name' => 'trainingDates',
-            'training_yes_id' => 'trainingDatesYes',
-            'training_no_id' => 'trainingDatesNo',
-            'training_status_id' => 'trainingDatesStatus',
+            'training_radio_name' => 'trainingProofDates',
+            'training_yes_id' => 'trainingProofDatesYes',
+            'training_no_id' => 'trainingProofDatesNo',
+            'training_status_id' => 'trainingProofDatesStatus',
             'extra_training_ids' => array(),
             'show_subtotal' => true,
             'subtotal_id' => 'academicSubtotal',
@@ -84,7 +84,7 @@ if (!function_exists('renderAsepTeAcademic')) {
   id="<?php echo $h($c['id']); ?>"
   class="asep-te-academic-degree"
   data-component="asep-te-academic"
-  data-branch-id="<?php echo $h($c['branch_id']); ?>"
+  data-specialty-id="<?php echo $h($c['specialty_id']); ?>"
   data-grade-scale-id="<?php echo $h($c['grade_scale_id']); ?>"
   data-degree-id="<?php echo $h($c['degree_id']); ?>"
   data-text-grade-id="<?php echo $h($c['text_grade_id']); ?>"

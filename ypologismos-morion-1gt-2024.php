@@ -51,8 +51,8 @@ renderDeadlineCard(array(
 
         <div class="field-grid">
           <div class="field">
-            <label for="branch">Κλάδος</label>
-            <select id="branch">
+            <label for="specialty">Κλάδος</label>
+            <select id="specialty">
               <option value="te01">ΤΕ01</option>
               <option value="te02">ΤΕ02</option>
               <option value="te16">ΤΕ16 — Μουσικής μη Ανώτατων Ιδρυμάτων</option>
@@ -64,7 +64,7 @@ renderDeadlineCard(array(
         <?php renderAsepTeAcademic(array(
             'part' => 'degree-details',
             'id' => 'asepTeAcademic',
-            'branch_id' => 'branch'
+            'specialty_id' => 'specialty'
         )); ?>
       <?php calculatorCardEnd(); ?>
 
@@ -225,7 +225,7 @@ renderAsepSocialCriteria(array(
   $('resetBtn').addEventListener('click',()=>{
     document.querySelectorAll('input[type="number"]').forEach(el=>el.value='0');$('degreeGrade').value='';
     document.querySelectorAll('input[type="text"]').forEach(el=>el.value='');document.querySelectorAll('input[type="checkbox"],input[type="radio"]').forEach(el=>el.checked=false);
-    $('branch').value='te01';AsepServiceController.reset('asepService',{silent:true});AsepTeAcademic.reset('asepTeAcademic',{silent:true});AsepPedagogicalProof.reset('pedagogical');calc();
+    $('specialty').value='te01';AsepServiceController.reset('asepService',{silent:true});AsepTeAcademic.reset('asepTeAcademic',{silent:true});AsepPedagogicalProof.reset('pedagogical');calc();
   });
   $('copyBtn').addEventListener('click',async()=>{const text=summary(calc());try{await navigator.clipboard.writeText(text);const old=$('copyBtn').textContent;$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent=old,1400);}catch(e){alert(text);}});
   AsepTeAcademic.sync('asepTeAcademic');calc();

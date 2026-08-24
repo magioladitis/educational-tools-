@@ -120,9 +120,9 @@
   <div class="field"><label for="unemploymentBand">Ανεργία</label><select id="unemploymentBand"><option value="none">Δεν δηλώνω ανεργία — 0%</option><option value="m0_6">0–6 μήνες — 2%</option><option value="m6_12">6–12 μήνες — 4%</option><option value="m12_18">12–18 μήνες — 6%</option><option value="m18_24">18–24 μήνες — 8%</option><option value="m24plus">24 μήνες και άνω — 10%</option></select><small>Απαιτείται πρόσφατη βεβαίωση ανεργίας, όχι παλαιότερη των 5 εργάσιμων ημερών από την αίτηση.</small></div>
   <h3>Ειδικές κατηγορίες — +10% η καθεμία</h3>
   <div class="field-grid">
-    <div class="field"><div class="check-row"><input id="threeChildrenParent" type="checkbox"><label for="threeChildrenParent">Γονέας τρίτεκνης οικογένειας</label></div></div>
-    <div class="field"><div class="check-row"><input id="manyChildrenMember" type="checkbox"><label for="manyChildrenMember">Μέλος πολύτεκνης οικογένειας (γονέας ή τέκνο)</label></div></div>
-    <div class="field"><div class="check-row"><input id="singleParentMember" type="checkbox"><label for="singleParentMember">Μέλος μονογονεϊκής οικογένειας (γονέας ή τέκνο)</label></div></div>
+    <div class="field"><div class="check-row"><input id="threeChildren" type="checkbox"><label for="threeChildren">Γονέας τρίτεκνης οικογένειας</label></div></div>
+    <div class="field"><div class="check-row"><input id="manyChildren" type="checkbox"><label for="manyChildren">Μέλος πολύτεκνης οικογένειας (γονέας ή τέκνο)</label></div></div>
+    <div class="field"><div class="check-row"><input id="singleParent" type="checkbox"><label for="singleParent">Μέλος μονογονεϊκής οικογένειας (γονέας ή τέκνο)</label></div></div>
     <div class="field"><div class="check-row"><input id="disabilityCategory" type="checkbox"><label for="disabilityCategory">ΑμεΑ — γονέας ή ο ίδιος</label></div></div>
   </div>
   <div class="note">Η πρόσκληση ορίζει τις ειδικές κατηγορίες ως ποσοστό επί του συνόλου της βαθμολογίας. Ο υπολογιστής προσθέτει αθροιστικά τα δηλωμένα ποσοστά πάνω στη βασική βαθμολογία, χωρίς ανατοκισμό.</div>
@@ -172,7 +172,7 @@ function data(){return {
   adultEducationPostgrad:$('adultEducationPostgrad').value, trainingSubjectHours:$('trainingSubjectHours').value, trainingVetHours:$('trainingVetHours').value, trainingAdultHours:$('trainingAdultHours').value,
   saekOutsideHours:$('saekOutsideHours').value, saekSivitanidiosHours:$('saekSivitanidiosHours').value, tertiaryTeachingYears:$('tertiaryTeachingYears').value, primarySecondaryTeachingYears:$('primarySecondaryTeachingYears').value, otherNonFormalHours:$('otherNonFormalHours').value,
   workMonths:$('workMonths').value, languageName:$('languageName').value, languageLevel:$('languageLevel').value, languageTeachingExcluded:$('languageTeachingExcluded').checked, languageArticle28Status:$('languageArticle28Status').value, languageArticle28:$('languageArticle28Status').value==='yes', languageTitleRegistered:$('languageTitleRegistered').checked, languageOfficialTranslation:$('languageOfficialTranslation').checked, computer:$('computer').checked, pe86:$('pe86').checked, adultTrainer:$('adultTrainer').checked,
-  unemploymentBand:$('unemploymentBand').value, threeChildrenParent:$('threeChildrenParent').checked, manyChildrenMember:$('manyChildrenMember').checked, singleParentMember:$('singleParentMember').checked, disabilityCategory:$('disabilityCategory').checked
+  unemploymentBand:$('unemploymentBand').value, threeChildren:$('threeChildren').checked, manyChildren:$('manyChildren').checked, singleParent:$('singleParent').checked, disabilityCategory:$('disabilityCategory').checked
 };}
 function syncLanguageProof(d){
   const hasLevel=d.languageLevel && d.languageLevel!=='none';

@@ -21,7 +21,7 @@
     return n.toLocaleString('el-GR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
-  function branchId(c) { return idOf(c, 'branchId', 'branch'); }
+  function specialtyId(c) { return idOf(c, 'specialtyId', 'specialty'); }
   function gradeScaleId(c) { return idOf(c, 'gradeScaleId', 'gradeScale'); }
   function degreeId(c) { return idOf(c, 'degreeId', 'degreeGrade'); }
   function textGradeId(c) { return idOf(c, 'textGradeId', 'te16TextGrade'); }
@@ -40,7 +40,7 @@
     return raw.split(',').map(function (x) { return x.trim(); }).filter(Boolean);
   }
 
-  function branchFamily(value) {
+  function specialtyFamily(value) {
     var v = global.EducationCore.normalizeSpecialtyCode(value);
     if (v.indexOf('ΤΕ16') === 0) return 'TE16';
     if (v.indexOf('ΤΕ01') === 0) return 'TE01';
@@ -83,7 +83,7 @@
     c = getContainer(c);
     if (!c) return null;
 
-    var family = branchFamily(valueOf(branchId(c)));
+    var family = specialtyFamily(valueOf(specialtyId(c)));
     var scale = byId(gradeScaleId(c));
     setSecondTitleLabel(c, family);
 
@@ -121,8 +121,8 @@
       : { points: 0, accepted: [], warnings: [] };
 
     return {
-      branch: valueOf(branchId(c)),
-      family: branchFamily(valueOf(branchId(c))),
+      specialty: valueOf(specialtyId(c)),
+      family: specialtyFamily(valueOf(specialtyId(c))),
       gradeScale: scale,
       rawDegreeGrade: rawGrade,
       degreePresent: hasGrade,
@@ -214,13 +214,13 @@
   function init(c) {
     if (!c || c.dataset.teAcademicReady === '1') return;
     c.dataset.teAcademicReady = '1';
-    var branch = byId(branchId(c));
+    var specialty = byId(specialtyId(c));
     var scale = byId(gradeScaleId(c));
     var degree = byId(degreeId(c));
     if (degree && global.EducationCore && global.EducationCore.bindBoundedNumberInput) {
       global.EducationCore.bindBoundedNumberInput(degree);
     }
-    if (branch) branch.addEventListener('change', function () {
+    if (specialty) specialty.addEventListener('change', function () {
       if (scale) scale.dataset.auto = 'on';
       sync(c);
       if (degree && global.EducationCore && global.EducationCore.normalizeBoundedInput && valueOf(gradeScaleId(c)) !== 'te16text') {
@@ -254,7 +254,7 @@
     reset: reset,
     trainingWarning: trainingWarning,
     trainingSummary: trainingSummary,
-    branchFamily: branchFamily
+    specialtyFamily: specialtyFamily
   });
 
   initAll();

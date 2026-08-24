@@ -70,10 +70,10 @@ renderAsepComputerProof(array(
 <?php
 renderTrainingProof([
     'id' => 'trainingProof',
-    'radio_name' => 'trainingDates',
-    'yes_id' => 'trainingDatesYes',
-    'no_id' => 'trainingDatesNo',
-    'status_id' => 'trainingDatesStatus',
+    'radio_name' => 'trainingProofDates',
+    'yes_id' => 'trainingProofDatesYes',
+    'no_id' => 'trainingProofDatesNo',
+    'status_id' => 'trainingProofDatesStatus',
     'context' => '1ea-2025-300h-7m',
     'legal_html' => <<<'HTML'
 Σε περίπτωση που στο πιστοποιητικό δεν αναγράφεται η ημεροχρονολογία έναρξης και λήξης του σεμιναρίου, απαιτείται η προσκόμιση σχετικής βεβαίωσης από τον οικείο φορέα. <strong>Σε κάθε περίπτωση πρέπει να προκύπτει ολόκληρο το χρονικό διάστημα των 7 μηνών (6 μήνες και 29 ημέρες δεν γίνεται δεκτό).</strong>
@@ -150,7 +150,7 @@ function social(){return AsepSocialCriteria.getState('socialCriteria',fmt);}
 function render(){TrainingProof.syncAll();const a=academic(),s=service(),c=social(),total=a.points+s.points+c.points;const post=$('titleType').value==='postsecondary';$('gradeInfo').innerHTML=post?'Τίτλος μεταδευτεροβάθμιας: <strong>7,2 μόρια</strong> για κάθε βαθμό πάνω από 10 · ακαδημαϊκό όριο <strong>96</strong>.':'Τίτλος δευτεροβάθμιας: <strong>4 μόρια</strong> για κάθε βαθμό πάνω από 10 · ακαδημαϊκό όριο <strong>64</strong>.';$('gradeWarning').classList.toggle('hidden',$('degreeGrade').value===''||a.valid);$('academicSubtotal').textContent=fmt(a.points);$('totalPoints').textContent=fmt(total);$('degreePoints').textContent=fmt(a.degree);$('academicPoints').textContent=fmt(a.points)+(a.raw>a.cap?' (όριο '+a.cap+')':'');$('servicePoints').textContent=fmt(s.points)+(s.rawPoints>120?' (όριο 120)':'');$('socialPoints').textContent=fmt(c.points);$('academicCap').textContent=a.cap;const sensory=EaeSensoryProof.getState(),eng=!!(sensory.eng&&sensory.eng.selected),pb=$('priorityBox');pb.className='priority'+(eng?' yes':'');pb.textContent=eng?'Ειδική προτεραιότητα ΕΝΓ για υποστήριξη κωφών/βαρήκοων μαθητών':'Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ';return{a,s,c,total};}
 function summary(r){return[`Υπολογισμός μορίων 1ΕΑ/2025 — ΔΕ01 ΕΒΠ`,`Βαθμός τίτλου: ${fmt(r.a.degree)}`,`Ακαδημαϊκά: ${fmt(r.a.points)}`,`Προϋπηρεσία: ${fmt(r.s.points)}`,`Κοινωνικά: ${fmt(r.c.points)}`,`ΣΥΝΟΛΟ: ${fmt(r.total)}`,EaeSensoryProof.summary(),TrainingProof.summary('trainingProof')].filter(Boolean).join('\n');}
 EducationCore.bindBoundedNumberInput($('degreeGrade'),{min:10,max:20});
-document.addEventListener('input',render);document.addEventListener('change',render);$('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});$('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=x.id==='degreeGrade'?'':'0');document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepServiceController.reset('asepService',{silent:true});AsepLanguageSelector.reset('asepLanguages',{silent:true});EaeSensoryProof.reset();render();});render();})();
+document.addEventListener('input',render);document.addEventListener('change',render);$('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});$('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=x.id==='degreeGrade'?'':'0');document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingProofDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepServiceController.reset('asepService',{silent:true});AsepLanguageSelector.reset('asepLanguages',{silent:true});EaeSensoryProof.reset();render();});render();})();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-computer-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

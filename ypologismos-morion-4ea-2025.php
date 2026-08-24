@@ -52,8 +52,8 @@ renderDeadlineCard(array(
 
         <div class="field-grid">
           <div class="field">
-            <label for="branch">Κλάδος</label>
-            <select id="branch">
+            <label for="specialty">Κλάδος</label>
+            <select id="specialty">
               <option value="">— Επιλογή κλάδου / ειδικότητας —</option>
               <optgroup label="ΤΕ01">
                 <option value="ΤΕ01.04">ΤΕ01.04 — Ψυκτικοί</option>
@@ -88,7 +88,7 @@ renderDeadlineCard(array(
         <?php renderAsepTeAcademic(array(
             'part' => 'degree-details',
             'id' => 'asepTeAcademic',
-            'branch_id' => 'branch',
+            'specialty_id' => 'specialty',
             'extra_training_ids' => array('seminar400'),
             'degree_placeholder_20' => 'π.χ. 15,40'
         )); ?>
@@ -98,7 +98,7 @@ renderDeadlineCard(array(
         <h2>Ένταξη σε πίνακα Ε.Α.Ε.</h2>
         <p class="cap">Ενδεικτικός έλεγχος των ειδικών κριτηρίων ένταξης της 4ΕΑ/2025.</p>
 
-        <div id="eaeEligibility" data-eae-profile="te" data-specialty-id="branch" data-social-id="socialCriteria">
+        <div id="eaeEligibility" data-eae-profile="te" data-specialty-id="specialty" data-social-id="socialCriteria">
         <div class="field">
           <label for="mainCriterion">Κριτήριο ένταξης στον Αξιολογικό Πίνακα Β΄ (Κύριος)</label>
           <select id="mainCriterion" data-eae-main-select>
@@ -290,7 +290,7 @@ renderAsepSocialCriteria(array(
   const fmt = v => (Math.round((Number(v)+Number.EPSILON)*100)/100).toLocaleString('el-GR',{minimumFractionDigits:2,maximumFractionDigits:2});
 
   function branchFamily(){
-    const value = $('branch').value;
+    const value = $('specialty').value;
     if(value === 'ΤΕ16') return 'ΤΕ16';
     if(value.startsWith('ΤΕ01')) return 'ΤΕ01';
     if(value.startsWith('ΤΕ02')) return 'ΤΕ02';
@@ -298,7 +298,7 @@ renderAsepSocialCriteria(array(
   }
 
   function selectedBranchLabel(){
-    const option = $('branch').selectedOptions[0];
+    const option = $('specialty').selectedOptions[0];
     return option && option.value ? option.textContent.trim() : 'κλάδος/ειδικότητα μη επιλεγμένος/η';
   }
 
@@ -392,8 +392,8 @@ renderAsepSocialCriteria(array(
     $('degreeGrade').value='';
     document.querySelectorAll('input[type="text"]').forEach(el=>el.value='');
     document.querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked=false);
-    document.querySelectorAll('input[name="trainingDates"]').forEach(el=>el.checked=false);
-    $('branch').value='';
+    document.querySelectorAll('input[name="trainingProofDates"]').forEach(el=>el.checked=false);
+    $('specialty').value='';
     $('mainCriterion').value='none';
     AsepServiceController.reset('asepService',{silent:true});
     AsepTeAcademic.reset('asepTeAcademic',{silent:true});

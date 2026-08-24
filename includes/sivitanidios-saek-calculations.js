@@ -98,7 +98,7 @@
 
   function calculateSocial(data, base) {
     const unemploymentPercent = UNEMPLOYMENT_PERCENT[data.unemploymentBand] || 0;
-    const specialKeys = ['threeChildrenParent', 'manyChildrenMember', 'singleParentMember', 'disabilityCategory'];
+    const specialKeys = ['threeChildren', 'manyChildren', 'singleParent', 'disabilityCategory'];
     const specialCount = specialKeys.reduce((sum, key) => sum + (data[key] ? 1 : 0), 0);
     const specialPercent = specialCount * 10;
     const totalPercent = unemploymentPercent + specialPercent;

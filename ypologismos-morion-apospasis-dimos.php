@@ -106,11 +106,11 @@
             <select id="appointmentLanguage"><option value="">— Δεν αφορά —</option><option value="fr">ΠΕ05 — Γαλλική</option><option value="en">ΠΕ06 — Αγγλική</option><option value="de">ΠΕ07 — Γερμανική</option><option value="it">ΠΕ34 — Ιταλική</option><option value="es">ΠΕ40 — Ισπανική</option></select>
           </div>
           <div class="two-col">
-            <div class="field"><label for="languageName1">1η ξένη γλώσσα</label><select id="languageName1"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select></div>
-            <div class="field"><label for="language1">Επίπεδο 1ης γλώσσας</label><select id="language1"><option value="0">Καμία / χωρίς μόρια</option><option value="1">Β2 — 1 μόριο</option><option value="2">Γ1 — 2 μόρια</option><option value="3">Γ2 — 3 μόρια</option></select></div>
+            <div class="field"><label for="language1">1η ξένη γλώσσα</label><select id="language1"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select></div>
+            <div class="field"><label for="languageLevel1">Επίπεδο 1ης γλώσσας</label><select id="languageLevel1"><option value="0">Καμία / χωρίς μόρια</option><option value="1">Β2 — 1 μόριο</option><option value="2">Γ1 — 2 μόρια</option><option value="3">Γ2 — 3 μόρια</option></select></div>
             <div class="field hidden" id="languageOther1Wrap"><label for="languageOther1">Ονομασία άλλης 1ης γλώσσας</label><input id="languageOther1" type="text" placeholder="π.χ. Πορτογαλική"></div>
-            <div class="field"><label for="languageName2">2η ξένη γλώσσα</label><select id="languageName2"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select></div>
-            <div class="field"><label for="language2">Επίπεδο 2ης γλώσσας</label><select id="language2"><option value="0">Καμία / χωρίς μόρια</option><option value="1">Β2 — 1 μόριο</option><option value="2">Γ1 — 2 μόρια</option><option value="3">Γ2 — 3 μόρια</option></select></div>
+            <div class="field"><label for="language2">2η ξένη γλώσσα</label><select id="language2"><option value="">— Επιλογή γλώσσας —</option><option value="en">Αγγλική</option><option value="fr">Γαλλική</option><option value="de">Γερμανική</option><option value="it">Ιταλική</option><option value="es">Ισπανική</option><option value="other">Άλλη ξένη γλώσσα</option></select></div>
+            <div class="field"><label for="languageLevel2">Επίπεδο 2ης γλώσσας</label><select id="languageLevel2"><option value="0">Καμία / χωρίς μόρια</option><option value="1">Β2 — 1 μόριο</option><option value="2">Γ1 — 2 μόρια</option><option value="3">Γ2 — 3 μόρια</option></select></div>
             <div class="field hidden" id="languageOther2Wrap"><label for="languageOther2">Ονομασία άλλης 2ης γλώσσας</label><input id="languageOther2" type="text" placeholder="π.χ. Πορτογαλική"></div>
           </div>
           <div id="languageWarning" class="note hidden"></div>
@@ -265,8 +265,8 @@
           <tr>
             <td>${item.label}</td>
             <td>${String(item.pts).replace(".", ",")}</td>
-            <td class="numcell"><input type="number" min="0" step="1" value="0" id="${item.id}_solo" aria-label="${item.label} ατομικά"></td>
-            <td class="numcell"><input type="number" min="0" step="1" value="0" id="${item.id}_group" aria-label="${item.label} ομαδικά"></td>
+            <td class="numcell"><input type="number" min="0" step="1" value="0" id="${item.id}Solo" aria-label="${item.label} ατομικά"></td>
+            <td class="numcell"><input type="number" min="0" step="1" value="0" id="${item.id}Group" aria-label="${item.label} ομαδικά"></td>
           </tr>
         `).join("");
       }
@@ -276,8 +276,8 @@
 
       function scoreItems(items){
         return items.reduce((sum, item) => {
-          const solo = n(item.id + "_solo");
-          const group = n(item.id + "_group");
+          const solo = n(item.id + "Solo");
+          const group = n(item.id + "Group");
           return sum + item.pts * solo + item.pts * 0.5 * group;
         }, 0);
       }
@@ -313,8 +313,8 @@
 
         syncLanguageUI();
         const languageDetails = EducationLanguages.calculatePair([
-          {language:$("languageName1").value, otherText:$("languageOther1").value, points:Number($("language1").value||0)},
-          {language:$("languageName2").value, otherText:$("languageOther2").value, points:Number($("language2").value||0)}
+          {language:$("language1").value, otherText:$("languageOther1").value, points:Number($("languageLevel1").value||0)},
+          {language:$("language2").value, otherText:$("languageOther2").value, points:Number($("languageLevel2").value||0)}
         ], {excluded:$("appointmentLanguage").value ? [$("appointmentLanguage").value] : [], cap:MAX.language});
         const language = languageDetails.points;
         const A = cap(titles + training + language, MAX.A);
@@ -340,7 +340,7 @@
       }
 
       function syncLanguageUI(){
-        const s1=$("languageName1"),s2=$("languageName2"),excluded=$("appointmentLanguage").value;
+        const s1=$("language1"),s2=$("language2"),excluded=$("appointmentLanguage").value;
         $("languageOther1Wrap").classList.toggle("hidden",s1.value!=="other"); $("languageOther2Wrap").classList.toggle("hidden",s2.value!=="other");
         [s1,s2].forEach(s=>Array.from(s.options).forEach(o=>o.disabled=false));
         [s1,s2].forEach(s=>{if(excluded){const o=Array.from(s.options).find(x=>x.value===excluded);if(o)o.disabled=true;}});
@@ -416,13 +416,13 @@
         $("secondDegree4y").checked = true;
         $("aeiPrograms").value = 2;
         $("iepHours").value = 40;
-        $("languageName1").value = "en";
-        $("language1").value = 3;
-        $("languageName2").value = "de";
-        $("language2").value = 2;
+        $("language1").value = "en";
+        $("languageLevel1").value = 3;
+        $("language2").value = "de";
+        $("languageLevel2").value = 2;
         $("researchPrograms").value = 1;
-        $("intlProceedings_solo").value = 2;
-        $("greekArticles_group").value = 1;
+        $("intlProceedingsSolo").value = 2;
+        $("greekArticlesGroup").value = 1;
         $("innovativePrograms").value = 3;
         $("clubs").value = 2;
         calc();

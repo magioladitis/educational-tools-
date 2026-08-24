@@ -96,10 +96,10 @@ renderAsepComputerProof(array(
 <?php
 renderTrainingProof([
     'id' => 'trainingProof',
-    'radio_name' => 'trainingDates',
-    'yes_id' => 'trainingDatesYes',
-    'no_id' => 'trainingDatesNo',
-    'status_id' => 'trainingDatesStatus',
+    'radio_name' => 'trainingProofDates',
+    'yes_id' => 'trainingProofDatesYes',
+    'no_id' => 'trainingProofDatesNo',
+    'status_id' => 'trainingProofDatesStatus',
     'context' => '3ea-2025-general-300h-or-eae-400h-7m',
     'input_ids' => array('training', 'seminar400'),
     'legal_html' => <<<'HTML'
@@ -222,7 +222,7 @@ renderEaeSensoryPriority(array(
  document.addEventListener('change',render);
  $('copyBtn').addEventListener('click',async()=>{const txt=summary(render());try{await navigator.clipboard.writeText(txt);$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent='Αντιγραφή',1200)}catch(e){alert(txt)}});
  document.addEventListener('asep-digital-tutoring-change',render);
- $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degreeGrade').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepPeAcademic.reset('asepPeAcademic',{silent:true});AsepServiceController.reset('asepService',{silent:true});AsepPedagogicalProof.reset('pedagogical');EaeSensoryProof.reset();render();});
+ $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(x=>x.value=0);$('degreeGrade').value='';document.querySelectorAll('input[type=text]').forEach(x=>x.value='');document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.querySelectorAll('input[name="trainingProofDates"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);AsepPeAcademic.reset('asepPeAcademic',{silent:true});AsepServiceController.reset('asepService',{silent:true});AsepPedagogicalProof.reset('pedagogical');EaeSensoryProof.reset();render();});
  render();
 })();
 </script>

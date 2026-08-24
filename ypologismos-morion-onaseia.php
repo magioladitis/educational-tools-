@@ -248,15 +248,15 @@ renderAsepPeAcademic(array(
     row.className = "service-row";
     row.innerHTML = `
       <div class="question">
-        <label for="serviceYear_${serviceRowCounter}">Σχολικό έτος</label>
-        <select class="service-year" id="serviceYear_${serviceRowCounter}">
+        <label for="serviceYear${serviceRowCounter}">Σχολικό έτος</label>
+        <select class="service-year" id="serviceYear${serviceRowCounter}">
           <option value="">-- Επιλογή --</option>
           ${serviceYearOptions(selectedYear)}
         </select>
       </div>
       <div class="question">
-        <label for="serviceMonths_${serviceRowCounter}">Αναγνωρισμένοι μήνες</label>
-        <input class="service-months" id="serviceMonths_${serviceRowCounter}" type="text" inputmode="decimal" data-min="0" data-max="10" value="${months}" placeholder="0 έως 10">
+        <label for="serviceMonths${serviceRowCounter}">Αναγνωρισμένοι μήνες</label>
+        <input class="service-months" id="serviceMonths${serviceRowCounter}" type="text" inputmode="decimal" data-min="0" data-max="10" value="${months}" placeholder="0 έως 10">
       </div>
       <button type="button" class="remove-row" aria-label="Αφαίρεση γραμμής προϋπηρεσίας" onclick="this.parentElement.remove()">Αφαίρεση</button>
     `;
