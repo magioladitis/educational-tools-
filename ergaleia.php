@@ -32,7 +32,7 @@
 <?php
 renderDeadlineCard(array(
     'title' => '📅 Ενεργές & προσεχείς προθεσμίες',
-    'intro' => 'Συγκεντρωτικά οι προθεσμίες που συνδέονται άμεσα με εργαλεία της Εργαλειοθήκης.',
+    'intro' => 'Συγκεντρωτικά σημαντικές προθεσμίες για εκπαιδευτικούς, μαζί με όσες συνδέονται άμεσα με εργαλεία της Εργαλειοθήκης.',
     'collapsible' => true,
     'expanded' => true,
     'items' => array(
@@ -93,6 +93,18 @@ renderDeadlineCard(array(
             'source_label' => 'ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗',
             'tool_url' => 'ypologismos-morion-onaseia.php',
             'tool_label' => 'Ωνάσεια →'
+        ),
+        array(
+            'title' => 'ΣΑΕΚ Σιβιτανιδείου — ωρομίσθιοι εκπαιδευτές 2026–2027',
+            'meta_html' => 'Ηλεκτρονικές αιτήσεις για το φθινοπωρινό εξάμηνο 2026Β και το εαρινό 2027Α · από <strong>24/08/2026, 12:00</strong> έως <strong>04/09/2026, 12:00</strong>.',
+            'start' => '2026-08-24T12:00:00+03:00',
+            'end' => '2026-09-04T12:00:00+03:00',
+            'source_url' => 'https://ek.sivitanidios.edu.gr/download/2026/7903.pdf',
+            'source_label' => 'Σιβιτανίδειος — Πρόσκληση 7903/21-08-2026 · ΑΔΑ ΨΞ0Ο469ΒΨ1-3ΥΚ ↗',
+            'open_text' => 'Η περίοδος υποβολής αιτήσεων είναι ανοικτή.',
+            'closed_text' => 'Η προθεσμία υποβολής αιτήσεων έχει λήξει.',
+            'tool_url' => 'ypologismos-morion-sivitanidios-saek.php',
+            'tool_label' => 'Υπολόγισε μόρια →'
         )
     ),
     'note_html' => 'Στην ορκωμοσία/ανάληψη νεοδιορίστων και στις προσκλήσεις αναπληρωτών και ΕΕΠ–ΕΒΠ δεν αναφέρεται συγκεκριμένη ώρα λήξης· το countdown θεωρεί τεχνικά το τέλος της αντίστοιχης καταληκτικής ημέρας. Οι επίσημες ανακοινώσεις, οι προσκλήσεις και οι ηλεκτρονικές πλατφόρμες υπερισχύουν.'
@@ -109,9 +121,10 @@ renderDeadlineCard(array(
 <button aria-pressed="false" class="filter-btn" data-filter="anaplirotes" type="button">Αναπληρωτές</button>
 <button aria-pressed="false" class="filter-btn" data-filter="apospaseis" type="button">Αποσπάσεις</button>
 <button aria-pressed="false" class="filter-btn" data-filter="sde" type="button">ΣΔΕ</button>
+<button aria-pressed="false" class="filter-btn" data-filter="saek" type="button">ΣΑΕΚ</button>
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 23 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 24 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
@@ -374,6 +387,13 @@ renderDeadlineCard(array(
 <div class="card-top"><span class="tool-number">23</span><span class="category-tag orange">ΣΔΕ / Μητρώο</span></div>
 <h2>Μόρια Μητρώου ΣΔΕ</h2>
 <p>Ενιαίος υπολογιστής για Εκπαιδευτικό Προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας, με δυναμικά κριτήρια και κοινωνικές προσαυξήσεις.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
+<a class="tool-card" data-category="saek" data-search="ΣΑΕΚ Σιβιτανίδειος Σιβιτανιδείου ωρομίσθιοι εκπαιδευτές 2026 2027 μόρια μοριοδότηση εκπαίδευση ενηλίκων διδακτική εμπειρία κοινωνικά κριτήρια" href="ypologismos-morion-sivitanidios-saek.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">24</span><span class="category-tag green">ΣΑΕΚ / Ωρομίσθιοι</span></div>
+<h2>Μόρια Εκπαιδευτή ΣΑΕΚ Σιβιτανιδείου</h2>
+<p>Υπολόγισε τη βασική βαθμολογία και τις κοινωνικές προσαυξήσεις για την πρόσκληση ωρομίσθιων εκπαιδευτών 2026–2027.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a></section>
 <div aria-hidden="true" class="no-results" id="noResults">

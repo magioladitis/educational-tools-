@@ -905,6 +905,22 @@ body.edu-ui.edu-calc-standard .card {
 }
 body.edu-ui.edu-calc-standard .card h2 { margin:0 0 5px; color:var(--blue-dark); font-size:21px; }
 body.edu-ui.edu-calc-standard .card h3 { margin:20px 0 7px; font-size:17px; }
+/* Sivitanidios SAEK: compact score caps + language-document checklist. */
+body.edu-page-sivitanidios-saek .section-head { display:flex; justify-content:space-between; gap:14px; align-items:flex-start; margin-bottom:12px; }
+body.edu-page-sivitanidios-saek .section-head > div:first-child { min-width:0; }
+body.edu-page-sivitanidios-saek .section-head .subtitle { margin:0; color:var(--muted); font-size:14px; }
+body.edu-page-sivitanidios-saek .section-head .max,
+body.edu-page-sivitanidios-saek .subsection-max { display:inline-flex; align-items:center; flex:0 0 auto; white-space:nowrap; padding:4px 9px; border-radius:999px; background:var(--blue-soft); color:var(--blue-dark); font-size:13px; font-weight:800; }
+body.edu-page-sivitanidios-saek .subsection-head { display:flex; justify-content:space-between; gap:12px; align-items:baseline; flex-wrap:wrap; margin:20px 0 7px; }
+body.edu-page-sivitanidios-saek .subsection-head h3 { margin:0; }
+body.edu-page-sivitanidios-saek .language-proof { margin:12px 0 2px; padding:13px; border:1px solid #d9e2ec; border-radius:12px; background:#f8fafc; }
+body.edu-page-sivitanidios-saek .language-proof-title { margin-bottom:7px; color:var(--blue-dark); font-weight:800; }
+body.edu-page-sivitanidios-saek .language-proof .check-row { display:flex; align-items:flex-start; gap:9px; padding:7px 0; }
+body.edu-page-sivitanidios-saek .language-proof .check-row input { width:18px; height:18px; margin-top:2px; flex:0 0 auto; }
+body.edu-page-sivitanidios-saek .language-proof .check-row label { margin:0; font-weight:600; }
+body.edu-page-sivitanidios-saek .language-proof-status { margin-top:8px; padding:9px 10px; border-radius:9px; background:var(--orange-soft); color:#7b4900; border:1px solid var(--edu-warning-border); font-size:13.5px; font-weight:700; }
+body.edu-page-sivitanidios-saek .language-proof-status.yes { background:var(--green-soft); color:var(--green); border-color:var(--edu-success-border); }
+@media(max-width:650px){body.edu-page-sivitanidios-saek .section-head{align-items:flex-start}body.edu-page-sivitanidios-saek .section-head .max{margin-top:1px}}
 body.edu-ui.edu-calc-standard .cap { color:var(--muted); font-size:14px; margin:0 0 15px; }
 body.edu-ui.edu-calc-standard .field-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 body.edu-ui.edu-calc-standard .field { margin-bottom:13px; }
