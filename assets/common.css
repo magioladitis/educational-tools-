@@ -738,7 +738,6 @@ body.edu-ui .app-box.edu-modernized .question p {
   }
 }
 
-
 /* Common legal/source card used by all toolbox tools. */
 body.edu-ui .edu-source-card {
   width: 100%;
@@ -826,7 +825,6 @@ body.edu-ui .edu-source-card .source-disclaimer {
   body.edu-ui .edu-source-card { box-shadow: none; border-left-width: 1px; }
   body.edu-ui .edu-source-card .source-links a { border: 0; padding: 0; background: transparent; color: inherit; }
 }
-
 
 /* Keep legal/source references visually inside the tool shell, including legacy pages. */
 body.edu-ui .edu-source-card.is-embedded {
@@ -1227,7 +1225,6 @@ body.edu-ui.edu-guide-objection .action-links a:hover { text-decoration:underlin
   body.edu-ui.edu-guide-objection .action-links a { display:block; margin-top:8px; text-align:center; }
 }
 
-
 /* Batch 1 utility additions v3.20.9 */
 .edu-mt-0 { margin-top:0 !important; }
 .edu-mt-12 { margin-top:12px !important; }
@@ -1237,30 +1234,57 @@ body.edu-ui.edu-guide-objection .action-links a:hover { text-decoration:underlin
 .edu-font-13 { font-size:13px !important; }
 .edu-fw-normal { font-weight:400 !important; }
 
+/* --------------------------------------------------------------------------
+   Shared declarations across the modern split-calculator families.
+   Consolidated v3.20.50 from identical page-scoped rules only; theme-specific
+   and business-state presentation remains in each family block below.
+   -------------------------------------------------------------------------- */
 /* ypologismos-morion-apospasis-evropaika-scholeia.php — migrated local CSS v3.20.9 */
 body.edu-page-european-schools {--bg:#f4f7fb;--card:#fff;--text:#18202b;--muted:#5f6b7a;--border:#dfe5ec;--blue:#1f6feb;--blue-dark:#174ea6;--green:#18794e;--green-soft:#eaf7f0;--orange:#9a4d00;--orange-soft:#fff4e5;--red:#b42318;--red-soft:#fff0ee;--purple:#6941c6;--shadow:0 10px 30px rgba(28,39,55,.09);margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
 body.edu-page-european-schools .page-shell {max-width:1220px;margin:0 auto;padding:28px 22px 50px}
 body.edu-page-european-schools .hero {background:linear-gradient(135deg,#153e75,#1f6feb 55%,#6653c7);color:#fff;border-radius:20px;padding:30px;box-shadow:var(--shadow);margin-bottom:20px}
-body.edu-page-european-schools .hero h1 {margin:0 0 9px;font-size:clamp(28px,4vw,40px);line-height:1.15}
+body.edu-page-european-schools .hero h1,
+body.edu-page-abroad .hero h1 {margin:0 0 9px;font-size:clamp(28px,4vw,40px);line-height:1.15}
 body.edu-page-european-schools .hero p {margin:5px 0;max-width:960px;color:rgba(255,255,255,.95)}
 body.edu-page-european-schools .hero-meta {display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}
 body.edu-page-european-schools .hero-meta span {background:rgba(0,0,0,.16);border-radius:999px;padding:6px 10px;font-size:13px;font-weight:bold}
 body.edu-page-european-schools .layout {display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
 body.edu-page-european-schools .card {background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 5px 18px rgba(28,39,55,.05)}
-body.edu-page-european-schools .card h2 {margin:0 0 5px;font-size:20px}
-body.edu-page-european-schools .card h3 {margin:18px 0 8px;font-size:16px}
-body.edu-page-european-schools .subtitle {margin:0 0 15px;color:var(--muted);font-size:14px}
-body.edu-page-european-schools .field-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-body.edu-page-european-schools .field {border:1px solid #e5e9ef;border-radius:12px;padding:13px;background:#fbfcfe}
+body.edu-page-european-schools .card h2,
+body.edu-page-abroad .card h2,
+body.edu-page-digital-tutoring .card h2,
+body.edu-ui.edu-calc-sde .card h2 {margin:0 0 5px;font-size:20px}
+body.edu-page-european-schools .card h3,
+body.edu-page-abroad .card h3,
+body.edu-ui.edu-calc-sde .card h3 {margin:18px 0 8px;font-size:16px}
+body.edu-page-european-schools .subtitle,
+body.edu-page-abroad .subtitle,
+body.edu-page-digital-tutoring .card .subtitle,
+body.edu-ui.edu-calc-sde .subtitle {margin:0 0 15px;color:var(--muted);font-size:14px}
+body.edu-page-european-schools .field-grid,
+body.edu-page-abroad .field-grid,
+body.edu-page-digital-tutoring .field-grid,
+body.edu-ui.edu-calc-sde .field-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+body.edu-page-european-schools .field,
+body.edu-page-abroad .field,
+body.edu-page-digital-tutoring .field {border:1px solid #e5e9ef;border-radius:12px;padding:13px;background:#fbfcfe}
 body.edu-page-european-schools .field.full {grid-column:1/-1}
-body.edu-page-european-schools label {display:block;font-weight:700;margin-bottom:7px}
+body.edu-page-european-schools label,
+body.edu-page-abroad label,
+body.edu-page-digital-tutoring label,
+body.edu-ui.edu-calc-sde label {display:block;font-weight:700;margin-bottom:7px}
 body.edu-page-european-schools label small {display:block;color:var(--muted);font-weight:400;margin-top:3px;line-height:1.4}
 body.edu-page-european-schools input[type="number"],
 body.edu-page-european-schools select,
-body.edu-page-european-schools input[type="text"] {width:100%;padding:10px 11px;border:1px solid #cfd7e2;border-radius:9px;font-size:15px;background:#fff;color:var(--text)}
+body.edu-page-european-schools input[type="text"],
+body.edu-page-abroad input[type="number"],
+body.edu-page-abroad select,
+body.edu-page-digital-tutoring input[type="number"],
+body.edu-page-digital-tutoring select {width:100%;padding:10px 11px;border:1px solid #cfd7e2;border-radius:9px;font-size:15px;background:#fff;color:var(--text)}
 body.edu-page-european-schools .check {display:flex;gap:10px;align-items:flex-start;border:1px solid #e5e9ef;border-radius:12px;padding:12px 13px;background:#fbfcfe;margin-top:9px}
 body.edu-page-european-schools .check input {margin-top:4px}
-body.edu-page-european-schools .check label {margin:0;cursor:pointer}
+body.edu-page-european-schools .check label,
+body.edu-page-abroad .check label {margin:0;cursor:pointer}
 body.edu-page-european-schools .hidden {display:none!important}
 body.edu-page-european-schools .note,
 body.edu-page-european-schools .info,
@@ -1268,28 +1292,59 @@ body.edu-page-european-schools .warning,
 body.edu-page-european-schools .danger,
 body.edu-page-european-schools .success {margin-top:12px;border-radius:11px;padding:12px 13px;font-size:14px}
 body.edu-page-european-schools .note,
-body.edu-page-european-schools .info {background:#eef4ff;border:1px solid #d6e4ff;color:#174ea6}
-body.edu-page-european-schools .warning {background:var(--orange-soft);border:1px solid #f0d4a8;color:#7b4900}
-body.edu-page-european-schools .danger {background:var(--red-soft);border:1px solid #f3c1bc;color:#8f1f17}
-body.edu-page-european-schools .success {background:var(--green-soft);border:1px solid #b7e3c9;color:#12633f}
+body.edu-page-european-schools .info,
+body.edu-page-abroad .note,
+body.edu-page-abroad .info,
+body.edu-page-digital-tutoring .note,
+body.edu-page-digital-tutoring .info {background:#eef4ff;border:1px solid #d6e4ff;color:#174ea6}
+body.edu-page-european-schools .warning,
+body.edu-page-abroad .warning,
+body.edu-page-digital-tutoring .warning,
+body.edu-ui.edu-calc-sde .warning {background:var(--orange-soft);border:1px solid #f0d4a8;color:#7b4900}
+body.edu-page-european-schools .danger,
+body.edu-page-abroad .danger,
+body.edu-page-digital-tutoring .danger,
+body.edu-ui.edu-calc-sde .danger {background:var(--red-soft);border:1px solid #f3c1bc;color:#8f1f17}
+body.edu-page-european-schools .success,
+body.edu-page-abroad .success,
+body.edu-page-digital-tutoring .success {background:var(--green-soft);border:1px solid #b7e3c9;color:#12633f}
 body.edu-page-european-schools .subtot {display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;padding-top:13px;border-top:1px solid #e7ebf0;font-weight:bold}
 body.edu-page-european-schools .pill {background:#eaf2ff;color:#174ea6;border-radius:999px;padding:5px 9px;font-size:13px}
-body.edu-page-european-schools .results {position:sticky;top:14px}
+body.edu-page-european-schools .results,
+body.edu-page-abroad .results,
+body.edu-page-digital-tutoring .results,
+body.edu-ui.edu-calc-sde .results {position:sticky;top:14px}
 body.edu-page-european-schools .stage {padding:13px 0;border-bottom:1px solid #edf0f4}
 body.edu-page-european-schools .stage-label {font-size:13px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:.04em}
 body.edu-page-european-schools .stage-number {font-size:42px;font-weight:800;color:var(--blue);line-height:1.1;font-variant-numeric:tabular-nums}
 body.edu-page-european-schools .stage-number.final {color:var(--purple)}
 body.edu-page-european-schools .result-row {display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid #edf0f4;font-size:14px}
 body.edu-page-european-schools .result-row strong {font-variant-numeric:tabular-nums}
-body.edu-page-european-schools .actions {display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-body.edu-page-european-schools button {border:0;border-radius:10px;padding:11px 12px;font-weight:bold;cursor:pointer;font-size:14px}
-body.edu-page-european-schools .primary {background:var(--blue);color:#fff}
-body.edu-page-european-schools .secondary {background:#e8edf4;color:#253247}
+body.edu-page-european-schools .actions,
+body.edu-page-abroad .actions,
+body.edu-page-digital-tutoring .actions,
+body.edu-ui.edu-calc-sde .actions {display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+body.edu-page-european-schools button,
+body.edu-page-abroad button,
+body.edu-page-digital-tutoring button {border:0;border-radius:10px;padding:11px 12px;font-weight:bold;cursor:pointer;font-size:14px}
+body.edu-page-european-schools .primary,
+body.edu-page-abroad .primary,
+body.edu-page-digital-tutoring button.primary {background:var(--blue);color:#fff}
+body.edu-page-european-schools .secondary,
+body.edu-page-abroad .secondary,
+body.edu-page-digital-tutoring button.secondary,
+body.edu-ui.edu-calc-sde .secondary {background:#e8edf4;color:#253247}
 body.edu-page-european-schools details {margin-top:12px}
-body.edu-page-european-schools summary {cursor:pointer;font-weight:bold;color:var(--blue-dark)}
-body.edu-page-european-schools .criteria {margin:8px 0 0;padding-left:20px;color:#4f5967;font-size:14px}
+body.edu-page-european-schools summary,
+body.edu-page-abroad summary {cursor:pointer;font-weight:bold;color:var(--blue-dark)}
+body.edu-page-european-schools .criteria,
+body.edu-page-abroad .criteria-list,
+body.edu-ui.edu-calc-sde .criteria-list {margin:8px 0 0;padding-left:20px;color:#4f5967;font-size:14px}
 body.edu-page-european-schools .criteria li {margin:5px 0}
-body.edu-page-european-schools .source-note {font-size:13px;color:#667085;margin-top:18px;text-align:justify}
+body.edu-page-european-schools .source-note,
+body.edu-page-abroad .source-note,
+body.edu-page-digital-tutoring .source-note,
+body.edu-ui.edu-calc-sde .source-note {font-size:13px;color:#667085;margin-top:18px;text-align:justify}
 body.edu-page-european-schools .duration-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 body.edu-page-european-schools .duration-grid .mini-label {display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:5px}
 body.edu-page-european-schools .document-checklist {list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
@@ -1316,66 +1371,72 @@ body.edu-page-european-schools .break-row strong {font-variant-numeric:tabular-n
   body.edu-page-european-schools .actions {grid-template-columns:1fr}
 }
 
-
 /* ypologismos-morion-apospasis-exoteriko.php — migrated local CSS v3.20.9 */
-body.edu-page-abroad {--bg:#f4f7fb;--card:#fff;--text:#18202b;--muted:#5f6b7a;--border:#dfe5ec;
+body.edu-page-abroad,
+body.edu-page-digital-tutoring {--bg:#f4f7fb;--card:#fff;--text:#18202b;--muted:#5f6b7a;--border:#dfe5ec;
       --blue:#1f6feb;--blue-dark:#174ea6;--green:#18794e;--green-soft:#eaf7f0;
       --orange:#9a4d00;--orange-soft:#fff4e5;--red:#b42318;--red-soft:#fff0ee;
       --purple:#6941c6;--purple-soft:#f1edff;--shadow:0 10px 30px rgba(28,39,55,.09);
       margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
-body.edu-page-abroad .page-shell {max-width:1180px;margin:0 auto;padding:28px 22px 50px}
+body.edu-page-abroad .page-shell,
+body.edu-page-digital-tutoring .page-shell {max-width:1180px;margin:0 auto;padding:28px 22px 50px}
 body.edu-page-abroad .hero {background:linear-gradient(135deg,#123c69 0%,#1f6feb 58%,#4b83d8 100%);color:#fff;border-radius:20px;padding:30px;box-shadow:var(--shadow);margin-bottom:20px}
-body.edu-page-abroad .hero h1 {margin:0 0 9px;font-size:clamp(28px,4vw,40px);line-height:1.15}
+
 body.edu-page-abroad .hero p {margin:5px 0;color:rgba(255,255,255,.94);max-width:940px}
-body.edu-page-abroad .hero-meta {display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+body.edu-page-abroad .hero-meta,
+body.edu-page-digital-tutoring .hero-meta,
+body.edu-ui.edu-calc-sde .hero-meta {display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
 body.edu-page-abroad .hero-meta span {background:rgba(0,0,0,.16);padding:6px 10px;border-radius:999px;font-size:13px;font-weight:bold}
 body.edu-page-abroad .layout {display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:18px;align-items:start}
-body.edu-page-abroad .card {background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 5px 18px rgba(28,39,55,.05)}
-body.edu-page-abroad .card h2 {margin:0 0 5px;font-size:20px}
-body.edu-page-abroad .card h3 {margin:18px 0 8px;font-size:16px}
-body.edu-page-abroad .subtitle {margin:0 0 15px;color:var(--muted);font-size:14px}
-body.edu-page-abroad .field-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-body.edu-page-abroad .field {border:1px solid #e5e9ef;border-radius:12px;padding:13px;background:#fbfcfe}
+body.edu-page-abroad .card,
+body.edu-page-digital-tutoring .card {background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 5px 18px rgba(28,39,55,.05)}
+
 body.edu-page-abroad .field.full {grid-column:1/-1}
-body.edu-page-abroad label {display:block;font-weight:700;margin-bottom:7px}
-body.edu-page-abroad label small {display:block;font-weight:400;color:var(--muted);margin-top:3px;line-height:1.4}
-body.edu-page-abroad input[type="number"],
-body.edu-page-abroad select {width:100%;padding:10px 11px;border:1px solid #cfd7e2;border-radius:9px;font-size:15px;background:#fff;color:var(--text)}
+
+body.edu-page-abroad label small,
+body.edu-page-digital-tutoring label small,
+body.edu-ui.edu-calc-sde label small {display:block;font-weight:400;color:var(--muted);margin-top:3px;line-height:1.4}
+
 body.edu-page-abroad select {cursor:pointer}
 body.edu-page-abroad .hidden {display:none!important}
 body.edu-page-abroad .check {display:flex;gap:10px;align-items:flex-start;border:1px solid #e5e9ef;border-radius:12px;padding:13px;background:#fbfcfe;margin-top:10px}
 body.edu-page-abroad .check input {margin-top:4px}
-body.edu-page-abroad .check label {margin:0;cursor:pointer}
+
 body.edu-page-abroad .note,
 body.edu-page-abroad .info,
 body.edu-page-abroad .warning,
 body.edu-page-abroad .danger,
-body.edu-page-abroad .success {margin-top:13px;padding:12px 13px;border-radius:11px;font-size:14px;line-height:1.5}
-body.edu-page-abroad .note,
-body.edu-page-abroad .info {background:#eef4ff;border:1px solid #d6e4ff;color:#174ea6}
-body.edu-page-abroad .warning {background:var(--orange-soft);border:1px solid #f0d4a8;color:#7b4900}
-body.edu-page-abroad .danger {background:var(--red-soft);border:1px solid #f3c1bc;color:#8f1f17}
-body.edu-page-abroad .success {background:var(--green-soft);border:1px solid #b7e3c9;color:#12633f}
+body.edu-page-abroad .success,
+body.edu-page-digital-tutoring .note,
+body.edu-page-digital-tutoring .info,
+body.edu-page-digital-tutoring .warning,
+body.edu-page-digital-tutoring .danger,
+body.edu-page-digital-tutoring .success,
+body.edu-ui.edu-calc-sde .note,body.edu-ui.edu-calc-sde .warning,body.edu-ui.edu-calc-sde .danger,body.edu-ui.edu-calc-sde .success {margin-top:13px;padding:12px 13px;border-radius:11px;font-size:14px;line-height:1.5}
+
 body.edu-page-abroad .score-row {display:flex;justify-content:space-between;gap:18px;align-items:center;padding:11px 0;border-bottom:1px solid #edf0f4}
 body.edu-page-abroad .score-row:last-child {border-bottom:0}
 body.edu-page-abroad .score-row strong {font-variant-numeric:tabular-nums;color:var(--blue-dark)}
-body.edu-page-abroad .results {position:sticky;top:14px}
+
 body.edu-page-abroad .big-total {text-align:center;padding:7px 0 15px}
 body.edu-page-abroad .big-total .number {font-size:56px;font-weight:800;line-height:1;color:var(--blue);font-variant-numeric:tabular-nums}
-body.edu-page-abroad .big-total .outof {color:var(--muted);margin-top:5px}
-body.edu-page-abroad .bar {height:11px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:12px 0}
-body.edu-page-abroad .bar div {height:100%;width:0;background:linear-gradient(90deg,#1f6feb,#6941c6);transition:width .2s ease}
-body.edu-page-abroad .result-row {display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #edf0f4;font-size:14px}
+body.edu-page-abroad .big-total .outof,
+body.edu-page-digital-tutoring .big-total .outof,
+body.edu-ui.edu-calc-sde .big-total .outof {color:var(--muted);margin-top:5px}
+body.edu-page-abroad .bar,
+body.edu-page-digital-tutoring .bar,
+body.edu-ui.edu-calc-sde .bar {height:11px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:12px 0}
+body.edu-page-abroad .bar div,
+body.edu-page-digital-tutoring .bar div {height:100%;width:0;background:linear-gradient(90deg,#1f6feb,#6941c6);transition:width .2s ease}
+body.edu-page-abroad .result-row,
+body.edu-page-digital-tutoring .result-row,
+body.edu-ui.edu-calc-sde .result-row {display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #edf0f4;font-size:14px}
 body.edu-page-abroad .result-row strong {font-variant-numeric:tabular-nums}
-body.edu-page-abroad .actions {display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-body.edu-page-abroad button {border:0;border-radius:10px;padding:11px 12px;font-weight:bold;cursor:pointer;font-size:14px}
-body.edu-page-abroad .primary {background:var(--blue);color:#fff}
-body.edu-page-abroad .secondary {background:#e8edf4;color:#253247}
+
 body.edu-page-abroad details {margin-top:12px}
-body.edu-page-abroad summary {cursor:pointer;font-weight:bold;color:var(--blue-dark)}
-body.edu-page-abroad .criteria-list {margin:8px 0 0;padding-left:20px;color:#4f5967;font-size:14px}
+
 body.edu-page-abroad .criteria-list li {margin:5px 0}
-body.edu-page-abroad .source-note {font-size:13px;color:#667085;margin-top:18px;text-align:justify}
+
 body.edu-page-abroad .stipend-panel {margin-top:14px;border:1px solid #cfe0ff;border-radius:14px;background:#f7faff;padding:15px}
 body.edu-page-abroad .stipend-panel h3 {margin:0 0 4px;font-size:17px;color:var(--blue-dark)}
 body.edu-page-abroad .stipend-panel .stipend-intro {margin:0 0 11px;color:var(--muted);font-size:13px}
@@ -1408,29 +1469,8 @@ body.edu-page-abroad .stipend-footnote {margin-top:10px;color:#667085;font-size:
   body.edu-page-abroad .stipend-tax-grid b {text-align:left;white-space:normal}
 }
 
-
 /* ypologismos-morion-apospasis-psifiako-frontistirio.php — migrated local CSS v3.20.9 */
-body.edu-page-digital-tutoring {--bg:#f4f7fb;
-      --card:#fff;
-      --text:#18202b;
-      --muted:#5f6b7a;
-      --border:#dfe5ec;
-      --blue:#1f6feb;
-      --blue-dark:#174ea6;
-      --green:#18794e;
-      --green-soft:#eaf7f0;
-      --orange:#9a4d00;
-      --orange-soft:#fff4e5;
-      --red:#b42318;
-      --red-soft:#fff0ee;
-      --purple:#6941c6;
-      --purple-soft:#f1edff;
-      --shadow:0 10px 30px rgba(28,39,55,.09);margin:0;
-      font-family:Arial,Helvetica,sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.55;}
-body.edu-page-digital-tutoring .page-shell {max-width:1180px;margin:0 auto;padding:28px 22px 50px}
+
 body.edu-page-digital-tutoring .hero {background:linear-gradient(135deg,#132f5b 0%,#1f6feb 65%,#4a8df6 100%);
       color:#fff;
       border-radius:20px;
@@ -1439,36 +1479,14 @@ body.edu-page-digital-tutoring .hero {background:linear-gradient(135deg,#132f5b 
       margin-bottom:20px;}
 body.edu-page-digital-tutoring .hero h1 {margin:0 0 9px;font-size:clamp(27px,4vw,40px);line-height:1.15}
 body.edu-page-digital-tutoring .hero p {margin:5px 0;color:rgba(255,255,255,.92);max-width:900px}
-body.edu-page-digital-tutoring .hero-meta {display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+
 body.edu-page-digital-tutoring .hero-meta span {background:rgba(0,0,0,.15);padding:6px 10px;border-radius:999px;font-size:13px;font-weight:bold}
 body.edu-page-digital-tutoring .layout {display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
-body.edu-page-digital-tutoring .card {background:var(--card);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:18px;
-      margin-bottom:16px;
-      box-shadow:0 5px 18px rgba(28,39,55,.05);}
-body.edu-page-digital-tutoring .card h2 {margin:0 0 5px;font-size:20px}
-body.edu-page-digital-tutoring .card .subtitle {margin:0 0 15px;color:var(--muted);font-size:14px}
-body.edu-page-digital-tutoring .field-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-body.edu-page-digital-tutoring .field {border:1px solid #e5e9ef;border-radius:12px;padding:13px;background:#fbfcfe}
+
 body.edu-page-digital-tutoring .field.full {grid-column:1/-1}
-body.edu-page-digital-tutoring label {display:block;font-weight:700;margin-bottom:7px}
-body.edu-page-digital-tutoring label small {display:block;font-weight:400;color:var(--muted);margin-top:3px;line-height:1.4}
-body.edu-page-digital-tutoring input[type="number"],
-body.edu-page-digital-tutoring select {width:100%;padding:10px 11px;border:1px solid #cfd7e2;border-radius:9px;
-      font-size:15px;background:#fff;color:var(--text)}
+
 body.edu-page-digital-tutoring select {cursor:pointer}
-body.edu-page-digital-tutoring .note,
-body.edu-page-digital-tutoring .info,
-body.edu-page-digital-tutoring .warning,
-body.edu-page-digital-tutoring .danger,
-body.edu-page-digital-tutoring .success {margin-top:13px;padding:12px 13px;border-radius:11px;font-size:14px;line-height:1.5}
-body.edu-page-digital-tutoring .note,
-body.edu-page-digital-tutoring .info {background:#eef4ff;border:1px solid #d6e4ff;color:#174ea6}
-body.edu-page-digital-tutoring .warning {background:var(--orange-soft);border:1px solid #f0d4a8;color:#7b4900}
-body.edu-page-digital-tutoring .danger {background:var(--red-soft);border:1px solid #f3c1bc;color:#8f1f17}
-body.edu-page-digital-tutoring .success {background:var(--green-soft);border:1px solid #b7e3c9;color:#12633f}
+
 body.edu-page-digital-tutoring .criterion-head {display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:13px}
 body.edu-page-digital-tutoring .criterion-head .max {font-weight:bold;color:var(--blue-dark);white-space:nowrap}
 body.edu-page-digital-tutoring .score-row {display:grid;grid-template-columns:minmax(0,1fr) 140px;gap:12px;align-items:center;
@@ -1476,23 +1494,17 @@ body.edu-page-digital-tutoring .score-row {display:grid;grid-template-columns:mi
 body.edu-page-digital-tutoring .score-row:first-of-type {border-top:0}
 body.edu-page-digital-tutoring .score-row strong {display:block}
 body.edu-page-digital-tutoring .score-row small {display:block;color:var(--muted);margin-top:2px}
-body.edu-page-digital-tutoring .results {position:sticky;top:14px}
+
 body.edu-page-digital-tutoring .big-total {text-align:center;padding:9px 0 16px}
 body.edu-page-digital-tutoring .big-total .number {font-size:54px;font-weight:800;line-height:1;color:var(--blue);font-variant-numeric:tabular-nums}
-body.edu-page-digital-tutoring .big-total .outof {color:var(--muted);margin-top:5px}
-body.edu-page-digital-tutoring .bar {height:11px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:12px 0}
-body.edu-page-digital-tutoring .bar div {height:100%;width:0;background:linear-gradient(90deg,#1f6feb,#6941c6);transition:width .2s ease}
-body.edu-page-digital-tutoring .result-row {display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #edf0f4;font-size:14px}
+
 body.edu-page-digital-tutoring .result-row strong {font-variant-numeric:tabular-nums}
 body.edu-page-digital-tutoring .pre-interview {margin-top:13px;padding:13px;border-radius:12px;background:var(--purple-soft);color:#4d2b9b;border:1px solid #ddd2ff}
 body.edu-page-digital-tutoring .pre-interview strong {font-size:20px}
-body.edu-page-digital-tutoring .actions {display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-body.edu-page-digital-tutoring button {border:0;border-radius:10px;padding:11px 12px;font-weight:bold;cursor:pointer;font-size:14px}
-body.edu-page-digital-tutoring button.primary {background:var(--blue);color:#fff}
-body.edu-page-digital-tutoring button.secondary {background:#e8edf4;color:#253247}
+
 body.edu-page-digital-tutoring .status-box {margin-top:14px}
 body.edu-page-digital-tutoring .credits {text-align:center;color:#7a8490;font-size:13px;margin-top:24px}
-body.edu-page-digital-tutoring .source-note {font-size:13px;color:#667085;margin-top:18px;text-align:justify}
+
 body.edu-page-digital-tutoring .hidden {display:none!important}
 @media (max-width:900px) {
   body.edu-page-digital-tutoring .layout {grid-template-columns:1fr}
@@ -1506,7 +1518,6 @@ body.edu-page-digital-tutoring .hidden {display:none!important}
   body.edu-page-digital-tutoring .field.full {grid-column:auto}
   body.edu-page-digital-tutoring .actions {grid-template-columns:1fr}
 }
-
 
 /* ypologismos-morion-apospasis.php — migrated local CSS v3.20.9 */
 body.edu-page-detachment {--blue: #1f6feb;
@@ -1726,7 +1737,6 @@ body.edu-page-detachment .compact-checks {display: grid;
   body.edu-page-detachment .actions {display: none;}
 }
 
-
 /* ypologismos-morion-apospasis-dimos.php — migrated local CSS v3.20.9 */
 body.edu-page-dimos-detachment {--bg:#f6f7fb;
       --card:#ffffff;
@@ -1940,53 +1950,47 @@ body.edu-ui.edu-calc-sde .page-shell{max-width:var(--sde-page-max,1240px);margin
 body.edu-ui.edu-calc-sde .hero{background:var(--sde-hero,linear-gradient(135deg,#173f37 0%,#176b55 58%,#2a9474 100%));color:#fff;border-radius:20px;padding:30px;box-shadow:var(--shadow);margin-bottom:20px}
 body.edu-ui.edu-calc-sde .hero h1{margin:0 0 9px;font-size:clamp(28px,4vw,40px);line-height:1.15;color:#fff}
 body.edu-ui.edu-calc-sde .hero p{margin:5px 0;color:rgba(255,255,255,.94);max-width:980px}
-body.edu-ui.edu-calc-sde .hero-meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+
 body.edu-ui.edu-calc-sde .hero-meta span{background:rgba(0,0,0,.16);padding:6px 10px;border-radius:999px;font-size:13px;font-weight:700}
 body.edu-ui.edu-calc-sde .layout{display:grid;grid-template-columns:minmax(0,1fr) var(--sde-sidebar,360px);gap:18px;align-items:start}
 body.edu-ui.edu-calc-sde .layout>*{min-width:0}
 body.edu-ui.edu-calc-sde .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 5px 18px rgba(28,39,55,.05);min-width:0}
-body.edu-ui.edu-calc-sde .card h2{margin:0 0 5px;font-size:20px}
-body.edu-ui.edu-calc-sde .card h3{margin:18px 0 8px;font-size:16px}
-body.edu-ui.edu-calc-sde .subtitle{margin:0 0 15px;color:var(--muted);font-size:14px}
-body.edu-ui.edu-calc-sde .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+
 body.edu-ui.edu-calc-sde .field{border:1px solid #e5e9ef;border-radius:12px;padding:13px;background:#fbfcfe;min-width:0}
 body.edu-ui.edu-calc-sde .field.full{grid-column:1/-1}
-body.edu-ui.edu-calc-sde label{display:block;font-weight:700;margin-bottom:7px}
-body.edu-ui.edu-calc-sde label small{display:block;font-weight:400;color:var(--muted);margin-top:3px;line-height:1.4}
+
 body.edu-ui.edu-calc-sde input[type="number"],body.edu-ui.edu-calc-sde input[type="text"],body.edu-ui.edu-calc-sde select{width:100%;min-width:0;padding:10px 11px;border:1px solid #cfd7e2;border-radius:9px;font-size:15px;background:#fff;color:var(--text)}
 body.edu-ui.edu-calc-sde input[type="checkbox"]{width:18px;height:18px}
 body.edu-ui.edu-calc-sde .check-row{display:flex;align-items:flex-start;gap:9px}
 body.edu-ui.edu-calc-sde .check-row label{margin:0;font-weight:600}
 body.edu-ui.edu-calc-sde .section-head{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:12px}
 body.edu-ui.edu-calc-sde .max{font-weight:700;color:var(--sde);white-space:nowrap}
-body.edu-ui.edu-calc-sde .note,body.edu-ui.edu-calc-sde .warning,body.edu-ui.edu-calc-sde .danger,body.edu-ui.edu-calc-sde .success{margin-top:13px;padding:12px 13px;border-radius:11px;font-size:14px;line-height:1.5}
+
 body.edu-ui.edu-calc-sde .note{background:var(--blue-soft);border:1px solid #d6e4ff;color:#174ea6}
-body.edu-ui.edu-calc-sde .warning{background:var(--orange-soft);border:1px solid #f0d4a8;color:#7b4900}
-body.edu-ui.edu-calc-sde .danger{background:var(--red-soft);border:1px solid #f3c1bc;color:#8f1f17}
+
 body.edu-ui.edu-calc-sde .success{background:var(--sde-soft);border:1px solid #b7e3cf;color:#12543f}
-body.edu-ui.edu-calc-sde .results{position:sticky;top:14px}
+
 body.edu-ui.edu-calc-sde .role-chip{display:inline-block;padding:4px 9px;border-radius:999px;background:var(--sde-soft);color:var(--sde-dark);font-size:12px;font-weight:700;margin-bottom:7px}
 body.edu-ui.edu-calc-sde .big-total{text-align:center;padding:8px 0 13px}
 body.edu-ui.edu-calc-sde .big-total .context{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#667085;font-weight:700;margin-bottom:8px}
 body.edu-ui.edu-calc-sde .big-total .number{font-size:var(--sde-total-size,58px);font-weight:800;line-height:1;color:var(--sde);font-variant-numeric:tabular-nums}
-body.edu-ui.edu-calc-sde .big-total .outof{color:var(--muted);margin-top:5px}
-body.edu-ui.edu-calc-sde .bar{height:11px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:12px 0}
+
 body.edu-ui.edu-calc-sde .bar div{height:100%;width:0;background:linear-gradient(90deg,#176b55,#1f6feb);transition:width .2s ease}
-body.edu-ui.edu-calc-sde .result-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #edf0f4;font-size:14px}
+
 body.edu-ui.edu-calc-sde .result-row strong{font-variant-numeric:tabular-nums}
 body.edu-ui.edu-calc-sde .result-row.emphasis{font-size:15px;color:var(--sde-dark)}
-body.edu-ui.edu-calc-sde .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+
 body.edu-ui.edu-calc-sde button{border:0;border-radius:10px;padding:11px 12px;font-weight:700;cursor:pointer;font-size:14px}
 body.edu-ui.edu-calc-sde .primary{background:var(--sde);color:#fff}
-body.edu-ui.edu-calc-sde .secondary{background:#e8edf4;color:#253247}
+
 body.edu-ui.edu-calc-sde .breakdown-list{list-style:none;margin:0;padding:0}
 body.edu-ui.edu-calc-sde .breakdown-list li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #edf0f4;font-size:13.5px}
 body.edu-ui.edu-calc-sde .breakdown-list li:last-child{border-bottom:0}
 body.edu-ui.edu-calc-sde .breakdown-list strong{font-variant-numeric:tabular-nums}
-body.edu-ui.edu-calc-sde .source-note{font-size:13px;color:#667085;margin-top:18px;text-align:justify}
+
 body.edu-ui.edu-calc-sde details{margin-top:10px}
 body.edu-ui.edu-calc-sde summary{cursor:pointer;font-weight:700;color:#174ea6}
-body.edu-ui.edu-calc-sde .criteria-list{margin:8px 0 0;padding-left:20px;color:#4f5967;font-size:14px}
+
 body.edu-ui.edu-calc-sde .criteria-list li{margin:5px 0}
 body.edu-page-sde-registry{--sde-page-max:1260px;--sde-sidebar:365px;--sde-total-size:56px;--sde-hero:linear-gradient(135deg,#143b33 0%,#176b55 57%,#319276 100%)}
 body.edu-page-sde-registry .assignment-list{display:grid;gap:8px;margin-top:10px}
@@ -2137,8 +2141,6 @@ body.edu-page-ea1{--edu-calc-max-width:1080px;--edu-calc-sidebar-width:335px}
 body.edu-page-ea2{--edu-calc-max-width:1100px;--edu-calc-sidebar-width:345px;--purple:#6941c6;--purple-soft:#f1edff}
 body.edu-page-ea4,body.edu-page-gt1{--edu-calc-max-width:1060px;--edu-calc-sidebar-width:330px;--purple:#6941c6;--purple-soft:#f1edff}
 body.edu-page-ea1 .warning,body.edu-page-ea2 .warning,body.edu-page-ea4 .warning,body.edu-page-gt1 .warning{background:var(--red-soft)!important;color:var(--red)!important;border:1px solid var(--edu-danger-border)!important}
-
-
 
 /* ==========================================================================
    v3.20.9-b3 — CSS consolidation batch 3
@@ -2440,7 +2442,6 @@ body.edu-ui.edu-calc-asep-main .warning {
 }
 body.edu-ui.edu-guide-children-disability .question > .small-note { margin-bottom:0; }
 
-
 /* ASEP social criteria component v3.20.13 — presentation only. */
 body.edu-ui .asep-social-criteria .asep-social-disability-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2501,7 +2502,6 @@ body.edu-ui .asep-social-criteria .asep-social-rule-note {
     grid-template-columns: 1fr;
   }
 }
-
 
 /* ASEP computer proof quick-check — v3.20.15-rc1 */
 body.edu-ui .asep-computer-proof { display:contents; }
@@ -2711,7 +2711,7 @@ body.edu-ui .edu-deadline-summary {
   user-select: none;
 }
 body.edu-ui .edu-deadline-summary::-webkit-details-marker { display: none; }
-body.edu-ui .edu-deadline-summary::marker { content: ''; }
+body.edu-ui .edu-deadline-summary::marker { content: ""; }
 body.edu-ui .edu-deadline-heading {
   font-size: 1.5em;
   line-height: 1.2;
