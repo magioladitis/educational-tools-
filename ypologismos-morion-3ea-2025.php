@@ -170,10 +170,10 @@ renderEaeSensoryPriority(array(
 
 <?php calculatorResultsStart(array('variant' => 'result-card', 'class' => 'card result-card', 'aria_live' => 'polite')); ?>
 <h2 class="edu-text-center">Αποτέλεσμα</h2>
-<div class="total" id="grandTotal">0.00</div><div class="total-label">συνολικά μόρια</div>
+<div class="total" id="grandTotal">0,00</div><div class="total-label">συνολικά μόρια</div>
 <div id="tableStatus" class="status none">Επίλεξε κλάδο</div>
 <div id="eligibilityWhy" class="eligibility-box"><strong>Έλεγχος ένταξης</strong>Συμπλήρωσε τα προσόντα σου.</div>
-<table class="table"><tr><td>Ακαδημαϊκά</td><td id="resAcademic">0.00 / 120</td></tr><tr><td>Προϋπηρεσία</td><td id="resService">0.00 / 120</td></tr><tr><td>Κοινωνικά</td><td id="resSocial">0.00</td></tr></table>
+<table class="table"><tr><td>Ακαδημαϊκά</td><td id="resAcademic">0,00 / 120</td></tr><tr><td>Προϋπηρεσία</td><td id="resService">0,00 / 120</td></tr><tr><td>Κοινωνικά</td><td id="resSocial">0,00</td></tr></table>
 <div id="priorities"></div>
 <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
 <div class="note edu-mt-14">Ενημερωτικός υπολογισμός βάσει της 3ΕΑ/2025. Η τελική ένταξη και μοριοδότηση προκύπτει από τον έλεγχο ΑΣΕΠ/ΟΠΣΥΔ και τα επίσημα δικαιολογητικά.</div>
@@ -202,7 +202,7 @@ renderEaeSensoryPriority(array(
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/eae-sensory-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
 (function(){
- const $=id=>document.getElementById(id); const num=id=>Math.max(0,Number($(id)?.value||0)); const cap=(v,m)=>Math.min(v,m); const fmt=v=>(Math.round((v+Number.EPSILON)*100)/100).toFixed(2);
+ const $=id=>document.getElementById(id); const num=id=>Math.max(0,Number($(id)?.value||0)); const cap=(v,m)=>Math.min(v,m); const fmt=v=>(Math.round((v+Number.EPSILON)*100)/100).toLocaleString('el-GR',{minimumFractionDigits:2,maximumFractionDigits:2});
  function calcService(){return AsepServiceController.getState('asepService',fmt).points;}
  function calcSocial(){return AsepSocialCriteria.getState('socialCriteria',fmt);}
  function render(){

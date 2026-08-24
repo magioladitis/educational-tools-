@@ -27,7 +27,7 @@
             Δεν μοριοδοτείται προσόν που αποτέλεσε προϋπόθεση διορισμού/μετάταξης/κατάταξης. Για αλλοδαπούς τίτλους απαιτείται η προβλεπόμενη αναγνώριση.
           </div>
 
-          <h3>Α1. Τίτλοι σπουδών <span class="pill" id="titlesSubtotal">0.00 / 19</span></h3>
+          <h3>Α1. Τίτλοι σπουδών <span class="pill" id="titlesSubtotal">0,00 / 19</span></h3>
           <div class="checkrow">
             <input type="checkbox" id="phdRelated" data-title-points="8">
             <label for="phdRelated">Διδακτορικό συναφές <small>8 μόρια</small></label>
@@ -61,7 +61,7 @@
             <label for="thirdDegree">Τρίτο πτυχίο <small>1 μόριο</small></label>
           </div>
 
-          <h3>Α2. Επιμορφώσεις <span class="pill" id="trainingSubtotal">0.00 / 5</span></h3>
+          <h3>Α2. Επιμορφώσεις <span class="pill" id="trainingSubtotal">0,00 / 5</span></h3>
           <div class="checkrow">
             <input type="checkbox" id="selme" data-training-points="1">
             <label for="selme">Σ.Ε.Λ.Μ.Ε. / Α.Σ.ΠΑΙ.Τ.Ε. / Σ.Ε.Λ.Ε.Τ.Ε. <small>1 μόριο, εφόσον δεν αποτέλεσε προσόν διορισμού</small></label>
@@ -97,7 +97,7 @@
             <input type="number" id="ekddaHours" min="0" step="1" value="0">
           </div>
 
-          <h3>Α3. Ξένες γλώσσες <span class="pill" id="languageSubtotal">0.00 / 5</span></h3>
+          <h3>Α3. Ξένες γλώσσες <span class="pill" id="languageSubtotal">0,00 / 5</span></h3>
           <div class="note">
             Για την ίδια γλώσσα λαμβάνεται μόνο το ανώτερο επίπεδο. Για ΠΕ05, ΠΕ06, ΠΕ07, ΠΕ34 και ΠΕ40 η γλώσσα που αποτέλεσε προσόν διορισμού δεν μοριοδοτείται.
           </div>
@@ -115,14 +115,14 @@
           </div>
           <div id="languageWarning" class="note hidden"></div>
 
-          <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Α', 'value_id' => 'categoryA', 'value_html' => '0.00 / 29')); ?>
+          <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Α', 'value_id' => 'categoryA', 'value_html' => '0,00 / 29')); ?>
         <?php calculatorCardEnd(); ?>
 
         <?php calculatorCardStart(); ?>
           <h2>Β. Επιστημονικό – συγγραφικό έργο</h2>
           <p class="cap">Μέγιστο κατηγορίας: 13 μόρια</p>
 
-          <h3>Β1. Ερευνητικά προγράμματα και διακρίσεις <span class="pill" id="researchSubtotal">0.00 / 4</span></h3>
+          <h3>Β1. Ερευνητικά προγράμματα και διακρίσεις <span class="pill" id="researchSubtotal">0,00 / 4</span></h3>
           <div class="two-col">
             <div class="field">
               <label for="researchPrograms">Συμμετοχές σε ερευνητικά προγράμματα / ομάδες έργου <small>1 μόριο ανά συμμετοχή</small></label>
@@ -134,7 +134,7 @@
             </div>
           </div>
 
-          <h3>Β2. Συγγραφικό και ερευνητικό έργο <span class="pill" id="writingSubtotal">0.00 / 5</span></h3>
+          <h3>Β2. Συγγραφικό και ερευνητικό έργο <span class="pill" id="writingSubtotal">0,00 / 5</span></h3>
           <div class="oknote">Στην ομαδική συγγραφή λαμβάνεται το ήμισυ της μοριοδότησης. Βάλε χωριστά ατομικά και ομαδικά έργα.</div>
           <table>
             <thead>
@@ -148,7 +148,7 @@
             <tbody id="writingRows"></tbody>
           </table>
 
-          <h3>Β3. Άρθρα σε επιστημονικά περιοδικά <span class="pill" id="articlesSubtotal">0.00 / 4</span></h3>
+          <h3>Β3. Άρθρα σε επιστημονικά περιοδικά <span class="pill" id="articlesSubtotal">0,00 / 4</span></h3>
           <table>
             <thead>
               <tr>
@@ -161,7 +161,7 @@
             <tbody id="articleRows"></tbody>
           </table>
 
-          <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Β', 'value_id' => 'categoryB', 'value_html' => '0.00 / 13')); ?>
+          <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Β', 'value_id' => 'categoryB', 'value_html' => '0,00 / 13')); ?>
         <?php calculatorCardEnd(); ?>
 
         <?php calculatorCardStart(); ?>
@@ -185,20 +185,20 @@
             <input type="number" id="clubs" min="0" step="1" value="0">
           </div>
 
-          <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Γ', 'value_id' => 'categoryC', 'value_html' => '0.00 / 11')); ?>
+          <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Γ', 'value_id' => 'categoryC', 'value_html' => '0,00 / 11')); ?>
         <?php calculatorCardEnd(); ?>
       <?php calculatorMainEnd(); ?>
 
       <?php calculatorResultsStart(array('attrs' => array('aria-live' => 'polite'))); ?>
         <div class="total">
-          <span class="num" id="grandTotal">0.00</span>
+          <span class="num" id="grandTotal">0,00</span>
           <div class="outof">από 53 μόρια</div>
           <div class="bar"><div id="totalBar"></div></div>
         </div>
 
-        <?php calculatorResultRow(array('label_html' => 'Α. Συγκρότηση & κατάρτιση', 'value_html' => '0.00 / 29', 'value_id' => 'resA')); ?>
-        <?php calculatorResultRow(array('label_html' => 'Β. Επιστημονικό έργο', 'value_html' => '0.00 / 13', 'value_id' => 'resB')); ?>
-        <?php calculatorResultRow(array('label_html' => 'Γ. Καινοτόμο έργο', 'value_html' => '0.00 / 11', 'value_id' => 'resC')); ?>
+        <?php calculatorResultRow(array('label_html' => 'Α. Συγκρότηση & κατάρτιση', 'value_html' => '0,00 / 29', 'value_id' => 'resA')); ?>
+        <?php calculatorResultRow(array('label_html' => 'Β. Επιστημονικό έργο', 'value_html' => '0,00 / 13', 'value_id' => 'resB')); ?>
+        <?php calculatorResultRow(array('label_html' => 'Γ. Καινοτόμο έργο', 'value_html' => '0,00 / 11', 'value_id' => 'resC')); ?>
 
         <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
         <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'printBtn'), 'html' => 'Εκτύπωση'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'sampleBtn'), 'html' => 'Φόρτωση παραδείγματος'))); ?>
@@ -247,7 +247,7 @@
       const qsa = (sel) => Array.from(document.querySelectorAll(sel));
       const n = (id) => Math.max(0, Number($(id)?.value || 0));
       const cap = (value, max) => Math.min(value, max);
-      const f = (value) => (Math.round((value + Number.EPSILON) * 100) / 100).toFixed(2);
+      const f = (value) => (Math.round((value + Number.EPSILON) * 100) / 100).toLocaleString('el-GR', {minimumFractionDigits:2, maximumFractionDigits:2});
       const fullTenHours = (hours) => Math.floor(Math.max(0, hours) / 10) * 0.1;
 
       function makeRows(targetId, items){

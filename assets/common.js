@@ -9,7 +9,8 @@
   function enhanceButtons(root) {
     (root || document).querySelectorAll('button').forEach(function (button) {
       if (button.classList.contains('edu-back-to-top')) return;
-      if (button.classList.contains('edu-btn-primary') || button.classList.contains('edu-btn-secondary')) return;
+      if (button.classList.contains('edu-btn--primary') || button.classList.contains('edu-btn--secondary') ||
+          button.classList.contains('edu-btn-primary') || button.classList.contains('edu-btn-secondary')) return;
 
       /* Stateful / component buttons keep their page-specific appearance. */
       if (button.matches('.filter-btn, .add-row, .remove-row, .tab, .tab-btn, .mode-tab')) return;
@@ -32,7 +33,7 @@
          ordinary action buttons progressively. */
       if (button.classList.contains('primary') || button.classList.contains('secondary') ||
           button.classList.contains('reset-button') || button.classList.contains('reset-btn')) return;
-      button.classList.add(isSecondary ? 'edu-btn-secondary' : 'edu-btn-primary');
+      button.classList.add('edu-btn', isSecondary ? 'edu-btn--secondary' : 'edu-btn--primary');
     });
   }
 
