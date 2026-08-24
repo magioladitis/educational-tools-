@@ -6,11 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 4ΕΑ/2025 για εκπαιδευτικούς Ειδικής Αγωγής κατηγορίας ΤΕ (ΤΕ01, ΤΕ02, ΤΕ16).">
   <title>Υπολογισμός μορίων 4ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.17">
+<link rel="stylesheet" href="assets/common.css?v=3.20.36">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea4">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-te-academic.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
@@ -24,6 +25,22 @@
       <span>Κύριος / Επικουρικός Πίνακας</span><span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span>
     </div>
   <?php calculatorHeroEnd(); ?>
+
+  <?php
+renderDeadlineCard(array(
+    'title' => '📅 Δήλωση περιοχών αναπληρωτών 2026–2027',
+    'intro' => 'Η φετινή πρόσκληση του ΥΠΑΙΘΑ για πρόσληψη αναπληρωτών/ωρομισθίων είναι σε εξέλιξη.',
+    'items' => array(array(
+        'title' => '4ΕΑ/2025 — ΤΕ01, ΤΕ02, ΤΕ16 Ειδικής Αγωγής',
+        'meta_html' => 'Δήλωση περιοχών στο <strong>ΟΠΣΥΔ</strong> από <strong>Παρασκευή 14</strong> έως και <strong>Δευτέρα 24 Αυγούστου 2026</strong>.',
+        'start' => '2026-08-14T00:00:00+03:00',
+        'end_exclusive' => '2026-08-25T00:00:00+03:00',
+        'source_url' => 'https://diavgeia.gov.gr/doc/9%CE%96%CE%A5%CE%A146%CE%9D%CE%9A%CE%A0%CE%94-%CE%93%CE%A8%CE%A9?inline=true',
+        'source_label' => 'Επίσημη πρόσκληση — ΑΔΑ 9ΖΥΡ46ΝΚΠΔ-ΓΨΩ ↗'
+    )),
+    'note_html' => '<strong>Σημείωση ώρας:</strong> η επίσημη πρόσκληση αναφέρει την καταληκτική ημερομηνία 24/08/2026 χωρίς συγκεκριμένη ώρα. Το countdown χρησιμοποιεί τεχνικά το τέλος της ημέρας σε ώρα Ελλάδας· υπερισχύει πάντοτε η επίσημη πρόσκληση και το ΟΠΣΥΔ.'
+));
+?>
 
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
@@ -387,6 +404,6 @@ renderAsepSocialCriteria(array(
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="includes/eae-sensory-proof.js?v=3.20.23"></script>
-  <script src="assets/common.js?v=3.20.13"></script>
+  <script src="assets/common.js?v=3.20.36"></script>
 </body>
 </html>

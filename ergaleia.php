@@ -6,9 +6,10 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="Εργαλειοθήκη Εκπαιδευτικού: δωρεάν εργαλεία για ΑΣΕΠ, αναπληρωτές, αποσπάσεις και Δημόσια Ωνάσεια Σχολεία." name="description"/>
 <title>Εργαλειοθήκη Εκπαιδευτικού</title>
-<link href="assets/common.css?v=3.20.13" rel="stylesheet"/>
+<link href="assets/common.css?v=3.20.36" rel="stylesheet"/>
 </head>
 <body class="edu-ui edu-tools-directory">
+<?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 <main class="page-shell">
 <section class="hero">
 <span class="hero-kicker">ΔΩΡΕΑΝ ΕΡΓΑΛΕΙΑ ΓΙΑ ΕΚΠΑΙΔΕΥΤΙΚΟΥΣ</span>
@@ -27,6 +28,73 @@
 <span>ΣΔΕ</span>
 </div>
 </section>
+<?php
+renderDeadlineCard(array(
+    'title' => '📅 Ενεργές & προσεχείς προθεσμίες',
+    'intro' => 'Συγκεντρωτικά οι προθεσμίες που συνδέονται άμεσα με εργαλεία της Εργαλειοθήκης.',
+    'items' => array(
+        array(
+            'title' => 'Νεοδιόριστοι 2026 — Ορκωμοσία & ανάληψη υπηρεσίας',
+            'meta_html' => '4.789 εκπαιδευτικοί Α/θμιας και Β/θμιας και 470 μέλη ΕΕΠ–ΕΒΠ · από <strong>24/08/2026</strong> έως και <strong>28/08/2026</strong>.',
+            'start' => '2026-08-24T00:00:00+03:00',
+            'end_exclusive' => '2026-08-29T00:00:00+03:00',
+            'source_url' => 'https://www.minedu.gov.gr/site/70681-21-08-26-enemerose-gia-ten-orkomosia-kai-analepse-yperesias-4-789-ekpaideutikon-a-thmias-kai-b-thmias-ekp-ses',
+            'source_label' => 'ΥΠΑΙΘΑ — επίσημη ανακοίνωση ↗',
+            'open_text' => 'Η περίοδος ορκωμοσίας και ανάληψης υπηρεσίας είναι ανοικτή.',
+            'closed_text' => 'Η περίοδος ορκωμοσίας και ανάληψης υπηρεσίας έχει λήξει.'
+        ),
+        array(
+            'title' => 'Αναπληρωτές / ωρομίσθιοι 2026–2027',
+            'meta_html' => '1ΓΕ/2026, 2ΓΕ/2026, 1ΓΤ/2024, 3ΕΑ/2025, 4ΕΑ/2025 · ΟΠΣΥΔ έως <strong>24/08/2026</strong>.',
+            'start' => '2026-08-14T00:00:00+03:00',
+            'end_exclusive' => '2026-08-25T00:00:00+03:00',
+            'source_url' => 'https://diavgeia.gov.gr/doc/9%CE%96%CE%A5%CE%A146%CE%9D%CE%9A%CE%A0%CE%94-%CE%93%CE%A8%CE%A9?inline=true',
+            'source_label' => 'ΑΔΑ 9ΖΥΡ46ΝΚΠΔ-ΓΨΩ ↗',
+            'tool_url' => 'ypologismos-morion.php',
+            'tool_label' => '1ΓΕ/2ΓΕ →'
+        ),
+        array(
+            'title' => 'ΕΕΠ–ΕΒΠ 2026–2027',
+            'meta_html' => '2ΕΑ/2025: ΠΕ21, ΠΕ22, ΠΕ23, ΠΕ25, ΠΕ28, ΠΕ29, ΠΕ30 · 1ΕΑ/2025: ΔΕ01 ΕΒΠ · ΟΠΣΥΔ έως <strong>24/08/2026</strong>.',
+            'start' => '2026-08-14T00:00:00+03:00',
+            'end_exclusive' => '2026-08-25T00:00:00+03:00',
+            'source_url' => 'https://diavgeia.gov.gr/doc/%CE%A8%CE%970%CE%9C46%CE%9D%CE%9A%CE%A0%CE%94-553?inline=true',
+            'source_label' => 'ΑΔΑ ΨΗ0Μ46ΝΚΠΔ-553 ↗',
+            'tool_url' => 'ypologismos-morion-2ea-2025.php',
+            'tool_label' => '2ΕΑ/2025 →'
+        ),
+        array(
+            'title' => 'ΔΗΜ.Ω.Σ. — γενική πρόσκληση',
+            'meta_html' => 'Αιτήσεις αναπληρωτών έως <strong>24/08/2026, 15:00</strong>.',
+            'end' => '2026-08-24T15:00:00+03:00',
+            'source_url' => 'https://diavgeia.gov.gr/doc/%CE%957%CE%98%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%9C%CE%98?inline=true',
+            'source_label' => 'ΑΔΑ Ε7ΘΑ46ΝΚΠΔ-ΡΜΘ ↗',
+            'tool_url' => 'ypologismos-morion-onaseia.php',
+            'tool_label' => 'Ωνάσεια →'
+        ),
+        array(
+            'title' => 'ΑΣΠΑΙΤΕ — ΕΠΠΑΙΚ 2026–2027',
+            'meta_html' => 'Αιτήσεις συμμετοχής στην κλήρωση έως <strong>25/08/2026, 19:00</strong>.',
+            'start' => '2026-06-16T12:00:00+03:00',
+            'end' => '2026-08-25T19:00:00+03:00',
+            'source_url' => 'https://www.aspete.gr/wp-content/uploads/2026/06/6%CE%A7%CE%9B546%CE%A88%CE%A7%CE%99-3%CE%9E%CE%92-%CE%A0%CE%A1%CE%9F%CE%A3%CE%9A%CE%9B%CE%97%CE%A3%CE%97-%CE%95%CE%A0%CE%A0%CE%91%CE%99%CE%9A-2026-2027.pdf',
+            'source_label' => 'ΑΔΑ 6ΧΛ546Ψ8ΧΙ-3ΞΒ ↗',
+            'tool_url' => 'paidagogiki-eparkeia.php',
+            'tool_label' => 'Παιδαγωγική επάρκεια →'
+        ),
+        array(
+            'title' => 'ΔΗΜ.Ω.Σ. — ΕΑΕ / Τμήματα Ένταξης',
+            'meta_html' => '3ΕΑ/2025 · ΠΕ02, ΠΕ03, ΠΕ04 με εξειδίκευση ΕΑΕ έως <strong>31/08/2026, 15:00</strong>.',
+            'end' => '2026-08-31T15:00:00+03:00',
+            'source_url' => 'https://diavgeia.gov.gr/doc/%CE%A1%CE%A4%CE%91%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%932%CE%97?inline=true',
+            'source_label' => 'ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗',
+            'tool_url' => 'ypologismos-morion-onaseia.php',
+            'tool_label' => 'Ωνάσεια →'
+        )
+    ),
+    'note_html' => 'Στην ορκωμοσία/ανάληψη νεοδιορίστων και στις προσκλήσεις αναπληρωτών και ΕΕΠ–ΕΒΠ δεν αναφέρεται συγκεκριμένη ώρα λήξης· το countdown θεωρεί τεχνικά το τέλος της αντίστοιχης καταληκτικής ημέρας. Οι επίσημες ανακοινώσεις, οι προσκλήσεις και οι ηλεκτρονικές πλατφόρμες υπερισχύουν.'
+));
+?>
 <section aria-label="Αναζήτηση και φίλτρα εργαλείων" class="toolbar">
 <div class="search-wrap">
 <input aria-label="Αναζήτηση εργαλείου" autocomplete="off" id="toolSearch" placeholder="Αναζήτηση εργαλείου π.χ. μόρια, παράβολο, Ωνάσεια..." type="search"/>
@@ -374,6 +442,6 @@
     })();
   </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.13"></script>
+  <script src="assets/common.js?v=3.20.36"></script>
 </body>
 </html>

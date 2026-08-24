@@ -6,11 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 1ΕΑ/2025 για μέλη Ειδικού Βοηθητικού Προσωπικού (ΕΒΠ) κλάδου ΔΕ01.">
 <title>Υπολογισμός μορίων 1ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.17">
+<link rel="stylesheet" href="assets/common.css?v=3.20.36">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea1">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
@@ -23,6 +24,21 @@
 <p>Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ2΄ μελών <strong>Ειδικού Βοηθητικού Προσωπικού (Ε.Β.Π.) — ΔΕ01</strong>.</p>
 <div class="meta"><span>1ΕΑ/2025</span><span>ΔΕ01 — ΕΒΠ</span><span>Ακαδημαϊκά έως 64 ή 96</span><span>Προϋπηρεσία έως 120</span></div>
 <?php calculatorHeroEnd(); ?>
+<?php
+renderDeadlineCard(array(
+    'title' => '📅 Δήλωση προτιμήσεων ΕΕΠ–ΕΒΠ 2026–2027',
+    'intro' => 'Η πρόσκληση για υποψήφια μέλη ΕΕΠ–ΕΒΠ αφορά τις προσλήψεις αναπληρωτών για το διδακτικό έτος 2026–2027.',
+    'items' => array(array(
+        'title' => '1ΕΑ/2025 — ΔΕ01 Ειδικού Βοηθητικού Προσωπικού (ΕΒΠ)',
+        'meta_html' => 'Δήλωση προτιμήσεων στο <strong>ΟΠΣΥΔ</strong> από <strong>Παρασκευή 14</strong> έως και <strong>Δευτέρα 24 Αυγούστου 2026</strong>.',
+        'start' => '2026-08-14T00:00:00+03:00',
+        'end_exclusive' => '2026-08-25T00:00:00+03:00',
+        'source_url' => 'https://diavgeia.gov.gr/doc/%CE%A8%CE%970%CE%9C46%CE%9D%CE%9A%CE%A0%CE%94-553?inline=true',
+        'source_label' => 'Επίσημη πρόσκληση — ΑΔΑ ΨΗ0Μ46ΝΚΠΔ-553 ↗'
+    )),
+    'note_html' => '<strong>Σημείωση ώρας:</strong> η επίσημη πρόσκληση αναφέρει την καταληκτική ημερομηνία 24/08/2026 χωρίς συγκεκριμένη ώρα. Το countdown χρησιμοποιεί τεχνικά το τέλος της ημέρας σε ώρα Ελλάδας· υπερισχύει πάντοτε η επίσημη πρόσκληση και το ΟΠΣΥΔ.'
+));
+?>
 <?php calculatorColumnsStart(); ?><?php calculatorMainStart(array('tag' => 'main')); ?>
 <?php calculatorCardStart(); ?>
 <h2>1. Βασικός τίτλος σπουδών</h2>
@@ -139,6 +155,6 @@ document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
   <script src="includes/eae-sensory-proof.js?v=3.20.23"></script>
-  <script src="assets/common.js?v=3.20.13"></script>
+  <script src="assets/common.js?v=3.20.36"></script>
 </body>
 </html>

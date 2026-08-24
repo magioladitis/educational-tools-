@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Έχω Παιδαγωγική και Διδακτική Επάρκεια;</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="assets/common.css?v=3.20.36">
 </head>
 
 <body class="edu-ui edu-guide-standard edu-guide-pedagogy">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 
 <div class="app-box edu-modernized">
 <section class="hero edu-legacy-hero">
@@ -18,6 +19,22 @@
     αποδεικτικών της Παιδαγωγικής και Διδακτικής Επάρκειας του Παραρτήματος Ε΄.
   </p>
 </section>
+
+<?php
+renderDeadlineCard(array(
+    'title' => '📅 Αιτήσεις ΕΠΠΑΙΚ ΑΣΠΑΙΤΕ 2026–2027',
+    'intro' => 'Η ΑΣΠΑΙΤΕ δέχεται αιτήσεις συμμετοχής στην κλήρωση για το Ετήσιο Πρόγραμμα Παιδαγωγικής Κατάρτισης (ΕΠΠΑΙΚ).',
+    'items' => array(array(
+        'title' => 'ΕΠΠΑΙΚ 2026–2027',
+        'meta_html' => 'Ηλεκτρονικές αιτήσεις έως <strong>Τρίτη 25 Αυγούστου 2026, ώρα 19:00</strong>.',
+        'start' => '2026-06-16T12:00:00+03:00',
+        'end' => '2026-08-25T19:00:00+03:00',
+        'source_url' => 'https://www.aspete.gr/wp-content/uploads/2026/06/6%CE%A7%CE%9B546%CE%A88%CE%A7%CE%99-3%CE%9E%CE%92-%CE%A0%CE%A1%CE%9F%CE%A3%CE%9A%CE%9B%CE%97%CE%A3%CE%97-%CE%95%CE%A0%CE%A0%CE%91%CE%99%CE%9A-2026-2027.pdf',
+        'source_label' => 'Επίσημη πρόσκληση ΑΣΠΑΙΤΕ — ΑΔΑ 6ΧΛ546Ψ8ΧΙ-3ΞΒ ↗'
+    )),
+    'note_html' => 'Η κάρτα ενημερώνει για την <strong>προθεσμία αίτησης στο ΕΠΠΑΙΚ</strong>. Για το αν και με ποιο αποδεικτικό θεμελιώνεται Παιδαγωγική και Διδακτική Επάρκεια σε συγκεκριμένη διαδικασία, εφαρμόζονται οι κανόνες της αντίστοιχης προκήρυξης.'
+));
+?>
 
   <div class="question">
     <label for="specialty">Κλάδος / ειδικότητα</label>
@@ -666,6 +683,6 @@
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.13"></script>
+  <script src="assets/common.js?v=3.20.36"></script>
 </body>
 </html>

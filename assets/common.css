@@ -2024,19 +2024,7 @@ body.edu-page-onaseia .breakdown th{background:#f1f3f4}
 body.edu-page-onaseia .total-row{font-weight:700;background:#e6f4ea;color:var(--green)}
 body.edu-page-onaseia .warning{margin-top:16px;padding:12px;border-radius:8px;background:var(--warning-bg);color:var(--warning-text);font-weight:700}
 body.edu-page-onaseia .credits{margin-top:24px;text-align:center;font-size:13px;color:#777}
-body.edu-page-onaseia .onaseia-deadline-card h2{margin:0 0 6px}
-body.edu-page-onaseia .onaseia-deadline-intro{margin:0;color:#5f6368;line-height:1.5}
-body.edu-page-onaseia .onaseia-deadline-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
-body.edu-page-onaseia .onaseia-deadline-item{border:1px solid #d8e2f2;border-radius:12px;background:#f8fbff;padding:14px}
-body.edu-page-onaseia .onaseia-deadline-item h3{margin:0 0 7px;font-size:16px;color:var(--blue)}
-body.edu-page-onaseia .onaseia-deadline-meta{margin:0;line-height:1.5;font-size:14px;color:#3c4043}
-body.edu-page-onaseia .onaseia-deadline-status{margin-top:10px;padding:9px 11px;border-radius:8px;font-weight:700;line-height:1.45}
-body.edu-page-onaseia .onaseia-deadline-status.open{background:#e6f4ea;color:#137333}
-body.edu-page-onaseia .onaseia-deadline-status.closed{background:#fdecea;color:#b3261e}
-body.edu-page-onaseia .onaseia-countdown{display:block;margin-top:3px;font-size:14px}
-body.edu-page-onaseia .onaseia-deadline-link{display:inline-block;margin-top:9px;font-weight:700}
-body.edu-page-onaseia .onaseia-deadline-note{margin:12px 0 0;font-size:12.5px;color:#667085}
-@media(max-width:760px){body.edu-ui.edu-page-onaseia{padding:16px}body.edu-page-onaseia .app-box{padding:18px}body.edu-page-onaseia .field-grid{grid-template-columns:1fr}body.edu-page-onaseia .service-row{grid-template-columns:1fr}body.edu-page-onaseia .remove-row{width:100%}body.edu-page-onaseia .actions{grid-template-columns:1fr}body.edu-page-onaseia .onaseia-deadline-grid{grid-template-columns:1fr}body.edu-page-onaseia h1{font-size:24px}}
+@media(max-width:760px){body.edu-ui.edu-page-onaseia{padding:16px}body.edu-page-onaseia .app-box{padding:18px}body.edu-page-onaseia .field-grid{grid-template-columns:1fr}body.edu-page-onaseia .service-row{grid-template-columns:1fr}body.edu-page-onaseia .remove-row{width:100%}body.edu-page-onaseia .actions{grid-template-columns:1fr}body.edu-page-onaseia h1{font-size:24px}}
 
 /* Degree-scale conversion utility. */
 body.edu-ui.edu-page-grade-converter{--blue:#1f6feb;--blue-dark:#174ea6;--muted:#5f6368;--border:#d9e0e8;--soft:#eef4ff;--green:#137333;--green-soft:#e6f4ea;--orange:#8a5300;--orange-soft:#fff4e5;margin:0;padding:30px;background:#f5f7fb;color:#202124;line-height:1.5}
@@ -2654,4 +2642,46 @@ body.edu-ui .eae-sensory-legal {
 body.edu-ui .asep-pe-academic > .field-grid > .training-proof {
   grid-column: 1 / -1;
   margin-top: 2px;
+}
+
+/* Shared application deadline cards. */
+body.edu-ui .edu-deadline-card {
+  margin: 0 0 22px;
+  padding: 18px;
+  border: 1px solid #d8e2f2;
+  border-radius: 14px;
+  background: #fff;
+}
+body.edu-ui .edu-deadline-card > h2 { margin: 0 0 6px; }
+body.edu-ui .edu-deadline-intro { margin: 0; color: #5f6368; line-height: 1.55; }
+body.edu-ui .edu-deadline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+body.edu-ui .edu-deadline-item {
+  border: 1px solid #d8e2f2;
+  border-radius: 12px;
+  background: #f8fbff;
+  padding: 14px;
+}
+body.edu-ui .edu-deadline-item h3 { margin: 0 0 7px; font-size: 16px; color: var(--edu-primary, #1a4f8b); }
+body.edu-ui .edu-deadline-meta { margin: 0; line-height: 1.55; font-size: 14px; color: #3c4043; }
+body.edu-ui .edu-deadline-status {
+  margin-top: 10px;
+  padding: 9px 11px;
+  border-radius: 8px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+body.edu-ui .edu-deadline-status.before { background: var(--edu-warning-soft, #fff4d6); color: var(--edu-warning, #7a5200); }
+body.edu-ui .edu-deadline-status.open { background: var(--edu-success-soft, #e6f4ea); color: var(--edu-success, #137333); }
+body.edu-ui .edu-deadline-status.closed { background: var(--edu-danger-soft, #fdecea); color: var(--edu-danger, #b3261e); }
+body.edu-ui .edu-deadline-countdown { display: block; margin-top: 4px; }
+body.edu-ui .edu-deadline-links { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 9px; }
+body.edu-ui .edu-deadline-links a { font-weight: 700; }
+body.edu-ui .edu-deadline-note { margin: 12px 0 0; font-size: 12.5px; color: #667085; line-height: 1.5; }
+@media (max-width: 760px) {
+  body.edu-ui .edu-deadline-grid { grid-template-columns: 1fr; }
 }

@@ -6,12 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Υπολογισμός μορίων απόσπασης μονίμων εκπαιδευτικών στα Σχολεία Δεύτερης Ευκαιρίας (ΣΔΕ) και έλεγχος αποδεκτών ειδικοτήτων/γραμματισμών σύμφωνα με το ΦΕΚ Β' 4088/03.07.2026.">
   <title>Υπολογισμός μορίων απόσπασης στα ΣΔΕ</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="assets/common.css?v=3.20.36">
 </head>
 <body class="edu-ui edu-calc-sde edu-page-sde-apospasis">
 <main class="page-shell">
   <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 
   <?php calculatorHero(array(
     'title' => 'Υπολογισμός μορίων απόσπασης στα ΣΔΕ',
@@ -21,6 +22,23 @@
 )); ?>
 
   <div class="success sde-update-banner"><strong>Ενημερωμένος πίνακας μοριοδότησης:</strong> ο υπολογισμός εφαρμόζει τη Διόρθωση Σφάλματος του ΦΕΚ Β΄ 4199/10.07.2026 (Εκπαίδευση 22, Άλλα προσόντα 5, Η/Υ 2 και μοριοδότηση τυπικής εκπαίδευσης από το 1ο έτος).</div>
+
+  <?php
+renderDeadlineCard(array(
+    'title' => '📅 Προθεσμία αιτήσεων ΣΔΕ 2026–2027',
+    'intro' => 'Η επίσημη πρόσκληση όρισε υποβολή αιτήσεων από <strong>Τρίτη 14 Ιουλίου 2026</strong> έως και <strong>Δευτέρα 20 Ιουλίου 2026</strong>.',
+    'items' => array(array(
+        'title' => 'Απόσπαση μόνιμων εκπαιδευτικών στα ΣΔΕ',
+        'meta_html' => 'Ηλεκτρονική υποβολή για το σχολικό έτος <strong>2026–2027</strong>.',
+        'start' => '2026-07-14T00:00:00+03:00',
+        'end_exclusive' => '2026-07-21T00:00:00+03:00',
+        'source_url' => 'https://diavgeia.gov.gr/doc/%CE%A19%CE%A0646%CE%9D%CE%9A%CE%A0%CE%94-%CE%A36%CE%A5?inline=true',
+        'source_label' => 'Επίσημη πρόσκληση — ΑΔΑ Ρ9Π646ΝΚΠΔ-Σ6Υ ↗',
+        'closed_text' => 'Η προθεσμία αιτήσεων ΣΔΕ 2026–2027 έχει λήξει.'
+    )),
+    'note_html' => '<strong>Σημείωση ώρας:</strong> η πρόσκληση αναφέρει ημερομηνίες χωρίς συγκεκριμένη ώρα. Για το countdown θεωρείται τεχνικά ως όριο το τέλος της 20ής Ιουλίου σε ώρα Ελλάδας· υπερισχύει πάντοτε η επίσημη πρόσκληση.'
+));
+?>
 
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
@@ -199,7 +217,7 @@
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 
-  <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Πηγή:</strong> Υ.Α. 88422/Κ1, ΦΕΚ Β΄ 4088/03.07.2026, <strong>όπως διορθώθηκε με τη Διόρθωση Σφάλματος ΦΕΚ Β΄ 4199/10.07.2026</strong>.</p><p class="source-disclaimer">Το εργαλείο είναι ενδεικτικό. Οι τελικοί πίνακες καταρτίζονται από την αρμόδια Επιτροπή και ισχύουν οι όροι της εκάστοτε πρόσκλησης.</p></section>
+  <section class="edu-source-card" aria-labelledby="sourcesTitle"><h2 id="sourcesTitle">Πηγές / Νομική βάση</h2><p><strong>Νομική βάση:</strong> Υ.Α. 88422/Κ1, ΦΕΚ Β΄ 4088/03.07.2026, <strong>όπως διορθώθηκε με τη Διόρθωση Σφάλματος ΦΕΚ Β΄ 4199/10.07.2026</strong>.</p><p><strong>Πρόσκληση 2026–2027:</strong> 94386/Κ1/13.07.2026 — αιτήσεις από 14 έως και 20 Ιουλίου 2026.</p><div class="source-links"><a href="https://www.gsvetlly.minedu.gov.gr/nea-anakoinoseis/809-prosklese-ekdeloses-endiapherontos-gia-ten-ypobole-aiteseon-apospases-monimon-ekpaideutikon-protobathmias-kai-deuterobathmias-ekpaideuses-sta-scholeia-deuteres-eukairias-gia-to-scholiko-etos-2026-2027" target="_blank" rel="noopener noreferrer">Επίσημη πρόσκληση απόσπασης στα ΣΔΕ 2026–2027 — Γ.Γ.Ε.Ε.Κ. &amp; Δ.Β.Μ. ↗</a></div><p class="source-disclaimer">Το εργαλείο είναι ενδεικτικό. Οι τελικοί πίνακες καταρτίζονται από την αρμόδια Επιτροπή και ισχύουν οι όροι της εκάστοτε πρόσκλησης.</p></section>
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
 
@@ -358,6 +376,6 @@
   specialtyChanged();
   calculate();
 </script>
-  <script src="assets/common.js?v=3.20.13"></script>
+  <script src="assets/common.js?v=3.20.36"></script>
 </body>
 </html>

@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία 2026-2027</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.13">
+<link rel="stylesheet" href="assets/common.css?v=3.20.36">
 </head>
 <body class="edu-ui edu-page-onaseia">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-pe-academic.php'; ?>
 
 <?php calculatorContainerStart(array('class' => 'app-box edu-modernized')); ?>
@@ -20,25 +21,29 @@
   </p>
 <?php calculatorHeroEnd(); ?>
 
-  <section class="deadline-card onaseia-deadline-card" aria-labelledby="onaseiaDeadlinesTitle">
-    <h2 id="onaseiaDeadlinesTitle">📅 Προθεσμίες αιτήσεων ΔΗΜ.Ω.Σ. 2026–2027</h2>
-    <p class="onaseia-deadline-intro">Οι δύο φετινές προσκλήσεις έχουν διαφορετική καταληκτική ημερομηνία. Η αντίστροφη μέτρηση γίνεται σε ώρα Ελλάδας.</p>
-    <div class="onaseia-deadline-grid">
-      <article class="onaseia-deadline-item">
-        <h3>Γενική πρόσκληση εκπαιδευτικών</h3>
-        <p class="onaseia-deadline-meta">1ΓΕ/2026, 2ΓΕ/2026 και 1ΓΤ/2024<br>Αιτήσεις έως <strong>Δευτέρα 24 Αυγούστου 2026, 15:00</strong>.</p>
-        <div id="onaseiaGeneralDeadlineStatus" class="onaseia-deadline-status" role="status" aria-live="polite"></div>
-        <a class="onaseia-deadline-link" href="https://diavgeia.gov.gr/doc/%CE%957%CE%98%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%9C%CE%98?inline=true" target="_blank" rel="noopener noreferrer">Πρόσκληση στη Διαύγεια — ΑΔΑ Ε7ΘΑ46ΝΚΠΔ-ΡΜΘ ↗</a>
-      </article>
-      <article class="onaseia-deadline-item">
-        <h3>Ειδική πρόσκληση ΕΑΕ — Τμήματα Ένταξης</h3>
-        <p class="onaseia-deadline-meta">3ΕΑ/2025 — ΠΕ02, ΠΕ03 και ΠΕ04 με εξειδίκευση στην ΕΑΕ<br>Αιτήσεις έως <strong>Δευτέρα 31 Αυγούστου 2026, 15:00</strong>.<br><strong>Για την ΕΑΕ:</strong> χρησιμοποίησε τη χειροκίνητη καταχώριση των ακαδημαϊκών μορίων όπως εμφανίζονται στον πίνακα 3ΕΑ/2025· ο αναλυτικός υπολογισμός της σελίδας αφορά 1ΓΕ/2026–2ΓΕ/2026.</p>
-        <div id="onaseiaEaeDeadlineStatus" class="onaseia-deadline-status" role="status" aria-live="polite"></div>
-        <a class="onaseia-deadline-link" href="https://diavgeia.gov.gr/doc/%CE%A1%CE%A4%CE%91%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%932%CE%97?inline=true" target="_blank" rel="noopener noreferrer">Πρόσκληση ΕΑΕ στη Διαύγεια — ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗</a>
-      </article>
-    </div>
-    <p class="onaseia-deadline-note">Το countdown είναι ενημερωτικό. Για την ακριβή ισχύ της προθεσμίας υπερισχύει πάντοτε το κείμενο της αντίστοιχης επίσημης πρόσκλησης.</p>
-  </section>
+  <?php
+renderDeadlineCard(array(
+    'title' => '📅 Προθεσμίες αιτήσεων ΔΗΜ.Ω.Σ. 2026–2027',
+    'intro' => 'Οι δύο φετινές προσκλήσεις έχουν διαφορετική καταληκτική ημερομηνία. Η αντίστροφη μέτρηση γίνεται σε ώρα Ελλάδας.',
+    'items' => array(
+        array(
+            'title' => 'Γενική πρόσκληση εκπαιδευτικών',
+            'meta_html' => '1ΓΕ/2026, 2ΓΕ/2026 και 1ΓΤ/2024<br>Αιτήσεις έως <strong>Δευτέρα 24 Αυγούστου 2026, 15:00</strong>.',
+            'end' => '2026-08-24T15:00:00+03:00',
+            'source_url' => 'https://diavgeia.gov.gr/doc/%CE%957%CE%98%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%9C%CE%98?inline=true',
+            'source_label' => 'Πρόσκληση — ΑΔΑ Ε7ΘΑ46ΝΚΠΔ-ΡΜΘ ↗'
+        ),
+        array(
+            'title' => 'Ειδική πρόσκληση ΕΑΕ — Τμήματα Ένταξης',
+            'meta_html' => '3ΕΑ/2025 — ΠΕ02, ΠΕ03 και ΠΕ04 με εξειδίκευση στην ΕΑΕ<br>Αιτήσεις έως <strong>Δευτέρα 31 Αυγούστου 2026, 15:00</strong>.<br><strong>Για την ΕΑΕ:</strong> χρησιμοποίησε τη χειροκίνητη καταχώριση των ακαδημαϊκών μορίων όπως εμφανίζονται στον πίνακα 3ΕΑ/2025.',
+            'end' => '2026-08-31T15:00:00+03:00',
+            'source_url' => 'https://diavgeia.gov.gr/doc/%CE%A1%CE%A4%CE%91%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%932%CE%97?inline=true',
+            'source_label' => 'Πρόσκληση ΕΑΕ — ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗'
+        )
+    ),
+    'note_html' => 'Το countdown είναι ενημερωτικό. Για την ακριβή ισχύ της προθεσμίας υπερισχύει πάντοτε το κείμενο της αντίστοιχης επίσημης πρόσκλησης.'
+));
+?>
 
   <div class="important">
     <strong>Τύπος υπολογισμού:</strong><br>
@@ -418,44 +423,6 @@ renderAsepPeAcademic(array(
   addServiceRow("2023-2024");
   updateAcademicMode();
   AsepPeAcademic.sync("asepPeAcademic");
-  const onaseiaDeadlines = [
-    { id: "onaseiaGeneralDeadlineStatus", end: new Date("2026-08-24T15:00:00+03:00") },
-    { id: "onaseiaEaeDeadlineStatus", end: new Date("2026-08-31T15:00:00+03:00") }
-  ];
-
-  function formatOnaseiaRemaining(ms) {
-    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    const parts = [];
-    if (days) parts.push(days + (days === 1 ? " ημέρα" : " ημέρες"));
-    parts.push(String(hours).padStart(2, "0") + " ώρες");
-    parts.push(String(minutes).padStart(2, "0") + " λεπτά");
-    parts.push(String(seconds).padStart(2, "0") + " δευτ.");
-    return parts.join(", ");
-  }
-
-  function updateOnaseiaDeadlines() {
-    const now = new Date();
-    onaseiaDeadlines.forEach(item => {
-      const box = document.getElementById(item.id);
-      if (!box) return;
-      box.className = "onaseia-deadline-status";
-      if (now <= item.end) {
-        box.classList.add("open");
-        box.innerHTML = "🟢 Η προθεσμία είναι ανοικτή." +
-          '<span class="onaseia-countdown">Απομένουν: <strong>' + formatOnaseiaRemaining(item.end - now) + "</strong></span>";
-      } else {
-        box.classList.add("closed");
-        box.textContent = "🔴 Η προθεσμία έχει λήξει.";
-      }
-    });
-  }
-
-  updateOnaseiaDeadlines();
-  setInterval(updateOnaseiaDeadlines, 1000);
 
   document.addEventListener("input", event => {
     if (event.target && event.target.classList && event.target.classList.contains("service-months") && event.target.value !== "") {
@@ -482,6 +449,6 @@ renderAsepPeAcademic(array(
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="assets/common.js?v=3.20.13"></script>
+  <script src="assets/common.js?v=3.20.36"></script>
 </body>
 </html>

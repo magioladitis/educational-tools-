@@ -6,11 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 2ΕΑ/2025 για μέλη Ειδικού Εκπαιδευτικού Προσωπικού (ΕΕΠ).">
 <title>Υπολογισμός μορίων 2ΕΑ/2025</title>
-<link rel="stylesheet" href="assets/common.css?v=3.20.17">
+<link rel="stylesheet" href="assets/common.css?v=3.20.36">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-ea2">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-computer-proof.php'; ?>
@@ -19,6 +20,21 @@
 <?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
 <div class="app">
 <?php calculatorHeroStart(); ?><h1>Υπολογισμός μορίων 2ΕΑ/2025</h1><p>Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ1΄ μελών <strong>Ειδικού Εκπαιδευτικού Προσωπικού (Ε.Ε.Π.)</strong>.</p><div class="meta"><span>2ΕΑ/2025</span><span>ΠΕ21–ΠΕ31</span><span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span><span>Έλεγχος πρόταξης</span><span>Άδειες &amp; βεβαιώσεις</span></div><?php calculatorHeroEnd(); ?>
+<?php
+renderDeadlineCard(array(
+    'title' => '📅 Δήλωση προτιμήσεων ΕΕΠ–ΕΒΠ 2026–2027',
+    'intro' => 'Η πρόσκληση για υποψήφια μέλη ΕΕΠ–ΕΒΠ αφορά τις προσλήψεις αναπληρωτών για το διδακτικό έτος 2026–2027.',
+    'items' => array(array(
+        'title' => '2ΕΑ/2025 — ΠΕ21, ΠΕ22, ΠΕ23, ΠΕ25, ΠΕ28, ΠΕ29, ΠΕ30',
+        'meta_html' => 'Η πρόσκληση αφορά τους παραπάνω κλάδους ΕΕΠ. Δήλωση προτιμήσεων στο <strong>ΟΠΣΥΔ</strong> από <strong>Παρασκευή 14</strong> έως και <strong>Δευτέρα 24 Αυγούστου 2026</strong>.',
+        'start' => '2026-08-14T00:00:00+03:00',
+        'end_exclusive' => '2026-08-25T00:00:00+03:00',
+        'source_url' => 'https://diavgeia.gov.gr/doc/%CE%A8%CE%970%CE%9C46%CE%9D%CE%9A%CE%A0%CE%94-553?inline=true',
+        'source_label' => 'Επίσημη πρόσκληση — ΑΔΑ ΨΗ0Μ46ΝΚΠΔ-553 ↗'
+    )),
+    'note_html' => '<strong>Σημείωση ώρας:</strong> η επίσημη πρόσκληση αναφέρει την καταληκτική ημερομηνία 24/08/2026 χωρίς συγκεκριμένη ώρα. Το countdown χρησιμοποιεί τεχνικά το τέλος της ημέρας σε ώρα Ελλάδας· υπερισχύει πάντοτε η επίσημη πρόσκληση και το ΟΠΣΥΔ.'
+));
+?>
 <?php calculatorColumnsStart(); ?><?php calculatorMainStart(array('tag' => 'main')); ?>
 <?php calculatorCardStart(); ?><h2>1. Κλάδος και πρόταξη</h2><p class="cap">Ο κλάδος δεν αλλάζει τον βασικό πίνακα μοριοδότησης, αλλά ενεργοποιεί ειδικές επισημάνσεις και κανόνες πρόταξης.</p>
 <div class="field"><label for="branch">Κλάδος ΕΕΠ</label><select id="branch"><option value="">— Επιλογή —</option><option value="PE21">ΠΕ21 — Θεραπευτών Λόγου</option><option value="PE22">ΠΕ22 — Επαγγελματικών Συμβούλων</option><option value="PE23">ΠΕ23 — Ψυχολόγων</option><option value="PE25">ΠΕ25 — Σχολικών Νοσηλευτών</option><option value="PE28">ΠΕ28 — Φυσιοθεραπευτών</option><option value="PE29">ΠΕ29 — Εργασιοθεραπευτών–Εργοθεραπευτών</option><option value="PE30">ΠΕ30 — Κοινωνικών Λειτουργών</option><option value="PE31">ΠΕ31 — Εξειδικευμένου</option></select></div>
@@ -131,6 +147,6 @@ document.addEventListener('input',e=>{sanitizeServiceMonthInput(e.target);render
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="includes/asep-computer-proof.js?v=3.20.15-rc2"></script>
   <script src="includes/eae-sensory-proof.js?v=3.20.23"></script>
-  <script src="assets/common.js?v=3.20.13"></script>
+  <script src="assets/common.js?v=3.20.36"></script>
 </body>
 </html>
