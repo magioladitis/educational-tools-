@@ -20,11 +20,11 @@
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <?php require_once __DIR__ . '/includes/components/eae-sensory-priority.php'; ?>
 <div class="app">
-<?php calculatorHeroStart(); ?>
-<h1>Υπολογισμός μορίων 1ΕΑ/2025</h1>
-<p>Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ2΄ μελών <strong>Ειδικού Βοηθητικού Προσωπικού (Ε.Β.Π.) — ΔΕ01</strong>.</p>
-<div class="meta"><span>1ΕΑ/2025</span><span>ΔΕ01 — ΕΒΠ</span><span>Ακαδημαϊκά έως 64 ή 96</span><span>Προϋπηρεσία έως 120</span></div>
-<?php calculatorHeroEnd(); ?>
+<?php calculatorHero(array(
+    'title' => 'Υπολογισμός μορίων 1ΕΑ/2025',
+    'intro_html' => 'Ενδεικτικός υπολογισμός για τον αξιολογικό πίνακα Γ2΄ μελών <strong>Ειδικού Βοηθητικού Προσωπικού (Ε.Β.Π.) — ΔΕ01</strong>.',
+    'badges' => array('1ΕΑ/2025', 'ΔΕ01 — ΕΒΠ', 'Ακαδημαϊκά έως 64 ή 96', 'Προϋπηρεσία έως 120')
+)); ?>
 <?php
 renderDeadlineCard(array(
     'title' => '📅 Δήλωση προτιμήσεων ΕΕΠ–ΕΒΠ 2026–2027',
@@ -80,7 +80,7 @@ renderTrainingProof([
 HTML
 ]);
 ?>
-<div class="subtot"><span>Ακαδημαϊκά</span><span class="pill" id="academicSubtotal">0,00</span></div>
+<?php calculatorSubtotalRow(array('label_html' => 'Ακαδημαϊκά', 'value_id' => 'academicSubtotal', 'value_html' => '0,00')); ?>
 <?php calculatorCardEnd(); ?>
 <?php calculatorCardStart(array('id' => 'asepService', 'attrs' => array('data-component' => 'asep-service-criteria', 'data-warning-id' => 'serviceWarning', 'data-subtotal-id' => 'serviceSubtotal', 'data-warn-months' => 'true'))); ?>
 <h2>3. Εκπαιδευτική προϋπηρεσία</h2><p class="cap">Μέγιστο 120 μόρια. Μην δηλώνεις τον ίδιο μήνα σε περισσότερα από ένα πεδία.</p>
@@ -95,7 +95,7 @@ renderAsepThreeMonthService(array(
 ?>
 <div class="info">Η προϋπηρεσία αναπληρωτή ΤΕ01.30 Βοηθών Βρεφοκόμων–Παιδοκόμων προσμετράται και στον ΔΕ01-ΕΒΠ. Η ειδική μοριοδότηση ιδιωτικής σχολικής προϋπηρεσίας με συντελεστή 0,9 <strong>δεν αφορά τα μέλη ΕΕΠ-ΕΒΠ</strong>.</div>
 <div id="serviceWarning" class="note hidden"></div>
-<div class="subtot"><span>Προϋπηρεσία</span><span class="pill" id="serviceSubtotal">0,00</span></div>
+<?php calculatorSubtotalRow(array('label_html' => 'Προϋπηρεσία', 'value_id' => 'serviceSubtotal', 'value_html' => '0,00')); ?>
 <?php calculatorCardEnd(); ?>
 <?php
 renderAsepSocialCriteria(array(
@@ -129,7 +129,7 @@ renderEaeSensoryPriority(array(
 ?>
 <?php calculatorCardEnd(); ?>
 <?php calculatorMainEnd(); ?><?php calculatorResultsStart(array('class' => 'results')); ?>
-<?php calculatorCardStart(); ?><h2>Αποτέλεσμα</h2><div class="total"><div class="num" id="totalPoints">0,00</div><div class="label">συνολικά μόρια</div></div><?php calculatorResultRow(array('label_html' => 'Βαθμός τίτλου', 'value_html' => '0,00', 'value_id' => 'degreePoints')); ?><?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά', 'value_html' => '0,00', 'value_id' => 'academicPoints')); ?><?php calculatorResultRow(array('label_html' => 'Προϋπηρεσία', 'value_html' => '0,00', 'value_id' => 'servicePoints')); ?><?php calculatorResultRow(array('label_html' => 'Κοινωνικά', 'value_html' => '0,00', 'value_id' => 'socialPoints')); ?><?php calculatorResultRow(array('label_html' => 'Όριο ακαδημαϊκών', 'value_html' => '64', 'value_id' => 'academicCap')); ?><div id="priorityBox" class="priority">Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ</div><?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?><?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(); ?><h2>Αποτέλεσμα</h2><?php calculatorTotalBlock(array('value_id' => 'totalPoints', 'value_html' => '0,00', 'label' => 'συνολικά μόρια')); ?><?php calculatorResultRow(array('label_html' => 'Βαθμός τίτλου', 'value_html' => '0,00', 'value_id' => 'degreePoints')); ?><?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά', 'value_html' => '0,00', 'value_id' => 'academicPoints')); ?><?php calculatorResultRow(array('label_html' => 'Προϋπηρεσία', 'value_html' => '0,00', 'value_id' => 'servicePoints')); ?><?php calculatorResultRow(array('label_html' => 'Κοινωνικά', 'value_html' => '0,00', 'value_id' => 'socialPoints')); ?><?php calculatorResultRow(array('label_html' => 'Όριο ακαδημαϊκών', 'value_html' => '64', 'value_id' => 'academicCap')); ?><div id="priorityBox" class="priority">Χωρίς δηλωμένη ειδική προτεραιότητα ΕΝΓ</div><?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?><?php calculatorCardEnd(); ?>
 <?php calculatorResultsEnd(); ?><?php calculatorColumnsEnd(); ?>
 <?php sourceCardStart(); ?><p><strong>Βάση υπολογισμού:</strong> Προκήρυξη ΑΣΕΠ 1ΕΑ/2025, Κεφάλαιο Γ΄ — κριτήρια αξιολογικού πίνακα Γ2΄ ΕΒΠ.</p><?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/76176', '1ΕΑ/2025 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?><?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι βοηθητικό και δεν υποκαθιστά τον επίσημο έλεγχο ΑΣΕΠ/ΟΠΣΥΔ.<?php sourceCardDisclaimerEnd(); ?><?php sourceCardEnd(); ?>
 <div class="credits">Εργαλείο υπολογισμού μορίων · 1ΕΑ/2025</div>

@@ -14,13 +14,12 @@
 <?php require_once __DIR__ . '/includes/components/asep-pe-academic.php'; ?>
 
 <?php calculatorContainerStart(array('class' => 'app-box edu-modernized')); ?>
-  <?php calculatorHeroStart(array('class' => 'hero edu-legacy-hero')); ?>
-<h1>Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία</h1>
-<p class="intro">
-    Σχολικό έτος <strong>2026-2027</strong>. Ο υπολογισμός βασίζεται στα ακαδημαϊκά προσόντα
-    του πίνακα Α.Σ.Ε.Π. και στην αναγνωρισμένη προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία.
-  </p>
-<?php calculatorHeroEnd(); ?>
+  <?php calculatorHero(array(
+  'class' => 'hero edu-legacy-hero',
+  'title' => 'Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία',
+  'intro_html' => 'Σχολικό έτος <strong>2026-2027</strong>. Ο υπολογισμός βασίζεται στα ακαδημαϊκά προσόντα του πίνακα Α.Σ.Ε.Π. και στην αναγνωρισμένη προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία.',
+  'intro_attrs' => array('class' => 'intro')
+)); ?>
 
   <?php
 renderDeadlineCard(array(

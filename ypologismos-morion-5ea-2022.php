@@ -18,14 +18,11 @@
 <?php require_once __DIR__ . '/includes/components/asep-pedagogical-proof.php'; ?>
 
 <div class="app">
-<?php calculatorHeroStart(); ?>
-  <h1>Υπολογισμός μορίων 5ΕΑ/2022</h1>
-  <p>Ιστορικός υπολογιστής για τους εκπαιδευτικούς Δευτεροβάθμιας Ειδικής Αγωγής κατηγορίας Δ.Ε. των κλάδων ΔΕ01 και ΔΕ02.</p>
-  <div class="meta">
-    <span>5ΕΑ/2022</span><span>ΔΕ01 / ΔΕ02</span><span>7 ειδικότητες</span><span>123 αιτήσεις</span>
-    <span>Κύριος / Επικουρικός Πίνακας</span><span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span>
-  </div>
-<?php calculatorHeroEnd(); ?>
+<?php calculatorHero(array(
+  'title' => 'Υπολογισμός μορίων 5ΕΑ/2022',
+  'intro' => 'Ιστορικός υπολογιστής για τους εκπαιδευτικούς Δευτεροβάθμιας Ειδικής Αγωγής κατηγορίας Δ.Ε. των κλάδων ΔΕ01 και ΔΕ02.',
+  'badges' => array('5ΕΑ/2022', 'ΔΕ01 / ΔΕ02', '7 ειδικότητες', '123 αιτήσεις', 'Κύριος / Επικουρικός Πίνακας', 'Ακαδημαϊκά έως 120', 'Προϋπηρεσία έως 120')
+)); ?>
 
 <div class="info-note edu-mb-16">
   <strong>Ιστορική προκήρυξη:</strong> η 5ΕΑ/2022 (ΦΕΚ Α.Σ.Ε.Π. 19/18.04.2022) είχε μόλις <strong>123 αιτήσεις</strong>. Μέχρι 24/08/2026 δεν εντοπίζεται αντίστοιχη 5ΕΑ/2025 στην επίσημη σειρά του ΑΣΕΠ· το εργαλείο διατηρείται για πληρότητα και έλεγχο των ιστορικών πινάκων.
@@ -143,7 +140,7 @@
   )); ?>
 
   <div id="serviceWarning" class="note hidden"></div>
-  <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
+  <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Προϋπηρεσίας', 'value_id' => 'serviceSubtotal', 'value_html' => '0,00 / 120')); ?>
 </section>
 
 <?php renderAsepSocialCriteria(array(
@@ -176,7 +173,7 @@
 <?php calculatorMainEnd(); ?>
 
 <?php calculatorResultsStart(); ?>
-  <div class="total"><div class="num" id="grandTotal">0,00</div><div class="label">συνολικά μόρια</div></div>
+  <?php calculatorTotalBlock(array('value_id' => 'grandTotal', 'value_html' => '0,00', 'label' => 'συνολικά μόρια')); ?>
   <?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά', 'value_html' => '0,00 / 120', 'value_id' => 'resAcademic')); ?>
   <?php calculatorResultRow(array('label_html' => 'Βαθμός τίτλου', 'value_html' => '0,00 / 50', 'value_id' => 'resDegree')); ?>
   <?php calculatorResultRow(array('label_html' => 'Πρόσθετη επαγγελματική εμπειρία', 'value_html' => '0,00 / 20', 'value_id' => 'resWork')); ?>

@@ -13,15 +13,12 @@
     <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
-    <?php calculatorHeroStart(); ?>
-      <h1>Υπολογισμός μορίων απόσπασης στο Ψηφιακό Φροντιστήριο</h1>
-      <p>Ενδεικτικός υπολογισμός για την πρόσκληση αποσπάσεων μονίμων εκπαιδευτικών για το σχολικό έτος 2026–2027.</p>
-      <div class="hero-meta">
-        <span>Σύνολο: 100 μονάδες</span>
-        <span>Β + Γ πριν από τη συνέντευξη: έως 65</span>
-        <span>Βιντεοσκοπημένο μάθημα: βάση 20/35</span>
-      </div>
-    <?php calculatorHeroEnd(); ?>
+    <?php calculatorHero(array(
+      'title' => 'Υπολογισμός μορίων απόσπασης στο Ψηφιακό Φροντιστήριο',
+      'intro' => 'Ενδεικτικός υπολογισμός για την πρόσκληση αποσπάσεων μονίμων εκπαιδευτικών για το σχολικό έτος 2026–2027.',
+      'meta_class' => 'hero-meta',
+      'badges' => array('Σύνολο: 100 μονάδες', 'Β + Γ πριν από τη συνέντευξη: έως 65', 'Βιντεοσκοπημένο μάθημα: βάση 20/35')
+    )); ?>
 
     <?php calculatorColumnsStart(); ?>
       <?php calculatorMainStart(); ?>

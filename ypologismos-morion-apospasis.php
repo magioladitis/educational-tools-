@@ -15,15 +15,12 @@
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
 <?php calculatorContainerStart(array('class' => 'app-box edu-modernized')); ?>
-<?php calculatorHeroStart(array('class' => 'hero edu-legacy-hero')); ?>
-<h1>Υπολογισμός μορίων απόσπασης εκπαιδευτικών</h1>
-<p class="intro">
-    Υπολόγισε <strong>ενδεικτικά</strong> τα μόριά σου για απόσπαση
-    <strong>από ΠΥΣΠΕ/ΠΥΣΔΕ σε ΠΥΣΠΕ/ΠΥΣΔΕ</strong>.
-    Ορισμένα κριτήρια εξαρτώνται από τη συγκεκριμένη περιοχή που ζητάς,
-    γι’ αυτό ο υπολογισμός πρέπει να γίνεται χωριστά για κάθε περιοχή ενδιαφέροντος.
-  </p>
-<?php calculatorHeroEnd(); ?>
+<?php calculatorHero(array(
+  'class' => 'hero edu-legacy-hero',
+  'title' => 'Υπολογισμός μορίων απόσπασης εκπαιδευτικών',
+  'intro_html' => 'Υπολόγισε <strong>ενδεικτικά</strong> τα μόριά σου για απόσπαση <strong>από ΠΥΣΠΕ/ΠΥΣΔΕ σε ΠΥΣΠΕ/ΠΥΣΔΕ</strong>. Ορισμένα κριτήρια εξαρτώνται από τη συγκεκριμένη περιοχή που ζητάς, γι’ αυτό ο υπολογισμός πρέπει να γίνεται χωριστά για κάθε περιοχή ενδιαφέροντος.',
+  'intro_attrs' => array('class' => 'intro')
+)); ?>
 
 
   <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>

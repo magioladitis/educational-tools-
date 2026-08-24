@@ -125,7 +125,10 @@ if (!function_exists('calculatorHero')) {
         if ($title !== '') echo '<h1>' . $title . '</h1>';
 
         $intro = calculatorLayoutTextOrHtml($config, 'intro', 'intro_html');
-        if ($intro !== '') echo '<p>' . $intro . '</p>';
+        if ($intro !== '') {
+            $introAttrs = isset($config['intro_attrs']) && is_array($config['intro_attrs']) ? $config['intro_attrs'] : array();
+            echo '<p' . calculatorLayoutAttributes($introAttrs) . '>' . $intro . '</p>';
+        }
 
         $badges = isset($config['badges']) && is_array($config['badges']) ? $config['badges'] : array();
         if (count($badges) > 0) {
@@ -272,6 +275,59 @@ if (!function_exists('calculatorResultsEnd')) {
     function calculatorResultsEnd() {
         $tags = calculatorLayoutStackPop('results');
         foreach (array_reverse($tags) as $tag) echo '</' . $tag . '>';
+    }
+}
+
+
+
+if (!function_exists('calculatorSubtotalRow')) {
+    function calculatorSubtotalRow($config = array()) {
+        $config = is_array($config) ? $config : array();
+        $class = isset($config['class']) ? $config['class'] : 'subtot';
+        $attrs = isset($config['attrs']) && is_array($config['attrs']) ? $config['attrs'] : array();
+        $id = isset($config['id']) ? $config['id'] : null;
+        calculatorLayoutOpenTag('div', $class, $id, $attrs);
+
+        $labelAttrs = isset($config['label_attrs']) && is_array($config['label_attrs']) ? $config['label_attrs'] : array();
+        if (isset($config['label_id'])) $labelAttrs['id'] = $config['label_id'];
+        $label = calculatorLayoutTextOrHtml($config, 'label', 'label_html');
+        echo '<span' . calculatorLayoutAttributes($labelAttrs) . '>' . $label . '</span>';
+
+        $valueAttrs = isset($config['value_attrs']) && is_array($config['value_attrs']) ? $config['value_attrs'] : array();
+        if (isset($config['value_id'])) $valueAttrs['id'] = $config['value_id'];
+        if (!isset($valueAttrs['class'])) $valueAttrs['class'] = isset($config['value_class']) ? $config['value_class'] : 'pill';
+        $value = calculatorLayoutTextOrHtml($config, 'value', 'value_html');
+        echo '<span' . calculatorLayoutAttributes($valueAttrs) . '>' . $value . '</span>';
+        echo '</div>';
+    }
+}
+
+if (!function_exists('calculatorTotalBlock')) {
+    function calculatorTotalBlock($config = array()) {
+        $config = is_array($config) ? $config : array();
+        $class = isset($config['class']) ? $config['class'] : 'total';
+        $attrs = isset($config['attrs']) && is_array($config['attrs']) ? $config['attrs'] : array();
+        $id = isset($config['id']) ? $config['id'] : null;
+        calculatorLayoutOpenTag('div', $class, $id, $attrs);
+
+        $valueTag = isset($config['value_tag']) ? $config['value_tag'] : 'div';
+        $valueTag = preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', (string)$valueTag) ? $valueTag : 'div';
+        $valueAttrs = isset($config['value_attrs']) && is_array($config['value_attrs']) ? $config['value_attrs'] : array();
+        if (isset($config['value_id'])) $valueAttrs['id'] = $config['value_id'];
+        if (!isset($valueAttrs['class'])) $valueAttrs['class'] = isset($config['value_class']) ? $config['value_class'] : 'num';
+        $value = calculatorLayoutTextOrHtml($config, 'value', 'value_html');
+        echo '<' . $valueTag . calculatorLayoutAttributes($valueAttrs) . '>' . $value . '</' . $valueTag . '>';
+
+        $label = calculatorLayoutTextOrHtml($config, 'label', 'label_html');
+        if ($label !== '') {
+            $labelTag = isset($config['label_tag']) ? $config['label_tag'] : 'div';
+            $labelTag = preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', (string)$labelTag) ? $labelTag : 'div';
+            $labelAttrs = isset($config['label_attrs']) && is_array($config['label_attrs']) ? $config['label_attrs'] : array();
+            if (isset($config['label_id'])) $labelAttrs['id'] = $config['label_id'];
+            if (!isset($labelAttrs['class'])) $labelAttrs['class'] = isset($config['label_class']) ? $config['label_class'] : 'label';
+            echo '<' . $labelTag . calculatorLayoutAttributes($labelAttrs) . '>' . $label . '</' . $labelTag . '>';
+        }
+        echo '</div>';
     }
 }
 

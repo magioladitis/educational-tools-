@@ -115,10 +115,7 @@
           </div>
           <div id="languageWarning" class="note hidden"></div>
 
-          <div class="subtot">
-            <span>Σύνολο Α</span>
-            <span class="pill" id="categoryA">0.00 / 29</span>
-          </div>
+          <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Α', 'value_id' => 'categoryA', 'value_html' => '0.00 / 29')); ?>
         <?php calculatorCardEnd(); ?>
 
         <?php calculatorCardStart(); ?>
@@ -164,10 +161,7 @@
             <tbody id="articleRows"></tbody>
           </table>
 
-          <div class="subtot">
-            <span>Σύνολο Β</span>
-            <span class="pill" id="categoryB">0.00 / 13</span>
-          </div>
+          <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Β', 'value_id' => 'categoryB', 'value_html' => '0.00 / 13')); ?>
         <?php calculatorCardEnd(); ?>
 
         <?php calculatorCardStart(); ?>
@@ -191,10 +185,7 @@
             <input type="number" id="clubs" min="0" step="1" value="0">
           </div>
 
-          <div class="subtot">
-            <span>Σύνολο Γ</span>
-            <span class="pill" id="categoryC">0.00 / 11</span>
-          </div>
+          <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Γ', 'value_id' => 'categoryC', 'value_html' => '0.00 / 11')); ?>
         <?php calculatorCardEnd(); ?>
       <?php calculatorMainEnd(); ?>
 

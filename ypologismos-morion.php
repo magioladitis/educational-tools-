@@ -110,7 +110,7 @@ renderAsepThreeMonthService(array(
         </div>
 
 <?php renderAsepDigitalTutoringService(array('container_id' => 'digitalTutoring', 'input_class' => 'service-months')); ?>
-        <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
+        <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Προϋπηρεσίας', 'value_id' => 'serviceSubtotal', 'value_html' => '0,00 / 120')); ?>
       <?php calculatorCardEnd(); ?>
 
 <?php
@@ -148,10 +148,7 @@ renderAsepSocialCriteria(array(
     <?php calculatorMainEnd(); ?>
 
     <?php calculatorResultsStart(array('class' => 'card results', 'aria_live' => 'polite')); ?>
-      <div class="total">
-        <div class="num" id="grandTotal">0,00</div>
-        <div class="label">συνολικά μόρια</div>
-      </div>
+      <?php calculatorTotalBlock(array('value_id' => 'grandTotal', 'value_html' => '0,00', 'label' => 'συνολικά μόρια')); ?>
 
       <?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά', 'value_html' => '0,00 / 120', 'value_id' => 'resAcademic')); ?>
       <?php calculatorResultRow(array('label_html' => 'Προϋπηρεσία', 'value_html' => '0,00 / 120', 'value_id' => 'resService')); ?>

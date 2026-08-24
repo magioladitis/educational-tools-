@@ -13,13 +13,12 @@
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
-<?php calculatorHeroStart(); ?>
-  <h1>Μόρια Μητρώου ΣΔΕ</h1>
-  <p>Ενιαίος υπολογιστής για ωρομίσθιο Εκπαιδευτικό Προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας στα Σχολεία Δεύτερης Ευκαιρίας.</p>
-  <div class="hero-meta">
-    <span>3 κατηγορίες υποψηφίων</span><span>Βασική βαθμολογία έως 40</span><span>Κοινωνικές προσαυξήσεις</span><span>Live υπολογισμός</span><span>ΦΕΚ Β΄ 3224/25.06.2025</span>
-  </div>
-<?php calculatorHeroEnd(); ?>
+<?php calculatorHero(array(
+  'title' => 'Μόρια Μητρώου ΣΔΕ',
+  'intro' => 'Ενιαίος υπολογιστής για ωρομίσθιο Εκπαιδευτικό Προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας στα Σχολεία Δεύτερης Ευκαιρίας.',
+  'meta_class' => 'hero-meta',
+  'badges' => array('3 κατηγορίες υποψηφίων', 'Βασική βαθμολογία έως 40', 'Κοινωνικές προσαυξήσεις', 'Live υπολογισμός', 'ΦΕΚ Β΄ 3224/25.06.2025')
+)); ?>
 
 <?php calculatorColumnsStart(); ?>
 <?php calculatorMainStart(); ?>

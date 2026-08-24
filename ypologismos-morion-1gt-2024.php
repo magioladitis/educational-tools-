@@ -18,14 +18,11 @@
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-pedagogical-proof.php'; ?>
 <div class="app">
-<?php calculatorHeroStart(); ?>
-    <h1>Υπολογισμός μορίων 1ΓΤ/2024</h1>
-    <p>Ενδεικτικός υπολογισμός για τους αξιολογικούς πίνακες Γενικής Εκπαίδευσης κατηγορίας Τ.Ε.</p>
-    <div class="meta">
-      <span>ΤΕ01</span><span>ΤΕ02</span><span>ΤΕ16</span>
-      <span>Ακαδημαϊκά έως 120</span><span>Προϋπηρεσία έως 120</span>
-    </div>
-  <?php calculatorHeroEnd(); ?>
+<?php calculatorHero(array(
+    'title' => 'Υπολογισμός μορίων 1ΓΤ/2024',
+    'intro' => 'Ενδεικτικός υπολογισμός για τους αξιολογικούς πίνακες Γενικής Εκπαίδευσης κατηγορίας Τ.Ε.',
+    'badges' => array('ΤΕ01', 'ΤΕ02', 'ΤΕ16', 'Ακαδημαϊκά έως 120', 'Προϋπηρεσία έως 120')
+  )); ?>
 
   <?php
 renderDeadlineCard(array(
@@ -111,7 +108,7 @@ renderAsepThreeMonthService(array(
 ));
 ?>
 
-        <div class="subtot"><span>Σύνολο Προϋπηρεσίας</span><span class="pill" id="serviceSubtotal">0,00 / 120</span></div>
+        <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Προϋπηρεσίας', 'value_id' => 'serviceSubtotal', 'value_html' => '0,00 / 120')); ?>
       </section>
 
 <?php
@@ -146,10 +143,7 @@ renderAsepSocialCriteria(array(
     <?php calculatorMainEnd(); ?>
 
     <?php calculatorResultsStart(); ?>
-      <div class="total">
-        <div class="num" id="grandTotal">0,00</div>
-        <div class="label">συνολικά μόρια</div>
-      </div>
+      <?php calculatorTotalBlock(array('value_id' => 'grandTotal', 'value_html' => '0,00', 'label' => 'συνολικά μόρια')); ?>
 
       <?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά', 'value_html' => '0,00 / 120', 'value_id' => 'resAcademic')); ?>
       <?php calculatorResultRow(array('label_html' => 'Προϋπηρεσία', 'value_html' => '0,00 / 120', 'value_id' => 'resService')); ?>

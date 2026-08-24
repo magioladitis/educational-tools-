@@ -13,17 +13,12 @@
   <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
-  <?php calculatorHeroStart(); ?>
-    <h1>Μόρια Διευθυντών &amp; Υποδιευθυντών ΣΔΕ</h1>
-    <p>Υπολόγισε τα μόρια επιλογής για θέσεις ευθύνης στα Σχολεία Δεύτερης Ευκαιρίας και κάνε βασικό έλεγχο των προϋποθέσεων συμμετοχής.</p>
-    <div class="hero-meta">
-      <span>Διευθυντής: έως 100</span>
-      <span>Υποδιευθυντής: έως 75</span>
-      <span>Τυπικά προσόντα: 25</span>
-      <span>Συνέντευξη: μόνο Διευθυντές, έως 25</span>
-      <span>ΦΕΚ Β΄ 3037/19.06.2025</span>
-    </div>
-  <?php calculatorHeroEnd(); ?>
+  <?php calculatorHero(array(
+    'title_html' => 'Μόρια Διευθυντών &amp; Υποδιευθυντών ΣΔΕ',
+    'intro' => 'Υπολόγισε τα μόρια επιλογής για θέσεις ευθύνης στα Σχολεία Δεύτερης Ευκαιρίας και κάνε βασικό έλεγχο των προϋποθέσεων συμμετοχής.',
+    'meta_class' => 'hero-meta',
+    'badges' => array('Διευθυντής: έως 100', 'Υποδιευθυντής: έως 75', 'Τυπικά προσόντα: 25', 'Συνέντευξη: μόνο Διευθυντές, έως 25', 'ΦΕΚ Β΄ 3037/19.06.2025')
+  )); ?>
 
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>

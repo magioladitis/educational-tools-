@@ -14,11 +14,11 @@
 <?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 
 <div class="app">
-<?php calculatorHeroStart(); ?>
-  <h1>Μόρια ωρομίσθιου εκπαιδευτή ΣΑΕΚ Σιβιτανιδείου 2026–2027</h1>
-  <p>Ενδεικτικός υπολογισμός της μοριοδότησης της πρόσκλησης 7903/21-08-2026 για το 2026Β και το 2027Α.</p>
-  <div class="meta"><span>ΣΑΕΚ Σιβιτανιδείου</span><span>2026Β + 2027Α</span><span>Βασική βαθμολογία έως 60</span><span>Κοινωνικές προσαυξήσεις</span><span>ΑΔΑ ΨΞ0Ο469ΒΨ1-3ΥΚ</span></div>
-<?php calculatorHeroEnd(); ?>
+<?php calculatorHero(array(
+  'title' => 'Μόρια ωρομίσθιου εκπαιδευτή ΣΑΕΚ Σιβιτανιδείου 2026–2027',
+  'intro' => 'Ενδεικτικός υπολογισμός της μοριοδότησης της πρόσκλησης 7903/21-08-2026 για το 2026Β και το 2027Α.',
+  'badges' => array('ΣΑΕΚ Σιβιτανιδείου', '2026Β + 2027Α', 'Βασική βαθμολογία έως 60', 'Κοινωνικές προσαυξήσεις', 'ΑΔΑ ΨΞ0Ο469ΒΨ1-3ΥΚ')
+)); ?>
 
 <?php renderDeadlineCard(array(
   'title' => '📅 Προθεσμία αιτήσεων',
@@ -131,7 +131,7 @@
 <?php calculatorMainEnd(); ?>
 
 <?php calculatorResultsStart(array('aria_live'=>'polite')); ?>
-  <div class="total"><div class="num" id="finalTotal">0,00</div><div class="label">τελική βαθμολογία</div></div>
+  <?php calculatorTotalBlock(array('value_id' => 'finalTotal', 'value_html' => '0,00', 'label' => 'τελική βαθμολογία')); ?>
   <?php calculatorResultRow(array('label_html'=>'Βασική βαθμολογία','value_html'=>'0,00','value_id'=>'resBase')); ?>
   <?php calculatorResultRow(array('label_html'=>'Εκπαίδευση – Επιμόρφωση','value_html'=>'0,00 / 23','value_id'=>'resEducation')); ?>
   <?php calculatorResultRow(array('label_html'=>'Διδακτική εμπειρία','value_html'=>'0,00 / 21','value_id'=>'resTeaching')); ?>
