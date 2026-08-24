@@ -131,7 +131,7 @@
 <?php calculatorMainEnd(); ?>
 
 <?php calculatorResultsStart(array('aria_live'=>'polite')); ?>
-  <?php calculatorTotalBlock(array('value_id' => 'finalTotal', 'value_html' => '0,00', 'label' => 'τελική βαθμολογία')); ?>
+  <?php calculatorScoreHeader(array('value_id' => 'finalTotal', 'value_html' => '0,00', 'label' => 'τελική βαθμολογία')); ?>
   <?php calculatorResultRow(array('label_html'=>'Βασική βαθμολογία','value_html'=>'0,00','value_id'=>'resBase')); ?>
   <?php calculatorResultRow(array('label_html'=>'Εκπαίδευση – Επιμόρφωση','value_html'=>'0,00 / 23','value_id'=>'resEducation')); ?>
   <?php calculatorResultRow(array('label_html'=>'Διδακτική εμπειρία','value_html'=>'0,00 / 21','value_id'=>'resTeaching')); ?>

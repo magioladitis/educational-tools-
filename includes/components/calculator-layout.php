@@ -302,6 +302,56 @@ if (!function_exists('calculatorSubtotalRow')) {
     }
 }
 
+if (!function_exists('calculatorScoreHeader')) {
+    function calculatorScoreHeader($config = array()) {
+        $config = is_array($config) ? $config : array();
+        $variant = isset($config['variant']) && $config['variant'] !== '' ? $config['variant'] : 'standard';
+        $variant = preg_replace('/[^a-zA-Z0-9_-]/', '', (string)$variant);
+        if ($variant === '') $variant = 'standard';
+
+        $class = 'result-score-header result-score-header--' . $variant;
+        if (isset($config['class']) && $config['class'] !== '') $class .= ' ' . $config['class'];
+        $attrs = isset($config['attrs']) && is_array($config['attrs']) ? $config['attrs'] : array();
+        if (!isset($attrs['role'])) $attrs['role'] = 'group';
+        if (!isset($attrs['aria-label'])) $attrs['aria-label'] = isset($config['aria_label']) ? $config['aria_label'] : 'Αποτέλεσμα';
+        $id = isset($config['id']) ? $config['id'] : null;
+        calculatorLayoutOpenTag('div', $class, $id, $attrs);
+
+        $context = calculatorLayoutTextOrHtml($config, 'context', 'context_html');
+        if ($context !== '') {
+            $contextAttrs = isset($config['context_attrs']) && is_array($config['context_attrs']) ? $config['context_attrs'] : array();
+            if (isset($config['context_id'])) $contextAttrs['id'] = $config['context_id'];
+            if (!isset($contextAttrs['class'])) $contextAttrs['class'] = 'result-score-context';
+            echo '<div' . calculatorLayoutAttributes($contextAttrs) . '>' . $context . '</div>';
+        }
+
+        $valueTag = isset($config['value_tag']) ? $config['value_tag'] : 'div';
+        $valueTag = preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', (string)$valueTag) ? $valueTag : 'div';
+        $valueAttrs = isset($config['value_attrs']) && is_array($config['value_attrs']) ? $config['value_attrs'] : array();
+        if (isset($config['value_id'])) $valueAttrs['id'] = $config['value_id'];
+        if (!isset($valueAttrs['class'])) $valueAttrs['class'] = isset($config['value_class']) ? $config['value_class'] : 'result-score';
+        $value = calculatorLayoutTextOrHtml($config, 'value', 'value_html');
+        echo '<' . $valueTag . calculatorLayoutAttributes($valueAttrs) . '>' . $value . '</' . $valueTag . '>';
+
+        $label = calculatorLayoutTextOrHtml($config, 'label', 'label_html');
+        if ($label !== '') {
+            $labelAttrs = isset($config['label_attrs']) && is_array($config['label_attrs']) ? $config['label_attrs'] : array();
+            if (isset($config['label_id'])) $labelAttrs['id'] = $config['label_id'];
+            if (!isset($labelAttrs['class'])) $labelAttrs['class'] = isset($config['label_class']) ? $config['label_class'] : 'result-score-label';
+            echo '<div' . calculatorLayoutAttributes($labelAttrs) . '>' . $label . '</div>';
+        }
+
+        $cap = calculatorLayoutTextOrHtml($config, 'cap', 'cap_html');
+        if ($cap !== '') {
+            $capAttrs = isset($config['cap_attrs']) && is_array($config['cap_attrs']) ? $config['cap_attrs'] : array();
+            if (isset($config['cap_id'])) $capAttrs['id'] = $config['cap_id'];
+            if (!isset($capAttrs['class'])) $capAttrs['class'] = isset($config['cap_class']) ? $config['cap_class'] : 'result-score-cap';
+            echo '<div' . calculatorLayoutAttributes($capAttrs) . '>' . $cap . '</div>';
+        }
+        echo '</div>';
+    }
+}
+
 if (!function_exists('calculatorTotalBlock')) {
     function calculatorTotalBlock($config = array()) {
         $config = is_array($config) ? $config : array();

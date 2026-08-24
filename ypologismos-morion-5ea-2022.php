@@ -173,7 +173,7 @@
 <?php calculatorMainEnd(); ?>
 
 <?php calculatorResultsStart(); ?>
-  <?php calculatorTotalBlock(array('value_id' => 'grandTotal', 'value_html' => '0,00', 'label' => 'συνολικά μόρια')); ?>
+  <?php calculatorScoreHeader(array('value_id' => 'grandTotal', 'value_html' => '0,00', 'label' => 'συνολικά μόρια')); ?>
   <?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά', 'value_html' => '0,00 / 120', 'value_id' => 'resAcademic')); ?>
   <?php calculatorResultRow(array('label_html' => 'Βαθμός τίτλου', 'value_html' => '0,00 / 50', 'value_id' => 'resDegree')); ?>
   <?php calculatorResultRow(array('label_html' => 'Πρόσθετη επαγγελματική εμπειρία', 'value_html' => '0,00 / 20', 'value_id' => 'resWork')); ?>

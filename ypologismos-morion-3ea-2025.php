@@ -169,8 +169,7 @@ renderEaeSensoryPriority(array(
 <?php calculatorMainEnd(); ?>
 
 <?php calculatorResultsStart(array('variant' => 'result-card', 'class' => 'card result-card', 'aria_live' => 'polite')); ?>
-<h2 class="edu-text-center">Αποτέλεσμα</h2>
-<div class="total" id="grandTotal">0,00</div><div class="total-label">συνολικά μόρια</div>
+<?php calculatorScoreHeader(array('value_id' => 'grandTotal', 'value_html' => '0,00', 'label' => 'συνολικά μόρια')); ?>
 <div id="tableStatus" class="status none">Επίλεξε κλάδο</div>
 <div id="eligibilityWhy" class="eligibility-box"><strong>Έλεγχος ένταξης</strong>Συμπλήρωσε τα προσόντα σου.</div>
 <table class="table"><tr><td>Ακαδημαϊκά</td><td id="resAcademic">0,00 / 120</td></tr><tr><td>Προϋπηρεσία</td><td id="resService">0,00 / 120</td></tr><tr><td>Κοινωνικά</td><td id="resSocial">0,00</td></tr></table>
