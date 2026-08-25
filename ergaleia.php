@@ -19,7 +19,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
 <div class="hero-meta">
-<span>23 διαθέσιμα εργαλεία</span>
+<span>26 διαθέσιμα εργαλεία</span>
 <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
 <span>Αναπληρωτές</span>
 <span>Αποσπάσεις</span>
@@ -135,8 +135,9 @@ renderDeadlineCard(array(
 <button aria-pressed="false" class="filter-btn" data-filter="sde" type="button">ΣΔΕ</button>
 <button aria-pressed="false" class="filter-btn" data-filter="saek" type="button">ΣΑΕΚ</button>
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
+<button aria-pressed="false" class="filter-btn" data-filter="ypiresiaka" type="button">Υπηρεσιακά</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 24 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 26 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
@@ -406,6 +407,20 @@ renderDeadlineCard(array(
 <div class="card-top"><span class="tool-number">24</span><span class="category-tag green">ΣΑΕΚ / Ωρομίσθιοι</span></div>
 <h2>Μόρια Εκπαιδευτή ΣΑΕΚ Σιβιτανιδείου</h2>
 <p>Υπολόγισε τη βασική βαθμολογία και τις κοινωνικές προσαυξήσεις για την πρόσκληση ωρομίσθιων εκπαιδευτών 2026–2027.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
+<a class="tool-card" data-category="ypiresiaka" data-search="υποχρεωτικό διδακτικό ωράριο ώρες εβδομάδα πρωτοβάθμια νηπιαγωγείο δημοτικό δευτεροβάθμια καθηγητές διευθυντές υποδιευθυντές οργανικότητα έτη υπηρεσίας" href="ypologismos-didaktikou-orariou.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">25</span><span class="category-tag">Υπηρεσιακά</span></div>
+<h2>Υπολογισμός υποχρεωτικού διδακτικού ωραρίου</h2>
+<p>Υπολόγισε τις εβδομαδιαίες ώρες διδασκαλίας σε Νηπιαγωγείο, Δημοτικό ή Δευτεροβάθμια, με βάση οργανικότητα, κλάδο, θέση και έτη υπηρεσίας.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
+<a class="tool-card" data-category="ypiresiaka" data-search="μισθολογικό κλιμάκιο ΜΚ μισθολογική εξέλιξη εκπαιδευτικών ΠΕ ΤΕ ΔΕ ΥΕ προϋπηρεσία μεταπτυχιακό διδακτορικό integrated master 4354 5246" href="ypologismos-misthologikou-klimakiou.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">26</span><span class="category-tag">Υπηρεσιακά</span></div>
+<h2>Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.)</h2>
+<p>Βρες ενδεικτικά το Μ.Κ. από την κατηγορία, τον αναγνωρισμένο μισθολογικό χρόνο και τυχόν αναγνωρισμένη προώθηση λόγω τίτλου σπουδών.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a></section>
 <div aria-hidden="true" class="no-results" id="noResults">
