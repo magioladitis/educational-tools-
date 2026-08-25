@@ -19,7 +19,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
 <div class="hero-meta">
-<span>26 διαθέσιμα εργαλεία</span>
+<span>27 διαθέσιμα εργαλεία</span>
 <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
 <span>Αναπληρωτές</span>
 <span>Αποσπάσεις</span>
@@ -132,12 +132,13 @@ renderDeadlineCard(array(
 <button aria-pressed="false" class="filter-btn" data-filter="eidiki-agogi" type="button">Ειδική Αγωγή</button>
 <button aria-pressed="false" class="filter-btn" data-filter="anaplirotes" type="button">Αναπληρωτές</button>
 <button aria-pressed="false" class="filter-btn" data-filter="apospaseis" type="button">Αποσπάσεις</button>
+<button aria-pressed="false" class="filter-btn" data-filter="metatheseis" type="button">Μεταθέσεις</button>
 <button aria-pressed="false" class="filter-btn" data-filter="sde" type="button">ΣΔΕ</button>
 <button aria-pressed="false" class="filter-btn" data-filter="saek" type="button">ΣΑΕΚ</button>
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
 <button aria-pressed="false" class="filter-btn" data-filter="ypiresiaka" type="button">Υπηρεσιακά</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 26 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 27 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
@@ -421,6 +422,13 @@ renderDeadlineCard(array(
 <div class="card-top"><span class="tool-number">26</span><span class="category-tag">Υπηρεσιακά</span></div>
 <h2>Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.)</h2>
 <p>Βρες ενδεικτικά το Μ.Κ. από την κατηγορία, τον αναγνωρισμένο μισθολογικό χρόνο και τυχόν αναγνωρισμένη προώθηση λόγω τίτλου σπουδών.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
+<a class="tool-card" data-category="metatheseis ypiresiaka" data-search="μετάθεση μεταθέσεις μόρια μετάθεσης μονάδες συνθηκών διαβίωσης ΜΣΔ δυσπρόσιτα απομακρυσμένα καταστήματα κράτησης ψηφιακό φροντιστήριο συνυπηρέτηση εντοπιότητα πρώτη προτίμηση" href="ypologismos-morion-metathesis.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">27</span><span class="category-tag orange">Μεταθέσεις</span></div>
+<h2>Υπολογισμός μορίων μετάθεσης</h2>
+<p>Υπολόγισε τα βασικά μόρια μετάθεσης Δ.Ε. και αναλυτικά τις Μ.Σ.Δ., με δυσπρόσιτα/απομακρυσμένα, καταστήματα κράτησης, Ψηφιακό Φροντιστήριο και ειδικές υπηρετήσεις.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a></section>
 <div aria-hidden="true" class="no-results" id="noResults">

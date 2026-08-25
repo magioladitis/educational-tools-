@@ -2804,3 +2804,46 @@ body.edu-ui .asep-pedagogical-proof-guide a { font-weight:700; }
 @media (max-width:640px) {
   body.edu-ui .asep-pedagogical-proof-panel { padding:12px; }
 }
+
+/* Transfer calculator — dynamic MSD service rows */
+body.edu-page-transfer .transfer-service-row {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fbfcfe;
+}
+body.edu-page-transfer .transfer-service-row-head,
+body.edu-page-transfer .transfer-service-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+body.edu-page-transfer .transfer-service-row-head { margin-bottom: 10px; }
+body.edu-page-transfer .transfer-row-score { font-weight: 800; color: var(--blue); font-variant-numeric: tabular-nums; }
+body.edu-page-transfer .transfer-service-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+body.edu-page-transfer .transfer-type-field { grid-column: span 2; }
+body.edu-page-transfer .transfer-service-actions { margin-top: 10px; }
+body.edu-page-transfer .add-row,
+body.edu-page-transfer .remove-row {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 750;
+  cursor: pointer;
+}
+body.edu-page-transfer .add-row { background: #e8edf4; color: #253247; }
+body.edu-page-transfer .remove-row { background: #fff0ee; color: #9b241c; }
+body.edu-page-transfer .transfer-remote-row { margin-top: 10px; }
+@media(max-width:900px) {
+  body.edu-page-transfer .transfer-service-grid { grid-template-columns: 1fr 1fr; }
+  body.edu-page-transfer .transfer-type-field { grid-column: 1 / -1; }
+}
+@media(max-width:650px) {
+  body.edu-page-transfer .transfer-service-grid { grid-template-columns: 1fr; }
+  body.edu-page-transfer .transfer-type-field { grid-column: auto; }
+  body.edu-page-transfer .transfer-service-actions { align-items: stretch; }
+  body.edu-page-transfer .remove-row { width: 100%; }
+}
