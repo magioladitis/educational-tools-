@@ -1555,7 +1555,7 @@ body.edu-page-detachment {--blue: #1f6feb;
       margin: 0;
       padding: 30px;
       color: var(--text);}
-body.edu-page-detachment .app-box {max-width: 960px;
+body.edu-page-detachment .app-box {max-width: 1180px;
       margin: auto;
       background: var(--card);
       padding: 26px;
@@ -1569,6 +1569,27 @@ body.edu-page-detachment .intro {text-align: center;
       line-height: 1.55;
       margin: 0 auto 22px;
       max-width: 820px;}
+body.edu-page-detachment .layout {display:grid;
+      grid-template-columns:minmax(0,1fr) 330px;
+      gap:18px;
+      align-items:start;
+      margin-top:20px;}
+body.edu-page-detachment .layout > * {min-width:0;}
+body.edu-page-detachment .results {position:sticky;
+      top:16px;
+      background:#fff;
+      border:1px solid var(--edu-border);
+      border-radius:16px;
+      padding:20px;
+      box-shadow:0 4px 16px rgba(28,39,55,.05);
+      min-width:0;}
+body.edu-page-detachment .result-row {display:flex;
+      justify-content:space-between;
+      gap:var(--edu-result-row-gap);
+      padding:var(--edu-result-row-pad-y) 0;
+      border-top:1px solid var(--edu-result-row-separator);
+      font-size:14px;}
+body.edu-page-detachment .result-row strong {white-space:nowrap;}
 body.edu-page-detachment .section {margin-top: 22px;
       padding: 17px;
       border-radius: 12px;
@@ -1695,6 +1716,10 @@ body.edu-page-detachment .credits {margin-top: 24px;
       text-align: center;
       font-size: 13px;
       color: #777;}
+@media (max-width: 900px) {
+  body.edu-page-detachment .layout {grid-template-columns:1fr;}
+  body.edu-page-detachment .results {position:static;}
+}
 @media (max-width: 760px) {
   body.edu-page-detachment {padding: 16px;}
   body.edu-page-detachment .app-box {padding: 18px;}
@@ -2002,11 +2027,16 @@ body.edu-page-sde-leadership .overflow-box{margin-top:12px;padding:11px;border:1
 
 /* Onaseia substitute-teacher calculator. */
 body.edu-ui.edu-page-onaseia{--blue:#174ea6;--blue2:#1f6feb;--green:#137333;--line:#d0d7de;--muted:#666;--warning-bg:#fff4e5;--warning-text:#8a5200;margin:0;padding:30px;background:#f5f5f5;color:#222}
-body.edu-page-onaseia .app-box{max-width:980px;margin:auto;background:#fff;padding:26px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.12);min-width:0}
+body.edu-page-onaseia .app-box{max-width:1220px;margin:auto;background:#fff;padding:26px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.12);min-width:0}
 body.edu-page-onaseia h1{text-align:center;font-size:28px;line-height:1.25;margin:0 0 10px}
 body.edu-page-onaseia .intro{text-align:center;color:#555;line-height:1.55;margin:0 auto 24px;max-width:820px}
 body.edu-page-onaseia .section{margin-top:22px;padding:17px;border-radius:12px;background:#fafafa;border:1px solid #ddd}
 body.edu-page-onaseia .section h2{margin:0 0 14px;font-size:20px;color:var(--blue)}
+body.edu-page-onaseia .layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start;margin-top:20px}
+body.edu-page-onaseia .layout>*{min-width:0}
+body.edu-page-onaseia .results{position:sticky;top:16px;background:#fff;border:1px solid var(--edu-border);border-radius:16px;padding:20px;box-shadow:0 4px 16px rgba(28,39,55,.05);min-width:0}
+body.edu-page-onaseia .result-row{display:flex;justify-content:space-between;gap:var(--edu-result-row-gap);padding:var(--edu-result-row-pad-y) 0;border-top:1px solid var(--edu-result-row-separator);font-size:14px}
+body.edu-page-onaseia .result-row strong{text-align:right;font-variant-numeric:tabular-nums}
 body.edu-page-onaseia .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 body.edu-page-onaseia .question{margin-bottom:12px;min-width:0}
 body.edu-page-onaseia label{display:block;font-weight:700;margin-bottom:6px;line-height:1.35}
@@ -2037,6 +2067,7 @@ body.edu-page-onaseia .breakdown th{background:#f1f3f4}
 body.edu-page-onaseia .total-row{font-weight:700;background:#e6f4ea;color:var(--green)}
 body.edu-page-onaseia .warning{margin-top:16px;padding:12px;border-radius:8px;background:var(--warning-bg);color:var(--warning-text);font-weight:700}
 body.edu-page-onaseia .credits{margin-top:24px;text-align:center;font-size:13px;color:#777}
+@media(max-width:900px){body.edu-page-onaseia .layout{grid-template-columns:1fr}body.edu-page-onaseia .results{position:static}}
 @media(max-width:760px){body.edu-ui.edu-page-onaseia{padding:16px}body.edu-page-onaseia .app-box{padding:18px}body.edu-page-onaseia .field-grid{grid-template-columns:1fr}body.edu-page-onaseia .service-row{grid-template-columns:1fr}body.edu-page-onaseia .remove-row{width:100%}body.edu-page-onaseia .actions{grid-template-columns:1fr}body.edu-page-onaseia h1{font-size:24px}}
 
 /* Degree-scale conversion utility. */

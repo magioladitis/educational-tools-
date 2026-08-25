@@ -158,10 +158,15 @@
 
       <?php calculatorResultsStart(array('class' => 'results', 'attrs' => array('aria-live' => 'polite'))); ?>
         <?php calculatorCardStart(); ?>
-          <div class="big-total">
-            <div class="number" id="totalScore">0</div>
-            <div class="outof">/ 100 μονάδες</div>
-          </div>
+          <?php calculatorScoreHeader(array(
+            'variant' => 'capped',
+            'class' => 'big-total',
+            'value_id' => 'totalScore',
+            'value_html' => '0',
+            'value_class' => 'number',
+            'cap_html' => '/ 100 μονάδες',
+            'cap_class' => 'outof'
+          )); ?>
           <div class="bar"><div id="totalBar"></div></div>
 
           <?php calculatorResultRow(array('label_html' => 'Α. Γενική παρουσία', 'value_html' => '0 / 35', 'value_id' => 'aTotal')); ?>

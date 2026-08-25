@@ -22,6 +22,8 @@
   'intro_attrs' => array('class' => 'intro')
 )); ?>
 
+  <?php calculatorColumnsStart(); ?>
+    <?php calculatorMainStart(array('tag' => 'main')); ?>
 
   <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>Α. Προκαταρκτικός έλεγχος δικαιώματος / κωλύματος</h2>
@@ -353,6 +355,31 @@
   )); ?>
 
   <?php calculatorInlineResult(array('id' => 'result', 'class' => 'result', 'attrs' => array('role' => 'status', 'aria-live' => 'polite'))); ?>
+    <?php calculatorMainEnd(); ?>
+
+    <?php calculatorResultsStart(array('class' => 'card results', 'aria_live' => 'polite')); ?>
+      <?php calculatorScoreHeader(array(
+        'value_id' => 'grandTotal',
+        'value_html' => '0,00',
+        'label' => 'συνολικά μόρια απόσπασης'
+      )); ?>
+      <?php calculatorResultRow(array('label_html' => 'Συνολική υπηρεσία', 'value_html' => '0,00', 'value_id' => 'resService')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Συνυπηρέτηση', 'value_html' => '0,00', 'value_id' => 'resCoService')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Εντοπιότητα', 'value_html' => '0,00', 'value_id' => 'resLocality')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Οικογενειακοί λόγοι', 'value_html' => '0,00', 'value_id' => 'resFamily')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Σοβαροί λόγοι υγείας', 'value_html' => '0,00', 'value_id' => 'resHealth')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Σπουδές', 'value_html' => '0,00', 'value_id' => 'resStudies')); ?>
+      <?php calculatorResultMessage(array(
+        'id' => 'sidebarStatus',
+        'variant' => 'status',
+        'text' => 'Συμπλήρωσε τα στοιχεία σου για ζωντανό υπολογισμό.'
+      )); ?>
+      <?php calculatorResultMessage(array(
+        'variant' => 'disclaimer',
+        'text' => 'Η κατά προτεραιότητα εξέταση και τα κωλύματα δεν προσθέτουν μόρια· εμφανίζονται χωριστά στον έλεγχο του αποτελέσματος.'
+      )); ?>
+    <?php calculatorResultsEnd(); ?>
+  <?php calculatorColumnsEnd(); ?>
 
 
   <?php sourceCardStart(); ?>
@@ -384,6 +411,39 @@
     return truncated.toFixed(2).replace(".", ",").replace(/0$/, "");
   }
 
+  function formatPointsFixed(value) {
+    return new Intl.NumberFormat('el-GR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(Number(value) || 0);
+  }
+
+  function updateSidebarSummary(summary = {}) {
+    const values = {
+      grandTotal: summary.total || 0,
+      resService: summary.service || 0,
+      resCoService: summary.coService || 0,
+      resLocality: summary.locality || 0,
+      resFamily: summary.family || 0,
+      resHealth: summary.health || 0,
+      resStudies: summary.studies || 0
+    };
+    Object.entries(values).forEach(([id, value]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = formatPointsFixed(value);
+    });
+
+    const statusBox = document.getElementById('sidebarStatus');
+    if (!statusBox) return;
+    const variant = summary.variant || 'status';
+    statusBox.className = `result-message edu-message result-message--${variant} edu-message--${variant}`;
+    statusBox.textContent = summary.status || 'Συμπλήρωσε τα στοιχεία σου για ζωντανό υπολογισμό.';
+  }
+
+  function setSidebarError(message) {
+    updateSidebarSummary({ status: message, variant: 'warning' });
+  }
+
   function escapeHtml(text) {
     return text
       .replaceAll("&", "&amp;")
@@ -394,6 +454,7 @@
   }
 
   function showError(message) {
+    setSidebarError(message);
     const result = document.getElementById("result");
     result.style.display = "block";
     result.className = "result error";
@@ -651,6 +712,31 @@
 
     const total = service.total + coServicePoints + localityPoints + familyTotal + healthTotal + studiesPoints;
 
+    let sidebarStatus = requestedArea ? `Υπολογισμός για ${requestedArea}.` : 'Ενδεικτικός υπολογισμός μορίων απόσπασης.';
+    let sidebarVariant = 'status';
+    if (eligibility.obstacleReasons.length > 0) {
+      sidebarStatus = 'Πιθανό κώλυμα εξέτασης της αίτησης — έλεγξε το αναλυτικό αποτέλεσμα.';
+      sidebarVariant = 'warning';
+    } else if (eligibility.priorityReasons.length > 0) {
+      sidebarStatus = 'Πιθανή υπαγωγή σε απόσπαση κατά προτεραιότητα.';
+      sidebarVariant = 'success';
+    } else if (eligibility.priorityBlockedByFirstChoice) {
+      sidebarStatus = 'Η πιθανή κατά προτεραιότητα περίπτωση χρειάζεται έλεγχο της 1ης προτίμησης.';
+      sidebarVariant = 'warning';
+    }
+
+    updateSidebarSummary({
+      total,
+      service: service.total,
+      coService: coServicePoints,
+      locality: localityPoints,
+      family: familyTotal,
+      health: healthTotal,
+      studies: studiesPoints,
+      status: sidebarStatus,
+      variant: sidebarVariant
+    });
+
     const familyAnalysis = [];
     if (familyBasePoints > 0) familyAnalysis.push(familyStatusLabel(familyStatus) + ": " + formatPoints(familyBasePoints) + " μόρια");
     if (childrenPoints > 0) familyAnalysis.push(children + " τέκνο/τέκνα: " + formatPoints(childrenPoints) + " μόρια");
@@ -730,6 +816,7 @@
     result.style.display = "none";
     result.innerHTML = "";
     result.className = "result";
+    updateSidebarSummary();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 

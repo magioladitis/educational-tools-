@@ -45,12 +45,14 @@ renderDeadlineCard(array(
 ));
 ?>
 
-  <div class="important">
-    <strong>Τύπος υπολογισμού:</strong><br>
-    Μόρια ΔΗΜ.Ω.Σ. = Ακαδημαϊκά Προσόντα Α.Σ.Ε.Π. + μόρια προϋπηρεσίας σε Πρότυπα/Πειραματικά.<br>
-    Η ειδική προϋπηρεσία μοριοδοτείται με <strong>1,5 μόριο ανά αναγνωρισμένο μήνα</strong>,
-    με ανώτατο όριο <strong>15 μόρια ανά σχολικό έτος</strong>.
-  </div>
+  <?php calculatorColumnsStart(); ?>
+    <?php calculatorMainStart(); ?>
+      <div class="important">
+        <strong>Τύπος υπολογισμού:</strong><br>
+        Μόρια ΔΗΜ.Ω.Σ. = Ακαδημαϊκά Προσόντα Α.Σ.Ε.Π. + μόρια προϋπηρεσίας σε Πρότυπα/Πειραματικά.<br>
+        Η ειδική προϋπηρεσία μοριοδοτείται με <strong>1,5 μόριο ανά αναγνωρισμένο μήνα</strong>,
+        με ανώτατο όριο <strong>15 μόρια ανά σχολικό έτος</strong>.
+      </div>
 
   <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
     <h2>1. Κλάδος / ειδικότητα</h2>
@@ -146,7 +148,28 @@ renderAsepPeAcademic(array(
     array('label' => 'Καθαρισμός', 'class' => 'reset-btn', 'attrs' => array('type' => 'button', 'onclick' => 'resetForm()'))
   )); ?>
 
-  <?php calculatorInlineResult(array('id' => 'result', 'class' => 'result', 'attrs' => array('role' => 'status', 'aria-live' => 'polite'))); ?>
+      <?php calculatorInlineResult(array('id' => 'result', 'class' => 'result', 'attrs' => array('role' => 'status', 'aria-live' => 'polite'))); ?>
+    <?php calculatorMainEnd(); ?>
+
+    <?php calculatorResultsStart(array('class' => 'card results', 'aria_live' => 'polite')); ?>
+      <?php calculatorScoreHeader(array(
+        'value_id' => 'grandTotal',
+        'value_html' => '0,00',
+        'label' => 'συνολικά μόρια ΔΗΜ.Ω.Σ.'
+      )); ?>
+      <?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά Α.Σ.Ε.Π.', 'value_html' => '0,00', 'value_id' => 'resAcademic')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Πρότυπα / Πειραματικά', 'value_html' => '0,00', 'value_id' => 'resService')); ?>
+      <?php calculatorResultMessage(array(
+        'id' => 'sidebarStatus',
+        'variant' => 'status',
+        'text' => 'Επίλεξε κλάδο και συμπλήρωσε τα απαιτούμενα στοιχεία.'
+      )); ?>
+      <?php calculatorResultMessage(array(
+        'variant' => 'disclaimer',
+        'text' => 'Σε περίπτωση ισοβαθμίας εφαρμόζονται οι κανόνες της επίσημης πρόσκλησης. Ο υπολογισμός είναι ενημερωτικός.'
+      )); ?>
+    <?php calculatorResultsEnd(); ?>
+  <?php calculatorColumnsEnd(); ?>
 <?php calculatorContainerEnd(); ?>
 
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
@@ -182,7 +205,35 @@ renderAsepPeAcademic(array(
     });
   }
 
+  function formatPointsFixed(value) {
+    const rounded = Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+    return rounded.toLocaleString("el-GR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function updateSidebarSummary(total = 0, academic = 0, service = 0, status = "") {
+    document.getElementById("grandTotal").textContent = formatPointsFixed(total);
+    document.getElementById("resAcademic").textContent = formatPointsFixed(academic);
+    document.getElementById("resService").textContent = formatPointsFixed(service);
+    const statusBox = document.getElementById("sidebarStatus");
+    if (statusBox) {
+      statusBox.className = "result-message edu-message result-message--status edu-message--status";
+      statusBox.textContent = status || "Επίλεξε κλάδο και συμπλήρωσε τα απαιτούμενα στοιχεία.";
+    }
+  }
+
+  function setSidebarError(message) {
+    updateSidebarSummary();
+    const statusBox = document.getElementById("sidebarStatus");
+    if (!statusBox) return;
+    statusBox.className = "result-message edu-message result-message--warning edu-message--warning";
+    statusBox.textContent = message;
+  }
+
   function showError(message) {
+    setSidebarError(message);
     const result = document.getElementById("result");
     result.style.display = "block";
     result.className = "result error";
@@ -337,6 +388,13 @@ renderAsepPeAcademic(array(
       const service = calculateService(warnings);
       const total = academicPoints + service.points;
 
+      updateSidebarSummary(
+        total,
+        academicPoints,
+        service.points,
+        `Κλάδος ${specialty} · ${currentAcademicMode() === "manual" ? "χειροκίνητη" : "αναλυτική"} καταχώριση ακαδημαϊκών`
+      );
+
       const detailText = items => items.length ? items.join("<br>") : "—";
 
       let html = `
@@ -382,6 +440,7 @@ renderAsepPeAcademic(array(
   }
 
   function clearLiveResult() {
+    updateSidebarSummary();
     const result = document.getElementById("result");
     result.style.display = "none";
     result.innerHTML = "";
@@ -415,6 +474,7 @@ renderAsepPeAcademic(array(
     addServiceRow("2024-2025");
     addServiceRow("2023-2024");
     document.getElementById("result").style.display = "none";
+    updateSidebarSummary();
     updateAcademicMode();
   }
 

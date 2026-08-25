@@ -196,8 +196,15 @@ renderDeadlineCard(array(
 
     <?php calculatorResultsStart(array('class' => 'results', 'aria_live' => 'polite')); ?>
       <?php calculatorCardStart(); ?>
-        <h2>Αποτέλεσμα</h2>
-        <div class="big-total"><div class="number" id="totalScore">0</div><div class="outof">από 40 μόρια</div></div>
+        <?php calculatorScoreHeader(array(
+          'variant' => 'capped',
+          'class' => 'big-total',
+          'value_id' => 'totalScore',
+          'value_html' => '0',
+          'value_class' => 'number',
+          'cap_html' => 'από 40 μόρια',
+          'cap_class' => 'outof'
+        )); ?>
         <div class="bar"><div id="totalBar"></div></div>
         <?php calculatorResultRow(array('label_html' => 'Εκπαίδευση', 'value_html' => '0 / 22', 'value_id' => 'educationScore')); ?>
         <?php calculatorResultRow(array('label_html' => 'Διδακτική εμπειρία', 'value_html' => '0 / 13', 'value_id' => 'experienceScore')); ?>

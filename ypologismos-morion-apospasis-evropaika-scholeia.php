@@ -61,7 +61,29 @@
 <div class="note">Στη συνέντευξη καλείται το 50% των υποψηφίων με τα υψηλότερα μόρια του 1ου σταδίου, με στρογγυλοποίηση στην πλησιέστερη ακέραιη μονάδα και αριθμό τουλάχιστον τριπλάσιο των θέσεων. Δεν υπάρχει σταθερό όριο μορίων.</div><?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Γ', 'value_id' => 'interviewSubtotal', 'value_html' => '— / 40')); ?>
 <?php calculatorCardEnd(); ?>
 <?php calculatorMainEnd(); ?>
-<?php calculatorResultsStart(array('class' => 'card results', 'aria_live' => 'polite')); ?><h2>Αποτέλεσμα</h2><div class="stage"><div class="stage-label">1ο στάδιο · πριν τη συνέντευξη</div><div class="stage-number"><span id="preInterviewTotal">0</span> <small class="edu-stage-suffix">/ 50</small></div></div><?php calculatorResultRow(array('label_html' => 'Α. Κατάρτιση', 'value_html' => '0 / 32', 'value_id' => 'academicResult')); ?><?php calculatorResultRow(array('label_html' => 'Β. Υπηρεσία / εμπειρία', 'value_html' => '0 / 18', 'value_id' => 'serviceResult')); ?><?php calculatorResultRow(array('label_html' => 'Γ. Συνέντευξη', 'value_html' => '— / 40', 'value_id' => 'interviewResult')); ?><details class="breakdown-box"><summary>Αναλυτική κατανομή μορίων</summary><div id="academicBreakdown" class="breakdown-list"></div><div id="serviceBreakdown" class="breakdown-list"></div></details><div class="stage"><div class="stage-label">Τελική βαθμολογία</div><div class="stage-number final" id="finalTotal">—</div><div id="finalHelp" class="edu-small-muted">Συμπλήρωσε όλα τα πεδία της συνέντευξης για τελικό /90.</div></div><div id="eligibilityStatus" role="status" aria-live="polite"></div><?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή σύνοψης'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?><?php calculatorResultsEnd(); ?>
+<?php calculatorResultsStart(array('class' => 'card results', 'aria_live' => 'polite')); ?>
+<?php calculatorScoreHeader(array(
+  'variant' => 'staged',
+  'class' => 'stage',
+  'context_html' => '1ο στάδιο · πριν τη συνέντευξη',
+  'context_attrs' => array('class' => 'stage-label'),
+  'value_html' => '<span id="preInterviewTotal">0</span> <small class="edu-stage-suffix">/ 50</small>',
+  'value_class' => 'stage-number'
+)); ?>
+<?php calculatorResultRow(array('label_html' => 'Α. Κατάρτιση', 'value_html' => '0 / 32', 'value_id' => 'academicResult')); ?><?php calculatorResultRow(array('label_html' => 'Β. Υπηρεσία / εμπειρία', 'value_html' => '0 / 18', 'value_id' => 'serviceResult')); ?><?php calculatorResultRow(array('label_html' => 'Γ. Συνέντευξη', 'value_html' => '— / 40', 'value_id' => 'interviewResult')); ?><details class="breakdown-box"><summary>Αναλυτική κατανομή μορίων</summary><div id="academicBreakdown" class="breakdown-list"></div><div id="serviceBreakdown" class="breakdown-list"></div></details>
+<?php calculatorScoreHeader(array(
+  'variant' => 'final',
+  'class' => 'stage',
+  'context_html' => 'Τελική βαθμολογία',
+  'context_attrs' => array('class' => 'stage-label'),
+  'value_id' => 'finalTotal',
+  'value_html' => '—',
+  'value_class' => 'stage-number final',
+  'cap_id' => 'finalHelp',
+  'cap_html' => 'Συμπλήρωσε όλα τα πεδία της συνέντευξης για τελικό /90.',
+  'cap_class' => 'edu-small-muted'
+)); ?>
+<div id="eligibilityStatus" role="status" aria-live="polite"></div><?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή σύνοψης'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?><?php calculatorResultsEnd(); ?>
 <?php calculatorColumnsEnd(); ?>
 <?php sourceCardStart(); ?><p><strong>Πηγή:</strong> Πρόσκληση 33598/Η2/18-03-2026 για απόσπαση εκπαιδευτικών στα Ευρωπαϊκά Σχολεία και η αναφερόμενη Υ.Α. 26754/Η2/10-03-2022 (Β΄1165, διόρθωση Β΄1300).</p><?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενημερωτικό.<?php sourceCardDisclaimerEnd(); ?><?php sourceCardEnd(); ?>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

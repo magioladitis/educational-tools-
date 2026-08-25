@@ -190,11 +190,16 @@
       <?php calculatorMainEnd(); ?>
 
       <?php calculatorResultsStart(array('attrs' => array('aria-live' => 'polite'))); ?>
-        <div class="total">
-          <span class="num" id="grandTotal">0,00</span>
-          <div class="outof">από 53 μόρια</div>
-          <div class="bar"><div id="totalBar"></div></div>
-        </div>
+        <?php calculatorScoreHeader(array(
+          'variant' => 'capped',
+          'class' => 'total',
+          'value_id' => 'grandTotal',
+          'value_html' => '0,00',
+          'value_class' => 'num',
+          'cap_html' => 'από 53 μόρια',
+          'cap_class' => 'outof'
+        )); ?>
+        <div class="bar"><div id="totalBar"></div></div>
 
         <?php calculatorResultRow(array('label_html' => 'Α. Συγκρότηση & κατάρτιση', 'value_html' => '0,00 / 29', 'value_id' => 'resA')); ?>
         <?php calculatorResultRow(array('label_html' => 'Β. Επιστημονικό έργο', 'value_html' => '0,00 / 13', 'value_id' => 'resB')); ?>
