@@ -15,9 +15,9 @@
 
   const PROMOTIONS = Object.freeze({
     none: Object.freeze({ mk: 0, label: "Χωρίς μισθολογική προώθηση τίτλου" }),
-    master: Object.freeze({ mk: 2, label: "Αναγνωρισμένος μεταπτυχιακός τίτλος (+2 Μ.Κ.)" }),
-    integrated: Object.freeze({ mk: 2, label: "Integrated Master ελληνικού Α.Ε.Ι. (+2 Μ.Κ. από 01-01-2026)" }),
-    phd: Object.freeze({ mk: 6, label: "Αναγνωρισμένο διδακτορικό (+6 Μ.Κ.)" })
+    master: Object.freeze({ mk: 2, label: "Αναγνωρισμένο συναφές μεταπτυχιακό (+2 Μ.Κ.)" }),
+    integrated: Object.freeze({ mk: 2, label: "Integrated Master ελληνικού Α.Ε.Ι. που πληροί τις προϋποθέσεις (+2 Μ.Κ. από 01-01-2026)" }),
+    phd: Object.freeze({ mk: 6, label: "Αναγνωρισμένο συναφές διδακτορικό (+6 Μ.Κ.)" })
   });
 
   function nonNegativeInteger(value) {
@@ -31,6 +31,12 @@
     return y * 12 + m;
   }
 
+  function suspendedServiceMonths(years, months) {
+    const y = Math.min(2, nonNegativeInteger(years));
+    const m = Math.min(11, nonNegativeInteger(months));
+    return Math.min(24, y * 12 + m);
+  }
+
   function calculate(options) {
     options = options || {};
     const category = RULES[options.category] ? options.category : "PE";
@@ -38,11 +44,14 @@
     const promotionKey = PROMOTIONS[options.qualification] ? options.qualification : "none";
     const promotion = PROMOTIONS[promotionKey];
     const totalMonths = serviceMonths(options.years, options.months);
+    const requestedSuspendedMonths = suspendedServiceMonths(options.suspendedYears, options.suspendedMonths);
+    const excludedMonths = Math.min(totalMonths, requestedSuspendedMonths);
+    const countableMonths = Math.max(0, totalMonths - excludedMonths);
 
-    const completedSteps = Math.floor(totalMonths / rule.monthsPerMK);
+    const completedSteps = Math.floor(countableMonths / rule.monthsPerMK);
     const baseMK = Math.min(rule.maxMK, 1 + completedSteps);
     const finalMK = Math.min(rule.maxMK, baseMK + promotion.mk);
-    const remainderMonths = baseMK >= rule.maxMK ? 0 : totalMonths % rule.monthsPerMK;
+    const remainderMonths = baseMK >= rule.maxMK ? 0 : countableMonths % rule.monthsPerMK;
     const monthsToNext = finalMK >= rule.maxMK ? 0 : rule.monthsPerMK - remainderMonths;
 
     return {
@@ -51,6 +60,10 @@
       maxMK: rule.maxMK,
       monthsPerMK: rule.monthsPerMK,
       serviceMonths: totalMonths,
+      requestedSuspendedServiceMonths: requestedSuspendedMonths,
+      suspendedServiceMonths: excludedMonths,
+      countableServiceMonths: countableMonths,
+      suspendedServiceAdjusted: requestedSuspendedMonths > totalMonths,
       baseMK: baseMK,
       promotionMK: Math.max(0, finalMK - baseMK),
       requestedPromotionMK: promotion.mk,
@@ -69,6 +82,7 @@
     PROMOTIONS: PROMOTIONS,
     nonNegativeInteger: nonNegativeInteger,
     serviceMonths: serviceMonths,
+    suspendedServiceMonths: suspendedServiceMonths,
     calculate: calculate
   });
 })(window);

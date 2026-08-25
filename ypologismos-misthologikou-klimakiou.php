@@ -32,24 +32,40 @@
             </select>
           </div>
           <div class="field">
-            <label for="serviceYears">Αναγνωρισμένα έτη μισθολογικής υπηρεσίας</label>
+            <label for="qualification">Ανώτερο προσόν που έχει ήδη αναγνωριστεί για μισθολογική προώθηση από την υπηρεσία σας</label>
+            <select id="qualification">
+              <option value="none">Χωρίς αναγνωρισμένη προώθηση</option>
+              <option value="master">Αναγνωρισμένο συναφές μεταπτυχιακό — +2 Μ.Κ.</option>
+              <option value="integrated">Integrated Master ελληνικού Α.Ε.Ι. που πληροί τις προϋποθέσεις — +2 Μ.Κ. από 01-01-2026</option>
+              <option value="phd">Αναγνωρισμένο συναφές διδακτορικό — +6 Μ.Κ.</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="serviceYears">Συνολικά αναγνωρισμένα έτη υπηρεσίας</label>
             <input id="serviceYears" type="number" min="0" max="40" step="1" value="0" inputmode="numeric">
           </div>
           <div class="field">
             <label for="serviceMonths">Επιπλέον αναγνωρισμένοι μήνες</label>
             <input id="serviceMonths" type="number" min="0" max="11" step="1" value="0" inputmode="numeric">
           </div>
-          <div class="field">
-            <label for="qualification">Ανώτερος τίτλος που έχει αναγνωριστεί μισθολογικά</label>
-            <select id="qualification">
-              <option value="none">Κανένας</option>
-              <option value="master">Μεταπτυχιακός τίτλος — +2 Μ.Κ.</option>
-              <option value="integrated">Integrated Master ελληνικού Α.Ε.Ι. — +2 Μ.Κ. από 01-01-2026</option>
-              <option value="phd">Διδακτορικό — +6 Μ.Κ.</option>
-            </select>
+          <div class="edu-field--full">
+            <div class="info-note"><strong>Υπηρεσία στη διετία 01-01-2016 έως 31-12-2017</strong><br>Δήλωσε πόση από τη συνολική αναγνωρισμένη υπηρεσία διανύθηκε στη διετία που δεν λαμβάνεται υπόψη για μισθολογική εξέλιξη.</div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="suspendedYears">Έτη υπηρεσίας στη διετία</label>
+                <input id="suspendedYears" type="number" min="0" max="2" step="1" value="0" inputmode="numeric">
+              </div>
+              <div class="field">
+                <label for="suspendedMonths">Επιπλέον μήνες στη διετία</label>
+                <input id="suspendedMonths" type="number" min="0" max="11" step="1" value="0" inputmode="numeric">
+              </div>
+            </div>
           </div>
         </div>
 
+        <div class="info-note">
+          <strong>Αναστολή μισθολογικής εξέλιξης 2016–2017:</strong> ο δηλωμένος χρόνος της συγκεκριμένης διετίας (έως 24 μήνες) <strong>δεν λαμβάνεται υπόψη για μισθολογική εξέλιξη</strong> και αφαιρείται αυτόματα από τον υπολογισμό του Μ.Κ. Αν δεν έχεις υπηρεσία μέσα στη διετία, άφησε Έτη και Μήνες στο 0.
+        </div>
         <div class="info-note">
           Καταχώρισε <strong>μόνο</strong> χρόνο προϋπηρεσίας και τίτλο που έχουν ήδη αναγνωριστεί μισθολογικά από την αρμόδια υπηρεσία. Το εργαλείο δεν κρίνει αν μια προϋπηρεσία είναι αναγνωρίσιμη ούτε αν ένας τίτλος είναι συναφής.
         </div>
@@ -57,7 +73,7 @@
           Από <strong>01-01-2026</strong>, η ειδική προώθηση κατά <strong>2 Μ.Κ.</strong> για Integrated Master αφορά ενιαίο και αδιάσπαστο τίτλο <strong>ελληνικού Α.Ε.Ι.</strong> που εμπίπτει στο άρθρο 46 του ν. 4485/2017 ή στο άρθρο 78 του ν. 4957/2022. <strong>Integrated Master αλλοδαπής δεν καλύπτεται από αυτή την ειδική ρύθμιση.</strong> Επίσης δεν χορηγείται δεύτερη προώθηση όταν έχει ήδη δοθεί προώθηση λόγω διακριτού μεταπτυχιακού τίτλου.
         </div>
         <div class="info-note">
-          Η προώθηση από αναγνωρισμένο συναφές <strong>μεταπτυχιακό (+2 Μ.Κ.)</strong> ή <strong>διδακτορικό (+6 Μ.Κ.)</strong> δεν περιορίζεται στις κατηγορίες ΠΕ/ΤΕ. Μπορεί να εφαρμοστεί και σε υπάλληλο κατηγορίας <strong>ΔΕ</strong>, εφόσον πληρούνται οι νόμιμες προϋποθέσεις και υπάρχει η απαιτούμενη υπηρεσιακή αναγνώριση· η εξέλιξη παραμένει μέσα στην κλίμακα ΔΕ, έως το Μ.Κ. 13.
+          <strong>Ειδικές περιπτώσεις:</strong> η δυνατότητα μισθολογικής προώθησης δεν προκύπτει μόνο από την κατηγορία ΠΕ/ΤΕ/ΔΕ ή από την απλή κατοχή ενός τίτλου. Για μεταπτυχιακό ή διδακτορικό απαιτούνται οι νόμιμες προϋποθέσεις και, όπου απαιτείται, αναγνώριση συνάφειας από το αρμόδιο υπηρεσιακό όργανο. Η κατηγορία <strong>ΔΕ</strong> δεν αποκλείεται αυτομάτως, αλλά η αναγνώριση πρέπει να έχει προηγηθεί υπηρεσιακά. Ιδιαίτερη προσοχή απαιτείται σε περιπτώσεις όπως ο κλάδος <strong>ΤΕ16</strong>, όπου έχουν τεθεί ειδικά ζητήματα ως προς τον βασικό τίτλο διορισμού και τη μισθολογική αναγνώριση μεταπτυχιακών τίτλων. <strong>Μην επιλέγεις +2 ή +6 Μ.Κ. μόνο επειδή κατέχεις τον τίτλο· επίλεξέ το μόνο αν η αντίστοιχη μισθολογική προώθηση έχει ήδη αναγνωριστεί από την υπηρεσία σου.</strong>
         </div>
 
         <?php calculatorActions(array(
@@ -80,6 +96,8 @@
         'cap' => 'Με βάση τα αναγνωρισμένα στοιχεία'
       )); ?>
       <?php calculatorResultRow(array('label' => 'Κατηγορία', 'value' => 'ΠΕ', 'value_id' => 'categoryResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Αφαιρούμενος χρόνος 2016–2017', 'value' => '0 μήνες', 'value_id' => 'suspendedServiceResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Μετρήσιμος χρόνος για Μ.Κ.', 'value' => '0 μήνες', 'value_id' => 'countableServiceResult')); ?>
       <?php calculatorResultRow(array('label' => 'Μ.Κ. από υπηρεσία', 'value' => 'Μ.Κ. 1', 'value_id' => 'baseMkResult')); ?>
       <?php calculatorResultRow(array('label' => 'Προώθηση τίτλου', 'value' => '0 Μ.Κ.', 'value_id' => 'promotionResult')); ?>
       <?php calculatorResultRow(array('label' => 'Χρόνος προς επόμενο Μ.Κ.', 'value' => '24 μήνες', 'value_id' => 'nextMkResult')); ?>
@@ -90,11 +108,13 @@
 
 <?php sourceCardStart(); ?>
   <p>Ο ν. 4354/2015 προβλέπει 19 Μ.Κ. για ΠΕ/ΤΕ και 13 για ΔΕ/ΥΕ. Για τη συνήθη μισθολογική εξέλιξη απαιτούνται δύο έτη ανά Μ.Κ. για ΠΕ/ΤΕ και τρία έτη για ΔΕ/ΥΕ. Αναγνωρισμένος συναφής μεταπτυχιακός τίτλος προωθεί κατά 2 Μ.Κ. και διδακτορικό κατά 6 Μ.Κ. στην κατηγορία όπου ανήκει ο υπάλληλος. Από 01-01-2026, ο ν. 5246/2025 προσθέτει ειδική προώθηση +2 Μ.Κ. για Integrated Master που εμπίπτει στις διατάξεις των άρθρων 46 ν. 4485/2017 και 78 ν. 4957/2022.</p>
+  <p>Με το άρθρο 26 παρ. 2 του ν. 4354/2015 η μισθολογική εξέλιξη ανεστάλη έως 31-12-2017. Από 01-01-2018 ενεργοποιήθηκε εκ νέου, χωρίς να λαμβάνεται υπόψη για την εξέλιξη το χρονικό διάστημα 01-01-2016 έως 31-12-2017.</p>
   <?php sourceCardLinksStart(); ?>
-    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-demosion-upallelon/nomos-4354-2015.html', 'Ν. 4354/2015 — Μισθολογικά κλιμάκια ↗'); ?>
+    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-demosion-upallelon/nomos-4354-2015.html', 'Ν. 4354/2015 — Μισθολογικά κλιμάκια & άρθρο 26 ↗'); ?>
+    <?php sourceCardLink('https://www.taxheaven.gr/circulars/23568/ar-prwt-2-31029-dep-6-5-2016', 'Εγκύκλιος ΓΛΚ 2/31029/ΔΕΠ/06-05-2016 ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/index.php/n-5246-2025.html', 'Ν. 5246/2025 — Integrated Master ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
-  <?php sourceCardDisclaimerStart(); ?>Για τη συνάφεια τίτλου, την αναγνώριση προϋπηρεσίας και την ημερομηνία οικονομικών αποτελεσμάτων υπερισχύει η απόφαση του αρμόδιου υπηρεσιακού οργάνου.<?php sourceCardDisclaimerEnd(); ?>
+  <?php sourceCardDisclaimerStart(); ?>Ο υπολογιστής δεν αποφαίνεται αν ένας τίτλος θεμελιώνει δικαίωμα προώθησης. Για τη συνάφεια τίτλου, την αναγνώριση προϋπηρεσίας, ειδικές περιπτώσεις όπως ΤΕ16 και την ημερομηνία οικονομικών αποτελεσμάτων υπερισχύει η ισχύουσα απόφαση του αρμόδιου υπηρεσιακού οργάνου.<?php sourceCardDisclaimerEnd(); ?>
 <?php sourceCardEnd(); ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
@@ -124,32 +144,61 @@
       category: byId('category').value,
       years: integer('serviceYears', 40),
       months: integer('serviceMonths', 11),
-      qualification: byId('qualification').value
+      qualification: byId('qualification').value,
+      suspendedYears: integer('suspendedYears', 2),
+      suspendedMonths: integer('suspendedMonths', 11)
     });
 
     byId('finalMkResult').textContent = 'Μ.Κ. ' + result.finalMK;
-    byId('categoryResult').textContent = result.category;
+    const categoryLabels = { PE: 'ΠΕ', TE: 'ΤΕ', DE: 'ΔΕ', YE: 'ΥΕ' };
+    byId('categoryResult').textContent = categoryLabels[result.categoryCode] || categoryLabels[byId('category').value] || result.category || 'ΠΕ';
+    byId('suspendedServiceResult').textContent = formatServiceMonths(result.suspendedServiceMonths);
+    byId('countableServiceResult').textContent = formatServiceMonths(result.countableServiceMonths);
     byId('baseMkResult').textContent = 'Μ.Κ. ' + result.baseMK;
     byId('promotionResult').textContent = result.promotionMK + ' Μ.Κ.';
     byId('nextMkResult').textContent = result.capped ? 'Καταληκτικό Μ.Κ.' : result.monthsToNext + ' μήνες';
 
     const status = byId('statusResult');
-    if (result.promotionCapped) {
+    if (result.suspendedServiceAdjusted) {
+      status.textContent = 'Ο δηλωμένος χρόνος της διετίας 2016–2017 υπερέβαινε τη συνολική υπηρεσία και περιορίστηκε στον διαθέσιμο χρόνο.';
+      status.className = 'result-message edu-message result-message--warning edu-message--warning';
+    } else if (result.promotionCapped) {
       status.textContent = 'Η προώθηση περιορίζεται στο καταληκτικό Μ.Κ. ' + result.maxMK + ' της κατηγορίας.';
       status.className = 'result-message edu-message result-message--warning edu-message--warning';
     } else if (result.qualification !== 'none') {
-      status.textContent = result.qualificationLabel + '. Χρησιμοποίησε την επιλογή μόνο αν η προώθηση έχει αναγνωριστεί υπηρεσιακά.';
+      status.textContent = result.qualificationLabel + '. Ο χρόνος 2016–2017 που δηλώθηκε έχει αφαιρεθεί από τη μισθολογική εξέλιξη. Χρησιμοποίησε την επιλογή τίτλου μόνο αν η προώθηση έχει αναγνωριστεί υπηρεσιακά.';
       status.className = 'result-message edu-message result-message--success edu-message--success';
     } else {
-      status.textContent = 'Υπολογισμός με βάση τον αναγνωρισμένο μισθολογικό χρόνο.';
+      status.textContent = result.suspendedServiceMonths > 0
+        ? 'Ο χρόνος 2016–2017 αφαιρέθηκε. Ο υπολογισμός γίνεται με τον υπόλοιπο μισθολογικά μετρήσιμο χρόνο.'
+        : 'Υπολογισμός με βάση τον αναγνωρισμένο μισθολογικό χρόνο.';
       status.className = 'result-message edu-message result-message--status edu-message--status';
     }
+  }
+
+  function formatServiceMonths(totalMonths) {
+    const total = Math.max(0, Math.floor(Number(totalMonths) || 0));
+    const years = Math.floor(total / 12);
+    const months = total % 12;
+    if (years && months) return years + ' έτη ' + months + ' μήνες';
+    if (years) return years + (years === 1 ? ' έτος' : ' έτη');
+    return months + (months === 1 ? ' μήνας' : ' μήνες');
+  }
+
+  function clampSuspendedInputs() {
+    const yearsEl = byId('suspendedYears');
+    const monthsEl = byId('suspendedMonths');
+    clampBoundedIntegerInput(yearsEl, 2);
+    clampBoundedIntegerInput(monthsEl, 11);
+    if (Number(yearsEl.value) >= 2 && Number(monthsEl.value) > 0) monthsEl.value = '0';
   }
 
   function reset() {
     byId('category').value = 'PE';
     byId('serviceYears').value = '0';
     byId('serviceMonths').value = '0';
+    byId('suspendedYears').value = '0';
+    byId('suspendedMonths').value = '0';
     byId('qualification').value = 'none';
     calculate();
   }
@@ -158,11 +207,13 @@
     el.addEventListener('input', () => {
       if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 40);
       if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
+      if (el.id === 'suspendedYears' || el.id === 'suspendedMonths') clampSuspendedInputs();
       calculate();
     });
     el.addEventListener('change', () => {
       if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 40);
       if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
+      if (el.id === 'suspendedYears' || el.id === 'suspendedMonths') clampSuspendedInputs();
       calculate();
     });
   });
