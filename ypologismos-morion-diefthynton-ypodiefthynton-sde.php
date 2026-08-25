@@ -167,7 +167,19 @@
       <?php calculatorCardStart(); ?>
         <div class="role-chip" id="roleChip">Επίλεξε θέση</div>
         <h2>Αποτέλεσμα</h2>
-        <div class="big-total"><div class="context" id="totalContext">Μόρια κριτηρίων</div><div class="number" id="totalScore">0</div><div class="outof" id="totalOutOf">από 75 μόρια</div></div>
+        <?php calculatorScoreHeader(array(
+          'variant' => 'staged',
+          'class' => 'big-total',
+          'context_id' => 'totalContext',
+          'context_html' => 'Μόρια κριτηρίων',
+          'context_attrs' => array('class' => 'context'),
+          'value_id' => 'totalScore',
+          'value_html' => '0',
+          'value_class' => 'number',
+          'cap_id' => 'totalOutOf',
+          'cap_html' => 'από 75 μόρια',
+          'cap_class' => 'outof'
+        )); ?>
         <div class="bar"><div id="totalBar"></div></div>
         <?php calculatorResultRow(array('label_html' => 'Τυπικά προσόντα', 'value_html' => '0 / 25', 'value_id' => 'formalScore')); ?>
         <?php calculatorResultRow(array('label_html' => 'Διδακτική εμπειρία', 'value_html' => '0 / —', 'value_id' => 'teachingScore')); ?>

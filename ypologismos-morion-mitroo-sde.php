@@ -115,7 +115,17 @@
 <?php calculatorResultsStart(array('class' => 'results', 'attrs' => array('aria-live' => 'polite'))); ?>
   <?php calculatorCardStart(); ?>
     <div class="role-chip" id="roleChip">Επίλεξε κατηγορία</div><h2>Αποτέλεσμα</h2>
-    <div class="big-total"><div class="context">Τελική βαθμολογία με προσαυξήσεις</div><div class="number" id="finalScore">0</div><div class="outof">Βασική βαθμολογία έως 40 + κοινωνικά κριτήρια</div></div>
+    <?php calculatorScoreHeader(array(
+      'variant' => 'staged',
+      'class' => 'big-total',
+      'context_html' => 'Τελική βαθμολογία με προσαυξήσεις',
+      'context_attrs' => array('class' => 'context'),
+      'value_id' => 'finalScore',
+      'value_html' => '0',
+      'value_class' => 'number',
+      'cap_html' => 'Βασική βαθμολογία έως 40 + κοινωνικά κριτήρια',
+      'cap_class' => 'outof'
+    )); ?>
     <div class="bar"><div id="baseBar"></div></div>
     <?php calculatorResultRow(array('label_html' => 'Εκπαίδευση', 'value_html' => '0 / 22', 'value_id' => 'educationScore')); ?>
     <?php calculatorResultRow(array('label_html' => 'Εμπειρία', 'value_html' => '0 / 13', 'value_id' => 'experienceScore')); ?>

@@ -273,10 +273,16 @@
     <?php calculatorResultsStart(array('attrs' => array('aria-live' => 'polite'))); ?>
       <h2>Αποτέλεσμα</h2>
 
-      <div class="big-total">
-        <div class="number" id="grandTotal">0</div>
-        <div class="outof" id="totalOutOf">Επίλεξε αξιολογικό πίνακα</div>
-      </div>
+      <?php calculatorScoreHeader(array(
+        'variant' => 'staged',
+        'class' => 'big-total',
+        'value_id' => 'grandTotal',
+        'value_html' => '0',
+        'value_class' => 'number',
+        'cap_id' => 'totalOutOf',
+        'cap_html' => 'Επίλεξε αξιολογικό πίνακα',
+        'cap_class' => 'outof'
+      )); ?>
 
       <div class="bar"><div id="scoreBar"></div></div>
 
