@@ -29,13 +29,13 @@
     <h2>Α. Προκαταρκτικός έλεγχος δικαιώματος / κωλύματος</h2>
 
     <div class="question">
-      <label for="appointmentStatus">Κατάσταση ως προς τον διορισμό</label>
+      <label for="appointmentStatus">Πότε έγινε ο μόνιμος διορισμός σας;</label>
       <select id="appointmentStatus">
         <option value="">— Επιλογή —</option>
-        <option value="not_new">Δεν είμαι νεοδιόριστος/η που επηρεάζεται από τον ειδικό κανόνα</option>
-        <option value="before_2024_09_01">Νεοδιόριστος/η πριν από 01-09-2024</option>
-        <option value="sep_2024">Διορισμός από 01-09-2024 έως 30-09-2024 / δεν είμαι βέβαιος/η</option>
-        <option value="after_2024_09_30">Νεοδιόριστος/η μετά τις 30-09-2024</option>
+        <option value="not_new">Διορίστηκα έως το 2023</option>
+        <option value="before_2024_09_01">Διορίστηκα το 2024, πριν από 01-09-2024</option>
+        <option value="sep_2024">Διορίστηκα από 01-09-2024 έως 30-09-2024</option>
+        <option value="after_2024_09_30">Διορίστηκα από 01-10-2024 και μετά</option>
       </select>
     </div>
 
@@ -88,9 +88,15 @@
     <div class="check-row">
       <input type="checkbox" id="prioritySpecialCategory">
       <label for="prioritySpecialCategory">
-        Ανήκω σε <strong>ειδική κατηγορία μετάθεσης</strong> που προβλέπεται από τις διατάξεις στις οποίες παραπέμπει η εγκύκλιος.
+        Ανήκω σε <strong>ειδική κατηγορία μετάθεσης</strong>
+        (π.χ. πολύτεκνος/η, ειδική περίπτωση λόγω πάθησης ή γονέας τέκνου με αναπηρία 67% και άνω).
       </label>
     </div>
+    <p class="note">
+      Οι ειδικές κατηγορίες καθορίζονται από το άρθρο 13 του π.δ. 50/1996 και τις λοιπές διατάξεις
+      στις οποίες παραπέμπει η εγκύκλιος. Η επιλογή εδώ αποτελεί δήλωση του χρήστη και δεν πιστοποιεί
+      από μόνη της την υπαγωγή σε ειδική κατηγορία.
+    </p>
 
     <div class="check-row">
       <input type="checkbox" id="priorityNewSelfSpouse75">
@@ -582,7 +588,7 @@
     const newSelfSpouse75 = checked("priorityNewSelfSpouse75");
     const newChild67 = checked("priorityNewChild67");
     if (!appointmentStatus) {
-      warnings.push("Δεν έχει δηλωθεί η κατάσταση ως προς τον διορισμό. Ο έλεγχος του ειδικού κανόνα νεοδιορίστων δεν μπορεί να ολοκληρωθεί.");
+      warnings.push("Δεν έχει δηλωθεί η περίοδος μόνιμου διορισμού. Ο έλεγχος του ειδικού κανόνα νεοδιορίστων δεν μπορεί να ολοκληρωθεί.");
     }
     const isNewAppointee = ["before_2024_09_01","sep_2024","after_2024_09_30"].includes(appointmentStatus);
     const newAppointeeException = specialCategory || (isNewAppointee && (newSelfSpouse75 || newChild67));
@@ -596,7 +602,7 @@
     }
 
     const priorityReasons = [];
-    if (specialCategory) priorityReasons.push("ειδική κατηγορία μετάθεσης");
+    if (specialCategory) priorityReasons.push("δηλώθηκε ειδική κατηγορία μετάθεσης");
     if (isNewAppointee && newSelfSpouse75) priorityReasons.push("νεοδιόριστος/η με αναπηρία ιδίου/συζύγου 75%+");
     if (isNewAppointee && newChild67) priorityReasons.push("νεοδιόριστος/η με τέκνο με αναπηρία 67%+");
     if (checked("priorityElected")) priorityReasons.push("αιρετός/ή ΟΤΑ");
