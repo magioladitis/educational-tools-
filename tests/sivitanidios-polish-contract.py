@@ -35,6 +35,6 @@ check('official note mentions five languages', all(x in src for x in ['αγγλ�
 check('official note cites article 28 PD 50/2001', 'άρθρου 28 του Π.Δ. 50/2001' in src)
 check('engine recognizes five translation-exempt language names', "['english', 'french', 'german', 'italian', 'spanish']" in js)
 check('engine warns for missing translation package', 'επίσημη μετάφραση' in js)
-check('cache 3.20.49', "define('EDU_TOOLS_VERSION', '3.20.49')" in (ROOT/'includes/config.php').read_text())
+check('page uses central asset-version helper', 'edu_asset_url(' in src)
 print(f'RESULT {passes} PASS / {fails} FAIL')
 raise SystemExit(1 if fails else 0)

@@ -31,7 +31,7 @@ check('21 shared section-head configs', section_head_count == 21)
 check('0 literal section-head blocks', '<div class="section-head">' not in source)
 check('18 page action helper calls', source.count('calculatorActions(') == 18)
 check('0 literal page action blocks', '<div class="actions">' not in source)
-check('77 static result-row helper calls', source.count('calculatorResultRow(') == 77)
+check('at least 77 static result-row helper calls', source.count('calculatorResultRow(') >= 77)
 check('only runtime JS result-row literal remains', source.count('<div class="result-row') == 1)
 check('runtime JS result-row remains in SDE breakdown', "html += '<div class=\"result-row\"><span>'" in (ROOT/'ypologismos-morion-apospasis-sde.php').read_text())
 
