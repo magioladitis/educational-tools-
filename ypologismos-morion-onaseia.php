@@ -142,7 +142,7 @@ renderAsepPeAcademic(array(
   <?php calculatorCardEnd(); ?>
 
   <?php calculatorActions(array(
-    array('label' => 'Υπολόγισε τα μόρια ΔΗΜ.Ω.Σ.', 'attrs' => array('type' => 'button', 'onclick' => 'calculatePoints()')),
+    array('label' => 'Έλεγχος & υπολογισμός', 'attrs' => array('type' => 'button', 'onclick' => 'calculatePoints()')),
     array('label' => 'Καθαρισμός', 'class' => 'reset-btn', 'attrs' => array('type' => 'button', 'onclick' => 'resetForm()'))
   )); ?>
 

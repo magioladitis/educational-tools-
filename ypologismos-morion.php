@@ -155,13 +155,13 @@ renderAsepSocialCriteria(array(
       <?php calculatorResultRow(array('label_html' => 'Κοινωνικά', 'value_html' => '0,00', 'value_id' => 'resSocial')); ?>
       <?php calculatorResultRow(array('label_html' => 'Βαθμός τίτλου', 'value_html' => '0,00', 'value_id' => 'resDegree')); ?>
 
-      <div class="priority" id="pedagogicalPriorityBox">Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.</div>
-      <div class="priority" id="sidebarStatus">Συμπλήρωσε κλάδο και βαθμό τίτλου· στη συνέχεια τα μόρια ενημερώνονται αυτόματα.</div>
+      <?php calculatorResultMessage(array('id' => 'pedagogicalPriorityBox', 'variant' => 'status', 'text' => 'Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.')); ?>
+      <?php calculatorResultMessage(array('id' => 'sidebarStatus', 'variant' => 'status', 'text' => 'Συμπλήρωσε κλάδο και βαθμό τίτλου· στη συνέχεια τα μόρια ενημερώνονται αυτόματα.')); ?>
 
-      <button type="button" class="calculate-primary" onclick="calculatePoints()">Υπολογισμός μορίων</button>
-      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyResultBtn', 'onclick' => 'copyResult()', 'disabled' => true), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'onclick' => 'resetCalculator()'), 'html' => 'Μηδενισμός'))); ?>
+      <button type="button" class="calculate-primary" onclick="calculatePoints()">Έλεγχος & υπολογισμός</button>
+      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyResultBtn', 'onclick' => 'copyResult()', 'disabled' => true), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'onclick' => 'resetCalculator()'), 'html' => 'Μηδενισμός'))); ?>
 
-      <div class="info-note edu-mt-14">Η τελική σειρά κατάταξης εξαρτάται από τους κανόνες της αντίστοιχης προκήρυξης και τον επίσημο έλεγχο των δικαιολογητικών.</div>
+      <?php calculatorResultMessage(array('variant' => 'disclaimer', 'text' => 'Η τελική σειρά κατάταξης εξαρτάται από τους κανόνες της αντίστοιχης προκήρυξης και τον επίσημο έλεγχο των δικαιολογητικών.')); ?>
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 
@@ -355,7 +355,7 @@ renderAsepSocialCriteria(array(
 
     const pedagogical = document.getElementById("pedagogical").checked;
     const pedagogicalBox = document.getElementById("pedagogicalPriorityBox");
-    pedagogicalBox.className = "priority" + (pedagogical ? " yes" : "");
+    pedagogicalBox.className = "result-message edu-message " + (pedagogical ? "result-message--success edu-message--success" : "result-message--status edu-message--status");
     pedagogicalBox.textContent = pedagogical ? "ΠΡΟΤΑΞΗ λόγω Παιδαγωγικής & Διδακτικής Επάρκειας" : "Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.";
 
     const total =

@@ -365,6 +365,12 @@ body.edu-ui .duplicate-warning {
 
 .edu-message { padding: 12px 13px; border: 1px solid; }
 
+.edu-message--status {
+  background: var(--edu-neutral-soft);
+  border: 1px solid var(--edu-border);
+  color: #475569;
+}
+
 body.edu-ui .note,
 body.edu-ui .note-box,
 body.edu-ui .info,
@@ -399,6 +405,20 @@ body.edu-ui .duplicate-warning,
   border: 1px solid var(--edu-danger-border);
   color: var(--edu-danger);
 }
+
+/* Result-sidebar message semantics. */
+body.edu-ui .result-message {
+  margin-top: var(--edu-result-section-gap);
+  padding: 11px 12px;
+  border-radius: 11px;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+body.edu-ui .result-message--status { font-weight: 700; text-align: center; }
+body.edu-ui .result-message--success { font-weight: 700; text-align: center; }
+body.edu-ui .result-message--warning { font-weight: 600; }
+body.edu-ui .result-message--disclaimer { font-weight: 400; text-align: left; }
+body.edu-ui .result-message.hidden { display: none !important; }
 
 /* --------------------------------------------------------------------------
    Results / totals / tables
@@ -978,9 +998,6 @@ body.edu-ui.edu-calc-standard .priority {
 body.edu-ui.edu-calc-standard .priority.yes {
   background:var(--green-soft); border-color:var(--edu-success-border); color:var(--green);
 }
-body.edu-ui.edu-calc-standard .priority.special {
-  background:#f1edff; border-color:#d8cdf7; color:#6941c6;
-}
 body.edu-ui.edu-calc-standard .actions {
   display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:var(--edu-result-section-gap);
 }
@@ -1501,7 +1518,7 @@ body.edu-page-digital-tutoring .result-row strong {font-variant-numeric:tabular-
 body.edu-page-digital-tutoring .pre-interview {margin-top:13px;padding:13px;border-radius:12px;background:var(--purple-soft);color:#4d2b9b;border:1px solid #ddd2ff}
 body.edu-page-digital-tutoring .pre-interview strong {font-size:20px}
 
-body.edu-page-digital-tutoring .status-box {margin-top:14px}
+body.edu-page-digital-tutoring .status-box {margin-top:0}
 body.edu-page-digital-tutoring .credits {text-align:center;color:#7a8490;font-size:13px;margin-top:24px}
 
 body.edu-page-digital-tutoring .hidden {display:none!important}
@@ -2100,8 +2117,6 @@ body.edu-calc-ea3 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;ma
 body.edu-calc-ea3 .actions button{border:0;border-radius:10px;padding:11px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff}
 body.edu-calc-ea3 .actions button.secondary{background:#e8edf4;color:#263445}
 body.edu-calc-ea3 .footer{text-align:center;color:#7a8490;font-size:13px;margin-top:22px}
-body.edu-calc-ea3 .eligibility-box{margin-top:12px;padding:12px;border:1px dashed #b7c5d8;border-radius:12px;background:#fbfcfe;font-size:13px}
-body.edu-calc-ea3 .eligibility-box strong{display:block;margin-bottom:4px}
 @media(max-width:900px){body.edu-calc-ea3 .grid{grid-template-columns:1fr}body.edu-calc-ea3 .result-card{position:static}}
 @media(max-width:650px){body.edu-calc-ea3 .page{padding:16px 12px 35px}body.edu-calc-ea3 .hero{padding:25px 20px;border-radius:17px}body.edu-calc-ea3 .field{grid-template-columns:1fr}body.edu-calc-ea3 .actions{grid-template-columns:1fr}}
 

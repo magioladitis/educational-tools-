@@ -20,7 +20,7 @@ if (!defined('EDU_TOOLS_YEAR')) {
 }
 
 if (!defined('EDU_TOOLS_VERSION')) {
-    define('EDU_TOOLS_VERSION', '3.20.53');
+    define('EDU_TOOLS_VERSION', '3.20.54');
 }
 if (!function_exists('edu_asset_url')) {
     function edu_asset_url($path)

@@ -170,14 +170,14 @@ renderEaeSensoryPriority(array(
 
 <?php calculatorResultsStart(array('variant' => 'result-card', 'class' => 'card result-card', 'aria_live' => 'polite')); ?>
 <?php calculatorScoreHeader(array('value_id' => 'grandTotal', 'value_html' => '0,00', 'label' => 'συνολικά μόρια')); ?>
-<div id="tableStatus" class="status none">Επίλεξε κλάδο</div>
-<div id="eligibilityWhy" class="eligibility-box"><strong>Έλεγχος ένταξης</strong>Συμπλήρωσε τα προσόντα σου.</div>
+<?php calculatorResultMessage(array('id' => 'tableStatus', 'variant' => 'status', 'text' => 'Επίλεξε κλάδο')); ?>
+<?php calculatorResultMessage(array('id' => 'eligibilityWhy', 'variant' => 'disclaimer', 'html' => '<strong>Έλεγχος ένταξης</strong>Συμπλήρωσε τα προσόντα σου.')); ?>
 <?php calculatorResultRow(array('label_html' => 'Ακαδημαϊκά', 'value_html' => '0,00 / 120', 'value_id' => 'resAcademic')); ?>
 <?php calculatorResultRow(array('label_html' => 'Προϋπηρεσία', 'value_html' => '0,00 / 120', 'value_id' => 'resService')); ?>
 <?php calculatorResultRow(array('label_html' => 'Κοινωνικά', 'value_html' => '0,00', 'value_id' => 'resSocial')); ?>
 <div id="priorities"></div>
-<?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
-<div class="note edu-mt-14">Ενημερωτικός υπολογισμός βάσει της 3ΕΑ/2025. Η τελική ένταξη και μοριοδότηση προκύπτει από τον έλεγχο ΑΣΕΠ/ΟΠΣΥΔ και τα επίσημα δικαιολογητικά.</div>
+<?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
+<?php calculatorResultMessage(array('variant' => 'disclaimer', 'text' => 'Ενημερωτικός υπολογισμός βάσει της 3ΕΑ/2025. Η τελική ένταξη και μοριοδότηση προκύπτει από τον έλεγχο ΑΣΕΠ/ΟΠΣΥΔ και τα επίσημα δικαιολογητικά.')); ?>
 <?php calculatorResultsEnd(); ?>
 <?php calculatorColumnsEnd(); ?>
 
@@ -213,9 +213,9 @@ renderEaeSensoryPriority(array(
    $('degreeValidation').classList.toggle('hidden', !degreeInvalid);
    const academic=AsepPeAcademic.calculate('asepPeAcademic'), a=academic.points, b=calcService(), socialResult=calcSocial(), c=socialResult.points, t=a+b+c, e=AsepEaeEligibility.getState('eaeEligibility',{socialResult:socialResult});
    $('grandTotal').textContent=fmt(t); $('resAcademic').textContent=fmt(a)+' / 120'; $('resService').textContent=fmt(b)+' / 120'; $('resSocial').textContent=fmt(c);
-   $('tableStatus').className='status '+e.type; $('tableStatus').textContent=e.label; $('eligibilityWhy').innerHTML='<strong>Έλεγχος ένταξης</strong>'+e.why;
+   $('tableStatus').className='result-message edu-message '+(e.type==='main'||e.type==='aux'?'result-message--success edu-message--success':e.type==='none'&&e.label!=='Επίλεξε κλάδο'?'result-message--warning edu-message--warning':'result-message--status edu-message--status'); $('tableStatus').textContent=e.label; $('eligibilityWhy').innerHTML='<strong>Έλεγχος ένταξης</strong>'+e.why;
    let p=[]; if($('pedagogical').checked) p.push('Πρόταξη λόγω Παιδαγωγικής & Διδακτικής Επάρκειας'); p=p.concat(EaeSensoryProof.priorityLabels());
-   $('priorities').innerHTML=p.map(x=>'<div class="priority">✓ '+x+'</div>').join('');
+   $('priorities').innerHTML=p.map(x=>'<div class="result-message edu-message result-message--success edu-message--success">✓ '+x+'</div>').join('');
    return {a,b,c,t,e,p};
  }
  function summary(v){return ['Υπολογισμός μορίων 3ΕΑ/2025',`Πίνακας: ${v.e.label}`,v.e.why,`Ακαδημαϊκά: ${fmt(v.a)} / 120`,`Προϋπηρεσία: ${fmt(v.b)} / 120`,`Κοινωνικά: ${fmt(v.c)}`,`ΣΥΝΟΛΟ: ${fmt(v.t)}`,AsepDigitalTutoring.summary('digitalTutoring',fmt),v.p.length?'Προτάξεις/προτεραιότητες: '+v.p.join(' · '):'',AsepPedagogicalProof.summary('pedagogical'),EaeSensoryProof.summary(),TrainingProof.summary('trainingProof')].filter(Boolean).join('\n');}

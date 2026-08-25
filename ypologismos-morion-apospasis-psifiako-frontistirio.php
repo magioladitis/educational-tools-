@@ -175,7 +175,7 @@
 
           <div id="statusBox" class="status-box" role="status" aria-live="polite"></div>
 
-          <?php calculatorActions(array(array('attrs' => array('class' => 'primary', 'type' => 'button', 'onclick' => 'calculate()'), 'html' => 'Υπολογισμός'), array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Καθαρισμός'))); ?>
+          <?php calculatorActions(array(array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Καθαρισμός'))); ?>
         <?php calculatorCardEnd(); ?>
 
         <?php calculatorCardStart(); ?>
@@ -291,27 +291,27 @@
     const status = [];
     const videoScoreFilled = document.getElementById('videoScore').value !== '';
     if(!videoScoreFilled){
-      status.push('<div class="info"><strong>Βαθμολογία βίντεο:</strong> συμπλήρωσε τη βαθμολογία Γ όταν είναι διαθέσιμη.</div>');
+      status.push('<div class="result-message edu-message result-message--status edu-message--status"><strong>Βαθμολογία βίντεο:</strong> συμπλήρωσε τη βαθμολογία Γ όταν είναι διαθέσιμη.</div>');
     } else if(c < 20){
-      status.push('<div class="danger"><strong>Δεν καλύπτεται η βάση του βιντεοσκοπημένου μαθήματος:</strong> απαιτούνται τουλάχιστον 20/35.</div>');
+      status.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Δεν καλύπτεται η βάση του βιντεοσκοπημένου μαθήματος:</strong> απαιτούνται τουλάχιστον 20/35.</div>');
     } else {
-      status.push('<div class="success"><strong>Καλύπτεται η βάση Γ:</strong> ' + format(c) + '/35. Η κλήση σε συνέντευξη εξαρτάται και από τη σχετική κατάταξη Β+Γ έναντι των άλλων υποψηφίων.</div>');
+      status.push('<div class="result-message edu-message result-message--success edu-message--success"><strong>Καλύπτεται η βάση Γ:</strong> ' + format(c) + '/35. Η κλήση σε συνέντευξη εξαρτάται και από τη σχετική κατάταξη Β+Γ έναντι των άλλων υποψηφίων.</div>');
     }
 
     if((a1 > 0 || a2 > 0) && (a1 < 12 || a2 < 8)){
       const missing=[];
       if(a1 < 12) missing.push('Α1 κάτω από 12');
       if(a2 < 8) missing.push('Α2 κάτω από 8');
-      status.push('<div class="danger"><strong>Βάσεις συνέντευξης:</strong> ' + missing.join(' · ') + '.</div>');
+      status.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Βάσεις συνέντευξης:</strong> ' + missing.join(' · ') + '.</div>');
     } else if(a1 >= 12 && a2 >= 8){
-      status.push('<div class="success"><strong>Καλύπτονται και οι δύο βάσεις της συνέντευξης.</strong></div>');
+      status.push('<div class="result-message edu-message result-message--success edu-message--success"><strong>Καλύπτονται και οι δύο βάσεις της συνέντευξης.</strong></div>');
     }
 
     if(unanswered.length){
-      status.push('<div class="warning"><strong>Συμπλήρωσε τις προϋποθέσεις:</strong> ' + unanswered.join(' · ') + '.</div>');
+      status.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Συμπλήρωσε τις προϋποθέσεις:</strong> ' + unanswered.join(' · ') + '.</div>');
     }
     if(issues.length){
-      status.push('<div class="danger"><strong>Έλεγχος προϋποθέσεων:</strong><ul class="edu-list-compact"><li>' + issues.join('</li><li>') + '</li></ul></div>');
+      status.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Έλεγχος προϋποθέσεων:</strong><ul class="edu-list-compact"><li>' + issues.join('</li><li>') + '</li></ul></div>');
     }
 
     document.getElementById('statusBox').innerHTML = status.join('');

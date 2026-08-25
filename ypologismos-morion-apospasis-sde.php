@@ -203,7 +203,7 @@ renderDeadlineCard(array(
         <?php calculatorResultRow(array('label_html' => 'Διδακτική εμπειρία', 'value_html' => '0 / 13', 'value_id' => 'experienceScore')); ?>
         <?php calculatorResultRow(array('label_html' => 'Άλλα προσόντα', 'value_html' => '0 / 5', 'value_id' => 'otherScore')); ?>
         <div id="eligibilityStatus" role="status" aria-live="polite"></div>
-        <?php calculatorActions(array(array('attrs' => array('class' => 'primary', 'type' => 'button', 'onclick' => 'calculate()'), 'html' => 'Υπολογισμός'), array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Καθαρισμός'))); ?>
+        <?php calculatorActions(array(array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Καθαρισμός'))); ?>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorCardStart(); ?>
@@ -326,32 +326,32 @@ renderDeadlineCard(array(
     const blockingValue = value('blockingIssue');
     const teleValue = value('teleEducation');
 
-    if (!specialtySelected) messages.push('<div class="info"><strong>Επίλεξε ειδικότητα</strong> για να ελεγχθούν οι αποδεκτοί γραμματισμοί.</div>');
+    if (!specialtySelected) messages.push('<div class="result-message edu-message result-message--status edu-message--status"><strong>Επίλεξε ειδικότητα</strong> για να ελεγχθούν οι αποδεκτοί γραμματισμοί.</div>');
     const eligibilityYearsAnswered = $('eligibilitySchoolYears').value !== '';
     if (!eligibilityYearsAnswered) {
-      messages.push('<div class="info"><strong>Δικαίωμα αίτησης:</strong> συμπλήρωσε τη διδακτική υπηρεσία σε σχολεία Πρωτοβάθμιας/Δευτεροβάθμιας.</div>');
+      messages.push('<div class="result-message edu-message result-message--status edu-message--status"><strong>Δικαίωμα αίτησης:</strong> συμπλήρωσε τη διδακτική υπηρεσία σε σχολεία Πρωτοβάθμιας/Δευτεροβάθμιας.</div>');
     } else if (!result.eligibleByTwoYears) {
-      messages.push('<div class="danger"><strong>Δεν συμπληρώνονται τα 2 απαιτούμενα έτη διδακτικής υπηρεσίας.</strong></div>');
+      messages.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Δεν συμπληρώνονται τα 2 απαιτούμενα έτη διδακτικής υπηρεσίας.</strong></div>');
     }
 
     if (blockingValue === '') {
-      messages.push('<div class="warning"><strong>Κωλύματα:</strong> δήλωσε αν υπάρχει πιθανό κώλυμα του άρθρου 4.</div>');
+      messages.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Κωλύματα:</strong> δήλωσε αν υπάρχει πιθανό κώλυμα του άρθρου 4.</div>');
     } else if (blockingValue === 'yes') {
-      messages.push('<div class="danger"><strong>Δήλωσες πιθανό κώλυμα του άρθρου 4.</strong> Απαιτείται έλεγχος πριν την αίτηση.</div>');
+      messages.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Δήλωσες πιθανό κώλυμα του άρθρου 4.</strong> Απαιτείται έλεγχος πριν την αίτηση.</div>');
     } else if (specialtySelected && eligibilityYearsAnswered && result.eligibleByTwoYears) {
-      messages.push('<div class="success"><strong>Ο βασικός έλεγχος των 2 ετών/κωλύματος είναι θετικός.</strong> Έλεγξε πάντως όλες τις προϋποθέσεις της πρόσκλησης.</div>');
+      messages.push('<div class="result-message edu-message result-message--success edu-message--success"><strong>Ο βασικός έλεγχος των 2 ετών/κωλύματος είναι θετικός.</strong> Έλεγξε πάντως όλες τις προϋποθέσεις της πρόσκλησης.</div>');
     }
 
     if ($('formalEducationYears').value !== '' && eligibilityYearsAnswered && Math.floor(numberValue('formalEducationYears')) < Math.floor(numberValue('eligibilitySchoolYears'))) {
-      messages.push('<div class="warning"><strong>Έλεγχος ετών:</strong> τα συνολικά πλήρη έτη τυπικής εκπαίδευσης που δήλωσες για μοριοδότηση είναι λιγότερα από τα έτη Πρωτοβάθμιας/Δευτεροβάθμιας που δήλωσες για επιλεξιμότητα. Έλεγξε τις καταχωρίσεις.</div>');
+      messages.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Έλεγχος ετών:</strong> τα συνολικά πλήρη έτη τυπικής εκπαίδευσης που δήλωσες για μοριοδότηση είναι λιγότερα από τα έτη Πρωτοβάθμιας/Δευτεροβάθμιας που δήλωσες για επιλεξιμότητα. Έλεγξε τις καταχωρίσεις.</div>');
     }
 
-    if (specialtySelected && !result.assignments.length) messages.push('<div class="warning">Δεν εντοπίζεται αποδεκτός γραμματισμός για την επιλεγμένη ειδικότητα στο άρθρο 5.</div>');
+    if (specialtySelected && !result.assignments.length) messages.push('<div class="result-message edu-message result-message--warning edu-message--warning">Δεν εντοπίζεται αποδεκτός γραμματισμός για την επιλεγμένη ειδικότητα στο άρθρο 5.</div>');
 
     if (teleValue === '') {
-      messages.push('<div class="info">Δήλωσε αν αποδέχεσαι σύγχρονη τηλεκπαίδευση· χρησιμοποιείται ως πρώτο κριτήριο ισοβαθμίας.</div>');
+      messages.push('<div class="result-message edu-message result-message--status edu-message--status">Δήλωσε αν αποδέχεσαι σύγχρονη τηλεκπαίδευση· χρησιμοποιείται ως πρώτο κριτήριο ισοβαθμίας.</div>');
     } else if (teleValue === 'no') {
-      messages.push('<div class="warning">Σε ισοβαθμία προηγείται υποψήφιος που έχει αποδεχτεί τη σύγχρονη τηλεκπαίδευση.</div>');
+      messages.push('<div class="result-message edu-message result-message--warning edu-message--warning">Σε ισοβαθμία προηγείται υποψήφιος που έχει αποδεχτεί τη σύγχρονη τηλεκπαίδευση.</div>');
     }
     $('eligibilityStatus').innerHTML = messages.join('');
 

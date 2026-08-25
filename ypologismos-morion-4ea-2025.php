@@ -246,13 +246,11 @@ renderAsepSocialCriteria(array(
 
       <?php calculatorResultRow(array('label_html' => 'Πίνακας Ε.Α.Ε.', 'value_html' => '—', 'value_id' => 'resTable')); ?>
 
-      <div class="priority" id="priorityBox">Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.</div>
+      <?php calculatorResultMessage(array('id' => 'priorityBox', 'variant' => 'status', 'text' => 'Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.')); ?>
 
-      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
+      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
 
-      <div class="info-note edu-mt-14">
-        Σε ισοβαθμία προηγούνται κατά σειρά: περισσότερα κοινωνικά μόρια (και ειδικότερα αναπηρία), έπειτα περισσότερα ακαδημαϊκά / μεγαλύτερος βαθμός πτυχίου και τέλος περισσότερη προϋπηρεσία.
-      </div>
+      <?php calculatorResultMessage(array('variant' => 'disclaimer', 'text' => 'Σε ισοβαθμία προηγούνται κατά σειρά: περισσότερα κοινωνικά μόρια (και ειδικότερα αναπηρία), έπειτα περισσότερα ακαδημαϊκά / μεγαλύτερος βαθμός πτυχίου και τέλος περισσότερη προϋπηρεσία.')); ?>
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 
@@ -331,7 +329,7 @@ renderAsepSocialCriteria(array(
     const priorities=[];
     if(ped) priorities.push('ΠΡΟΤΑΞΗ λόγω Παιδαγωγικής και Διδακτικής Επάρκειας');
     priorities.push.apply(priorities,EaeSensoryProof.priorityLabels());
-    $('priorityBox').classList.toggle('yes',priorities.length>0);
+    $('priorityBox').className='result-message edu-message '+(priorities.length?'result-message--success edu-message--success':'result-message--status edu-message--status');
     $('priorityBox').textContent=priorities.length?priorities.join(' · '):'Χωρίς δηλωμένη ειδική πρόταξη / προτεραιότητα';
 
     return {academicResult,languages,service,social,total,ped,tableCode,tableLabel,why,priorities};

@@ -139,11 +139,11 @@
   <?php calculatorResultRow(array('label_html'=>'Άλλα προσόντα','value_html'=>'0,00 / 6','value_id'=>'resOther')); ?>
   <?php calculatorResultRow(array('label_html'=>'Κοινωνική προσαύξηση','value_html'=>'+0,00','value_id'=>'resSocial')); ?>
   <?php calculatorResultRow(array('label_html'=>'Συνολικό ποσοστό κοινωνικών','value_html'=>'0%','value_id'=>'resSocialPercent')); ?>
-  <div id="resultStatus" class="priority">Συμπλήρωσε τα βασικά στοιχεία.</div>
-  <div id="warningBox" class="note hidden"></div>
-  <div id="breakdownBox" class="note">Η αναλυτική κατανομή θα εμφανιστεί εδώ.</div>
+  <?php calculatorResultMessage(array('id'=>'resultStatus','variant'=>'status','text'=>'Συμπλήρωσε τα βασικά στοιχεία.')); ?>
+  <?php calculatorResultMessage(array('id'=>'warningBox','variant'=>'warning','class'=>'hidden','text'=>'')); ?>
+  <?php calculatorResultMessage(array('id'=>'breakdownBox','variant'=>'disclaimer','text'=>'Η αναλυτική κατανομή θα εμφανιστεί εδώ.')); ?>
   <?php calculatorActions(array(
-    array('attrs'=>array('type'=>'button','id'=>'copyBtn'),'html'=>'Αντιγραφή αποτελέσματος'),
+    array('attrs'=>array('type'=>'button','class'=>'secondary','id'=>'copyBtn'),'html'=>'Αντιγραφή αποτελέσματος'),
     array('attrs'=>array('type'=>'button','id'=>'resetBtn','class'=>'secondary'),'html'=>'Μηδενισμός')
   )); ?>
 <?php calculatorResultsEnd(); ?>
@@ -208,7 +208,7 @@ function calc(){
   $('resEducation').textContent=fmt(r.education.points)+' / 23'; $('resTeaching').textContent=fmt(r.teaching.points)+' / 21'; $('resWork').textContent=fmt(r.work.points)+' / 10'; $('resOther').textContent=fmt(r.other.points)+' / 6';
   $('resSocial').textContent='+'+fmt(r.social.increase); $('resSocialPercent').textContent=fmt(r.social.totalPercent).replace(',00','')+'%';
   const st=r.eligibility; $('eligibilityBox').classList.toggle('yes',st.eligible); $('eligibilityBox').textContent=st.blockers.length?'⚠ '+st.blockers.join(' '):st.pending.length?'ℹ '+st.pending.join(' '):'✓ Τα βασικά στοιχεία της επιλεγμένης κατηγορίας έχουν επιβεβαιωθεί.';
-  $('resultStatus').classList.toggle('yes',st.eligible); $('resultStatus').textContent=st.eligible?'Υπολογισμός ολοκληρωμένος — έλεγξε και το προσοντολόγιο του μαθήματος.':'Ο υπολογισμός είναι προσωρινός μέχρι να συμπληρωθούν τα βασικά στοιχεία.';
+  $('resultStatus').className='result-message edu-message '+(st.eligible?'result-message--success edu-message--success':'result-message--status edu-message--status'); $('resultStatus').textContent=st.eligible?'Υπολογισμός ολοκληρωμένος — έλεγξε και το προσοντολόγιο του μαθήματος.':'Ο υπολογισμός είναι προσωρινός μέχρι να συμπληρωθούν τα βασικά στοιχεία.';
   const warnings=(r.other.warnings||[]).slice(); if(d.candidateType==='craft'&&Number(d.workMonths||0)<36) warnings.push('Ο εμπειροτέχνης δεν συμπληρώνει την απαιτούμενη τριετή εμπειρία.');
   $('warningBox').classList.toggle('hidden',warnings.length===0); $('warningBox').textContent=warnings.join(' ');
   const lines=[]; r.education.details.forEach(x=>lines.push(x.label+': '+fmt(x.points))); r.teaching.details.forEach(x=>lines.push(x.label+': '+fmt(x.points)));

@@ -348,7 +348,7 @@
   <?php calculatorCardEnd(); ?>
 
   <?php calculatorActions(array(
-    array('label' => 'Υπολογισμός μορίων', 'class' => 'primary-btn', 'attrs' => array('type' => 'button', 'onclick' => 'calculatePoints()')),
+    array('label' => 'Έλεγχος & προβολή αποτελέσματος', 'class' => 'primary-btn', 'attrs' => array('type' => 'button', 'onclick' => 'calculatePoints()')),
     array('label' => 'Καθαρισμός', 'class' => 'secondary-btn', 'attrs' => array('type' => 'button', 'onclick' => 'resetCalculator()'))
   )); ?>
 

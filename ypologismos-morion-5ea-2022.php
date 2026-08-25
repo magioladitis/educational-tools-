@@ -183,9 +183,9 @@
   <?php calculatorResultRow(array('label_html' => 'Βασικό τυπικό προσόν', 'value_html' => '—', 'value_id' => 'resBasic')); ?>
   <?php calculatorResultRow(array('label_html' => 'Πίνακας Ε.Α.Ε.', 'value_html' => '—', 'value_id' => 'resTable')); ?>
 
-  <div class="priority" id="priorityBox">Χωρίς δηλωμένη ειδική πρόταξη / προτεραιότητα</div>
+  <?php calculatorResultMessage(array('id' => 'priorityBox', 'variant' => 'status', 'text' => 'Χωρίς δηλωμένη ειδική πρόταξη / προτεραιότητα')); ?>
   <?php calculatorActions(array(
-      array('attrs' => array('type' => 'button', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή αποτελέσματος'),
+      array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή αποτελέσματος'),
       array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός')
   )); ?>
 <?php calculatorResultsEnd(); ?>
@@ -275,7 +275,7 @@
     const priorities=[];
     if($('pedagogical').checked) priorities.push('ΠΡΟΤΑΞΗ λόγω Παιδαγωγικής και Διδακτικής Επάρκειας');
     priorities.push.apply(priorities,EaeSensoryProof.priorityLabels());
-    $('priorityBox').classList.toggle('yes',priorities.length>0);
+    $('priorityBox').className='result-message edu-message '+(priorities.length?'result-message--success edu-message--success':'result-message--status edu-message--status');
     $('priorityBox').textContent=priorities.length?priorities.join(' · '):'Χωρίς δηλωμένη ειδική πρόταξη / προτεραιότητα';
 
     return {academic,serviceResult,socialResult,eligibility,basic,total,priorities};

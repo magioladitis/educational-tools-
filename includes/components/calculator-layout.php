@@ -404,6 +404,30 @@ if (!function_exists('calculatorResultRow')) {
     }
 }
 
+
+if (!function_exists('calculatorResultMessage')) {
+    function calculatorResultMessage($config = array()) {
+        $config = is_array($config) ? $config : array();
+        $variant = isset($config['variant']) && $config['variant'] !== '' ? $config['variant'] : 'status';
+        $allowed = array('status', 'success', 'warning', 'disclaimer');
+        if (!in_array($variant, $allowed, true)) $variant = 'status';
+
+        $class = 'result-message edu-message result-message--' . $variant;
+        if ($variant === 'success') $class .= ' edu-message--success';
+        elseif ($variant === 'warning') $class .= ' edu-message--warning';
+        elseif ($variant === 'disclaimer') $class .= ' edu-message--info';
+        else $class .= ' edu-message--status';
+        if (isset($config['class']) && $config['class'] !== '') $class .= ' ' . $config['class'];
+
+        $attrs = isset($config['attrs']) && is_array($config['attrs']) ? $config['attrs'] : array();
+        $id = isset($config['id']) ? $config['id'] : null;
+        $html = calculatorLayoutTextOrHtml($config, 'text', 'html');
+        calculatorLayoutOpenTag('div', $class, $id, $attrs);
+        echo $html;
+        echo '</div>';
+    }
+}
+
 if (!function_exists('calculatorActions')) {
     function calculatorActions($buttons, $config = array()) {
         $buttons = is_array($buttons) ? $buttons : array();

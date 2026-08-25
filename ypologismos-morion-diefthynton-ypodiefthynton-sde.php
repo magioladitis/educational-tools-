@@ -176,7 +176,7 @@
         <?php calculatorResultRow(array('class' => 'result-row hidden', 'id' => 'interviewRow', 'label_html' => 'Συνέντευξη', 'value_html' => '— / 25', 'value_id' => 'interviewResult')); ?>
         <?php calculatorResultRow(array('class' => 'result-row emphasis', 'id' => 'criteriaRow', 'label_html' => 'Σύνολο πριν συνέντευξη', 'value_html' => '0 / 75', 'value_id' => 'criteriaScore')); ?>
         <div id="eligibilityStatus" role="status" aria-live="polite"></div>
-        <?php calculatorActions(array(array('attrs' => array('class' => 'primary', 'type' => 'button', 'onclick' => 'copySummary(this)'), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Μηδενισμός'))); ?>
+        <?php calculatorActions(array(array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'copySummary(this)'), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Μηδενισμός'))); ?>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorCardStart(); ?><h2>Ανάλυση μορίων</h2><div id="breakdown" class="subtitle">Συμπλήρωσε τα στοιχεία σου.</div><?php calculatorCardEnd(); ?>
