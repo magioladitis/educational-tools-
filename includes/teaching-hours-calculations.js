@@ -8,6 +8,7 @@
  * - Secondary: art. 14(13) n. 1566/1985 as replaced by n. 4152/2013,
  *   together with circular 123948/D2/06-09-2013 and n. 2413/1996.
  * - EK/EPAL laboratory sector/specialty responsibility: art. 27(3) n. 4386/2016.
+ * - Special Educational Personnel (EEP) and Special Auxiliary Personnel (EBP): YA 66079/D3/2018 (FEK B 1585/08-05-2018).
  */
 (function (global) {
   "use strict";
@@ -24,15 +25,15 @@
     }),
     secondary: Object.freeze({
       PE: Object.freeze([
-        Object.freeze({ minMonths: 0, maxMonthsExclusive: 84, hours: 23, label: "κάτω από 7 έτη" }),
-        Object.freeze({ minMonths: 84, maxMonthsExclusive: 156, hours: 21, label: "7 έως κάτω από 13 έτη" }),
-        Object.freeze({ minMonths: 156, maxMonthsExclusive: 240, hours: 20, label: "13 έως κάτω από 20 έτη" }),
+        Object.freeze({ minMonths: 0, maxMonthsExclusive: 72 + (1 / 30), hours: 23, label: "έως 6 έτη" }),
+        Object.freeze({ minMonths: 72 + (1 / 30), maxMonthsExclusive: 144 + (1 / 30), hours: 21, label: "πάνω από 6 έως 12 έτη" }),
+        Object.freeze({ minMonths: 144 + (1 / 30), maxMonthsExclusive: 240, hours: 20, label: "πάνω από 12 έως κάτω από 20 έτη" }),
         Object.freeze({ minMonths: 240, maxMonthsExclusive: null, hours: 18, label: "20 έτη και άνω" })
       ]),
       TE01: Object.freeze([
-        Object.freeze({ minMonths: 0, maxMonthsExclusive: 96, hours: 24, label: "κάτω από 8 έτη" }),
-        Object.freeze({ minMonths: 96, maxMonthsExclusive: 168, hours: 21, label: "8 έως κάτω από 14 έτη" }),
-        Object.freeze({ minMonths: 168, maxMonthsExclusive: 240, hours: 20, label: "14 έως κάτω από 20 έτη" }),
+        Object.freeze({ minMonths: 0, maxMonthsExclusive: 84 + (1 / 30), hours: 24, label: "έως 7 έτη" }),
+        Object.freeze({ minMonths: 84 + (1 / 30), maxMonthsExclusive: 156 + (1 / 30), hours: 21, label: "πάνω από 7 έως 13 έτη" }),
+        Object.freeze({ minMonths: 156 + (1 / 30), maxMonthsExclusive: 240, hours: 20, label: "πάνω από 13 έως κάτω από 20 έτη" }),
         Object.freeze({ minMonths: 240, maxMonthsExclusive: null, hours: 18, label: "20 έτη και άνω" })
       ]),
       DE01_ARCH: Object.freeze([
@@ -51,10 +52,11 @@
     return Math.max(0, n);
   }
 
-  function serviceMonths(years, months) {
+  function serviceMonths(years, months, days) {
     const y = Math.min(40, nonNegativeInteger(years));
     const m = Math.min(11, nonNegativeInteger(months));
-    return y * 12 + m;
+    const d = Math.min(29, nonNegativeInteger(days));
+    return y * 12 + m + d / 30;
   }
 
   function findBand(bands, totalMonths) {
@@ -64,9 +66,15 @@
   }
 
   function serviceLabel(totalMonths) {
-    const years = Math.floor(totalMonths / 12);
-    const months = totalMonths % 12;
-    return years + " έτη" + (months ? " και " + months + " μήν." : "");
+    const totalDays = Math.max(0, Math.round((Number(totalMonths) || 0) * 30));
+    const years = Math.floor(totalDays / 360);
+    const remainder = totalDays % 360;
+    const months = Math.floor(remainder / 30);
+    const days = remainder % 30;
+    let label = years + " έτη";
+    if (months) label += " και " + months + " μήν.";
+    if (days) label += " και " + days + " ημ.";
+    return label;
   }
 
   function primary(options) {
@@ -74,7 +82,7 @@
     const schoolType = options.schoolType === "kindergarten" ? "kindergarten" : "primary";
     const role = ["director", "vice_director"].includes(options.role) ? options.role : "teacher";
     const organicity = Math.max(1, nonNegativeInteger(options.organicity || 1));
-    const totalMonths = serviceMonths(options.years, options.months);
+    const totalMonths = serviceMonths(options.years, options.months, options.days);
 
     if (role === "director") {
       if (organicity < 4) {
@@ -144,7 +152,7 @@
     options = options || {};
     const role = options.role || "teacher";
     const branch = RULES.secondary[options.branch] ? options.branch : "PE";
-    const totalMonths = serviceMonths(options.years, options.months);
+    const totalMonths = serviceMonths(options.years, options.months, options.days);
     const twentyYears = totalMonths >= 240;
 
     if (role === "director") {
@@ -177,8 +185,49 @@
     return { valid: true, level: "secondary", role: "teacher", branch: branch, hours: band.hours, serviceMonths: totalMonths, serviceLabel: serviceLabel(totalMonths), rule: "Εκπαιδευτικός κλάδου " + branch.replace("DE01_ARCH", "ΔΕ01 — Αρχιτεχνίτης").replace("DE01_TECH", "ΔΕ01 — Τεχνίτης") + " — " + band.label + "." };
   }
 
+  function eep(options) {
+    options = options || {};
+    const totalMonths = serviceMonths(options.years, options.months, options.days);
+    let hours;
+    let bandLabel;
+    if (totalMonths <= 60) {
+      hours = 25; bandLabel = "έως 5 έτη υπηρεσίας";
+    } else if (totalMonths <= 120) {
+      hours = 24; bandLabel = "πάνω από 5 έως 10 έτη υπηρεσίας";
+    } else if (totalMonths <= 180) {
+      hours = 23; bandLabel = "πάνω από 10 έως 15 έτη υπηρεσίας";
+    } else if (totalMonths <= 240) {
+      hours = 22; bandLabel = "πάνω από 15 έως 20 έτη υπηρεσίας";
+    } else {
+      hours = 21; bandLabel = "πάνω από 20 έτη υπηρεσίας";
+    }
+    return {
+      valid: true,
+      level: "eep",
+      role: "eep",
+      hours: hours,
+      serviceMonths: totalMonths,
+      serviceLabel: serviceLabel(totalMonths),
+      rule: "Ειδικό Εκπαιδευτικό Προσωπικό (ΕΕΠ) — " + hours + " ώρες υποστηρικτικού έργου (" + bandLabel + ")."
+    };
+  }
+
+  function ebp() {
+    return {
+      valid: true,
+      level: "ebp",
+      role: "ebp",
+      hours: 30,
+      serviceMonths: 0,
+      serviceLabel: "Δεν επηρεάζει το ωράριο",
+      rule: "Ειδικό Βοηθητικό Προσωπικό (ΕΒΠ) — 30 ώρες υποστηρικτικού έργου την εβδομάδα."
+    };
+  }
+
   function calculate(options) {
     options = options || {};
+    if (options.level === "eep") return eep(options);
+    if (options.level === "ebp") return ebp(options);
     return options.level === "secondary" ? secondary(options) : primary(options);
   }
 
@@ -189,6 +238,8 @@
     serviceLabel: serviceLabel,
     primary: primary,
     secondary: secondary,
+    eep: eep,
+    ebp: ebp,
     calculate: calculate
   });
 })(window);
