@@ -133,9 +133,10 @@ renderAsepPeAcademic(array(
     <h2>3. Προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία</h2>
 
     <p class="note">
-      Καταχώρισε τους <strong>αναγνωρισμένους μήνες ανά σχολικό έτος</strong>.
+      Καταχώρισε τους <strong>αναγνωρισμένους μήνες ανά σχολικό έτος από το 2020-2021 και μετά</strong>.
       Κάθε μήνας δίνει 1,5 μόριο, με μέγιστο 15 μόρια ανά σχολικό έτος.
       Οι μήνες Ιουλίου και Αυγούστου δεν προσμετρώνται.
+      <strong>Σημείωση:</strong> η πρόσκληση δεν αναγράφει ρητά το 2020-2021 ως αφετηρία· το εργαλείο ακολουθεί την εφαρμογή που αποτυπώνεται στους δημοσιευμένους πίνακες κατάταξης και την αναφορά της πρόσκλησης στα Πρότυπα/Πειραματικά «όπως ορίζονται στον ν. 4692/2020».
     </p>
 
     <div id="serviceRows"></div>
@@ -181,8 +182,9 @@ renderAsepPeAcademic(array(
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/onaseia-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
   let isLiveCalculation = false;
+  const MIN_SPECIAL_SERVICE_YEAR = 2020;
   const schoolYears = [];
-  for (let y = 2025; y >= 1990; y--) {
+  for (let y = 2025; y >= MIN_SPECIAL_SERVICE_YEAR; y--) {
     schoolYears.push(`${y}-${y + 1}`);
   }
 
@@ -326,6 +328,13 @@ renderAsepPeAcademic(array(
 
       if (months < 0) {
         throw new Error("Οι μήνες προϋπηρεσίας δεν μπορούν να είναι αρνητικοί.");
+      }
+
+      if (year) {
+        const startYear = Number(String(year).slice(0, 4));
+        if (!Number.isInteger(startYear) || startYear < MIN_SPECIAL_SERVICE_YEAR) {
+          throw new Error("Η προϋπηρεσία σε Πρότυπα/Πειραματικά για τον υπολογισμό ΔΗΜ.Ω.Σ. καταχωρίζεται από το σχολικό έτος 2020-2021 και μετά.");
+        }
       }
 
       if (!year || months === 0) return;
@@ -502,9 +511,10 @@ renderAsepPeAcademic(array(
 
 <?php sourceCardStart(); ?>
   <p>Η κατάταξη στα ΔΗΜ.Ω.Σ. συνδυάζει τη μοριοδότηση των ακαδημαϊκών προσόντων όπως έχει διαμορφωθεί στον αντίστοιχο πίνακα Α.Σ.Ε.Π. με την αναγνωρισμένη προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία.</p>
+  <p><strong>Χρονική αφετηρία ειδικής προϋπηρεσίας:</strong> στο εργαλείο καταχωρίζεται προϋπηρεσία από το σχολικό έτος <strong>2020-2021</strong> και μετά. Η πρόσκληση δεν αναγράφει ρητά αυτό το έτος ως όριο· η επιλογή ακολουθεί την εφαρμογή που αποτυπώνεται στους δημοσιευμένους πίνακες κατάταξης και την παραπομπή της πρόσκλησης στα Πρότυπα/Πειραματικά του ν. 4692/2020.</p>
   <p><strong>Φετινές προσκλήσεις πρόσληψης 2026–2027:</strong></p>
   <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://diavgeia.gov.gr/doc/%CE%957%CE%98%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%9C%CE%98?inline=true', '14/08/2026 — Γενική πρόσκληση ΔΗΜ.Ω.Σ. για αναπληρωτές — ΑΔΑ Ε7ΘΑ46ΝΚΠΔ-ΡΜΘ ↗'); ?><?php sourceCardLink('https://diavgeia.gov.gr/doc/%CE%A1%CE%A4%CE%91%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%932%CE%97?inline=true', '20/08/2026 — Ειδική πρόσκληση ΕΑΕ για Τμήματα Ένταξης ΔΗΜ.Ω.Σ. — ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗'); ?><?php sourceCardLinksEnd(); ?>
-  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://www.minedu.gov.gr/news?catid=1183&id=63940%3A30-01-26-prokiryksi-diadikasias-katataksis-ekpaideftikon-vvathmias-ekpaidefsis-me-seira-proteraiotitas-kata-klado-kai-eidikotita-ypopsifion-gia-tin-plirosi-kenon-theseon-thiteias-sta-dimosia-onaseia-sxoleia&view=article', 'Προκήρυξη διαδικασίας κατάταξης ΔΗΜ.Ω.Σ. — ΥΠΑΙΘΑ ↗'); ?><?php sourceCardLink('https://info.asep.gr/node/78737', '1ΓΕ/2026 & 2ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
+  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://www.minedu.gov.gr/news?catid=1183&id=63940%3A30-01-26-prokiryksi-diadikasias-katataksis-ekpaideftikon-vvathmias-ekpaidefsis-me-seira-proteraiotitas-kata-klado-kai-eidikotita-ypopsifion-gia-tin-plirosi-kenon-theseon-thiteias-sta-dimosia-onaseia-sxoleia&view=article', 'Προκήρυξη διαδικασίας κατάταξης ΔΗΜ.Ω.Σ. — ΥΠΑΙΘΑ ↗'); ?><?php sourceCardLink('https://info.asep.gr/node/78737', '1ΓΕ/2026 & 2ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLink('https://dedimos.minedu.gov.gr/nea/anakoinoseis/anartisi-pinakon-katataxis-tis-prosklisis-tis-d-e-dim-o-s-gia-anaplirotes-plirous-i-meiomenou-orariou-genikis-ekpaidefsis/', '26/08/2026 — Δημοσιευμένοι πίνακες κατάταξης αναπληρωτών ΔΗΜ.Ω.Σ. ↗'); ?><?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
