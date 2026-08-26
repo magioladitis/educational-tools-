@@ -106,6 +106,12 @@
       color:var(--edu-warning);
     }
 
+    .edu-page-teaching-assignments .assignment-s .assignment-badge{
+      background:var(--edu-neutral-soft);
+      color:var(--edu-muted);
+      min-width:64px;
+    }
+
     @media (max-width:700px){
       .edu-page-teaching-assignments .school-type-options{
         grid-template-columns:1fr;
@@ -122,7 +128,7 @@
     'title_html' => 'Αναθέσεις Μαθημάτων ανά Ειδικότητα',
     'intro' => 'Επίλεξε τον κλάδο / την ειδικότητά σου και δες ποια μαθήματα έχεις σε Α΄, Β΄ ή Γ΄ ανάθεση.',
     'meta_class' => 'meta',
-    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'Ε.Α.Ε.', 'Α΄ · Β΄ · Γ΄ ανάθεση')
+    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Α΄ · Β΄ · Γ΄ ανάθεση')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
@@ -177,8 +183,13 @@
                 <input type="checkbox" id="schoolEaeLykeio">
                 <label for="schoolEaeLykeio">Λύκειο Ε.Α.Ε.</label>
               </div>
+              <div class="checkrow">
+                <input type="checkbox" id="schoolEneegylGym">
+                <label for="schoolEneegylGym">Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.</label>
+              </div>
             </div>
           </div>
+          <p class="help"><strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> σε αυτό το ελεγχόμενο βήμα έχει περαστεί το Γυμνάσιο. Οι αναθέσεις του Λυκείου ΕΝ.Ε.Ε.ΓΥ.-Λ. θα προστεθούν χωριστά, επειδή περιλαμβάνουν εκτεταμένους πίνακες τομέων και ειδικοτήτων.</p>
         </div>
 
         <div class="field" id="gradeWrap">
@@ -224,6 +235,7 @@
       <?php calculatorResultRow(array('label_html' => 'Α΄ ανάθεση', 'value_html' => '0', 'value_id' => 'countA')); ?>
       <?php calculatorResultRow(array('label_html' => 'Β΄ ανάθεση', 'value_html' => '0', 'value_id' => 'countB')); ?>
       <?php calculatorResultRow(array('label_html' => 'Γ΄ ανάθεση', 'value_html' => '0', 'value_id' => 'countC')); ?>
+      <?php calculatorResultRow(array('label_html' => 'Ειδικές προβλέψεις', 'value_html' => '0', 'value_id' => 'countSpecial')); ?>
 
       <?php calculatorResultMessage(array('variant' => 'status', 'id' => 'statusMessage', 'text' => 'Επίλεξε ειδικότητα για συνοπτικά αποτελέσματα.')); ?>
     <?php calculatorResultsEnd(); ?>
@@ -241,6 +253,7 @@
   const schoolEveningGel = document.getElementById('schoolEveningGel');
   const schoolEaeGym = document.getElementById('schoolEaeGym');
   const schoolEaeLykeio = document.getElementById('schoolEaeLykeio');
+  const schoolEneegylGym = document.getElementById('schoolEneegylGym');
   const gradeFilter = document.getElementById('gradeFilter');
   const gradeWrap = document.getElementById('gradeWrap');
   const results = document.getElementById('assignmentResults');
@@ -249,25 +262,43 @@
   const countA = document.getElementById('countA');
   const countB = document.getElementById('countB');
   const countC = document.getElementById('countC');
+  const countSpecial = document.getElementById('countSpecial');
   const fullResultsStatus = document.getElementById('fullResultsStatus');
 
   const esc = (s) => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
   const normalize = (value) => String(value || '').trim().toUpperCase().replace(/\s+/g, '');
 
+  function codeMatches(entry, code){
+    const item = normalize(entry);
+    if (item === code) return true;
+    if (/^ΠΕ\d+$/.test(item) && code.indexOf(item + '.') === 0) return true;
+    return false;
+  }
+
   function matchesExact(list, code){
-    return Array.isArray(list) && list.some(x => normalize(x) === code);
+    return Array.isArray(list) && list.some(function(x){ return codeMatches(x, code); });
+  }
+
+  function noteFor(notes, code){
+    if (!notes) return '';
+    const keys = Object.keys(notes);
+    for (let i = 0; i < keys.length; i++) {
+      if (codeMatches(keys[i], code)) return notes[keys[i]] || '';
+    }
+    return '';
   }
 
   function assignmentFor(row, code){
     for (const level of ['A','B','C']) {
       if (matchesExact(row[level], code)) {
-        const notes = row[level + '_notes'] || {};
-        return {level, note: notes[code] || notes[Object.keys(notes).find(k => normalize(k) === code)] || ''};
+        return {level, note: noteFor(row[level + '_notes'], code)};
       }
     }
-    if (row.B_all_others === true) {
-      const a = (row.A || []).map(normalize);
-      if (!a.includes(code)) return {level:'B', note:'όλες οι άλλες ειδικότητες'};
+    if (row.B_all_others === true && !matchesExact(row.A || [], code)) {
+      return {level:'B', note:'όλες οι άλλες ειδικότητες'};
+    }
+    if (row.special_all_pe === true && code.indexOf('ΠΕ') === 0) {
+      return {level:'S', note: row.special_note || 'ειδική πρόβλεψη της απόφασης'};
     }
     return null;
   }
@@ -279,6 +310,7 @@
     if (row.school === 'evening_gel') return row.grade ? `${row.grade} Εσπερινού ΓΕΛ` : 'Εσπερινό ΓΕΛ';
     if (row.school === 'eae_gymnasio') return 'Γυμνάσιο Ε.Α.Ε.';
     if (row.school === 'eae_lykeio') return row.grade ? `${row.grade} Λύκειο Ε.Α.Ε.` : 'Λύκειο Ε.Α.Ε.';
+    if (row.school === 'eneegyl_gymnasio') return 'Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.';
     return row.school || '';
   }
 
@@ -290,6 +322,7 @@
     const includeEveningGel = schoolEveningGel.checked;
     const includeEaeGym = schoolEaeGym.checked;
     const includeEaeLykeio = schoolEaeLykeio.checked;
+    const includeEneegylGym = schoolEneegylGym.checked;
     const grade = gradeFilter.value;
     gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEaeLykeio));
 
@@ -299,6 +332,7 @@
       countA.textContent = '0';
       countB.textContent = '0';
       countC.textContent = '0';
+      countSpecial.textContent = '0';
       fullResultsStatus.textContent = 'Επίλεξε κλάδο / ειδικότητα για να εμφανιστεί η πλήρης λίστα μαθημάτων.';
       status.textContent = 'Επίλεξε ειδικότητα για συνοπτικά αποτελέσματα.';
       status.classList.remove('hidden');
@@ -313,6 +347,7 @@
       if (row.school === 'evening_gel' && !includeEveningGel) return;
       if (row.school === 'eae_gymnasio' && !includeEaeGym) return;
       if (row.school === 'eae_lykeio' && !includeEaeLykeio) return;
+      if (row.school === 'eneegyl_gymnasio' && !includeEneegylGym) return;
       if ((row.school === 'gel' || row.school === 'evening_gel' || row.school === 'eae_lykeio') && grade !== 'all' && row.grade !== grade) return;
       const hit = assignmentFor(row, code);
       if (hit) found.push({...row, assignment: hit.level, assignmentNote: hit.note});
@@ -321,27 +356,30 @@
     count.textContent = String(found.length);
     if (!found.length) {
       results.innerHTML = '';
+      count.textContent = '0';
       countA.textContent = '0';
       countB.textContent = '0';
       countC.textContent = '0';
+      countSpecial.textContent = '0';
       fullResultsStatus.textContent = `Δεν βρέθηκε ανάθεση για ${code} με τα επιλεγμένα φίλτρα.`;
       status.textContent = `Δεν βρέθηκε ανάθεση για ${code} με τα επιλεγμένα φίλτρα.`;
       status.classList.remove('hidden');
       return;
     }
 
-    const groups = {A:[], B:[], C:[]};
+    const groups = {A:[], B:[], C:[], S:[]};
     found.forEach(row => groups[row.assignment].push(row));
 
     countA.textContent = String(groups.A.length);
     countB.textContent = String(groups.B.length);
     countC.textContent = String(groups.C.length);
-    status.textContent = `${code} · Α΄ ${groups.A.length} · Β΄ ${groups.B.length} · Γ΄ ${groups.C.length}`;
+    countSpecial.textContent = String(groups.S.length);
+    status.textContent = `${code} · Α΄ ${groups.A.length} · Β΄ ${groups.B.length} · Γ΄ ${groups.C.length}${groups.S.length ? ' · Ειδικές ' + groups.S.length : ''}`;
     status.classList.remove('hidden');
     fullResultsStatus.textContent = `${code} · ${found.length} ${found.length === 1 ? 'καταχώριση' : 'καταχωρίσεις'} στα επιλεγμένα σχολεία.`;
 
-    results.innerHTML = ['A','B','C'].map(level => {
-      const label = level === 'A' ? 'Α΄ Ανάθεση' : level === 'B' ? 'Β΄ Ανάθεση' : 'Γ΄ Ανάθεση';
+    results.innerHTML = ['A','B','C','S'].map(level => {
+      const label = level === 'A' ? 'Α΄ Ανάθεση' : level === 'B' ? 'Β΄ Ανάθεση' : level === 'C' ? 'Γ΄ Ανάθεση' : 'Ειδική πρόβλεψη';
       const rows = groups[level];
       if (!rows.length) return `
         <section>
@@ -372,17 +410,19 @@
   schoolEveningGel.addEventListener('change', render);
   schoolEaeGym.addEventListener('change', render);
   schoolEaeLykeio.addEventListener('change', render);
+  schoolEneegylGym.addEventListener('change', render);
   gradeFilter.addEventListener('change', render);
   render();
 })();
 </script>
 
 <?php sourceCardStart(); ?>
-  <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο τίτλο «Αναθέσεις μαθημάτων Γυμνασίου και Γενικού Λυκείου» και δεν δημοσιεύει χωριστό πίνακα αναθέσεων για τα εσπερινά, γι’ αυτό στο εργαλείο τα εσπερινά χρησιμοποιούν τον αντίστοιχο πίνακα Γυμνασίου/ΓΕΛ. <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. Οι αποφάσεις ισχύουν για το σχολικό έτος 2026-2027 και περιλαμβάνουν το μάθημα <strong>Ηθική</strong>.</p>
+  <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο τίτλο «Αναθέσεις μαθημάτων Γυμνασίου και Γενικού Λυκείου» και δεν δημοσιεύει χωριστό πίνακα αναθέσεων για τα εσπερινά, γι’ αυτό στο εργαλείο τα εσπερινά χρησιμοποιούν τον αντίστοιχο πίνακα Γυμνασίου/ΓΕΛ. <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. <strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026. Στην παρούσα ελεγχόμενη φάση έχει ενσωματωθεί ο πίνακας του Γυμνασίου ΕΝ.Ε.Ε.ΓΥ.-Λ. Οι αποφάσεις ισχύουν για το σχολικό έτος 2026-2027 και περιλαμβάνουν το μάθημα <strong>Ηθική</strong>.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/anatheseis-mathimaton---eidiki-kai-entaksiaki-ekpaidefsi', 'ΥΠΑΙΘΑ — Αναθέσεις Ειδικής & Ενταξιακής Εκπαίδευσης ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3275_B_2026_ANATHESEIS%20EAE_GYMN_LYK_2026-2027.pdf', 'ΦΕΚ Β΄ 3275/2026 — Ε.Α.Ε. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3216_B_2026_ANATHESEIS%20ENEEGYL_2026-2027.pdf', 'ΦΕΚ Β΄ 3216/2026 — ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 

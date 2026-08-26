@@ -4,6 +4,7 @@
  * Πηγές:
  * - Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026 (Γυμνάσιο / ΓΕΛ).
  * - Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026 (Γυμνάσια / Λύκεια Ε.Α.Ε.).
+ * - Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026 (ΕΝ.Ε.Ε.ΓΥ.-Λ.).
  * Ισχύς: σχολικό έτος 2026-2027.
  */
 
@@ -137,15 +138,28 @@ function teachingAssignmentsData()
         }
     }
 
+    $eneegylRows = require __DIR__ . '/teaching-assignments-eneegyl.php';
+    if (is_array($eneegylRows)) {
+        $rows = array_merge($rows, $eneegylRows);
+    }
+
     return $rows;
 }
 
 function teachingAssignmentKnownSpecialties()
 {
-    return [
-        'ΠΕ01','ΠΕ02','ΠΕ03','ΠΕ04.01','ΠΕ04.02','ΠΕ04.03','ΠΕ04.04','ΠΕ04.05',
-        'ΠΕ05','ΠΕ06','ΠΕ07','ΠΕ08','ΠΕ11','ΠΕ33','ΠΕ34','ΠΕ78','ΠΕ79','ΠΕ79.01',
-        'ΠΕ80','ΠΕ81','ΠΕ82','ΠΕ83','ΠΕ84','ΠΕ85','ΠΕ86','ΠΕ87.01','ΠΕ87.02',
-        'ΠΕ88','ΠΕ88.01','ΠΕ89','ΠΕ89.01','ΠΕ91','ΤΕ16'
-    ];
+    $codes = array();
+    foreach (teachingAssignmentsData() as $row) {
+        foreach (array('A', 'B', 'C') as $level) {
+            if (empty($row[$level]) || !is_array($row[$level])) {
+                continue;
+            }
+            foreach ($row[$level] as $code) {
+                $codes[$code] = true;
+            }
+        }
+    }
+    $result = array_keys($codes);
+    natcasesort($result);
+    return array_values($result);
 }

@@ -19,7 +19,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
 <div class="hero-meta">
-<span>27 διαθέσιμα εργαλεία</span>
+<span>28 διαθέσιμα εργαλεία</span>
 <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
 <span>Αναπληρωτές</span>
 <span>Αποσπάσεις</span>
@@ -148,7 +148,7 @@ renderDeadlineCard(array(
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
 <button aria-pressed="false" class="filter-btn" data-filter="ypiresiaka" type="button">Υπηρεσιακά</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 27 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 28 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
@@ -439,6 +439,13 @@ renderDeadlineCard(array(
 <div class="card-top"><span class="tool-number">27</span><span class="category-tag orange">Μεταθέσεις</span></div>
 <h2>Υπολογισμός μορίων μετάθεσης</h2>
 <p>Υπολόγισε τα βασικά μόρια μετάθεσης Δ.Ε. και αναλυτικά τις Μ.Σ.Δ., με δυσπρόσιτα/απομακρυσμένα, καταστήματα κράτησης, Ψηφιακό Φροντιστήριο και ειδικές υπηρετήσεις.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
+<a class="tool-card" data-category="ypiresiaka eidiki-agogi" data-search="αναθέσεις μαθημάτων Α Β Γ ανάθεση ειδικότητα κλάδος Γυμνάσιο ΓΕΛ Εσπερινό ΕΑΕ ΕΝΕΕΓΥΛ ΕΝ.Ε.Ε.ΓΥ.-Λ." href="anatheseis-mathimaton.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">28</span><span class="category-tag green">Υπηρεσιακά / Αναθέσεις</span></div>
+<h2>Αναθέσεις Μαθημάτων ανά Ειδικότητα</h2>
+<p>Δες ποια μαθήματα έχει ο κλάδος σου σε Α΄, Β΄ και Γ΄ ανάθεση, με φίλτρα ανά τύπο σχολείου και τις αντίστοιχες επίσημες πηγές.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a></section>
 <div aria-hidden="true" class="no-results" id="noResults">
