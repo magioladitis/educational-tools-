@@ -206,7 +206,6 @@
         <?php calculatorResultRow(array('label_html' => 'Γ. Καινοτόμο έργο', 'value_html' => '0,00 / 11', 'value_id' => 'resC')); ?>
 
         <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
-        <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'printBtn'), 'html' => 'Εκτύπωση'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'sampleBtn'), 'html' => 'Φόρτωση παραδείγματος'))); ?>
 
         <?php calculatorResultMessage(array('variant' => 'disclaimer', 'text' => 'Το εργαλείο είναι βοηθητικό. Η τελική αποτίμηση γίνεται από τα αρμόδια όργανα και προϋποθέτει τα σωστά δικαιολογητικά στα αντίστοιχα πεδία.')); ?>
       <?php calculatorResultsEnd(); ?>
@@ -392,8 +391,6 @@
         calc();
       });
 
-      $("printBtn").addEventListener("click", () => window.print());
-
       $("copyBtn").addEventListener("click", async () => {
         const text = summaryText(calc());
         try{
@@ -403,23 +400,6 @@
         }catch(e){
           alert(text);
         }
-      });
-
-      $("sampleBtn").addEventListener("click", () => {
-        $("masterRelated").checked = true;
-        $("secondDegree4y").checked = true;
-        $("aeiPrograms").value = 2;
-        $("iepHours").value = 40;
-        $("language1").value = "en";
-        $("languageLevel1").value = 3;
-        $("language2").value = "de";
-        $("languageLevel2").value = 2;
-        $("researchPrograms").value = 1;
-        $("intlProceedingsSolo").value = 2;
-        $("greekArticlesGroup").value = 1;
-        $("innovativePrograms").value = 3;
-        $("clubs").value = 2;
-        calc();
       });
 
       calc();
