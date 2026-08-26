@@ -39,6 +39,10 @@
           </div>
         </div>
 
+        <div class="info-note">
+          Για τη μείωση του διδακτικού ωραρίου λαμβάνεται υπόψη η <strong>αναγνωρισμένη εκπαιδευτική προϋπηρεσία</strong> που προβλέπεται από τις σχετικές διατάξεις. <a href="https://diavgeia.gov.gr/doc/4%CE%99%CE%9949-%CE%9F9?inline=true" target="_blank" rel="noopener noreferrer">Δες ποια προϋπηρεσία προσμετράται ↗</a>
+        </div>
+
         <div id="primaryFields">
           <div class="field-grid">
             <div class="field">
@@ -134,6 +138,7 @@
   <p>Ο υπολογισμός βασίζεται στις ισχύουσες ρυθμίσεις για το εβδομαδιαίο υποχρεωτικό διδακτικό ωράριο. Στην Πρωτοβάθμια λαμβάνονται υπόψη η οργανικότητα, η ιδιότητα και τα έτη υπηρεσίας· στη Δευτεροβάθμια ο κλάδος, τα έτη υπηρεσίας και η διοικητική θέση.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/news/17496-25-01-16-orario-ekpaideftikon-se-protovathmia-kai-defterovathmia-ekpaidefsi', 'ΥΠΑΙΘΑ — Ωράριο εκπαιδευτικών ↗'); ?>
+    <?php sourceCardLink('https://diavgeia.gov.gr/doc/4%CE%99%CE%9949-%CE%9F9?inline=true', 'ΥΠΑΙΘ — Εγκύκλιος Φ.361.23/12/123995/Δ1 (20-12-2010) — Προϋπηρεσία για μείωση ωραρίου ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2016/leitourgia__nhpio.pdf', 'ΥΠΑΙΘΑ — Ωράριο Νηπιαγωγών / λειτουργία Νηπιαγωγείων ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/EPAL_N_4547_FEK_102A_12-06-2018.pdf', 'Ν. 4547/2018, άρθρο 49 — Δημοτικά / Υποδιευθυντές ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-oikonomia/n-4152-2013.html', 'Ν. 4152/2013 — Δευτεροβάθμια ↗'); ?>

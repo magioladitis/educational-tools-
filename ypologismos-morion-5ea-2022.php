@@ -185,7 +185,7 @@
 
   <?php calculatorResultMessage(array('id' => 'priorityBox', 'variant' => 'status', 'text' => 'Χωρίς δηλωμένη ειδική πρόταξη / προτεραιότητα')); ?>
   <?php calculatorActions(array(
-      array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή αποτελέσματος'),
+      array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'),
       array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός')
   )); ?>
 <?php calculatorResultsEnd(); ?>
@@ -308,7 +308,7 @@
     try{
       await navigator.clipboard.writeText(text);
       const old=$('copyBtn').textContent;
-      $('copyBtn').textContent='Αντιγράφηκε';
+      $('copyBtn').textContent='Αντιγράφηκε ✓';
       setTimeout(()=>$('copyBtn').textContent=old,1400);
     }catch(e){alert(text);}
   });

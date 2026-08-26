@@ -248,7 +248,7 @@ renderAsepSocialCriteria(array(
 
       <?php calculatorResultMessage(array('id' => 'priorityBox', 'variant' => 'status', 'text' => 'Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.')); ?>
 
-      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
+      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
 
       <?php calculatorResultMessage(array('variant' => 'disclaimer', 'text' => 'Σε ισοβαθμία προηγούνται κατά σειρά: περισσότερα κοινωνικά μόρια (και ειδικότερα αναπηρία), έπειτα περισσότερα ακαδημαϊκά / μεγαλύτερος βαθμός πτυχίου και τέλος περισσότερη προϋπηρεσία.')); ?>
     <?php calculatorResultsEnd(); ?>
@@ -374,7 +374,7 @@ renderAsepSocialCriteria(array(
     try{
       await navigator.clipboard.writeText(text);
       const old=$('copyBtn').textContent;
-      $('copyBtn').textContent='Αντιγράφηκε';
+      $('copyBtn').textContent='Αντιγράφηκε ✓';
       setTimeout(()=>$('copyBtn').textContent=old,1400);
     }catch(e){alert(text);}
   });

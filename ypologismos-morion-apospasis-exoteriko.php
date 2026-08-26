@@ -293,7 +293,7 @@
 
       <div id="eligibilityStatus" role="status" aria-live="polite"></div>
 
-      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή σύνοψης'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
+      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
 
       <div class="note">
         *Τα 185/165 είναι το θεωρητικό άθροισμα των επιμέρους μοριοδοτούμενων κριτηρίων του ΦΕΚ και όχι ξεχωριστό συνολικό πλαφόν που αναγράφεται στην απόφαση.
@@ -745,7 +745,7 @@
     try{
       await navigator.clipboard.writeText(lines.join('\n'));
       $('copyBtn').textContent = 'Αντιγράφηκε ✓';
-      setTimeout(() => $('copyBtn').textContent = 'Αντιγραφή σύνοψης', 1400);
+      setTimeout(() => $('copyBtn').textContent = 'Αντιγραφή', 1400);
     }catch(e){
       alert(lines.join('\n'));
     }

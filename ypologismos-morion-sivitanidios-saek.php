@@ -143,7 +143,7 @@
   <?php calculatorResultMessage(array('id'=>'warningBox','variant'=>'warning','class'=>'hidden','text'=>'')); ?>
   <?php calculatorResultMessage(array('id'=>'breakdownBox','variant'=>'disclaimer','text'=>'Η αναλυτική κατανομή θα εμφανιστεί εδώ.')); ?>
   <?php calculatorActions(array(
-    array('attrs'=>array('type'=>'button','class'=>'secondary','id'=>'copyBtn'),'html'=>'Αντιγραφή αποτελέσματος'),
+    array('attrs'=>array('type'=>'button','class'=>'secondary','id'=>'copyBtn'),'html'=>'Αντιγραφή'),
     array('attrs'=>array('type'=>'button','id'=>'resetBtn','class'=>'secondary'),'html'=>'Μηδενισμός')
   )); ?>
 <?php calculatorResultsEnd(); ?>
@@ -245,7 +245,7 @@ scoreControls.forEach(el=>{
     calc();
   });
 });
-$('copyBtn').addEventListener('click',async()=>{const r=calc(), text=['ΣΑΕΚ Σιβιτανιδείου 2026–2027','Βασική βαθμολογία: '+fmt(r.base),'Κοινωνική προσαύξηση: +'+fmt(r.social.increase)+' ('+fmt(r.social.totalPercent).replace(',00','')+'%)','Τελική βαθμολογία: '+fmt(r.final)].join('\n'); try{await navigator.clipboard.writeText(text); const old=$('copyBtn').textContent;$('copyBtn').textContent='Αντιγράφηκε';setTimeout(()=>$('copyBtn').textContent=old,1400);}catch(e){alert(text);}});
+$('copyBtn').addEventListener('click',async()=>{const r=calc(), text=['ΣΑΕΚ Σιβιτανιδείου 2026–2027','Βασική βαθμολογία: '+fmt(r.base),'Κοινωνική προσαύξηση: +'+fmt(r.social.increase)+' ('+fmt(r.social.totalPercent).replace(',00','')+'%)','Τελική βαθμολογία: '+fmt(r.final)].join('\n'); try{await navigator.clipboard.writeText(text); const old=$('copyBtn').textContent;$('copyBtn').textContent='Αντιγράφηκε ✓';setTimeout(()=>$('copyBtn').textContent=old,1400);}catch(e){alert(text);}});
 $('resetBtn').addEventListener('click',()=>{document.querySelectorAll('input[type="number"]').forEach(el=>el.value=el.matches('[data-training-hours]')?'':'0');document.querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked=false);document.querySelectorAll('select').forEach(el=>el.selectedIndex=0);$('trainingHoursWarning').classList.add('hidden');calc();});
 calc();
 })();

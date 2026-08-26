@@ -134,7 +134,7 @@
     <?php calculatorResultRow(array('label_html' => 'Ανεργία', 'value_html' => '+0', 'value_id' => 'unemploymentScore')); ?>
     <?php calculatorResultRow(array('label_html' => 'Ειδικές κατηγορίες', 'value_html' => '+0', 'value_id' => 'specialScore')); ?>
     <div id="priorityStatus"></div><div id="eligibilityStatus"></div>
-    <?php calculatorActions(array(array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'copySummary(this)'), 'html' => 'Αντιγραφή αποτελέσματος'), array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Μηδενισμός'))); ?>
+    <?php calculatorActions(array(array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'copySummary(this)'), 'html' => 'Αντιγραφή'), array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Μηδενισμός'))); ?>
   <?php calculatorCardEnd(); ?>
   <?php calculatorCardStart(); ?><h2>Αναλυτική μοριοδότηση</h2><div id="breakdown" class="subtitle">Επίλεξε κατηγορία και συμπλήρωσε τα στοιχεία.</div><?php calculatorCardEnd(); ?>
   <?php calculatorCardStart(); ?><h2>Δικαιολογητικά / έλεγχοι</h2><div id="checklist" class="subtitle">Θα προσαρμοστεί στις επιλογές σου.</div><?php calculatorCardEnd(); ?>

@@ -398,7 +398,7 @@
         const text = summaryText(calc());
         try{
           await navigator.clipboard.writeText(text);
-          $("copyBtn").textContent = "Αντιγράφηκε";
+          $("copyBtn").textContent = "Αντιγράφηκε ✓";
           setTimeout(() => $("copyBtn").textContent = "Αντιγραφή", 1400);
         }catch(e){
           alert(text);
