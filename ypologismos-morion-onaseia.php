@@ -84,6 +84,20 @@ renderDeadlineCard(array(
       </select>
     </div>
 
+    <div class="question hidden" id="pe04VacancySpecialtyWrap">
+      <label for="pe04VacancySpecialty">Ειδικότητα ΠΕ04 για προβολή φετινών κενών</label>
+      <select id="pe04VacancySpecialty">
+        <option value="">-- Επιλογή ειδικότητας ΠΕ04 --</option>
+        <option value="ΠΕ04.01">ΠΕ04.01 Φυσικοί</option>
+        <option value="ΠΕ04.02">ΠΕ04.02 Χημικοί</option>
+        <option value="ΠΕ04.04">ΠΕ04.04 Βιολόγοι</option>
+        <option value="ΠΕ04.05">ΠΕ04.05 Γεωλόγοι</option>
+      </select>
+      <p class="note">Η υποεπιλογή χρησιμοποιείται μόνο για την προβολή των λειτουργικών αναγκών και δεν αλλάζει τον υπολογισμό των ακαδημαϊκών μορίων ΠΕ04.</p>
+    </div>
+
+    <div id="vacancyPanel" class="important hidden" role="status" aria-live="polite"></div>
+
     <p class="note">
       Για τους κλάδους ΠΕ γίνεται αναλυτικός υπολογισμός των ακαδημαϊκών προσόντων των 1ΓΕ/2026 και 2ΓΕ/2026.
       Για τον ΤΕ16 χρησιμοποιείται η καταχώριση των ακαδημαϊκών μορίων όπως εμφανίζονται στον πίνακα της 1ΓΤ/2024.
@@ -180,6 +194,7 @@ renderAsepPeAcademic(array(
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/training-proof.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-pe-academic.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/onaseia-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/onaseia-vacancies-2026.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
   let isLiveCalculation = false;
   const MIN_SPECIAL_SERVICE_YEAR = 2020;
@@ -255,6 +270,69 @@ renderAsepPeAcademic(array(
     return document.querySelector('input[name="academicMode"]:checked').value;
   }
 
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function vacancyRows(items) {
+    if (!items.length) return '<p class="note">Δεν καταγράφονται θέσεις στην απόφαση.</p>';
+    const rows = items.map(item => `
+      <tr>
+        <td>${escapeHtml(item.label)}<br><span class="note">Κωδ. ${escapeHtml(item.code)}</span></td>
+        <td>${item.positions}</td>
+      </tr>`).join("");
+    return `<table class="breakdown">
+      <tr><th>Σχολική μονάδα</th><th>Θέσεις</th></tr>${rows}
+    </table>`;
+  }
+
+  function updateVacancyPanel() {
+    const specialty = valueOf("specialty");
+    const pe04Wrap = document.getElementById("pe04VacancySpecialtyWrap");
+    const pe04Select = document.getElementById("pe04VacancySpecialty");
+    const panel = document.getElementById("vacancyPanel");
+    const needsPe04 = specialty === "ΠΕ04";
+    pe04Wrap.classList.toggle("hidden", !needsPe04);
+    if (!needsPe04) pe04Select.value = "";
+
+    if (!specialty) {
+      panel.classList.add("hidden");
+      panel.innerHTML = "";
+      return;
+    }
+
+    const data = OnaseiaVacancies2026.selection(specialty, pe04Select.value);
+    const parts = [
+      `<strong>Φετινές λειτουργικές ανάγκες ΔΗΜ.Ω.Σ. 2026-2027</strong>`,
+      `<p class="note">Αποφάσεις ${escapeHtml(data.generalDecision)} και ${escapeHtml(data.eaeDecision)}, ${escapeHtml(data.sourceDate)} · προσωρινοί αναπληρωτές πλήρους ωραρίου.</p>`
+    ];
+
+    if (data.needsPe04Specialty) {
+      parts.push('<p><strong>Γενική Εκπαίδευση:</strong> επίλεξε ειδικότητα ΠΕ04 για να εμφανιστούν οι αντίστοιχες θέσεις.</p>');
+    } else {
+      const generalLabel = data.te16UsesPe79 ? 'Θέσεις μουσικής ΠΕ79.01' : `Γενική Εκπαίδευση — ${escapeHtml(data.generalCode)}`;
+      parts.push(`<details open><summary><strong>${generalLabel}: ${data.generalTotal} ${data.generalTotal === 1 ? "θέση" : "θέσεις"}</strong></summary>${vacancyRows(data.general)}</details>`);
+    }
+
+    if (data.eaeCode) {
+      parts.push(`<details open><summary><strong>ΕΑΕ — ${escapeHtml(data.eaeCode)}: ${data.eaeTotal} ${data.eaeTotal === 1 ? "θέση" : "θέσεις"}</strong></summary>${vacancyRows(data.eae)}</details>`);
+      parts.push('<p class="note">Οι θέσεις ΕΑΕ αφορούν υποψηφίους με εξειδίκευση στην Ε.Α.Ε. της 3ΕΑ/2025.</p>');
+    }
+
+    if (data.te16UsesPe79) {
+      parts.push('<p class="note"><strong>ΤΕ16:</strong> η απόφαση λειτουργικών αναγκών καταγράφει τη θέση στον ΠΕ79.01. Στη διαδικασία πρόσληψης τηρείται απόλυτη πρόταξη των ΠΕ79 έναντι των ΤΕ16.</p>');
+    }
+
+    parts.push('<p class="note">Οι αριθμοί αποτυπώνουν τις λειτουργικές ανάγκες που προσδιορίστηκαν στις 26/08/2026 και μπορεί να μεταβληθούν με νεότερη απόφαση ή μετά από τοποθετήσεις.</p>');
+    panel.innerHTML = parts.join("");
+    panel.classList.remove("hidden");
+  }
+
   function updateAcademicMode() {
     const specialty = valueOf("specialty");
     const detailedRadio = document.querySelector('input[name="academicMode"][value="detailed"]');
@@ -276,6 +354,7 @@ renderAsepPeAcademic(array(
     document.getElementById("manualAcademicPoints").setAttribute("data-min", String(manualMin));
     document.getElementById("manualAcademicPoints").setAttribute("data-max", "120");
     AsepPeAcademic.sync("asepPeAcademic");
+    updateVacancyPanel();
   }
 
   document.querySelectorAll('input[name="academicMode"]').forEach(el => {
@@ -283,6 +362,7 @@ renderAsepPeAcademic(array(
   });
 
   document.getElementById("specialty").addEventListener("change", updateAcademicMode);
+  document.getElementById("pe04VacancySpecialty").addEventListener("change", updateVacancyPanel);
 
 
   function serviceYearOptions(selectedYear = "") {
@@ -474,6 +554,7 @@ renderAsepPeAcademic(array(
 
   function resetForm() {
     document.getElementById("specialty").value = "";
+    document.getElementById("pe04VacancySpecialty").value = "";
     document.querySelector('input[name="academicMode"][value="detailed"]').checked = true;
     document.querySelector('input[name="academicMode"][value="detailed"]').disabled = false;
     document.getElementById("manualAcademicPoints").value = "";
@@ -514,6 +595,8 @@ renderAsepPeAcademic(array(
   <p><strong>Χρονική αφετηρία ειδικής προϋπηρεσίας:</strong> στο εργαλείο καταχωρίζεται προϋπηρεσία από το σχολικό έτος <strong>2020-2021</strong> και μετά. Η πρόσκληση δεν αναγράφει ρητά αυτό το έτος ως όριο· η επιλογή ακολουθεί την εφαρμογή που αποτυπώνεται στους δημοσιευμένους πίνακες κατάταξης και την παραπομπή της πρόσκλησης στα Πρότυπα/Πειραματικά του ν. 4692/2020.</p>
   <p><strong>Φετινές προσκλήσεις πρόσληψης 2026–2027:</strong></p>
   <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://diavgeia.gov.gr/doc/%CE%957%CE%98%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%9C%CE%98?inline=true', '14/08/2026 — Γενική πρόσκληση ΔΗΜ.Ω.Σ. για αναπληρωτές — ΑΔΑ Ε7ΘΑ46ΝΚΠΔ-ΡΜΘ ↗'); ?><?php sourceCardLink('https://diavgeia.gov.gr/doc/%CE%A1%CE%A4%CE%91%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%932%CE%97?inline=true', '20/08/2026 — Ειδική πρόσκληση ΕΑΕ για Τμήματα Ένταξης ΔΗΜ.Ω.Σ. — ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗'); ?><?php sourceCardLinksEnd(); ?>
+  <p><strong>Λειτουργικές ανάγκες πλήρους ωραρίου 2026–2027 (26/08/2026):</strong></p>
+  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://diavgeia.gov.gr/doc/%CE%A1%CE%9D7%CE%9546%CE%9D%CE%9A%CE%A0%CE%94-%CE%98%CE%A3%CE%94?inline=true', '55/ΔΕΔΗΜΩΣ — Γενική Εκπαίδευση — ΑΔΑ ΡΝ7Ε46ΝΚΠΔ-ΘΣΔ ↗'); ?><?php sourceCardLink('https://diavgeia.gov.gr/doc/9%CE%98%CE%93246%CE%9D%CE%9A%CE%A0%CE%94-%CE%A5%CE%990?inline=true', '56/ΔΕΔΗΜΩΣ — ΕΑΕ — ΑΔΑ 9ΘΓ246ΝΚΠΔ-ΥΙ0 ↗'); ?><?php sourceCardLinksEnd(); ?>
   <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://www.minedu.gov.gr/news?catid=1183&id=63940%3A30-01-26-prokiryksi-diadikasias-katataksis-ekpaideftikon-vvathmias-ekpaidefsis-me-seira-proteraiotitas-kata-klado-kai-eidikotita-ypopsifion-gia-tin-plirosi-kenon-theseon-thiteias-sta-dimosia-onaseia-sxoleia&view=article', 'Προκήρυξη διαδικασίας κατάταξης ΔΗΜ.Ω.Σ. — ΥΠΑΙΘΑ ↗'); ?><?php sourceCardLink('https://info.asep.gr/node/78737', '1ΓΕ/2026 & 2ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLink('https://dedimos.minedu.gov.gr/nea/anakoinoseis/anartisi-pinakon-katataxis-tis-prosklisis-tis-d-e-dim-o-s-gia-anaplirotes-plirous-i-meiomenou-orariou-genikis-ekpaidefsis/', '26/08/2026 — Δημοσιευμένοι πίνακες κατάταξης αναπληρωτών ΔΗΜ.Ω.Σ. ↗'); ?><?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 
