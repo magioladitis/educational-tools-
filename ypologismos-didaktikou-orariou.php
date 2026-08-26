@@ -154,6 +154,7 @@
       )); ?>
       <?php calculatorResultRow(array('label' => 'Κατηγορία / βαθμίδα', 'value' => 'Πρωτοβάθμια', 'value_id' => 'levelResult')); ?>
       <?php calculatorResultRow(array('label' => 'Υπηρεσία', 'value' => '0 έτη', 'value_id' => 'serviceResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Χρόνος μέχρι την επόμενη μείωση ωραρίου', 'value' => '—', 'value_id' => 'nextReductionResult')); ?>
       <?php calculatorResultRow(array('label' => 'Ιδιότητα / κανόνας', 'value' => '—', 'value_id' => 'ruleResult')); ?>
       <?php calculatorResultMessage(array('variant' => 'status', 'id' => 'statusResult', 'html' => 'Συμπλήρωσε τα στοιχεία για να δεις το ωράριο.')); ?>
     <?php calculatorResultsEnd(); ?>
@@ -253,6 +254,7 @@
       byId('hoursResult').textContent = '—';
       byId('levelResult').textContent = level.value === 'secondary' ? 'Δευτεροβάθμια' : (level.value === 'eep' ? 'ΕΕΠ' : (level.value === 'ebp' ? 'ΕΒΠ' : 'Πρωτοβάθμια'));
       byId('serviceResult').textContent = level.value === 'ebp' ? 'Δεν εφαρμόζεται' : window.EducationTeachingHours.serviceLabel(window.EducationTeachingHours.serviceMonths(options.years, options.months, options.days));
+      byId('nextReductionResult').textContent = '—';
       byId('ruleResult').textContent = '—';
       status.textContent = result.error || 'Δεν είναι δυνατός ο υπολογισμός.';
       status.className = 'result-message edu-message result-message--warning edu-message--warning';
@@ -262,6 +264,7 @@
     byId('hoursResult').textContent = result.hours;
     byId('levelResult').textContent = result.level === 'eep' ? 'ΕΕΠ' : (result.level === 'ebp' ? 'ΕΒΠ' : (result.level === 'secondary' ? 'Δευτεροβάθμια' : (result.schoolType === 'kindergarten' ? 'Νηπιαγωγείο' : 'Δημοτικό')));
     byId('serviceResult').textContent = result.serviceLabel;
+    byId('nextReductionResult').textContent = result.nextReductionLabel || 'Δεν προβλέπεται περαιτέρω μείωση';
     byId('ruleResult').textContent = result.rule;
     status.textContent = 'Υπολογισμός σύμφωνα με τα δηλωμένα στοιχεία.';
     status.className = 'result-message edu-message result-message--success edu-message--success';

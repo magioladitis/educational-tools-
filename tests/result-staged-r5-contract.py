@@ -30,9 +30,9 @@ check('European Schools: first-stage score preserved', 'id="preInterviewTotal"' 
 check('European Schools: final score preserved', "'value_id' => 'finalTotal'" in e and 'Τελική βαθμολογία' in e)
 check('European Schools: uses two shared score headers', e.count('calculatorScoreHeader(array(') == 2)
 
-# No cache bump for PHP-only structural refactor.
+# Current shared-asset cache key.
 config=(root/'includes/config.php').read_text()
-check('R5 keeps 3.20.54 cache version', "EDU_TOOLS_VERSION', '3.20.54" in config)
+check('current cache version is 3.20.61', "EDU_TOOLS_VERSION', '3.20.61" in config)
 
 failed=[n for n,v in checks if not v]
 for n,v in checks: print(('PASS' if v else 'FAIL')+': '+n)

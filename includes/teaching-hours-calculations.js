@@ -52,11 +52,15 @@
     return Math.max(0, n);
   }
 
-  function serviceMonths(years, months, days) {
+  function serviceDays(years, months, days) {
     const y = Math.min(40, nonNegativeInteger(years));
     const m = Math.min(11, nonNegativeInteger(months));
     const d = Math.min(29, nonNegativeInteger(days));
-    return y * 12 + m + d / 30;
+    return y * 360 + m * 30 + d;
+  }
+
+  function serviceMonths(years, months, days) {
+    return serviceDays(years, months, days) / 30;
   }
 
   function findBand(bands, totalMonths) {
@@ -75,6 +79,28 @@
     if (months) label += " και " + months + " μήν.";
     if (days) label += " και " + days + " ημ.";
     return label;
+  }
+
+  function durationLabel(totalDays) {
+    const daysTotal = Math.max(0, nonNegativeInteger(totalDays));
+    const years = Math.floor(daysTotal / 360);
+    const remainder = daysTotal % 360;
+    const months = Math.floor(remainder / 30);
+    const days = remainder % 30;
+    const parts = [];
+    if (years) parts.push(years === 1 ? "1 έτος" : years + " έτη");
+    if (months) parts.push(months === 1 ? "1 μήνας" : months + " μήνες");
+    if (days) parts.push(days === 1 ? "1 ημέρα" : days + " ημέρες");
+    if (!parts.length) return "0 ημέρες";
+    if (parts.length === 1) return parts[0];
+    return parts.slice(0, -1).join(", ") + " και " + parts[parts.length - 1];
+  }
+
+  function servicePartsFromDays(totalDays) {
+    const safe = Math.max(0, nonNegativeInteger(totalDays));
+    const years = Math.floor(safe / 360);
+    const remainder = safe % 360;
+    return { years: years, months: Math.floor(remainder / 30), days: remainder % 30 };
   }
 
   function primary(options) {
@@ -143,6 +169,15 @@
     };
   }
 
+  function secondaryBranchLabel(branch) {
+    return ({
+      PE: "ΠΕ",
+      TE01: "ΤΕ01",
+      DE01_ARCH: "ΔΕ01 — Αρχιτεχνίτης",
+      DE01_TECH: "ΔΕ01 — Τεχνίτης"
+    })[branch] || String(branch || "");
+  }
+
   function secondaryTeacherHours(branch, totalMonths) {
     const normalized = RULES.secondary[branch] ? branch : "PE";
     return findBand(RULES.secondary[normalized], totalMonths);
@@ -182,7 +217,7 @@
       return { valid: true, level: "secondary", role: role, branch: branch, hours: hours, serviceMonths: totalMonths, serviceLabel: serviceLabel(totalMonths), baseTeacherHours: band.hours, rule: "Υπεύθυνος/η εργαστηρίου τομέα ή ειδικότητας Ε.Κ./ΕΠΑ.Λ.: μείωση 2 ωρών από το ατομικό υποχρεωτικό ωράριο, με κατώτερο όριο 18 ώρες." };
     }
 
-    return { valid: true, level: "secondary", role: "teacher", branch: branch, hours: band.hours, serviceMonths: totalMonths, serviceLabel: serviceLabel(totalMonths), rule: "Εκπαιδευτικός κλάδου " + branch.replace("DE01_ARCH", "ΔΕ01 — Αρχιτεχνίτης").replace("DE01_TECH", "ΔΕ01 — Τεχνίτης") + " — " + band.label + "." };
+    return { valid: true, level: "secondary", role: "teacher", branch: branch, hours: band.hours, serviceMonths: totalMonths, serviceLabel: serviceLabel(totalMonths), rule: "Εκπαιδευτικός κλάδου " + secondaryBranchLabel(branch) + " — " + band.label + "." };
   }
 
   function eep(options) {
@@ -224,22 +259,84 @@
     };
   }
 
-  function calculate(options) {
+  function calculateBase(options) {
     options = options || {};
     if (options.level === "eep") return eep(options);
     if (options.level === "ebp") return ebp(options);
     return options.level === "secondary" ? secondary(options) : primary(options);
   }
 
+  function nextReductionCandidates(options) {
+    options = options || {};
+    if (options.level === "ebp") return [];
+    if (options.level === "eep") return [5 * 360 + 1, 10 * 360 + 1, 15 * 360 + 1, 20 * 360 + 1];
+
+    if (options.level === "primary") {
+      const role = ["director", "vice_director"].includes(options.role) ? options.role : "teacher";
+      const organicity = Math.max(1, nonNegativeInteger(options.organicity || 1));
+      if (role === "director" || organicity <= 3) return [];
+      return [10 * 360, 15 * 360, 20 * 360];
+    }
+
+    const role = options.role || "teacher";
+    if (["director", "lab_director", "vice_or_sector"].includes(role)) return [20 * 360];
+    const branch = RULES.secondary[options.branch] ? options.branch : "PE";
+    return RULES.secondary[branch]
+      .map(function (band) { return Math.round(band.minMonths * 30); })
+      .filter(function (days) { return days > 0; });
+  }
+
+  function nextReduction(options, currentResult) {
+    options = options || {};
+    if (!currentResult || !currentResult.valid) {
+      return { exists: false, label: "—" };
+    }
+
+    const currentDays = serviceDays(options.years, options.months, options.days);
+    const candidates = nextReductionCandidates(options).slice().sort(function (a, b) { return a - b; });
+    for (let i = 0; i < candidates.length; i++) {
+      const targetDays = candidates[i];
+      if (targetDays <= currentDays) continue;
+      const parts = servicePartsFromDays(targetDays);
+      const futureOptions = Object.assign({}, options, parts);
+      const futureResult = calculateBase(futureOptions);
+      if (futureResult.valid && Number(futureResult.hours) < Number(currentResult.hours)) {
+        const remainingDays = targetDays - currentDays;
+        return {
+          exists: true,
+          remainingDays: remainingDays,
+          targetServiceDays: targetDays,
+          nextHours: futureResult.hours,
+          label: durationLabel(remainingDays) + " (→ " + futureResult.hours + " ώρες)"
+        };
+      }
+    }
+    return { exists: false, label: "Δεν προβλέπεται περαιτέρω μείωση" };
+  }
+
+  function calculate(options) {
+    options = options || {};
+    const result = calculateBase(options);
+    if (!result.valid) return result;
+    const reduction = nextReduction(options, result);
+    return Object.assign({}, result, {
+      nextReduction: reduction,
+      nextReductionLabel: reduction.label
+    });
+  }
+
   global.EducationTeachingHours = Object.freeze({
     RULES: RULES,
     nonNegativeInteger: nonNegativeInteger,
+    serviceDays: serviceDays,
     serviceMonths: serviceMonths,
     serviceLabel: serviceLabel,
+    durationLabel: durationLabel,
     primary: primary,
     secondary: secondary,
     eep: eep,
     ebp: ebp,
+    nextReduction: nextReduction,
     calculate: calculate
   });
 })(window);
