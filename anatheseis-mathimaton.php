@@ -29,6 +29,15 @@
       margin-bottom:4px;
     }
 
+    .edu-page-teaching-assignments .school-type-group--all .school-type-options{
+      grid-template-columns:1fr;
+    }
+
+    .edu-page-teaching-assignments .school-type-group--all .checkrow{
+      background:var(--edu-primary-soft);
+      border-color:var(--edu-primary);
+    }
+
     .edu-page-teaching-assignments .school-type-options .checkrow{
       margin:0;
       padding:12px 14px;
@@ -128,7 +137,7 @@
     'title_html' => 'Αναθέσεις Μαθημάτων ανά Ειδικότητα',
     'intro' => 'Επίλεξε τον κλάδο / την ειδικότητά σου και δες ποια μαθήματα έχεις σε Α΄, Β΄ ή Γ΄ ανάθεση.',
     'meta_class' => 'meta',
-    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Καλλιτεχνικά', 'Α΄ · Β΄ · Γ΄ ανάθεση')
+    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'ΕΠΑ.Λ.', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Καλλιτεχνικά', 'Α΄ · Β΄ · Γ΄ ανάθεση')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
@@ -151,6 +160,14 @@
 
         <div class="field">
           <label>Τύπος σχολείου</label>
+          <div class="school-type-group school-type-group--all">
+            <div class="school-type-options">
+              <div class="checkrow">
+                <input type="checkbox" id="schoolAll">
+                <label for="schoolAll"><strong>Όλα</strong> <small>(επιλογή / αποεπιλογή όλων των δομών)</small></label>
+              </div>
+            </div>
+          </div>
           <div class="school-type-group">
             <div class="school-type-group__title">Γενική Εκπαίδευση</div>
             <div class="school-type-options">
@@ -169,6 +186,19 @@
               <div class="checkrow">
                 <input type="checkbox" id="schoolEveningGel">
                 <label for="schoolEveningGel">Εσπερινό ΓΕΛ</label>
+              </div>
+            </div>
+          </div>
+          <div class="school-type-group">
+            <div class="school-type-group__title">Επαγγελματική Εκπαίδευση</div>
+            <div class="school-type-options">
+              <div class="checkrow">
+                <input type="checkbox" id="schoolEpal">
+                <label for="schoolEpal">ΕΠΑ.Λ. <small>(Α΄ πλήρης · Β΄/Γ΄ Γενικής Παιδείας · 2 Τομείς Β΄)</small></label>
+              </div>
+              <div class="checkrow">
+                <input type="checkbox" id="schoolEveningEpal">
+                <label for="schoolEveningEpal">Εσπερινό ΕΠΑ.Λ. <small>(ίδιες αναθέσεις)</small></label>
               </div>
             </div>
           </div>
@@ -202,6 +232,7 @@
               </div>
             </div>
           </div>
+          <p class="help"><strong>ΕΠΑ.Λ.:</strong> ενεργοποιήθηκε η υπάρχουσα βάση για Α΄ τάξη (Γενικής Παιδείας, Προσανατολισμού και Επιλογής), Β΄/Γ΄ Γενικής Παιδείας και προστέθηκαν οι <strong>Τομείς Γεωπονίας, Τροφίμων και Περιβάλλοντος</strong> και <strong>Διοίκησης και Οικονομίας της Β΄ τάξης</strong>. Οι υπόλοιποι Τομείς Β΄ και οι Ειδικότητες Γ΄ θα προστεθούν σταδιακά με έλεγχο ανά πίνακα.</p>
           <p class="help"><strong>Καλλιτεχνικό Γυμνάσιο:</strong> έχουν περαστεί οι αναθέσεις του ισχύοντος πίνακα για τους κλάδους <strong>ΠΕ/ΤΕ</strong>. Οι ειδικοί πίνακες <strong>ΚΙΝΗΣΗ–ΧΟΡΟΣ, ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ, ΚΛΑΣΙΚΟΥ ΧΟΡΟΥ και ΣΥΓΧΡΟΝΟΥ ΧΟΡΟΥ</strong> θα ενσωματωθούν χωριστά, ώστε να αποτυπωθούν σωστά ως εξειδικευμένοι πίνακες και όχι ως συμβατικοί κλάδοι.</p>
           <p class="help"><strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> πλήρης κάλυψη της Υ.Α. 69785/Δ3/2026: Γυμνάσιο, <strong>Α΄ τάξη Λυκείου</strong> (Γενική Παιδεία, Προσανατολισμός και Επιλογής), <strong>Γενική Παιδεία Β΄, Γ΄ και Δ΄</strong>, οι <strong>8 κοινοί Τομείς Β΄–Γ΄</strong> και οι <strong>33 ειδικότητες της Δ΄ τάξης</strong>, με τις κατά προτεραιότητα αναθέσεις και τις ειδικές προϋποθέσεις του ΦΕΚ.</p>
         </div>
@@ -271,6 +302,9 @@
   const schoolEneegylGym = document.getElementById('schoolEneegylGym');
   const schoolEneegylLykeio = document.getElementById('schoolEneegylLykeio');
   const schoolKallitexnikoGym = document.getElementById('schoolKallitexnikoGym');
+  const schoolEpal = document.getElementById('schoolEpal');
+  const schoolEveningEpal = document.getElementById('schoolEveningEpal');
+  const schoolAll = document.getElementById('schoolAll');
   const gradeFilter = document.getElementById('gradeFilter');
   const gradeWrap = document.getElementById('gradeWrap');
   const results = document.getElementById('assignmentResults');
@@ -332,6 +366,8 @@
     if (row.school === 'eae_lykeio') return row.grade ? `${row.grade} Λύκειο Ε.Α.Ε.` : 'Λύκειο Ε.Α.Ε.';
     if (row.school === 'eneegyl_gymnasio') return 'Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.';
     if (row.school === 'kallitexniko_gymnasio') return 'Καλλιτεχνικό Γυμνάσιο';
+    if (row.school === 'epal') return row.grade ? `${row.grade} ΕΠΑ.Λ.` : 'ΕΠΑ.Λ.';
+    if (row.school === 'evening_epal') return row.grade ? `${row.grade} Εσπερινού ΕΠΑ.Λ.` : 'Εσπερινό ΕΠΑ.Λ.';
     if (row.school === 'eneegyl_lykeio') {
       const shownGrade = (row.grades && row.grades.length)
         ? (gradeFilter.value !== 'all' && row.grades.includes(gradeFilter.value) ? gradeFilter.value : row.grades.join('/'))
@@ -341,7 +377,16 @@
     return row.school || '';
   }
 
+  const schoolCheckboxes = [schoolGymnasio, schoolEveningGym, schoolGel, schoolEveningGel, schoolEpal, schoolEveningEpal, schoolEaeGym, schoolEaeLykeio, schoolEneegylGym, schoolEneegylLykeio, schoolKallitexnikoGym];
+
+  function syncSchoolAll(){
+    const checkedCount = schoolCheckboxes.filter(function(box){ return box.checked; }).length;
+    schoolAll.checked = checkedCount === schoolCheckboxes.length;
+    schoolAll.indeterminate = checkedCount > 0 && checkedCount < schoolCheckboxes.length;
+  }
+
   function render(){
+    syncSchoolAll();
     const code = normalize(specialty.value);
     const includeGymnasio = schoolGymnasio.checked;
     const includeGel = schoolGel.checked;
@@ -352,8 +397,10 @@
     const includeEneegylGym = schoolEneegylGym.checked;
     const includeEneegylLykeio = schoolEneegylLykeio.checked;
     const includeKallitexnikoGym = schoolKallitexnikoGym.checked;
+    const includeEpal = schoolEpal.checked;
+    const includeEveningEpal = schoolEveningEpal.checked;
     const grade = gradeFilter.value;
-    gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEaeLykeio || includeEneegylLykeio));
+    gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEaeLykeio || includeEneegylLykeio || includeEpal || includeEveningEpal));
 
     if (!code) {
       results.innerHTML = '';
@@ -379,7 +426,9 @@
       if (row.school === 'eneegyl_gymnasio' && !includeEneegylGym) return;
       if (row.school === 'eneegyl_lykeio' && !includeEneegylLykeio) return;
       if (row.school === 'kallitexniko_gymnasio' && !includeKallitexnikoGym) return;
-      if (row.school === 'gel' || row.school === 'evening_gel' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio') {
+      if (row.school === 'epal' && !includeEpal) return;
+      if (row.school === 'evening_epal' && !includeEveningEpal) return;
+      if (row.school === 'gel' || row.school === 'evening_gel' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio' || row.school === 'epal' || row.school === 'evening_epal') {
         const rowGrades = Array.isArray(row.grades) ? row.grades : (row.grade ? [row.grade] : []);
         if (grade !== 'all' && !rowGrades.includes(grade)) return;
       }
@@ -447,18 +496,27 @@
   schoolEneegylGym.addEventListener('change', render);
   schoolEneegylLykeio.addEventListener('change', render);
   schoolKallitexnikoGym.addEventListener('change', render);
+  schoolEpal.addEventListener('change', render);
+  schoolEveningEpal.addEventListener('change', render);
+  schoolAll.addEventListener('change', function(){
+    const target = schoolAll.checked;
+    schoolCheckboxes.forEach(function(box){ box.checked = target; });
+    render();
+  });
   gradeFilter.addEventListener('change', render);
   render();
 })();
 </script>
 
 <?php sourceCardStart(); ?>
-  <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο τίτλο «Αναθέσεις μαθημάτων Γυμνασίου και Γενικού Λυκείου» και δεν δημοσιεύει χωριστό πίνακα αναθέσεων για τα εσπερινά, γι’ αυτό στο εργαλείο τα εσπερινά χρησιμοποιούν τον αντίστοιχο πίνακα Γυμνασίου/ΓΕΛ. <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. <strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026. Έχει ενσωματωθεί <strong>ολόκληρος ο πίνακας ΕΝ.Ε.Ε.ΓΥ.-Λ.</strong>: Γυμνάσιο, Α΄ τάξη Λυκείου, Γενική Παιδεία Β΄/Γ΄/Δ΄, οι 8 κοινοί Τομείς Β΄–Γ΄ και οι 33 ειδικότητες της Δ΄ τάξης, μαζί με τις κατά προτεραιότητα αναθέσεις και τις ειδικές προϋποθέσεις. Οι αποφάσεις ισχύουν για το σχολικό έτος 2026-2027 και περιλαμβάνουν το μάθημα <strong>Ηθική</strong>. <strong>Καλλιτεχνικά Σχολεία:</strong> Υ.Α. 65409/Δ2/12-06-2024, ΦΕΚ Β΄ 3418/13-06-2024 (ΑΔΑ 99ΓΦ46ΝΚΠΔ-9Γ1), η οποία τροποποιεί και διαμορφώνει τον ισχύοντα πίνακα της Υ.Α. 148262/Δ2/10-09-2018 (ΦΕΚ Β΄ 4077). Στην παρούσα φάση έχουν ενσωματωθεί οι αναθέσεις του <strong>Καλλιτεχνικού Γυμνασίου για τους κλάδους ΠΕ/ΤΕ</strong>, με τις ειδικεύσεις και τις συνδιδασκαλίες που ορίζει η απόφαση· οι ειδικοί πίνακες Θεάτρου–Κινηματογράφου και Χορού θα προστεθούν χωριστά.</p>
+  <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο τίτλο «Αναθέσεις μαθημάτων Γυμνασίου και Γενικού Λυκείου» και δεν δημοσιεύει χωριστό πίνακα αναθέσεων για τα εσπερινά, γι’ αυτό στο εργαλείο τα εσπερινά χρησιμοποιούν τον αντίστοιχο πίνακα Γυμνασίου/ΓΕΛ. <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. <strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026. Έχει ενσωματωθεί <strong>ολόκληρος ο πίνακας ΕΝ.Ε.Ε.ΓΥ.-Λ.</strong>: Γυμνάσιο, Α΄ τάξη Λυκείου, Γενική Παιδεία Β΄/Γ΄/Δ΄, οι 8 κοινοί Τομείς Β΄–Γ΄ και οι 33 ειδικότητες της Δ΄ τάξης, μαζί με τις κατά προτεραιότητα αναθέσεις και τις ειδικές προϋποθέσεις. Οι αποφάσεις ισχύουν για το σχολικό έτος 2026-2027 και περιλαμβάνουν το μάθημα <strong>Ηθική</strong>. <strong>ΕΠΑ.Λ. / Εσπερινά ΕΠΑ.Λ.:</strong> Υ.Α. Φ22/75401/Δ4/10-05-2018, ΦΕΚ Β΄ 1664/15-05-2018, όπως τροποποιήθηκε και ισχύει. Στην παρούσα φάση έχουν ενσωματωθεί η Α΄ τάξη, τα Γενικής Παιδείας Β΄/Γ΄ και οι Τομείς Γεωπονίας, Τροφίμων και Περιβάλλοντος και Διοίκησης και Οικονομίας της Β΄ τάξης. Η ίδια δέσμη αναθέσεων εφαρμόζεται και στο Εσπερινό ΕΠΑ.Λ. <strong>Καλλιτεχνικά Σχολεία:</strong> Υ.Α. 65409/Δ2/12-06-2024, ΦΕΚ Β΄ 3418/13-06-2024 (ΑΔΑ 99ΓΦ46ΝΚΠΔ-9Γ1), η οποία τροποποιεί και διαμορφώνει τον ισχύοντα πίνακα της Υ.Α. 148262/Δ2/10-09-2018 (ΦΕΚ Β΄ 4077). Στην παρούσα φάση έχουν ενσωματωθεί οι αναθέσεις του <strong>Καλλιτεχνικού Γυμνασίου για τους κλάδους ΠΕ/ΤΕ</strong>, με τις ειδικεύσεις και τις συνδιδασκαλίες που ορίζει η απόφαση· οι ειδικοί πίνακες Θεάτρου–Κινηματογράφου και Χορού θα προστεθούν χωριστά.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/anatheseis-mathimaton---eidiki-kai-entaksiaki-ekpaidefsi', 'ΥΠΑΙΘΑ — Αναθέσεις Ειδικής & Ενταξιακής Εκπαίδευσης ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3275_B_2026_ANATHESEIS%20EAE_GYMN_LYK_2026-2027.pdf', 'ΦΕΚ Β΄ 3275/2026 — Ε.Α.Ε. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3216_B_2026_ANATHESEIS%20ENEEGYL_2026-2027.pdf', 'ΦΕΚ Β΄ 3216/2026 — ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/panelladikes-eksetaseis-pistopoiitika/gel-mixanografiko?catid=1524&id=35699%3Athesmiko-plaisio-leitourgias-epal-sp-299&view=article', 'ΥΠΑΙΘΑ — Θεσμικό πλαίσιο ΕΠΑ.Λ. / Αναθέσεις ↗'); ?>
+    <?php sourceCardLink('https://gsvetlly.minedu.gov.gr/publications/mathiteia/thesmiko/%CE%91%CE%9D%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%99%CE%A3_%CE%9C%CE%91%CE%98%CE%97%CE%9C%CE%91%CE%A4%CE%A9%CE%9D_%CE%95%CE%A0%CE%91%CE%9B_%CE%A6%CE%95%CE%9A_1664-4-15-5-18.pdf', 'ΦΕΚ Β΄ 1664/2018 — Αναθέσεις ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/defterovathmia/kallitexnika', 'ΥΠΑΙΘΑ — Καλλιτεχνικά Σχολεία ↗'); ?>
     <?php sourceCardLink('https://diavgeia.gov.gr/doc/99%CE%93%CE%A646%CE%9D%CE%9A%CE%A0%CE%94-9%CE%931?inline=true', 'Υ.Α. 65409/Δ2/2024 — ΑΔΑ 99ΓΦ46ΝΚΠΔ-9Γ1 ↗'); ?>
   <?php sourceCardLinksEnd(); ?>

@@ -6,8 +6,16 @@
  * - Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026 (Γυμνάσια / Λύκεια Ε.Α.Ε.).
  * - Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026 (ΕΝ.Ε.Ε.ΓΥ.-Λ.).
  * - Υ.Α. 65409/Δ2/12-06-2024, ΦΕΚ Β΄ 3418/13-06-2024 (Καλλιτεχνικά Σχολεία).
+ * - Υ.Α. Φ22/75401/Δ4/10-05-2018, ΦΕΚ Β΄ 1664/15-05-2018, όπως ισχύει (ΕΠΑ.Λ.).
  * Ισχύς: σχολικό έτος 2026-2027.
  */
+
+
+function teachingAssignmentLoadRows($file)
+{
+    $loaded = require $file;
+    return is_array($loaded) ? $loaded : array();
+}
 
 function teachingAssignmentsData()
 {
@@ -139,19 +147,24 @@ function teachingAssignmentsData()
         }
     }
 
-    $eneegylRows = require __DIR__ . '/teaching-assignments-eneegyl.php';
+    $eneegylRows = teachingAssignmentLoadRows(__DIR__ . '/teaching-assignments-eneegyl.php');
     if (is_array($eneegylRows)) {
         $rows = array_merge($rows, $eneegylRows);
     }
 
-    $eneegylDRows = require __DIR__ . '/teaching-assignments-eneegyl-d.php';
+    $eneegylDRows = teachingAssignmentLoadRows(__DIR__ . '/teaching-assignments-eneegyl-d.php');
     if (is_array($eneegylDRows)) {
         $rows = array_merge($rows, $eneegylDRows);
     }
 
-    $kallitexnikaRows = require __DIR__ . '/teaching-assignments-kallitexnika.php';
+    $kallitexnikaRows = teachingAssignmentLoadRows(__DIR__ . '/teaching-assignments-kallitexnika.php');
     if (is_array($kallitexnikaRows)) {
         $rows = array_merge($rows, $kallitexnikaRows);
+    }
+
+    $epalRows = teachingAssignmentLoadRows(__DIR__ . '/teaching-assignments-epal.php');
+    if (is_array($epalRows)) {
+        $rows = array_merge($rows, $epalRows);
     }
 
     return $rows;
