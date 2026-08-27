@@ -323,7 +323,7 @@ foreach ($digitalTutoringSpecialties as $code) {
       return;
     }
     box.className = 'success';
-    box.innerHTML = positions.map(item => '<div class="assignment"><strong>' + item.category + ' · ' + item.course + '</strong><span class="badge">' + item.seats + (item.seats === 1 ? ' θέση' : ' θέσεις') + '</span>' + (item.note ? '<small>' + item.note + '</small>' : '') + '</div>').join('');
+    box.innerHTML = positions.map(item => '<div class="assignment"><strong>' + item.category + ' · ' + item.course + '</strong> <span class="badge">' + item.seats + (item.seats === 1 ? ' θέση' : ' θέσεις') + '</span>' + (item.note ? '<small>' + item.note + '</small>' : '') + '</div>').join('');
   }
 
   function specialtyChanged(){
