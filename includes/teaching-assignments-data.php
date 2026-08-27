@@ -104,10 +104,27 @@ function teachingAssignmentsData()
 
     /*
      * Εσπερινό Γυμνάσιο / Εσπερινό ΓΕΛ.
-     * Η Υ.Α. 54058/Δ2/2026 ορίζει ενιαία «Αναθέσεις μαθημάτων
-     * Γυμνασίου και Γενικού Λυκείου» χωρίς χωριστό πίνακα εσπερινών.
-     * Για το UI κρατάμε διακριτό τύπο σχολείου, με το ίδιο assignment set.
+     * Η Υ.Α. 54058/Δ2/2026 ορίζει ενιαίο πίνακα αναθέσεων για Γυμνάσιο/ΓΕΛ,
+     * αλλά τα ωρολόγια των εσπερινών δεν είναι ταυτόσημα με των ημερησίων.
+     * Επομένως αντιγράφουμε τις ίδιες αναθέσεις μόνο για μαθήματα που υπάρχουν
+     * πράγματι στο ισχύον ωρολόγιο του αντίστοιχου εσπερινού σχολείου.
+     * Για το Εσπερινό ΓΕΛ: Υ.Α. 43706/Δ2/2026, ΦΕΚ Β΄ 2102/09-04-2026.
      */
+    $eveningGelExcludedSubjects = array(
+        'Α΄' => array(
+            '2η Ξένη Γλώσσα (Γαλλικά ή Γερμανικά)',
+        ),
+        'Β΄' => array(
+            'Εισαγωγή στις Αρχές της Επιστήμης των Η/Υ',
+            'Φιλοσοφία',
+            '2η Ξένη Γλώσσα (Γαλλικά ή Γερμανικά)',
+        ),
+        'Γ΄' => array(
+            'Αγγλικά',
+            'Φυσική Αγωγή',
+        ),
+    );
+
     $dayGeneralRows = $rows;
     foreach ($dayGeneralRows as $row) {
         if ($row['school'] === 'gymnasio') {
@@ -115,6 +132,12 @@ function teachingAssignmentsData()
             $copy['school'] = 'evening_gymnasio';
             $rows[] = $copy;
         } elseif ($row['school'] === 'gel') {
+            $excluded = isset($eveningGelExcludedSubjects[$row['grade']])
+                ? $eveningGelExcludedSubjects[$row['grade']]
+                : array();
+            if (in_array($row['subject'], $excluded, true)) {
+                continue;
+            }
             $copy = $row;
             $copy['school'] = 'evening_gel';
             $rows[] = $copy;
