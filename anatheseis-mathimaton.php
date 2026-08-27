@@ -128,7 +128,7 @@
     'title_html' => 'Αναθέσεις Μαθημάτων ανά Ειδικότητα',
     'intro' => 'Επίλεξε τον κλάδο / την ειδικότητά σου και δες ποια μαθήματα έχεις σε Α΄, Β΄ ή Γ΄ ανάθεση.',
     'meta_class' => 'meta',
-    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Α΄ · Β΄ · Γ΄ ανάθεση')
+    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'ΕΠΑΛ', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Α΄ · Β΄ · Γ΄ ανάθεση')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
@@ -173,6 +173,19 @@
             </div>
           </div>
           <div class="school-type-group">
+            <div class="school-type-group__title">Επαγγελματική Εκπαίδευση</div>
+            <div class="school-type-options">
+              <div class="checkrow">
+                <input type="checkbox" id="schoolEpal">
+                <label for="schoolEpal">ΕΠΑΛ <small>(Α΄ πλήρης + Β΄/Γ΄ Γενικής Παιδείας)</small></label>
+              </div>
+              <div class="checkrow">
+                <input type="checkbox" id="schoolEveningEpal">
+                <label for="schoolEveningEpal">Εσπερινό ΕΠΑΛ <small>(Α΄ πλήρης + Β΄/Γ΄ Γενικής Παιδείας)</small></label>
+              </div>
+            </div>
+          </div>
+          <div class="school-type-group">
             <div class="school-type-group__title">Ειδική Αγωγή και Εκπαίδευση</div>
             <div class="school-type-options">
               <div class="checkrow">
@@ -193,6 +206,7 @@
               </div>
             </div>
           </div>
+          <p class="help"><strong>ΕΠΑΛ:</strong> έχει πλέον περαστεί <strong>ολόκληρη η Α΄ τάξη</strong> (Γενικής Παιδείας, Προσανατολισμού και Επιλογής) και τα <strong>Μαθήματα Γενικής Παιδείας της Β΄ και Γ΄ τάξης</strong>, για Ημερήσιο και Εσπερινό ΕΠΑΛ. Οι Τομείς της Β΄ και οι Ειδικότητες της Γ΄ θα προστεθούν χωριστά.</p>
           <p class="help"><strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> έχουν περαστεί το Γυμνάσιο, η <strong>Α΄ τάξη Λυκείου</strong> (Γενική Παιδεία, Προσανατολισμός και Επιλογής) και, στο παρόν ελεγχόμενο βήμα, <strong>τα Μαθήματα Γενικής Παιδείας της Β΄, Γ΄ και Δ΄ τάξης και μόνο οι οκτώ πρώτοι κοινοί Τομείς Β΄–Γ΄: Γεωπονίας, Τροφίμων και Περιβάλλοντος, Διοίκησης και Οικονομίας, Δομικών Έργων, Δομημένου Περιβάλλοντος και Αρχιτεκτονικού Σχεδιασμού, Εφαρμοσμένων Τεχνών, Ηλεκτρολογίας, Ηλεκτρονικής και Αυτοματισμού, Μηχανολογίας, Πληροφορικής και Υγείας – Πρόνοιας – Ευεξίας</strong>. Οι υπόλοιποι κοινοί τομείς Β΄–Γ΄ και οι πίνακες ειδικοτήτων της Δ΄ τάξης θα προστεθούν χωριστά.</p>
         </div>
 
@@ -256,6 +270,8 @@
   const schoolGel = document.getElementById('schoolGel');
   const schoolEveningGym = document.getElementById('schoolEveningGym');
   const schoolEveningGel = document.getElementById('schoolEveningGel');
+  const schoolEpal = document.getElementById('schoolEpal');
+  const schoolEveningEpal = document.getElementById('schoolEveningEpal');
   const schoolEaeGym = document.getElementById('schoolEaeGym');
   const schoolEaeLykeio = document.getElementById('schoolEaeLykeio');
   const schoolEneegylGym = document.getElementById('schoolEneegylGym');
@@ -317,6 +333,8 @@
     if (row.school === 'gel') return row.grade ? `${row.grade} ΓΕΛ` : 'ΓΕΛ';
     if (row.school === 'evening_gymnasio') return 'Εσπερινό Γυμνάσιο';
     if (row.school === 'evening_gel') return row.grade ? `${row.grade} Εσπερινού ΓΕΛ` : 'Εσπερινό ΓΕΛ';
+    if (row.school === 'epal') return row.grade ? `${row.grade} ΕΠΑΛ` : 'ΕΠΑΛ';
+    if (row.school === 'evening_epal') return row.grade ? `${row.grade} Εσπερινού ΕΠΑΛ` : 'Εσπερινό ΕΠΑΛ';
     if (row.school === 'eae_gymnasio') return 'Γυμνάσιο Ε.Α.Ε.';
     if (row.school === 'eae_lykeio') return row.grade ? `${row.grade} Λύκειο Ε.Α.Ε.` : 'Λύκειο Ε.Α.Ε.';
     if (row.school === 'eneegyl_gymnasio') return 'Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.';
@@ -335,12 +353,14 @@
     const includeGel = schoolGel.checked;
     const includeEveningGym = schoolEveningGym.checked;
     const includeEveningGel = schoolEveningGel.checked;
+    const includeEpal = schoolEpal.checked;
+    const includeEveningEpal = schoolEveningEpal.checked;
     const includeEaeGym = schoolEaeGym.checked;
     const includeEaeLykeio = schoolEaeLykeio.checked;
     const includeEneegylGym = schoolEneegylGym.checked;
     const includeEneegylLykeio = schoolEneegylLykeio.checked;
     const grade = gradeFilter.value;
-    gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEaeLykeio || includeEneegylLykeio));
+    gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEpal || includeEveningEpal || includeEaeLykeio || includeEneegylLykeio));
 
     if (!code) {
       results.innerHTML = '';
@@ -361,11 +381,13 @@
       if (row.school === 'gel' && !includeGel) return;
       if (row.school === 'evening_gymnasio' && !includeEveningGym) return;
       if (row.school === 'evening_gel' && !includeEveningGel) return;
+      if (row.school === 'epal' && !includeEpal) return;
+      if (row.school === 'evening_epal' && !includeEveningEpal) return;
       if (row.school === 'eae_gymnasio' && !includeEaeGym) return;
       if (row.school === 'eae_lykeio' && !includeEaeLykeio) return;
       if (row.school === 'eneegyl_gymnasio' && !includeEneegylGym) return;
       if (row.school === 'eneegyl_lykeio' && !includeEneegylLykeio) return;
-      if (row.school === 'gel' || row.school === 'evening_gel' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio') {
+      if (row.school === 'gel' || row.school === 'evening_gel' || row.school === 'epal' || row.school === 'evening_epal' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio') {
         const rowGrades = Array.isArray(row.grades) ? row.grades : (row.grade ? [row.grade] : []);
         if (grade !== 'all' && !rowGrades.includes(grade)) return;
       }
@@ -428,6 +450,8 @@
   schoolGel.addEventListener('change', render);
   schoolEveningGym.addEventListener('change', render);
   schoolEveningGel.addEventListener('change', render);
+  schoolEpal.addEventListener('change', render);
+  schoolEveningEpal.addEventListener('change', render);
   schoolEaeGym.addEventListener('change', render);
   schoolEaeLykeio.addEventListener('change', render);
   schoolEneegylGym.addEventListener('change', render);
@@ -438,11 +462,17 @@
 </script>
 
 <?php sourceCardStart(); ?>
+  <p><strong>ΕΠΑΛ / Εσπερινό ΕΠΑΛ:</strong> Υ.Α. Φ22/75401/Δ4/10-05-2018, ΦΕΚ Β΄ 1664/15-05-2018, όπως ισχύει. Για την Α΄ τάξη έχει ενσωματωθεί η τροποποίηση Φ22/40504/Δ4/10-04-2025, ΦΕΚ Β΄ 1975/23-04-2025 για την Ιστορία, και για Α΄/Β΄ η Φ22/55785/Δ4/07-05-2026, ΦΕΚ Β΄ 2625/11-05-2026 που προσθέτει την <strong>Ηθική</strong> και αναδιατυπώνει τους ισχύοντες πίνακες Γενικής Παιδείας. Στην παρούσα φάση έχει ενσωματωθεί <strong>ολόκληρη η Α΄ τάξη</strong> (Γενικής Παιδείας, Προσανατολισμού και Επιλογής) και τα Μαθήματα Γενικής Παιδείας της Β΄ και Γ΄. </p>
   <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο τίτλο «Αναθέσεις μαθημάτων Γυμνασίου και Γενικού Λυκείου» και δεν δημοσιεύει χωριστό πίνακα αναθέσεων για τα εσπερινά, γι’ αυτό στο εργαλείο τα εσπερινά χρησιμοποιούν τον αντίστοιχο πίνακα Γυμνασίου/ΓΕΛ. <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. <strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026. Στην παρούσα ελεγχόμενη φάση έχουν ενσωματωθεί ο πίνακας του Γυμνασίου, η Α΄ τάξη του Λυκείου ΕΝ.Ε.Ε.ΓΥ.-Λ. (Γενική Παιδεία, Προσανατολισμού και Επιλογής) και τα Μαθήματα Γενικής Παιδείας της Β΄, Γ΄ και Δ΄ τάξης, μαζί με τους οκτώ πρώτους ελεγχόμενους κοινούς τομείς Β΄–Γ΄: <strong>Γεωπονίας, Τροφίμων και Περιβάλλοντος</strong>, <strong>Διοίκησης και Οικονομίας</strong>, <strong>Δομικών Έργων, Δομημένου Περιβάλλοντος και Αρχιτεκτονικού Σχεδιασμού</strong>, <strong>Εφαρμοσμένων Τεχνών</strong>, <strong>Ηλεκτρολογίας, Ηλεκτρονικής και Αυτοματισμού</strong>, <strong>Μηχανολογίας</strong>, <strong>Πληροφορικής</strong> και <strong>Υγείας – Πρόνοιας – Ευεξίας</strong>. Οι αποφάσεις ισχύουν για το σχολικό έτος 2026-2027 και περιλαμβάνουν το μάθημα <strong>Ηθική</strong>.</p>
   <?php sourceCardLinksStart(); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/lykeio-draseis?id=1524&view=category', 'ΥΠΑΙΘΑ — Θεσμικό πλαίσιο ΕΠΑΛ / Αναθέσεις ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/EPAL_FEK_1664%CE%92_15-05-2018.pdf', 'Υ.Α. Φ22/75401/Δ4 — ΦΕΚ Β΄ 1664/15-05-2018 — Βασικές αναθέσεις ΕΠΑΛ ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/FEK_2637B.pdf', 'Υ.Α. Φ22/107970/Δ4 — ΦΕΚ Β΄ 2637/05-07-2018 — Ναυτιλιακές Γνώσεις Α΄ ΕΠΑΛ ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2023/2025_04_10_%CE%95%CE%9E%CE%95_40504_%CF%84%CF%81%CE%BF%CF%80%CE%BF%CF%80_%CE%A5%CE%91_%CE%91%CE%BD%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CE%B9%CF%82_%CE%BC%CE%B1%CE%B8%CE%AE%CE%BC_%CE%99%CE%A3%CE%A4%CE%9F%CE%A1%CE%99%CE%91_%CE%91_%CF%84%CE%AC%CE%BE%CE%B7%CF%82_%CE%95%CE%A0%CE%91%CE%9B_%CE%A6%CE%95%CE%9A_1975%CE%92_23.04.2025.pdf', 'Υ.Α. Φ22/40504/Δ4 — ΦΕΚ Β΄ 1975/23-04-2025 — Ιστορία Α΄ ΕΠΑΛ ↗'); ?>
+    <?php sourceCardLink('https://www.mydocman.gr/f22-75401-d4-2018', 'Φ22/75401/Δ4/2018 όπως τροποποιήθηκε — περιλαμβάνει ΦΕΚ Β΄ 2625/2026 (Ηθική) ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/anatheseis-mathimaton---eidiki-kai-entaksiaki-ekpaidefsi', 'ΥΠΑΙΘΑ — Αναθέσεις Ειδικής & Ενταξιακής Εκπαίδευσης ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3275_B_2026_ANATHESEIS%20EAE_GYMN_LYK_2026-2027.pdf', 'ΦΕΚ Β΄ 3275/2026 — Ε.Α.Ε. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3275_B_2026_ANATHESEIS%20EAE_GYMN_LYK_2026-2027.pdf', 'Υ.Α. 72559/Δ3 — ΦΕΚ Β΄ 3275/11-06-2026 — Αναθέσεις Γυμνασίων & Λυκείων Ε.Α.Ε. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3216_B_2026_ANATHESEIS%20ENEEGYL_2026-2027.pdf', 'ΦΕΚ Β΄ 3216/2026 — ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>

@@ -138,6 +138,11 @@ function teachingAssignmentsData()
         }
     }
 
+    $epalRows = require __DIR__ . '/teaching-assignments-epal.php';
+    if (is_array($epalRows)) {
+        $rows = array_merge($rows, $epalRows);
+    }
+
     $eneegylRows = require __DIR__ . '/teaching-assignments-eneegyl.php';
     if (is_array($eneegylRows)) {
         $rows = array_merge($rows, $eneegylRows);
