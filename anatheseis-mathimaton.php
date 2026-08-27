@@ -1,5 +1,6 @@
 <?php require_once __DIR__ . '/includes/config.php'; ?>
 <?php require_once __DIR__ . '/includes/teaching-assignments-data.php'; ?>
+<?php require_once __DIR__ . '/includes/teacher-specialties.php'; ?>
 <!doctype html>
 <html lang="el">
 <head>
@@ -143,7 +144,7 @@
             <select id="specialty">
               <option value="">— Επιλογή κλάδου —</option>
               <?php foreach (teachingAssignmentKnownSpecialties() as $code): ?>
-                <option value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?></option>
+                <option value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars(teacherSpecialtyDisplay($code), ENT_QUOTES, 'UTF-8'); ?></option>
               <?php endforeach; ?>
             </select>
           </div>
@@ -464,13 +465,16 @@
 <?php sourceCardStart(); ?>
   <p><strong>ΕΠΑΛ / Εσπερινό ΕΠΑΛ:</strong> Υ.Α. Φ22/75401/Δ4/10-05-2018, ΦΕΚ Β΄ 1664/15-05-2018, όπως ισχύει. Για την Α΄ τάξη έχει ενσωματωθεί η τροποποίηση Φ22/40504/Δ4/10-04-2025, ΦΕΚ Β΄ 1975/23-04-2025 για την Ιστορία, και για Α΄/Β΄ η Φ22/55785/Δ4/07-05-2026, ΦΕΚ Β΄ 2625/11-05-2026 που προσθέτει την <strong>Ηθική</strong> και αναδιατυπώνει τους ισχύοντες πίνακες Γενικής Παιδείας. Στην παρούσα φάση έχει ενσωματωθεί <strong>ολόκληρη η Α΄ τάξη</strong> (Γενικής Παιδείας, Προσανατολισμού και Επιλογής) και τα Μαθήματα Γενικής Παιδείας της Β΄ και Γ΄. </p>
   <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο τίτλο «Αναθέσεις μαθημάτων Γυμνασίου και Γενικού Λυκείου» και δεν δημοσιεύει χωριστό πίνακα αναθέσεων για τα εσπερινά, γι’ αυτό στο εργαλείο τα εσπερινά χρησιμοποιούν τον αντίστοιχο πίνακα Γυμνασίου/ΓΕΛ. <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. <strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026. Στην παρούσα ελεγχόμενη φάση έχουν ενσωματωθεί ο πίνακας του Γυμνασίου, η Α΄ τάξη του Λυκείου ΕΝ.Ε.Ε.ΓΥ.-Λ. (Γενική Παιδεία, Προσανατολισμού και Επιλογής) και τα Μαθήματα Γενικής Παιδείας της Β΄, Γ΄ και Δ΄ τάξης, μαζί με τους οκτώ πρώτους ελεγχόμενους κοινούς τομείς Β΄–Γ΄: <strong>Γεωπονίας, Τροφίμων και Περιβάλλοντος</strong>, <strong>Διοίκησης και Οικονομίας</strong>, <strong>Δομικών Έργων, Δομημένου Περιβάλλοντος και Αρχιτεκτονικού Σχεδιασμού</strong>, <strong>Εφαρμοσμένων Τεχνών</strong>, <strong>Ηλεκτρολογίας, Ηλεκτρονικής και Αυτοματισμού</strong>, <strong>Μηχανολογίας</strong>, <strong>Πληροφορικής</strong> και <strong>Υγείας – Πρόνοιας – Ευεξίας</strong>. Οι αποφάσεις ισχύουν για το σχολικό έτος 2026-2027 και περιλαμβάνουν το μάθημα <strong>Ηθική</strong>.</p>
+  <p><strong>Έλεγχος δεδομένων:</strong> Ο πίνακας Γυμνασίου και οι πίνακες Α΄, Β΄ και Γ΄ ΓΕΛ έχουν ελεγχθεί γραμμή-γραμμή απέναντι στο ΦΕΚ Β΄ 2583/2026.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/lykeio-draseis?id=1524&view=category', 'ΥΠΑΙΘΑ — Θεσμικό πλαίσιο ΕΠΑΛ / Αναθέσεις ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/EPAL_FEK_1664%CE%92_15-05-2018.pdf', 'Υ.Α. Φ22/75401/Δ4 — ΦΕΚ Β΄ 1664/15-05-2018 — Βασικές αναθέσεις ΕΠΑΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/FEK_2637B.pdf', 'Υ.Α. Φ22/107970/Δ4 — ΦΕΚ Β΄ 2637/05-07-2018 — Ναυτιλιακές Γνώσεις Α΄ ΕΠΑΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2023/2025_04_10_%CE%95%CE%9E%CE%95_40504_%CF%84%CF%81%CE%BF%CF%80%CE%BF%CF%80_%CE%A5%CE%91_%CE%91%CE%BD%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CE%B9%CF%82_%CE%BC%CE%B1%CE%B8%CE%AE%CE%BC_%CE%99%CE%A3%CE%A4%CE%9F%CE%A1%CE%99%CE%91_%CE%91_%CF%84%CE%AC%CE%BE%CE%B7%CF%82_%CE%95%CE%A0%CE%91%CE%9B_%CE%A6%CE%95%CE%9A_1975%CE%92_23.04.2025.pdf', 'Υ.Α. Φ22/40504/Δ4 — ΦΕΚ Β΄ 1975/23-04-2025 — Ιστορία Α΄ ΕΠΑΛ ↗'); ?>
     <?php sourceCardLink('https://www.mydocman.gr/f22-75401-d4-2018', 'Φ22/75401/Δ4/2018 όπως τροποποιήθηκε — περιλαμβάνει ΦΕΚ Β΄ 2625/2026 (Ηθική) ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
+    <?php sourceCardLink('https://ia37rg02wpsa01.blob.core.windows.net/fek/02/2026/20260202583.pdf', 'Υ.Α. 54058/Δ2 — ΦΕΚ Β΄ 2583/07-05-2026 — Αναθέσεις Γυμνασίου & ΓΕΛ ↗'); ?>
+    <?php sourceCardLink('https://www.mydocman.gr/54058-d2-2026', '54058/Δ2/2026 — καταχώριση απόφασης / εύκολη αναφορά ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Θεσμικό αρχείο αναθέσεων Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/anatheseis-mathimaton---eidiki-kai-entaksiaki-ekpaidefsi', 'ΥΠΑΙΘΑ — Αναθέσεις Ειδικής & Ενταξιακής Εκπαίδευσης ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3275_B_2026_ANATHESEIS%20EAE_GYMN_LYK_2026-2027.pdf', 'Υ.Α. 72559/Δ3 — ΦΕΚ Β΄ 3275/11-06-2026 — Αναθέσεις Γυμνασίων & Λυκείων Ε.Α.Ε. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3216_B_2026_ANATHESEIS%20ENEEGYL_2026-2027.pdf', 'ΦΕΚ Β΄ 3216/2026 — ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>

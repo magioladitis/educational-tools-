@@ -8,6 +8,17 @@
  * Ισχύς: σχολικό έτος 2026-2027.
  */
 
+
+/**
+ * Φορτώνει dataset σε απομονωμένο function scope ώστε οι τοπικές μεταβλητές
+ * του include (π.χ. $rows) να μην αντικαθιστούν τις μεταβλητές του βασικού dataset.
+ * PHP 5.6 compatible.
+ */
+function teachingAssignmentsLoadDataset($file)
+{
+    return require $file;
+}
+
 function teachingAssignmentsData()
 {
     $rows = [
@@ -16,7 +27,7 @@ function teachingAssignmentsData()
         ['school'=>'gymnasio','grade'=>'','section'=>'Νεοελληνική Γλώσσα και Γραμματεία','subject'=>'Νεοελληνική Λογοτεχνία','A'=>['ΠΕ02']],
         ['school'=>'gymnasio','grade'=>'','section'=>'Αρχαία Ελληνική Γλώσσα και Γραμματεία','subject'=>'Αρχαία Ελληνική Γλώσσα','A'=>['ΠΕ02']],
         ['school'=>'gymnasio','grade'=>'','section'=>'Αρχαία Ελληνική Γλώσσα και Γραμματεία','subject'=>'Αρχαία Ελληνικά Κείμενα από Μετάφραση','A'=>['ΠΕ02']],
-        ['school'=>'gymnasio','grade'=>'','section'=>'','subject'=>'Μαθηματικά','A'=>['ΠΕ03'],'B'=>['ΠΕ04.01','ΠΕ86'],'B_notes'=>['ΠΕ04.01'=>'με πτυχίο Μαθηματικών ή Πληροφορικής','ΠΕ86'=>'με πτυχίο Μαθηματικών ή Πληροφορικής'],'C'=>['ΠΕ04.02','ΠΕ04.03','ΠΕ04.04','ΠΕ04.05']],
+        ['school'=>'gymnasio','grade'=>'','section'=>'','subject'=>'Μαθηματικά','A'=>['ΠΕ03'],'B'=>['ΠΕ04.01','ΠΕ86'],'B_notes'=>['ΠΕ86'=>'με πτυχίο Μαθηματικών ή Πληροφορικής'],'C'=>['ΠΕ04.02','ΠΕ04.03','ΠΕ04.04','ΠΕ04.05']],
         ['school'=>'gymnasio','grade'=>'','section'=>'','subject'=>'Φυσική','A'=>['ΠΕ04.01'],'B'=>['ΠΕ03','ΠΕ04.02','ΠΕ04.03','ΠΕ04.04','ΠΕ04.05'],'C'=>['ΠΕ81']],
         ['school'=>'gymnasio','grade'=>'','section'=>'','subject'=>'Χημεία','A'=>['ΠΕ04.02','ΠΕ85'],'A_notes'=>['ΠΕ85'=>'με πτυχίο Χημικών Μηχανικών'],'B'=>['ΠΕ04.01','ΠΕ04.03','ΠΕ04.04','ΠΕ04.05'],'C'=>['ΠΕ88.01']],
         ['school'=>'gymnasio','grade'=>'','section'=>'','subject'=>'Βιολογία','A'=>['ΠΕ04.04','ΠΕ04.03'],'B'=>['ΠΕ04.01','ΠΕ04.02','ΠΕ04.05','ΠΕ87.01','ΠΕ88.01']],
@@ -138,12 +149,12 @@ function teachingAssignmentsData()
         }
     }
 
-    $epalRows = require __DIR__ . '/teaching-assignments-epal.php';
+    $epalRows = teachingAssignmentsLoadDataset(__DIR__ . '/teaching-assignments-epal.php');
     if (is_array($epalRows)) {
         $rows = array_merge($rows, $epalRows);
     }
 
-    $eneegylRows = require __DIR__ . '/teaching-assignments-eneegyl.php';
+    $eneegylRows = teachingAssignmentsLoadDataset(__DIR__ . '/teaching-assignments-eneegyl.php');
     if (is_array($eneegylRows)) {
         $rows = array_merge($rows, $eneegylRows);
     }
