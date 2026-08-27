@@ -125,3 +125,24 @@ function teacherSpecialtyDisplay($code)
     $label = teacherSpecialtyLabel($code);
     return $label !== '' ? $code . ' — ' . $label : $code;
 }
+
+function teacherSpecialtyCanonicalCode($code)
+{
+    $code = trim((string) $code);
+    if (strpos($code, 'PE') === 0) {
+        return 'ΠΕ' . substr($code, 2);
+    }
+    if (strpos($code, 'TE') === 0) {
+        return 'ΤΕ' . substr($code, 2);
+    }
+    if (strpos($code, 'DE') === 0) {
+        return 'ΔΕ' . substr($code, 2);
+    }
+    return $code;
+}
+
+function teacherSpecialtyDisplayFromInternal($code)
+{
+    return teacherSpecialtyDisplay(teacherSpecialtyCanonicalCode($code));
+}
+

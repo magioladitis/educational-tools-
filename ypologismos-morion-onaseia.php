@@ -1,4 +1,7 @@
-<?php require_once __DIR__ . '/includes/config.php'; ?>
+<?php
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/teacher-specialties.php';
+?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -61,26 +64,20 @@ renderDeadlineCard(array(
       <label for="specialty">Επίλεξε κλάδο</label>
       <select id="specialty">
         <option value="">-- Επιλογή --</option>
-        <option value="ΠΕ01">ΠΕ01 Θεολόγοι</option>
-        <option value="ΠΕ02">ΠΕ02 Φιλόλογοι</option>
-        <option value="ΠΕ03">ΠΕ03 Μαθηματικοί</option>
-        <option value="ΠΕ04">ΠΕ04 Φυσικών Επιστημών</option>
-        <option value="ΠΕ05">ΠΕ05 Γαλλικής</option>
-        <option value="ΠΕ06">ΠΕ06 Αγγλικής</option>
-        <option value="ΠΕ07">ΠΕ07 Γερμανικής</option>
-        <option value="ΠΕ08">ΠΕ08 Καλλιτεχνικών</option>
-        <option value="ΠΕ11">ΠΕ11 Φυσικής Αγωγής</option>
-        <option value="ΠΕ78">ΠΕ78 Κοινωνικών Επιστημών</option>
-        <option value="ΠΕ79.01">ΠΕ79.01 Μουσικής Επιστήμης</option>
-        <option value="ΠΕ80">ΠΕ80 Οικονομίας</option>
-        <option value="ΠΕ81">ΠΕ81 Πολιτικών Μηχανικών - Αρχιτεκτόνων</option>
-        <option value="ΠΕ82">ΠΕ82 Μηχανολόγων</option>
-        <option value="ΠΕ83">ΠΕ83 Ηλεκτρολόγων</option>
-        <option value="ΠΕ84">ΠΕ84 Ηλεκτρονικών</option>
-        <option value="ΠΕ85">ΠΕ85 Χημικών Μηχανικών</option>
-        <option value="ΠΕ86">ΠΕ86 Πληροφορικής</option>
-        <option value="ΠΕ88">ΠΕ88 Γεωπονίας / Διατροφής / Περιβάλλοντος</option>
-        <option value="ΤΕ16">ΤΕ16 Μουσικής</option>
+        <?php
+        // ΔΗΜ.Ω.Σ.: κρατάμε το ειδικό allowlist του εργαλείου.
+        // Το κοινό registry παρέχει μόνο τα λεκτικά.
+        $onaseiaSpecialties = array(
+            'ΠΕ01', 'ΠΕ02', 'ΠΕ03', 'ΠΕ04', 'ΠΕ05', 'ΠΕ06', 'ΠΕ07', 'ΠΕ08', 'ΠΕ11',
+            'ΠΕ78', 'ΠΕ79.01', 'ΠΕ80', 'ΠΕ81', 'ΠΕ82', 'ΠΕ83', 'ΠΕ84', 'ΠΕ85', 'ΠΕ86',
+            'ΠΕ88', 'ΤΕ16'
+        );
+        foreach ($onaseiaSpecialties as $code) {
+            echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '">'
+                . htmlspecialchars(teacherSpecialtyDisplay($code), ENT_QUOTES, 'UTF-8')
+                . '</option>';
+        }
+        ?>
       </select>
     </div>
 
@@ -88,10 +85,14 @@ renderDeadlineCard(array(
       <label for="pe04VacancySpecialty">Ειδικότητα ΠΕ04 για προβολή φετινών κενών</label>
       <select id="pe04VacancySpecialty">
         <option value="">-- Επιλογή ειδικότητας ΠΕ04 --</option>
-        <option value="ΠΕ04.01">ΠΕ04.01 Φυσικοί</option>
-        <option value="ΠΕ04.02">ΠΕ04.02 Χημικοί</option>
-        <option value="ΠΕ04.04">ΠΕ04.04 Βιολόγοι</option>
-        <option value="ΠΕ04.05">ΠΕ04.05 Γεωλόγοι</option>
+        <?php
+        $onaseiaPe04VacancySpecialties = array('ΠΕ04.01', 'ΠΕ04.02', 'ΠΕ04.04', 'ΠΕ04.05');
+        foreach ($onaseiaPe04VacancySpecialties as $code) {
+            echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '">'
+                . htmlspecialchars(teacherSpecialtyDisplay($code), ENT_QUOTES, 'UTF-8')
+                . '</option>';
+        }
+        ?>
       </select>
       <p class="note">Η υποεπιλογή χρησιμοποιείται μόνο για την προβολή των λειτουργικών αναγκών και δεν αλλάζει τον υπολογισμό των ακαδημαϊκών μορίων ΠΕ04.</p>
     </div>

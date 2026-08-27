@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/includes/config.php'; ?>
+<?php require_once __DIR__ . '/includes/teacher-specialties.php'; ?>
 <!doctype html>
 <html lang="el">
 <head>
@@ -29,7 +30,16 @@
 
     <div id="educatorEligibility" class="hidden">
       <div class="field-grid edu-mt-13">
-        <div class="field"><label for="specialty">Κλάδος / ειδικότητα</label><select id="specialty" onchange="specialtyChanged()"><option value="">— Επίλεξε —</option></select></div>
+        <div class="field"><label for="specialty">Κλάδος / ειδικότητα</label><select id="specialty" onchange="specialtyChanged()"><option value="">— Επίλεξε —</option><?php
+$sdeRegistrySpecialties = array(
+    'PE01', 'PE02', 'PE03', 'PE04.01', 'PE04.02', 'PE04.03', 'PE04.04', 'PE04.05',
+    'PE06', 'PE08', 'PE78', 'PE79.01', 'PE80', 'PE85', 'PE86', 'PE87.01', 'PE88.01',
+    'PE88.05', 'PE89.01', 'PE91', 'TE16'
+);
+foreach ($sdeRegistrySpecialties as $code) {
+    echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(teacherSpecialtyDisplayFromInternal($code), ENT_QUOTES, 'UTF-8') . '</option>';
+}
+?></select></div>
         <div class="field"><label for="eoppepAdultTrainer">Πιστοποίηση εκπαιδευτικής επάρκειας Εκπαιδευτή Ενηλίκων ΕΟΠΠΕΠ <small>Δεν δίνει μόρια, αλλά οι πιστοποιημένοι εκπαιδευτές απασχολούνται κατά προτεραιότητα.</small></label><select id="eoppepAdultTrainer" onchange="calculate()"><option value="no">Όχι / δεν έχει δηλωθεί</option><option value="yes">Ναι</option></select></div>
       </div>
       <div id="assignmentPanel" class="note">Επίλεξε κλάδο για να εμφανιστούν τα γνωστικά αντικείμενα Α΄/Β΄ ανάθεσης.</div>
@@ -160,7 +170,6 @@ const $=id=>document.getElementById(id); const val=id=>$(id)?.value||''; const c
 const fmt=x=>Number(x||0).toLocaleString('el-GR',{maximumFractionDigits:2,minimumFractionDigits:Number.isInteger(Number(x||0))?0:1});
 function boolSelect(id){const v=val(id);return v==='yes'?true:v==='no'?false:null;}
 
-function fillSpecialties(){const s=$('specialty');Object.entries(SDERegistryCalc.SPECIALTIES).forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;s.appendChild(o);});}
 function show(id,on){$(id).classList.toggle('hidden',!on);}
 function pe86ComputerExcluded(){return val('role')==='educator'&&val('specialty')==='PE86';}
 function updateComputerUI(){const excluded=pe86ComputerExcluded(),c=$('computer');if(excluded)c.checked=false;c.disabled=excluded;show('computerPe86Note',excluded);}
@@ -202,7 +211,7 @@ function calculate(){const d=data(),r=SDERegistryCalc.calculateAll(d);$('roleChi
 function copySummary(btn){const d=data(),r=SDERegistryCalc.calculateAll(d);let t='Μόρια Μητρώου ΣΔΕ\nΚατηγορία: '+(SDERegistryCalc.ROLE[d.role]||'—')+'\nΕκπαίδευση: '+fmt(r.education.total)+'/22\nΕμπειρία: '+fmt(r.experience.total)+'/13\nΆλλα προσόντα: '+fmt(r.other.total)+'/5\nΒασική βαθμολογία: '+fmt(r.base)+'/40\nΑνεργία: +'+fmt(r.social.unemploymentPoints)+' ('+fmt(r.social.unemploymentPercent)+'%)\nΕιδικές κατηγορίες: +'+fmt(r.social.specialPoints)+' ('+r.social.specialPercent+'%)\nΤελικό: '+fmt(r.final);navigator.clipboard?.writeText(t).then(()=>{const old=btn.textContent;btn.textContent='Αντιγράφηκε ✓';setTimeout(()=>btn.textContent=old,1400);});}
 function resetForm(){document.querySelectorAll('input[type="number"]').forEach(x=>x.value='0');document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);$('fppBefore1993').value='no';$('eoppepAdultTrainer').value='no';syncLanguageChoices();roleChanged();psychFppChanged();}
 document.addEventListener('input',function(event){const el=event.target;if(!el||el.tagName!=='INPUT'||el.type!=='number'||el.value==='')return;let value=Number(el.value);if(!Number.isFinite(value))return;const min=el.getAttribute('min'),max=el.getAttribute('max');if(min!==null&&min!=='')value=Math.max(Number(min),value);if(max!==null&&max!=='')value=Math.min(Number(max),value);if(value!==Number(el.value))el.value=String(value);});
-fillSpecialties();syncLanguageChoices();roleChanged();
+syncLanguageChoices();roleChanged();
 </script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body></html>

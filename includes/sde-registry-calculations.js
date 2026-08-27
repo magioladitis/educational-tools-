@@ -22,15 +22,7 @@
     career: 'Σύμβουλος Σταδιοδρομίας'
   });
 
-  const SPECIALTIES = Object.freeze({
-    'PE01':'ΠΕ01 Θεολόγων','PE02':'ΠΕ02 Φιλολόγων','PE03':'ΠΕ03 Μαθηματικών',
-    'PE04.01':'ΠΕ04.01 Φυσικών','PE04.02':'ΠΕ04.02 Χημικών','PE04.03':'ΠΕ04.03 Φυσιογνωστών',
-    'PE04.04':'ΠΕ04.04 Βιολόγων','PE04.05':'ΠΕ04.05 Γεωλόγων','PE06':'ΠΕ06 Αγγλικής',
-    'PE08':'ΠΕ08 Καλλιτεχνικών','PE78':'ΠΕ78 Κοινωνικών Επιστημών','PE79.01':'ΠΕ79.01 Μουσικής Επιστήμης',
-    'PE80':'ΠΕ80 Οικονομίας','PE85':'ΠΕ85 Χημικών Μηχανικών','PE86':'ΠΕ86 Πληροφορικής',
-    'PE87.01':'ΠΕ87.01 Ιατρικής','PE88.01':'ΠΕ88.01 Γεωπονίας','PE88.05':'ΠΕ88.05 Φυσικού Περιβάλλοντος',
-    'PE89.01':'ΠΕ89.01 Καλλιτεχνικών Σπουδών','PE91':'ΠΕ91 Δραματικής Τέχνης','TE16':'ΤΕ16 Μουσικής'
-  });
+
 
   function num(v) {
     const n = Number(v);
@@ -264,5 +256,5 @@
     };
   }
 
-  global.SDERegistryCalc={MAX,ROLE,SPECIALTIES,calculateFormal,calculateTraining,calculateEducation,calculateExperience,calculateLanguages,calculateOther,calculateSocial,educatorAssignments,eligibility,calculateAll};
+  global.SDERegistryCalc={MAX,ROLE,calculateFormal,calculateTraining,calculateEducation,calculateExperience,calculateLanguages,calculateOther,calculateSocial,educatorAssignments,eligibility,calculateAll};
 })(typeof window!=='undefined'?window:globalThis);

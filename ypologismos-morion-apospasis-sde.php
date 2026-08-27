@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/includes/config.php'; ?>
+<?php require_once __DIR__ . '/includes/teacher-specialties.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
 <!doctype html>
 <html lang="el">
@@ -49,23 +50,15 @@ renderDeadlineCard(array(
             <label for="specialty">Κλάδος / ειδικότητα</label>
             <select id="specialty" onchange="specialtyChanged()">
               <option value="">— Επιλογή —</option>
-              <option value="PE01">ΠΕ01 Θεολόγων</option>
-              <option value="PE02">ΠΕ02 Φιλολόγων</option>
-              <option value="PE03">ΠΕ03 Μαθηματικών</option>
-              <option value="PE04.01">ΠΕ04.01 Φυσικών</option>
-              <option value="PE04.02">ΠΕ04.02 Χημικών</option>
-              <option value="PE04.03">ΠΕ04.03 Φυσιογνωστών</option>
-              <option value="PE04.04">ΠΕ04.04 Βιολόγων</option>
-              <option value="PE04.05">ΠΕ04.05 Γεωλόγων</option>
-              <option value="PE06">ΠΕ06 Αγγλικής</option>
-              <option value="PE70">ΠΕ70 Δασκάλων</option>
-              <option value="PE78">ΠΕ78 Κοινωνικών Επιστημών</option>
-              <option value="PE80">ΠΕ80 Οικονομίας</option>
-              <option value="PE85">ΠΕ85 Χημικών Μηχανικών</option>
-              <option value="PE86">ΠΕ86 Πληροφορικής</option>
-              <option value="PE87.01">ΠΕ87.01 Ιατρικής</option>
-              <option value="PE88.01">ΠΕ88.01 Γεωπονίας</option>
-              <option value="PE88.05">ΠΕ88.05 Φυσικού Περιβάλλοντος</option>
+<?php
+$sdeSecondmentSpecialties = array(
+    'PE01', 'PE02', 'PE03', 'PE04.01', 'PE04.02', 'PE04.03', 'PE04.04', 'PE04.05',
+    'PE06', 'PE70', 'PE78', 'PE80', 'PE85', 'PE86', 'PE87.01', 'PE88.01', 'PE88.05'
+);
+foreach ($sdeSecondmentSpecialties as $code) {
+    echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(teacherSpecialtyDisplayFromInternal($code), ENT_QUOTES, 'UTF-8') . '</option>';
+}
+?>
               <option value="OTHER">Άλλη ειδικότητα</option>
             </select>
           </div>

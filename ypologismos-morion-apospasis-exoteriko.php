@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/includes/config.php'; ?>
+<?php require_once __DIR__ . '/includes/config.php'; require_once __DIR__ . '/includes/teacher-specialties.php'; ?>
 <!doctype html>
 <html lang="el">
 <head>
@@ -34,30 +34,14 @@
             </label>
             <select id="specialty">
               <option value="">— Επίλεξε ειδικότητα —</option>
-              <option value="PE01">ΠΕ01 — Θεολόγοι</option>
-              <option value="PE02">ΠΕ02 — Φιλόλογοι</option>
-              <option value="PE03">ΠΕ03 — Μαθηματικοί</option>
-              <option value="PE04.01">ΠΕ04.01 — Φυσικοί</option>
-              <option value="PE04.02">ΠΕ04.02 — Χημικοί</option>
-              <option value="PE04.03">ΠΕ04.03 — Φυσιογνώστες</option>
-              <option value="PE04.04">ΠΕ04.04 — Βιολόγοι</option>
-              <option value="PE04.05">ΠΕ04.05 — Γεωλόγοι</option>
-              <option value="PE05">ΠΕ05 — Γαλλικής</option>
-              <option value="PE06">ΠΕ06 — Αγγλικής</option>
-              <option value="PE07">ΠΕ07 — Γερμανικής</option>
-              <option value="PE08">ΠΕ08 — Καλλιτεχνικών</option>
-              <option value="PE11">ΠΕ11 — Φυσικής Αγωγής</option>
-              <option value="PE60">ΠΕ60 — Νηπιαγωγοί</option>
-              <option value="PE70">ΠΕ70 — Δάσκαλοι</option>
-              <option value="PE78">ΠΕ78 — Κοινωνικών Επιστημών</option>
-              <option value="PE79.01">ΠΕ79.01 — Μουσικής Επιστήμης</option>
-              <option value="PE80">ΠΕ80 — Οικονομίας</option>
-              <option value="PE82">ΠΕ82 — Μηχανολόγων</option>
-              <option value="PE83">ΠΕ83 — Ηλεκτρολόγων</option>
-              <option value="PE85">ΠΕ85 — Χημικών Μηχανικών</option>
-              <option value="PE86">ΠΕ86 — Πληροφορικής</option>
-              <option value="PE88.04">ΠΕ88.04 — Διατροφής</option>
-            </select>
+<?php
+$abroadSpecialties = array('PE01', 'PE02', 'PE03', 'PE04.01', 'PE04.02', 'PE04.03', 'PE04.04', 'PE04.05', 'PE05', 'PE06', 'PE07', 'PE08', 'PE11', 'PE60', 'PE70', 'PE78', 'PE79.01', 'PE80', 'PE82', 'PE83', 'PE85', 'PE86', 'PE88.04');
+foreach ($abroadSpecialties as $internalCode) {
+    echo '              <option value="' . htmlspecialchars($internalCode, ENT_QUOTES, 'UTF-8') . '">'
+        . htmlspecialchars(teacherSpecialtyDisplayFromInternal($internalCode), ENT_QUOTES, 'UTF-8')
+        . "</option>\n";
+}
+?>            </select>
             <div id="specialtyAvailability" class="info hidden"></div>
           </div>
 
@@ -320,16 +304,13 @@
   const $ = id => document.getElementById(id);
   const fmt = n => Number(n || 0).toLocaleString('el-GR', {maximumFractionDigits: 1});
 
-  const SPECIALTY_LABELS = Object.freeze({
-    "PE01":"ΠΕ01 — Θεολόγοι", "PE02":"ΠΕ02 — Φιλόλογοι", "PE03":"ΠΕ03 — Μαθηματικοί",
-    "PE04.01":"ΠΕ04.01 — Φυσικοί", "PE04.02":"ΠΕ04.02 — Χημικοί", "PE04.03":"ΠΕ04.03 — Φυσιογνώστες",
-    "PE04.04":"ΠΕ04.04 — Βιολόγοι", "PE04.05":"ΠΕ04.05 — Γεωλόγοι", "PE05":"ΠΕ05 — Γαλλικής",
-    "PE06":"ΠΕ06 — Αγγλικής", "PE07":"ΠΕ07 — Γερμανικής", "PE08":"ΠΕ08 — Καλλιτεχνικών",
-    "PE11":"ΠΕ11 — Φυσικής Αγωγής", "PE60":"ΠΕ60 — Νηπιαγωγοί", "PE70":"ΠΕ70 — Δάσκαλοι",
-    "PE78":"ΠΕ78 — Κοινωνικών Επιστημών", "PE79.01":"ΠΕ79.01 — Μουσικής Επιστήμης",
-    "PE80":"ΠΕ80 — Οικονομίας", "PE82":"ΠΕ82 — Μηχανολόγων", "PE83":"ΠΕ83 — Ηλεκτρολόγων",
-    "PE85":"ΠΕ85 — Χημικών Μηχανικών", "PE86":"ΠΕ86 — Πληροφορικής", "PE88.04":"ΠΕ88.04 — Διατροφής"
-  });
+  const SPECIALTY_LABELS = Object.freeze(<?php
+$abroadSpecialtyLabels = array();
+foreach ($abroadSpecialties as $internalCode) {
+    $abroadSpecialtyLabels[$internalCode] = teacherSpecialtyDisplayFromInternal($internalCode);
+}
+echo json_encode($abroadSpecialtyLabels, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+?>);
 
   // Παράρτημα ΙΙΙ — Πίνακας χωρών/ειδικοτήτων, πρόσκληση 11771/Η2/30-01-2026.
   const DESTINATIONS = Object.freeze([
