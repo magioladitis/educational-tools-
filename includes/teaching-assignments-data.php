@@ -6,15 +6,14 @@
  * - Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026 (Γυμνάσια / Λύκεια Ε.Α.Ε.).
  * - Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026 (ΕΝ.Ε.Ε.ΓΥ.-Λ.).
  * - Υ.Α. 65409/Δ2/12-06-2024, ΦΕΚ Β΄ 3418/13-06-2024 (Καλλιτεχνικά Σχολεία).
- * - Υ.Α. Φ22/75401/Δ4/10-05-2018, ΦΕΚ Β΄ 1664/15-05-2018, όπως ισχύει (ΕΠΑ.Λ.).
  * Ισχύς: σχολικό έτος 2026-2027.
  */
 
-
-function teachingAssignmentLoadRows($file)
+function teachingAssignmentsLoadRows($path)
 {
-    $loaded = require $file;
-    return is_array($loaded) ? $loaded : array();
+    $rows = null;
+    $result = require $path;
+    return is_array($result) ? $result : array();
 }
 
 function teachingAssignmentsData()
@@ -147,24 +146,19 @@ function teachingAssignmentsData()
         }
     }
 
-    $eneegylRows = teachingAssignmentLoadRows(__DIR__ . '/teaching-assignments-eneegyl.php');
-    if (is_array($eneegylRows)) {
-        $rows = array_merge($rows, $eneegylRows);
-    }
-
-    $eneegylDRows = teachingAssignmentLoadRows(__DIR__ . '/teaching-assignments-eneegyl-d.php');
-    if (is_array($eneegylDRows)) {
-        $rows = array_merge($rows, $eneegylDRows);
-    }
-
-    $kallitexnikaRows = teachingAssignmentLoadRows(__DIR__ . '/teaching-assignments-kallitexnika.php');
-    if (is_array($kallitexnikaRows)) {
-        $rows = array_merge($rows, $kallitexnikaRows);
-    }
-
-    $epalRows = teachingAssignmentLoadRows(__DIR__ . '/teaching-assignments-epal.php');
-    if (is_array($epalRows)) {
-        $rows = array_merge($rows, $epalRows);
+    /* Φορτώνουμε κάθε dataset σε απομονωμένο function scope ώστε το τοπικό
+     * $rows ενός include να μην μπορεί να αντικαταστήσει το κεντρικό dataset. */
+    foreach (array(
+        'teaching-assignments-eneegyl.php',
+        'teaching-assignments-eneegyl-d.php',
+        'teaching-assignments-kallitexnika.php',
+        'teaching-assignments-epal.php',
+        'teaching-assignments-pepal.php'
+    ) as $assignmentFile) {
+        $extraRows = teachingAssignmentsLoadRows(__DIR__ . '/' . $assignmentFile);
+        if ($extraRows) {
+            $rows = array_merge($rows, $extraRows);
+        }
     }
 
     return $rows;
@@ -174,7 +168,7 @@ function teachingAssignmentKnownSpecialties()
 {
     $codes = array();
     foreach (teachingAssignmentsData() as $row) {
-        foreach (array('A', 'B', 'C') as $level) {
+        foreach (array('A', 'B', 'C', 'special_codes') as $level) {
             if (empty($row[$level]) || !is_array($row[$level])) {
                 continue;
             }

@@ -137,7 +137,7 @@
     'title_html' => 'Αναθέσεις Μαθημάτων ανά Ειδικότητα',
     'intro' => 'Επίλεξε τον κλάδο / την ειδικότητά σου και δες ποια μαθήματα έχεις σε Α΄, Β΄ ή Γ΄ ανάθεση.',
     'meta_class' => 'meta',
-    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'ΕΠΑ.Λ.', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Καλλιτεχνικά', 'Α΄ · Β΄ · Γ΄ ανάθεση')
+    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'ΕΠΑ.Λ. / Π.ΕΠΑ.Λ.', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Καλλιτεχνικά', 'Α΄ · Β΄ · Γ΄ ανάθεση')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
@@ -200,6 +200,10 @@
                 <input type="checkbox" id="schoolEveningEpal">
                 <label for="schoolEveningEpal">Εσπερινό ΕΠΑ.Λ. <small>(ίδιες αναθέσεις)</small></label>
               </div>
+              <div class="checkrow">
+                <input type="checkbox" id="schoolPepal">
+                <label for="schoolPepal">Πρότυπο ΕΠΑ.Λ. (Π.ΕΠΑ.Λ.) <small>(Α΄–Β΄ τάξη πλήρεις · 9 Τομείς Β΄)</small></label>
+              </div>
             </div>
           </div>
           <div class="school-type-group">
@@ -233,6 +237,7 @@
             </div>
           </div>
           <p class="help"><strong>ΕΠΑ.Λ.:</strong> <strong>πλήρης κάλυψη Α΄–Γ΄ τάξης</strong>: Α΄ τάξη (Γενικής Παιδείας, Προσανατολισμού και Επιλογής), Γενικής Παιδείας Β΄/Γ΄, <strong>και οι 9 Τομείς της Β΄</strong> και <strong>και οι 35 Ειδικότητες της Γ΄</strong>. Έχουν ενσωματωθεί οι τροποποιήσεις ΦΕΚ Β΄ 2637/2018, 2779/2019 και 3609/2020, καθώς και η ειδική Υ.Α. για τον Τομέα Ναυτιλιακών Επαγγελμάτων (ΦΕΚ Β΄ 3520/2018).</p>
+          <p class="help"><strong>Π.ΕΠΑ.Λ.:</strong> έχουν ενσωματωθεί πλήρως οι <strong>Α΄ και Β΄ τάξεις</strong> για το 2026–2027. Η Α΄ περιλαμβάνει Γενική Παιδεία και τις έξι διαθεματικές ενότητες Επαγγελματικής Κατεύθυνσης. Η <strong>Β΄ περιλαμβάνει Γενική Παιδεία και και τους 9 Τομείς</strong>, με την ειδική τροποποίηση των Ναυτιλιακών (ΦΕΚ Β΄ 418/2023), τη Χημεία (ΦΕΚ Β΄ 5206/2023) και την Ηθική (ΦΕΚ Β΄ 2624/2026).</p>
           <p class="help"><strong>Καλλιτεχνικό Γυμνάσιο:</strong> έχουν περαστεί οι αναθέσεις του ισχύοντος πίνακα για τους κλάδους <strong>ΠΕ/ΤΕ</strong>. Οι ειδικοί πίνακες <strong>ΚΙΝΗΣΗ–ΧΟΡΟΣ, ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ, ΚΛΑΣΙΚΟΥ ΧΟΡΟΥ και ΣΥΓΧΡΟΝΟΥ ΧΟΡΟΥ</strong> θα ενσωματωθούν χωριστά, ώστε να αποτυπωθούν σωστά ως εξειδικευμένοι πίνακες και όχι ως συμβατικοί κλάδοι.</p>
           <p class="help"><strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> πλήρης κάλυψη της Υ.Α. 69785/Δ3/2026: Γυμνάσιο, <strong>Α΄ τάξη Λυκείου</strong> (Γενική Παιδεία, Προσανατολισμός και Επιλογής), <strong>Γενική Παιδεία Β΄, Γ΄ και Δ΄</strong>, οι <strong>8 κοινοί Τομείς Β΄–Γ΄</strong> και οι <strong>33 ειδικότητες της Δ΄ τάξης</strong>, με τις κατά προτεραιότητα αναθέσεις και τις ειδικές προϋποθέσεις του ΦΕΚ.</p>
         </div>
@@ -304,6 +309,7 @@
   const schoolKallitexnikoGym = document.getElementById('schoolKallitexnikoGym');
   const schoolEpal = document.getElementById('schoolEpal');
   const schoolEveningEpal = document.getElementById('schoolEveningEpal');
+  const schoolPepal = document.getElementById('schoolPepal');
   const schoolAll = document.getElementById('schoolAll');
   const gradeFilter = document.getElementById('gradeFilter');
   const gradeWrap = document.getElementById('gradeWrap');
@@ -351,6 +357,9 @@
     if (row.B_all_others === true && !matchesExact(row.A || [], code)) {
       return {level:'B', note:'όλες οι άλλες ειδικότητες'};
     }
+    if (matchesExact(row.special_codes, code)) {
+      return {level:'S', note: noteFor(row.special_notes, code) || row.special_note || 'διαθεματική ανάθεση / ειδική πρόβλεψη της απόφασης'};
+    }
     if (row.special_all_pe === true && code.indexOf('ΠΕ') === 0) {
       return {level:'S', note: row.special_note || 'ειδική πρόβλεψη της απόφασης'};
     }
@@ -368,6 +377,7 @@
     if (row.school === 'kallitexniko_gymnasio') return 'Καλλιτεχνικό Γυμνάσιο';
     if (row.school === 'epal') return row.grade ? `${row.grade} ΕΠΑ.Λ.` : 'ΕΠΑ.Λ.';
     if (row.school === 'evening_epal') return row.grade ? `${row.grade} Εσπερινού ΕΠΑ.Λ.` : 'Εσπερινό ΕΠΑ.Λ.';
+    if (row.school === 'pepal') return row.grade ? `${row.grade} Π.ΕΠΑ.Λ.` : 'Π.ΕΠΑ.Λ.';
     if (row.school === 'eneegyl_lykeio') {
       const shownGrade = (row.grades && row.grades.length)
         ? (gradeFilter.value !== 'all' && row.grades.includes(gradeFilter.value) ? gradeFilter.value : row.grades.join('/'))
@@ -377,7 +387,7 @@
     return row.school || '';
   }
 
-  const schoolCheckboxes = [schoolGymnasio, schoolEveningGym, schoolGel, schoolEveningGel, schoolEpal, schoolEveningEpal, schoolEaeGym, schoolEaeLykeio, schoolEneegylGym, schoolEneegylLykeio, schoolKallitexnikoGym];
+  const schoolCheckboxes = [schoolGymnasio, schoolEveningGym, schoolGel, schoolEveningGel, schoolEpal, schoolEveningEpal, schoolPepal, schoolEaeGym, schoolEaeLykeio, schoolEneegylGym, schoolEneegylLykeio, schoolKallitexnikoGym];
 
   function syncSchoolAll(){
     const checkedCount = schoolCheckboxes.filter(function(box){ return box.checked; }).length;
@@ -399,8 +409,9 @@
     const includeKallitexnikoGym = schoolKallitexnikoGym.checked;
     const includeEpal = schoolEpal.checked;
     const includeEveningEpal = schoolEveningEpal.checked;
+    const includePepal = schoolPepal.checked;
     const grade = gradeFilter.value;
-    gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEaeLykeio || includeEneegylLykeio || includeEpal || includeEveningEpal));
+    gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEaeLykeio || includeEneegylLykeio || includeEpal || includeEveningEpal || includePepal));
 
     if (!code) {
       results.innerHTML = '';
@@ -428,7 +439,8 @@
       if (row.school === 'kallitexniko_gymnasio' && !includeKallitexnikoGym) return;
       if (row.school === 'epal' && !includeEpal) return;
       if (row.school === 'evening_epal' && !includeEveningEpal) return;
-      if (row.school === 'gel' || row.school === 'evening_gel' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio' || row.school === 'epal' || row.school === 'evening_epal') {
+      if (row.school === 'pepal' && !includePepal) return;
+      if (row.school === 'gel' || row.school === 'evening_gel' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio' || row.school === 'epal' || row.school === 'evening_epal' || row.school === 'pepal') {
         const rowGrades = Array.isArray(row.grades) ? row.grades : (row.grade ? [row.grade] : []);
         if (grade !== 'all' && !rowGrades.includes(grade)) return;
       }
@@ -462,7 +474,7 @@
     fullResultsStatus.textContent = `${code} · ${found.length} ${found.length === 1 ? 'καταχώριση' : 'καταχωρίσεις'} στα επιλεγμένα σχολεία.`;
 
     results.innerHTML = ['A','B','C','S'].map(level => {
-      const label = level === 'A' ? 'Α΄ Ανάθεση' : level === 'B' ? 'Β΄ Ανάθεση' : level === 'C' ? 'Γ΄ Ανάθεση' : 'Ειδική πρόβλεψη';
+      const label = level === 'A' ? 'Α΄ Ανάθεση' : level === 'B' ? 'Β΄ Ανάθεση' : level === 'C' ? 'Γ΄ Ανάθεση' : 'Ειδική / Διαθεματική ανάθεση';
       const rows = groups[level];
       if (!rows.length) return `
         <section>
@@ -498,6 +510,7 @@
   schoolKallitexnikoGym.addEventListener('change', render);
   schoolEpal.addEventListener('change', render);
   schoolEveningEpal.addEventListener('change', render);
+  schoolPepal.addEventListener('change', render);
   schoolAll.addEventListener('change', function(){
     const target = schoolAll.checked;
     schoolCheckboxes.forEach(function(box){ box.checked = target; });
@@ -509,13 +522,22 @@
 </script>
 
 <?php sourceCardStart(); ?>
-  <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο τίτλο «Αναθέσεις μαθημάτων Γυμνασίου και Γενικού Λυκείου» και δεν δημοσιεύει χωριστό πίνακα αναθέσεων για τα εσπερινά, γι’ αυτό στο εργαλείο τα εσπερινά χρησιμοποιούν τον αντίστοιχο πίνακα Γυμνασίου/ΓΕΛ. <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. <strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026. Έχει ενσωματωθεί <strong>ολόκληρος ο πίνακας ΕΝ.Ε.Ε.ΓΥ.-Λ.</strong>: Γυμνάσιο, Α΄ τάξη Λυκείου, Γενική Παιδεία Β΄/Γ΄/Δ΄, οι 8 κοινοί Τομείς Β΄–Γ΄ και οι 33 ειδικότητες της Δ΄ τάξης, μαζί με τις κατά προτεραιότητα αναθέσεις και τις ειδικές προϋποθέσεις. Οι αποφάσεις ισχύουν για το σχολικό έτος 2026-2027 και περιλαμβάνουν το μάθημα <strong>Ηθική</strong>. <strong>ΕΠΑ.Λ. / Εσπερινά ΕΠΑ.Λ.:</strong> Υ.Α. Φ22/75401/Δ4/10-05-2018, ΦΕΚ Β΄ 1664/15-05-2018, όπως τροποποιήθηκε και ισχύει. Έχουν ενσωματωθεί η Α΄ τάξη, τα Γενικής Παιδείας Β΄/Γ΄, <strong>οι 9 Τομείς της Β΄ τάξης και οι 35 Ειδικότητες της Γ΄ τάξης</strong>. Για τις ειδικότητες της Γ΄ εφαρμόζονται οι τροποποιήσεις ΦΕΚ Β΄ 2637/2018 (Τουριστικές Επιχειρήσεις και Δομικά Έργα), ΦΕΚ Β΄ 2779/2019 (Εφαρμοσμένες Τέχνες και Υγεία – Πρόνοια – Ευεξία), ΦΕΚ Β΄ 3609/2020 (Τεχνολογία Τροφίμων και Ποτών) και η ειδική Υ.Α. Φ22/134291/Δ4/2018 (ΦΕΚ Β΄ 3520/21-08-2018) για τις δύο ειδικότητες Ναυτιλιακών Επαγγελμάτων. Η ίδια δέσμη αναθέσεων εφαρμόζεται και στο Εσπερινό ΕΠΑ.Λ. <strong>Καλλιτεχνικά Σχολεία:</strong> Υ.Α. 65409/Δ2/12-06-2024, ΦΕΚ Β΄ 3418/13-06-2024 (ΑΔΑ 99ΓΦ46ΝΚΠΔ-9Γ1), η οποία τροποποιεί και διαμορφώνει τον ισχύοντα πίνακα της Υ.Α. 148262/Δ2/10-09-2018 (ΦΕΚ Β΄ 4077). Στην παρούσα φάση έχουν ενσωματωθεί οι αναθέσεις του <strong>Καλλιτεχνικού Γυμνασίου για τους κλάδους ΠΕ/ΤΕ</strong>, με τις ειδικεύσεις και τις συνδιδασκαλίες που ορίζει η απόφαση· οι ειδικοί πίνακες Θεάτρου–Κινηματογράφου και Χορού θα προστεθούν χωριστά.</p>
+  <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο τίτλο «Αναθέσεις μαθημάτων Γυμνασίου και Γενικού Λυκείου» και δεν δημοσιεύει χωριστό πίνακα αναθέσεων για τα εσπερινά, γι’ αυτό στο εργαλείο τα εσπερινά χρησιμοποιούν τον αντίστοιχο πίνακα Γυμνασίου/ΓΕΛ. <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. <strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026. Έχει ενσωματωθεί <strong>ολόκληρος ο πίνακας ΕΝ.Ε.Ε.ΓΥ.-Λ.</strong>: Γυμνάσιο, Α΄ τάξη Λυκείου, Γενική Παιδεία Β΄/Γ΄/Δ΄, οι 8 κοινοί Τομείς Β΄–Γ΄ και οι 33 ειδικότητες της Δ΄ τάξης, μαζί με τις κατά προτεραιότητα αναθέσεις και τις ειδικές προϋποθέσεις. Οι αποφάσεις ισχύουν για το σχολικό έτος 2026-2027 και περιλαμβάνουν το μάθημα <strong>Ηθική</strong>. <strong>ΕΠΑ.Λ. / Εσπερινά ΕΠΑ.Λ.:</strong> Υ.Α. Φ22/75401/Δ4/10-05-2018, ΦΕΚ Β΄ 1664/15-05-2018, όπως τροποποιήθηκε και ισχύει. Έχουν ενσωματωθεί η Α΄ τάξη, τα Γενικής Παιδείας Β΄/Γ΄, <strong>οι 9 Τομείς της Β΄ τάξης και οι 35 Ειδικότητες της Γ΄ τάξης</strong>. Για τις ειδικότητες της Γ΄ εφαρμόζονται οι τροποποιήσεις ΦΕΚ Β΄ 2637/2018 (Τουριστικές Επιχειρήσεις και Δομικά Έργα), ΦΕΚ Β΄ 2779/2019 (Εφαρμοσμένες Τέχνες και Υγεία – Πρόνοια – Ευεξία), ΦΕΚ Β΄ 3609/2020 (Τεχνολογία Τροφίμων και Ποτών) και η ειδική Υ.Α. Φ22/134291/Δ4/2018 (ΦΕΚ Β΄ 3520/21-08-2018) για τις δύο ειδικότητες Ναυτιλιακών Επαγγελμάτων. Η ίδια δέσμη αναθέσεων εφαρμόζεται και στο Εσπερινό ΕΠΑ.Λ. <strong>Π.ΕΠΑ.Λ.:</strong> για την Α΄ τάξη: Υ.Α. Φ9/116550/Δ4/17-09-2021, ΦΕΚ Β΄ 4367/22-09-2021, όπως τροποποιήθηκε με τα ΦΕΚ Β΄ 5188/2023, 7403/2023, 1832/2025 και 2687/2026. Για τη Β΄ τάξη: Υ.Α. Φ9/114791/Δ4/21-09-2022, <strong>ΦΕΚ Β΄ 4983/26-09-2022</strong>, όπως τροποποιήθηκε με Φ9/8772/Δ4/2023 (<strong>ΦΕΚ Β΄ 418</strong> — Ναυτιλιακά), Φ9/92706/Δ4/2023 (<strong>ΦΕΚ Β΄ 5206</strong> — Χημεία) και Φ9/55875/Δ4/2026 (<strong>ΦΕΚ Β΄ 2624</strong> — Ηθική και αναδιατύπωση Γενικής Παιδείας για το 2026-2027). Έχουν ενσωματωθεί πλήρως Α΄ και Β΄, με όλους τους 9 Τομείς της Β΄. <strong>Καλλιτεχνικά Σχολεία:</strong> Υ.Α. 65409/Δ2/12-06-2024, ΦΕΚ Β΄ 3418/13-06-2024 (ΑΔΑ 99ΓΦ46ΝΚΠΔ-9Γ1), η οποία τροποποιεί και διαμορφώνει τον ισχύοντα πίνακα της Υ.Α. 148262/Δ2/10-09-2018 (ΦΕΚ Β΄ 4077). Στην παρούσα φάση έχουν ενσωματωθεί οι αναθέσεις του <strong>Καλλιτεχνικού Γυμνασίου για τους κλάδους ΠΕ/ΤΕ</strong>, με τις ειδικεύσεις και τις συνδιδασκαλίες που ορίζει η απόφαση· οι ειδικοί πίνακες Θεάτρου–Κινηματογράφου και Χορού θα προστεθούν χωριστά.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/anatheseis-mathimaton---eidiki-kai-entaksiaki-ekpaidefsi', 'ΥΠΑΙΘΑ — Αναθέσεις Ειδικής & Ενταξιακής Εκπαίδευσης ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3275_B_2026_ANATHESEIS%20EAE_GYMN_LYK_2026-2027.pdf', 'ΦΕΚ Β΄ 3275/2026 — Ε.Α.Ε. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3216_B_2026_ANATHESEIS%20ENEEGYL_2026-2027.pdf', 'ΦΕΚ Β΄ 3216/2026 — ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/panelladikes-eksetaseis-pistopoiitika/gel-mixanografiko?catid=1524&id=35699%3Athesmiko-plaisio-leitourgias-epal-sp-299&view=article', 'ΥΠΑΙΘΑ — Θεσμικό πλαίσιο ΕΠΑ.Λ. / Αναθέσεις ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2025/epal/%CE%99%CE%A3%CE%A7%CE%A5%CE%9F%CE%9D_%CE%98%CE%95%CE%A3%CE%9C%CE%99%CE%9A%CE%9F_%CE%A0%CE%9B%CE%91%CE%99%CE%A3%CE%99%CE%9F_%CE%95%CE%A0%CE%91%CE%9B_12-02-2025.pdf', 'ΥΠΑΙΘΑ — Θεσμικό πλαίσιο Π.ΕΠΑ.Λ. / ΦΕΚ 4367, 5188, 7403 ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2020/2023_08_23_%CE%95%CE%9E%CE%95_92688_%CF%84%CF%81%CE%BF%CF%80%CE%BF%CF%80_%CE%A5%CE%91_%CE%91%CE%BD%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CE%B9%CF%82_%CE%BC%CE%B1%CE%B8%CE%B7%CE%BC%CE%AC%CF%84%CF%89%CE%BD_%CE%91_%CF%84%CE%AC%CE%BE%CE%B7%CF%82_%CE%A0_%CE%95%CE%A0%CE%91%CE%9B_%CE%A6%CE%95%CE%9A_5188%CE%92_25.08.2023.pdf', 'ΦΕΚ Β΄ 5188/2023 — Α΄ Π.ΕΠΑ.Λ. / Χημεία ↗'); ?>
+    <?php sourceCardLink('https://e-wall.net/wp-content/uploads/2023/12/%CE%95%CE%A0%CE%91%CE%9B.pdf', 'ΦΕΚ Β΄ 7403/2023 — Α΄ Π.ΕΠΑ.Λ. / διαθεματικές αναθέσεις ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2023/2025_04_10_%CE%95%CE%9E%CE%95_40530_%CF%84%CF%81%CE%BF%CF%80%CE%BF%CF%80_%CE%A5%CE%91_%CE%91%CE%BD%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CE%B9%CF%82_%CE%BC%CE%B1%CE%B8%CE%AE%CE%BC_%CE%99%CE%A3%CE%A4%CE%9F%CE%A1%CE%99%CE%91_%CE%91_%CF%84%CE%AC%CE%BE%CE%B7%CF%82_%CE%A0_%CE%95%CE%A0%CE%91%CE%9B_%CE%A6%CE%95%CE%9A_1832%CE%92_14.04.2025.pdf', 'ΦΕΚ Β΄ 1832/2025 — Α΄ Π.ΕΠΑ.Λ. / Ιστορία ↗'); ?>
+    <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/05/2026_05_07_%CE%95%CE%9E%CE%95_55830_%CF%84%CF%81%CE%BF%CF%80%CE%BF%CF%80_%CE%A5%CE%91_%CE%91%CE%BD%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CE%B9%CF%82_%CE%BC%CE%B1%CE%B8%CE%AE%CE%BC_%CE%97%CE%98%CE%99%CE%9A%CE%97_%CE%91_%CE%A0%CE%95%CE%A0%CE%91%CE%9B_%CE%A6%CE%95%CE%9A_2687%CE%92_13.05.2026.pdf', 'ΦΕΚ Β΄ 2687/2026 — Α΄ Π.ΕΠΑ.Λ. / Ηθική και Γενική Παιδεία ↗'); ?>
+    <?php sourceCardLink('https://edu.klimaka.gr/ekpaideytikoi/wrario-anatheseis/3607-anatheseis-mathimata-b-taxi-protypa-epaggelmatika-lykeia', 'ΦΕΚ Β΄ 4983/2022 — Β΄ Π.ΕΠΑ.Λ. / Γενική Παιδεία & Τομείς ↗'); ?>
+    <?php sourceCardLink('https://edu.klimaka.gr/ekpaideytikoi/wrario-anatheseis/3607-anatheseis-mathimata-b-taxi-protypa-epaggelmatika-lykeia', 'ΦΕΚ Β΄ 418/2023 — Β΄ Π.ΕΠΑ.Λ. / Ναυτιλιακά ↗'); ?>
+    <?php sourceCardLink('https://edu.klimaka.gr/ekpaideytikoi/wrario-anatheseis/3607-anatheseis-mathimata-b-taxi-protypa-epaggelmatika-lykeia', 'ΦΕΚ Β΄ 5206/2023 — Β΄ Π.ΕΠΑ.Λ. / Χημεία ↗'); ?>
+    <?php sourceCardLink('https://vaspapachristou.gr/tropopoiisi-ya-anatheseon-hthikis-b-pepal/', 'ΦΕΚ Β΄ 2624/2026 — Β΄ Π.ΕΠΑ.Λ. / Ηθική και Γενική Παιδεία ↗'); ?>
     <?php sourceCardLink('https://gsvetlly.minedu.gov.gr/publications/mathiteia/thesmiko/%CE%91%CE%9D%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%99%CE%A3_%CE%9C%CE%91%CE%98%CE%97%CE%9C%CE%91%CE%A4%CE%A9%CE%9D_%CE%95%CE%A0%CE%91%CE%9B_%CE%A6%CE%95%CE%9A_1664-4-15-5-18.pdf', 'ΦΕΚ Β΄ 1664/2018 — Αναθέσεις ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/EPAL_FEK_2637%CE%92_05-07-2018.pdf', 'ΦΕΚ Β΄ 2637/2018 — Τροποποιήσεις Ειδικοτήτων Γ΄ ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/4._%CE%A6%CE%95%CE%9A_3520_%CE%92_21.08.2018.pdf', 'ΦΕΚ Β΄ 3520/2018 — Τομέας Ναυτιλιακών Επαγγελμάτων ↗'); ?>
