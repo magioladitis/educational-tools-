@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/includes/config.php'; ?>
+<?php require_once __DIR__ . '/includes/teacher-specialties.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -52,19 +53,21 @@ renderDeadlineCard(array(
         <div class="field-grid">
           <div class="field">
             <label for="specialty">Κλάδος / ειδικότητα</label>
+            <?php
+            // This calculator keeps its own allowlist. The shared registry only
+            // resolves the human-readable label for each permitted code.
+            $allowedSpecialties = array(
+                'ΠΕ01', 'ΠΕ02', 'ΠΕ03', 'ΠΕ04', 'ΠΕ05', 'ΠΕ06', 'ΠΕ07', 'ΠΕ08', 'ΠΕ11',
+                'ΠΕ33', 'ΠΕ34', 'ΠΕ40', 'ΠΕ41', 'ΠΕ60', 'ΠΕ70', 'ΠΕ73', 'ΠΕ78',
+                'ΠΕ79.01', 'ΠΕ79.02', 'ΠΕ80', 'ΠΕ81', 'ΠΕ82', 'ΠΕ83', 'ΠΕ84', 'ΠΕ85',
+                'ΠΕ86', 'ΠΕ87', 'ΠΕ88', 'ΠΕ89', 'ΠΕ90', 'ΠΕ91'
+            );
+            ?>
             <select id="specialty">
               <option value="">— Επιλογή κλάδου —</option>
-              <option value="ΠΕ01">ΠΕ01</option><option value="ΠΕ02">ΠΕ02</option><option value="ΠΕ03">ΠΕ03</option>
-              <option value="ΠΕ04">ΠΕ04</option><option value="ΠΕ05">ΠΕ05</option><option value="ΠΕ06">ΠΕ06</option>
-              <option value="ΠΕ07">ΠΕ07</option><option value="ΠΕ08">ΠΕ08</option><option value="ΠΕ11">ΠΕ11</option>
-              <option value="ΠΕ33">ΠΕ33</option><option value="ΠΕ34">ΠΕ34</option><option value="ΠΕ40">ΠΕ40</option>
-              <option value="ΠΕ41">ΠΕ41</option><option value="ΠΕ60">ΠΕ60</option><option value="ΠΕ70">ΠΕ70</option>
-              <option value="ΠΕ73">ΠΕ73</option><option value="ΠΕ78">ΠΕ78</option><option value="ΠΕ79.01">ΠΕ79.01</option>
-              <option value="ΠΕ79.02">ΠΕ79.02</option><option value="ΠΕ80">ΠΕ80</option><option value="ΠΕ81">ΠΕ81</option>
-              <option value="ΠΕ82">ΠΕ82</option><option value="ΠΕ83">ΠΕ83</option><option value="ΠΕ84">ΠΕ84</option>
-              <option value="ΠΕ85">ΠΕ85</option><option value="ΠΕ86">ΠΕ86</option><option value="ΠΕ87">ΠΕ87</option>
-              <option value="ΠΕ88">ΠΕ88</option><option value="ΠΕ89">ΠΕ89</option><option value="ΠΕ90">ΠΕ90</option>
-              <option value="ΠΕ91">ΠΕ91</option>
+              <?php foreach ($allowedSpecialties as $code) { ?>
+                <option value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars(teacherSpecialtyDisplay($code), ENT_QUOTES, 'UTF-8'); ?></option>
+              <?php } ?>
             </select>
           </div>
         </div>
