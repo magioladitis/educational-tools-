@@ -189,11 +189,11 @@
               </div>
               <div class="checkrow">
                 <input type="checkbox" id="schoolEneegylLykeio">
-                <label for="schoolEneegylLykeio">Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ. <small>(Α΄ τάξη)</small></label>
+                <label for="schoolEneegylLykeio">Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ. <small>(Α΄ + Β΄/Γ΄ Γενικής Παιδείας + 8 κοινοί Τομείς Β΄–Γ΄)</small></label>
               </div>
             </div>
           </div>
-          <p class="help"><strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> έχουν περαστεί το Γυμνάσιο και, στο παρόν ελεγχόμενο βήμα, <strong>μόνο η Α΄ τάξη του Λυκείου</strong> (Γενική Παιδεία, Προσανατολισμός και Επιλογής). Οι Β΄, Γ΄ και Δ΄ τάξεις Λυκείου θα προστεθούν χωριστά.</p>
+          <p class="help"><strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> έχουν περαστεί το Γυμνάσιο, η <strong>Α΄ τάξη Λυκείου</strong> (Γενική Παιδεία, Προσανατολισμός και Επιλογής) και, στο παρόν ελεγχόμενο βήμα, <strong>τα Μαθήματα Γενικής Παιδείας της Β΄ και Γ΄ τάξης και μόνο οι οκτώ πρώτοι κοινοί Τομείς Β΄–Γ΄: Γεωπονίας, Τροφίμων και Περιβάλλοντος, Διοίκησης και Οικονομίας, Δομικών Έργων, Δομημένου Περιβάλλοντος και Αρχιτεκτονικού Σχεδιασμού, Εφαρμοσμένων Τεχνών, Ηλεκτρολογίας, Ηλεκτρονικής και Αυτοματισμού, Μηχανολογίας, Πληροφορικής και Υγείας – Πρόνοιας – Ευεξίας</strong>. Οι υπόλοιποι κοινοί τομείς Β΄–Γ΄ και οι πίνακες της Δ΄ τάξης θα προστεθούν χωριστά.</p>
         </div>
 
         <div class="field" id="gradeWrap">
@@ -319,7 +319,12 @@
     if (row.school === 'eae_gymnasio') return 'Γυμνάσιο Ε.Α.Ε.';
     if (row.school === 'eae_lykeio') return row.grade ? `${row.grade} Λύκειο Ε.Α.Ε.` : 'Λύκειο Ε.Α.Ε.';
     if (row.school === 'eneegyl_gymnasio') return 'Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.';
-    if (row.school === 'eneegyl_lykeio') return row.grade ? `${row.grade} Λυκείου ΕΝ.Ε.Ε.ΓΥ.-Λ.` : 'Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ.';
+    if (row.school === 'eneegyl_lykeio') {
+      const shownGrade = (row.grades && row.grades.length)
+        ? (gradeFilter.value !== 'all' && row.grades.includes(gradeFilter.value) ? gradeFilter.value : row.grades.join('/'))
+        : row.grade;
+      return shownGrade ? `${shownGrade} Λυκείου ΕΝ.Ε.Ε.ΓΥ.-Λ.` : 'Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ.';
+    }
     return row.school || '';
   }
 
@@ -334,7 +339,7 @@
     const includeEneegylGym = schoolEneegylGym.checked;
     const includeEneegylLykeio = schoolEneegylLykeio.checked;
     const grade = gradeFilter.value;
-    gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEaeLykeio));
+    gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEaeLykeio || includeEneegylLykeio));
 
     if (!code) {
       results.innerHTML = '';
@@ -359,7 +364,10 @@
       if (row.school === 'eae_lykeio' && !includeEaeLykeio) return;
       if (row.school === 'eneegyl_gymnasio' && !includeEneegylGym) return;
       if (row.school === 'eneegyl_lykeio' && !includeEneegylLykeio) return;
-      if ((row.school === 'gel' || row.school === 'evening_gel' || row.school === 'eae_lykeio') && grade !== 'all' && row.grade !== grade) return;
+      if (row.school === 'gel' || row.school === 'evening_gel' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio') {
+        const rowGrades = Array.isArray(row.grades) ? row.grades : (row.grade ? [row.grade] : []);
+        if (grade !== 'all' && !rowGrades.includes(grade)) return;
+      }
       const hit = assignmentFor(row, code);
       if (hit) found.push({...row, assignment: hit.level, assignmentNote: hit.note});
     });
@@ -429,7 +437,7 @@
 </script>
 
 <?php sourceCardStart(); ?>
-  <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο τίτλο «Αναθέσεις μαθημάτων Γυμνασίου και Γενικού Λυκείου» και δεν δημοσιεύει χωριστό πίνακα αναθέσεων για τα εσπερινά, γι’ αυτό στο εργαλείο τα εσπερινά χρησιμοποιούν τον αντίστοιχο πίνακα Γυμνασίου/ΓΕΛ. <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. <strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026. Στην παρούσα ελεγχόμενη φάση έχουν ενσωματωθεί ο πίνακας του Γυμνασίου και μόνο η Α΄ τάξη του Λυκείου ΕΝ.Ε.Ε.ΓΥ.-Λ. (μαθήματα Γενικής Παιδείας, Προσανατολισμού και Επιλογής). Οι αποφάσεις ισχύουν για το σχολικό έτος 2026-2027 και περιλαμβάνουν το μάθημα <strong>Ηθική</strong>.</p>
+  <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο τίτλο «Αναθέσεις μαθημάτων Γυμνασίου και Γενικού Λυκείου» και δεν δημοσιεύει χωριστό πίνακα αναθέσεων για τα εσπερινά, γι’ αυτό στο εργαλείο τα εσπερινά χρησιμοποιούν τον αντίστοιχο πίνακα Γυμνασίου/ΓΕΛ. <strong>Γυμνάσια / Λύκεια Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. <strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026. Στην παρούσα ελεγχόμενη φάση έχουν ενσωματωθεί ο πίνακας του Γυμνασίου, η Α΄ τάξη του Λυκείου ΕΝ.Ε.Ε.ΓΥ.-Λ. (Γενική Παιδεία, Προσανατολισμού και Επιλογής) και τα Μαθήματα Γενικής Παιδείας της Β΄ και Γ΄ τάξης, μαζί με τους οκτώ πρώτους ελεγχόμενους κοινούς τομείς Β΄–Γ΄: <strong>Γεωπονίας, Τροφίμων και Περιβάλλοντος</strong>, <strong>Διοίκησης και Οικονομίας</strong>, <strong>Δομικών Έργων, Δομημένου Περιβάλλοντος και Αρχιτεκτονικού Σχεδιασμού</strong>, <strong>Εφαρμοσμένων Τεχνών</strong>, <strong>Ηλεκτρολογίας, Ηλεκτρονικής και Αυτοματισμού</strong>, <strong>Μηχανολογίας</strong>, <strong>Πληροφορικής</strong> και <strong>Υγείας – Πρόνοιας – Ευεξίας</strong>. Οι αποφάσεις ισχύουν για το σχολικό έτος 2026-2027 και περιλαμβάνουν το μάθημα <strong>Ηθική</strong>.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/anatheseis-mathimaton---eidiki-kai-entaksiaki-ekpaidefsi', 'ΥΠΑΙΘΑ — Αναθέσεις Ειδικής & Ενταξιακής Εκπαίδευσης ↗'); ?>
