@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/includes/config.php'; ?>
+<?php require_once __DIR__ . '/includes/teacher-specialties.php'; ?>
 <!doctype html>
 <html lang="el">
 <head>
@@ -23,9 +24,26 @@
     <?php calculatorColumnsStart(); ?>
       <?php calculatorMainStart(); ?>
         <?php calculatorCardStart(); ?>
-          <h2>Προϋποθέσεις που επηρεάζουν τη διαδικασία</h2>
-          <p class="subtitle">Δεν μοριοδοτούνται, αλλά μπορεί να επηρεάσουν το αν η αίτηση είναι παραδεκτή ή αν συνεχίζεις στη διαδικασία.</p>
+          <h2>Ειδικότητα &amp; προϋποθέσεις</h2>
+          <p class="subtitle">Επίλεξε τον κλάδο σου για να εμφανιστούν τα μαθήματα/θέσεις του Παραρτήματος Ι που μπορείς να δηλώσεις. Οι υπόλοιπες προϋποθέσεις δεν μοριοδοτούνται, αλλά επηρεάζουν το παραδεκτό ή τη συνέχεια της διαδικασίας.</p>
           <div class="field-grid">
+            <div class="field">
+              <label for="specialty">Κλάδος / ειδικότητα</label>
+              <select id="specialty" onchange="specialtyChanged()">
+                <option value="">— Επιλογή —</option>
+<?php
+$digitalTutoringSpecialties = array(
+    'ΠΕ02', 'ΠΕ03', 'ΠΕ04.01', 'ΠΕ04.02', 'ΠΕ04.03', 'ΠΕ04.04', 'ΠΕ04.05', 'ΠΕ07',
+    'ΠΕ34', 'ΠΕ40', 'ΠΕ80', 'ΠΕ81', 'ΠΕ82', 'ΠΕ83', 'ΠΕ85', 'ΠΕ86',
+    'ΠΕ87.01', 'ΠΕ87.02', 'ΠΕ87.03', 'ΠΕ87.04', 'ΠΕ87.05', 'ΠΕ87.06', 'ΠΕ87.07', 'ΠΕ87.08', 'ΠΕ87.09', 'ΠΕ87.10',
+    'ΠΕ88.01', 'ΠΕ88.02', 'ΠΕ88.03', 'ΠΕ88.04', 'ΠΕ88.05', 'ΠΕ89.01', 'ΠΕ90'
+);
+foreach ($digitalTutoringSpecialties as $code) {
+    echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(teacherSpecialtyDisplay($code), ENT_QUOTES, 'UTF-8') . '</option>';
+}
+?>
+              </select>
+            </div>
             <div class="field">
               <label for="requiredExperience">Έχεις τουλάχιστον 2 έτη διδακτικής προϋπηρεσίας στο σχετικό μάθημα της Γ΄ Λυκείου;</label>
               <select id="requiredExperience">
@@ -66,6 +84,50 @@
               </select>
             </div>
           </div>
+          <div id="assignmentBox" class="info">Επίλεξε ειδικότητα για να δεις τα διαθέσιμα μαθήματα/θέσεις του Παραρτήματος Ι.</div>
+          <details>
+            <summary>Προβολή όλων των θέσεων του Παραρτήματος Ι</summary>
+            <div class="mapping-wrap">
+              <table class="mapping-table">
+                <thead><tr><th>Κατηγορία</th><th>Μάθημα</th><th>Κλάδος</th><th>Θέσεις</th></tr></thead>
+                <tbody>
+                  <tr><td>ΓΕΛ</td><td>Αρχαία Ελληνικά</td><td>ΠΕ02</td><td>2</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Λατινικά</td><td>ΠΕ02</td><td>2</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Ιστορία</td><td>ΠΕ02</td><td>2</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Μαθηματικά</td><td>ΠΕ03</td><td>2</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Χημεία</td><td>ΠΕ04.02, ΠΕ85</td><td>4</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Φυσική</td><td>ΠΕ04.01</td><td>2</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Βιολογία</td><td>ΠΕ04.04, ΠΕ04.03</td><td>4</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Πληροφορική</td><td>ΠΕ86</td><td>4</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Οικονομία</td><td>ΠΕ80</td><td>2</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Γερμανικά</td><td>ΠΕ07</td><td>1</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Γραμμικό Σχέδιο</td><td>ΠΕ89.01, ΠΕ81</td><td>1</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Ισπανικά</td><td>ΠΕ40</td><td>2</td></tr>
+                  <tr><td>ΓΕΛ</td><td>Ιταλικά</td><td>ΠΕ34</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Αρχές Οικονομικής Θεωρίας</td><td>ΠΕ80</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Αρχές Οργάνωσης και Διοίκησης</td><td>ΠΕ80</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Αρχιτεκτονικό Σχέδιο</td><td>ΠΕ81</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Τεχνολογία Υλικών</td><td>ΠΕ89.01</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Στοιχεία ψύξης – Κλιματισμού</td><td>ΠΕ82</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Στοιχεία Σχεδιασμού Κεντρικών Θερμάνσεων</td><td>ΠΕ82</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Κινητήρες Αεροσκαφών</td><td>ΠΕ82</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Ναυτικές Μηχανές</td><td>ΠΕ82</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Ναυσιπλοΐα ΙΙ</td><td>ΠΕ90</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Προγραμματισμός Υπολογιστών</td><td>ΠΕ86</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Δίκτυα Υπολογιστών</td><td>ΠΕ86</td><td>1</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Υγιεινή</td><td>ΠΕ87</td><td>2</td></tr>
+                  <tr><td>ΕΠΑΛ</td><td>Αρχές Βιολογικής Γεωργίας</td><td>ΠΕ88</td><td>1</td></tr>
+                  <tr><td>ΕΑΕ</td><td>Μαθήματα Α΄ ανάθεσης ΠΕ02</td><td>ΠΕ02 ΕΑΕ</td><td>1</td></tr>
+                  <tr><td>ΕΑΕ</td><td>Μαθήματα Φυσικών Επιστημών</td><td>ΠΕ04 ΕΑΕ</td><td>1</td></tr>
+                  <tr><td>ΕΑΕ</td><td>Μαθήματα Α΄ ανάθεσης ΠΕ80</td><td>ΠΕ80 ΕΑΕ</td><td>1</td></tr>
+                  <tr><td>ΕΑΕ</td><td>Μαθήματα Α΄ ανάθεσης ΠΕ82</td><td>ΠΕ82 ΕΑΕ</td><td>1</td></tr>
+                  <tr><td>ΕΑΕ</td><td>Μαθήματα Α΄ ανάθεσης ΠΕ83</td><td>ΠΕ83 ΕΑΕ</td><td>1</td></tr>
+                  <tr><td>ΕΑΕ</td><td>Μαθήματα Α΄ ανάθεσης ΠΕ87</td><td>ΠΕ87 ΕΑΕ</td><td>1</td></tr>
+                  <tr><td>ΕΑΕ</td><td>Μαθήματα Α΄ ανάθεσης ΠΕ88</td><td>ΠΕ88 ΕΑΕ</td><td>1</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
           <div class="warning">Η πρόσκληση προβλέπει και επιπλέον κωλύματα/προϋποθέσεις απόσπασης. Το παρόν εργαλείο δεν αντικαθιστά τον πλήρη έλεγχο της πρόσκλησης και του ΠΥΜ.</div>
         <?php calculatorCardEnd(); ?>
 
@@ -109,10 +171,6 @@
             <div class="field">
               <label for="examExperience">Εμπειρία σε Πανελλαδικές Εξετάσεις <small>Θεματοδότης ή βαθμολογητής ή υπεύθυνος μαθήματος σε Βαθμολογικό Κέντρο · +2</small></label>
               <select id="examExperience" onchange="calculate()"><option value="0">Όχι</option><option value="2">Ναι</option></select>
-            </div>
-            <div class="field">
-              <label for="branchPe86">Κλάδος ΠΕ86; <small>Για τον ΠΕ86 τεκμαίρεται η γνώση ΤΠΕ Α΄ επιπέδου, αν δεν δηλωθεί ανώτερη πιστοποίηση.</small></label>
-              <select id="branchPe86" onchange="calculate()"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
             </div>
           </div>
 
@@ -198,6 +256,81 @@
 </main>
 
 <script>
+  const digitalTutoringPositions = [
+    {category:'ΓΕΛ', course:'Αρχαία Ελληνικά', branches:['ΠΕ02'], seats:2},
+    {category:'ΓΕΛ', course:'Λατινικά', branches:['ΠΕ02'], seats:2},
+    {category:'ΓΕΛ', course:'Ιστορία', branches:['ΠΕ02'], seats:2},
+    {category:'ΓΕΛ', course:'Μαθηματικά', branches:['ΠΕ03'], seats:2},
+    {category:'ΓΕΛ', course:'Χημεία', branches:['ΠΕ04.02','ΠΕ85'], seats:4, note:'Για ΠΕ85 απαιτείται πτυχίο Χημικών Μηχανικών.'},
+    {category:'ΓΕΛ', course:'Φυσική', branches:['ΠΕ04.01'], seats:2},
+    {category:'ΓΕΛ', course:'Βιολογία', branches:['ΠΕ04.04','ΠΕ04.03'], seats:4},
+    {category:'ΓΕΛ', course:'Πληροφορική', branches:['ΠΕ86'], seats:4},
+    {category:'ΓΕΛ', course:'Οικονομία', branches:['ΠΕ80'], seats:2, note:'Προτεραιότητα σε εκπαιδευτικούς με πτυχία που αντιστοιχούν στον πρώην ΠΕ09.'},
+    {category:'ΓΕΛ', course:'Γερμανικά', branches:['ΠΕ07'], seats:1},
+    {category:'ΓΕΛ', course:'Γραμμικό Σχέδιο', branches:['ΠΕ89.01','ΠΕ81'], seats:1},
+    {category:'ΓΕΛ', course:'Ισπανικά', branches:['ΠΕ40'], seats:2},
+    {category:'ΓΕΛ', course:'Ιταλικά', branches:['ΠΕ34'], seats:1},
+    {category:'ΕΠΑΛ', course:'Αρχές Οικονομικής Θεωρίας', branches:['ΠΕ80'], seats:1, note:'Προτεραιότητα σε πτυχία που αντιστοιχούν στον πρώην ΠΕ09.'},
+    {category:'ΕΠΑΛ', course:'Αρχές Οργάνωσης και Διοίκησης', branches:['ΠΕ80'], seats:1, note:'Προτεραιότητα σε πτυχία που αντιστοιχούν στους πρώην ΠΕ09 και ΠΕ18.02.'},
+    {category:'ΕΠΑΛ', course:'Αρχιτεκτονικό Σχέδιο', branches:['ΠΕ81'], seats:1, note:'Προτεραιότητα στους πρώην ΠΕ12.01, ΠΕ12.02, ΠΕ17.01, ΠΕ17.05.'},
+    {category:'ΕΠΑΛ', course:'Τεχνολογία Υλικών', branches:['ΠΕ89.01'], seats:1},
+    {category:'ΕΠΑΛ', course:'Στοιχεία ψύξης – Κλιματισμού', branches:['ΠΕ82'], seats:1, note:'Προτεραιότητα στους πρώην ΠΕ12.04, ΠΕ17.02, ΠΕ17.06.'},
+    {category:'ΕΠΑΛ', course:'Στοιχεία Σχεδιασμού Κεντρικών Θερμάνσεων', branches:['ΠΕ82'], seats:1, note:'Προτεραιότητα στους πρώην ΠΕ12.04, ΠΕ17.02, ΠΕ17.06.'},
+    {category:'ΕΠΑΛ', course:'Κινητήρες Αεροσκαφών', branches:['ΠΕ82'], seats:1, note:'Προτεραιότητα στους πρώην ΠΕ12.04, ΠΕ17.02, ΠΕ17.06, ΠΕ18.18, ΠΕ18.31, ΠΕ18.32.'},
+    {category:'ΕΠΑΛ', course:'Ναυτικές Μηχανές', branches:['ΠΕ82'], seats:1, note:'Προτεραιότητα στον πρώην ΠΕ18.31.'},
+    {category:'ΕΠΑΛ', course:'Ναυσιπλοΐα ΙΙ', branches:['ΠΕ90'], seats:1},
+    {category:'ΕΠΑΛ', course:'Προγραμματισμός Υπολογιστών', branches:['ΠΕ86'], seats:1},
+    {category:'ΕΠΑΛ', course:'Δίκτυα Υπολογιστών', branches:['ΠΕ86'], seats:1},
+    {category:'ΕΠΑΛ', course:'Υγιεινή', branches:['ΠΕ87'], seats:2},
+    {category:'ΕΠΑΛ', course:'Αρχές Βιολογικής Γεωργίας', branches:['ΠΕ88'], seats:1},
+    {category:'ΕΑΕ', course:'Μαθήματα Α΄ ανάθεσης ΠΕ02', branches:['ΠΕ02'], seats:1, note:'Νεοελληνική Γλώσσα και Λογοτεχνία, Νέα Ελληνικά, Αρχαία Ελληνικά, Λατινικά, Ιστορία.'},
+    {category:'ΕΑΕ', course:'Μαθήματα Φυσικών Επιστημών', branches:['ΠΕ04'], seats:1, note:'Φυσική, Χημεία, Βιολογία.'},
+    {category:'ΕΑΕ', course:'Μαθήματα Α΄ ανάθεσης ΠΕ80', branches:['ΠΕ80'], seats:1, note:'Προτεραιότητα πρώην ΠΕ09.'},
+    {category:'ΕΑΕ', course:'Μαθήματα Α΄ ανάθεσης ΠΕ82', branches:['ΠΕ82'], seats:1},
+    {category:'ΕΑΕ', course:'Μαθήματα Α΄ ανάθεσης ΠΕ83', branches:['ΠΕ83'], seats:1},
+    {category:'ΕΑΕ', course:'Μαθήματα Α΄ ανάθεσης ΠΕ87', branches:['ΠΕ87'], seats:1},
+    {category:'ΕΑΕ', course:'Μαθήματα Α΄ ανάθεσης ΠΕ88', branches:['ΠΕ88'], seats:1}
+  ];
+
+  function branchMatches(rule, specialty){
+    return rule === specialty || (rule === 'ΠΕ04' && specialty.indexOf('ΠΕ04.') === 0) ||
+      (rule === 'ΠΕ87' && specialty.indexOf('ΠΕ87.') === 0) ||
+      (rule === 'ΠΕ88' && specialty.indexOf('ΠΕ88.') === 0);
+  }
+
+  function matchingPositions(){
+    const specialty = document.getElementById('specialty').value;
+    if(!specialty) return [];
+    const eae = document.getElementById('eaePosition').value === 'yes';
+    return digitalTutoringPositions.filter(item =>
+      (eae ? item.category === 'ΕΑΕ' : item.category !== 'ΕΑΕ') &&
+      item.branches.some(rule => branchMatches(rule, specialty))
+    );
+  }
+
+  function renderAssignments(){
+    const box = document.getElementById('assignmentBox');
+    const specialty = document.getElementById('specialty').value;
+    if(!specialty){
+      box.className = 'info';
+      box.innerHTML = 'Επίλεξε ειδικότητα για να δεις τα διαθέσιμα μαθήματα/θέσεις του Παραρτήματος Ι.';
+      return;
+    }
+    const positions = matchingPositions();
+    if(!positions.length){
+      box.className = 'danger';
+      box.innerHTML = 'Δεν εντοπίζεται θέση του Παραρτήματος Ι για την επιλεγμένη ειδικότητα' + (document.getElementById('eaePosition').value === 'yes' ? ' στην ΕΑΕ.' : '.');
+      return;
+    }
+    box.className = 'success';
+    box.innerHTML = positions.map(item => '<div class="assignment"><strong>' + item.category + ' · ' + item.course + '</strong><span class="badge">' + item.seats + (item.seats === 1 ? ' θέση' : ' θέσεις') + '</span>' + (item.note ? '<small>' + item.note + '</small>' : '') + '</div>').join('');
+  }
+
+  function specialtyChanged(){
+    renderAssignments();
+    calculate();
+  }
+
   function n(id){
     const value = Number(document.getElementById(id).value || 0);
     return Number.isFinite(value) ? value : 0;
@@ -233,6 +366,7 @@
   function toggleEae(){
     const show = document.getElementById('eaePosition').value === 'yes';
     document.getElementById('eaeSpecializationWrap').classList.toggle('hidden', !show);
+    renderAssignments();
     calculate();
   }
 
@@ -250,7 +384,7 @@
     const b4 = Math.min(6, years * 2 + Math.floor(months / 4));
 
     let b5 = n('ict');
-    const pe86 = document.getElementById('branchPe86').value === 'yes';
+    const pe86 = document.getElementById('specialty').value === 'ΠΕ86';
     if(pe86 && b5 < 1) b5 = 1;
 
     const b = Math.min(30,b1+b2+b3+b4+b5);
@@ -279,6 +413,9 @@
 
     const issues = [];
     const unanswered = [];
+    const specialtyValue = document.getElementById('specialty').value;
+    if(specialtyValue === '') unanswered.push('κλάδος / ειδικότητα');
+    else if(!matchingPositions().length) issues.push('Δεν προβλέπεται θέση του Παραρτήματος Ι για την επιλεγμένη ειδικότητα και κατηγορία.');
     if(requiredExperienceValue === '') unanswered.push('διετής διδακτική προϋπηρεσία');
     else if(requiredExperienceValue === 'no') issues.push('Δεν δηλώνεται η απαιτούμενη διετής διδακτική προϋπηρεσία στο σχετικό μάθημα.');
 
@@ -330,11 +467,12 @@
       else el.selectedIndex=0;
     });
     toggleEae();
+    specialtyChanged();
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
   toggleEae();
-  calculate();
+  specialtyChanged();
 </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
   <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

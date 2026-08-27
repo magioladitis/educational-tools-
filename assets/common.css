@@ -2177,25 +2177,25 @@ body.edu-ui.edu-page-sde-apospasis .hero p{max-width:930px}
 body.edu-ui.edu-page-sde-apospasis .hero-meta span{background:rgba(0,0,0,.15)}
 body.edu-ui.edu-page-sde-apospasis .success{border-color:#b7e3c9;color:#12633f}
 body.edu-ui.edu-page-sde-apospasis .sde-update-banner{margin:0 0 18px}
-body.edu-ui.edu-page-sde-apospasis .assignment{
+body.edu-ui:is(.edu-page-sde-apospasis,.edu-page-digital-tutoring) .assignment{
   padding:11px 12px;border:1px solid #d8e8df;border-radius:11px;margin-top:8px;background:#f8fcfa
 }
-body.edu-ui.edu-page-sde-apospasis .assignment strong{color:#12633f}
-body.edu-ui.edu-page-sde-apospasis .assignment small{display:block;color:var(--muted);margin-top:3px}
-body.edu-ui.edu-page-sde-apospasis .assignment .badge{
+body.edu-ui:is(.edu-page-sde-apospasis,.edu-page-digital-tutoring) .assignment strong{color:#12633f}
+body.edu-ui:is(.edu-page-sde-apospasis,.edu-page-digital-tutoring) .assignment small{display:block;color:var(--muted);margin-top:3px}
+body.edu-ui:is(.edu-page-sde-apospasis,.edu-page-digital-tutoring) .assignment .badge{
   display:inline-block;padding:3px 7px;border-radius:999px;background:var(--sde-soft);
   color:var(--sde);font-size:11px;font-weight:700;margin-left:6px
 }
-body.edu-ui.edu-page-sde-apospasis .mapping-wrap{overflow-x:auto;margin-top:12px;max-width:100%}
-body.edu-ui.edu-page-sde-apospasis .mapping-table{
+body.edu-ui:is(.edu-page-sde-apospasis,.edu-page-digital-tutoring) .mapping-wrap{overflow-x:auto;margin-top:12px;max-width:100%}
+body.edu-ui:is(.edu-page-sde-apospasis,.edu-page-digital-tutoring) .mapping-table{
   width:100%;border-collapse:collapse;font-size:13.5px;min-width:620px
 }
-body.edu-ui.edu-page-sde-apospasis .mapping-table th,
-body.edu-ui.edu-page-sde-apospasis .mapping-table td{
+body.edu-ui:is(.edu-page-sde-apospasis,.edu-page-digital-tutoring) .mapping-table th,
+body.edu-ui:is(.edu-page-sde-apospasis,.edu-page-digital-tutoring) .mapping-table td{
   border:1px solid #dfe5ec;padding:9px 10px;text-align:left;vertical-align:top
 }
-body.edu-ui.edu-page-sde-apospasis .mapping-table th{background:#eef4ff;color:#174ea6}
-body.edu-ui.edu-page-sde-apospasis .mapping-table tr:nth-child(even) td{background:#fbfcfe}
+body.edu-ui:is(.edu-page-sde-apospasis,.edu-page-digital-tutoring) .mapping-table th{background:#eef4ff;color:#174ea6}
+body.edu-ui:is(.edu-page-sde-apospasis,.edu-page-digital-tutoring) .mapping-table tr:nth-child(even) td{background:#fbfcfe}
 
 /* --------------------------------------------------------------------------
    Main tools directory
