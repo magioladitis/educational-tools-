@@ -258,7 +258,7 @@
         </div>
 
         <div class="note">
-          Στα <strong>Εργαστήρια Δεξιοτήτων</strong> η Β΄ ανάθεση μπορεί να αφορά «όλες τις άλλες ειδικότητες», σύμφωνα με τον αντίστοιχο πίνακα αναθέσεων.
+          Στα <strong>Εργαστήρια Δεξιοτήτων</strong> η Β΄ ανάθεση μπορεί να αφορά «όλες τις άλλες ειδικότητες», σύμφωνα με τον αντίστοιχο πίνακα αναθέσεων. Η γενική αυτή ένδειξη αφορά κανονικούς κλάδους/ειδικότητες και <strong>όχι τους ειδικούς πίνακες ωρομίσθιου προσωπικού Καλλιτεχνικών Σχολείων</strong>.
         </div>
       <?php calculatorCardEnd(); ?>
 
@@ -349,6 +349,10 @@
     return '';
   }
 
+  function isSpecialHourlyTableChoice(code){
+    return code.indexOf(normalize('Ειδικός πίνακας')) === 0;
+  }
+
   function assignmentFor(row, code){
     for (const level of ['A','B','C']) {
       if (matchesExact(row[level], code)) {
@@ -358,7 +362,9 @@
     if (row.A_all_pe === true && code.indexOf('ΠΕ') === 0) {
       return {level:'A', note: row.A_all_pe_note || 'όλοι οι κλάδοι-ειδικότητες Π.Ε.'};
     }
-    if (row.B_all_others === true && !matchesExact(row.A || [], code)) {
+    if (row.B_all_others === true
+        && !isSpecialHourlyTableChoice(code)
+        && !matchesExact(row.A || [], code)) {
       return {level:'B', note:'όλες οι άλλες ειδικότητες'};
     }
     if (matchesExact(row.special_codes, code)) {
