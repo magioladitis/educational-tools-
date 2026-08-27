@@ -11,6 +11,7 @@
 <body class="edu-ui edu-calc-standard edu-page-ea5">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php require_once __DIR__ . '/includes/teacher-specialties.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-de-academic.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-three-month-service.php'; ?>
@@ -39,17 +40,19 @@
     <label for="specialty">Κλάδος / ειδικότητα</label>
     <select id="specialty">
       <option value="">— Επιλογή ειδικότητας —</option>
-      <optgroup label="ΔΕ01">
-        <option value="ΔΕ01.05">ΔΕ01.05 — Οικοδόμοι</option>
-        <option value="ΔΕ01.13">ΔΕ01.13 — Ξυλουργοί</option>
-        <option value="ΔΕ01.14">ΔΕ01.14 — Κοπτικής – Ραπτικής</option>
-        <option value="ΔΕ01.15">ΔΕ01.15 — Αργυροχρυσοχοΐας</option>
-        <option value="ΔΕ01.17">ΔΕ01.17 — Κομμωτικής</option>
-      </optgroup>
-      <optgroup label="ΔΕ02">
-        <option value="ΔΕ02.01">ΔΕ02.01 — Ηλεκτρολόγοι – Ηλεκτρονικοί</option>
-        <option value="ΔΕ02.02">ΔΕ02.02 — Μηχανολόγοι</option>
-      </optgroup>
+      <?php
+      $deSpecialtyGroups = array(
+          'ΔΕ01' => array('ΔΕ01.05', 'ΔΕ01.13', 'ΔΕ01.14', 'ΔΕ01.15', 'ΔΕ01.17'),
+          'ΔΕ02' => array('ΔΕ02.01', 'ΔΕ02.02')
+      );
+      foreach ($deSpecialtyGroups as $groupLabel => $codes) {
+          echo '<optgroup label="' . htmlspecialchars($groupLabel, ENT_QUOTES, 'UTF-8') . '">';
+          foreach ($codes as $code) {
+              echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(teacherSpecialtyDisplay($code), ENT_QUOTES, 'UTF-8') . '</option>';
+          }
+          echo '</optgroup>';
+      }
+      ?>
     </select>
   </div>
 

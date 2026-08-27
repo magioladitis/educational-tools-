@@ -12,6 +12,7 @@
 <body class="edu-ui edu-calc-standard edu-page-ea4">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php require_once __DIR__ . '/includes/teacher-specialties.php'; ?>
 <?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-te-academic.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-social-criteria.php'; ?>
@@ -52,31 +53,20 @@ renderDeadlineCard(array(
             <label for="specialty">Κλάδος</label>
             <select id="specialty">
               <option value="">— Επιλογή κλάδου / ειδικότητας —</option>
-              <optgroup label="ΤΕ01">
-                <option value="ΤΕ01.04">ΤΕ01.04 — Ψυκτικοί</option>
-                <option value="ΤΕ01.06">ΤΕ01.06 — Ηλεκτρολόγοι</option>
-                <option value="ΤΕ01.07">ΤΕ01.07 — Ηλεκτρονικοί</option>
-                <option value="ΤΕ01.13">ΤΕ01.13 — Προγραμματιστές Η/Υ</option>
-                <option value="ΤΕ01.19">ΤΕ01.19 — Κομμωτικής</option>
-                <option value="ΤΕ01.20">ΤΕ01.20 — Αισθητικής</option>
-                <option value="ΤΕ01.25">ΤΕ01.25 — Αργυροχρυσοχοΐας</option>
-                <option value="ΤΕ01.26">ΤΕ01.26 — Οδοντοτεχνικής</option>
-                <option value="ΤΕ01.29">ΤΕ01.29 — Βοηθών Ιατρικών &amp; Βιολογικών Εργαστηρίων</option>
-                <option value="ΤΕ01.30">ΤΕ01.30 — Βοηθοί Βρεφοκόμων – Παιδοκόμων</option>
-                <option value="ΤΕ01.31">ΤΕ01.31 — Χειριστές Ιατρικών Συσκευών (Βοηθοί Ακτινολόγοι)</option>
-              </optgroup>
-              <optgroup label="ΤΕ02">
-                <option value="ΤΕ02.01">ΤΕ02.01 — Σχεδιαστές – Δομικοί</option>
-                <option value="ΤΕ02.02">ΤΕ02.02 — Μηχανολόγοι</option>
-                <option value="ΤΕ02.03">ΤΕ02.03 — Χημικοί Εργαστηρίων</option>
-                <option value="ΤΕ02.04">ΤΕ02.04 — Οικονομίας – Διοίκησης</option>
-                <option value="ΤΕ02.05">ΤΕ02.05 — Εφαρμοσμένων Τεχνών</option>
-                <option value="ΤΕ02.06">ΤΕ02.06 — Σχεδιασμού και Παραγωγής Προϊόντων</option>
-                <option value="ΤΕ02.07">ΤΕ02.07 — Γεωπονίας</option>
-              </optgroup>
-              <optgroup label="ΤΕ16">
-                <option value="ΤΕ16">ΤΕ16 — Μουσικής μη Ανώτατων Ιδρυμάτων</option>
-              </optgroup>
+              <?php
+              $teSpecialtyGroups = array(
+                  'ΤΕ01' => array('ΤΕ01.04', 'ΤΕ01.06', 'ΤΕ01.07', 'ΤΕ01.13', 'ΤΕ01.19', 'ΤΕ01.20', 'ΤΕ01.25', 'ΤΕ01.26', 'ΤΕ01.29', 'ΤΕ01.30', 'ΤΕ01.31'),
+                  'ΤΕ02' => array('ΤΕ02.01', 'ΤΕ02.02', 'ΤΕ02.03', 'ΤΕ02.04', 'ΤΕ02.05', 'ΤΕ02.06', 'ΤΕ02.07'),
+                  'ΤΕ16' => array('ΤΕ16')
+              );
+              foreach ($teSpecialtyGroups as $groupLabel => $codes) {
+                  echo '<optgroup label="' . htmlspecialchars($groupLabel, ENT_QUOTES, 'UTF-8') . '">';
+                  foreach ($codes as $code) {
+                      echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(teacherSpecialtyDisplay($code), ENT_QUOTES, 'UTF-8') . '</option>';
+                  }
+                  echo '</optgroup>';
+              }
+              ?>
             </select>
           </div>
           <?php renderAsepTeAcademic(array('part' => 'grade-scale')); ?>

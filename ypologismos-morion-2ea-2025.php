@@ -12,6 +12,7 @@
 <body class="edu-ui edu-calc-standard edu-page-ea2">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php require_once __DIR__ . '/includes/teacher-specialties.php'; ?>
 <?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 <?php require_once __DIR__ . '/includes/components/training-proof.php'; ?>
 <?php require_once __DIR__ . '/includes/components/asep-language-selector.php'; ?>
@@ -43,7 +44,21 @@ renderDeadlineCard(array(
 ?>
 <?php calculatorColumnsStart(); ?><?php calculatorMainStart(array('tag' => 'main')); ?>
 <?php calculatorCardStart(); ?><h2>1. Κλάδος και πρόταξη</h2><p class="cap">Ο κλάδος δεν αλλάζει τον βασικό πίνακα μοριοδότησης, αλλά ενεργοποιεί ειδικές επισημάνσεις και κανόνες πρόταξης.</p>
-<div class="field"><label for="specialty">Κλάδος ΕΕΠ</label><select id="specialty"><option value="">— Επιλογή —</option><option value="PE21">ΠΕ21 — Θεραπευτών Λόγου</option><option value="PE22">ΠΕ22 — Επαγγελματικών Συμβούλων</option><option value="PE23">ΠΕ23 — Ψυχολόγων</option><option value="PE25">ΠΕ25 — Σχολικών Νοσηλευτών</option><option value="PE28">ΠΕ28 — Φυσιοθεραπευτών</option><option value="PE29">ΠΕ29 — Εργασιοθεραπευτών–Εργοθεραπευτών</option><option value="PE30">ΠΕ30 — Κοινωνικών Λειτουργών</option><option value="PE31">ΠΕ31 — Εξειδικευμένου</option></select></div>
+<div class="field"><label for="specialty">Κλάδος ΕΕΠ</label><select id="specialty"><option value="">— Επιλογή —</option><?php
+$allowedEepSpecialties = array(
+    'PE21' => 'ΠΕ21',
+    'PE22' => 'ΠΕ22',
+    'PE23' => 'ΠΕ23',
+    'PE25' => 'ΠΕ25',
+    'PE28' => 'ΠΕ28',
+    'PE29' => 'ΠΕ29',
+    'PE30' => 'ΠΕ30',
+    'PE31' => 'ΠΕ31'
+);
+foreach ($allowedEepSpecialties as $value => $registryCode) {
+    echo '<option value="' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(teacherSpecialtyDisplay($registryCode), ENT_QUOTES, 'UTF-8') . '</option>';
+}
+?></select></div>
 <div id="branchNote" class="info">Επίλεξε κλάδο για να εμφανιστούν οι ειδικές επισημάνσεις.</div>
 <?php renderAsepPedagogicalProof(array(
     'context' => '2ea-2025',
