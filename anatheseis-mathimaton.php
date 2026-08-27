@@ -152,6 +152,7 @@
             <select id="specialty">
               <option value="">— Επιλογή κλάδου —</option>
               <?php foreach (teachingAssignmentKnownSpecialties() as $code): ?>
+                <?php if ($code === 'ΤΕ') continue; // τεχνικός γενικός δείκτης, όχι πραγματικός κλάδος ?>
                 <option value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?></option>
               <?php endforeach; ?>
             </select>
@@ -378,6 +379,8 @@
     const item = normalize(entry);
     if (item === code) return true;
     if (/^ΠΕ\d+$/.test(item) && code.indexOf(item + '.') === 0) return true;
+    if (item === 'ΤΕ' && /^ΤΕ\d/.test(code)) return true;
+    if (/^ΤΕ\d+$/.test(item) && code.indexOf(item + '.') === 0) return true;
     return false;
   }
 
