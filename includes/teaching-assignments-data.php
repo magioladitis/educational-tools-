@@ -153,7 +153,8 @@ function teachingAssignmentsData()
         'teaching-assignments-eneegyl-d.php',
         'teaching-assignments-kallitexnika.php',
         'teaching-assignments-epal.php',
-        'teaching-assignments-pepal.php'
+        'teaching-assignments-pepal.php',
+        'teaching-assignments-mousika.php'
     ) as $assignmentFile) {
         $extraRows = teachingAssignmentsLoadRows(__DIR__ . '/' . $assignmentFile);
         if ($extraRows) {
