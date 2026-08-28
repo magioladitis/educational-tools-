@@ -13,7 +13,7 @@ check('2016-2017 group heading', 'Υπηρεσία στη διετία 01-01-201
 check('freeze years concise label', 'Έτη υπηρεσίας στη διετία' in page)
 check('freeze months concise label', 'Επιπλέον μήνες στη διετία' in page)
 check('freeze fields nested together', '<div class="field-grid">' in page and page.index('id="suspendedYears"') < page.index('id="suspendedMonths"'))
-check('cache version bumped', "EDU_TOOLS_VERSION', '3.20.63" in config)
+check('cache version bumped', "EDU_TOOLS_VERSION', '3.20.68" in config)
 failed=[n for n,v in checks if not v]
 for n,v in checks: print(('PASS' if v else 'FAIL')+': '+n)
 print(f'SALARY-SCALE R18 UI: {len(checks)-len(failed)}/{len(checks)} PASS')

@@ -93,10 +93,14 @@
     return (period.type || 'school') === 'school' && !!REMOTE_DOUBLE_CATEGORIES[period.category];
   }
 
+  function isFixedFullWeekType(type) {
+    return /^abroad_/.test(type || '') || type === 'study_leave';
+  }
+
   function calculateMsdPeriod(period) {
     period = period || {};
     var duration = normalizeDuration(period.years, period.months, period.days);
-    var daysPerWeek = bounded(period.daysPerWeek == null ? 5 : period.daysPerWeek, 0, 5);
+    var daysPerWeek = isFixedFullWeekType(period.type) ? 5 : bounded(period.daysPerWeek == null ? 5 : period.daysPerWeek, 0, 5);
     var baseAnnual = baseAnnualForPeriod(period);
     var bonusAnnual = bonusAnnualForPeriod(period);
     var remoteDouble = !!period.remoteDouble && canRemoteDouble(period);
@@ -154,6 +158,7 @@
     servicePoints: servicePoints,
     childPoints: childPoints,
     familyPoints: familyPoints,
+    isFixedFullWeekType: isFixedFullWeekType,
     calculateMsdPeriod: calculateMsdPeriod,
     calculate: calculate
   };

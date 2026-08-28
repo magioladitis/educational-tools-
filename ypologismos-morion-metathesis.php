@@ -31,7 +31,7 @@
           </div>
           <div class="field">
             <label for="serviceYears">Συνολική αναγνωρισμένη υπηρεσία — έτη</label>
-            <input id="serviceYears" type="number" min="0" max="60" step="1" value="0" inputmode="numeric">
+            <input id="serviceYears" type="number" min="0" max="40" step="1" value="0" inputmode="numeric">
           </div>
           <div class="field">
             <label for="serviceMonths">Επιπλέον μήνες</label>
@@ -172,10 +172,10 @@
       '<div class="field-grid transfer-service-grid">' +
         '<div class="field transfer-type-field"><label>Είδος υπηρέτησης</label><select class="msd-type">' + typeOptionsHtml() + '</select></div>' +
         '<div class="field transfer-category-field"><label>Κατηγορία / πλησιέστερο σχολείο</label><select class="msd-category">' + categoryOptionsHtml() + '</select></div>' +
-        '<div class="field"><label>Έτη</label><input class="msd-years" type="number" min="0" max="60" step="1" value="0" inputmode="numeric"></div>' +
+        '<div class="field"><label>Έτη</label><input class="msd-years" type="number" min="0" max="40" step="1" value="0" inputmode="numeric"></div>' +
         '<div class="field"><label>Μήνες</label><input class="msd-months" type="number" min="0" max="11" step="1" value="0" inputmode="numeric"></div>' +
         '<div class="field"><label>Ημέρες <small>15+ → μήνας</small></label><input class="msd-days" type="number" min="0" max="29" step="1" value="0" inputmode="numeric"></div>' +
-        '<div class="field"><label>Ημέρες / εβδομάδα <small>έως 5/5</small></label><input class="msd-weekdays" type="number" min="0" max="5" step="0.01" value="5" inputmode="decimal"></div>' +
+        '<div class="field transfer-weekdays-field"><label>Ημέρες / εβδομάδα <small class="msd-weekdays-hint">έως 5/5</small></label><input class="msd-weekdays" type="number" min="0" max="5" step="0.01" value="5" inputmode="decimal"></div>' +
       '</div>' +
       '<div class="check-row transfer-remote-row"><label><input class="msd-remote-double" type="checkbox"> Έχει θεμελιωθεί διπλασιασμός απομακρυσμένης σχολικής μονάδας (Ι΄–ΙΓ΄, διετής συνεχόμενη υπηρεσία)</label></div>' +
       '<div class="transfer-service-actions"><span class="field-hint transfer-row-note"></span><button class="remove-row" type="button">Αφαίρεση</button></div>';
@@ -194,6 +194,19 @@
     var category = row.querySelector('.msd-category').value;
     var fixedCategory = /^abroad_|^study_leave$/.test(type);
     categoryField.classList.toggle('hidden', fixedCategory);
+
+    var fixedFullWeek = /^abroad_|^study_leave$/.test(type);
+    var weekdaysInput = row.querySelector('.msd-weekdays');
+    var weekdaysHint = row.querySelector('.msd-weekdays-hint');
+    if (fixedFullWeek) {
+      weekdaysInput.value = '5';
+      weekdaysInput.disabled = true;
+      weekdaysHint.textContent = 'σταθερά 5/5';
+    } else {
+      weekdaysInput.disabled = false;
+      weekdaysHint.textContent = 'έως 5/5';
+    }
+
     var remoteEligible = type === 'school' && ['I', 'IA', 'IB', 'IG'].indexOf(category) !== -1;
     remoteRow.classList.toggle('hidden', !remoteEligible);
     if (!remoteEligible) row.querySelector('.msd-remote-double').checked = false;
@@ -204,10 +217,10 @@
     else if (type === 'listed_service_bonus2') note = 'Ισχύει μόνο για τις υπηρεσίες που απαριθμεί η εγκύκλιος: ΥΠΑΙΘΑ, ΠΔΕ, ΔΠΕ/ΔΔΕ, ΙΕΠ κ.ά.';
     else if (type === 'other_secondment') note = 'Χωρίς πρόσθετη προσαύξηση: μονάδες της πλησιέστερης σχολικής μονάδας.';
     else if (type === 'recognized_prior') note = 'Για προϋπηρεσία που η εγκύκλιος αναγνωρίζει και για Μ.Σ.Δ.';
-    else if (type === 'abroad_europe') note = 'Η υπηρεσία θεωρείται Α΄ κατηγορίας.';
-    else if (type === 'abroad_america') note = 'Η υπηρεσία θεωρείται Β΄ κατηγορίας.';
-    else if (type === 'abroad_other') note = 'Η υπηρεσία θεωρείται Γ΄ κατηγορίας.';
-    else if (type === 'study_leave') note = 'Η άδεια υπηρεσιακής εκπαίδευσης με αποδοχές θεωρείται Α΄ κατηγορίας.';
+    else if (type === 'abroad_europe') note = 'Η υπηρεσία θεωρείται Α΄ κατηγορίας και υπολογίζεται υποχρεωτικά ως 5/5 ημέρες την εβδομάδα.';
+    else if (type === 'abroad_america') note = 'Η υπηρεσία θεωρείται Β΄ κατηγορίας και υπολογίζεται υποχρεωτικά ως 5/5 ημέρες την εβδομάδα.';
+    else if (type === 'abroad_other') note = 'Η υπηρεσία θεωρείται Γ΄ κατηγορίας και υπολογίζεται υποχρεωτικά ως 5/5 ημέρες την εβδομάδα.';
+    else if (type === 'study_leave') note = 'Η άδεια υπηρεσιακής εκπαίδευσης με αποδοχές θεωρείται Α΄ κατηγορίας και υπολογίζεται υποχρεωτικά ως 5/5 ημέρες την εβδομάδα.';
     row.querySelector('.transfer-row-note').textContent = note;
   }
 
@@ -287,7 +300,7 @@
   document.addEventListener('input', function (event) {
     var target = event.target;
     if (!target) return;
-    if (target.id === 'serviceYears' || target.classList.contains('msd-years')) clampInput(target, 60);
+    if (target.id === 'serviceYears' || target.classList.contains('msd-years')) clampInput(target, 40);
     if (target.id === 'serviceMonths' || target.classList.contains('msd-months')) clampInput(target, 11);
     if (target.id === 'serviceDays' || target.classList.contains('msd-days')) clampInput(target, 29);
     if (target.id === 'eligibleChildren') clampInput(target, 20);
