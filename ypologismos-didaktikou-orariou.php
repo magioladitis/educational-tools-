@@ -33,7 +33,7 @@
           </div>
           <div class="field" id="serviceYearsField">
             <label for="serviceYears">Συμπληρωμένα έτη υπηρεσίας</label>
-            <input id="serviceYears" type="number" min="0" max="40" step="1" value="0" inputmode="numeric">
+            <input id="serviceYears" type="number" min="0" max="50" step="1" value="0" inputmode="numeric">
           </div>
           <div class="field" id="serviceMonthsField">
             <label for="serviceMonths">Επιπλέον μήνες υπηρεσίας</label>
@@ -233,7 +233,7 @@
     syncFields();
     const options = {
       level: level.value,
-      years: numberValue('serviceYears', 40),
+      years: numberValue('serviceYears', 50),
       months: numberValue('serviceMonths', 11),
       days: numberValue('serviceDays', 29)
     };
@@ -286,13 +286,13 @@
 
   document.querySelectorAll('input, select').forEach(el => {
     el.addEventListener('input', () => {
-      if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 40);
+      if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 50);
       if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
       if (el.id === 'serviceDays') clampBoundedIntegerInput(el, 29);
       calculate();
     });
     el.addEventListener('change', () => {
-      if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 40);
+      if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 50);
       if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
       if (el.id === 'serviceDays') clampBoundedIntegerInput(el, 29);
       calculate();

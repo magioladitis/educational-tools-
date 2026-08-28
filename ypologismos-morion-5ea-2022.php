@@ -95,7 +95,7 @@
       <label for="eaeMonths">Μήνες προϋπηρεσίας στην Ε.Α.Ε.
         <small>Για το κριτήριο Επικουρικού απαιτούνται τουλάχιστον 10 μήνες.</small>
       </label>
-      <input type="number" id="eaeMonths" data-eae-aux="months" min="0" max="480" step="1" value="0">
+      <input type="number" id="eaeMonths" data-eae-aux="months" min="0" max="600" step="1" value="0">
     </div>
 
     <div class="info-note">Το κριτήριο γονέα παιδιού με αναπηρία ≥67% ελέγχεται από το αντίστοιχο ποσοστό στα Κοινωνικά Κριτήρια.</div>

@@ -79,14 +79,14 @@ foreach ($abroadSpecialties as $internalCode) {
             <label for="educationYears">Συνολικά έτη εκπαιδευτικής υπηρεσίας
               <small>Απαιτούνται τουλάχιστον 5 έτη.</small>
             </label>
-            <input type="number" id="educationYears" min="0" max="40" step="1" inputmode="numeric" value="" placeholder="π.χ. 12">
+            <input type="number" id="educationYears" min="0" max="50" step="1" inputmode="numeric" value="" placeholder="π.χ. 12">
           </div>
 
           <div class="field">
             <label for="teachingYears">Έτη διδακτικής υπηρεσίας μετά το ΦΕΚ διορισμού
               <small>Απαιτούνται τουλάχιστον 3 έτη σε σχολεία Πρωτοβάθμιας ή Δευτεροβάθμιας Εκπαίδευσης.</small>
             </label>
-            <input type="number" id="teachingYears" min="0" max="40" step="1" inputmode="numeric" value="" placeholder="π.χ. 8">
+            <input type="number" id="teachingYears" min="0" max="50" step="1" inputmode="numeric" value="" placeholder="π.χ. 8">
           </div>
 
           <div class="field">
@@ -408,7 +408,7 @@ echo json_encode($abroadSpecialtyLabels, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED
   function normalizeYears(id){
     const el = $(id);
     if(!el || el.value === '') return;
-    el.value = String(Math.min(40, Math.max(0, Math.floor(Number(el.value) || 0))));
+    el.value = String(Math.min(50, Math.max(0, Math.floor(Number(el.value) || 0))));
   }
 
   function eligibleDestinations(specialty){

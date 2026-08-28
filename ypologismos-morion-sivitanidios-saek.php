@@ -73,8 +73,8 @@
   <div class="note">Οι δύο παραπάνω κατηγορίες μοιράζονται το ίδιο ανώτατο όριο.</div>
   <div class="subsection-head"><h3>2.2 Τυπική εκπαίδευση</h3><span class="subsection-max">έως 4</span></div>
   <div class="field-grid">
-    <div class="field"><label for="tertiaryTeachingYears">Τριτοβάθμια — έτη <small>0,5 μόριο / έτος.</small></label><input id="tertiaryTeachingYears" type="number" min="0" step="0.01" value="0"></div>
-    <div class="field"><label for="primarySecondaryTeachingYears">Πρωτοβάθμια / Δευτεροβάθμια — έτη <small>1 μόριο / έτος.</small></label><input id="primarySecondaryTeachingYears" type="number" min="0" step="0.01" value="0"></div>
+    <div class="field"><label for="tertiaryTeachingYears">Τριτοβάθμια — έτη <small>0,5 μόριο / έτος.</small></label><input id="tertiaryTeachingYears" type="number" min="0" max="50" step="0.01" value="0"></div>
+    <div class="field"><label for="primarySecondaryTeachingYears">Πρωτοβάθμια / Δευτεροβάθμια — έτη <small>1 μόριο / έτος.</small></label><input id="primarySecondaryTeachingYears" type="number" min="0" max="50" step="0.01" value="0"></div>
   </div>
   <div class="note">Η πρόσκληση δέχεται δεκαδική αναγωγή σε έτη (π.χ. 11 μήνες = 0,92).</div>
   <div class="subsection-head"><h3>2.3 Άλλα προγράμματα μη τυπικής εκπαίδευσης</h3><span class="subsection-max">έως 5</span></div>

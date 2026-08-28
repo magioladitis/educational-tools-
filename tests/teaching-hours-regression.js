@@ -63,10 +63,10 @@ check('lab responsible PE 6y next effective reduction is 20y', H.calculate({leve
 check('EPAL/EK lab sector PE 7', hours({level:'secondary', role:'epal_ek_lab_sector', branch:'PE', years:7}), 19);
 check('EPAL/EK lab sector PE 20 floor', hours({level:'secondary', role:'epal_ek_lab_sector', branch:'PE', years:20}), 18);
 
-check('service years capped at 40', H.serviceMonths(99, 0), 480);
+check('service years capped at 50', H.serviceMonths(99, 0), 600);
 check('service months capped at 11', H.serviceMonths(1, 99), 23);
 check('service days capped at 29', H.serviceMonths(1, 0, 99), 12 + 29/30);
-check('service max 40y11m29d', H.serviceMonths(40, 11, 29), 491 + 29/30);
+check('service max 50y11m29d', H.serviceMonths(50, 11, 29), 611 + 29/30);
 check('service label with days', H.serviceLabel(H.serviceMonths(6, 11, 29)), '6 έτη και 11 μήν. και 29 ημ.');
 
 check('EEP 0 years', hours({level:'eep', years:0}), 25);

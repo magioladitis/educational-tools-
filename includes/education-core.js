@@ -9,7 +9,7 @@
 (function (global) {
   'use strict';
 
-  var MAX_SERVICE_YEARS = 40;
+  var MAX_SERVICE_YEARS = 50;
   var MAX_SERVICE_MONTHS = MAX_SERVICE_YEARS * 12;
 
   function finiteNumber(value) {

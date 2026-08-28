@@ -33,7 +33,7 @@
   }
 
   function normalizeDuration(years, months, days) {
-    var y = integer(years, 0, 60);
+    var y = integer(years, 0, 50);
     var m = integer(months, 0, 11);
     var d = integer(days, 0, 29);
     if (d >= 15) m += 1;

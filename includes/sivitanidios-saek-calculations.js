@@ -60,7 +60,9 @@
     const saekOutside = cap(num(data.saekOutsideHours) / 150, 8);
     const saekSivitanidios = cap(num(data.saekSivitanidiosHours) / 150 * 1.2, 10);
     const saekPoints = cap(saekOutside + saekSivitanidios, MAX.saekTeaching);
-    const formalPoints = cap(num(data.tertiaryTeachingYears) * 0.5 + num(data.primarySecondaryTeachingYears), MAX.formalTeaching);
+    const tertiaryTeachingYears = Math.min(50, num(data.tertiaryTeachingYears));
+    const primarySecondaryTeachingYears = Math.min(50, num(data.primarySecondaryTeachingYears));
+    const formalPoints = cap(tertiaryTeachingYears * 0.5 + primarySecondaryTeachingYears, MAX.formalTeaching);
     const nonFormalPoints = cap(num(data.otherNonFormalHours) / 200, MAX.nonFormalTeaching);
     const points = cap(saekPoints + formalPoints + nonFormalPoints, MAX.teaching);
     const details = [];

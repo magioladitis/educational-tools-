@@ -109,7 +109,7 @@ renderAsepThreeMonthService(array(
 ?>
 
         <div class="field-grid">
-          <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" data-service-role="private" min="0" max="480" step="1" value="0" inputmode="numeric"></div>
+          <div class="field"><label for="privateMonths">Ιδιωτική εκπαίδευση<small>0,9 μόρια/μήνα</small></label><input type="number" id="privateMonths" data-service-role="private" min="0" max="600" step="1" value="0" inputmode="numeric"></div>
         </div>
 
 <?php renderAsepDigitalTutoringService(array('container_id' => 'digitalTutoring', 'input_class' => 'service-months')); ?>

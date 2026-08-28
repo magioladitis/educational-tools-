@@ -53,7 +53,7 @@
   }
 
   function serviceDays(years, months, days) {
-    const y = Math.min(40, nonNegativeInteger(years));
+    const y = Math.min(50, nonNegativeInteger(years));
     const m = Math.min(11, nonNegativeInteger(months));
     const d = Math.min(29, nonNegativeInteger(days));
     return y * 360 + m * 30 + d;

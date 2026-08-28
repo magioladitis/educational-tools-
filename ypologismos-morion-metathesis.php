@@ -31,7 +31,7 @@
           </div>
           <div class="field">
             <label for="serviceYears">Συνολική αναγνωρισμένη υπηρεσία — έτη</label>
-            <input id="serviceYears" type="number" min="0" max="40" step="1" value="0" inputmode="numeric">
+            <input id="serviceYears" type="number" min="0" max="50" step="1" value="0" inputmode="numeric">
           </div>
           <div class="field">
             <label for="serviceMonths">Επιπλέον μήνες</label>
@@ -172,7 +172,7 @@
       '<div class="field-grid transfer-service-grid">' +
         '<div class="field transfer-type-field"><label>Είδος υπηρέτησης</label><select class="msd-type">' + typeOptionsHtml() + '</select></div>' +
         '<div class="field transfer-category-field"><label>Κατηγορία / πλησιέστερο σχολείο</label><select class="msd-category">' + categoryOptionsHtml() + '</select></div>' +
-        '<div class="field"><label>Έτη</label><input class="msd-years" type="number" min="0" max="40" step="1" value="0" inputmode="numeric"></div>' +
+        '<div class="field"><label>Έτη</label><input class="msd-years" type="number" min="0" max="50" step="1" value="0" inputmode="numeric"></div>' +
         '<div class="field"><label>Μήνες</label><input class="msd-months" type="number" min="0" max="11" step="1" value="0" inputmode="numeric"></div>' +
         '<div class="field"><label>Ημέρες <small>15+ → μήνας</small></label><input class="msd-days" type="number" min="0" max="29" step="1" value="0" inputmode="numeric"></div>' +
         '<div class="field transfer-weekdays-field"><label>Ημέρες / εβδομάδα <small class="msd-weekdays-hint">έως 5/5</small></label><input class="msd-weekdays" type="number" min="0" max="5" step="0.01" value="5" inputmode="decimal"></div>' +
@@ -300,7 +300,7 @@
   document.addEventListener('input', function (event) {
     var target = event.target;
     if (!target) return;
-    if (target.id === 'serviceYears' || target.classList.contains('msd-years')) clampInput(target, 40);
+    if (target.id === 'serviceYears' || target.classList.contains('msd-years')) clampInput(target, 50);
     if (target.id === 'serviceMonths' || target.classList.contains('msd-months')) clampInput(target, 11);
     if (target.id === 'serviceDays' || target.classList.contains('msd-days')) clampInput(target, 29);
     if (target.id === 'eligibleChildren') clampInput(target, 20);

@@ -42,7 +42,7 @@
           </div>
           <div class="field">
             <label for="serviceYears">Συνολικά αναγνωρισμένα έτη υπηρεσίας</label>
-            <input id="serviceYears" type="number" min="0" max="40" step="1" value="0" inputmode="numeric">
+            <input id="serviceYears" type="number" min="0" max="50" step="1" value="0" inputmode="numeric">
           </div>
           <div class="field">
             <label for="serviceMonths">Επιπλέον αναγνωρισμένοι μήνες</label>
@@ -142,7 +142,7 @@
   function calculate() {
     const result = window.EducationSalaryScale.calculate({
       category: byId('category').value,
-      years: integer('serviceYears', 40),
+      years: integer('serviceYears', 50),
       months: integer('serviceMonths', 11),
       qualification: byId('qualification').value,
       suspendedYears: integer('suspendedYears', 2),
@@ -205,13 +205,13 @@
 
   document.querySelectorAll('input, select').forEach(el => {
     el.addEventListener('input', () => {
-      if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 40);
+      if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 50);
       if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
       if (el.id === 'suspendedYears' || el.id === 'suspendedMonths') clampSuspendedInputs();
       calculate();
     });
     el.addEventListener('change', () => {
-      if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 40);
+      if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 50);
       if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
       if (el.id === 'suspendedYears' || el.id === 'suspendedMonths') clampSuspendedInputs();
       calculate();

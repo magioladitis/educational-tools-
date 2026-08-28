@@ -38,7 +38,7 @@
           </div>
           <div class="field">
             <label for="educationalServiceYears">Συνολική εκπαιδευτική υπηρεσία <small id="serviceRequirement">Επίλεξε θέση για να εμφανιστεί το ελάχιστο.</small></label>
-            <input type="number" id="educationalServiceYears" min="0" max="40" step="0.01" placeholder="π.χ. 12" oninput="calculate()">
+            <input type="number" id="educationalServiceYears" min="0" max="50" step="0.01" placeholder="π.χ. 12" oninput="calculate()">
           </div>
           <div class="field hidden" id="tertiaryDegreeWrap">
             <label for="tertiaryDegree">Πτυχίο τριτοβάθμιας εκπαίδευσης ή ισότιμος τίτλος</label>
@@ -106,7 +106,7 @@
         <div class="field-grid">
           <div class="field">
             <label for="sdeTeachingYears">Διδακτικό έργο στα ΣΔΕ — πλήρη έτη <small>Μην περιλαμβάνεις εδώ χρόνο διοικητικής θητείας που παίρνει μόρια στην ενότητα 4.</small></label>
-            <input type="number" id="sdeTeachingYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="sdeTeachingYears" min="0" max="50" step="0.01" value="0" oninput="calculate()">
           </div>
           <div class="field">
             <label for="sdeTeachingHours">Διδακτικό έργο στα ΣΔΕ — ώρες ωρομίσθιας απασχόλησης</label>
@@ -114,7 +114,7 @@
           </div>
           <div class="field">
             <label for="sdeTransferredYears">Έτη διοικητικής θητείας σε ΣΔΕ που δεν πήραν διοικητικά μόρια λόγω πλαφόν <small>Χρησιμοποίησέ το μόνο αν ο συγκεκριμένος χρόνος επιτρέπεται να μεταφερθεί στη διδακτική εμπειρία.</small></label>
-            <input type="number" id="sdeTransferredYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="sdeTransferredYears" min="0" max="50" step="0.01" value="0" oninput="calculate()">
           </div>
           <div class="field">
             <label for="adultNonformalHours">Μη τυπική εκπαίδευση ενηλίκων — ώρες <small>ΝΕΛΕ, ΚΕΕ, ΚΔΒΜ, ΚΕΔΙΒΙΜ, ΚΕΚ, ΠΕΚ, ΠΕΚΕΣ, ΕΚΔΔΑ. 0,5 μόριο ανά 100 ώρες.</small></label>
@@ -122,7 +122,7 @@
           </div>
           <div class="field">
             <label for="schoolTeachingYears">Π/θμια – Δ/θμια – ΣΑΕΚ – ΕΣΚ — πλήρη διδακτικά έτη <small>Χωρίς περίοδο διοικητικής θητείας που μοριοδοτείται στην ενότητα 4.</small></label>
-            <input type="number" id="schoolTeachingYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="schoolTeachingYears" min="0" max="50" step="0.01" value="0" oninput="calculate()">
           </div>
           <div class="field">
             <label for="schoolTeachingHours">Π/θμια – Δ/θμια – ΣΑΕΚ – ΕΣΚ — ώρες ωρομίσθιας απασχόλησης</label>
@@ -130,7 +130,7 @@
           </div>
           <div class="field full">
             <label for="schoolTransferredYears">Έτη διοικητικής θητείας που δεν πήραν διοικητικά μόρια λόγω πλαφόν και μπορούν να προσμετρηθούν ως διδακτικά <small>Μην δηλώσεις χρόνο που έχει ήδη μοριοδοτηθεί διοικητικά.</small></label>
-            <input type="number" id="schoolTransferredYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="schoolTransferredYears" min="0" max="50" step="0.01" value="0" oninput="calculate()">
           </div>
         </div>
         <div class="warning">Δεν προσμετράται χρόνος άδειας άνευ αποδοχών, εκπαιδευτικής άδειας ή απόσπασης σε θέση με διοικητικά καθήκοντα, ούτε προϋπηρεσία που αναγνωρίστηκε κατά τον διορισμό στην τυπική εκπαίδευση. Το διδακτικό έργο στην τριτοβάθμια εκπαίδευση δεν θεωρείται διδακτικό έργο στην Εκπαίδευση Ενηλίκων.</div>
@@ -140,15 +140,15 @@
         <div class="field-grid">
           <div class="field">
             <label for="sdeDirectorYears">Στα ΣΔΕ ως Διευθυντής — σχολικά έτη <small>2 μόρια ανά έτος.</small></label>
-            <input type="number" id="sdeDirectorYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="sdeDirectorYears" min="0" max="50" step="0.01" value="0" oninput="calculate()">
           </div>
           <div class="field">
             <label for="sdeDeputyYears">Στα ΣΔΕ ως Υποδιευθυντής — σχολικά έτη <small>1 μόριο ανά έτος.</small></label>
-            <input type="number" id="sdeDeputyYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="sdeDeputyYears" min="0" max="50" step="0.01" value="0" oninput="calculate()">
           </div>
           <div class="field full">
             <label for="otherAdminYears">Σε σχολικές μονάδες Π/θμιας ή Δ/θμιας, ΣΑΕΚ ή ΕΣΚ ως Διευθυντής/Υποδιευθυντής — σχολικά έτη <small>1 μόριο ανά έτος.</small></label>
-            <input type="number" id="otherAdminYears" min="0" max="40" step="0.01" value="0" oninput="calculate()">
+            <input type="number" id="otherAdminYears" min="0" max="50" step="0.01" value="0" oninput="calculate()">
           </div>
         </div>
         <div class="overflow-box" id="overflowHint">Επίλεξε θέση για να υπολογιστούν τα επιμέρους πλαφόν και τυχόν διοικητικός χρόνος που μένει εκτός μοριοδότησης.</div>
@@ -207,7 +207,7 @@
   const $ = id => document.getElementById(id);
   const val = id => $(id).value;
   const num = id => Math.max(0, Number($(id).value || 0));
-  const EXPERIENCE_YEAR_MAX = 40;
+  const EXPERIENCE_YEAR_MAX = 50;
   const boundedYears = (id, preserveBlank = false) => {
     const el = $(id);
     if (!el || el.value === '') return preserveBlank ? '' : 0;

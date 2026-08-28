@@ -26,7 +26,7 @@
   }
 
   function serviceMonths(years, months) {
-    const y = Math.min(40, nonNegativeInteger(years));
+    const y = Math.min(50, nonNegativeInteger(years));
     const m = Math.min(11, nonNegativeInteger(months));
     return y * 12 + m;
   }

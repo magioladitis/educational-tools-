@@ -112,7 +112,7 @@ renderDeadlineCard(array(
           <label for="eaeMonths">Μήνες προϋπηρεσίας στην Ε.Α.Ε.
             <small>Για το κριτήριο του Επικουρικού απαιτούνται τουλάχιστον 10 μήνες.</small>
           </label>
-          <input type="number" id="eaeMonths" data-eae-aux="months" min="0" max="480" step="1" value="0">
+          <input type="number" id="eaeMonths" data-eae-aux="months" min="0" max="600" step="1" value="0">
         </div>
 
         <div class="info-note">
@@ -186,7 +186,7 @@ renderAsepThreeMonthService(array(
           <label for="privateMonths">Μήνες προϋπηρεσίας στην ιδιωτική εκπαίδευση
             <small>0,9 μόρια ανά μήνα, εφόσον πληρούνται οι ειδικές προϋποθέσεις της προκήρυξης.</small>
           </label>
-          <input type="number" id="privateMonths" data-service-role="private" min="0" max="480" step="1" value="0">
+          <input type="number" id="privateMonths" data-service-role="private" min="0" max="600" step="1" value="0">
         </div>
 
         <?php calculatorSubtotalRow(array('label_html' => 'Σύνολο Προϋπηρεσίας', 'value_id' => 'serviceSubtotal', 'value_html' => '0,00 / 120')); ?>

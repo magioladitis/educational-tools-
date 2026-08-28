@@ -16,7 +16,7 @@
   const RULES = Object.freeze({
     publicMaxMonths: 120,
     difficultMaxMonths: 60,
-    privateMaxMonths: 480,
+    privateMaxMonths: 600,
     totalMaxPoints: 120,
     threeMonth2020MaxMonths: 8,
     threeMonth2021MaxMonths: 7,

@@ -64,11 +64,11 @@ foreach ($sdeSecondmentSpecialties as $code) {
           </div>
           <div class="field">
             <label for="eligibilitySchoolYears">Διδακτική υπηρεσία σε σχολεία Πρωτοβάθμιας ή Δευτεροβάθμιας Εκπαίδευσης <small>Για δικαίωμα αίτησης απαιτούνται τουλάχιστον 2 χρόνια. Το πεδίο αυτό χρησιμοποιείται μόνο για τον έλεγχο επιλεξιμότητας.</small></label>
-            <input type="number" id="eligibilitySchoolYears" min="0" max="40" step="0.01" value="" inputmode="decimal" placeholder="π.χ. 2" oninput="calculate()">
+            <input type="number" id="eligibilitySchoolYears" min="0" max="50" step="0.01" value="" inputmode="decimal" placeholder="π.χ. 2" oninput="calculate()">
           </div>
           <div class="field">
             <label for="formalEducationYears">Συνολικά πλήρη σχολικά έτη διδακτικού έργου στην τυπική εκπαίδευση <small>Πρωτοβάθμια / Δευτεροβάθμια / Τριτοβάθμια. Με τη διόρθωση Β΄ 4199/2026: 1 μόριο από το 1ο πλήρες σχολικό έτος, έως 4.</small></label>
-            <input type="number" id="formalEducationYears" min="0" max="40" step="1" value="" inputmode="numeric" placeholder="π.χ. 6" oninput="calculate()">
+            <input type="number" id="formalEducationYears" min="0" max="50" step="1" value="" inputmode="numeric" placeholder="π.χ. 6" oninput="calculate()">
           </div>
           <div class="field hidden" id="mathInfoDegreeWrap">
             <label for="mathInfoDegree">Πληροίς την προϋπόθεση «πτυχίο Μαθηματικών ή Πληροφορικής» που αναγράφεται για τη Β΄ ανάθεση στα Μαθηματικά;</label>
@@ -153,7 +153,7 @@ foreach ($sdeSecondmentSpecialties as $code) {
         <div class="field-grid">
           <div class="field">
             <label for="sdeYears">Πλήρη σχολικά έτη διδακτικής εμπειρίας σε ΣΔΕ <small>1 μόριο ανά σχολικό έτος, έως 5.</small></label>
-            <input type="number" id="sdeYears" min="0" max="40" step="1" value="0" oninput="calculate()">
+            <input type="number" id="sdeYears" min="0" max="50" step="1" value="0" oninput="calculate()">
           </div>
           <div class="field">
             <label for="sdeHourlyHours">Ώρες ωρομίσθιας απασχόλησης σε ΣΔΕ <small>650 ώρες = 1 έτος = 1 μόριο. Μην καταχωρίζεις εδώ χρόνο που έχεις ήδη δηλώσει ως πλήρες έτος.</small></label>

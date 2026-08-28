@@ -93,8 +93,8 @@ foreach ($sdeRegistrySpecialties as $code) {
       <div class="field full"><label for="expFormalHours">Τυπική εκπαίδευση ή επαγγελματική κατάρτιση — ώρες <small>Π/θμια, Δ/θμια, Τριτοβάθμια ή Επαγγελματική Κατάρτιση. 1 μόριο / 200 ώρες, έως 4.</small></label><input id="expFormalHours" type="number" min="0" step="1" value="0" oninput="calculate()"></div>
     </div>
     <div id="advisorExperience" class="field-grid hidden">
-      <div class="field"><label for="expSdeMonths" id="expSdeMonthsLabel">Εμπειρία στα ΣΔΕ — μήνες</label><input id="expSdeMonths" type="number" min="0" max="480" step="1" value="0" oninput="calculate()"></div>
-      <div class="field"><label for="expAdultCounsellingMonths" id="expAdultCounsellingLabel">Συμβουλευτικές υπηρεσίες σε ενήλικες — μήνες</label><input id="expAdultCounsellingMonths" type="number" min="0" max="480" step="1" value="0" oninput="calculate()"></div>
+      <div class="field"><label for="expSdeMonths" id="expSdeMonthsLabel">Εμπειρία στα ΣΔΕ — μήνες</label><input id="expSdeMonths" type="number" min="0" max="600" step="1" value="0" oninput="calculate()"></div>
+      <div class="field"><label for="expAdultCounsellingMonths" id="expAdultCounsellingLabel">Συμβουλευτικές υπηρεσίες σε ενήλικες — μήνες</label><input id="expAdultCounsellingMonths" type="number" min="0" max="600" step="1" value="0" oninput="calculate()"></div>
     </div>
     <div id="careerInconsistency" class="warning hidden"><strong>Σημείωση για το ΦΕΚ:</strong> στο άρθρο 12 §2.1 το λεκτικό αναφέρει «μέγιστο αριθμό μορίων 12», αλλά η στήλη του πίνακα δίνει 7 και η συνολική κατηγορία Επαγγελματικής Εμπειρίας είναι 13, ενώ το §2.2 δίνει 6. Ο υπολογιστής χρησιμοποιεί πλαφόν <strong>7</strong>, ως τη μοναδική τιμή που συμφωνεί εσωτερικά με το άθροισμα 13.</div>
   <?php calculatorCardEnd(); ?>

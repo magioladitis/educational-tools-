@@ -163,7 +163,7 @@
     <div class="field-grid three">
       <div class="question">
         <label for="serviceYears">Έτη</label>
-        <input type="number" id="serviceYears" min="0" max="40" step="1" value="0">
+        <input type="number" id="serviceYears" min="0" max="50" step="1" value="0">
       </div>
       <div class="question">
         <label for="serviceMonths">Μήνες</label>
@@ -477,7 +477,7 @@
   }
 
   function calculateServicePoints(years, months, days) {
-    years = Math.min(40, Math.max(0, Math.floor(Number(years) || 0)));
+    years = Math.min(50, Math.max(0, Math.floor(Number(years) || 0)));
     let totalMonths = (years * 12) + months;
     if (days >= 15) totalMonths += 1;
 

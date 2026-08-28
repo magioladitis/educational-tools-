@@ -24,7 +24,7 @@
     })
   });
 
-  const MAX_EXPERIENCE_YEARS = 40;
+  const MAX_EXPERIENCE_YEARS = 50;
 
   function n(value) {
     const x = Number(value);
