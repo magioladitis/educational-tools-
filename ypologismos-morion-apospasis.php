@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Ενδεικτικός υπολογισμός μορίων απόσπασης εκπαιδευτικών από ΠΥΣΠΕ/ΠΥΣΔΕ σε ΠΥΣΠΕ/ΠΥΣΔΕ για το διδακτικό έτος 2026-2027.">
-  <title>Υπολογισμός μορίων απόσπασης εκπαιδευτικών</title>
+  <title>Μόρια Απόσπασης</title>
 
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
@@ -17,7 +17,7 @@
 <?php calculatorContainerStart(array('class' => 'app-box edu-modernized')); ?>
 <?php calculatorHero(array(
   'class' => 'hero edu-legacy-hero',
-  'title' => 'Υπολογισμός μορίων απόσπασης εκπαιδευτικών',
+  'title' => 'Μόρια Απόσπασης',
   'intro_html' => 'Υπολόγισε <strong>ενδεικτικά</strong> τα μόριά σου για απόσπαση <strong>από ΠΥΣΠΕ/ΠΥΣΔΕ σε ΠΥΣΠΕ/ΠΥΣΔΕ</strong>. Ορισμένα κριτήρια εξαρτώνται από τη συγκεκριμένη περιοχή που ζητάς, γι’ αυτό ο υπολογισμός πρέπει να γίνεται χωριστά για κάθε περιοχή ενδιαφέροντος.',
   'intro_attrs' => array('class' => 'intro')
 )); ?>

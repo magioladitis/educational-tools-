@@ -47,7 +47,7 @@ check('module local first preference guard', "input.mode === 'local' ? 0" in mod
 check('toolbox filter', 'data-filter="metatheseis"' in tools)
 check('toolbox card', 'href="ypologismos-morion-metathesis.php"' in tools and 'class="tool-number">27<' in tools)
 check('toolbox count 29', '29 διαθέσιμα εργαλεία' in tools and 'Εμφανίζονται 29 εργαλεία.' in tools)
-check('asset version 3.20.62', "EDU_TOOLS_VERSION', '3.20.62'" in config)
+check('asset version 3.20.63', "EDU_TOOLS_VERSION', '3.20.63'" in config)
 ids = re.findall(r'\bid="([^"]+)"', page)
 check('no duplicate literal ids', len(ids) == len(set(ids)))
 proc = subprocess.run(['php','-l',str(PAGE)], capture_output=True, text=True)

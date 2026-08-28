@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Υπολογισμός μορίων μετάθεσης εκπαιδευτικών Δευτεροβάθμιας Εκπαίδευσης</title>
+  <title>Μόρια Μετάθεσης</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-transfer">
@@ -13,7 +13,7 @@
 
 <?php calculatorContainerStart(array('class' => 'app')); ?>
   <?php calculatorHero(array(
-    'title' => 'Υπολογισμός μορίων μετάθεσης',
+    'title' => 'Μόρια Μετάθεσης',
     'intro_html' => 'Πρώτη έκδοση για εκπαιδευτικούς <strong>Δευτεροβάθμιας Εκπαίδευσης</strong>, με τα έξι βασικά κριτήρια μετάθεσης και αναλυτικό υπολογισμό Μονάδων Συνθηκών Διαβίωσης (Μ.Σ.Δ.).',
     'badges' => array('Δ.Ε. 2025–2026', 'Μ.Σ.Δ.', 'Δυσπρόσιτα / ειδικές υπηρετήσεις')
   )); ?>

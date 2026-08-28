@@ -21,15 +21,19 @@
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('title' => 'Α. Μόρια τοποθέτησης')); ?>
-        <div class="check-row">
-          <label>
-            <input id="familyStatusEligible" type="checkbox">
-            Δικαιούμαι μονάδες οικογενειακής κατάστασης (+4)
-            <small>Γάμος ή σύμφωνο συμβίωσης, καθώς και οι προβλεπόμενες περιπτώσεις γονέα με επιμέλεια.</small>
-          </label>
-        </div>
-
         <div class="field-grid">
+          <div class="field">
+            <label for="familyStatus">Οικογενειακή κατάσταση</label>
+            <select id="familyStatus">
+              <option value="none">Καμία μοριοδοτούμενη περίπτωση — 0 μόρια</option>
+              <option value="married">Έγγαμος/η ή σύμφωνο συμβίωσης — 4 μόρια</option>
+              <option value="widowed_parent">Σε χηρεία, με μοριοδοτούμενο τέκνο — 4 μόρια</option>
+              <option value="single_parent">Άγαμος/η γονέας με μοριοδοτούμενο τέκνο — 4 μόρια</option>
+              <option value="divorced_custody">Διαζευγμένος/η ή σε διάσταση με νόμιμη επιμέλεια — 4 μόρια</option>
+            </select>
+            <div class="field-hint">Για χηρεία, άγαμο γονέα, διαζευγμένο/η ή σε διάσταση, τα 4 μόρια αποδίδονται μόνο όταν υπάρχει μοριοδοτούμενο τέκνο και συντρέχουν οι νόμιμες προϋποθέσεις επιμέλειας.</div>
+          </div>
+
           <div class="field">
             <label for="eligibleChildren">Τέκνα που μοριοδοτούνται</label>
             <input id="eligibleChildren" type="number" min="0" max="20" step="1" value="0" inputmode="numeric">
@@ -77,7 +81,6 @@
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorActions(array(
-        array('id' => 'calculateBtn', 'class' => 'primary', 'label' => 'Υπολογισμός μορίων'),
         array('id' => 'resetBtn', 'class' => 'secondary', 'label' => 'Καθαρισμός')
       )); ?>
 
@@ -130,7 +133,7 @@
 
   function getInput() {
     return {
-      familyStatusEligible: byId('familyStatusEligible').checked,
+      familyStatus: byId('familyStatus').value,
       eligibleChildren: byId('eligibleChildren').value,
       coService: byId('coService').checked,
       locality: byId('locality').checked
@@ -145,13 +148,17 @@
     byId('familyResult').textContent = formatPoints(result.familyPoints);
     byId('coServiceResult').textContent = formatPoints(result.coServicePoints);
     byId('localityResult').textContent = formatPoints(result.localityPoints);
-    byId('statusResult').textContent = result.total > 0
-      ? 'Το σύνολο αφορά το συγκεκριμένο σχολείο/Δήμο. Έλεγξε ξανά συνυπηρέτηση και εντοπιότητα για κάθε διαφορετικό Δήμο.'
-      : 'Δεν έχουν επιλεγεί μοριοδοτούμενα κριτήρια για τον συγκεκριμένο Δήμο.';
+    if (result.familyStatusRequiresChild && result.eligibleChildren === 0) {
+      byId('statusResult').textContent = 'Η επιλεγμένη οικογενειακή κατάσταση δίνει 4 μόρια μόνο όταν υπάρχει μοριοδοτούμενο τέκνο και πληρούνται οι προϋποθέσεις επιμέλειας.';
+    } else {
+      byId('statusResult').textContent = result.total > 0
+        ? 'Το σύνολο αφορά το συγκεκριμένο σχολείο/Δήμο. Έλεγξε ξανά συνυπηρέτηση και εντοπιότητα για κάθε διαφορετικό Δήμο.'
+        : 'Δεν έχουν επιλεγεί μοριοδοτούμενα κριτήρια για τον συγκεκριμένο Δήμο.';
+    }
   }
 
   function reset() {
-    byId('familyStatusEligible').checked = false;
+    byId('familyStatus').value = 'none';
     byId('eligibleChildren').value = '0';
     byId('coService').checked = false;
     byId('locality').checked = false;
@@ -162,8 +169,13 @@
     var n = Math.floor(Number(this.value || 0));
     if (!Number.isFinite(n)) n = 0;
     this.value = String(Math.max(0, Math.min(20, n)));
+    render();
   });
-  byId('calculateBtn').addEventListener('click', render);
+
+  ['familyStatus', 'coService', 'locality'].forEach(function (id) {
+    byId(id).addEventListener('change', render);
+  });
+
   byId('resetBtn').addEventListener('click', reset);
   render();
 }());
