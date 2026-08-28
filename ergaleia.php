@@ -19,7 +19,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
 <div class="hero-meta">
-<span>28 διαθέσιμα εργαλεία</span>
+<span>29 διαθέσιμα εργαλεία</span>
 <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
 <span>Αναπληρωτές</span>
 <span>Αποσπάσεις</span>
@@ -148,7 +148,7 @@ renderDeadlineCard(array(
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
 <button aria-pressed="false" class="filter-btn" data-filter="ypiresiaka" type="button">Υπηρεσιακά</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 28 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 29 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
@@ -441,9 +441,16 @@ renderDeadlineCard(array(
 <p>Υπολόγισε τα βασικά μόρια μετάθεσης Δ.Ε. και αναλυτικά τις Μ.Σ.Δ., με δυσπρόσιτα/απομακρυσμένα, καταστήματα κράτησης, Ψηφιακό Φροντιστήριο και ειδικές υπηρετήσεις.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a>
+<a class="tool-card" data-category="metatheseis ypiresiaka" data-search="νεοδιόριστοι νεοδιοριστοι τοποθέτηση προσωρινή τοποθέτηση μόρια οικογενειακοί λόγοι συνυπηρέτηση εντοπιότητα ΠΔ 144 154" href="ypologismos-morion-topothetisis-neodioriston.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">28</span><span class="category-tag orange">Τοποθετήσεις</span></div>
+<h2>Μόρια τοποθέτησης νεοδιόριστων</h2>
+<p>Υπολόγισε τα μόρια προσωρινής τοποθέτησης από οικογενειακούς λόγους, συνυπηρέτηση και εντοπιότητα, μαζί με τη σειρά κριτηρίων ισοβαθμίας.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
 <a class="tool-card" data-category="ypiresiaka eidiki-agogi" data-search="αναθέσεις μαθημάτων Α Β Γ ανάθεση ειδικότητα κλάδος Γυμνάσιο ΓΕΛ Εσπερινό ΕΑΕ ΕΝΕΕΓΥΛ ΕΝ.Ε.Ε.ΓΥ.-Λ." href="anatheseis-mathimaton.php">
 <span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">28</span><span class="category-tag green">Υπηρεσιακά / Αναθέσεις</span></div>
+<div class="card-top"><span class="tool-number">29</span><span class="category-tag green">Υπηρεσιακά / Αναθέσεις</span></div>
 <h2>Αναθέσεις Μαθημάτων ανά Ειδικότητα</h2>
 <p>Δες ποια μαθήματα έχει ο κλάδος σου σε Α΄, Β΄ και Γ΄ ανάθεση, με φίλτρα ανά τύπο σχολείου και τις αντίστοιχες επίσημες πηγές.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>

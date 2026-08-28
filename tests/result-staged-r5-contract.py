@@ -32,7 +32,7 @@ check('European Schools: uses two shared score headers', e.count('calculatorScor
 
 # Current shared-asset cache key.
 config=(root/'includes/config.php').read_text()
-check('current cache version is 3.20.61', "EDU_TOOLS_VERSION', '3.20.61" in config)
+check('current cache version is 3.20.62', "EDU_TOOLS_VERSION', '3.20.62" in config)
 
 failed=[n for n,v in checks if not v]
 for n,v in checks: print(('PASS' if v else 'FAIL')+': '+n)

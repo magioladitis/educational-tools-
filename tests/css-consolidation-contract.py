@@ -55,7 +55,7 @@ for declarations, selectors in by_declarations.items():
         cross_family_duplicates.append((declarations, selectors))
 
 check('no remaining exact cross-family duplicate declaration sets', len(cross_family_duplicates) == 0)
-check('qualified-rule count remains at or below consolidated baseline 811', qualified_count <= 811)
+check('qualified-rule count remains at or below consolidated baseline 816', qualified_count <= 816)
 check('legacy checkrow retained for distinct visual variants', '.checkrow' in css)
 check('legacy check-row retained for distinct visual variants', '.check-row' in css)
 

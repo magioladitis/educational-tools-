@@ -39,12 +39,13 @@ for page in PAGES:
     fragments = [markup[max(0, pos-260):pos+120] for pos in positions]
     check(all('secondary' in frag for frag in fragments), f'{page}: every copy utility is secondary')
 
-# Fixed-cap extra utilities remain secondary.
+# DIMOS cleanup: low-value print/example utilities were intentionally removed; reset stays secondary.
 dimos = (ROOT / 'ypologismos-morion-apospasis-dimos.php').read_text(encoding='utf-8')
-for label in ('Εκτύπωση', 'Φόρτωση παραδείγματος', 'Μηδενισμός'):
-    pos = dimos.find(label)
-    frag = dimos[max(0, pos-220):pos+80] if pos >= 0 else ''
-    check(pos >= 0 and 'secondary' in frag, f'DIMOS: {label} remains secondary')
+for label in ('Εκτύπωση', 'Φόρτωση παραδείγματος'):
+    check(label not in dimos, f'DIMOS: {label} remains removed')
+pos = dimos.find('Μηδενισμός')
+frag = dimos[max(0, pos-220):pos+80] if pos >= 0 else ''
+check(pos >= 0 and 'secondary' in frag, 'DIMOS: Μηδενισμός remains secondary')
 
 # Hybrid/manual-value actions must retain their distinct hierarchy.
 aposp = (ROOT / 'ypologismos-morion-apospasis.php').read_text(encoding='utf-8')

@@ -27,7 +27,7 @@ check('layout defines compatibility calculatorTotalBlock', 'function calculatorT
 check('layout defines canonical calculatorScoreHeader', 'function calculatorScoreHeader' in layout)
 check('layout defines calculatorSubtotalRow', 'function calculatorSubtotalRow' in layout)
 check('hero helper supports intro_attrs', "intro_attrs" in layout)
-check('16 declarative calculatorHero calls', source.count('calculatorHero(') == 16)
+check('18 declarative calculatorHero calls', source.count('calculatorHero(') == 18)
 check('only 1 manual calculatorHeroStart remains', source.count('calculatorHeroStart(') == 1)
 check('manual hero remains only on DIMOS special two-paragraph hero', 'calculatorHeroStart(' in source_by_page['ypologismos-morion-apospasis-dimos.php'])
 for name, text in source_by_page.items():

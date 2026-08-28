@@ -12,7 +12,7 @@ for variant in ['status','success','warning','disclaimer']:
     check('helper supports '+variant, "'"+variant+"'" in layout)
     check('CSS result-message variant '+variant, '.result-message--'+variant in css)
 check('neutral status message style exists', '.edu-message--status' in css)
-check('central cache version is 3.20.61', "EDU_TOOLS_VERSION', '3.20.61" in config)
+check('central cache version is 3.20.62', "EDU_TOOLS_VERSION', '3.20.62" in config)
 standard={
  'ypologismos-morion.php':['pedagogicalPriorityBox','sidebarStatus'],
  'ypologismos-morion-1ea-2025.php':['priorityBox'],
