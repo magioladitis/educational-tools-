@@ -19,7 +19,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
 <div class="hero-meta">
-<span>29 διαθέσιμα εργαλεία</span>
+<span>30 διαθέσιμα εργαλεία</span>
 <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
 <span>Αναπληρωτές</span>
 <span>Αποσπάσεις</span>
@@ -117,6 +117,18 @@ renderDeadlineCard(array(
             'tool_label' => 'Ωνάσεια →'
         ),
         array(
+            'title' => 'Υποδιευθυντές δημόσιων Σ.Α.Ε.Κ. — αιτήσεις υποψηφιότητας',
+            'meta_html' => 'Για μόνιμους εκπαιδευτικούς Σ.Α.Ε.Κ., διοικητικούς υπαλλήλους με σχέση εργασίας και αποσπασμένους εκπαιδευτικούς για διοικητικό έργο, που υπηρετούν στην οικεία Σ.Α.Ε.Κ. και πληρούν τις προϋποθέσεις της πρόσκλησης · αιτήσεις αποκλειστικά στη Σ.Α.Ε.Κ. όπου υπηρετούν από <strong>01/09/2026</strong> έως και <strong>10/09/2026</strong>.',
+            'start' => '2026-09-01T00:00:00+03:00',
+            'end_exclusive' => '2026-09-11T00:00:00+03:00',
+            'source_url' => 'https://gsvetlly.minedu.gov.gr/publications/docs2023/%CE%A0%CF%81%CF%8C%CF%83%CE%BA%CE%BB%CE%B7%CF%83%CE%B7_%CE%B5%CE%BA%CE%B4%CE%AE%CE%BB%CF%89%CF%83%CE%B7%CF%82_%CE%B5%CE%BD%CE%B4%CE%B9%CE%B1%CF%86%CE%AD%CF%81%CE%BF%CE%BD%CF%84%CE%BF%CF%82_%CE%B3%CE%B9%CE%B1_%CF%84%CE%B7%CE%BD_%CF%80%CE%BB%CE%AE%CF%81%CF%89%CF%83%CE%B7_%CE%BC%CE%B5_%CE%B5%CF%80%CE%B9%CE%BB%CE%BF%CE%B3%CE%AE_%CE%B8%CE%AD%CF%83%CE%B5%CF%89%CE%BD_%CE%A5%CF%80%CE%BF%CE%B4%CE%B9%CE%B5%CF%85%CE%B8%CF%85%CE%BD%CF%84%CF%8E%CE%BD.pdf',
+            'source_label' => 'ΥΠΑΙΘΑ — Πρόσκληση 113585/01-09-2026 · ΑΔΑ 6ΤΨΝ46ΝΚΠΔ-ΦΗΙ ↗',
+            'open_text' => 'Η περίοδος υποβολής αιτήσεων είναι ανοικτή.',
+            'closed_text' => 'Η προθεσμία υποβολής αιτήσεων έχει λήξει.',
+            'tool_url' => 'dikaioma-ypodiefthynti-saek.php',
+            'tool_label' => 'Έλεγξε αν έχεις δικαίωμα →'
+        ),
+        array(
             'title' => 'ΣΑΕΚ Σιβιτανιδείου — ωρομίσθιοι εκπαιδευτές 2026–2027',
             'meta_html' => 'Ηλεκτρονικές αιτήσεις για το φθινοπωρινό εξάμηνο 2026Β και το εαρινό 2027Α · από <strong>24/08/2026, 12:00</strong> έως <strong>04/09/2026, 12:00</strong>.',
             'start' => '2026-08-24T12:00:00+03:00',
@@ -129,7 +141,7 @@ renderDeadlineCard(array(
             'tool_label' => 'Υπολόγισε μόρια →'
         )
     ),
-    'note_html' => 'Στις προσκλήσεις νεοδιοριζομένων εκπαιδευτικών και μελών ΕΕΠ–ΕΒΠ για αιτήσεις απόσπασης και στις προσκλήσεις αναπληρωτών και ΕΕΠ–ΕΒΠ δεν αναφέρεται συγκεκριμένη ώρα λήξης· το countdown θεωρεί τεχνικά το τέλος της αντίστοιχης καταληκτικής ημέρας. Οι επίσημες ανακοινώσεις, οι προσκλήσεις και οι ηλεκτρονικές πλατφόρμες υπερισχύουν.'
+    'note_html' => 'Στις προσκλήσεις νεοδιοριζομένων εκπαιδευτικών και μελών ΕΕΠ–ΕΒΠ για αιτήσεις απόσπασης, στις προσκλήσεις αναπληρωτών και ΕΕΠ–ΕΒΠ και στην πρόσκληση Υποδιευθυντών δημόσιων Σ.Α.Ε.Κ. δεν αναφέρεται συγκεκριμένη ώρα λήξης· το countdown θεωρεί τεχνικά το τέλος της αντίστοιχης καταληκτικής ημέρας. Οι επίσημες ανακοινώσεις, οι προσκλήσεις και οι ηλεκτρονικές πλατφόρμες υπερισχύουν.'
 ));
 ?>
 <section aria-label="Αναζήτηση και φίλτρα εργαλείων" class="toolbar">
@@ -148,7 +160,7 @@ renderDeadlineCard(array(
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
 <button aria-pressed="false" class="filter-btn" data-filter="ypiresiaka" type="button">Υπηρεσιακά</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 29 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 30 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
@@ -454,7 +466,15 @@ renderDeadlineCard(array(
 <h2>Αναθέσεις Μαθημάτων ανά Ειδικότητα</h2>
 <p>Δες ποια μαθήματα έχει ο κλάδος σου σε Α΄, Β΄ και Γ΄ ανάθεση, με φίλτρα ανά τύπο σχολείου και τις αντίστοιχες επίσημες πηγές.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
-</a></section>
+</a>
+<a class="tool-card" data-category="saek" data-search="ΣΑΕΚ υποδιευθυντές υποδιευθυντής δικαίωμα συμμετοχής υποψηφιότητα προϋποθέσεις κωλύματα 2026" href="dikaioma-ypodiefthynti-saek.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">30</span><span class="category-tag green">ΣΑΕΚ</span></div>
+<h2>Δικαίωμα υποψηφιότητας Υποδιευθυντή Σ.Α.Ε.Κ.</h2>
+<p>Έλεγξε τις βασικές προϋποθέσεις και τα κωλύματα της πρόσκλησης Κ5/113585/01-09-2026 για τις κενές θέσεις Υποδιευθυντών δημόσιων Σ.Α.Ε.Κ.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
+</section>
 <div aria-hidden="true" class="no-results" id="noResults">
       Δεν βρέθηκε εργαλείο που να ταιριάζει στην αναζήτησή σου.
     </div>
