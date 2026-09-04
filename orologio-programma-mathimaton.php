@@ -24,14 +24,14 @@
     'title_html' => 'Ώρες Μαθημάτων στο Εβδομαδιαίο Ωρολόγιο Πρόγραμμα',
     'intro' => 'Επίλεξε τύπο σχολείου και τάξη για να δεις τις εβδομαδιαίες ώρες κάθε μαθήματος, όπως ισχύουν για το σχολικό έτος 2026–2027.',
     'meta_class' => 'meta',
-    'badges' => array('2026–2027', 'Γυμνάσιο & ΓΕΛ', 'Ημερήσιο & Εσπερινό', 'Καλλιτεχνικά', 'Μουσικά')
+    'badges' => array('2026–2027', 'Γυμνάσιο & ΓΕΛ', 'ΕΠΑ.Λ. & Π.ΕΠΑ.Λ.', 'Ημερήσιο & Εσπερινό', 'Καλλιτεχνικά', 'Μουσικά')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(); ?>
         <h2>Ωρολόγιο πρόγραμμα</h2>
-        <p class="cap">Το εργαλείο εμφανίζει το επίσημο εβδομαδιαίο πρόγραμμα ανά τάξη. Στα ΓΕΛ οι Ομάδες Προσανατολισμού εμφανίζονται χωριστά από τη Γενική Παιδεία, ενώ στα Καλλιτεχνικά Σχολεία επιλέγεται και η κατεύθυνση.</p>
+        <p class="cap">Το εργαλείο εμφανίζει το επίσημο εβδομαδιαίο πρόγραμμα ανά τάξη. Στα ΓΕΛ οι Ομάδες Προσανατολισμού εμφανίζονται χωριστά από τη Γενική Παιδεία. Στα Καλλιτεχνικά Σχολεία επιλέγεται κατεύθυνση και στη Β΄ τάξη ΕΠΑ.Λ./Π.ΕΠΑ.Λ. επιλέγεται τομέας.</p>
 
         <div class="field-grid">
           <div class="field">
@@ -47,7 +47,7 @@
             <select id="grade"></select>
           </div>
           <div id="trackField" class="field" hidden>
-            <label for="track">Κατεύθυνση</label>
+            <label id="trackLabel" for="track">Κατεύθυνση</label>
             <select id="track"></select>
           </div>
         </div>
@@ -63,13 +63,14 @@
         <p class="cap">Οι ώρες αφορούν το εβδομαδιαίο ωρολόγιο πρόγραμμα του συγκεκριμένου τμήματος/ομάδας και όχι το ατομικό υποχρεωτικό ωράριο ενός εκπαιδευτικού.</p>
         <p class="help">Στη Γ΄ ΓΕΛ ορισμένα μαθήματα Γενικής Παιδείας εξαρτώνται από την Ομάδα Προσανατολισμού. Δεν πρέπει να αθροίζονται σαν να τα παρακολουθούν όλοι οι μαθητές.</p>
         <p class="help">Στο Β΄ Εσπερινού ΓΕΛ οι ενδείξεις <strong>1/2</strong> και <strong>2/1</strong> διατηρούνται όπως ακριβώς στο ΦΕΚ και δεν μετατρέπονται σε τεχνητό μέσο όρο.</p>
+        <p class="help">Στα επαγγελματικά μαθήματα: <strong>Θ</strong> = θεωρία, <strong>Ε</strong> = εργαστήριο, <strong>Σ</strong> = σχέδιο και <strong>ΠΑ</strong> = πρακτική άσκηση.</p>
 <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 </main>
 
 <?php sourceCardStart(); ?>
   <?php sourceCardDisclaimerStart(); ?>
-    Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, καθώς και Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027.
+    Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, Α΄–Β΄ τάξη Ημερήσιου και Εσπερινού ΕΠΑ.Λ., καθώς και Α΄–Β΄ τάξη Π.ΕΠΑ.Λ., σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027.
   <?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf', 'ΦΕΚ Β΄ 2132/2026 — Ημερήσιο Γυμνάσιο ↗'); ?>
@@ -77,6 +78,14 @@
     <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/04/%CE%A6%CE%95%CE%9A-%CE%92-2102_09_04_26_%CE%A9%CE%A0-%CE%95%CE%A3%CE%A0-%CE%93%CE%95%CE%9B.pdf', 'ΦΕΚ Β΄ 2102/2026 — Εσπερινό ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202104_09_04_26_OP%20KALL%20GYMN%20GEL%201.pdf', 'ΦΕΚ Β΄ 2104/2026 — Καλλιτεχνικά Σχολεία ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202107_09_04_26_OP%20MOUSIKOU%20GYMN%20GEL.pdf', 'ΦΕΚ Β΄ 2107/2026 — Μουσικά Σχολεία ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2026_04_08_EXE_44260_tropop_YA_OPS_mathema_ETHIKE_A_B_EPAL_PHEK_2151B_16.04.2026.pdf', 'ΦΕΚ Β΄ 2151/2026 — Α΄/Β΄ Ημερήσιου ΕΠΑ.Λ. & Α΄ Εσπερινού ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2018.05_YA_OPS_AB_taxes_EPAL_N_4386_2016_NEO_PHEK_2187B_12.06.2018.pdf', 'ΦΕΚ Β΄ 2187/2018 — Α΄/Β΄ ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/FEK_2636B.pdf', 'ΦΕΚ Β΄ 2636/2018 — Τριετές Εσπερινό ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/orologio%CE%9D%CE%91%CE%A5%CE%A4.pdf', 'ΦΕΚ Β΄ 3224/2018 — Ναυτιλιακά ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2026_04_08_EXE_44286_tropop_YA_OPS_mathema_ETHIKE_B_PEPAL_PHEK_2136B_09.04.2026.pdf', 'ΦΕΚ Β΄ 2136/2026 — Α΄/Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2021_07_23_EXE_90217_YA_OPS_A_TAXES_P_EPAL_PHEK_3470B_29.07.2021.pdf', 'ΦΕΚ Β΄ 3470/2021 — Α΄ Π.ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2022_08_25_EXE_103460_YA_OPS_B_taxes_P_EPAL_n4763_2020_PHEK_4578B_30.08.2022.pdf', 'ΦΕΚ Β΄ 4578/2022 — Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2022_09_16_EXE_112468_tropop_YA_OPS_B_taxes_P_EPAL_n4763_2020_PHEK_4961B_22.09.2022.pdf', 'ΦΕΚ Β΄ 4961/2022 — Διόρθωση Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 
@@ -92,6 +101,7 @@
   var gradeSelect = document.getElementById('grade');
   var trackField = document.getElementById('trackField');
   var trackSelect = document.getElementById('track');
+  var trackLabel = document.getElementById('trackLabel');
   var results = document.getElementById('timetableResults');
   var summary = document.getElementById('programSummary');
 
@@ -104,9 +114,22 @@
       .replace(/'/g, '&#039;');
   }
 
+  function currentTracks(school, grade) {
+    var info = schools[school] || {};
+    if (info.tracks_by_grade && info.tracks_by_grade[grade]) return info.tracks_by_grade[grade];
+    return info.tracks || null;
+  }
+
+  function currentTrackLabel(school, grade) {
+    var info = schools[school] || {};
+    if (info.track_label_by_grade && info.track_label_by_grade[grade]) return info.track_label_by_grade[grade];
+    return info.track_label || 'Κατεύθυνση';
+  }
+
   function refreshTracks() {
     var school = schoolSelect.value;
-    var tracks = schools[school] && schools[school].tracks ? schools[school].tracks : null;
+    var grade = gradeSelect.value;
+    var tracks = currentTracks(school, grade);
     var previous = trackSelect.value;
     trackSelect.innerHTML = '';
 
@@ -116,6 +139,7 @@
     }
 
     trackField.hidden = false;
+    trackLabel.textContent = currentTrackLabel(school, grade);
     Object.keys(tracks).forEach(function (code) {
       var option = document.createElement('option');
       option.value = code;
@@ -167,8 +191,9 @@
         html += '<span>' + esc(label) + ': <strong>' + esc(info.parts[label]) + '</strong> ώρες</span>';
       });
     }
-    if (track && schools[school] && schools[school].tracks && schools[school].tracks[track]) {
-      html += '<span>Κατεύθυνση: <strong>' + esc(schools[school].tracks[track]) + '</strong></span>';
+    var tracks = currentTracks(school, grade);
+    if (track && tracks && tracks[track]) {
+      html += '<span>' + esc(currentTrackLabel(school, grade)) + ': <strong>' + esc(tracks[track]) + '</strong></span>';
     }
     html += '<span class="total">Σύνολο: ' + esc(info.total) + ' ώρες</span>';
     summary.innerHTML = html;
@@ -203,6 +228,13 @@
     });
 
     return combined;
+  }
+
+  function hoursBadgeText(row) {
+    var text = String(row.hoursText == null ? '' : row.hoursText);
+    // Στα επαγγελματικά μαθήματα το hours_display περιέχει ήδη την κατανομή
+    // Θ/Ε/Σ/ΠΑ και δεν χρειάζεται δεύτερη κατάληξη «ώρ.».
+    return /[ΘΕΣ]|ΠΑ/.test(text) ? text : text + ' ώρ.';
   }
 
   function render() {
@@ -250,7 +282,7 @@
           + '<span><strong>' + esc(row.subject) + '</strong>'
           + (details.length ? '<small>' + details.join(' · ') + '</small>' : '')
           + '</span>'
-          + '<span class="hours-badge">' + esc(row.hoursText) + ' ώρ.</span>'
+          + '<span class="hours-badge">' + esc(hoursBadgeText(row)) + '</span>'
           + '</div>';
       });
       html += '</section>';
@@ -260,7 +292,7 @@
   }
 
   schoolSelect.addEventListener('change', refreshGrades);
-  gradeSelect.addEventListener('change', render);
+  gradeSelect.addEventListener('change', function () { refreshTracks(); render(); });
   trackSelect.addEventListener('change', render);
   refreshGrades();
 }());
