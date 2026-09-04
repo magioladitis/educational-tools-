@@ -7,6 +7,7 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 DATA = (ROOT / 'includes' / 'weekly-timetable-data.php').read_text(encoding='utf-8')
 GDATA = (ROOT / 'includes' / 'weekly-timetable-vocational-g-data.php').read_text(encoding='utf-8')
+EDATA = (ROOT / 'includes' / 'weekly-timetable-eneegyl-data.php').read_text(encoding='utf-8')
 PAGE = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
 TOOLS = (ROOT / 'ergaleia.php').read_text(encoding='utf-8')
 CSS = (ROOT / 'assets' / 'weekly-timetable.css').read_text(encoding='utf-8')
@@ -47,6 +48,18 @@ check('PEPAL accounting amendment applied', "'subject'=>'Εισαγωγή στη
 check('PEPAL exact automation title', 'Εισαγωγή στον Αυτοματισμό (Αυτοματισμοί και Αισθητήρες)' in DATA)
 check('PEPAL exact refrigeration title', 'Βασικές Αρχές Ψύξης - Κλιματισμού, Θερμάνσεων, ΜΕΚ και ΑΠΕ' in DATA)
 check('PEPAL health ethics title', 'Εργασιακό Περιβάλλον Τομέα - Δεοντολογία' in DATA)
+check('ENEEGYL source snapshots', '2259/22-04-2026' in EDATA and '2149/16-04-2026' in EDATA)
+check('ENEEGYL independent data file required', "weekly-timetable-eneegyl-data.php" in DATA)
+check('ENEEGYL Gym four grades 31', "'eneegyl_gymnasio'" in DATA and DATA.count("'total' => 31") >= 4)
+check('ENEEGYL Lyceum programme splits', "'eneegyl_lykeio'" in DATA and "'Α΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 20, 'Προσανατολισμός' => 4, 'Μαθήματα Επιλογής' => 6))" in DATA and "'Β΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 15, 'Μαθήματα Τομέα' => 15))" in DATA and "'Δ΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 10, 'Μαθήματα Ειδικότητας' => 20))" in DATA)
+check('ENEEGYL has 8 sectors', EDATA.count("function weeklyTimetableEneegylTrackLabels()") == 1 and "'health' => 'Υγείας - Πρόνοιας - Ευεξίας'" in EDATA and "'naval'" not in EDATA)
+check('ENEEGYL D has no naval specialties', "'captain'" not in EDATA and "'engineer' => 'Μηχανικός Εμπορικού Ναυτικού'" not in EDATA)
+check('ENEEGYL A choices are seven real courses', EDATA.count("'choice_set_id'=>'eneegyl.lykeio.a.choices'") == 7 and "'choice_count'=>3" in EDATA and "'subject'=>'Μαθήματα Επιλογής (3 από 7)'" not in EDATA)
+check('ENEEGYL health fallback variant data', 'weeklyTimetableEneegylHealthFallbackProgramData' in EDATA and "'4Θ + 1Ε'" in EDATA and "'1Θ + 4Ε'" in EDATA and "'1Θ + 3Ε'" in EDATA)
+check('ENEEGYL health variant selector config', "'variants_by_grade_track'" in DATA and "'two_specials' => 'Διδάσκονται δύο Ειδικά Μαθήματα'" in DATA and "'one_special' => 'Δεν είναι δυνατή η διδασκαλία δεύτερου Ειδικού Μαθήματος'" in DATA)
+check('page supports timetable variant selector', 'id="variantField"' in PAGE and 'function currentVariants(school, grade, track)' in PAGE and 'row.variant && row.variant !== variant' in PAGE)
+check('ENEEGYL public sources exposed', '2259/2026 — Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.' in PAGE and '2149/2026 — Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ.' in PAGE)
+check('ENEEGYL roadmap remains internal', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.' in PAGE and 'μελλοντική διασύνδεση με αναθέσεις' not in PAGE)
 check('evening GEL preserves 1/2', "'Β΄'=>'1 / 2'" in DATA)
 check('evening GEL preserves 2/1', "'Β΄'=>'2 / 1'" in DATA)
 check('C GEL conditional general History', 'Μόνο για μαθητές/ήτριες των Ομάδων Θετικών Σπουδών' in DATA)
@@ -83,9 +96,11 @@ php_code = f"require {json.dumps(str(ROOT / 'includes' / 'weekly-timetable-data.
 proc = subprocess.run(['php', '-r', php_code], capture_output=True, text=True, check=True)
 payload = json.loads(proc.stdout)
 
-def slot_sum(school, grade, group, track=None, specialty=None):
+def slot_sum(school, grade, group, track=None, specialty=None, variant=None):
     ordinary = 0
     slots = {}
+    choice_sets = {}
+    choice_counts = {}
     for row in payload['rows']:
         if row.get('school') != school or row.get('group') != group:
             continue
@@ -99,15 +114,29 @@ def slot_sum(school, grade, group, track=None, specialty=None):
             continue
         if specialty is not None and row_specialty not in (None, specialty):
             continue
+        row_variant = row.get('variant')
+        if variant is None and row_variant is not None:
+            continue
+        if variant is not None and row_variant not in (None, variant):
+            continue
         hours = row.get('hours', {}).get(grade)
         if hours is None:
+            continue
+        choice_set = row.get('choice_set_id')
+        if choice_set:
+            choice_sets.setdefault(choice_set, []).append(float(hours))
+            choice_counts[choice_set] = int(row.get('choice_count', 1))
             continue
         sid = row.get('slot_id')
         if sid:
             slots[sid] = max(slots.get(sid, 0), float(hours))
         else:
             ordinary += float(hours)
-    return ordinary + sum(slots.values())
+    choices_total = 0
+    for choice_set, values in choice_sets.items():
+        count = choice_counts.get(choice_set, 1)
+        choices_total += sum(sorted(values, reverse=True)[:count])
+    return ordinary + sum(slots.values()) + choices_total
 
 expected_groups = {
     ('gymnasio','Α΄','Κοινό πρόγραμμα'):33,
@@ -205,6 +234,58 @@ for school, (general_total, specialty_total, overall_total) in expected_c.items(
             actual = slot_sum(school, 'Γ΄', group, track_code, specialty_code)
             check('row sum ' + school + ' / Γ΄ / ' + specialty_code, actual == specialty_total)
             check('total ' + school + ' / Γ΄ / ' + specialty_code, general_total + actual == overall_total)
+
+# EN.E.E.GY.-L.: verify the 2026-2027 four-grade Gymnasium and Lyceum structures.
+for grade in ('Α΄', 'Β΄', 'Γ΄', 'Δ΄'):
+    check('row sum eneegyl_gymnasio / ' + grade, slot_sum('eneegyl_gymnasio', grade, 'Κοινό πρόγραμμα') == 31)
+
+eneegyl_lykeio = payload['schools']['eneegyl_lykeio']
+check('ENEEGYL Lyceum sector count', len(eneegyl_lykeio['tracks_by_grade']['Β΄']) == 8 and len(eneegyl_lykeio['tracks_by_grade']['Γ΄']) == 8 and len(eneegyl_lykeio['tracks_by_grade']['Δ΄']) == 8)
+check('ENEEGYL Lyceum A general', slot_sum('eneegyl_lykeio', 'Α΄', 'Μαθήματα Γενικής Παιδείας') == 20)
+check('ENEEGYL Lyceum A orientation', slot_sum('eneegyl_lykeio', 'Α΄', 'Μαθήματα Προσανατολισμού') == 4)
+check('ENEEGYL Lyceum A choices', slot_sum('eneegyl_lykeio', 'Α΄', 'Μαθήματα Επιλογής') == 6)
+eneegyl_a_choices = [row for row in payload['rows'] if row.get('school') == 'eneegyl_lykeio' and row.get('choice_set_id') == 'eneegyl.lykeio.a.choices']
+check('ENEEGYL Lyceum A seven choice rows', len(eneegyl_a_choices) == 7 and all(row.get('hours', {}).get('Α΄') == 2 for row in eneegyl_a_choices))
+check('ENEEGYL Lyceum A drawing choice display', any(row.get('subject') == 'Αρχές Γραμμικού και Αρχιτεκτονικού Σχεδίου' and row.get('hours_display', {}).get('Α΄') == '2Σ' for row in eneegyl_a_choices))
+for grade in ('Β΄', 'Γ΄'):
+    check('ENEEGYL Lyceum ' + grade + ' general', slot_sum('eneegyl_lykeio', grade, 'Μαθήματα Γενικής Παιδείας') == 15)
+    for track_code, track_label in eneegyl_lykeio['tracks_by_grade'][grade].items():
+        group = 'Μαθήματα Τομέα · ' + track_label
+        if track_code == 'health':
+            standard = slot_sum('eneegyl_lykeio', grade, group, track_code, variant='two_specials')
+            fallback = slot_sum('eneegyl_lykeio', grade, group, track_code, variant='one_special')
+            check('ENEEGYL Lyceum ' + grade + ' sector health / two specials', standard == 15)
+            check('ENEEGYL Lyceum ' + grade + ' sector health / one special', fallback == 15)
+        else:
+            actual = slot_sum('eneegyl_lykeio', grade, group, track_code)
+            check('ENEEGYL Lyceum ' + grade + ' sector ' + track_code, actual == 15)
+
+check('ENEEGYL Lyceum D general', slot_sum('eneegyl_lykeio', 'Δ΄', 'Μαθήματα Γενικής Παιδείας') == 10)
+eneegyl_d = eneegyl_lykeio['specialties_by_grade_track']['Δ΄']
+eneegyl_d_count = sum(len(items) for items in eneegyl_d.values())
+check('ENEEGYL Lyceum D specialty count', eneegyl_d_count == 33)
+for track_code, items in eneegyl_d.items():
+    for specialty_code, specialty_label in items.items():
+        group = 'Μαθήματα Ειδικότητας · ' + specialty_label
+        actual = slot_sum('eneegyl_lykeio', 'Δ΄', group, track_code, specialty_code)
+        check('ENEEGYL Lyceum D specialty ' + specialty_code, actual == 20)
+        check('ENEEGYL Lyceum D total ' + specialty_code, 10 + actual == 30)
+
+def find_row(course_id):
+    return next((row for row in payload['rows'] if row.get('course_id') == course_id), None)
+
+sep = find_row('eneegyl.gym.sep')
+check('ENEEGYL Gym SEP B display', sep is not None and sep.get('hours_display', {}).get('Β΄') == '1Θ + 2Ε')
+plant = find_row('eneegyl.lykeio.d.plant.6')
+check('ENEEGYL D plant phytoprotection', plant is not None and plant.get('subject') == 'Φυτοπροστασία' and plant.get('hours_display', {}).get('Δ΄') == '1Θ + 2Ε')
+nurse = find_row('eneegyl.lykeio.d.nurse.3')
+check('ENEEGYL D nursing II', nurse is not None and nurse.get('subject') == 'Νοσηλευτική ΙΙ' and nurse.get('hours_display', {}).get('Δ΄') == '2Θ + 8Ε')
+graphic = find_row('eneegyl.lykeio.d.graphic.4')
+check('ENEEGYL D graphic applications', graphic is not None and graphic.get('subject') == 'Γραφιστικές Εφαρμογές' and graphic.get('hours_display', {}).get('Δ΄') == '3Ε')
+health_fallback_b = [row for row in payload['rows'] if row.get('school') == 'eneegyl_lykeio' and row.get('track') == 'health' and row.get('variant') == 'one_special' and row.get('hours', {}).get('Β΄') is not None]
+health_fallback_c = [row for row in payload['rows'] if row.get('school') == 'eneegyl_lykeio' and row.get('track') == 'health' and row.get('variant') == 'one_special' and row.get('hours', {}).get('Γ΄') is not None]
+check('ENEEGYL health fallback B exact rows', len(health_fallback_b) == 4 and any(row.get('subject') == 'Ειδικό Μάθημα Α' and row.get('hours_display', {}).get('Β΄') == '1Θ + 4Ε' for row in health_fallback_b))
+check('ENEEGYL health fallback C exact rows', len(health_fallback_c) == 6 and any(row.get('subject') == 'Πρώτες Βοήθειες' and row.get('hours_display', {}).get('Γ΄') == '1Θ + 2Ε' for row in health_fallback_c))
 
 for key, expected in expected_groups.items():
     actual = slot_sum(*key)

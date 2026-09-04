@@ -37,6 +37,7 @@
  */
 
 require_once __DIR__ . '/weekly-timetable-vocational-g-data.php';
+require_once __DIR__ . '/weekly-timetable-eneegyl-data.php';
 
 function weeklyTimetableSchoolTypes()
 {
@@ -129,6 +130,50 @@ function weeklyTimetableSchoolTypes()
                 'Α΄' => array('total' => 42, 'parts' => array('Γενική Παιδεία' => 29, 'Μουσική Παιδεία' => 13)),
                 'Β΄' => array('total' => 42, 'parts' => array('Γενική Παιδεία' => 26, 'Ομάδα Προσανατολισμού' => 5, 'Μουσική Παιδεία' => 11)),
                 'Γ΄' => array('total' => 42, 'parts' => array('Γενική Παιδεία' => 12, 'Ομάδα Προσανατολισμού' => 18, 'Μουσική Παιδεία' => 12)),
+            ),
+        ),
+        'eneegyl_gymnasio' => array(
+            'label' => 'Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.',
+            'grades' => array('Α΄', 'Β΄', 'Γ΄', 'Δ΄'),
+            'source' => 'ΦΕΚ Β΄ 2259/2026',
+            'program' => array(
+                'Α΄' => array('total' => 31, 'parts' => array('Κοινό πρόγραμμα' => 31)),
+                'Β΄' => array('total' => 31, 'parts' => array('Κοινό πρόγραμμα' => 31)),
+                'Γ΄' => array('total' => 31, 'parts' => array('Κοινό πρόγραμμα' => 31)),
+                'Δ΄' => array('total' => 31, 'parts' => array('Κοινό πρόγραμμα' => 31)),
+            ),
+        ),
+        'eneegyl_lykeio' => array(
+            'label' => 'Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ.',
+            'grades' => array('Α΄', 'Β΄', 'Γ΄', 'Δ΄'),
+            'track_label_by_grade' => array('Β΄' => 'Τομέας', 'Γ΄' => 'Τομέας', 'Δ΄' => 'Τομέας'),
+            'tracks_by_grade' => array(
+                'Β΄' => weeklyTimetableEneegylTrackLabels(),
+                'Γ΄' => weeklyTimetableEneegylTrackLabels(),
+                'Δ΄' => weeklyTimetableEneegylTrackLabels(),
+            ),
+            'specialty_label_by_grade' => array('Δ΄' => 'Ειδικότητα'),
+            'specialties_by_grade_track' => array('Δ΄' => weeklyTimetableEneegylSpecialties()),
+            'variant_label_by_grade_track' => array(
+                'Β΄' => array('health' => 'Περίπτωση διδασκαλίας'),
+                'Γ΄' => array('health' => 'Περίπτωση διδασκαλίας'),
+            ),
+            'variants_by_grade_track' => array(
+                'Β΄' => array('health' => array(
+                    'two_specials' => 'Διδάσκονται δύο Ειδικά Μαθήματα',
+                    'one_special' => 'Δεν είναι δυνατή η διδασκαλία δεύτερου Ειδικού Μαθήματος',
+                )),
+                'Γ΄' => array('health' => array(
+                    'two_specials' => 'Διδάσκονται δύο Ειδικά Μαθήματα',
+                    'one_special' => 'Δεν είναι δυνατή η διδασκαλία δεύτερου Ειδικού Μαθήματος',
+                )),
+            ),
+            'source' => 'ΦΕΚ Β΄ 2149/2026',
+            'program' => array(
+                'Α΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 20, 'Προσανατολισμός' => 4, 'Μαθήματα Επιλογής' => 6)),
+                'Β΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 15, 'Μαθήματα Τομέα' => 15)),
+                'Γ΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 15, 'Μαθήματα Τομέα' => 15)),
+                'Δ΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 10, 'Μαθήματα Ειδικότητας' => 20)),
             ),
         ),
         'epal' => array(
@@ -497,7 +542,7 @@ function weeklyTimetableRows()
         array('course_id'=>'mgel.c.choice.choral','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Επεξεργασία Χορικού (Choral)','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
         array('course_id'=>'mgel.c.choice.ixolipsia2','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Στοιχειώδεις αρχές ηχοληψίας ΙΙ','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
     );
-    return array_merge($rows, weeklyTimetableVocationalRows());
+    return array_merge($rows, weeklyTimetableEneegylRows(), weeklyTimetableVocationalRows());
 }
 
 function weeklyTimetableVocationalRows()

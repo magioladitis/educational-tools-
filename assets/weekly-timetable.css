@@ -37,6 +37,12 @@
   font-size:1.02rem;
   line-height:1.35;
 }
+.edu-page-weekly-timetable .timetable-group-note{
+  margin:7px 0 5px;
+  color:var(--edu-muted);
+  font-size:.86rem;
+  line-height:1.45;
+}
 
 /*
  * Timetable rows intentionally use their own semantic classes instead of the

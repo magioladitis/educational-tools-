@@ -24,14 +24,14 @@
     'title_html' => 'Ώρες Μαθημάτων στο Εβδομαδιαίο Ωρολόγιο Πρόγραμμα',
     'intro' => 'Επίλεξε τύπο σχολείου και τάξη για να δεις τις εβδομαδιαίες ώρες κάθε μαθήματος, όπως ισχύουν για το σχολικό έτος 2026–2027.',
     'meta_class' => 'meta',
-    'badges' => array('2026–2027', 'Γυμνάσιο & ΓΕΛ', 'ΕΠΑ.Λ. & Π.ΕΠΑ.Λ.', 'Ημερήσιο & Εσπερινό', 'Καλλιτεχνικά', 'Μουσικά')
+    'badges' => array('2026–2027', 'Γυμνάσιο & ΓΕΛ', 'ΕΠΑ.Λ. & Π.ΕΠΑ.Λ.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Ημερήσιο & Εσπερινό', 'Καλλιτεχνικά', 'Μουσικά')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(); ?>
         <h2>Ωρολόγιο πρόγραμμα</h2>
-        <p class="cap">Το εργαλείο εμφανίζει το επίσημο εβδομαδιαίο πρόγραμμα ανά τάξη. Στα ΓΕΛ οι Ομάδες Προσανατολισμού εμφανίζονται χωριστά από τη Γενική Παιδεία. Στα Καλλιτεχνικά Σχολεία επιλέγεται κατεύθυνση. Στη Β΄–Γ΄ τάξη ΕΠΑ.Λ./Π.ΕΠΑ.Λ. επιλέγεται τομέας και στη Γ΄ τάξη επιλέγεται επιπλέον ειδικότητα.</p>
+        <p class="cap">Το εργαλείο εμφανίζει το επίσημο εβδομαδιαίο πρόγραμμα ανά τάξη. Στα ΓΕΛ οι Ομάδες Προσανατολισμού εμφανίζονται χωριστά από τη Γενική Παιδεία. Στα Καλλιτεχνικά Σχολεία επιλέγεται κατεύθυνση. Στη Β΄–Γ΄ τάξη ΕΠΑ.Λ./Π.ΕΠΑ.Λ. επιλέγεται τομέας και στη Γ΄ τάξη επιλέγεται επιπλέον ειδικότητα. Στο Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ. επιλέγεται τομέας στη Β΄–Δ΄ τάξη και ειδικότητα στη Δ΄. Στον Τομέα Υγείας της Β΄/Γ΄ τάξης εμφανίζεται επιπλέον η προβλεπόμενη από το ΦΕΚ περίπτωση διδασκαλίας.</p>
 
         <div class="field-grid">
           <div class="field">
@@ -49,6 +49,10 @@
           <div id="trackField" class="field" hidden>
             <label id="trackLabel" for="track">Κατεύθυνση</label>
             <select id="track"></select>
+          </div>
+          <div id="variantField" class="field" hidden>
+            <label id="variantLabel" for="variant">Περίπτωση</label>
+            <select id="variant"></select>
           </div>
           <div id="specialtyField" class="field" hidden>
             <label id="specialtyLabel" for="specialty">Ειδικότητα</label>
@@ -74,7 +78,7 @@
 
 <?php sourceCardStart(); ?>
   <?php sourceCardDisclaimerStart(); ?>
-    Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, Α΄–Γ΄ τάξη Ημερήσιου και τριετούς Εσπερινού ΕΠΑ.Λ., καθώς και Α΄–Γ΄ τάξη Π.ΕΠΑ.Λ., σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027.
+    Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, Γυμνάσιο και Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ., Α΄–Γ΄ τάξη Ημερήσιου και τριετούς Εσπερινού ΕΠΑ.Λ., καθώς και Α΄–Γ΄ τάξη Π.ΕΠΑ.Λ., σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027.
   <?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf', 'ΦΕΚ Β΄ 2132/2026 — Ημερήσιο Γυμνάσιο ↗'); ?>
@@ -82,6 +86,8 @@
     <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/04/%CE%A6%CE%95%CE%9A-%CE%92-2102_09_04_26_%CE%A9%CE%A0-%CE%95%CE%A3%CE%A0-%CE%93%CE%95%CE%9B.pdf', 'ΦΕΚ Β΄ 2102/2026 — Εσπερινό ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202104_09_04_26_OP%20KALL%20GYMN%20GEL%201.pdf', 'ΦΕΚ Β΄ 2104/2026 — Καλλιτεχνικά Σχολεία ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202107_09_04_26_OP%20MOUSIKOU%20GYMN%20GEL.pdf', 'ΦΕΚ Β΄ 2107/2026 — Μουσικά Σχολεία ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%202259tB22-04-2026%20me%20thema%20Orologio%20Programma%20ton%20mathematon%20tou%20Gymnasiou%20EN.E.E.GY-L.pdf', 'ΦΕΚ Β΄ 2259/2026 — Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%202149%20t.B%2016-04-2026%20me%20thema%20Orologio%20programma%20tou%20Lykeiou%20ton%20Eniaion%20Eidikon%20Epangelmatikon%20Gymnasion%20-%20Lykeion%20EN.E.E.GY.-L.pdf', 'ΦΕΚ Β΄ 2149/2026 — Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2026_04_08_EXE_44260_tropop_YA_OPS_mathema_ETHIKE_A_B_EPAL_PHEK_2151B_16.04.2026.pdf', 'ΦΕΚ Β΄ 2151/2026 — Α΄/Β΄ Ημερήσιου ΕΠΑ.Λ. & Α΄ Εσπερινού ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2018.05_YA_OPS_AB_taxes_EPAL_N_4386_2016_NEO_PHEK_2187B_12.06.2018.pdf', 'ΦΕΚ Β΄ 2187/2018 — Α΄/Β΄ ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/orologio-programma-g-taksi---epaggelmatiki-ekpaidefsi', 'ΥΠΑΙΘΑ — Ισχύοντα ωρολόγια Γ΄ τάξης Επαγγελματικής Εκπαίδευσης ↗'); ?>
@@ -109,6 +115,9 @@
   var trackField = document.getElementById('trackField');
   var trackSelect = document.getElementById('track');
   var trackLabel = document.getElementById('trackLabel');
+  var variantField = document.getElementById('variantField');
+  var variantSelect = document.getElementById('variant');
+  var variantLabel = document.getElementById('variantLabel');
   var specialtyField = document.getElementById('specialtyField');
   var specialtySelect = document.getElementById('specialty');
   var specialtyLabel = document.getElementById('specialtyLabel');
@@ -134,6 +143,44 @@
     var info = schools[school] || {};
     if (info.track_label_by_grade && info.track_label_by_grade[grade]) return info.track_label_by_grade[grade];
     return info.track_label || 'Κατεύθυνση';
+  }
+
+  function currentVariants(school, grade, track) {
+    var info = schools[school] || {};
+    if (!info.variants_by_grade_track || !info.variants_by_grade_track[grade]) return null;
+    return info.variants_by_grade_track[grade][track] || null;
+  }
+
+  function currentVariantLabel(school, grade, track) {
+    var info = schools[school] || {};
+    if (info.variant_label_by_grade_track && info.variant_label_by_grade_track[grade] && info.variant_label_by_grade_track[grade][track]) {
+      return info.variant_label_by_grade_track[grade][track];
+    }
+    return 'Περίπτωση';
+  }
+
+  function refreshVariants() {
+    var school = schoolSelect.value;
+    var grade = gradeSelect.value;
+    var track = trackField.hidden ? '' : trackSelect.value;
+    var variants = currentVariants(school, grade, track);
+    var previous = variantSelect.value;
+    variantSelect.innerHTML = '';
+
+    if (!variants || !Object.keys(variants).length) {
+      variantField.hidden = true;
+      return;
+    }
+
+    variantField.hidden = false;
+    variantLabel.textContent = currentVariantLabel(school, grade, track);
+    Object.keys(variants).forEach(function (code) {
+      var option = document.createElement('option');
+      option.value = code;
+      option.textContent = variants[code];
+      variantSelect.appendChild(option);
+    });
+    if (Object.prototype.hasOwnProperty.call(variants, previous)) variantSelect.value = previous;
   }
 
   function currentSpecialties(school, grade, track) {
@@ -182,6 +229,8 @@
 
     if (!tracks || !Object.keys(tracks).length) {
       trackField.hidden = true;
+      variantField.hidden = true;
+      variantSelect.innerHTML = '';
       specialtyField.hidden = true;
       specialtySelect.innerHTML = '';
       return;
@@ -197,6 +246,7 @@
     });
     if (Object.prototype.hasOwnProperty.call(tracks, previous)) trackSelect.value = previous;
     refreshSpecialties();
+    refreshVariants();
   }
 
   function refreshGrades() {
@@ -231,7 +281,7 @@
     return copy;
   }
 
-  function renderSummary(school, grade, track, specialty) {
+  function renderSummary(school, grade, track, variant, specialty) {
     summary.innerHTML = '';
     var info = schools[school] && schools[school].program ? schools[school].program[grade] : null;
     if (!info) return;
@@ -244,6 +294,10 @@
     var tracks = currentTracks(school, grade);
     if (track && tracks && tracks[track]) {
       html += '<span>' + esc(currentTrackLabel(school, grade)) + ': <strong>' + esc(tracks[track]) + '</strong></span>';
+    }
+    var variants = currentVariants(school, grade, track);
+    if (variant && variants && variants[variant]) {
+      html += '<span>' + esc(currentVariantLabel(school, grade, track)) + ': <strong>' + esc(variants[variant]) + '</strong></span>';
     }
     var specialties = currentSpecialties(school, grade, track);
     if (specialty && specialties && specialties[specialty]) {
@@ -295,6 +349,7 @@
     var school = schoolSelect.value;
     var grade = gradeSelect.value;
     var track = trackField.hidden ? '' : trackSelect.value;
+    var variant = variantField.hidden ? '' : variantSelect.value;
     var specialty = specialtyField.hidden ? '' : specialtySelect.value;
     if (!school || !grade) {
       results.innerHTML = '<p class="help">Επίλεξε τύπο σχολείου και τάξη.</p>';
@@ -302,11 +357,12 @@
       return;
     }
 
-    renderSummary(school, grade, track, specialty);
+    renderSummary(school, grade, track, variant, specialty);
 
     var rows = allRows.map(function (row) {
       if (row.school !== school) return null;
       if (row.track && row.track !== track) return null;
+      if (row.variant && row.variant !== variant) return null;
       if (row.specialty && row.specialty !== specialty) return null;
       return rowForGrade(row, grade);
     }).filter(Boolean);
@@ -327,6 +383,12 @@
     var html = '';
     groups.forEach(function (group) {
       html += '<section class="timetable-group"><h3>' + esc(group) + '</h3>';
+      var groupNote = '';
+      grouped[group].some(function (row) {
+        if (row.group_note) { groupNote = row.group_note; return true; }
+        return false;
+      });
+      if (groupNote) html += '<p class="timetable-group-note">' + esc(groupNote) + '</p>';
       grouped[group].forEach(function (row) {
         var details = [];
         if (row.section) {
@@ -360,7 +422,8 @@
 
   schoolSelect.addEventListener('change', refreshGrades);
   gradeSelect.addEventListener('change', function () { refreshTracks(); render(); });
-  trackSelect.addEventListener('change', function () { refreshSpecialties(); render(); });
+  trackSelect.addEventListener('change', function () { refreshSpecialties(); refreshVariants(); render(); });
+  variantSelect.addEventListener('change', render);
   specialtySelect.addEventListener('change', render);
   refreshGrades();
 }());
