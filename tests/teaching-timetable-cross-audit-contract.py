@@ -155,6 +155,11 @@ for row in rows:
         direct = norm(row.get('subject')) in candidates
         if direct:
             direct_matches += 1
+        # choice_dependent/regulatory_gap are deliberately not counted as fully
+        # resolved even if their public title happens to match an assignment row.
+        if status in {'choice_dependent', 'regulatory_gap'}:
+            continue
+        if direct:
             resolved_instances += 1
             continue
         if row.get('assignment_subject_alias') and norm(row['assignment_subject_alias']) in candidates:
@@ -180,7 +185,8 @@ check('EPAL choice-dependent instances classified', choice_by_school['epal'] == 
 check('evening EPAL choice-dependent instances classified', choice_by_school['esperino_epal'] == 3)
 check('PEPAL choice-dependent instances classified', choice_by_school['pepal'] == 3)
 check('Music Gymnasium choice-dependent instances classified', choice_by_school['mousiko_gymnasio'] == 3)
-check('all choice-dependent instances classified', status_instances['choice_dependent'] == 19)
+check('Art Gymnasium choice-dependent instances classified', choice_by_school['kallitexniko_gymnasio'] == 3)
+check('all choice-dependent instances classified', status_instances['choice_dependent'] == 22)
 
 gap_by_school = Counter()
 for row in rows:
@@ -197,7 +203,7 @@ check('all regulatory-gap instances classified', status_instances['regulatory_ga
 # Every declared choice target must resolve to a real assignment row in the same
 # school/grade context. This protects the bridge against title drift in either dataset.
 for row in choice_rows:
-    if row.get('school') not in {'epal', 'esperino_epal', 'pepal', 'mousiko_gymnasio'}:
+    if row.get('school') not in {'epal', 'esperino_epal', 'pepal', 'mousiko_gymnasio', 'kallitexniko_gymnasio'}:
         continue
     options = row.get('assignment_choice_options') or []
     check(f'choice options present: {row.get("course_id")}', bool(options))
@@ -227,7 +233,7 @@ for row in choice_rows:
                 )
 
 classified_instances = resolved_instances + status_instances['choice_dependent'] + status_instances['regulatory_gap']
-check('classified linkage non-regression', classified_instances >= 2014)
+check('classified linkage non-regression', classified_instances >= 2017)
 
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:
