@@ -6,6 +6,7 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = (ROOT / 'includes' / 'weekly-timetable-data.php').read_text(encoding='utf-8')
+GDATA = (ROOT / 'includes' / 'weekly-timetable-vocational-g-data.php').read_text(encoding='utf-8')
 PAGE = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
 TOOLS = (ROOT / 'ergaleia.php').read_text(encoding='utf-8')
 
@@ -17,7 +18,9 @@ for source in (
     '2104/09-04-2026', '2107/09-04-2026', '2151/16-04-2026',
     '2187/12-06-2018', '2636/05-07-2018', '3224/07-08-2018',
     '2136/09-04-2026', '3470/29-07-2021', '4578/30-08-2022',
-    '4961/22-09-2022',
+    '4961/22-09-2022', '1426/26-04-2017', '2072/15-06-2017',
+    '2122/08-07-2018', '4373/01-10-2018', '4815/30-10-2018',
+    '5251/30-08-2023',
 ):
     check('source ' + source, source in DATA)
 
@@ -32,10 +35,13 @@ check('artistic Gym totals 40', "'kallitexniko_gymnasio'" in DATA and "'Α΄' =>
 check('artistic GEL totals 40', "'kallitexniko_gel'" in DATA and "'Γ΄' => array('total' => 40, 'parts' => array('Γενική Παιδεία' => 11, 'Ομάδα Προσανατολισμού' => 18, 'Καλλιτεχνική Παιδεία' => 11))" in DATA)
 check('music Gym totals 42', "'mousiko_gymnasio'" in DATA and "'Γ΄' => array('total' => 42, 'parts' => array('Γενική Παιδεία' => 28, 'Μουσική Παιδεία' => 14))" in DATA)
 check('music GEL totals 42', "'mousiko_gel'" in DATA and "'Γ΄' => array('total' => 42, 'parts' => array('Γενική Παιδεία' => 12, 'Ομάδα Προσανατολισμού' => 18, 'Μουσική Παιδεία' => 12))" in DATA)
-check('day EPAL totals A 35 B 35', "'epal' => array(" in DATA and "'Α΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 22, 'Προσανατολισμός' => 7, 'Μαθήματα Επιλογής' => 6))" in DATA and "'Β΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 12, 'Μαθήματα Τομέα' => 23))" in DATA)
-check('evening EPAL totals A 30 B 30', "'esperino_epal' => array(" in DATA and "'Α΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 20, 'Προσανατολισμός' => 4, 'Μαθήματα Επιλογής' => 6))" in DATA and "'Β΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 10, 'Μαθήματα Τομέα' => 20))" in DATA)
-check('PEPAL totals A 35 B 35', "'pepal' => array(" in DATA and "'Α΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 22, 'Επαγγελματική Κατεύθυνση' => 13))" in DATA and "'Β΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 12, 'Μαθήματα Τομέα' => 23))" in DATA)
-check('B vocational uses sector selector', DATA.count("'track_label_by_grade' => array('Β΄' => 'Τομέας')") == 3 and DATA.count("'tracks_by_grade' => array('Β΄' => array(") >= 3)
+check('day EPAL totals A 35 B 35 C 35', "'epal' => array(" in DATA and "'Α΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 22, 'Προσανατολισμός' => 7, 'Μαθήματα Επιλογής' => 6))" in DATA and "'Β΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 12, 'Μαθήματα Τομέα' => 23))" in DATA and "'Γ΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 12, 'Μαθήματα Ειδικότητας' => 23))" in DATA)
+check('evening EPAL totals A 30 B 30 C 30', "'esperino_epal' => array(" in DATA and "'Α΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 20, 'Προσανατολισμός' => 4, 'Μαθήματα Επιλογής' => 6))" in DATA and "'Β΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 10, 'Μαθήματα Τομέα' => 20))" in DATA and "'Γ΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 10, 'Μαθήματα Ειδικότητας' => 20))" in DATA)
+check('PEPAL totals A 35 B 35 C 35', "'pepal' => array(" in DATA and "'Α΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 22, 'Επαγγελματική Κατεύθυνση' => 13))" in DATA and "'Β΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 12, 'Μαθήματα Τομέα' => 23))" in DATA and "'Γ΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 12, 'Μαθήματα Ειδικότητας' => 23))" in DATA)
+check('B/C vocational use sector selector', DATA.count("'track_label_by_grade' => array('Β΄' => 'Τομέας', 'Γ΄' => 'Τομέας')") == 3 and DATA.count("'Γ΄' => weeklyTimetableVocationalTrackLabels()") == 3)
+check('C vocational uses specialty selector config', DATA.count("'specialty_label_by_grade' => array('Γ΄' => 'Ειδικότητα')") == 3 and DATA.count("'specialties_by_grade_track' => array('Γ΄' => weeklyTimetableVocationalSpecialties())") == 3)
+check('C vocational helper has 35 specialties', GDATA.count("function weeklyTimetableVocationalSpecialties()") == 1 and GDATA.count("'captain' => 'Πλοίαρχος Εμπορικού Ναυτικού'") == 1)
+check('PEPAL C practical exercise annotations preserved', '(ΠΑ 3Ε)' in GDATA and '2Ε + 2ΠΑ' in GDATA)
 check('PEPAL accounting amendment applied', "'subject'=>'Εισαγωγή στη Λογιστική'" in DATA and 'Εισαγωγή στη Χρηματοοικονομική Λογιστική' not in DATA)
 check('PEPAL exact automation title', 'Εισαγωγή στον Αυτοματισμό (Αυτοματισμοί και Αισθητήρες)' in DATA)
 check('PEPAL exact refrigeration title', 'Βασικές Αρχές Ψύξης - Κλιματισμού, Θερμάνσεων, ΜΕΚ και ΑΠΕ' in DATA)
@@ -52,6 +58,8 @@ check('period hours are explicit', "'period_hours'=>array('Β΄'=>array('Α΄ τ
 check('page exposes school and grade selectors', 'id="schoolType"' in PAGE and 'id="grade"' in PAGE)
 check('artistic direction selector', 'id="trackField"' in PAGE and 'id="track"' in PAGE and 'row.track && row.track !== track' in PAGE)
 check('dynamic direction or sector label', 'id="trackLabel"' in PAGE and 'function currentTracks(school, grade)' in PAGE and 'function currentTrackLabel(school, grade)' in PAGE and 'trackLabel.textContent = currentTrackLabel(school, grade)' in PAGE)
+check('dynamic specialty selector', 'id="specialtyField"' in PAGE and 'id="specialty"' in PAGE and 'function currentSpecialties(school, grade, track)' in PAGE and 'row.specialty && row.specialty !== specialty' in PAGE)
+check('C PEPAL official source exposed', '5251/2023 — Γ΄ Π.ΕΠΑ.Λ.' in PAGE and 'orologio-programma-g-taksi---epaggelmatiki-ekpaidefsi' in PAGE)
 check('professional hour badges avoid duplicate unit', 'function hoursBadgeText(row)' in PAGE and "/[ΘΕΣ]|ΠΑ/.test(text) ? text : text + ' ώρ.'" in PAGE)
 check('professional legend exposed', '<strong>Θ</strong> = θεωρία' in PAGE and '<strong>ΠΑ</strong> = πρακτική άσκηση' in PAGE)
 check('public religion ethics row is combined', "publicRow.subject = 'Θρησκευτικά / Ηθική'" in PAGE)
@@ -69,7 +77,7 @@ php_code = f"require {json.dumps(str(ROOT / 'includes' / 'weekly-timetable-data.
 proc = subprocess.run(['php', '-r', php_code], capture_output=True, text=True, check=True)
 payload = json.loads(proc.stdout)
 
-def slot_sum(school, grade, group, track=None):
+def slot_sum(school, grade, group, track=None, specialty=None):
     ordinary = 0
     slots = {}
     for row in payload['rows']:
@@ -79,6 +87,11 @@ def slot_sum(school, grade, group, track=None):
         if track is None and row_track is not None:
             continue
         if track is not None and row_track not in (None, track):
+            continue
+        row_specialty = row.get('specialty')
+        if specialty is None and row_specialty is not None:
+            continue
+        if specialty is not None and row_specialty not in (None, specialty):
             continue
         hours = row.get('hours', {}).get(grade)
         if hours is None:
@@ -173,13 +186,27 @@ for school, spec in vocational_common.items():
         actual = slot_sum(school, 'Β΄', 'Μαθήματα Τομέα · ' + label, code)
         check('row sum ' + school + ' / Β΄ / ' + code, actual == spec['sector_total'])
 
+# Vocational Γ: verify all 35 specialties for each school type.
+expected_c = {'epal': (12, 23, 35), 'esperino_epal': (10, 20, 30), 'pepal': (12, 23, 35)}
+for school, (general_total, specialty_total, overall_total) in expected_c.items():
+    check('row sum ' + school + ' / Γ΄ / general', slot_sum(school, 'Γ΄', 'Μαθήματα Γενικής Παιδείας') == general_total)
+    hierarchy = payload['schools'][school]['specialties_by_grade_track']['Γ΄']
+    count = sum(len(items) for items in hierarchy.values())
+    check('specialty count ' + school + ' / Γ΄', count == 35)
+    for track_code, items in hierarchy.items():
+        for specialty_code, specialty_label in items.items():
+            group = 'Μαθήματα Ειδικότητας · ' + specialty_label
+            actual = slot_sum(school, 'Γ΄', group, track_code, specialty_code)
+            check('row sum ' + school + ' / Γ΄ / ' + specialty_code, actual == specialty_total)
+            check('total ' + school + ' / Γ΄ / ' + specialty_code, general_total + actual == overall_total)
+
 for key, expected in expected_groups.items():
     actual = slot_sum(*key)
     label = ' / '.join(key)
     check('row sum ' + label, actual == expected)
 
-ids = re.findall(r"'course_id'=>'([^']+)'", DATA)
-check('course ids unique', len(ids) == len(set(ids)) and len(ids) >= 500)
+ids = [row.get('course_id') for row in payload['rows'] if row.get('course_id')]
+check('course ids unique', len(ids) == len(set(ids)) and len(ids) >= 1100)
 
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:

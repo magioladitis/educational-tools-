@@ -31,7 +31,7 @@
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(); ?>
         <h2>Ωρολόγιο πρόγραμμα</h2>
-        <p class="cap">Το εργαλείο εμφανίζει το επίσημο εβδομαδιαίο πρόγραμμα ανά τάξη. Στα ΓΕΛ οι Ομάδες Προσανατολισμού εμφανίζονται χωριστά από τη Γενική Παιδεία. Στα Καλλιτεχνικά Σχολεία επιλέγεται κατεύθυνση και στη Β΄ τάξη ΕΠΑ.Λ./Π.ΕΠΑ.Λ. επιλέγεται τομέας.</p>
+        <p class="cap">Το εργαλείο εμφανίζει το επίσημο εβδομαδιαίο πρόγραμμα ανά τάξη. Στα ΓΕΛ οι Ομάδες Προσανατολισμού εμφανίζονται χωριστά από τη Γενική Παιδεία. Στα Καλλιτεχνικά Σχολεία επιλέγεται κατεύθυνση. Στη Β΄–Γ΄ τάξη ΕΠΑ.Λ./Π.ΕΠΑ.Λ. επιλέγεται τομέας και στη Γ΄ τάξη επιλέγεται επιπλέον ειδικότητα.</p>
 
         <div class="field-grid">
           <div class="field">
@@ -49,6 +49,10 @@
           <div id="trackField" class="field" hidden>
             <label id="trackLabel" for="track">Κατεύθυνση</label>
             <select id="track"></select>
+          </div>
+          <div id="specialtyField" class="field" hidden>
+            <label id="specialtyLabel" for="specialty">Ειδικότητα</label>
+            <select id="specialty"></select>
           </div>
         </div>
 
@@ -70,7 +74,7 @@
 
 <?php sourceCardStart(); ?>
   <?php sourceCardDisclaimerStart(); ?>
-    Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, Α΄–Β΄ τάξη Ημερήσιου και Εσπερινού ΕΠΑ.Λ., καθώς και Α΄–Β΄ τάξη Π.ΕΠΑ.Λ., σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027.
+    Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, Α΄–Γ΄ τάξη Ημερήσιου και τριετούς Εσπερινού ΕΠΑ.Λ., καθώς και Α΄–Γ΄ τάξη Π.ΕΠΑ.Λ., σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027.
   <?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf', 'ΦΕΚ Β΄ 2132/2026 — Ημερήσιο Γυμνάσιο ↗'); ?>
@@ -80,12 +84,15 @@
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202107_09_04_26_OP%20MOUSIKOU%20GYMN%20GEL.pdf', 'ΦΕΚ Β΄ 2107/2026 — Μουσικά Σχολεία ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2026_04_08_EXE_44260_tropop_YA_OPS_mathema_ETHIKE_A_B_EPAL_PHEK_2151B_16.04.2026.pdf', 'ΦΕΚ Β΄ 2151/2026 — Α΄/Β΄ Ημερήσιου ΕΠΑ.Λ. & Α΄ Εσπερινού ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2018.05_YA_OPS_AB_taxes_EPAL_N_4386_2016_NEO_PHEK_2187B_12.06.2018.pdf', 'ΦΕΚ Β΄ 2187/2018 — Α΄/Β΄ ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/orologio-programma-g-taksi---epaggelmatiki-ekpaidefsi', 'ΥΠΑΙΘΑ — Ισχύοντα ωρολόγια Γ΄ τάξης Επαγγελματικής Εκπαίδευσης ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2017.04_YA_OPS_GD_taxes_EPAL_N.4386%20PHEK%201426%20B_26-4-17.pdf', 'ΦΕΚ Β΄ 1426/2017 — Γ΄ Ημερήσιου ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/FEK_2636B.pdf', 'ΦΕΚ Β΄ 2636/2018 — Τριετές Εσπερινό ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/orologio%CE%9D%CE%91%CE%A5%CE%A4.pdf', 'ΦΕΚ Β΄ 3224/2018 — Ναυτιλιακά ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2026_04_08_EXE_44286_tropop_YA_OPS_mathema_ETHIKE_B_PEPAL_PHEK_2136B_09.04.2026.pdf', 'ΦΕΚ Β΄ 2136/2026 — Α΄/Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2021_07_23_EXE_90217_YA_OPS_A_TAXES_P_EPAL_PHEK_3470B_29.07.2021.pdf', 'ΦΕΚ Β΄ 3470/2021 — Α΄ Π.ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2022_08_25_EXE_103460_YA_OPS_B_taxes_P_EPAL_n4763_2020_PHEK_4578B_30.08.2022.pdf', 'ΦΕΚ Β΄ 4578/2022 — Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2022_09_16_EXE_112468_tropop_YA_OPS_B_taxes_P_EPAL_n4763_2020_PHEK_4961B_22.09.2022.pdf', 'ΦΕΚ Β΄ 4961/2022 — Διόρθωση Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2023_08_28_EXE_93929_YA_OPS_G_taxes_P_EPAL_n4763_2020_PHEK_5251B_30.08.2023.pdf', 'ΦΕΚ Β΄ 5251/2023 — Γ΄ Π.ΕΠΑ.Λ. ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 
@@ -102,6 +109,9 @@
   var trackField = document.getElementById('trackField');
   var trackSelect = document.getElementById('track');
   var trackLabel = document.getElementById('trackLabel');
+  var specialtyField = document.getElementById('specialtyField');
+  var specialtySelect = document.getElementById('specialty');
+  var specialtyLabel = document.getElementById('specialtyLabel');
   var results = document.getElementById('timetableResults');
   var summary = document.getElementById('programSummary');
 
@@ -126,6 +136,43 @@
     return info.track_label || 'Κατεύθυνση';
   }
 
+  function currentSpecialties(school, grade, track) {
+    var info = schools[school] || {};
+    if (!info.specialties_by_grade_track || !info.specialties_by_grade_track[grade]) return null;
+    return info.specialties_by_grade_track[grade][track] || null;
+  }
+
+  function currentSpecialtyLabel(school, grade) {
+    var info = schools[school] || {};
+    if (info.specialty_label_by_grade && info.specialty_label_by_grade[grade]) return info.specialty_label_by_grade[grade];
+    return 'Ειδικότητα';
+  }
+
+  function refreshSpecialties() {
+    var school = schoolSelect.value;
+    var grade = gradeSelect.value;
+    var track = trackField.hidden ? '' : trackSelect.value;
+    var specialty = specialtyField.hidden ? '' : specialtySelect.value;
+    var specialties = currentSpecialties(school, grade, track);
+    var previous = specialtySelect.value;
+    specialtySelect.innerHTML = '';
+
+    if (!specialties || !Object.keys(specialties).length) {
+      specialtyField.hidden = true;
+      return;
+    }
+
+    specialtyField.hidden = false;
+    specialtyLabel.textContent = currentSpecialtyLabel(school, grade);
+    Object.keys(specialties).forEach(function (code) {
+      var option = document.createElement('option');
+      option.value = code;
+      option.textContent = specialties[code];
+      specialtySelect.appendChild(option);
+    });
+    if (Object.prototype.hasOwnProperty.call(specialties, previous)) specialtySelect.value = previous;
+  }
+
   function refreshTracks() {
     var school = schoolSelect.value;
     var grade = gradeSelect.value;
@@ -135,6 +182,8 @@
 
     if (!tracks || !Object.keys(tracks).length) {
       trackField.hidden = true;
+      specialtyField.hidden = true;
+      specialtySelect.innerHTML = '';
       return;
     }
 
@@ -147,6 +196,7 @@
       trackSelect.appendChild(option);
     });
     if (Object.prototype.hasOwnProperty.call(tracks, previous)) trackSelect.value = previous;
+    refreshSpecialties();
   }
 
   function refreshGrades() {
@@ -181,7 +231,7 @@
     return copy;
   }
 
-  function renderSummary(school, grade, track) {
+  function renderSummary(school, grade, track, specialty) {
     summary.innerHTML = '';
     var info = schools[school] && schools[school].program ? schools[school].program[grade] : null;
     if (!info) return;
@@ -194,6 +244,10 @@
     var tracks = currentTracks(school, grade);
     if (track && tracks && tracks[track]) {
       html += '<span>' + esc(currentTrackLabel(school, grade)) + ': <strong>' + esc(tracks[track]) + '</strong></span>';
+    }
+    var specialties = currentSpecialties(school, grade, track);
+    if (specialty && specialties && specialties[specialty]) {
+      html += '<span>' + esc(currentSpecialtyLabel(school, grade)) + ': <strong>' + esc(specialties[specialty]) + '</strong></span>';
     }
     html += '<span class="total">Σύνολο: ' + esc(info.total) + ' ώρες</span>';
     summary.innerHTML = html;
@@ -247,11 +301,12 @@
       return;
     }
 
-    renderSummary(school, grade, track);
+    renderSummary(school, grade, track, specialty);
 
     var rows = allRows.map(function (row) {
       if (row.school !== school) return null;
       if (row.track && row.track !== track) return null;
+      if (row.specialty && row.specialty !== specialty) return null;
       return rowForGrade(row, grade);
     }).filter(Boolean);
 
@@ -293,7 +348,8 @@
 
   schoolSelect.addEventListener('change', refreshGrades);
   gradeSelect.addEventListener('change', function () { refreshTracks(); render(); });
-  trackSelect.addEventListener('change', render);
+  trackSelect.addEventListener('change', function () { refreshSpecialties(); render(); });
+  specialtySelect.addEventListener('change', render);
   refreshGrades();
 }());
 </script>
