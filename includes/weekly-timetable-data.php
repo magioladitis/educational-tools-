@@ -469,21 +469,21 @@ function weeklyTimetableRows()
         array('course_id'=>'mgym.thriskeftika','slot_id'=>'mgym.religion_ethics','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Θρησκευτικά','hours'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1),'mode'=>'alternative'),
         array('course_id'=>'mgym.ithiki','slot_id'=>'mgym.religion_ethics','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Ηθική','hours'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1),'mode'=>'alternative','condition'=>'Για μαθητές/ήτριες που απαλλάσσονται από το μάθημα των Θρησκευτικών.'),
         array('course_id'=>'mgym.agglika','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Αγγλικά','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2)),
-        array('course_id'=>'mgym.deyteri_xeni','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Γαλλικά / Γερμανικά','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2)),
+        array('course_id'=>'mgym.deyteri_xeni','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Γαλλικά / Γερμανικά','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2),'assignment_link_status'=>'choice_dependent','assignment_choice_options'=>array(array('label'=>'Γαλλικά','subject'=>'2η Ξένη Γλώσσα (Γαλλικά / Γερμανικά / Ιταλικά)','codes'=>array('ΠΕ05')),array('label'=>'Γερμανικά','subject'=>'2η Ξένη Γλώσσα (Γαλλικά / Γερμανικά / Ιταλικά)','codes'=>array('ΠΕ07')))),
         array('course_id'=>'mgym.pliroforiki','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Πληροφορική','hours'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1)),
         array('course_id'=>'mgym.fysiki_agogi','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Φυσική Αγωγή','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>1),'note_by_grade'=>array('Α΄'=>'Η 2η ώρα είναι Ελληνικοί Χοροί.','Β΄'=>'Η 2η ώρα είναι Ελληνικοί Χοροί.')),
-        array('course_id'=>'mgym.theatro','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','section'=>'Αισθητική Αγωγή','subject'=>'Θέατρο','hours'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1)),
+        array('course_id'=>'mgym.theatro','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','section'=>'Αισθητική Αγωγή','subject'=>'Θέατρο','hours'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1),'assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το ισχύον ωρολόγιο ΦΕΚ Β΄ 2107/2026 περιλαμβάνει το Θέατρο, αλλά δεν εντοπίζεται ρητή ανάθεση στο ισχύον ΦΕΚ Β΄ 4202/2018. Η προγενέστερη Υ.Α. 94541/Δ2/2015 (ΦΕΚ Β΄ 1356) καταργήθηκε από το ΦΕΚ Β΄ 4202/2018.'),
         array('course_id'=>'mgym.kallitexnika','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','section'=>'Αισθητική Αγωγή','subject'=>'Καλλιτεχνικά','hours'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1)),
-        array('course_id'=>'mgym.istoria_texnis','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','section'=>'Αισθητική Αγωγή','subject'=>'Ιστορία Τέχνης','hours'=>array('Α΄'=>1)),
+        array('course_id'=>'mgym.istoria_texnis','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Γενικής Παιδείας','section'=>'Αισθητική Αγωγή','subject'=>'Ιστορία Τέχνης','hours'=>array('Α΄'=>1),'assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το ισχύον ωρολόγιο ΦΕΚ Β΄ 2107/2026 περιλαμβάνει την Ιστορία Τέχνης, αλλά δεν εντοπίζεται ρητή ανάθεση στο ισχύον ΦΕΚ Β΄ 4202/2018. Η προγενέστερη Υ.Α. 94541/Δ2/2015 (ΦΕΚ Β΄ 1356) καταργήθηκε από το ΦΕΚ Β΄ 4202/2018.'),
         array('course_id'=>'mgym.music.evropaiki','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ευρωπαϊκή Μουσική - Θεωρία και Πράξη','hours'=>array('Α΄'=>2,'Β΄'=>2)),
         array('course_id'=>'mgym.music.evropaiki_armonia','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ευρωπαϊκή Μουσική - Θεωρία και Πράξη και Εισαγωγή στην Αρμονία','hours'=>array('Γ΄'=>3)),
         array('course_id'=>'mgym.music.elliniki_paradosiaki','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ελληνική Παραδοσιακή Μουσική - Θεωρία και Πράξη','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2)),
         array('course_id'=>'mgym.music.istoria_mousikis','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ιστορία Μουσικής','hours'=>array('Β΄'=>1,'Γ΄'=>1)),
         array('course_id'=>'mgym.music.kritiki_akroasi','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Κριτική Μουσική Ακρόαση','hours'=>array('Α΄'=>1)),
         array('course_id'=>'mgym.music.xorodia','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Χορωδία','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2)),
-        array('course_id'=>'mgym.music.mousiko_synolo','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Μουσικό Σύνολο (Οργανοχρησίας ή άλλου είδους)','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2)),
-        array('course_id'=>'mgym.music.piano','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Πιάνο','hours'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1)),
-        array('course_id'=>'mgym.music.tambouras','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ταμπουράς ή άλλο τοπικό παραδοσιακό όργανο αναφοράς','hours'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1)),
+        array('course_id'=>'mgym.music.mousiko_synolo','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Μουσικό Σύνολο (Οργανοχρησίας ή άλλου είδους)','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2),'assignment_subject_alias'=>'Μουσικά Σύνολα: Οργανοχρησίας ή άλλο'),
+        array('course_id'=>'mgym.music.piano','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Πιάνο','hours'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1),'assignment_subject_alias'=>'Υποχρεωτικό ατομικό μουσικό όργανο - Πιάνο'),
+        array('course_id'=>'mgym.music.tambouras','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ταμπουράς ή άλλο τοπικό παραδοσιακό όργανο αναφοράς','hours'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1),'assignment_subject_alias'=>'Υποχρεωτικό ατομικό μουσικό όργανο - Ταμπουράς ή άλλο παραδοσιακό όργανο αναφοράς'),
         array('course_id'=>'mgym.music.atomiko_epilogis','school'=>'mousiko_gymnasio','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ατομικό Όργανο Επιλογής','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2)),
         array('course_id'=>'mgel.general.archaia','school'=>'mousiko_gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Αρχαία Ελληνική Γλώσσα και Γραμματεία','hours'=>array('Α΄'=>5,'Β΄'=>2)),
         array('course_id'=>'mgel.general.neoelliniki','school'=>'mousiko_gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Νεοελληνική Γλώσσα και Λογοτεχνία','hours'=>array('Α΄'=>4,'Β΄'=>4,'Γ΄'=>6),'note_by_grade'=>array('Γ΄'=>'5 ώρες για το κυρίως μάθημα και 1 ώρα για επίλυση αποριών, ανακεφαλαίωση κ.λπ.')),
@@ -518,8 +518,8 @@ function weeklyTimetableRows()
         array('course_id'=>'mgel.c.econ.oikonomia','school'=>'mousiko_gel','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Οικονομία','hours'=>array('Γ΄'=>6)),
         array('course_id'=>'mgel.music.armonia','school'=>'mousiko_gel','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Αρμονία','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2)),
         array('course_id'=>'mgel.music.akoustikes','school'=>'mousiko_gel','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ανάπτυξη Ακουστικών Ικανοτήτων','hours'=>array('Α΄'=>1,'Β΄'=>1),'note'=>'Περιλαμβάνει Γραφή καθ’ υπαγόρευση - Μουσική Ανάγνωση.'),
-        array('course_id'=>'mgel.music.akoustikes_c','school'=>'mousiko_gel','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ανάπτυξη Μουσικών Ακουστικών Ικανοτήτων','hours'=>array('Γ΄'=>1),'note'=>'Περιλαμβάνει Γραφή καθ’ υπαγόρευση - Μουσική Ανάγνωση και Αρμονία στο πιάνο.'),
-        array('course_id'=>'mgel.music.elliniki_paradosiaki','school'=>'mousiko_gel','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ελληνική Παραδοσιακή Μουσική','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2)),
+        array('course_id'=>'mgel.music.akoustikes_c','school'=>'mousiko_gel','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ανάπτυξη Μουσικών Ακουστικών Ικανοτήτων','hours'=>array('Γ΄'=>1),'note'=>'Περιλαμβάνει Γραφή καθ’ υπαγόρευση - Μουσική Ανάγνωση και Αρμονία στο πιάνο.','assignment_subject_alias'=>'Ανάπτυξη Ακουστικών Ικανοτήτων'),
+        array('course_id'=>'mgel.music.elliniki_paradosiaki','school'=>'mousiko_gel','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ελληνική Παραδοσιακή Μουσική','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2),'assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το μάθημα προβλέπεται στο ισχύον ωρολόγιο ΦΕΚ Β΄ 2107/2026, αλλά δεν υπάρχει αντίστοιχη γραμμή για το Γενικό Μουσικό Λύκειο στο ΦΕΚ αναθέσεων Β΄ 4202/2018.'),
         array('course_id'=>'mgel.music.istoria','school'=>'mousiko_gel','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Ιστορία της Μουσικής','hours'=>array('Α΄'=>1)),
         array('course_id'=>'mgel.music.morfologia','school'=>'mousiko_gel','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Μορφολογία','hours'=>array('Β΄'=>1)),
         array('course_id'=>'mgel.music.piano','school'=>'mousiko_gel','group'=>'Μαθήματα Μουσικής Παιδείας','subject'=>'Υποχρεωτικό Ατομικό Μουσικό Όργανο: Πιάνο','hours'=>array('Α΄'=>1)),
@@ -534,16 +534,34 @@ function weeklyTimetableRows()
         array('course_id'=>'mgel.a.choice.ixolipsia1','slot_id'=>'mgel.a.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 6)','subject'=>'Στοιχειώδεις αρχές ηχοληψίας Ι','hours'=>array('Α΄'=>1),'mode'=>'choice'),
         array('course_id'=>'mgel.c.choice.armonia_eidiko','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Αρμονία (Ειδικό)','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
         array('course_id'=>'mgel.c.choice.akoustikes_elegxos','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Ανάπτυξη (Έλεγχος) Μουσικών Ακουστικών Ικανοτήτων','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
-        array('course_id'=>'mgel.c.choice.elliniki_paradosiaki','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Ελληνική Παραδοσιακή Μουσική','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
+        array('course_id'=>'mgel.c.choice.elliniki_paradosiaki','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Ελληνική Παραδοσιακή Μουσική','hours'=>array('Γ΄'=>2),'mode'=>'choice','assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Η επιλογή της Γ΄ τάξης προβλέπεται στο ΦΕΚ Β΄ 2107/2026, αλλά δεν υπάρχει ρητή αντίστοιχη γραμμή επιλογής στο ΦΕΚ αναθέσεων Β΄ 4202/2018.'),
         array('course_id'=>'mgel.c.choice.org_symfonika','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Οργανολογία Μουσικών Οργάνων Συμφωνικής Ορχήστρας','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
         array('course_id'=>'mgel.c.choice.org_paradosiaka','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Οργανολογία Ελληνικών Παραδοσιακών Οργάνων','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
-        array('course_id'=>'mgel.c.choice.mousiko_keimeno','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Επεξεργασία Μουσικού Κειμένου με Η/Υ','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
+        array('course_id'=>'mgel.c.choice.mousiko_keimeno','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Επεξεργασία Μουσικού Κειμένου με Η/Υ','hours'=>array('Γ΄'=>2),'mode'=>'choice','assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το ΦΕΚ Β΄ 4202/2018 δίνει ρητή ανάθεση του μαθήματος μόνο ως επιλογή της Α΄ Λυκείου· δεν επεκτείνεται αυθαίρετα στη νέα επιλογή της Γ΄ τάξης του ΦΕΚ Β΄ 2107/2026.'),
         array('course_id'=>'mgel.c.choice.atomiko_anforas','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Ατομικό Όργανο Επιλογής ή και Αναφοράς (Πιάνο - Ταμπουράς ή άλλο)','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
-        array('course_id'=>'mgel.c.choice.analysi_partitouras','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Ανάλυση Παρτιτούρας Ορχήστρας','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
-        array('course_id'=>'mgel.c.choice.choral','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Επεξεργασία Χορικού (Choral)','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
-        array('course_id'=>'mgel.c.choice.ixolipsia2','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Στοιχειώδεις αρχές ηχοληψίας ΙΙ','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
+        array('course_id'=>'mgel.c.choice.analysi_partitouras','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Ανάλυση Παρτιτούρας Ορχήστρας','hours'=>array('Γ΄'=>2),'mode'=>'choice','assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το μάθημα υπάρχει στο ισχύον ωρολόγιο ΦΕΚ Β΄ 2107/2026, αλλά δεν υπάρχει ρητή αντίστοιχη γραμμή στο ΦΕΚ αναθέσεων Β΄ 4202/2018.'),
+        array('course_id'=>'mgel.c.choice.choral','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Επεξεργασία Χορικού (Choral)','hours'=>array('Γ΄'=>2),'mode'=>'choice','assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το μάθημα υπάρχει στο ισχύον ωρολόγιο ΦΕΚ Β΄ 2107/2026, αλλά δεν υπάρχει ρητή αντίστοιχη γραμμή στο ΦΕΚ αναθέσεων Β΄ 4202/2018.'),
+        array('course_id'=>'mgel.c.choice.ixolipsia2','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Στοιχειώδεις αρχές ηχοληψίας ΙΙ','hours'=>array('Γ΄'=>2),'mode'=>'choice','assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το ΦΕΚ Β΄ 4202/2018 περιλαμβάνει μόνο «Στοιχειώδεις Αρχές Ηχοληψίας» ως επιλογή της Α΄ Λυκείου· δεν τεκμηριώνει ανάθεση για τη νέα «ΙΙ» της Γ΄ τάξης του ΦΕΚ Β΄ 2107/2026.'),
     );
     return teachingTimetableEnrichRows(array_merge($rows, weeklyTimetableEneegylRows(), weeklyTimetableVocationalRows()));
+}
+
+/**
+ * Browser-safe timetable payload.
+ * Internal assignment crosswalk metadata stays server-side for audits/future linking.
+ */
+function weeklyTimetablePublicRows()
+{
+    $rows = weeklyTimetableRows();
+    foreach ($rows as &$row) {
+        foreach (array_keys($row) as $key) {
+            if (strpos($key, 'assignment_') === 0) {
+                unset($row[$key]);
+            }
+        }
+    }
+    unset($row);
+    return $rows;
 }
 
 function weeklyTimetableVocationalRows()

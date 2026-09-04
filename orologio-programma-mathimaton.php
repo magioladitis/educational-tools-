@@ -78,7 +78,7 @@
 
 <?php sourceCardStart(); ?>
   <?php sourceCardDisclaimerStart(); ?>
-    Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, Γυμνάσιο και Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ., Α΄–Γ΄ τάξη Ημερήσιου και τριετούς Εσπερινού ΕΠΑ.Λ., καθώς και Α΄–Γ΄ τάξη Π.ΕΠΑ.Λ., σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027. Για τη Γ΄ Π.ΕΠΑ.Λ. οι τίτλοι μαθημάτων έχουν διασταυρωθεί και με το αυτοτελές ΦΕΚ αναθέσεων Β΄ 5510/2023.
+    Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, Γυμνάσιο και Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ., Α΄–Γ΄ τάξη Ημερήσιου και τριετούς Εσπερινού ΕΠΑ.Λ., καθώς και Α΄–Γ΄ τάξη Π.ΕΠΑ.Λ., σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027. Για τη Γ΄ Π.ΕΠΑ.Λ. οι τίτλοι μαθημάτων έχουν διασταυρωθεί και με το αυτοτελές ΦΕΚ αναθέσεων Β΄ 5510/2023. Για τα Μουσικά Σχολεία η αντιπαραβολή τίτλων γίνεται και με το ΦΕΚ αναθέσεων μουσικής παιδείας Β΄ 4202/2018.
   <?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf', 'ΦΕΚ Β΄ 2132/2026 — Ημερήσιο Γυμνάσιο ↗'); ?>
@@ -86,6 +86,7 @@
     <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/04/%CE%A6%CE%95%CE%9A-%CE%92-2102_09_04_26_%CE%A9%CE%A0-%CE%95%CE%A3%CE%A0-%CE%93%CE%95%CE%9B.pdf', 'ΦΕΚ Β΄ 2102/2026 — Εσπερινό ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202104_09_04_26_OP%20KALL%20GYMN%20GEL%201.pdf', 'ΦΕΚ Β΄ 2104/2026 — Καλλιτεχνικά Σχολεία ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202107_09_04_26_OP%20MOUSIKOU%20GYMN%20GEL.pdf', 'ΦΕΚ Β΄ 2107/2026 — Μουσικά Σχολεία ↗'); ?>
+    <?php sourceCardLink('https://dide.ioa.sch.gr/wordpress/wp-content/uploads/2023/09/%CE%A6%CE%95%CE%9A-4202-T%CE%95%CE%A5%CE%A7%CE%9F%CE%A3-%CE%92-25_09_2018_-%CE%91%CF%81%CE%B9%CE%B8%CE%BC-144236_%CE%942_%CE%91%CE%BD%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CE%B9%CF%82-%CE%BC%CE%B1%CE%B8%CE%B7%CE%BC%CE%AC%CF%84%CF%89%CE%BD-%CE%BC%CE%BF%CF%85%CF%83%CE%B9%CE%BA%CE%AE%CF%82-%CF%80%CE%B1%CE%B9%CE%B4%CE%B5%CE%AF%CE%B1%CF%82-%CE%9C%CE%BF%CF%85%CF%83%CE%B9%CE%BA%CF%8E%CE%BD-%CF%83%CF%87%CE%BF%CE%BB%CE%B5%CE%AF%CF%89%CE%BD.pdf', 'ΦΕΚ Β΄ 4202/2018 — Αναθέσεις μουσικής παιδείας / διασταύρωση τίτλων ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%202259tB22-04-2026%20me%20thema%20Orologio%20Programma%20ton%20mathematon%20tou%20Gymnasiou%20EN.E.E.GY-L.pdf', 'ΦΕΚ Β΄ 2259/2026 — Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%202149%20t.B%2016-04-2026%20me%20thema%20Orologio%20programma%20tou%20Lykeiou%20ton%20Eniaion%20Eidikon%20Epangelmatikon%20Gymnasion%20-%20Lykeion%20EN.E.E.GY.-L.pdf', 'ΦΕΚ Β΄ 2149/2026 — Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2026_04_08_EXE_44260_tropop_YA_OPS_mathema_ETHIKE_A_B_EPAL_PHEK_2151B_16.04.2026.pdf', 'ΦΕΚ Β΄ 2151/2026 — Α΄/Β΄ Ημερήσιου ΕΠΑ.Λ. & Α΄ Εσπερινού ΕΠΑ.Λ. ↗'); ?>
@@ -110,7 +111,7 @@
   'use strict';
 
   var schools = <?php echo json_encode(weeklyTimetableSchoolTypes(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
-  var allRows = <?php echo json_encode(weeklyTimetableRows(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+  var allRows = <?php echo json_encode(weeklyTimetablePublicRows(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
   var schoolSelect = document.getElementById('schoolType');
   var gradeSelect = document.getElementById('grade');
   var trackField = document.getElementById('trackField');
