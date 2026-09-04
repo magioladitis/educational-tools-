@@ -114,6 +114,59 @@ function teachingTimetableEneegylSubjectAliases()
     );
 }
 
+function teachingTimetableLanguageChoiceOptionsForRow($row)
+{
+    $school = isset($row['school']) ? $row['school'] : '';
+    $subject = isset($row['subject']) ? $row['subject'] : '';
+    $specialty = isset($row['specialty']) ? $row['specialty'] : '';
+
+    /*
+     * Οι ενιαίες γραμμές «2η Ξένη Γλώσσα» του ωρολογίου/αναθέσεων
+     * αντιστοιχούν επιχειρησιακά σε διαφορετικό πραγματικό μάθημα ανά
+     * γλώσσα. Το myschool τις εμφανίζει χωριστά, άρα για μελλοντική
+     * κατανομή εκπαιδευτικών δεν αρκεί το broad assignment row: πρέπει
+     * να κρατάμε και τον συγκεκριμένο κλάδο της επιλεγμένης γλώσσας.
+     *
+     * Το myschool χρησιμοποιείται εδώ μόνο ως operational cross-check.
+     * Οι διαθέσιμες γλώσσες και οι κλάδοι προκύπτουν από τα ισχύοντα ΦΕΚ.
+     */
+    if ($school === 'gymnasio'
+        && $subject === '2η Ξένη Γλώσσα (Γαλλικά / Γερμανικά / Ιταλικά)') {
+        return array(
+            array('label'=>'Γαλλικά', 'subject'=>$subject, 'codes'=>array('ΠΕ05')),
+            array('label'=>'Γερμανικά', 'subject'=>$subject, 'codes'=>array('ΠΕ07')),
+            array(
+                'label'=>'Ιταλικά',
+                'subject'=>$subject,
+                'codes'=>array('ΠΕ34'),
+                'condition'=>'Μόνο στα Γυμνάσια όπου εκπαιδευτικοί ΠΕ34 είναι τοποθετημένοι οριστικά ή προσωρινά από το σχολικό έτος 2016-2017.',
+            ),
+        );
+    }
+
+    if ($school === 'gel'
+        && $subject === '2η Ξένη Γλώσσα (Γαλλικά ή Γερμανικά)') {
+        return array(
+            array('label'=>'Γαλλικά', 'subject'=>$subject, 'codes'=>array('ΠΕ05')),
+            array('label'=>'Γερμανικά', 'subject'=>$subject, 'codes'=>array('ΠΕ07')),
+        );
+    }
+
+    // Γ΄ τριετούς Εσπερινού ΕΠΑ.Λ. — Υπάλληλος Τουριστικών Επιχειρήσεων.
+    // Το ΦΕΚ Β΄ 2122/2018 δίνει επιλογή μίας από τέσσερις γλώσσες (2Θ).
+    if ($school === 'esperino_epal' && $specialty === 'tourism'
+        && $subject === 'Γαλλικά ή Γερμανικά ή Ισπανικά ή Ιταλικά') {
+        return array(
+            array('label'=>'Γαλλικά', 'subject'=>$subject, 'codes'=>array('ΠΕ05')),
+            array('label'=>'Γερμανικά', 'subject'=>$subject, 'codes'=>array('ΠΕ07')),
+            array('label'=>'Ισπανικά', 'subject'=>$subject, 'codes'=>array('ΠΕ40')),
+            array('label'=>'Ιταλικά', 'subject'=>$subject, 'codes'=>array('ΠΕ34')),
+        );
+    }
+
+    return null;
+}
+
 function teachingTimetableVocationalChoiceOptionsForRow($row)
 {
     $school = isset($row['school']) ? $row['school'] : '';
@@ -399,7 +452,10 @@ function teachingTimetableEnrichRows($rows)
             $rows[$index]['assignment_subject_alias'] = $alias;
         }
 
-        $choiceOptions = teachingTimetableVocationalChoiceOptionsForRow($row);
+        $choiceOptions = teachingTimetableLanguageChoiceOptionsForRow($row);
+        if ($choiceOptions === null) {
+            $choiceOptions = teachingTimetableVocationalChoiceOptionsForRow($row);
+        }
         if ($choiceOptions === null) {
             $choiceOptions = teachingTimetableEneegylChoiceOptionsForRow($row);
         }

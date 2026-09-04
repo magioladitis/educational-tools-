@@ -169,7 +169,7 @@ for row in rows:
             resolved_instances += 1
 
 check('direct normalized linkage non-regression', direct_matches >= 1700)
-check('direct+audited bridge linkage non-regression', resolved_instances >= 1966)
+check('direct+audited bridge linkage non-regression', resolved_instances >= 1960)
 # Choice-dependent slots are intentional structural bridges, not failed aliases.
 choice_by_school = Counter()
 choice_rows = []
@@ -181,12 +181,14 @@ for row in rows:
     choice_rows.append(row)
 
 check('ENEEGYL choice-dependent instances classified', choice_by_school['eneegyl_lykeio'] == 7)
+check('Gymnasium choice-dependent instances classified', choice_by_school['gymnasio'] == 3)
+check('GEL choice-dependent instances classified', choice_by_school['gel'] == 2)
 check('EPAL choice-dependent instances classified', choice_by_school['epal'] == 3)
-check('evening EPAL choice-dependent instances classified', choice_by_school['esperino_epal'] == 3)
+check('evening EPAL choice-dependent instances classified', choice_by_school['esperino_epal'] == 4)
 check('PEPAL choice-dependent instances classified', choice_by_school['pepal'] == 3)
 check('Music Gymnasium choice-dependent instances classified', choice_by_school['mousiko_gymnasio'] == 3)
 check('Art Gymnasium choice-dependent instances classified', choice_by_school['kallitexniko_gymnasio'] == 3)
-check('all choice-dependent instances classified', status_instances['choice_dependent'] == 22)
+check('all choice-dependent instances classified', status_instances['choice_dependent'] == 28)
 
 gap_by_school = Counter()
 for row in rows:
@@ -203,7 +205,7 @@ check('all regulatory-gap instances classified', status_instances['regulatory_ga
 # Every declared choice target must resolve to a real assignment row in the same
 # school/grade context. This protects the bridge against title drift in either dataset.
 for row in choice_rows:
-    if row.get('school') not in {'epal', 'esperino_epal', 'pepal', 'mousiko_gymnasio', 'kallitexniko_gymnasio'}:
+    if row.get('school') not in {'gymnasio', 'gel', 'epal', 'esperino_epal', 'pepal', 'mousiko_gymnasio', 'kallitexniko_gymnasio'}:
         continue
     options = row.get('assignment_choice_options') or []
     check(f'choice options present: {row.get("course_id")}', bool(options))

@@ -96,6 +96,7 @@
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/orologio-programma-g-taksi---epaggelmatiki-ekpaidefsi', 'ΥΠΑΙΘΑ — Ισχύοντα ωρολόγια Γ΄ τάξης Επαγγελματικής Εκπαίδευσης ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2017.04_YA_OPS_GD_taxes_EPAL_N.4386%20PHEK%201426%20B_26-4-17.pdf', 'ΦΕΚ Β΄ 1426/2017 — Γ΄ Ημερήσιου ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/FEK_2636B.pdf', 'ΦΕΚ Β΄ 2636/2018 — Τριετές Εσπερινό ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-ph2-89289-d4-2018.html', 'ΦΕΚ Β΄ 2122/2018 — Ξένες γλώσσες ειδικότητας Υπαλλήλου Τουριστικών Επιχειρήσεων ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/orologio%CE%9D%CE%91%CE%A5%CE%A4.pdf', 'ΦΕΚ Β΄ 3224/2018 — Ναυτιλιακά ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2026_04_08_EXE_44286_tropop_YA_OPS_mathema_ETHIKE_B_PEPAL_PHEK_2136B_09.04.2026.pdf', 'ΦΕΚ Β΄ 2136/2026 — Α΄/Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2021_07_23_EXE_90217_YA_OPS_A_TAXES_P_EPAL_PHEK_3470B_29.07.2021.pdf', 'ΦΕΚ Β΄ 3470/2021 — Α΄ Π.ΕΠΑ.Λ. ↗'); ?>
