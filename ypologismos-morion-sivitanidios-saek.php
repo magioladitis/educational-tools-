@@ -24,11 +24,11 @@
   'title' => '📅 Προθεσμία αιτήσεων',
   'items' => array(array(
     'title' => 'Ωρομίσθιοι εκπαιδευτές ΣΑΕΚ Σιβιτανιδείου 2026–2027',
-    'meta_html' => 'Από <strong>24/08/2026, 12:00</strong> έως <strong>04/09/2026, 12:00</strong>.',
+    'meta_html' => '<strong>ΠΑΡΑΤΑΣΗ:</strong> λόγω τεχνικού προβλήματος, η νέα καταληκτική προθεσμία είναι <strong>07/09/2026, 10:30</strong>.',
     'start' => '2026-08-24T12:00:00+03:00',
-    'end' => '2026-09-04T12:00:00+03:00',
-    'source_url' => 'https://ek.sivitanidios.edu.gr/download/2026/7903.pdf',
-    'source_label' => 'Επίσημη πρόσκληση ↗'
+    'end' => '2026-09-07T10:30:00+03:00',
+    'source_url' => 'https://www.sivitanidios.edu.gr/2026/09/paratasi.html',
+    'source_label' => 'Επίσημη ανακοίνωση παράτασης ↗'
   ))
 )); ?>
 
