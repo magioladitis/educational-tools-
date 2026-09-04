@@ -78,7 +78,7 @@
 
 <?php sourceCardStart(); ?>
   <?php sourceCardDisclaimerStart(); ?>
-    Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, Γυμνάσιο και Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ., Α΄–Γ΄ τάξη Ημερήσιου και τριετούς Εσπερινού ΕΠΑ.Λ., καθώς και Α΄–Γ΄ τάξη Π.ΕΠΑ.Λ., σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027.
+    Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, Γυμνάσιο και Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ., Α΄–Γ΄ τάξη Ημερήσιου και τριετούς Εσπερινού ΕΠΑ.Λ., καθώς και Α΄–Γ΄ τάξη Π.ΕΠΑ.Λ., σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027. Για τη Γ΄ Π.ΕΠΑ.Λ. οι τίτλοι μαθημάτων έχουν διασταυρωθεί και με το αυτοτελές ΦΕΚ αναθέσεων Β΄ 5510/2023.
   <?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf', 'ΦΕΚ Β΄ 2132/2026 — Ημερήσιο Γυμνάσιο ↗'); ?>
@@ -99,6 +99,7 @@
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2022_08_25_EXE_103460_YA_OPS_B_taxes_P_EPAL_n4763_2020_PHEK_4578B_30.08.2022.pdf', 'ΦΕΚ Β΄ 4578/2022 — Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2022_09_16_EXE_112468_tropop_YA_OPS_B_taxes_P_EPAL_n4763_2020_PHEK_4961B_22.09.2022.pdf', 'ΦΕΚ Β΄ 4961/2022 — Διόρθωση Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2023_08_28_EXE_93929_YA_OPS_G_taxes_P_EPAL_n4763_2020_PHEK_5251B_30.08.2023.pdf', 'ΦΕΚ Β΄ 5251/2023 — Γ΄ Π.ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2023/2023_09_13_%CE%95%CE%9E%CE%95_101003_%CE%A5%CE%91_%CE%91%CE%BD%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CE%B9%CF%82_%CE%9C%CE%B1%CE%B8%CE%B7%CE%BC%CE%AC%CF%84%CF%89%CE%BD_%CE%93_%CE%A4%CE%AC%CE%BE%CE%B7%CF%82_%CE%A0_%CE%95%CE%A0%CE%91%CE%9B_%CE%A6%CE%95%CE%9A_5510%CE%92_18.09.2023.pdf', 'ΦΕΚ Β΄ 5510/2023 — Γ΄ Π.ΕΠΑ.Λ. / Αναθέσεις (διασταύρωση τίτλων) ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 
