@@ -24,7 +24,7 @@
 
 <div class="question"><label for="status">Με ποια ιδιότητα υπηρετείς στην παραπάνω Σ.Α.Ε.Κ.;</label><select id="status"><option value="">-- Επιλογή --</option><option value="eligible">Μόνιμος/η εκπαιδευτικός Σ.Α.Ε.Κ.</option><option value="eligible">Διοικητικός/ή υπάλληλος με οποιαδήποτε σχέση εργασίας</option><option value="eligible">Αποσπασμένος/η εκπαιδευτικός για διοικητικό έργο στη Σ.Α.Ε.Κ.</option><option value="no">Δεν ανήκω σε κάποια από τις παραπάνω κατηγορίες</option></select></div>
 
-<div class="question"><label for="degree">Διαθέτεις τον απαιτούμενο τίτλο ανώτατης εκπαίδευσης (ή αναγνωρισμένο ακαδημαϊκά ισοδύναμο/ισότιμο τίτλο αλλοδαπής);</label><select id="degree"><option value="">-- Επιλογή --</option><option value="yes">Ναι</option><option value="no">Όχι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
+<div class="question"><label for="requiredDegree">Διαθέτεις τον απαιτούμενο τίτλο ανώτατης εκπαίδευσης (ή αναγνωρισμένο ακαδημαϊκά ισοδύναμο/ισότιμο τίτλο αλλοδαπής);</label><select id="requiredDegree"><option value="">-- Επιλογή --</option><option value="yes">Ναι</option><option value="no">Όχι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
 
 <div class="question"><label for="experience">Έχεις τουλάχιστον δύο (2) έτη διοικητικής εμπειρίας ή εκπαιδευτικής υπηρεσίας στην επαγγελματική εκπαίδευση ή κατάρτιση;</label><select id="experience"><option value="">-- Επιλογή --</option><option value="yes">Ναι</option><option value="no">Όχι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
 
@@ -39,7 +39,7 @@
 <p class="small-note">Η πρόσκληση αναφέρει επίσης ότι ο υποψήφιος πρέπει να διαθέτει γνώση και εμπειρία σε διδακτικές μεθόδους επαγγελματικής εκπαίδευσης και κατάρτισης και στην επιμόρφωση εκπαιδευτών, καθώς και ικανότητα παρακολούθησης/εποπτείας της εκπαιδευτικής διαδικασίας και συντονισμού της αξιολόγησης. Τα στοιχεία αυτά δεν μετατρέπονται εδώ σε αυτόματο αριθμητικό κριτήριο, επειδή η πρόσκληση δεν ορίζει σχετική μοριοδότηση.</p>
 </div>
 <script>
-const fieldIds=['saek','status','degree','experience','evaluationRefusal','unsuitable','retirement'];
+const fieldIds=['saek','status','requiredDegree','experience','evaluationRefusal','unsuitable','retirement'];
 function valueOf(id){return document.getElementById(id).value;}
 function showResult(message,cssClass){const r=document.getElementById('result');r.style.display='block';r.className='result '+cssClass;r.innerHTML=message;}
 function updateProgress(){const done=fieldIds.filter(id=>valueOf(id)!=='').length;document.getElementById('progressText').textContent=done+'/7 απαντήσεις';document.getElementById('progressFill').style.width=(done/7*100)+'%';}
@@ -49,7 +49,7 @@ function checkEligibility(){
  const vals=fieldIds.map(valueOf); if(vals.includes('')){showResult('Συμπλήρωσε πρώτα όλες τις ερωτήσεις.','unknown');return;}
  if(valueOf('saek')==='other'){showResult('Η Σ.Α.Ε.Κ. που δήλωσες δεν περιλαμβάνεται στις 26 Σ.Α.Ε.Κ. με κενές θέσεις της συγκεκριμένης πρόσκλησης. Δεν μπορείς να υποβάλεις αίτηση στο πλαίσιο αυτής της πρόσκλησης.','not-eligible');return;}
  if(valueOf('status')==='no'){showResult('Δεν προκύπτει δικαίωμα υποβολής αίτησης: η πρόσκληση περιορίζει τους υποψηφίους σε όσους υπηρετούν στην οικεία Σ.Α.Ε.Κ. με μία από τις προβλεπόμενες ιδιότητες.','not-eligible');return;}
- if(valueOf('degree')==='no'){showResult('Δεν προκύπτει δικαίωμα υποβολής αίτησης, επειδή δεν δηλώθηκε ο απαιτούμενος τίτλος ανώτατης εκπαίδευσης.','not-eligible');return;}
+ if(valueOf('requiredDegree')==='no'){showResult('Δεν προκύπτει δικαίωμα υποβολής αίτησης, επειδή δεν δηλώθηκε ο απαιτούμενος τίτλος ανώτατης εκπαίδευσης.','not-eligible');return;}
  if(valueOf('experience')==='no'){showResult('Δεν προκύπτει δικαίωμα υποβολής αίτησης: απαιτούνται τουλάχιστον δύο (2) έτη διοικητικής εμπειρίας ή εκπαιδευτικής υπηρεσίας στην επαγγελματική εκπαίδευση ή κατάρτιση.','not-eligible');return;}
  if(valueOf('evaluationRefusal')==='yes'){showResult('Δεν προκύπτει δικαίωμα συμμετοχής, επειδή δηλώθηκε ενεργός εξαετής αποκλεισμός που συνδέεται με άρνηση ή παρακώλυση της αξιολόγησης.','not-eligible');return;}
  if(valueOf('unsuitable')==='yes'){showResult('Δεν προκύπτει δικαίωμα συμμετοχής, επειδή δηλώθηκε ενεργός τριετής αποκλεισμός μετά από αξιολόγηση του έργου ως «ακατάλληλο».','not-eligible');return;}
