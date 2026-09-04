@@ -38,7 +38,7 @@ check('module four point criteria', 'input.coService ? 4 : 0' in module and 'inp
 check('module family dropdown mapping', "status === 'married'" in module and "status === 'widowed_parent'" in module and "status === 'single_parent'" in module and "status === 'divorced_custody'" in module)
 check('module child formula', '14 + ((n - 3) * 7)' in module)
 check('toolbox card', 'href="ypologismos-morion-topothetisis-neodioriston.php"' in tools)
-check('toolbox count', '29 διαθέσιμα εργαλεία' in tools and 'Εμφανίζονται 29 εργαλεία.' in tools)
+check('toolbox count', '31 διαθέσιμα εργαλεία' in tools and 'Εμφανίζονται 31 εργαλεία.' in tools)
 check('no calculate button', 'calculateBtn' not in page)
 check('live calculation children', "byId('eligibleChildren').addEventListener('input'" in page and 'render();' in page)
 check('live calculation checks', "['familyStatus', 'coService', 'locality'].forEach" in page and "addEventListener('change', render)" in page)

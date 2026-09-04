@@ -86,12 +86,12 @@ check('salary suspension UI clamp', 'clampSuspendedInputs' in page_salary and "e
 check('salary suspension GLK source', '2/31029/ΔΕΠ/06-05-2016' in page_salary)
 
 tools = (ROOT / 'ergaleia.php').read_text(encoding='utf-8')
-check('toolbox count 29 hero', '29 διαθέσιμα εργαλεία' in tools)
-check('toolbox count 29 results', 'Εμφανίζονται 29 εργαλεία.' in tools)
+check('toolbox count 31 hero', '31 διαθέσιμα εργαλεία' in tools)
+check('toolbox count 31 results', 'Εμφανίζονται 31 εργαλεία.' in tools)
 check('toolbox service filter', 'data-filter="ypiresiaka"' in tools)
 check('toolbox teaching card', 'href="ypologismos-didaktikou-orariou.php"' in tools)
 check('toolbox salary card', 'href="ypologismos-misthologikou-klimakiou.php"' in tools)
-check('toolbox card count', len(re.findall(r'class="tool-card"', tools)) == 29)
+check('toolbox card count', len(re.findall(r'class="tool-card"', tools)) == 31)
 check('toolbox numbers 25/26/27/28/29', 'class="tool-number">25<' in tools and 'class="tool-number">26<' in tools and 'class="tool-number">27<' in tools and 'class="tool-number">28<' in tools and 'class="tool-number">29<' in tools)
 
 print(f'Service tools R12 contract: PASS {checks}')

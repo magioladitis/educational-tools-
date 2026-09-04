@@ -1,0 +1,74 @@
+/* Page-specific styles: weekly timetable tool. */
+.edu-page-weekly-timetable .timetable-summary{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:12px 0 2px;
+    }
+    .edu-page-weekly-timetable .timetable-summary span{
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      padding:6px 10px;
+      border:1px solid var(--edu-border);
+      border-radius:999px;
+      background:var(--edu-surface-soft);
+      font-size:.88rem;
+    }
+    .edu-page-weekly-timetable .timetable-summary .total{
+      border-color:var(--edu-primary);
+      background:var(--edu-primary-soft);
+      color:var(--edu-primary-dark);
+      font-weight:800;
+    }
+    .edu-page-weekly-timetable #timetableResults{
+      margin-top:14px;
+    }
+    .edu-page-weekly-timetable .timetable-group{
+      margin-top:18px;
+    }
+    .edu-page-weekly-timetable .timetable-group:first-child{
+      margin-top:8px;
+    }
+    .edu-page-weekly-timetable .timetable-group h3{
+      margin:0 0 8px;
+      padding-bottom:8px;
+      border-bottom:1px solid var(--edu-result-row-separator);
+      font-size:1.02rem;
+    }
+    .edu-page-weekly-timetable .result-row{
+      align-items:flex-start;
+    }
+    .edu-page-weekly-timetable .result-row > span:first-child{
+      min-width:0;
+      line-height:1.35;
+    }
+    .edu-page-weekly-timetable .result-row strong{
+      display:block;
+      text-align:left;
+    }
+    .edu-page-weekly-timetable .result-row small{
+      display:block;
+      margin-top:3px;
+      color:var(--edu-muted);
+      line-height:1.35;
+    }
+    .edu-page-weekly-timetable .hours-badge{
+      flex:0 0 auto;
+      min-width:56px;
+      padding:5px 9px;
+      border-radius:999px;
+      background:var(--edu-primary-soft);
+      color:var(--edu-primary-dark);
+      text-align:center !important;
+      font-weight:800;
+      line-height:1.2;
+    }
+    .edu-page-weekly-timetable .architecture-note{
+      margin-top:12px;
+      padding:10px 12px;
+      border-left:3px solid var(--edu-primary);
+      background:var(--edu-primary-soft);
+      border-radius:8px;
+      line-height:1.45;
+    }

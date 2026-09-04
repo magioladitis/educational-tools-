@@ -51,7 +51,7 @@ check('module remote categories', 'REMOTE_DOUBLE_CATEGORIES' in module and all(k
 check('module local first preference guard', "input.mode === 'local' ? 0" in module)
 check('toolbox filter', 'data-filter="metatheseis"' in tools)
 check('toolbox card', 'href="ypologismos-morion-metathesis.php"' in tools and 'class="tool-number">27<' in tools)
-check('toolbox count 29', '29 διαθέσιμα εργαλεία' in tools and 'Εμφανίζονται 29 εργαλεία.' in tools)
+check('toolbox count 31', '31 διαθέσιμα εργαλεία' in tools and 'Εμφανίζονται 31 εργαλεία.' in tools)
 check('asset version 3.20.69', "EDU_TOOLS_VERSION', '3.20.69'" in config)
 ids = re.findall(r'\bid="([^"]+)"', page)
 check('no duplicate literal ids', len(ids) == len(set(ids)))

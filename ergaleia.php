@@ -19,7 +19,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
 <div class="hero-meta">
-<span>30 διαθέσιμα εργαλεία</span>
+<span>31 διαθέσιμα εργαλεία</span>
 <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
 <span>Αναπληρωτές</span>
 <span>Αποσπάσεις</span>
@@ -160,7 +160,7 @@ renderDeadlineCard(array(
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
 <button aria-pressed="false" class="filter-btn" data-filter="ypiresiaka" type="button">Υπηρεσιακά</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 30 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 31 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
@@ -472,6 +472,13 @@ renderDeadlineCard(array(
 <div class="card-top"><span class="tool-number">30</span><span class="category-tag green">ΣΑΕΚ</span></div>
 <h2>Δικαίωμα υποψηφιότητας Υποδιευθυντή Σ.Α.Ε.Κ.</h2>
 <p>Έλεγξε τις βασικές προϋποθέσεις και τα κωλύματα της πρόσκλησης Κ5/113585/01-09-2026 για τις κενές θέσεις Υποδιευθυντών δημόσιων Σ.Α.Ε.Κ.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
+<a class="tool-card" data-category="ypiresiaka orologio" data-search="ωρολόγιο πρόγραμμα ώρες μαθημάτων εβδομαδιαίο πρόγραμμα Γυμνάσιο ΓΕΛ Εσπερινό τάξη ώρες" href="orologio-programma-mathimaton.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">31</span><span class="category-tag green">Υπηρεσιακά / Ωρολόγιο</span></div>
+<h2>Ώρες μαθημάτων στο ωρολόγιο πρόγραμμα</h2>
+<p>Δες τις εβδομαδιαίες ώρες κάθε μαθήματος ανά τύπο σχολείου και τάξη, με χωριστή εμφάνιση των Ομάδων Προσανατολισμού.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a>
 </section>
