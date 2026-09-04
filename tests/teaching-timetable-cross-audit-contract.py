@@ -144,9 +144,13 @@ for a in assignments:
 total_instances = 0
 direct_matches = 0
 resolved_instances = 0
+status_instances = Counter()
 for row in rows:
     for grade in row.get('hours', {}):
         total_instances += 1
+        status = row.get('assignment_link_status')
+        if status:
+            status_instances[status] += 1
         candidates = assignment_index[(row.get('school'), grade)] | assignment_index[(row.get('school'), '')]
         direct = norm(row.get('subject')) in candidates
         if direct:
@@ -161,10 +165,14 @@ for row in rows:
 
 check('direct normalized linkage non-regression', direct_matches >= 1700)
 check('direct+audited bridge linkage non-regression', resolved_instances >= 1820)
+check('ENEEGYL choice-dependent instances classified', status_instances['choice_dependent'] == 7)
+check('ENEEGYL regulatory-gap instances classified', status_instances['regulatory_gap'] == 17)
+classified_instances = resolved_instances + status_instances['choice_dependent'] + status_instances['regulatory_gap']
+check('classified linkage non-regression', classified_instances >= 1970)
 
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:
     print(('PASS' if ok else 'FAIL') + ': ' + name)
-print(f'AUDIT direct={direct_matches}/{total_instances} resolved={resolved_instances}/{total_instances} component_rows={len(component_rows)} aliases={len(alias_rows)}')
+print(f'AUDIT direct={direct_matches}/{total_instances} resolved={resolved_instances}/{total_instances} choice={status_instances["choice_dependent"]} regulatory_gap={status_instances["regulatory_gap"]} classified={classified_instances}/{total_instances} component_rows={len(component_rows)} aliases={len(alias_rows)}')
 print(f'RESULT {len(checks)-len(failed)} PASS / {len(failed)} FAIL')
 raise SystemExit(1 if failed else 0)

@@ -74,6 +74,102 @@ function teachingTimetablePepalGSubjectAliases()
     );
 }
 
+function teachingTimetableEneegylSubjectAliases()
+{
+    /*
+     * Ελεγμένες, context-specific αποκλίσεις τίτλων μεταξύ:
+     * - ΦΕΚ Β΄ 2149/2026 (ωρολόγιο Λυκείου ΕΝ.Ε.Ε.ΓΥ.-Λ.) και
+     * - ΦΕΚ Β΄ 3216/2026 (αναθέσεις ΕΝ.Ε.Ε.ΓΥ.-Λ.).
+     *
+     * Δεν είναι global aliases. Ισχύουν μόνο στον συγκεκριμένο τομέα,
+     * επειδή το ΦΕΚ ωρολογίου χρησιμοποιεί νεότερο/συντομότερο τίτλο.
+     */
+    return array(
+        'admin' => array(
+            'Στοιχεία Δικαίου (Αστικό - Εργατικό)'
+                => 'Στοιχεία Δικαίου (Αστικό-Εμπορικό – Εργατικό-Τουριστικό)',
+        ),
+        'building' => array(
+            'Σχέδιο Δομικών Έργων με χρήση Η/Υ'
+                => 'Σχέδιο Δομικών Έργων με χρήση Η/Υ Ι',
+        ),
+    );
+}
+
+function teachingTimetableEneegylChoiceOptionsForRow($row)
+{
+    if (!isset($row['school']) || $row['school'] !== 'eneegyl_lykeio') {
+        return null;
+    }
+
+    $track = isset($row['track']) ? $row['track'] : '';
+    $subject = isset($row['subject']) ? $row['subject'] : '';
+
+    // Γ΄ Εφαρμοσμένων Τεχνών: το ΦΕΚ ωρολογίου δίνει ένα slot 4Ε και
+    // το ΦΕΚ αναθέσεων εξειδικεύει τις τέσσερις επιτρεπτές επιλογές.
+    if ($track === 'arts' && $subject === 'Ειδικό εργαστηριακό μάθημα') {
+        return array(
+            array('label'=>'Φωτογραφία και Ηλεκτρονική Επεξεργασία Εικόνας', 'subject'=>'Φωτογραφία και Ηλεκτρονική Επεξεργασία Εικόνας (μάθημα επιλογής)'),
+            array('label'=>'Τεχνολογία Υφαντικών Υλών', 'subject'=>'Τεχνολογία Υφαντικών Υλών (μάθημα επιλογής)'),
+            array('label'=>'Εργαστήριο Χαρακτικής - Πλαστικής', 'subject'=>'Εργαστήριο Χαρακτικής - Πλαστικής (μάθημα επιλογής)'),
+            array('label'=>'Εισαγωγή στις Ξύλινες Κατασκευές', 'subject'=>'Εισαγωγή στις Ξύλινες Κατασκευές'),
+        );
+    }
+
+    // Β΄/Γ΄ Υγείας: «Ειδικό Μάθημα Α/Β» δεν είναι τίτλος μαθήματος αλλά
+    // θέση επιλογής. Κρατάμε τις πραγματικές επιλογές ώστε μελλοντικά η
+    // ανάθεση να εξαρτάται από το μάθημα που λειτουργεί στη σχολική μονάδα.
+    if ($track === 'health' && strpos($subject, 'Ειδικό Μάθημα') === 0) {
+        $bases = array(
+            'Μικροβιολογία Ι',
+            'Νοσηλευτική Ι',
+            'Δημιουργική Απασχόληση στην Προσχολική Ηλικία Ι',
+            'Σύγχρονη Αισθητική Ι',
+            'Εισαγωγή στη Φυσικοθεραπεία Ι',
+            'Βασικές Εφαρμογές Κομμωτικής Ι',
+            'Οδοντοτεχνία Ι',
+            'Φαρμακευτική Τεχνολογία Ι',
+            'Ακτινοτεχνολογία Ι',
+        );
+        $options = array();
+        foreach ($bases as $base) {
+            $options[] = array('label'=>$base);
+        }
+        return $options;
+    }
+
+    return null;
+}
+
+function teachingTimetableEneegylRegulatoryGapCourseIds()
+{
+    /*
+     * Μαθήματα που υπάρχουν ρητά στο νέο ωρολόγιο ΦΕΚ Β΄ 2149/2026,
+     * αλλά δεν έχουν αντίστοιχη γραμμή στον πίνακα αναθέσεων Β΄/Γ΄ τάξης
+     * του ΦΕΚ Β΄ 3216/2026. Δεν δανειζόμαστε ανάθεση από τη Δ΄ τάξη μόνο
+     * επειδή ο τίτλος επανεμφανίζεται εκεί.
+     */
+    return array(
+        'eneegyl.lykeio.c.agriculture.5',
+        'eneegyl.lykeio.c.agriculture.6',
+        'eneegyl.lykeio.c.admin.5',
+        'eneegyl.lykeio.c.admin.6',
+        'eneegyl.lykeio.c.building.5',
+        'eneegyl.lykeio.c.building.6',
+        'eneegyl.lykeio.c.arts.4',
+        'eneegyl.lykeio.c.arts.5',
+        'eneegyl.lykeio.c.electrical.4',
+        'eneegyl.lykeio.c.electrical.5',
+        'eneegyl.lykeio.c.mechanical.5',
+        'eneegyl.lykeio.c.it.4',
+        'eneegyl.lykeio.c.it.5',
+        'eneegyl.lykeio.c.health.6',
+        'eneegyl.lykeio.c.health.7',
+        'eneegyl.lykeio.c.health.fallback.5',
+        'eneegyl.lykeio.c.health.fallback.6',
+    );
+}
+
 function teachingTimetableSplitTheoryLabSubjects()
 {
     /* Audited set: το ωρολόγιο έχει μία ενιαία γραμμή Θ+Ε, ενώ οι αναθέσεις
@@ -126,6 +222,16 @@ function teachingTimetableAssignmentAliasForRow($row)
 {
     $aliases = teachingTimetableSafeSubjectAliases();
     $subject = isset($row['subject']) ? $row['subject'] : '';
+
+    // ΕΝ.Ε.Ε.ΓΥ.-Λ.: ασφαλή aliases μόνο μέσα στον αντίστοιχο τομέα
+    // (ΦΕΚ Β΄ 2149/2026 ↔ Β΄ 3216/2026).
+    if (isset($row['school']) && $row['school'] === 'eneegyl_lykeio' && !empty($row['track'])) {
+        $eneegylAliases = teachingTimetableEneegylSubjectAliases();
+        $track = $row['track'];
+        if (isset($eneegylAliases[$track][$subject])) {
+            return $eneegylAliases[$track][$subject];
+        }
+    }
 
     // Γ΄ Π.ΕΠΑ.Λ.: οι παρακάτω αντιστοιχίσεις είναι ασφαλείς μόνο μέσα
     // στην αντίστοιχη ειδικότητα (ΦΕΚ Β΄ 5251/2023 ↔ Β΄ 5510/2023).
@@ -194,10 +300,24 @@ function teachingTimetableEnrichRows($rows)
     $splitSubjects = teachingTimetableSplitTheoryLabSubjects();
     $componentSchools = array('epal', 'esperino_epal', 'pepal', 'eneegyl_lykeio');
 
+    $eneegylGapIds = array_flip(teachingTimetableEneegylRegulatoryGapCourseIds());
+
     foreach ($rows as $index => $row) {
         $alias = teachingTimetableAssignmentAliasForRow($row);
         if ($alias !== null) {
             $rows[$index]['assignment_subject_alias'] = $alias;
+        }
+
+        $choiceOptions = teachingTimetableEneegylChoiceOptionsForRow($row);
+        if ($choiceOptions !== null) {
+            $rows[$index]['assignment_link_status'] = 'choice_dependent';
+            $rows[$index]['assignment_choice_options'] = $choiceOptions;
+        }
+
+        $courseId = isset($row['course_id']) ? $row['course_id'] : '';
+        if (isset($eneegylGapIds[$courseId])) {
+            $rows[$index]['assignment_link_status'] = 'regulatory_gap';
+            $rows[$index]['assignment_link_note'] = 'Το μάθημα υπάρχει στο ωρολόγιο ΦΕΚ Β΄ 2149/2026, χωρίς αντίστοιχη γραμμή στον πίνακα αναθέσεων Β΄/Γ΄ του ΦΕΚ Β΄ 3216/2026.';
         }
 
         $subject = isset($row['subject']) ? $row['subject'] : '';
