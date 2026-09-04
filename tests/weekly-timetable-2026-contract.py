@@ -55,6 +55,9 @@ check('ENEEGYL Lyceum programme splits', "'eneegyl_lykeio'" in DATA and "'Α΄' 
 check('ENEEGYL has 8 sectors', EDATA.count("function weeklyTimetableEneegylTrackLabels()") == 1 and "'health' => 'Υγείας - Πρόνοιας - Ευεξίας'" in EDATA and "'naval'" not in EDATA)
 check('ENEEGYL D has no naval specialties', "'captain'" not in EDATA and "'engineer' => 'Μηχανικός Εμπορικού Ναυτικού'" not in EDATA)
 check('ENEEGYL A choices are seven real courses', EDATA.count("'choice_set_id'=>'eneegyl.lykeio.a.choices'") == 7 and "'choice_count'=>3" in EDATA and "'subject'=>'Μαθήματα Επιλογής (3 από 7)'" not in EDATA)
+check('EPAL A choices are eight real courses', DATA.count("'choice_set_id'=>'epal.a.choices'") == 8 and "'subject'=>'Μαθήματα Επιλογής (3 από 8)'" not in DATA)
+check('evening EPAL A choices are eight real courses', DATA.count("'choice_set_id'=>'eepal.a.choices'") == 8 and "'subject'=>'Μαθήματα Επιλογής (3 από 8)'" not in DATA)
+check('internal timetable-assignment crosswalk loaded', 'teaching-timetable-crosswalk.php' in DATA and 'teachingTimetableEnrichRows' in DATA)
 check('ENEEGYL health fallback variant data', 'weeklyTimetableEneegylHealthFallbackProgramData' in EDATA and "'4Θ + 1Ε'" in EDATA and "'1Θ + 4Ε'" in EDATA and "'1Θ + 3Ε'" in EDATA)
 check('ENEEGYL health variant selector config', "'variants_by_grade_track'" in DATA and "'two_specials' => 'Διδάσκονται δύο Ειδικά Μαθήματα'" in DATA and "'one_special' => 'Δεν είναι δυνατή η διδασκαλία δεύτερου Ειδικού Μαθήματος'" in DATA)
 check('page supports timetable variant selector', 'id="variantField"' in PAGE and 'function currentVariants(school, grade, track)' in PAGE and 'row.variant && row.variant !== variant' in PAGE)
@@ -246,6 +249,10 @@ check('ENEEGYL Lyceum A orientation', slot_sum('eneegyl_lykeio', 'Α΄', 'Μαθ
 check('ENEEGYL Lyceum A choices', slot_sum('eneegyl_lykeio', 'Α΄', 'Μαθήματα Επιλογής') == 6)
 eneegyl_a_choices = [row for row in payload['rows'] if row.get('school') == 'eneegyl_lykeio' and row.get('choice_set_id') == 'eneegyl.lykeio.a.choices']
 check('ENEEGYL Lyceum A seven choice rows', len(eneegyl_a_choices) == 7 and all(row.get('hours', {}).get('Α΄') == 2 for row in eneegyl_a_choices))
+epal_a_choices = [row for row in payload['rows'] if row.get('school') == 'epal' and row.get('choice_set_id') == 'epal.a.choices']
+eepal_a_choices = [row for row in payload['rows'] if row.get('school') == 'esperino_epal' and row.get('choice_set_id') == 'eepal.a.choices']
+check('EPAL A eight choice rows', len(epal_a_choices) == 8 and all(row.get('hours', {}).get('Α΄') == 2 and row.get('choice_count') == 3 for row in epal_a_choices))
+check('evening EPAL A eight choice rows', len(eepal_a_choices) == 8 and all(row.get('hours', {}).get('Α΄') == 2 and row.get('choice_count') == 3 for row in eepal_a_choices))
 check('ENEEGYL Lyceum A drawing choice display', any(row.get('subject') == 'Αρχές Γραμμικού και Αρχιτεκτονικού Σχεδίου' and row.get('hours_display', {}).get('Α΄') == '2Σ' for row in eneegyl_a_choices))
 for grade in ('Β΄', 'Γ΄'):
     check('ENEEGYL Lyceum ' + grade + ' general', slot_sum('eneegyl_lykeio', grade, 'Μαθήματα Γενικής Παιδείας') == 15)

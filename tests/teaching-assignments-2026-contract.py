@@ -43,7 +43,7 @@ check('special Gym social education only G', "'Κοινωνική και Πολ�
 check('special Gym economics only G', "'Οικονομικά' => array('Γ΄')" in special_gym)
 check('Art and Music Gym receive general curriculum', "array('kallitexniko_gymnasio', 'mousiko_gymnasio')" in DATA)
 check('Music Gym receives general Arts assignment', "$row['subject'] === 'Καλλιτεχνικά'" in DATA)
-check('Art and Music Lyceum receive GEL curriculum', "array('kallitexniko_lykeio', 'mousiko_lykeio')" in DATA)
+check('Art and Music Lyceum receive GEL curriculum', "array('kallitexniko_gel', 'mousiko_gel')" in DATA)
 check('special Lyceum excludes second foreign language', "strpos($row['subject'], '2η Ξένη Γλώσσα') !== 0" in DATA)
 
 check('evening EPAL B exclusion set', "'Β΄' => array('Θρησκευτικά', 'Ηθική', 'Φυσική Αγωγή')" in EPAL)

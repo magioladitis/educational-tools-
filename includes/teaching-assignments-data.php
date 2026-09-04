@@ -154,7 +154,7 @@ function teachingAssignmentsData()
                 continue;
             }
             $copy = $row;
-            $copy['school'] = 'evening_gymnasio';
+            $copy['school'] = 'esperino_gymnasio';
             $rows[] = $copy;
         } elseif ($row['school'] === 'gel') {
             $excluded = isset($eveningGelExcludedSubjects[$row['grade']])
@@ -164,7 +164,7 @@ function teachingAssignmentsData()
                 continue;
             }
             $copy = $row;
-            $copy['school'] = 'evening_gel';
+            $copy['school'] = 'esperino_gel';
             $rows[] = $copy;
         }
     }
@@ -220,7 +220,7 @@ function teachingAssignmentsData()
 
         if ($row['school'] === 'gel'
             && strpos($row['subject'], '2η Ξένη Γλώσσα') !== 0) {
-            foreach (array('kallitexniko_lykeio', 'mousiko_lykeio') as $targetSchool) {
+            foreach (array('kallitexniko_gel', 'mousiko_gel') as $targetSchool) {
                 $copy = $row;
                 $copy['school'] = $targetSchool;
                 if (strpos($row['section'], 'Μαθήματα Γενικής Παιδείας') !== 0) {

@@ -549,7 +549,7 @@ foreach ($dayRows as $row) {
         continue;
     }
     $copy = $row;
-    $copy['school'] = 'evening_epal';
+    $copy['school'] = 'esperino_epal';
     $rows[] = $copy;
 }
 

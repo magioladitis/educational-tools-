@@ -192,7 +192,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Ζωγραφική',
@@ -201,7 +201,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Γλυπτική',
@@ -210,7 +210,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Χαρακτική',
@@ -219,7 +219,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Φωτογραφία',
@@ -227,7 +227,7 @@ return array(
         'A_notes' => array('ΠΕ08' => 'συνδιδασκαλία με εκπαιδευτικό από τον ειδικό πίνακα ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ', 'Ειδικός πίνακας ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ' => 'συνδιδασκαλία με ΠΕ08'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Ιστορία Τέχνης',
@@ -236,7 +236,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Κινησιολογία',
@@ -244,7 +244,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Υποκριτική',
@@ -252,7 +252,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Φωνητική – Ορθοφωνία',
@@ -263,7 +263,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Δραματοποίηση Κειμένου',
@@ -271,7 +271,7 @@ return array(
         'A_notes' => array('ΠΕ91.01' => 'συνδιδασκαλία με ΠΕ91.02', 'ΠΕ91.02' => 'συνδιδασκαλία με ΠΕ91.01'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Ιστορία Κινηματογράφου',
@@ -279,7 +279,7 @@ return array(
         'note' => 'Το μάθημα διδάσκεται από έναν/μία εκπαιδευτικό· δεν προβλέπεται συνδιδασκαλία ή χωρισμός τμήματος.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Αισθητική Κινηματογράφου – Βασικές Αρχές Σκηνοθεσίας Κινηματογράφου',
@@ -287,7 +287,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Χορού',
         'subject' => 'Κλασικός Χορός',
@@ -298,7 +298,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Χορού',
         'subject' => 'Τεχνικές Σύγχρονου Χορού',
@@ -306,7 +306,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Α΄',
         'section' => 'Κατεύθυνση Χορού',
         'subject' => 'Ρυθμός – Μετρική – Κίνηση',
@@ -316,7 +316,7 @@ return array(
         'B_notes' => array('ΠΕ11' => 'με ειδικότητα στους παραδοσιακούς χορούς· συνδιδασκαλία με ΠΕ79.01 ή ΤΕ16 με ειδίκευση Πιάνο', 'ΠΕ79.01' => 'με μουσική ειδίκευση Πιάνο· συνδιδασκαλία με ΠΕ11 με ειδικότητα στους παραδοσιακούς χορούς', 'ΤΕ16' => 'με μουσική ειδίκευση Πιάνο· συνδιδασκαλία με ΠΕ11 με ειδικότητα στους παραδοσιακούς χορούς'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Ζωγραφική',
@@ -325,7 +325,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Γλυπτική',
@@ -334,7 +334,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Χαρακτική',
@@ -343,7 +343,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Πολυμέσα',
@@ -353,7 +353,7 @@ return array(
         'B_notes' => array('Ειδικός πίνακας ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ' => 'συνδιδασκαλία με ΠΕ08', 'ΠΕ08' => 'συνδιδασκαλία με εκπαιδευτικό από τον ειδικό πίνακα ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Ιστορία Τέχνης',
@@ -362,7 +362,7 @@ return array(
         'note' => 'Το μάθημα διδάσκεται από έναν/μία εκπαιδευτικό· δεν προβλέπεται συνδιδασκαλία ή χωρισμός τμήματος.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Κινησιολογία – Σωματική Έκφραση',
@@ -370,7 +370,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Υποκριτική',
@@ -378,7 +378,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Στοιχεία Σκηνοθεσίας Θεάτρου',
@@ -386,7 +386,7 @@ return array(
         'note' => 'Το μάθημα διδάσκεται από έναν/μία εκπαιδευτικό· δεν προβλέπεται συνδιδασκαλία ή χωρισμός τμήματος.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Φωνητική – Τραγούδι',
@@ -396,7 +396,7 @@ return array(
         'B_notes' => array('ΤΕ16' => 'με μουσική ειδίκευση Πιάνο· συνδιδασκαλία με ΠΕ91.02', 'ΠΕ91.02' => 'συνδιδασκαλία με ΤΕ16 με μουσική ειδίκευση Πιάνο'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Ιστορία Θεάτρου – Ιστορία Κινηματογράφου',
@@ -404,7 +404,7 @@ return array(
         'note' => 'Το μάθημα διδάσκεται από έναν/μία εκπαιδευτικό· δεν προβλέπεται συνδιδασκαλία ή χωρισμός τμήματος.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Αισθητική Κινηματογράφου – Βασικές Αρχές Σκηνοθεσίας Κινηματογράφου',
@@ -412,7 +412,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Χορού',
         'subject' => 'Κλασικός Χορός',
@@ -423,7 +423,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Χορού',
         'subject' => 'Τεχνικές Σύγχρονου Χορού',
@@ -431,7 +431,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Χορού',
         'subject' => 'Μουσική – Μετρική – Αυτοσχεδιασμός',
@@ -441,7 +441,7 @@ return array(
         'B_notes' => array('Ειδικός πίνακας ΚΙΝΗΣΗ–ΧΟΡΟΣ' => 'συνδιδασκαλία με ΤΕ16 με μουσική ειδίκευση Πιάνο', 'ΤΕ16' => 'με μουσική ειδίκευση Πιάνο· συνδιδασκαλία με ειδικό πίνακα ΚΙΝΗΣΗ–ΧΟΡΟΣ'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Β΄',
         'section' => 'Κατεύθυνση Χορού',
         'subject' => 'Ιστορία Τέχνης',
@@ -450,7 +450,7 @@ return array(
         'note' => 'Το μάθημα διδάσκεται από έναν/μία εκπαιδευτικό· δεν προβλέπεται συνδιδασκαλία ή χωρισμός τμήματος.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Ζωγραφική',
@@ -459,7 +459,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Γλυπτική',
@@ -468,7 +468,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Χαρακτική',
@@ -477,7 +477,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Βιομηχανικό Σχέδιο',
@@ -485,7 +485,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Εικαστικών Τεχνών',
         'subject' => 'Εργαστήρια Πολυμέσα',
@@ -495,7 +495,7 @@ return array(
         'B_notes' => array('Ειδικός πίνακας ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ' => 'συνδιδασκαλία με ΠΕ08', 'ΠΕ08' => 'συνδιδασκαλία με εκπαιδευτικό από τον ειδικό πίνακα ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Κινησιολογία – Σωματική Έκφραση',
@@ -503,7 +503,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Υποκριτική',
@@ -511,7 +511,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Στοιχεία Σκηνοθεσίας Θεάτρου',
@@ -519,7 +519,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Ιστορία Θεάτρου',
@@ -527,7 +527,7 @@ return array(
         'note' => 'Το μάθημα διδάσκεται από έναν/μία εκπαιδευτικό· δεν προβλέπεται συνδιδασκαλία ή χωρισμός τμήματος.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Φωνητική – Τραγούδι',
@@ -537,7 +537,7 @@ return array(
         'B_notes' => array('ΤΕ16' => 'με μουσική ειδίκευση Πιάνο· συνδιδασκαλία με ΠΕ91.02', 'ΠΕ91.02' => 'συνδιδασκαλία με ΤΕ16 με μουσική ειδίκευση Πιάνο'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Θεάτρου – Κινηματογράφου',
         'subject' => 'Αισθητική Κινηματογράφου – Βασικές Αρχές Σκηνοθεσίας Κινηματογράφου',
@@ -545,7 +545,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, το τμήμα χωρίζεται σε δύο τμήματα.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Χορού',
         'subject' => 'Κλασικός Χορός',
@@ -556,7 +556,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Χορού',
         'subject' => 'Τεχνικές Σύγχρονου Χορού',
@@ -564,7 +564,7 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Κατεύθυνση Χορού',
         'subject' => 'Κινησιολογία',
@@ -572,21 +572,21 @@ return array(
         'note' => 'Αν οι μαθητές/τριες ξεπερνούν τους 15, γίνεται συνδιδασκαλία από δύο εκπαιδευτικούς της ειδικότητας.',
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Ελεύθερο Σχέδιο',
         'A' => array('ΠΕ08'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Γραμμικό Σχέδιο',
         'A' => array('ΠΕ08'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Μέσα Μαζικής Επικοινωνίας (ΜΜΕ)',
@@ -594,7 +594,7 @@ return array(
         'B' => array('ΠΕ02', 'Ειδικός πίνακας ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Χορός για την Κάμερα (Video Dance)',
@@ -604,21 +604,21 @@ return array(
         'B_notes' => array('Ειδικός πίνακας ΣΥΓΧΡΟΝΟΥ ΧΟΡΟΥ' => 'συνδιδασκαλία με εκπαιδευτικό από τον ειδικό πίνακα ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ', 'Ειδικός πίνακας ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ' => 'συνδιδασκαλία με εκπαιδευτικό από τον ειδικό πίνακα ΣΥΓΧΡΟΝΟΥ ΧΟΡΟΥ'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Κεραμική',
         'A' => array('ΠΕ08'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Εργαστήρι Μάσκας και Θεατρικών Εξαρτημάτων',
         'A' => array('ΠΕ08'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Σκηνογραφία – Ενδυματολογία',
@@ -626,21 +626,21 @@ return array(
         'B' => array('ΠΕ91.01'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Ντοκιμαντέρ',
         'A' => array('Ειδικός πίνακας ΚΙΝΗΜΑΤΟΓΡΑΦΟΥ'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Θεωρία Τέχνης – Στοιχεία Αισθητικής',
         'A' => array('ΠΕ08', 'ΠΕ41'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Φωτισμός Θεάτρου',
@@ -648,7 +648,7 @@ return array(
         'B' => array('ΠΕ91.02'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Δημιουργική Γραφή',
@@ -658,7 +658,7 @@ return array(
         'B_notes' => array('ΠΕ02' => 'συνδιδασκαλία με ΠΕ91.02'),
     ),
     array(
-        'school' => 'kallitexniko_lykeio',
+        'school' => 'kallitexniko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Επιλογής',
         'subject' => 'Κινηματογραφική Τεχνολογία – Φωτογραφία Κινηματογράφου',

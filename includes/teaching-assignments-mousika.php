@@ -154,7 +154,7 @@ return array(
 
     // Γενικό Μουσικό Λύκειο — θεωρητικά και γενικά μαθήματα
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grades' => array('Α΄', 'Β΄', 'Γ΄'),
         'section' => 'Μαθήματα Μουσικής Παιδείας · Θεωρητικά / γενικά',
         'subject' => 'Αρμονία',
@@ -164,7 +164,7 @@ return array(
         'music_requirement' => 'any',
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grades' => array('Α΄', 'Β΄', 'Γ΄'),
         'section' => 'Μαθήματα Μουσικής Παιδείας · Θεωρητικά / γενικά',
         'subject' => 'Ανάπτυξη Ακουστικών Ικανοτήτων',
@@ -174,7 +174,7 @@ return array(
         'music_requirement' => 'any',
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grade' => 'Α΄',
         'section' => 'Μαθήματα Μουσικής Παιδείας · Θεωρητικά / γενικά',
         'subject' => 'Ιστορία της Μουσικής',
@@ -184,7 +184,7 @@ return array(
         'music_requirement' => 'any',
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grade' => 'Β΄',
         'section' => 'Μαθήματα Μουσικής Παιδείας · Θεωρητικά / γενικά',
         'subject' => 'Μορφολογία',
@@ -196,7 +196,7 @@ return array(
 
     // Γενικό Μουσικό Λύκειο — Οργανολογία + Στοιχεία Αντίστιξης
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grades' => array('Α΄', 'Γ΄'),
         'section' => 'Μαθήματα Μουσικής Παιδείας · Επιλογής',
         'subject' => 'Οργανολογία Ελληνικών Παραδοσιακών Οργάνων',
@@ -209,7 +209,7 @@ return array(
         'note' => 'Στη Γ΄ τάξη επιλέγεται μόνο από μαθητές/ήτριες που δεν το επέλεξαν σε προηγούμενη τάξη του Μουσικού Λυκείου.',
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grades' => array('Α΄', 'Γ΄'),
         'section' => 'Μαθήματα Μουσικής Παιδείας · Επιλογής',
         'subject' => 'Οργανολογία Μουσικών Οργάνων Συμφωνικής Ορχήστρας',
@@ -222,7 +222,7 @@ return array(
         'note' => 'Στη Γ΄ τάξη επιλέγεται μόνο από μαθητές/ήτριες που δεν το επέλεξαν σε προηγούμενη τάξη του Μουσικού Λυκείου.',
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grade' => 'Α΄',
         'section' => 'Μαθήματα Μουσικής Παιδείας · Επιλογής',
         'subject' => 'Στοιχεία Αντίστιξης',
@@ -239,7 +239,7 @@ return array(
 
     // Γενικό Μουσικό Λύκειο — Πιάνο + Ατομικό Όργανο Επιλογής
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grade' => 'Α΄',
         'section' => 'Μαθήματα Μουσικής Παιδείας · Υποχρεωτικά ατομικά όργανα',
         'subject' => 'Υποχρεωτικό Ατομικό Μουσικό Όργανο: Πιάνο',
@@ -259,7 +259,7 @@ return array(
         'B_music_specializations' => array('piano'),
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grades' => array('Α΄', 'Β΄', 'Γ΄'),
         'section' => 'Μαθήματα Μουσικής Παιδείας · Ατομικό όργανο επιλογής',
         'subject' => 'Ατομικό Όργανο Επιλογής',
@@ -283,7 +283,7 @@ return array(
 
     // Γενικό Μουσικό Λύκειο — Μουσικά Σύνολα
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grades' => array('Α΄', 'Β΄', 'Γ΄'),
         'section' => 'Μαθήματα Μουσικής Παιδείας · Μουσικά Σύνολα',
         'subject' => 'Μουσικό Σύνολο (Οργανοχρησίας ή άλλου είδους)',
@@ -295,7 +295,7 @@ return array(
         'music_requirement' => 'any',
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grades' => array('Α΄', 'Β΄', 'Γ΄'),
         'section' => 'Μαθήματα Μουσικής Παιδείας · Μουσικά Σύνολα',
         'subject' => 'Μουσικό Σύνολο (Μουσικής Έκφρασης και Δημιουργίας)',
@@ -310,7 +310,7 @@ return array(
 
     // Γενικό Μουσικό Λύκειο — Μουσική Τεχνολογία / Πληροφορική / Ηχοληψία (Α΄)
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grade' => 'Α΄',
         'section' => 'Μαθήματα Επιλογής · Μουσική - Μουσική Τεχνολογία',
         'subject' => 'Εφαρμογές Πληροφορικής στη Μουσική',
@@ -330,7 +330,7 @@ return array(
         'B_music_excluded_specializations' => array('european_theory', 'music_technology', 'music_production'),
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grade' => 'Α΄',
         'section' => 'Μαθήματα Επιλογής · Μουσική - Μουσική Τεχνολογία',
         'subject' => 'Επεξεργασία Μουσικού Κειμένου με Η/Υ',
@@ -350,7 +350,7 @@ return array(
         'B_music_excluded_specializations' => array('european_theory', 'music_technology', 'music_production'),
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grade' => 'Α΄',
         'section' => 'Μαθήματα Επιλογής · Μουσική - Μουσική Τεχνολογία',
         'subject' => 'Στοιχειώδεις αρχές ηχοληψίας Ι',
@@ -374,7 +374,7 @@ return array(
 
     // Γενικό Μουσικό Λύκειο — τεκμηριωμένες αντιστοιχίσεις Γ΄ τάξης
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Μουσικής Παιδείας · Επιλογής',
         'subject' => 'Αρμονία (Ειδικό)',
@@ -389,7 +389,7 @@ return array(
         'music_requirement' => 'any',
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Μουσικής Παιδείας · Επιλογής',
         'subject' => 'Ανάπτυξη (Έλεγχος) Μουσικών Ακουστικών Ικανοτήτων',
@@ -404,7 +404,7 @@ return array(
         'music_requirement' => 'any',
     ),
     array(
-        'school' => 'mousiko_lykeio',
+        'school' => 'mousiko_gel',
         'grade' => 'Γ΄',
         'section' => 'Μαθήματα Μουσικής Παιδείας · Επιλογής',
         'subject' => 'Ατομικό Όργανο Επιλογής ή και Αναφοράς (Πιάνο - Ταμπουράς ή άλλο)',

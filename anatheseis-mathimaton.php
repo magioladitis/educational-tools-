@@ -442,27 +442,27 @@
   function schoolLabel(row){
     if (row.school === 'gymnasio') return 'Γυμνάσιο';
     if (row.school === 'gel') return row.grade ? `${row.grade} ΓΕΛ` : 'ΓΕΛ';
-    if (row.school === 'evening_gymnasio') return 'Εσπερινό Γυμνάσιο';
-    if (row.school === 'evening_gel') return row.grade ? `${row.grade} Εσπερινού ΓΕΛ` : 'Εσπερινό ΓΕΛ';
+    if (row.school === 'esperino_gymnasio') return 'Εσπερινό Γυμνάσιο';
+    if (row.school === 'esperino_gel') return row.grade ? `${row.grade} Εσπερινού ΓΕΛ` : 'Εσπερινό ΓΕΛ';
     if (row.school === 'eae_gymnasio') return 'Γυμνάσιο Ε.Α.Ε.';
     if (row.school === 'eae_lykeio') return row.grade ? `${row.grade} Λύκειο Ε.Α.Ε.` : 'Λύκειο Ε.Α.Ε.';
     if (row.school === 'eneegyl_gymnasio') return 'Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.';
     if (row.school === 'kallitexniko_gymnasio') return 'Καλλιτεχνικό Γυμνάσιο';
-    if (row.school === 'kallitexniko_lykeio') return row.grade ? `${row.grade} Καλλιτεχνικού Λυκείου` : 'Καλλιτεχνικό Λύκειο';
+    if (row.school === 'kallitexniko_gel') return row.grade ? `${row.grade} Καλλιτεχνικού Λυκείου` : 'Καλλιτεχνικό Λύκειο';
     if (row.school === 'mousiko_gymnasio') {
       const shownGrade = (row.grades && row.grades.length)
         ? (gradeFilter.value !== 'all' && row.grades.includes(gradeFilter.value) ? gradeFilter.value : row.grades.join('/'))
         : row.grade;
       return shownGrade ? `${shownGrade} Μουσικού Γυμνασίου` : 'Μουσικό Γυμνάσιο';
     }
-    if (row.school === 'mousiko_lykeio') {
+    if (row.school === 'mousiko_gel') {
       const shownGrade = (row.grades && row.grades.length)
         ? (gradeFilter.value !== 'all' && row.grades.includes(gradeFilter.value) ? gradeFilter.value : row.grades.join('/'))
         : row.grade;
       return shownGrade ? `${shownGrade} Γενικού Μουσικού Λυκείου` : 'Γενικό Μουσικό Λύκειο';
     }
     if (row.school === 'epal') return row.grade ? `${row.grade} ΕΠΑ.Λ.` : 'ΕΠΑ.Λ.';
-    if (row.school === 'evening_epal') return row.grade ? `${row.grade} Εσπερινού ΕΠΑ.Λ.` : 'Εσπερινό ΕΠΑ.Λ.';
+    if (row.school === 'esperino_epal') return row.grade ? `${row.grade} Εσπερινού ΕΠΑ.Λ.` : 'Εσπερινό ΕΠΑ.Λ.';
     if (row.school === 'pepal') return row.grade ? `${row.grade} Π.ΕΠΑ.Λ.` : 'Π.ΕΠΑ.Λ.';
     if (row.school === 'eneegyl_lykeio') {
       const shownGrade = (row.grades && row.grades.length)
@@ -524,20 +524,20 @@
     DATA.forEach(row => {
       if (row.school === 'gymnasio' && !includeGymnasio) return;
       if (row.school === 'gel' && !includeGel) return;
-      if (row.school === 'evening_gymnasio' && !includeEveningGym) return;
-      if (row.school === 'evening_gel' && !includeEveningGel) return;
+      if (row.school === 'esperino_gymnasio' && !includeEveningGym) return;
+      if (row.school === 'esperino_gel' && !includeEveningGel) return;
       if (row.school === 'eae_gymnasio' && !includeEaeGym) return;
       if (row.school === 'eae_lykeio' && !includeEaeLykeio) return;
       if (row.school === 'eneegyl_gymnasio' && !includeEneegylGym) return;
       if (row.school === 'eneegyl_lykeio' && !includeEneegylLykeio) return;
       if (row.school === 'kallitexniko_gymnasio' && !includeKallitexnikoGym) return;
-      if (row.school === 'kallitexniko_lykeio' && !includeKallitexnikoLykeio) return;
+      if (row.school === 'kallitexniko_gel' && !includeKallitexnikoLykeio) return;
       if (row.school === 'epal' && !includeEpal) return;
-      if (row.school === 'evening_epal' && !includeEveningEpal) return;
+      if (row.school === 'esperino_epal' && !includeEveningEpal) return;
       if (row.school === 'pepal' && !includePepal) return;
       if (row.school === 'mousiko_gymnasio' && !includeMousikoGym) return;
-      if (row.school === 'mousiko_lykeio' && !includeMousikoLykeio) return;
-      if (row.school === 'gel' || row.school === 'evening_gel' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio' || row.school === 'epal' || row.school === 'evening_epal' || row.school === 'pepal' || row.school === 'kallitexniko_lykeio' || row.school === 'mousiko_gymnasio' || row.school === 'mousiko_lykeio') {
+      if (row.school === 'mousiko_gel' && !includeMousikoLykeio) return;
+      if (row.school === 'gel' || row.school === 'esperino_gel' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio' || row.school === 'epal' || row.school === 'esperino_epal' || row.school === 'pepal' || row.school === 'kallitexniko_gel' || row.school === 'mousiko_gymnasio' || row.school === 'mousiko_gel') {
         const rowGrades = Array.isArray(row.grades) ? row.grades : (row.grade ? [row.grade] : []);
         if (grade !== 'all' && !rowGrades.includes(grade)) return;
       }

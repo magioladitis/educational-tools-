@@ -38,6 +38,7 @@
 
 require_once __DIR__ . '/weekly-timetable-vocational-g-data.php';
 require_once __DIR__ . '/weekly-timetable-eneegyl-data.php';
+require_once __DIR__ . '/teaching-timetable-crosswalk.php';
 
 function weeklyTimetableSchoolTypes()
 {
@@ -542,7 +543,7 @@ function weeklyTimetableRows()
         array('course_id'=>'mgel.c.choice.choral','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Επεξεργασία Χορικού (Choral)','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
         array('course_id'=>'mgel.c.choice.ixolipsia2','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Στοιχειώδεις αρχές ηχοληψίας ΙΙ','hours'=>array('Γ΄'=>2),'mode'=>'choice'),
     );
-    return array_merge($rows, weeklyTimetableEneegylRows(), weeklyTimetableVocationalRows());
+    return teachingTimetableEnrichRows(array_merge($rows, weeklyTimetableEneegylRows(), weeklyTimetableVocationalRows()));
 }
 
 function weeklyTimetableVocationalRows()
@@ -564,7 +565,14 @@ function weeklyTimetableVocationalRows()
         array('course_id'=>'epal.a.orientation.erevnitiki','school'=>'epal','group'=>'Μαθήματα Προσανατολισμού','subject'=>'Ερευνητική Εργασία στην Τεχνολογία','hours'=>array('Α΄'=>2)),
         array('course_id'=>'epal.a.orientation.sep_asfaleia','school'=>'epal','group'=>'Μαθήματα Προσανατολισμού','subject'=>'Σχολικός Επαγγελματικός Προσανατολισμός - Ασφάλεια και Υγεία στο χώρο εργασίας','hours'=>array('Α΄'=>2)),
         array('course_id'=>'epal.a.orientation.zoni','school'=>'epal','group'=>'Μαθήματα Προσανατολισμού','subject'=>'Ζώνη Δημιουργικών Δραστηριοτήτων','hours'=>array('Α΄'=>3)),
-        array('course_id'=>'epal.a.choices','school'=>'epal','group'=>'Μαθήματα Επιλογής','subject'=>'Μαθήματα Επιλογής (3 από 8)','hours'=>array('Α΄'=>6),'note'=>'Κάθε μάθημα είναι 2 ώρες. Επιλέγονται τρία από: Αγωγή Υγείας, Αρχές Γραμμικού και Αρχιτεκτονικού Σχεδίου, Αρχές Ηλεκτρολογίας και Ηλεκτρονικής, Αρχές Μηχανολογίας, Αρχές Οικονομίας, Βασικές Αρχές Σύνθεσης, Γεωπονία και Αειφόρος Ανάπτυξη, Ναυτιλιακές Γνώσεις.'),
+        array('course_id'=>'epal.a.choice.agogi_ygeias','choice_set_id'=>'epal.a.choices','choice_count'=>3,'school'=>'epal','group'=>'Μαθήματα Επιλογής','subject'=>'Αγωγή Υγείας','hours'=>array('Α΄'=>2),'group_note'=>'Επιλέγονται τρία (3) από τα οκτώ (8) προσφερόμενα μαθήματα, 2 ώρες το καθένα (6 ώρες συνολικά).'),
+        array('course_id'=>'epal.a.choice.grammiko_architektoniko','choice_set_id'=>'epal.a.choices','choice_count'=>3,'school'=>'epal','group'=>'Μαθήματα Επιλογής','subject'=>'Αρχές Γραμμικού και Αρχιτεκτονικού Σχεδίου','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'epal.a.choice.ilektrologia_ilektroniki','choice_set_id'=>'epal.a.choices','choice_count'=>3,'school'=>'epal','group'=>'Μαθήματα Επιλογής','subject'=>'Αρχές Ηλεκτρολογίας και Ηλεκτρονικής','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'epal.a.choice.mixanologia','choice_set_id'=>'epal.a.choices','choice_count'=>3,'school'=>'epal','group'=>'Μαθήματα Επιλογής','subject'=>'Αρχές Μηχανολογίας','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'epal.a.choice.oikonomia','choice_set_id'=>'epal.a.choices','choice_count'=>3,'school'=>'epal','group'=>'Μαθήματα Επιλογής','subject'=>'Αρχές Οικονομίας','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'epal.a.choice.synthesi','choice_set_id'=>'epal.a.choices','choice_count'=>3,'school'=>'epal','group'=>'Μαθήματα Επιλογής','subject'=>'Βασικές Αρχές Σύνθεσης','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'epal.a.choice.geoponia','choice_set_id'=>'epal.a.choices','choice_count'=>3,'school'=>'epal','group'=>'Μαθήματα Επιλογής','subject'=>'Γεωπονία και Αειφόρος Ανάπτυξη','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'epal.a.choice.nautiliakes','choice_set_id'=>'epal.a.choices','choice_count'=>3,'school'=>'epal','group'=>'Μαθήματα Επιλογής','subject'=>'Ναυτιλιακές Γνώσεις','hours'=>array('Α΄'=>2)),
         array('course_id'=>'epal.b.general.nea_ellinika','school'=>'epal','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Νέα Ελληνικά','hours'=>array('Β΄'=>3)),
         array('course_id'=>'epal.b.general.algebra','school'=>'epal','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Άλγεβρα','hours'=>array('Β΄'=>2)),
         array('course_id'=>'epal.b.general.geometria','school'=>'epal','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Γεωμετρία','hours'=>array('Β΄'=>1)),
@@ -654,7 +662,14 @@ function weeklyTimetableVocationalRows()
         array('course_id'=>'eepal.a.general.pliroforiki','school'=>'esperino_epal','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Πληροφορική','hours'=>array('Α΄'=>2)),
         array('course_id'=>'eepal.a.orientation.erevnitiki','school'=>'esperino_epal','group'=>'Μαθήματα Προσανατολισμού','subject'=>'Ερευνητική Εργασία στην Τεχνολογία','hours'=>array('Α΄'=>2)),
         array('course_id'=>'eepal.a.orientation.zoni','school'=>'esperino_epal','group'=>'Μαθήματα Προσανατολισμού','subject'=>'Ζώνη Δημιουργικών Δραστηριοτήτων','hours'=>array('Α΄'=>2)),
-        array('course_id'=>'eepal.a.choices','school'=>'esperino_epal','group'=>'Μαθήματα Επιλογής','subject'=>'Μαθήματα Επιλογής (3 από 8)','hours'=>array('Α΄'=>6),'note'=>'Κάθε μάθημα είναι 2 ώρες. Επιλέγονται τρία από: Αγωγή Υγείας, Αρχές Γραμμικού και Αρχιτεκτονικού Σχεδίου, Αρχές Ηλεκτρολογίας και Ηλεκτρονικής, Αρχές Μηχανολογίας, Αρχές Οικονομίας, Βασικές Αρχές Σύνθεσης, Γεωπονία και Αειφόρος Ανάπτυξη, Ναυτιλιακές Γνώσεις.'),
+        array('course_id'=>'eepal.a.choice.agogi_ygeias','choice_set_id'=>'eepal.a.choices','choice_count'=>3,'school'=>'esperino_epal','group'=>'Μαθήματα Επιλογής','subject'=>'Αγωγή Υγείας','hours'=>array('Α΄'=>2),'group_note'=>'Επιλέγονται τρία (3) από τα οκτώ (8) προσφερόμενα μαθήματα, 2 ώρες το καθένα (6 ώρες συνολικά).'),
+        array('course_id'=>'eepal.a.choice.grammiko_architektoniko','choice_set_id'=>'eepal.a.choices','choice_count'=>3,'school'=>'esperino_epal','group'=>'Μαθήματα Επιλογής','subject'=>'Αρχές Γραμμικού και Αρχιτεκτονικού Σχεδίου','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'eepal.a.choice.ilektrologia_ilektroniki','choice_set_id'=>'eepal.a.choices','choice_count'=>3,'school'=>'esperino_epal','group'=>'Μαθήματα Επιλογής','subject'=>'Αρχές Ηλεκτρολογίας και Ηλεκτρονικής','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'eepal.a.choice.mixanologia','choice_set_id'=>'eepal.a.choices','choice_count'=>3,'school'=>'esperino_epal','group'=>'Μαθήματα Επιλογής','subject'=>'Αρχές Μηχανολογίας','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'eepal.a.choice.oikonomia','choice_set_id'=>'eepal.a.choices','choice_count'=>3,'school'=>'esperino_epal','group'=>'Μαθήματα Επιλογής','subject'=>'Αρχές Οικονομίας','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'eepal.a.choice.synthesi','choice_set_id'=>'eepal.a.choices','choice_count'=>3,'school'=>'esperino_epal','group'=>'Μαθήματα Επιλογής','subject'=>'Βασικές Αρχές Σύνθεσης','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'eepal.a.choice.geoponia','choice_set_id'=>'eepal.a.choices','choice_count'=>3,'school'=>'esperino_epal','group'=>'Μαθήματα Επιλογής','subject'=>'Γεωπονία και Αειφόρος Ανάπτυξη','hours'=>array('Α΄'=>2)),
+        array('course_id'=>'eepal.a.choice.nautiliakes','choice_set_id'=>'eepal.a.choices','choice_count'=>3,'school'=>'esperino_epal','group'=>'Μαθήματα Επιλογής','subject'=>'Ναυτιλιακές Γνώσεις','hours'=>array('Α΄'=>2)),
         array('course_id'=>'eepal.b.general.nea_ellinika','school'=>'esperino_epal','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Νέα Ελληνικά','hours'=>array('Β΄'=>3)),
         array('course_id'=>'eepal.b.general.algebra','school'=>'esperino_epal','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Άλγεβρα','hours'=>array('Β΄'=>2)),
         array('course_id'=>'eepal.b.general.geometria','school'=>'esperino_epal','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Γεωμετρία','hours'=>array('Β΄'=>1)),
