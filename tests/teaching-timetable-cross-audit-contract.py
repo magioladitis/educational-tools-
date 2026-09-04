@@ -165,10 +165,48 @@ for row in rows:
 
 check('direct normalized linkage non-regression', direct_matches >= 1700)
 check('direct+audited bridge linkage non-regression', resolved_instances >= 1820)
-check('ENEEGYL choice-dependent instances classified', status_instances['choice_dependent'] == 7)
+# Choice-dependent slots are intentional structural bridges, not failed aliases.
+choice_by_school = Counter()
+choice_rows = []
+for row in rows:
+    if row.get('assignment_link_status') != 'choice_dependent':
+        continue
+    for _grade in row.get('hours', {}):
+        choice_by_school[row.get('school')] += 1
+    choice_rows.append(row)
+
+check('ENEEGYL choice-dependent instances classified', choice_by_school['eneegyl_lykeio'] == 7)
+check('EPAL choice-dependent instances classified', choice_by_school['epal'] == 3)
+check('evening EPAL choice-dependent instances classified', choice_by_school['esperino_epal'] == 3)
+check('PEPAL choice-dependent instances classified', choice_by_school['pepal'] == 3)
+check('all choice-dependent instances classified', status_instances['choice_dependent'] == 16)
 check('ENEEGYL regulatory-gap instances classified', status_instances['regulatory_gap'] == 17)
+
+# Every vocational choice target must resolve to a real assignment row in the same
+# school/grade context. This protects the bridge against title drift in either dataset.
+for row in choice_rows:
+    if row.get('school') not in {'epal', 'esperino_epal', 'pepal'}:
+        continue
+    options = row.get('assignment_choice_options') or []
+    check(f'vocational choice options present: {row.get("course_id")}', bool(options))
+    for grade in row.get('hours', {}):
+        for option in options:
+            targets = []
+            if option.get('subject'):
+                targets.append(option['subject'])
+            targets.extend(option.get('components') or [])
+            check(f'vocational choice target list nonempty: {row.get("course_id")} / {option.get("label")}', bool(targets))
+            for target in targets:
+                exists = any(
+                    a.get('school') == row.get('school')
+                    and (a.get('grade') in ('', grade) or grade in (a.get('grades') or []))
+                    and a.get('subject') == target
+                    for a in assignments
+                )
+                check(f'vocational choice target resolves: {row.get("course_id")} / {target}', exists)
+
 classified_instances = resolved_instances + status_instances['choice_dependent'] + status_instances['regulatory_gap']
-check('classified linkage non-regression', classified_instances >= 1970)
+check('classified linkage non-regression', classified_instances >= 1989)
 
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:

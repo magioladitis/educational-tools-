@@ -31,6 +31,24 @@ function teachingTimetableSafeSubjectAliases()
     );
 }
 
+function teachingTimetablePepalBSubjectAliases()
+{
+    /*
+     * Ελεγμένες αποκλίσεις τίτλων μεταξύ ωρολογίου και αναθέσεων της
+     * Β΄ Π.ΕΠΑ.Λ. Οι αντιστοιχίσεις ισχύουν μόνο στον αντίστοιχο τομέα.
+     * Επιβεβαιώθηκαν και επιχειρησιακά με snapshot myschool Π.ΕΠΑ.Λ.
+     * Κέρκυρας 2026-09-05, χωρίς το myschool να αποτελεί κανονιστική πηγή.
+     */
+    return array(
+        'electrical' => array(
+            'Ηλεκτροτεχνία'
+                => 'Ηλεκτροτεχνία (Κυκλώματα Συνεχούς και Εναλλασσόμενου ρεύματος)',
+            'Εισαγωγή στα Υπολογιστικά Συστήματα και Δίκτυα'
+                => 'Εισαγωγή στα Υπολογιστικά Συστήματα και στα Δίκτυα Επικοινωνιών',
+        ),
+    );
+}
+
 function teachingTimetablePepalGSubjectAliases()
 {
     /*
@@ -94,6 +112,69 @@ function teachingTimetableEneegylSubjectAliases()
                 => 'Σχέδιο Δομικών Έργων με χρήση Η/Υ Ι',
         ),
     );
+}
+
+function teachingTimetableVocationalChoiceOptionsForRow($row)
+{
+    $school = isset($row['school']) ? $row['school'] : '';
+    $track = isset($row['track']) ? $row['track'] : '';
+    $subject = isset($row['subject']) ? $row['subject'] : '';
+
+    // Β΄ ΕΠΑ.Λ./Εσπερινού ΕΠΑ.Λ. — Εφαρμοσμένες Τέχνες:
+    // ένα εργαστηριακό slot που εξειδικεύεται σε ένα από τέσσερα μαθήματα.
+    if (in_array($school, array('epal', 'esperino_epal'), true)
+        && $track === 'arts' && $subject === 'Ειδικό Εργαστηριακό Μάθημα') {
+        return array(
+            array('label'=>'Φωτογραφία και Ηλεκτρονική Επεξεργασία Εικόνας', 'subject'=>'Φωτογραφία και Ηλεκτρονική Επεξεργασία Εικόνας (μάθημα επιλογής)'),
+            array('label'=>'Τεχνολογία Υφαντικών Υλών', 'subject'=>'Τεχνολογία Υφαντικών Υλών (μάθημα επιλογής)'),
+            array('label'=>'Εργαστήριο Χαρακτικής - Πλαστικής', 'subject'=>'Εργαστήριο Χαρακτικής - Πλαστικής (μάθημα επιλογής)'),
+            array('label'=>'Εισαγωγή στις Ξύλινες Κατασκευές', 'subject'=>'Εισαγωγή στις Ξύλινες Κατασκευές'),
+        );
+    }
+
+    // Β΄ ΕΠΑ.Λ./Εσπερινού ΕΠΑ.Λ. — Υγεία: τα «Ειδικό Μάθημα Α/Β»
+    // είναι slots επιλογής. Κάθε πραγματικό μάθημα μπορεί να έχει χωριστή
+    // Θεωρία/Εργαστήριο και άρα διαφορετική ανάθεση ανά component.
+    if (in_array($school, array('epal', 'esperino_epal'), true)
+        && $track === 'health' && strpos($subject, 'Ειδικό Μάθημα') === 0) {
+        return array(
+            array('label'=>'Μικροβιολογία Ι', 'components'=>array('Μικροβιολογία Ι — Θεωρία','Μικροβιολογία Ι — Εργαστήριο')),
+            array('label'=>'Νοσηλευτική Ι', 'components'=>array('Νοσηλευτική Ι — Θεωρία','Νοσηλευτική Ι — Εργαστήριο')),
+            array('label'=>'Δημιουργική Απασχόληση στην Προσχολική Ηλικία Ι', 'components'=>array('Δημιουργική Απασχόληση στην Προσχολική Ηλικία Ι — Θεωρία','Δημιουργική Απασχόληση στην Προσχολική Ηλικία Ι — Εργαστήριο')),
+            array('label'=>'Σύγχρονη Αισθητική Ι', 'components'=>array('Σύγχρονη Αισθητική Ι — Θεωρία','Σύγχρονη Αισθητική Ι — Εργαστήριο')),
+            array('label'=>'Εισαγωγή στη Φυσικοθεραπεία Ι', 'components'=>array('Εισαγωγή στη Φυσικοθεραπεία Ι — Θεωρία','Εισαγωγή στη Φυσικοθεραπεία Ι — Εργαστήριο')),
+            array('label'=>'Βασικές Εφαρμογές Κομμωτικής Ι', 'components'=>array('Βασικές Εφαρμογές Κομμωτικής Ι — Εργαστήριο')),
+            array('label'=>'Οδοντοτεχνία Ι', 'components'=>array('Οδοντοτεχνία Ι — Θεωρία','Οδοντοτεχνία Ι — Εργαστήριο')),
+            array('label'=>'Φαρμακευτική Τεχνολογία Ι', 'components'=>array('Φαρμακευτική Τεχνολογία Ι — Θεωρία','Φαρμακευτική Τεχνολογία Ι — Εργαστήριο')),
+            array('label'=>'Ακτινοτεχνολογία Ι', 'components'=>array('Ακτινοτεχνολογία Ι — Θεωρία','Ακτινοτεχνολογία Ι — Εργαστήριο')),
+        );
+    }
+
+    // Β΄ Π.ΕΠΑ.Λ. — Υγεία: αντίστοιχη λογική επιλογής, αλλά με τους
+    // ακριβείς τίτλους του αυτοτελούς πίνακα αναθέσεων Π.ΕΠΑ.Λ.
+    if ($school === 'pepal' && $track === 'health' && strpos($subject, 'Ειδικό Μάθημα') === 0) {
+        return array(
+            array('label'=>'Μικροβιολογία I', 'components'=>array('Μικροβιολογία I — Θεωρία','Μικροβιολογία I — Εργαστήριο')),
+            array('label'=>'Βασικές Κλινικές Δεξιότητες', 'components'=>array('Βασικές Κλινικές Δεξιότητες — Θεωρία','Βασικές Κλινικές Δεξιότητες — Εργαστήριο')),
+            array('label'=>'Δημιουργία και Έκφραση στην Προσχολική Ηλικία Ι', 'components'=>array('Δημιουργία και Έκφραση στην Προσχολική Ηλικία Ι — Εργαστήριο')),
+            array('label'=>'Σύγχρονη Αισθητική I', 'components'=>array('Σύγχρονη Αισθητική I — Θεωρία','Σύγχρονη Αισθητική I — Εργαστήριο')),
+            array('label'=>'Εισαγωγή στη Φυσικοθεραπεία', 'components'=>array('Εισαγωγή στη Φυσικοθεραπεία — Θεωρία','Εισαγωγή στη Φυσικοθεραπεία — Εργαστήριο')),
+            array('label'=>'Βασικές Εφαρμογές Κομμωτικής I', 'components'=>array('Βασικές Εφαρμογές Κομμωτικής I — Εργαστήριο')),
+            array('label'=>'Οδοντοτεχνία I', 'components'=>array('Οδοντοτεχνία I — Θεωρία','Οδοντοτεχνία I — Εργαστήριο')),
+            array('label'=>'Φαρμακευτική Τεχνολογία Ι', 'components'=>array('Φαρμακευτική Τεχνολογία Ι — Θεωρία','Φαρμακευτική Τεχνολογία Ι — Εργαστήριο')),
+            array('label'=>'Ακτινολογία Ι', 'components'=>array('Ακτινολογία Ι — Θεωρία','Ακτινολογία Ι — Εργαστήριο')),
+        );
+    }
+
+    // Β΄ Π.ΕΠΑ.Λ. — Ναυτιλιακά: ρητή επιλογή ενός από δύο ειδικά μαθήματα.
+    if ($school === 'pepal' && $track === 'naval' && $subject === 'Ειδικό Μάθημα (1 από 2)') {
+        return array(
+            array('label'=>'Ναυτική Τέχνη - Έκτακτες Ανάγκες', 'subject'=>'Ναυτική Τέχνη - Έκτακτες Ανάγκες'),
+            array('label'=>'Αντοχή Υλικών - Εφαρμογές', 'subject'=>'Αντοχή Υλικών - Εφαρμογές'),
+        );
+    }
+
+    return null;
 }
 
 function teachingTimetableEneegylChoiceOptionsForRow($row)
@@ -233,6 +314,16 @@ function teachingTimetableAssignmentAliasForRow($row)
         }
     }
 
+    // Β΄ Π.ΕΠΑ.Λ.: ασφαλή aliases μόνο μέσα στον αντίστοιχο τομέα.
+    if (isset($row['school']) && $row['school'] === 'pepal'
+        && isset($row['hours']['Β΄']) && !empty($row['track'])) {
+        $pepalBAliases = teachingTimetablePepalBSubjectAliases();
+        $track = $row['track'];
+        if (isset($pepalBAliases[$track][$subject])) {
+            return $pepalBAliases[$track][$subject];
+        }
+    }
+
     // Γ΄ Π.ΕΠΑ.Λ.: οι παρακάτω αντιστοιχίσεις είναι ασφαλείς μόνο μέσα
     // στην αντίστοιχη ειδικότητα (ΦΕΚ Β΄ 5251/2023 ↔ Β΄ 5510/2023).
     if (isset($row['school']) && $row['school'] === 'pepal' && !empty($row['specialty'])) {
@@ -308,7 +399,10 @@ function teachingTimetableEnrichRows($rows)
             $rows[$index]['assignment_subject_alias'] = $alias;
         }
 
-        $choiceOptions = teachingTimetableEneegylChoiceOptionsForRow($row);
+        $choiceOptions = teachingTimetableVocationalChoiceOptionsForRow($row);
+        if ($choiceOptions === null) {
+            $choiceOptions = teachingTimetableEneegylChoiceOptionsForRow($row);
+        }
         if ($choiceOptions !== null) {
             $rows[$index]['assignment_link_status'] = 'choice_dependent';
             $rows[$index]['assignment_choice_options'] = $choiceOptions;
