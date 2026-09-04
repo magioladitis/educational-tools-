@@ -167,6 +167,45 @@ function teachingTimetableLanguageChoiceOptionsForRow($row)
     return null;
 }
 
+
+function teachingTimetablePepalAThematicSectionForRow($row)
+{
+    /*
+     * Α΄ Π.ΕΠΑ.Λ. — τα έξι μαθήματα Επαγγελματικής Κατεύθυνσης του
+     * ΦΕΚ Β΄ 3470/2021 είναι ενιαία εργαστηριακά blocks (2Ε/3Ε).
+     * Το ΦΕΚ αναθέσεων Β΄ 4367/2021 δεν κατανέμει τις ώρες σε ξεχωριστά
+     * «μαθήματα»: δίνει ενότητες και διαθεματικές αναθέσεις ανά ενότητα.
+     * Με το ΦΕΚ Β΄ 7403/2023 αποσαφηνίστηκε επιπλέον ότι η ανάθεση γίνεται
+     * με βάση τις ενότητες, τη συνάφεια/προσόντα και από τον Σύλλογο
+     * Διδασκόντων του Π.ΕΠΑ.Λ. ύστερα από εισήγηση του/της Διευθυντή/τριας.
+     *
+     * Άρα δεν επινοούμε per-topic ώρες και δεν χρησιμοποιούμε απλό alias.
+     * Κρατάμε σταθερή σύνδεση του ωρολογιακού block με ολόκληρη την
+     * αντίστοιχη ενότητα του dataset αναθέσεων.
+     */
+    if (!isset($row['school']) || $row['school'] !== 'pepal'
+        || !isset($row['hours']['Α΄'])
+        || !isset($row['group'])
+        || $row['group'] !== 'Μαθήματα Επαγγελματικής Κατεύθυνσης Προσανατολιστικού Χαρακτήρα') {
+        return null;
+    }
+
+    $subjects = array(
+        'Οικονομία, Διοίκηση',
+        'Κατασκευές, Παραγωγή και Βιομηχανία',
+        'Τέχνες και Πολιτισμός',
+        'Υγεία και Ευεξία',
+        'Γεωργία, Τρόφιμα και Περιβάλλον',
+        'Ενέργεια, Μεταφορές και Επικοινωνίες',
+    );
+    $subject = isset($row['subject']) ? $row['subject'] : '';
+    if (!in_array($subject, $subjects, true)) {
+        return null;
+    }
+
+    return 'Επαγγελματική Κατεύθυνση · ' . $subject;
+}
+
 function teachingTimetableVocationalChoiceOptionsForRow($row)
 {
     $school = isset($row['school']) ? $row['school'] : '';
@@ -450,6 +489,13 @@ function teachingTimetableEnrichRows($rows)
         $alias = teachingTimetableAssignmentAliasForRow($row);
         if ($alias !== null) {
             $rows[$index]['assignment_subject_alias'] = $alias;
+        }
+
+        $pepalAThematicSection = teachingTimetablePepalAThematicSectionForRow($row);
+        if ($pepalAThematicSection !== null) {
+            $rows[$index]['assignment_link_status'] = 'thematic_dependent';
+            $rows[$index]['assignment_section'] = $pepalAThematicSection;
+            $rows[$index]['assignment_link_note'] = 'Η ανάθεση του ενιαίου ωρολογιακού block γίνεται ανά θεματική ενότητα, με βάση το ΦΕΚ Β΄ 4367/2021 όπως τροποποιήθηκε με το ΦΕΚ Β΄ 7403/2023· δεν υφίσταται σταθερή κατανομή ωρών ανά ενότητα.';
         }
 
         $choiceOptions = teachingTimetableLanguageChoiceOptionsForRow($row);

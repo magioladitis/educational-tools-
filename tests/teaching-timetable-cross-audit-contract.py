@@ -128,11 +128,39 @@ for row in alias_rows:
         )
         check(f'safe alias resolves: {row.get("course_id")} / {grade}', exists)
 
-# P.P.EPAL A orientation blocks are intentionally NOT force-mapped: assignment data
-# is finer-grained than timetable hours, so inventing per-topic hours would be unsafe.
+# A' P.P.EPAL: the timetable has six integrated 2E/3E blocks, while the
+# assignment FEK works by thematic units inside each block. These must be
+# classified as thematic-dependent, never force-mapped to a single row and never
+# split into invented per-topic hours.
 pepal_a_blocks = [r for r in rows if r.get('school') == 'pepal' and r.get('group') == 'Μαθήματα Επαγγελματικής Κατεύθυνσης Προσανατολιστικού Χαρακτήρα']
 check('PEPAL A orientation blocks remain six', len(pepal_a_blocks) == 6)
-check('PEPAL A blocks remain structurally unresolved', all('assignment_subject_alias' not in r and 'assignment_components_by_grade' not in r for r in pepal_a_blocks))
+expected_pepal_a_hours = {
+    'Οικονομία, Διοίκηση': 2,
+    'Κατασκευές, Παραγωγή και Βιομηχανία': 3,
+    'Τέχνες και Πολιτισμός': 2,
+    'Υγεία και Ευεξία': 2,
+    'Γεωργία, Τρόφιμα και Περιβάλλον': 2,
+    'Ενέργεια, Μεταφορές και Επικοινωνίες': 2,
+}
+expected_pepal_a_section_rows = {
+    'Οικονομία, Διοίκηση': 3,
+    'Κατασκευές, Παραγωγή και Βιομηχανία': 15,
+    'Τέχνες και Πολιτισμός': 9,
+    'Υγεία και Ευεξία': 6,
+    'Γεωργία, Τρόφιμα και Περιβάλλον': 8,
+    'Ενέργεια, Μεταφορές και Επικοινωνίες': 10,
+}
+check('PEPAL A block titles exact', {r.get('subject') for r in pepal_a_blocks} == set(expected_pepal_a_hours))
+for row in pepal_a_blocks:
+    subject = row.get('subject')
+    section = 'Επαγγελματική Κατεύθυνση · ' + subject
+    check(f'PEPAL A block hours exact: {subject}', row.get('hours', {}).get('Α΄') == expected_pepal_a_hours[subject])
+    check(f'PEPAL A block thematic status: {subject}', row.get('assignment_link_status') == 'thematic_dependent')
+    check(f'PEPAL A block section bridge: {subject}', row.get('assignment_section') == section)
+    check(f'PEPAL A block not fake alias: {subject}', 'assignment_subject_alias' not in row and 'assignment_components_by_grade' not in row)
+    section_rows = [a for a in assignments if a.get('school') == 'pepal' and a.get('grade') == 'Α΄' and a.get('section') == section]
+    check(f'PEPAL A thematic rows count: {subject}', len(section_rows) == expected_pepal_a_section_rows[subject])
+    check(f'PEPAL A thematic rows carry assignments: {subject}', all(bool(a.get('special_codes')) for a in section_rows))
 
 # Non-regression metric: normalized public titles that already map directly to assignments.
 assignment_index = defaultdict(set)
@@ -157,7 +185,7 @@ for row in rows:
             direct_matches += 1
         # choice_dependent/regulatory_gap are deliberately not counted as fully
         # resolved even if their public title happens to match an assignment row.
-        if status in {'choice_dependent', 'regulatory_gap'}:
+        if status in {'choice_dependent', 'regulatory_gap', 'thematic_dependent'}:
             continue
         if direct:
             resolved_instances += 1
@@ -202,6 +230,15 @@ check('Music Gymnasium regulatory-gap instances classified', gap_by_school['mous
 check('Music Lyceum regulatory-gap instances classified', gap_by_school['mousiko_gel'] == 8)
 check('all regulatory-gap instances classified', status_instances['regulatory_gap'] == 29)
 
+thematic_by_school = Counter()
+for row in rows:
+    if row.get('assignment_link_status') != 'thematic_dependent':
+        continue
+    for _grade in row.get('hours', {}):
+        thematic_by_school[row.get('school')] += 1
+check('PEPAL thematic-dependent instances classified', thematic_by_school['pepal'] == 6)
+check('all thematic-dependent instances classified', status_instances['thematic_dependent'] == 6)
+
 # Every declared choice target must resolve to a real assignment row in the same
 # school/grade context. This protects the bridge against title drift in either dataset.
 for row in choice_rows:
@@ -234,12 +271,12 @@ for row in choice_rows:
                     set(option['codes']) <= assigned_codes,
                 )
 
-classified_instances = resolved_instances + status_instances['choice_dependent'] + status_instances['regulatory_gap']
-check('classified linkage non-regression', classified_instances >= 2017)
+classified_instances = resolved_instances + status_instances['choice_dependent'] + status_instances['regulatory_gap'] + status_instances['thematic_dependent']
+check('all timetable instances classified', classified_instances == total_instances)
 
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:
     print(('PASS' if ok else 'FAIL') + ': ' + name)
-print(f'AUDIT direct={direct_matches}/{total_instances} resolved={resolved_instances}/{total_instances} choice={status_instances["choice_dependent"]} regulatory_gap={status_instances["regulatory_gap"]} classified={classified_instances}/{total_instances} component_rows={len(component_rows)} aliases={len(alias_rows)}')
+print(f'AUDIT direct={direct_matches}/{total_instances} resolved={resolved_instances}/{total_instances} choice={status_instances["choice_dependent"]} thematic={status_instances["thematic_dependent"]} regulatory_gap={status_instances["regulatory_gap"]} classified={classified_instances}/{total_instances} component_rows={len(component_rows)} aliases={len(alias_rows)}')
 print(f'RESULT {len(checks)-len(failed)} PASS / {len(failed)} FAIL')
 raise SystemExit(1 if failed else 0)
