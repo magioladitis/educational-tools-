@@ -295,6 +295,7 @@
     var school = schoolSelect.value;
     var grade = gradeSelect.value;
     var track = trackField.hidden ? '' : trackSelect.value;
+    var specialty = specialtyField.hidden ? '' : specialtySelect.value;
     if (!school || !grade) {
       results.innerHTML = '<p class="help">Επίλεξε τύπο σχολείου και τάξη.</p>';
       summary.innerHTML = '';
@@ -328,15 +329,26 @@
       html += '<section class="timetable-group"><h3>' + esc(group) + '</h3>';
       grouped[group].forEach(function (row) {
         var details = [];
-        if (row.section) details.push('<span>' + esc(row.section) + '</span>');
-        if (row.conditionText) details.push('<strong>Προϋπόθεση:</strong> ' + esc(row.conditionText));
-        if (row.noteText) details.push(esc(row.noteText));
-        if (row.mode === 'alternative') details.push('Εναλλακτική διδασκαλία στην ίδια ωριαία ζώνη');
-        if (row.mode === 'choice') details.push('Επιλογή στην ίδια ωριαία ζώνη');
-        html += '<div class="result-row">'
-          + '<span><strong>' + esc(row.subject) + '</strong>'
-          + (details.length ? '<small>' + details.join(' · ') + '</small>' : '')
-          + '</span>'
+        if (row.section) {
+          details.push('<div class="timetable-course-detail timetable-course-section"><span class="timetable-detail-label">Ενότητα:</span> ' + esc(row.section) + '</div>');
+        }
+        if (row.conditionText) {
+          details.push('<div class="timetable-course-detail timetable-course-condition"><span class="timetable-detail-label">Προϋπόθεση:</span> ' + esc(row.conditionText) + '</div>');
+        }
+        if (row.noteText) {
+          details.push('<div class="timetable-course-detail timetable-course-note">' + esc(row.noteText) + '</div>');
+        }
+        if (row.mode === 'alternative') {
+          details.push('<div class="timetable-course-detail timetable-course-mode">Εναλλακτική διδασκαλία στην ίδια ωριαία ζώνη</div>');
+        }
+        if (row.mode === 'choice') {
+          details.push('<div class="timetable-course-detail timetable-course-mode">Επιλογή στην ίδια ωριαία ζώνη</div>');
+        }
+        html += '<div class="result-row timetable-course-row">'
+          + '<div class="timetable-course-content">'
+          + '<div class="timetable-course-title">' + esc(row.subject) + '</div>'
+          + (details.length ? '<div class="timetable-course-meta">' + details.join('') + '</div>' : '')
+          + '</div>'
           + '<span class="hours-badge">' + esc(hoursBadgeText(row)) + '</span>'
           + '</div>';
       });

@@ -31,35 +31,70 @@
   margin-top:8px;
 }
 .edu-page-weekly-timetable .timetable-group h3{
-  margin:0 0 8px;
-  padding-bottom:8px;
+  margin:0 0 4px;
+  padding:0 0 9px;
   border-bottom:1px solid var(--edu-result-row-separator);
   font-size:1.02rem;
+  line-height:1.35;
 }
-body.edu-ui.edu-calc-standard.edu-page-weekly-timetable .result-row{
+
+/*
+ * Timetable rows intentionally use their own semantic classes instead of the
+ * generic .result-row strong styles from common.css. This keeps course titles,
+ * notes and labels consistently left-aligned across every timetable type.
+ */
+body.edu-ui.edu-calc-standard.edu-page-weekly-timetable .result-row.timetable-course-row{
   display:grid;
   grid-template-columns:minmax(0,1fr) max-content;
   align-items:start;
-  column-gap:14px;
+  column-gap:16px;
+  padding:11px 0;
+  border-top:1px solid var(--edu-result-row-separator);
+  font-size:14px;
 }
-.edu-page-weekly-timetable .result-row > span:first-child{
+body.edu-ui.edu-calc-standard.edu-page-weekly-timetable .timetable-group h3 + .timetable-course-row{
+  border-top:0;
+}
+.edu-page-weekly-timetable .timetable-course-content{
   min-width:0;
-  padding-top:4px;
-  line-height:1.35;
 }
-.edu-page-weekly-timetable .result-row strong{
-  display:block;
+.edu-page-weekly-timetable .timetable-course-title{
+  margin:0;
+  color:var(--edu-text);
+  font-size:.96rem;
+  font-weight:750;
+  line-height:1.35;
   text-align:left;
 }
-.edu-page-weekly-timetable .result-row small{
-  display:block;
-  margin-top:3px;
+.edu-page-weekly-timetable .timetable-course-meta{
+  display:grid;
+  gap:3px;
+  margin-top:4px;
+}
+.edu-page-weekly-timetable .timetable-course-detail{
   color:var(--edu-muted);
-  line-height:1.35;
+  font-size:.84rem;
+  line-height:1.38;
+  text-align:left;
+}
+.edu-page-weekly-timetable .timetable-detail-label{
+  color:var(--edu-text);
+  font-weight:650;
+}
+.edu-page-weekly-timetable .timetable-course-section{
+  color:var(--edu-muted);
+}
+.edu-page-weekly-timetable .timetable-course-condition{
+  color:var(--edu-muted);
+}
+.edu-page-weekly-timetable .timetable-course-note{
+  color:var(--edu-muted);
+}
+.edu-page-weekly-timetable .timetable-course-mode{
+  font-style:italic;
 }
 .edu-page-weekly-timetable .hours-badge{
   align-self:start;
-  flex:0 0 auto;
   min-width:56px;
   padding:5px 9px;
   border-radius:999px;
@@ -68,11 +103,20 @@ body.edu-ui.edu-calc-standard.edu-page-weekly-timetable .result-row{
   text-align:center !important;
   font-weight:800;
   line-height:1.2;
+  white-space:nowrap;
 }
+
 @media (max-width:560px){
-  body.edu-ui.edu-calc-standard.edu-page-weekly-timetable .result-row{
+  body.edu-ui.edu-calc-standard.edu-page-weekly-timetable .result-row.timetable-course-row{
     grid-template-columns:minmax(0,1fr) auto;
     column-gap:10px;
+    padding:10px 0;
+  }
+  .edu-page-weekly-timetable .timetable-course-title{
+    font-size:.93rem;
+  }
+  .edu-page-weekly-timetable .timetable-course-detail{
+    font-size:.82rem;
   }
   .edu-page-weekly-timetable .hours-badge{
     min-width:52px;

@@ -9,6 +9,7 @@ DATA = (ROOT / 'includes' / 'weekly-timetable-data.php').read_text(encoding='utf
 GDATA = (ROOT / 'includes' / 'weekly-timetable-vocational-g-data.php').read_text(encoding='utf-8')
 PAGE = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
 TOOLS = (ROOT / 'ergaleia.php').read_text(encoding='utf-8')
+CSS = (ROOT / 'assets' / 'weekly-timetable.css').read_text(encoding='utf-8')
 
 checks = []
 def check(name, cond): checks.append((name, bool(cond)))
@@ -66,6 +67,11 @@ check('public religion ethics row is combined', "publicRow.subject = 'Θρησκ
 check('public roadmap UI removed', 'class="architecture-note"' not in PAGE and 'Έτοιμο για μελλοντική διασύνδεση με αναθέσεις' not in PAGE)
 check('internal course ids stay out of public UI', 'ID: ' not in PAGE and "row.course_id" not in PAGE)
 check('page has no inline style block', '<style>' not in PAGE)
+check('page uses semantic timetable row markup', 'timetable-course-row' in PAGE and 'timetable-course-title' in PAGE and 'timetable-course-meta' in PAGE and 'timetable-course-detail' in PAGE)
+check('timetable detail labels are explicit', 'Ενότητα:' in PAGE and 'Προϋπόθεση:' in PAGE and 'timetable-detail-label' in PAGE)
+check('render resolves specialty explicitly', "var specialty = specialtyField.hidden ? '' : specialtySelect.value;" in PAGE)
+check('timetable CSS owns title alignment', '.timetable-course-title' in CSS and 'text-align:left' in CSS)
+check('timetable CSS overrides generic result row layout', 'body.edu-ui.edu-calc-standard.edu-page-weekly-timetable .result-row.timetable-course-row' in CSS and 'grid-template-columns:minmax(0,1fr) max-content' in CSS)
 check('page uses dedicated stylesheet', 'assets/weekly-timetable.css' in PAGE and (ROOT / 'assets' / 'weekly-timetable.css').exists())
 check('tool card added', 'href="orologio-programma-mathimaton.php"' in TOOLS and '<span class="tool-number">31</span>' in TOOLS)
 check('tool directory count 31', '31 διαθέσιμα εργαλεία' in TOOLS and 'Εμφανίζονται 31 εργαλεία.' in TOOLS)
