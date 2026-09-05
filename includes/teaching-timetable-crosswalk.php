@@ -383,6 +383,78 @@ function teachingTimetableEneegylRegulatoryGapCourseIds()
     );
 }
 
+function teachingTimetableConfirmedRegulatoryGapMetadataForRow($row)
+{
+    /*
+     * Επιβεβαιωμένα κανονιστικά κενά 2026. Τα metadata είναι εσωτερικά και
+     * δεν δημοσιεύονται στο browser payload (weeklyTimetablePublicRows()).
+     *
+     * Κρίσιμος κανόνας για τη μελλοντική κατανομή ωρών: δεν μεταφέρουμε
+     * ανάθεση από άλλη τάξη/ειδικότητα ούτε επαναφέρουμε καταργημένη απόφαση
+     * μόνο επειδή ο τίτλος του μαθήματος μοιάζει ή ταυτίζεται.
+     */
+    $courseId = isset($row['course_id']) ? $row['course_id'] : '';
+
+    if (in_array($courseId, teachingTimetableEneegylRegulatoryGapCourseIds(), true)) {
+        return array(
+            'confirmed' => true,
+            'kind' => 'same_grade_assignment_missing',
+            'timetable_source' => 'ΦΕΚ Β΄ 2149/2026',
+            'assignment_source' => 'ΦΕΚ Β΄ 3216/2026',
+            'inference_guard' => 'no_cross_grade_or_specialty_borrow',
+            'related_scope' => 'Δ΄ τάξη / πίνακες ειδικοτήτων, όπου υπάρχει ίδιο ή συναφές μάθημα',
+        );
+    }
+
+    if (in_array($courseId, array('mgym.theatro', 'mgym.istoria_texnis'), true)) {
+        return array(
+            'confirmed' => true,
+            'kind' => 'current_timetable_subject_missing_from_current_assignment_tables',
+            'timetable_source' => 'ΦΕΚ Β΄ 2107/2026',
+            'assignment_source' => 'ΦΕΚ Β΄ 4202/2018 + ΦΕΚ Β΄ 2583/2026',
+            'inference_guard' => 'do_not_revive_repealed_2015_assignment',
+            'related_scope' => 'Υ.Α. 94541/Δ2/2015 (ΦΕΚ Β΄ 1356/2015), καταργημένη από το ΦΕΚ Β΄ 4202/2018',
+        );
+    }
+
+    if ($courseId === 'mgel.music.elliniki_paradosiaki'
+        || $courseId === 'mgel.c.choice.elliniki_paradosiaki'
+        || $courseId === 'mgel.c.choice.analysi_partitouras'
+        || $courseId === 'mgel.c.choice.choral') {
+        return array(
+            'confirmed' => true,
+            'kind' => 'current_timetable_subject_missing_from_music_assignment_table',
+            'timetable_source' => 'ΦΕΚ Β΄ 2107/2026',
+            'assignment_source' => 'ΦΕΚ Β΄ 4202/2018',
+            'inference_guard' => 'no_title_similarity_inference',
+        );
+    }
+
+    if ($courseId === 'mgel.c.choice.mousiko_keimeno') {
+        return array(
+            'confirmed' => true,
+            'kind' => 'assignment_exists_only_other_grade',
+            'timetable_source' => 'ΦΕΚ Β΄ 2107/2026',
+            'assignment_source' => 'ΦΕΚ Β΄ 4202/2018',
+            'inference_guard' => 'no_cross_grade_borrow',
+            'related_scope' => 'Ρητή ανάθεση μόνο ως επιλογή Α΄ Λυκείου',
+        );
+    }
+
+    if ($courseId === 'mgel.c.choice.ixolipsia2') {
+        return array(
+            'confirmed' => true,
+            'kind' => 'new_course_version_without_explicit_assignment',
+            'timetable_source' => 'ΦΕΚ Β΄ 2107/2026',
+            'assignment_source' => 'ΦΕΚ Β΄ 4202/2018',
+            'inference_guard' => 'do_not_map_version_ii_to_first_course',
+            'related_scope' => 'Το ΦΕΚ Β΄ 4202/2018 αναθέτει μόνο «Στοιχειώδεις Αρχές Ηχοληψίας» ως επιλογή Α΄ Λυκείου',
+        );
+    }
+
+    return null;
+}
+
 function teachingTimetableSplitTheoryLabSubjects()
 {
     /* Audited set: το ωρολόγιο έχει μία ενιαία γραμμή Θ+Ε, ενώ οι αναθέσεις
@@ -560,7 +632,20 @@ function teachingTimetableEnrichRows($rows)
         $courseId = isset($row['course_id']) ? $row['course_id'] : '';
         if (isset($eneegylGapIds[$courseId])) {
             $rows[$index]['assignment_link_status'] = 'regulatory_gap';
-            $rows[$index]['assignment_link_note'] = 'Το μάθημα υπάρχει στο ωρολόγιο ΦΕΚ Β΄ 2149/2026, χωρίς αντίστοιχη γραμμή στον πίνακα αναθέσεων Β΄/Γ΄ του ΦΕΚ Β΄ 3216/2026.';
+            $rows[$index]['assignment_link_note'] = 'Το μάθημα υπάρχει στο ωρολόγιο ΦΕΚ Β΄ 2149/2026, χωρίς αντίστοιχη γραμμή στον πίνακα αναθέσεων Β΄/Γ΄ του ΦΕΚ Β΄ 3216/2026. Δεν δανειζόμαστε ανάθεση από τη Δ΄ τάξη ή από άλλο κανονιστικό context.';
+        }
+
+        $gapMetadata = teachingTimetableConfirmedRegulatoryGapMetadataForRow($rows[$index]);
+        if ($gapMetadata !== null) {
+            $rows[$index]['assignment_link_status'] = 'regulatory_gap';
+            $rows[$index]['assignment_gap_confirmed'] = $gapMetadata['confirmed'];
+            $rows[$index]['assignment_gap_kind'] = $gapMetadata['kind'];
+            $rows[$index]['assignment_gap_timetable_source'] = $gapMetadata['timetable_source'];
+            $rows[$index]['assignment_gap_assignment_source'] = $gapMetadata['assignment_source'];
+            $rows[$index]['assignment_gap_inference_guard'] = $gapMetadata['inference_guard'];
+            if (isset($gapMetadata['related_scope'])) {
+                $rows[$index]['assignment_gap_related_scope'] = $gapMetadata['related_scope'];
+            }
         }
 
         $subject = isset($row['subject']) ? $row['subject'] : '';
