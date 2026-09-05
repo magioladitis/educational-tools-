@@ -100,11 +100,14 @@ function staffingUiPersonnelReasonLabel($reason) {
         'de_hours_scale_requires_explicit_architect_or_technician' => 'Για κλάδο ΔΕ χρειάζεται ρητή επιλογή κλίμακας ωραρίου Αρχιτεχνίτη ή Τεχνίτη.',
         'unknown_hours_branch' => 'Η επιλεγμένη κλίμακα ωραρίου δεν είναι έγκυρη.',
         'unsupported_specialty_for_secondary_hours' => 'Ο κλάδος δεν υποστηρίζεται από τον υπολογισμό ωραρίου Δευτεροβάθμιας.',
+        'required_teaching_hours_required' => 'Συμπλήρωσε το υποχρεωτικό διδακτικό ωράριο του εκπαιδευτικού.',
+        'required_teaching_hours_invalid' => 'Το υποχρεωτικό διδακτικό ωράριο πρέπει να είναι ακέραιος αριθμός από 1 έως 35 ώρες.',
+        'required_teaching_hours_exceeds_pe_max' => 'Για κλάδο ΠΕ το υποχρεωτικό διδακτικό ωράριο δεν μπορεί να ξεπερνά τις 23 ώρες.',
     );
     return isset($map[$reason]) ? $map[$reason] : $reason;
 }
 function staffingUiPersonnelRowsFromPost() {
-    $keys = array('person_id','display_name','specialty_code','service_years','service_months','service_days','role','assigned_external_hours','director_sections_band','hours_branch');
+    $keys = array('person_id','display_name','specialty_code','required_teaching_hours','service_years','service_months','service_days','role','assigned_external_hours','director_sections_band','hours_branch');
     $arrays = array();
     $count = 0;
     foreach ($keys as $key) {
@@ -116,6 +119,7 @@ function staffingUiPersonnelRowsFromPost() {
     for ($i=0; $i<$count; $i++) {
         $name = isset($arrays['display_name'][$i]) ? trim((string)$arrays['display_name'][$i]) : '';
         $specialty = isset($arrays['specialty_code'][$i]) ? teacherSpecialtyCanonicalCode($arrays['specialty_code'][$i]) : '';
+        $requiredHours = isset($arrays['required_teaching_hours'][$i]) ? trim((string)$arrays['required_teaching_hours'][$i]) : '';
         $years = isset($arrays['service_years'][$i]) ? (string)$arrays['service_years'][$i] : '';
         $months = isset($arrays['service_months'][$i]) ? (string)$arrays['service_months'][$i] : '';
         $days = isset($arrays['service_days'][$i]) ? (string)$arrays['service_days'][$i] : '';
@@ -131,6 +135,7 @@ function staffingUiPersonnelRowsFromPost() {
             'person_id'=>$id,
             'display_name'=>$name,
             'specialty_code'=>$specialty,
+            'required_teaching_hours'=>$requiredHours,
             'service'=>array('years'=>$years === '' ? 0 : $years,'months'=>$months === '' ? 0 : $months,'days'=>$days === '' ? 0 : $days),
             'role'=>$role,
             'assigned_external_hours'=>$external === '' ? 0 : $external,
@@ -164,6 +169,7 @@ function staffingUiRenderPersonnelStateHiddenInputs($rows) {
         echo '<input type="hidden" name="personnel_person_id[]" value="' . staffingUiH($person['person_id']) . '">';
         echo '<input type="hidden" name="personnel_display_name[]" value="' . staffingUiH($person['display_name']) . '">';
         echo '<input type="hidden" name="personnel_specialty_code[]" value="' . staffingUiH($person['specialty_code']) . '">';
+        echo '<input type="hidden" name="personnel_required_teaching_hours[]" value="' . staffingUiH(isset($person['required_teaching_hours']) ? $person['required_teaching_hours'] : '') . '">';
         echo '<input type="hidden" name="personnel_service_years[]" value="' . staffingUiH(isset($person['service']['years']) ? $person['service']['years'] : 0) . '">';
         echo '<input type="hidden" name="personnel_service_months[]" value="' . staffingUiH(isset($person['service']['months']) ? $person['service']['months'] : 0) . '">';
         echo '<input type="hidden" name="personnel_service_days[]" value="' . staffingUiH(isset($person['service']['days']) ? $person['service']['days'] : 0) . '">';
@@ -679,6 +685,8 @@ foreach ($allocationSlots as $slotId=>$slot) {
     .edu-page-staffing-simulator .personnel-row-main .metric{padding:8px 10px;border-radius:9px;background:var(--edu-surface-soft);min-height:42px}
     .edu-page-staffing-simulator .personnel-row-main .metric strong{display:block;font-size:1.05rem;color:var(--edu-primary-dark);font-variant-numeric:tabular-nums}
     .edu-page-staffing-simulator .personnel-row-main .metric span{font-size:11.5px;color:var(--edu-muted)}
+    .edu-page-staffing-simulator .personnel-required[readonly]{background:var(--edu-surface-soft);color:var(--edu-primary-dark);font-weight:800}
+    .edu-page-staffing-simulator .personnel-service-fields[hidden]{display:none!important}
     .edu-page-staffing-simulator .personnel-row details{border-top:1px solid var(--edu-result-row-separator)}
     .edu-page-staffing-simulator .personnel-row details>summary{cursor:pointer;padding:9px 12px;font-weight:700;color:var(--edu-muted);list-style:none}
     .edu-page-staffing-simulator .personnel-row details>summary::-webkit-details-marker{display:none}
@@ -1046,7 +1054,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
                 <summary>Αντιστοίχιση στηλών CSV</summary>
                 <div class="option-panel-body">
                   <div class="personnel-csv-mappings" id="personnelCsvMappings"></div>
-                  <p class="help">Απαραίτητος είναι ο <strong>Κλάδος / ειδικότητα</strong>. Το ονοματεπώνυμο μπορεί να προέρχεται από μία στήλη ή από χωριστές στήλες Επώνυμο + Όνομα. Η προϋπηρεσία μπορεί επίσης να δοθεί είτε σε χωριστές στήλες είτε σε μία ενιαία στήλη.</p>
+                  <p class="help">Απαραίτητος είναι ο <strong>Κλάδος / ειδικότητα</strong>. Για απλό εκπαιδευτικό δήλωσε απευθείας το <strong>υποχρεωτικό διδακτικό ωράριο</strong>. Τα έτη/μήνες/ημέρες υπηρεσίας χρησιμοποιούνται μόνο όταν ο ρόλος είναι Διευθυντής/ντρια ή Υποδιευθυντής/ντρια. Το ονοματεπώνυμο μπορεί να προέρχεται από μία στήλη ή από χωριστές στήλες Επώνυμο + Όνομα.</p>
                 </div>
               </details>
               <div class="personnel-csv-preview" id="personnelCsvPreview" hidden></div>
@@ -1060,6 +1068,8 @@ foreach ($allocationSlots as $slotId=>$slot) {
               <div class="personnel-csv-status" id="personnelCsvStatus"></div>
             </div>
 
+            <div class="info-note"><strong>Το υποχρεωτικό ωράριο του απλού εκπαιδευτικού καταχωρίζεται απευθείας.</strong> Αν δεν το γνωρίζεις, χρησιμοποίησε τον <a href="ypologismos-didaktikou-orariou.php">Υπολογισμό υποχρεωτικού διδακτικού ωραρίου</a> και επέστρεψε εδώ με το αποτέλεσμα. Για Διευθυντή/Υποδιευθυντή το ωράριο υπολογίζεται από τον ρόλο και την υπηρεσία.</div>
+
             <div class="personnel-list" id="personnelList">
               <?php if (empty($personnelRows)): ?>
                 <div class="empty-personnel" id="emptyPersonnelState">Δεν έχει προστεθεί ακόμη εκπαιδευτικός. Πάτησε «+ Προσθήκη εκπαιδευτικού» ή «Εισαγωγή CSV» για να ξεκινήσεις.</div>
@@ -1069,6 +1079,9 @@ foreach ($allocationSlots as $slotId=>$slot) {
                   $eval = isset($personnelEvaluations[$person['person_id']]) ? $personnelEvaluations[$person['person_id']] : array('status'=>'invalid','reason'=>'unknown');
                   $resolved = isset($eval['status']) && $eval['status'] === 'resolved';
                   $requiredHours = $resolved ? (int)$eval['required_teaching_hours'] : null;
+                  $manualRequiredHours = isset($person['required_teaching_hours']) ? trim((string)$person['required_teaching_hours']) : '';
+                  $requiredInputHours = $person['role'] === 'teacher' ? $manualRequiredHours : ($requiredHours === null ? '' : (string)$requiredHours);
+                  $manualRequiredHoursMax = ($person['role'] === 'teacher' && strpos(teacherSpecialtyCanonicalCode($person['specialty_code']), 'ΠΕ') === 0) ? 23 : 35;
                   $availableHours = $resolved ? (int)$eval['remaining_before_profile_hours'] : null;
                   $externalHours = isset($person['assigned_external_hours']) ? (int)$person['assigned_external_hours'] : 0;
                   $selectedCode = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
@@ -1084,7 +1097,10 @@ foreach ($allocationSlots as $slotId=>$slot) {
                       <label>Ονοματεπώνυμο</label>
                       <input type="text" name="personnel_display_name[]" class="personnel-name" value="<?php echo staffingUiH($person['display_name']); ?>" placeholder="π.χ. Μαρία Παπαδοπούλου">
                     </div>
-                    <div class="metric"><strong data-required-hours><?php echo $requiredHours === null ? '—' : $requiredHours; ?></strong><span>υποχρεωτικό</span></div>
+                    <div class="field">
+                      <label>Υποχρεωτικό ωράριο</label>
+                      <input type="number" min="1" max="<?php echo (int)$manualRequiredHoursMax; ?>" step="1" name="personnel_required_teaching_hours[]" class="personnel-required" data-required-hours data-manual-value="<?php echo staffingUiH($manualRequiredHours); ?>" value="<?php echo staffingUiH($requiredInputHours); ?>"<?php echo $person['role'] === 'teacher' ? ' required' : ' readonly'; ?>>
+                    </div>
                     <div class="field">
                       <label>Ώρες αλλού</label>
                       <input type="number" min="0" max="35" step="1" name="personnel_assigned_external_hours[]" class="personnel-external" value="<?php echo $externalHours; ?>">
@@ -1092,10 +1108,10 @@ foreach ($allocationSlots as $slotId=>$slot) {
                     <div class="metric"><strong data-available-hours><?php echo $availableHours === null ? '—' : $availableHours; ?></strong><span>διαθέσιμο εδώ</span></div>
                     <button type="button" class="personnel-remove" title="Αφαίρεση εκπαιδευτικού">Αφαίρεση</button>
                   </div>
-                  <details<?php echo !$resolved ? ' open' : ''; ?>>
-                    <summary>Στοιχεία υπολογισμού ωραρίου<?php if ($resolved && !empty($eval['obligation']['service_label'])): ?> · <?php echo staffingUiH($eval['obligation']['service_label']); ?><?php endif; ?></summary>
+                  <details<?php echo $person['role'] !== 'teacher' || !$resolved ? ' open' : ''; ?>>
+                    <summary>Ρόλος και στοιχεία διοίκησης<?php if ($person['role'] !== 'teacher' && $resolved && !empty($eval['obligation']['service_label'])): ?> · <?php echo staffingUiH($eval['obligation']['service_label']); ?><?php endif; ?></summary>
                     <div class="personnel-row-details">
-                      <div class="mini-grid">
+                      <div class="mini-grid personnel-service-fields"<?php echo $person['role'] === 'teacher' ? ' hidden' : ''; ?>>
                         <div class="field"><label>Έτη υπηρεσίας</label><input type="number" min="0" max="50" step="1" name="personnel_service_years[]" class="personnel-years" value="<?php echo staffingUiH($person['service']['years']); ?>"></div>
                         <div class="field"><label>Μήνες</label><input type="number" min="0" max="11" step="1" name="personnel_service_months[]" class="personnel-months" value="<?php echo staffingUiH($person['service']['months']); ?>"></div>
                         <div class="field"><label>Ημέρες</label><input type="number" min="0" max="29" step="1" name="personnel_service_days[]" class="personnel-days" value="<?php echo staffingUiH($person['service']['days']); ?>"></div>
@@ -1111,14 +1127,6 @@ foreach ($allocationSlots as $slotId=>$slot) {
                           <label>Τμήματα σχολικής μονάδας <small>αυτόματα</small></label>
                           <div class="summary-chip personnel-director-section-info"><strong data-director-section-count><?php echo (int)$generalSectionTotal; ?></strong><span data-director-section-band><?php echo $directorSectionsBandAuto ? 'κλίμακα ' . staffingUiH($directorSectionsBandAuto) : 'χρειάζονται τα κανονικά τμήματα'; ?></span></div>
                         </div>
-                        <div class="field personnel-de-branch"<?php echo strpos($selectedCode, 'ΔΕ') === 0 ? '' : ' hidden'; ?>>
-                          <label>Κλίμακα ωραρίου ΔΕ</label>
-                          <select name="personnel_hours_branch[]" class="personnel-hours-branch">
-                            <option value="">— επιλογή —</option>
-                            <option value="DE01_ARCH"<?php echo $person['hours_branch'] === 'DE01_ARCH' ? ' selected' : ''; ?>>Αρχιτεχνίτης</option>
-                            <option value="DE01_TECH"<?php echo $person['hours_branch'] === 'DE01_TECH' ? ' selected' : ''; ?>>Τεχνίτης</option>
-                          </select>
-                        </div>
                       </div>
                       <?php if ($resolved && !empty($eval['obligation']['rule'])): ?><p class="help" data-personnel-rule><?php echo staffingUiH($eval['obligation']['rule']); ?></p><?php else: ?><p class="help" data-personnel-rule></p><?php endif; ?>
                     </div>
@@ -1129,7 +1137,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
             </div>
 
             <div class="actions">
-              <button class="edu-btn-primary" type="button" data-staffing-request-action="personnel">Υπολόγισε ωράρια προσωπικού</button>
+              <button class="edu-btn-primary" type="button" data-staffing-request-action="personnel">Έλεγχος ωραρίων προσωπικού</button>
             </div>
           </form>
 
@@ -1139,15 +1147,15 @@ foreach ($allocationSlots as $slotId=>$slot) {
               <div class="personnel-row-main">
                 <div class="field"><label>Κλάδος</label><select name="personnel_specialty_code[]" class="personnel-specialty"><?php staffingUiRenderPersonnelSpecialtyOptions($personnelSpecialtyOptions, ''); ?></select></div>
                 <div class="field"><label>Ονοματεπώνυμο</label><input type="text" name="personnel_display_name[]" class="personnel-name" placeholder="π.χ. Μαρία Παπαδοπούλου"></div>
-                <div class="metric"><strong data-required-hours>—</strong><span>υποχρεωτικό</span></div>
+                <div class="field"><label>Υποχρεωτικό ωράριο</label><input type="number" min="1" max="35" step="1" name="personnel_required_teaching_hours[]" class="personnel-required" data-required-hours data-manual-value="" value="" required></div>
                 <div class="field"><label>Ώρες αλλού</label><input type="number" min="0" max="35" step="1" name="personnel_assigned_external_hours[]" class="personnel-external" value="0"></div>
                 <div class="metric"><strong data-available-hours>—</strong><span>διαθέσιμο εδώ</span></div>
                 <button type="button" class="personnel-remove" title="Αφαίρεση εκπαιδευτικού">Αφαίρεση</button>
               </div>
-              <details open>
-                <summary>Στοιχεία υπολογισμού ωραρίου</summary>
+              <details>
+                <summary>Ρόλος και στοιχεία διοίκησης</summary>
                 <div class="personnel-row-details">
-                  <div class="mini-grid">
+                  <div class="mini-grid personnel-service-fields" hidden>
                     <div class="field"><label>Έτη υπηρεσίας</label><input type="number" min="0" max="50" step="1" name="personnel_service_years[]" class="personnel-years" value="0"></div>
                     <div class="field"><label>Μήνες</label><input type="number" min="0" max="11" step="1" name="personnel_service_months[]" class="personnel-months" value="0"></div>
                     <div class="field"><label>Ημέρες</label><input type="number" min="0" max="29" step="1" name="personnel_service_days[]" class="personnel-days" value="0"></div>
@@ -1155,7 +1163,6 @@ foreach ($allocationSlots as $slotId=>$slot) {
                   <div class="mini-grid">
                     <div class="field"><label>Ρόλος</label><select name="personnel_role[]" class="personnel-role"><option value="teacher">Εκπαιδευτικός</option><option value="director">Διευθυντής/ντρια</option><option value="vice_or_sector">Υποδιευθυντής/ντρια</option></select></div>
                     <div class="field personnel-director-band" hidden><label>Τμήματα σχολικής μονάδας <small>αυτόματα</small></label><div class="summary-chip personnel-director-section-info"><strong data-director-section-count>—</strong><span data-director-section-band>από τα κανονικά τμήματα</span></div></div>
-                    <div class="field personnel-de-branch" hidden><label>Κλίμακα ωραρίου ΔΕ</label><select name="personnel_hours_branch[]" class="personnel-hours-branch"><option value="">— επιλογή —</option><option value="DE01_ARCH">Αρχιτεχνίτης</option><option value="DE01_TECH">Τεχνίτης</option></select></div>
                   </div>
                   <p class="help" data-personnel-rule></p>
                 </div>
@@ -1447,13 +1454,13 @@ foreach ($allocationSlots as $slotId=>$slot) {
     {key:'display_name',label:'Ονοματεπώνυμο'},
     {key:'surname',label:'Επώνυμο'},
     {key:'given_name',label:'Όνομα'},
-    {key:'service_years',label:'Έτη υπηρεσίας'},
-    {key:'service_months',label:'Μήνες υπηρεσίας'},
-    {key:'service_days',label:'Ημέρες υπηρεσίας'},
-    {key:'service_combined',label:'Προϋπηρεσία (ενιαία στήλη)'},
+    {key:'required_teaching_hours',label:'Υποχρεωτικό διδακτικό ωράριο'},
     {key:'role',label:'Ρόλος'},
-    {key:'assigned_external_hours',label:'Ώρες σε άλλη μονάδα'},
-    {key:'hours_branch',label:'Κλίμακα ωραρίου ΔΕ'}
+    {key:'service_years',label:'Έτη υπηρεσίας (μόνο διοίκηση)'},
+    {key:'service_months',label:'Μήνες υπηρεσίας (μόνο διοίκηση)'},
+    {key:'service_days',label:'Ημέρες υπηρεσίας (μόνο διοίκηση)'},
+    {key:'service_combined',label:'Προϋπηρεσία ενιαία (μόνο διοίκηση)'},
+    {key:'assigned_external_hours',label:'Ώρες σε άλλη μονάδα'}
   ];
 
   function schoolGeneralSectionCount(){
@@ -1482,67 +1489,112 @@ foreach ($allocationSlots as $slotId=>$slot) {
     return {count:count,band:band};
   }
 
-  function specialtyBranch(code,row){
-    code=(code||'').trim();
-    if(code.indexOf('ΠΕ')===0) return 'PE';
-    if(code.indexOf('ΤΕ')===0) return 'TE01';
-    if(code.indexOf('ΔΕ')===0){
-      const explicit=row.querySelector('.personnel-hours-branch');
-      return explicit && explicit.value ? explicit.value : '';
-    }
-    return '';
-  }
   function updatePersonnelRow(row){
-    if(!row || !window.EducationTeachingHours) return;
+    if(!row) return;
     const specialty=row.querySelector('.personnel-specialty');
     const years=row.querySelector('.personnel-years');
     const months=row.querySelector('.personnel-months');
     const days=row.querySelector('.personnel-days');
     const role=row.querySelector('.personnel-role');
+    const requiredInput=row.querySelector('.personnel-required');
     const external=row.querySelector('.personnel-external');
+    const serviceWrap=row.querySelector('.personnel-service-fields');
     const directorBandWrap=row.querySelector('.personnel-director-band');
-    const deWrap=row.querySelector('.personnel-de-branch');
     const rule=row.querySelector('[data-personnel-rule]');
     const error=row.querySelector('[data-personnel-error]');
-    const requiredEl=row.querySelector('[data-required-hours]');
     const availableEl=row.querySelector('[data-available-hours]');
-    const branch=specialtyBranch(specialty?specialty.value:'',row);
-    if(directorBandWrap) directorBandWrap.hidden=!(role && role.value==='director');
-    if(deWrap) deWrap.hidden=!(specialty && specialty.value.indexOf('ΔΕ')===0);
+    const roleValue=role?role.value:'teacher';
+    const managementRole=roleValue==='director'||roleValue==='vice_or_sector';
+    if(serviceWrap) serviceWrap.hidden=!managementRole;
+    if(directorBandWrap) directorBandWrap.hidden=roleValue!=='director';
+    if(requiredInput){
+      if(managementRole){
+        if(!requiredInput.readOnly) requiredInput.dataset.manualValue=requiredInput.value||'';
+        requiredInput.readOnly=true;
+        requiredInput.required=false;
+        requiredInput.setCustomValidity('');
+      }else{
+        if(requiredInput.readOnly){
+          requiredInput.readOnly=false;
+          requiredInput.value=requiredInput.dataset.manualValue||'';
+        }
+        requiredInput.required=true;
+      }
+    }
+    const code=specialty?specialty.value:'';
+    const manualHoursMax=code.indexOf('ΠΕ')===0 ? 23 : 35;
+    if(requiredInput && !managementRole) requiredInput.max=String(manualHoursMax);
+    const name=(row.querySelector('.personnel-name')||{}).value||'';
+    row.setAttribute('data-search',code+' '+name);
     if(!specialty || !specialty.value){
-      requiredEl.textContent='—'; availableEl.textContent='—'; if(rule) rule.textContent=''; if(error){error.hidden=true;error.textContent='';} return;
+      if(managementRole && requiredInput) requiredInput.value='';
+      if(availableEl) availableEl.textContent='—';
+      if(rule) rule.textContent='';
+      if(error){error.hidden=false;error.textContent='Επίλεξε κλάδο / ειδικότητα.';}
+      return;
     }
-    if(!branch){
-      requiredEl.textContent='—'; availableEl.textContent='—'; if(rule) rule.textContent=''; if(error){error.hidden=false;error.textContent='Χρειάζεται επιλογή κλίμακας ωραρίου για τον κλάδο ΔΕ.';} return;
+
+    let required=0;
+    if(managementRole){
+      if(!window.EducationTeachingHours){
+        if(requiredInput) requiredInput.value='';
+        if(availableEl) availableEl.textContent='—';
+        if(error){error.hidden=false;error.textContent='Δεν φορτώθηκε ο υπολογισμός ωραρίου διοικητικών ρόλων.';}
+        return;
+      }
+      const directorSectionInfo=updateDirectorSectionInfo(row);
+      if(roleValue==='director' && !directorSectionInfo.band){
+        if(requiredInput) requiredInput.value='';
+        if(availableEl) availableEl.textContent='—';
+        if(rule) rule.textContent='';
+        if(error){error.hidden=false;error.textContent='Για Διευθυντή/ντρια χρειάζονται τα δηλωμένα κανονικά τμήματα της σχολικής μονάδας.';}
+        return;
+      }
+      const result=window.EducationTeachingHours.secondary({
+        branch:'PE',
+        role:roleValue,
+        years:years?years.value:0,
+        months:months?months.value:0,
+        days:days?days.value:0,
+        sections:directorSectionInfo.band
+      });
+      if(!result || !result.valid){
+        if(requiredInput) requiredInput.value='';
+        if(availableEl) availableEl.textContent='—';
+        if(rule) rule.textContent='';
+        if(error){error.hidden=false;error.textContent=(result&&result.error)?result.error:'Δεν μπορεί να υπολογιστεί το ωράριο της διοικητικής θέσης.';}
+        return;
+      }
+      required=Math.max(0,parseInt(result.hours,10)||0);
+      if(requiredInput) requiredInput.value=String(required);
+      if(rule) rule.textContent=result.rule||'';
+    }else{
+      const raw=requiredInput?String(requiredInput.value||'').trim():'';
+      const parsedRaw=/^\d+$/.test(raw) ? parseInt(raw,10) : NaN;
+      const invalidMessage=code.indexOf('ΠΕ')===0 && Number.isFinite(parsedRaw) && parsedRaw>23
+        ? 'Για κλάδο ΠΕ το υποχρεωτικό διδακτικό ωράριο δεν μπορεί να ξεπερνά τις 23 ώρες.'
+        : 'Το υποχρεωτικό ωράριο πρέπει να είναι ακέραιος αριθμός από 1 έως '+manualHoursMax+' ώρες.';
+      if(raw==='' || !Number.isFinite(parsedRaw) || parsedRaw<1 || parsedRaw>manualHoursMax){
+        if(requiredInput) requiredInput.setCustomValidity(raw===''?'Συμπλήρωσε το υποχρεωτικό διδακτικό ωράριο.':invalidMessage);
+        if(availableEl) availableEl.textContent='—';
+        if(rule) rule.textContent='';
+        if(error){error.hidden=false;error.textContent=raw===''?'Συμπλήρωσε το υποχρεωτικό διδακτικό ωράριο.':invalidMessage;}
+        return;
+      }
+      required=parseInt(raw,10);
+      requiredInput.setCustomValidity('');
+      requiredInput.dataset.manualValue=String(required);
+      if(rule) rule.textContent='Το υποχρεωτικό διδακτικό ωράριο δηλώνεται απευθείας από τον χρήστη.';
     }
-    const directorSectionInfo=updateDirectorSectionInfo(row);
-    if(role && role.value==='director' && !directorSectionInfo.band){
-      requiredEl.textContent='—'; availableEl.textContent='—'; if(rule) rule.textContent=''; if(error){error.hidden=false;error.textContent='Για Διευθυντή/ντρια χρειάζονται τα δηλωμένα κανονικά τμήματα της σχολικής μονάδας.';} return;
-    }
-    const result=window.EducationTeachingHours.secondary({
-      branch:branch,
-      role:role?role.value:'teacher',
-      years:years?years.value:0,
-      months:months?months.value:0,
-      days:days?days.value:0,
-      sections:directorSectionInfo.band
-    });
-    if(!result || !result.valid){
-      requiredEl.textContent='—'; availableEl.textContent='—'; if(rule) rule.textContent=''; if(error){error.hidden=false;error.textContent=(result&&result.error)?result.error:'Δεν μπορεί να υπολογιστεί το ωράριο.';} return;
-    }
-    const required=Math.max(0,parseInt(result.hours,10)||0);
+
     const ext=Math.max(0,parseInt(external&&external.value?external.value:'0',10)||0);
-    requiredEl.textContent=String(required);
-    availableEl.textContent=String(Math.max(0,required-ext));
-    if(rule) rule.textContent=result.rule||'';
+    if(availableEl) availableEl.textContent=String(Math.max(0,required-ext));
     if(error){
       if(ext>required){error.hidden=false;error.textContent='Οι ώρες σε άλλη μονάδα υπερβαίνουν το υποχρεωτικό ωράριο κατά '+(ext-required)+' ώρες.';}
       else{error.hidden=true;error.textContent='';}
     }
-    const code=specialty.value||'';
-    const name=(row.querySelector('.personnel-name')||{}).value||'';
-    row.setAttribute('data-search',code+' '+name);
   }
+
   function bindPersonnelRow(row){
     if(!row || row.dataset.initialized==='1') return;
     row.dataset.initialized='1';
@@ -1596,9 +1648,9 @@ foreach ($allocationSlots as $slotId=>$slot) {
     const years=row.querySelector('.personnel-years'); if(years) years.value=String(person.service_years||0);
     const months=row.querySelector('.personnel-months'); if(months) months.value=String(person.service_months||0);
     const days=row.querySelector('.personnel-days'); if(days) days.value=String(person.service_days||0);
+    const required=row.querySelector('.personnel-required'); if(required){ required.value=person.required_teaching_hours==null?'':String(person.required_teaching_hours); required.dataset.manualValue=required.value; }
     const role=row.querySelector('.personnel-role'); if(role) role.value=person.role||'teacher';
     const external=row.querySelector('.personnel-external'); if(external) external.value=String(person.assigned_external_hours||0);
-    const hoursBranch=row.querySelector('.personnel-hours-branch'); if(hoursBranch) hoursBranch.value=person.hours_branch||'';
     personnelList.appendChild(fragment);
     bindPersonnelRow(row);
     if(code && !matched){
@@ -1708,13 +1760,13 @@ foreach ($allocationSlots as $slotId=>$slot) {
       let msg='Εισήχθησαν '+imported+' εκπαιδευτικοί.';
       if(skipped) msg+=' Παραλείφθηκαν '+skipped+' κενές εγγραφές.';
       if(unknown) msg+=' '+unknown+' εγγραφές έχουν μη αναγνωρισμένο κλάδο και χρειάζονται χειροκίνητο έλεγχο.';
-      msg+=' Πάτησε «Υπολόγισε ωράρια προσωπικού» για να ενημερωθεί και η σύνοψη ανά κλάδο.';
+      msg+=' Πάτησε «Έλεγχος ωραρίων προσωπικού» για να ενημερωθεί και η σύνοψη ανά κλάδο.';
       personnelCsvSetStatus(msg,unknown?'error':'success');
     });
   }
   if(downloadPersonnelCsvTemplate){
     downloadPersonnelCsvTemplate.addEventListener('click',function(){
-      const csv='\uFEFFΚλάδος;Ονοματεπώνυμο;Έτη υπηρεσίας;Μήνες;Ημέρες;Ρόλος;Ώρες αλλού;Κλίμακα ωραρίου ΔΕ\r\nΠΕ03;Μαρία Παπαδοπούλου;7;0;0;Εκπαιδευτικός;0;\r\n';
+      const csv='\uFEFFΚλάδος;Ονοματεπώνυμο;Υποχρεωτικό ωράριο;Ρόλος;Έτη υπηρεσίας;Μήνες;Ημέρες;Ώρες αλλού\r\nΠΕ03;Μαρία Παπαδοπούλου;20;Εκπαιδευτικός;;;;0\r\nΠΕ02;Γιώργος Διευθυντής;;Διευθυντής;20;0;0;0\r\n';
       const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='protypo-ekpaideftikon.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},500);
     });
   }

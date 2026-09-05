@@ -27,6 +27,7 @@ base={
 'personnel_person_id':['p1','p2','p3'],
 'personnel_display_name':['Μαρία Μαθηματικού','Νίκος Φιλόλογος','Διευθυντής Δοκιμής'],
 'personnel_specialty_code':['ΠΕ03','ΠΕ02','ΠΕ01'],
+'personnel_required_teaching_hours':[19,22,''],
 'personnel_service_years':[7,20,21],
 'personnel_service_months':[0,0,0],
 'personnel_service_days':[0,0,0],
@@ -47,14 +48,15 @@ def row_window(marker):
     return out[start:nxt if nxt>=0 else len(out)]
 pe03=row_window('ΠΕ03 Μαρία Μαθηματικού')
 check('PE03 row exists', bool(pe03))
-check('PE03 required 21', '<strong data-required-hours>21</strong>' in pe03)
-check('PE03 available 18', '<strong data-available-hours>18</strong>' in pe03)
-# PE02 20y = 18
+check('PE03 manual required 19 preserved', 'name="personnel_required_teaching_hours[]"' in pe03 and 'value="19"' in pe03)
+check('PE03 manual input exposes max 23', re.search(r'name="personnel_required_teaching_hours\[\]"[^>]*max="23"|max="23"[^>]*name="personnel_required_teaching_hours\[\]"', pe03) is not None)
+check('PE03 available 16 from manual 19 minus external 3', '<strong data-available-hours>16</strong>' in pe03)
+# PE02 uses the explicitly supplied value rather than deriving it from 20 years.
 pe02=row_window('ΠΕ02 Νίκος Φιλόλογος')
-check('PE02 twenty-year hours 18', '<strong data-required-hours>18</strong>' in pe02)
+check('PE02 manual required 22 preserved', 'name="personnel_required_teaching_hours[]"' in pe02 and 'value="22"' in pe02)
 # director: 2+2+1 = 5 normal sections => auto band 3-5; 20y => 8 hours (10-2)
 pedir=row_window('ΠΕ01 Διευθυντής Δοκιμής')
-check('director auto 5 sections with 20y = 8 hours', '<strong data-required-hours>8</strong>' in pedir)
+check('director auto 5 sections with 20y = 8 hours', 'name="personnel_required_teaching_hours[]"' in pedir and 'value="8"' in pedir and 'readonly' in pedir)
 check('director auto section info rendered', 'data-director-section-count>5</strong>' in pedir and 'κλίμακα 3-5' in pedir)
 check('director band is not editable', 'personnel-director-sections' not in pedir)
 check('branch summary rendered', 'Σύνοψη ανά κλάδο' in out and 'data-personnel-branch="ΠΕ03"' in out)
@@ -64,6 +66,8 @@ check('personnel filter exists', 'id="personnelFilter"' in out)
 check('personnel template exists', 'id="personnelRowTemplate"' in out)
 check('shared teaching-hours JS included', 'includes/teaching-hours-calculations.js' in out)
 check('client uses shared secondary calculator', 'EducationTeachingHours.secondary' in out)
+check('frontend dynamically limits PE manual hours to 23', "code.indexOf('ΠΕ')===0 ? 23 : 35" in out and 'requiredInput.max=String(manualHoursMax)' in out)
+check('frontend PE over-limit message is explicit', 'Για κλάδο ΠΕ το υποχρεωτικό διδακτικό ωράριο δεν μπορεί να ξεπερνά τις 23 ώρες.' in out)
 check('no automatic placement action', 'Πρότεινε κατανομή' not in out and 'Αυτόματη κατανομή' not in out)
 
 # Missing school section counts must keep a director unresolved; there is no manual band fallback in the UI.
@@ -74,6 +78,7 @@ bad['gym_general_c']=0
 bad['personnel_person_id']=['p4']
 bad['personnel_display_name']=['Διευθυντής χωρίς τμήματα']
 bad['personnel_specialty_code']=['ΠΕ02']
+bad['personnel_required_teaching_hours']=['']
 bad['personnel_service_years']=[10]
 bad['personnel_service_months']=[0]
 bad['personnel_service_days']=[0]
@@ -83,6 +88,37 @@ bad['personnel_hours_branch']=['']
 b=render(bad)
 check('director without school sections unresolved', 'Για Διευθυντή/ντρια χρειάζονται τα δηλωμένα κανονικά τμήματα της σχολικής μονάδας.' in b)
 check('unresolved count one', re.search(r'<strong>1</strong><span>εγγραφές που χρειάζονται συμπλήρωση</span>',b) is not None)
+
+teacher_missing=dict(base)
+teacher_missing['personnel_person_id']=['p5']
+teacher_missing['personnel_display_name']=['Εκπαιδευτικός χωρίς ωράριο']
+teacher_missing['personnel_specialty_code']=['ΠΕ03']
+teacher_missing['personnel_required_teaching_hours']=['']
+teacher_missing['personnel_service_years']=[30]
+teacher_missing['personnel_service_months']=[0]
+teacher_missing['personnel_service_days']=[0]
+teacher_missing['personnel_role']=['teacher']
+teacher_missing['personnel_assigned_external_hours']=[0]
+teacher_missing['personnel_hours_branch']=['']
+tm=render(teacher_missing)
+check('ordinary teacher requires explicit hours even with service years present', 'Συμπλήρωσε το υποχρεωτικό διδακτικό ωράριο του εκπαιδευτικού.' in tm)
+
+teacher_over=dict(base)
+teacher_over['personnel_person_id']=['p6']
+teacher_over['personnel_display_name']=['ΠΕ με υπερβολικό ωράριο']
+teacher_over['personnel_specialty_code']=['ΠΕ03']
+teacher_over['personnel_required_teaching_hours']=[24]
+teacher_over['personnel_service_years']=[0]
+teacher_over['personnel_service_months']=[0]
+teacher_over['personnel_service_days']=[0]
+teacher_over['personnel_role']=['teacher']
+teacher_over['personnel_assigned_external_hours']=[0]
+teacher_over['personnel_hours_branch']=['']
+to=render(teacher_over)
+check('backend PE manual max rejects 24 clearly', 'Για κλάδο ΠΕ το υποχρεωτικό διδακτικό ωράριο δεν μπορεί να ξεπερνά τις 23 ώρες.' in to)
+check('backend preserves rejected PE value 24', 'value="24"' in row_window('ΠΕ03 Μαρία Μαθηματικού') or 'value="24"' in to)
+check('DE scale removed from personnel UI', 'Κλίμακα ωραρίου ΔΕ' not in out)
+check('teaching-hours calculator link present', 'href="ypologismos-didaktikou-orariou.php"' in out)
 
 text=PAGE.read_text(encoding='utf-8')
 check('frontend uses personnel workload normalize', 'personnelWorkloadNormalizePerson' in text)

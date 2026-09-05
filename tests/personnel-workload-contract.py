@@ -53,6 +53,29 @@ de=php_json(php)
 check('DE hours scale not guessed', de['de_auto']['status']=='needs_input' and de['de_auto']['valid'] is False)
 check('DE explicit scale resolves', de['de_explicit']['valid'] and de['de_explicit']['required_teaching_hours']==28)
 
+# 1b) Staffing-UI explicit-hours path: ordinary teachers use the supplied
+# obligation directly, while director/vice roles remain role-calculated.
+php=r'''
+require "includes/personnel-workload.php";
+echo json_encode(array(
+ 'manual'=>personnelWorkloadSecondaryObligation(array('person_id'=>'m','specialty_code'=>'ΠΕ03','role'=>'teacher','required_teaching_hours'=>'19','service'=>array('years'=>35))),
+ 'pe_max'=>personnelWorkloadSecondaryObligation(array('person_id'=>'m','specialty_code'=>'ΠΕ03','role'=>'teacher','required_teaching_hours'=>'23','service'=>array('years'=>0))),
+ 'pe_over'=>personnelWorkloadSecondaryObligation(array('person_id'=>'m','specialty_code'=>'ΠΕ03','role'=>'teacher','required_teaching_hours'=>'24','service'=>array('years'=>0))),
+ 'missing'=>personnelWorkloadSecondaryObligation(array('person_id'=>'m','specialty_code'=>'ΠΕ03','role'=>'teacher','required_teaching_hours'=>'','service'=>array('years'=>35))),
+ 'invalid'=>personnelWorkloadSecondaryObligation(array('person_id'=>'m','specialty_code'=>'ΠΕ03','role'=>'teacher','required_teaching_hours'=>'36','service'=>array('years'=>35))),
+ 'de_manual'=>personnelWorkloadSecondaryObligation(array('person_id'=>'d','specialty_code'=>'ΔΕ01.05','role'=>'teacher','required_teaching_hours'=>'28','service'=>array('years'=>5))),
+ 'de_director'=>personnelWorkloadSecondaryObligation(array('person_id'=>'d','specialty_code'=>'ΔΕ01.05','role'=>'director','required_teaching_hours'=>'','service'=>array('years'=>20),'director_sections_band'=>'6-9'))
+),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+'''
+manual=php_json(php)
+check('manual teacher hours override service-derived scale', manual['manual']['valid'] and manual['manual']['required_teaching_hours']==19 and manual['manual']['hours_branch_mode']=='manual_required_hours')
+check('manual PE teacher accepts statutory maximum 23', manual['pe_max']['valid'] and manual['pe_max']['required_teaching_hours']==23)
+check('manual PE teacher rejects 24 without clamp', manual['pe_over']['status']=='invalid' and manual['pe_over']['reason']=='required_teaching_hours_exceeds_pe_max')
+check('manual teacher hours required when UI key is present', manual['missing']['status']=='needs_input' and manual['missing']['reason']=='required_teaching_hours_required')
+check('manual teacher hours reject out-of-range without clamp', manual['invalid']['status']=='invalid' and manual['invalid']['reason']=='required_teaching_hours_invalid')
+check('manual DE teacher needs no DE scale', manual['de_manual']['valid'] and manual['de_manual']['required_teaching_hours']==28)
+check('DE director needs no DE scale', manual['de_director']['valid'] and manual['de_director']['required_teaching_hours']==7)
+
 # 2) Person evaluation in the real ENEEGYL Corfu profile.
 php=r'''
 require "includes/personnel-workload.php";

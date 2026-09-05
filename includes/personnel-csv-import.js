@@ -81,6 +81,7 @@
     service_days:['ημερες υπηρεσιας','ημερες προυπηρεσιας','ημερες','days','service days'],
     service_combined:['προυπηρεσια','υπηρεσια','χρονος υπηρεσιας','συνολικη υπηρεσια','service','service time'],
     role:['ρολος','ιδιοτητα','θεση','role','position'],
+    required_teaching_hours:['υποχρεωτικο ωραριο','υποχρεωτικες ωρες','διδακτικο ωραριο','ωραριο','required teaching hours','required hours','teaching hours'],
     assigned_external_hours:['ωρες αλλου','ωρες σε αλλη μοναδα','ωρες αλλης μοναδας','διαθεση ωρες','external hours','hours elsewhere'],
     director_sections_band:['τμηματα διευθυντη','κλιμακα τμηματων','αριθμος τμηματων','director sections','sections band'],
     hours_branch:['κλιμακα ωραριου δε','κλιμακα δε','ωραριο δε','de scale','hours branch']
@@ -92,6 +93,7 @@
     service_months:['μηνες υπηρεσιας','μηνες προυπηρεσιας','service months'],
     service_days:['ημερες υπηρεσιας','ημερες προυπηρεσιας','service days'],
     service_combined:['συνολικη προυπηρεσια','χρονος υπηρεσιας','συνολικη υπηρεσια','service time'],
+    required_teaching_hours:['υποχρεωτικο ωραριο','υποχρεωτικες ωρες','διδακτικο ωραριο','required teaching hours','required hours'],
     assigned_external_hours:['ωρες σε αλλη μοναδα','ωρες αλλης μοναδας','external hours','hours elsewhere'],
     director_sections_band:['κλιμακα τμηματων','αριθμος τμηματων','director sections','sections band'],
     hours_branch:['κλιμακα ωραριου δε','de scale','hours branch']
@@ -119,6 +121,15 @@
     var n=parseInt(String(value == null ? '' : value).replace(/[^0-9-]/g,''),10);
     if(!isFinite(n) || n<0) n=0;
     if(typeof max==='number') n=Math.min(max,n);
+    return n;
+  }
+  function optionalPositiveInt(value,max){
+    var raw=String(value == null ? '' : value).trim();
+    if(raw==='') return '';
+    if(!/^\d+$/.test(raw)) return raw;
+    var n=parseInt(raw,10);
+    if(!isFinite(n)) return raw;
+    if(typeof max==='number' && n>max) return raw;
     return n;
   }
   function parseCombinedService(value){
@@ -178,6 +189,7 @@
       service_months:mapping.service_months ? nonNegativeInt(get(row,mapping,'service_months'),11) : combined.months,
       service_days:mapping.service_days ? nonNegativeInt(get(row,mapping,'service_days'),29) : combined.days,
       role:normalizeRole(get(row,mapping,'role')),
+      required_teaching_hours:optionalPositiveInt(get(row,mapping,'required_teaching_hours'),35),
       assigned_external_hours:nonNegativeInt(get(row,mapping,'assigned_external_hours'),35),
       director_sections_band:normalizeDirectorBand(get(row,mapping,'director_sections_band')),
       hours_branch:normalizeHoursBranch(get(row,mapping,'hours_branch'))

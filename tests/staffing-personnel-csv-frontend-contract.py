@@ -28,7 +28,9 @@ check('three delimiters documented', 'semicolon (;)' in out and 'κόμμα ή t
 check('browser FileReader used', 'new FileReader()' in text and 'readAsArrayBuffer' in text)
 check('UTF-8 and windows-1253 fallback', "TextDecoder('utf-8'" in text and "TextDecoder('windows-1253')" in text)
 check('unknown specialties guarded', 'δεν αναγνωρίζεται από τις διαθέσιμες αναθέσεις' in text)
-check('template is UTF8 BOM semicolon CSV', "\\uFEFFΚλάδος;Ονοματεπώνυμο;Έτη υπηρεσίας" in text)
+check('template is UTF8 BOM semicolon CSV', "\\uFEFFΚλάδος;Ονοματεπώνυμο;Υποχρεωτικό ωράριο;Ρόλος" in text)
+check('template no longer asks DE hours scale', 'Κλίμακα ωραρίου ΔΕ\\r\\n' not in text and 'Κλίμακα ωραρίου ΔΕ;' not in text)
+check('CSV mapping exposes manual required hours', "{key:'required_teaching_hours',label:'Υποχρεωτικό διδακτικό ωράριο'}" in text)
 check('CSV does not require form upload enctype', 'enctype="multipart/form-data"' not in out)
 check('CSV does not ask director section band', 'Κλίμακα τμημάτων Διευθυντή/ντριας' not in out and 'Κλίμακα τμημάτων διευθυντή' not in text)
 failed=[n for n,ok in checks if not ok]

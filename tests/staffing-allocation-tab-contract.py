@@ -17,6 +17,7 @@ base={
 'gym_tech_split_a':1,'gym_tech_split_b':0,'gym_tech_split_c':0,
 'staffing_action':'allocation','active_panel':'allocation',
 'personnel_person_id':['p1','p2'],'personnel_display_name':['Μαρία Μαθηματικού','Νίκος Φιλόλογος'],'personnel_specialty_code':['ΠΕ03','ΠΕ02'],
+'personnel_required_teaching_hours':[21,18],
 'personnel_service_years':[7,20],'personnel_service_months':[0,0],'personnel_service_days':[0,0],'personnel_role':['teacher','teacher'],'personnel_assigned_external_hours':[3,0],'personnel_hours_branch':['',''],
 'allocation_person_id':['p1'],'allocation_slot_id':['gym.mathimatika@Α΄|whole|section|1'],'allocation_hours':[4]
 }

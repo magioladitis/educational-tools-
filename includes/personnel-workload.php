@@ -131,12 +131,111 @@ function personnelWorkloadSecondaryObligation($person)
         return array('status'=>'invalid', 'valid'=>false, 'reason'=>'unknown_specialty_code');
     }
 
+    $role = isset($person['role']) ? (string) $person['role'] : 'teacher';
+    $allowedRoles = array('teacher','director','lab_director','vice_or_sector','lab_responsible','epal_ek_lab_sector');
+    if (!in_array($role, $allowedRoles, true)) {
+        return array('status'=>'invalid','valid'=>false,'reason'=>'unknown_secondary_role');
+    }
+
     $service = isset($person['service']) && is_array($person['service']) ? $person['service'] : array();
     $serviceDays = personnelWorkloadServiceDays(
         isset($service['years']) ? $service['years'] : 0,
         isset($service['months']) ? $service['months'] : 0,
         isset($service['days']) ? $service['days'] : 0
     );
+    $twentyYears = $serviceDays >= 20 * 360;
+
+    // In the staffing UI an ordinary teacher supplies the already-known
+    // compulsory teaching hours directly.  Presence of the key is deliberate:
+    // callers that do not use the staffing UI retain the legacy calculated path.
+    if ($role === 'teacher' && array_key_exists('required_teaching_hours', $person)) {
+        $rawHours = trim((string) $person['required_teaching_hours']);
+        if ($rawHours === '') {
+            return array(
+                'status'=>'needs_input',
+                'valid'=>false,
+                'reason'=>'required_teaching_hours_required',
+                'specialty_code'=>$specialty,
+                'service_days'=>$serviceDays,
+                'service_label'=>personnelWorkloadServiceLabel($serviceDays),
+            );
+        }
+        if (!preg_match('/^\d+$/', $rawHours) || (int) $rawHours < 1 || (int) $rawHours > 35) {
+            return array(
+                'status'=>'invalid',
+                'valid'=>false,
+                'reason'=>'required_teaching_hours_invalid',
+                'specialty_code'=>$specialty,
+                'service_days'=>$serviceDays,
+                'service_label'=>personnelWorkloadServiceLabel($serviceDays),
+            );
+        }
+        if (strpos($specialty, 'ΠΕ') === 0 && (int) $rawHours > 23) {
+            return array(
+                'status'=>'invalid',
+                'valid'=>false,
+                'reason'=>'required_teaching_hours_exceeds_pe_max',
+                'specialty_code'=>$specialty,
+                'service_days'=>$serviceDays,
+                'service_label'=>personnelWorkloadServiceLabel($serviceDays),
+            );
+        }
+        return array(
+            'status'=>'resolved',
+            'valid'=>true,
+            'specialty_code'=>$specialty,
+            'specialty_label'=>teacherSpecialtyLabel($specialty),
+            'role'=>$role,
+            'hours_branch'=>null,
+            'hours_branch_mode'=>'manual_required_hours',
+            'service_days'=>$serviceDays,
+            'service_label'=>personnelWorkloadServiceLabel($serviceDays),
+            'required_teaching_hours'=>(int) $rawHours,
+            'rule'=>'Το υποχρεωτικό διδακτικό ωράριο δηλώθηκε από τον χρήστη.',
+        );
+    }
+
+    // Director / vice-director hours depend on the management role and service
+    // threshold, not on the PE/TE/DE branch.  Therefore a DE scale is neither
+    // requested nor guessed for these roles.
+    if ($role === 'director' || $role === 'vice_or_sector') {
+        $hours = null;
+        $rule = '';
+        $extra = array();
+        if ($role === 'director') {
+            $sectionCount = isset($person['school_general_section_count']) ? max(0, (int) $person['school_general_section_count']) : null;
+            $sections = $sectionCount !== null
+                ? personnelWorkloadDirectorSectionsBandFromCount($sectionCount)
+                : (isset($person['director_sections_band']) ? (string) $person['director_sections_band'] : '');
+            $bases = array('3-5'=>10,'6-9'=>9,'10-12'=>7,'13+'=>5);
+            if (!isset($bases[$sections])) {
+                return array('status'=>'needs_input','valid'=>false,'reason'=>'director_sections_band_required');
+            }
+            $hours = $bases[$sections] - ($twentyYears ? 2 : 0);
+            $rule = 'Διευθυντής/ντρια Γυμνασίου/Λυκείου — ' . ($sectionCount !== null ? $sectionCount . ' κανονικά τμήματα, ' : '') . 'κλίμακα ' . $sections . ($twentyYears ? ', με συμπληρωμένα 20 έτη.' : '.');
+            $extra['director_sections_band'] = $sections;
+            if ($sectionCount !== null) $extra['school_general_section_count'] = $sectionCount;
+        } else {
+            $hours = $twentyYears ? 14 : 16;
+            $rule = 'Υποδιευθυντής/ντρια ή Υπεύθυνος/η Τομέα' . ($twentyYears ? ' με συμπληρωμένα 20 έτη.' : '.');
+        }
+        $result = array(
+            'status'=>'resolved',
+            'valid'=>true,
+            'specialty_code'=>$specialty,
+            'specialty_label'=>teacherSpecialtyLabel($specialty),
+            'role'=>$role,
+            'hours_branch'=>null,
+            'hours_branch_mode'=>'role_specific',
+            'service_days'=>$serviceDays,
+            'service_label'=>personnelWorkloadServiceLabel($serviceDays),
+            'required_teaching_hours'=>(int) $hours,
+            'rule'=>$rule,
+        );
+        foreach ($extra as $key=>$value) $result[$key] = $value;
+        return $result;
+    }
+
     $branchResolution = personnelWorkloadHoursBranchForSpecialty(
         $specialty,
         isset($person['hours_branch']) ? $person['hours_branch'] : null
@@ -154,13 +253,6 @@ function personnelWorkloadSecondaryObligation($person)
     }
 
     $branch = $branchResolution['branch'];
-    $role = isset($person['role']) ? (string) $person['role'] : 'teacher';
-    $allowedRoles = array('teacher','director','lab_director','vice_or_sector','lab_responsible','epal_ek_lab_sector');
-    if (!in_array($role, $allowedRoles, true)) {
-        return array('status'=>'invalid','valid'=>false,'reason'=>'unknown_secondary_role');
-    }
-
-    $twentyYears = $serviceDays >= 20 * 360;
     $baseBand = personnelWorkloadSecondaryTeacherBaseHours($branch, $serviceDays);
     if ($baseBand === null) {
         return array('status'=>'invalid','valid'=>false,'reason'=>'unsupported_hours_branch');
@@ -169,25 +261,9 @@ function personnelWorkloadSecondaryObligation($person)
     $hours = null;
     $rule = '';
     $extra = array();
-    if ($role === 'director') {
-        $sectionCount = isset($person['school_general_section_count']) ? max(0, (int) $person['school_general_section_count']) : null;
-        $sections = $sectionCount !== null
-            ? personnelWorkloadDirectorSectionsBandFromCount($sectionCount)
-            : (isset($person['director_sections_band']) ? (string) $person['director_sections_band'] : '');
-        $bases = array('3-5'=>10,'6-9'=>9,'10-12'=>7,'13+'=>5);
-        if (!isset($bases[$sections])) {
-            return array('status'=>'needs_input','valid'=>false,'reason'=>'director_sections_band_required');
-        }
-        $hours = $bases[$sections] - ($twentyYears ? 2 : 0);
-        $rule = 'Διευθυντής/ντρια Γυμνασίου/Λυκείου — ' . ($sectionCount !== null ? $sectionCount . ' κανονικά τμήματα, ' : '') . 'κλίμακα ' . $sections . ($twentyYears ? ', με συμπληρωμένα 20 έτη.' : '.');
-        $extra['director_sections_band'] = $sections;
-        if ($sectionCount !== null) $extra['school_general_section_count'] = $sectionCount;
-    } elseif ($role === 'lab_director') {
+    if ($role === 'lab_director') {
         $hours = $twentyYears ? 8 : 10;
         $rule = 'Διευθυντής/ντρια Εργαστηριακού Κέντρου' . ($twentyYears ? ' με συμπληρωμένα 20 έτη.' : '.');
-    } elseif ($role === 'vice_or_sector') {
-        $hours = $twentyYears ? 14 : 16;
-        $rule = 'Υποδιευθυντής/ντρια ή Υπεύθυνος/η Τομέα' . ($twentyYears ? ' με συμπληρωμένα 20 έτη.' : '.');
     } elseif ($role === 'lab_responsible') {
         $limit = $twentyYears ? 18 : 20;
         $hours = min($baseBand['hours'], $limit);
@@ -216,9 +292,7 @@ function personnelWorkloadSecondaryObligation($person)
         'required_teaching_hours'=>(int) $hours,
         'rule'=>$rule,
     );
-    foreach ($extra as $key=>$value) {
-        $result[$key] = $value;
-    }
+    foreach ($extra as $key=>$value) $result[$key] = $value;
     return $result;
 }
 

@@ -3,7 +3,7 @@ const csv=require(path.join(__dirname,'..','includes','personnel-csv-import.js')
 let pass=0, fail=0;
 function check(name,cond){ if(cond){console.log('PASS: '+name);pass++;}else{console.log('FAIL: '+name);fail++;} }
 
-const semicolon='Κλάδος;Επώνυμο;Όνομα;Έτη υπηρεσίας;Μήνες;Ημέρες;Ρόλος;Ώρες αλλού\nΠΕ03;Παπαδοπούλου;Μαρία;7;3;12;Εκπαιδευτικός;2\nΠΕ02;Ιωάννου;Νίκος;20;0;0;Υποδιευθυντής;0';
+const semicolon='Κλάδος;Επώνυμο;Όνομα;Υποχρεωτικό ωράριο;Έτη υπηρεσίας;Μήνες;Ημέρες;Ρόλος;Ώρες αλλού\nΠΕ03;Παπαδοπούλου;Μαρία;19;7;3;12;Εκπαιδευτικός;2\nΠΕ02;Ιωάννου;Νίκος;;20;0;0;Υποδιευθυντής;0';
 let parsed=csv.parse(semicolon);
 check('detect semicolon', parsed.delimiter===';');
 check('semicolon rows', parsed.rows.length===2);
@@ -12,10 +12,12 @@ check('auto map specialty', map.specialty_code==='Κλάδος');
 check('auto map surname/name', map.surname==='Επώνυμο' && map.given_name==='Όνομα');
 let p=csv.rowToPersonnel(parsed.rows[0],map);
 check('Greek full name combined', p.display_name==='Παπαδοπούλου Μαρία');
+check('manual required hours mapped', map.required_teaching_hours==='Υποχρεωτικό ωράριο' && p.required_teaching_hours===19);
 check('service fields', p.service_years===7 && p.service_months===3 && p.service_days===12);
 check('external hours', p.assigned_external_hours===2);
 let p2=csv.rowToPersonnel(parsed.rows[1],map);
 check('vice director role', p2.role==='vice_or_sector');
+check('manager may leave manual required hours blank', p2.required_teaching_hours==='');
 
 const quoted='Κλάδος,Ονοματεπώνυμο,Προϋπηρεσία,Ρόλος\n"ΠΕ04.01","Κόρη, Μαρία","12 έτη 4 μήνες 3 ημέρες","Διευθυντής"';
 parsed=csv.parse(quoted);
