@@ -128,3 +128,11 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Οι Ομάδες Προσανατολισμού του ΓΕΛ δεν συναγάγονται από τα κανονικά τμήματα τάξης. Η Γ΄ Θετικών/Υγείας απαιτεί ρητό πλήθος ομάδων Μαθηματικών/Βιολογίας.
 - Η Ηθική συνδέθηκε με το school-profile realization: dedicated equivalent και parallel/consolidated groups επηρεάζουν πλέον τις πραγματικές staffing ώρες, ενώ ελλιπή inputs παραμένουν dependency.
 - Νέο `tests/general-gymnasium-gel-school-profile-contract.py`: 35/35 PASS. Τα προηγούμενα workload/personnel/cross-audit regressions παραμένουν πράσινα και PHP lint 77/77.
+
+## Frontend — Υπολογισμός διδακτικών αναγκών σχολικής μονάδας (2026-09-05)
+- Προστέθηκε η δημόσια σελίδα `ypologismos-didaktikon-anagkon.php` ως πρώτο simulator/test harness του `school_profile → workload` pipeline.
+- Η πρώτη έκδοση υποστηρίζει Ημερήσιο Γυμνάσιο και Ημερήσιο ΓΕΛ με πραγματικά `general_sections`, ομάδες 2ης ξένης γλώσσας, Ομάδες Προσανατολισμού, επιλογές 2ου/3ου πεδίου, conditional groups της Γ΄ ΓΕΛ και inputs Ηθικής.
+- Τα αποτελέσματα εμφανίζουν ανά κλάδο Α΄/Β΄/Γ΄ eligibility, αποκλειστικές/κοινές κορυφαίες ώρες, ειδικές αναθέσεις και fallback ώρες, με αναλυτικό drill-down ανά μάθημα.
+- Το UI δηλώνει ρητά ότι τα αθροίσματα δεν είναι επίσημα λειτουργικά κενά και δεν εκτελεί αυτόματες τοποθετήσεις. Το personnel layer παραμένει επόμενο στάδιο.
+- Προστέθηκε νέα κάρτα #32 στην `ergaleia.php`.
+- Νέο `tests/school-staffing-simulator-frontend-contract.py` για προστασία του frontend και των synthetic totals Γυμνασίου/ΓΕΛ.

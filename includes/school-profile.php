@@ -56,6 +56,15 @@ function schoolProfileConditionalSectionCount($structure, $grade, $courseId)
     return max(0, (int) $structure['conditional_sections'][$grade][$courseId]);
 }
 
+function schoolProfileExtraCourseSectionCount($structure, $grade, $courseId)
+{
+    if (!isset($structure['extra_course_sections'][$grade])
+        || !array_key_exists($courseId, $structure['extra_course_sections'][$grade])) {
+        return 0;
+    }
+    return max(0, (int) $structure['extra_course_sections'][$grade][$courseId]);
+}
+
 function schoolProfileEthicsInputsForGrade($profile, $schoolCode, $grade)
 {
     if (!isset($profile['ethics']['by_structure_grade'][$schoolCode][$grade])
@@ -191,7 +200,8 @@ function schoolProfileSectionCountForInstance($profile, $instance)
             : 0;
     }
 
-    return schoolProfileGeneralSectionCount($structure, $grade);
+    return schoolProfileGeneralSectionCount($structure, $grade)
+        + schoolProfileExtraCourseSectionCount($structure, $grade, $instance['course_id']);
 }
 
 function schoolProfileDependencyState($profile, $instance)

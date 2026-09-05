@@ -371,6 +371,13 @@ unset($homeDeadlineConfig);
 <p>Δες τις εβδομαδιαίες ώρες κάθε μαθήματος ανά τύπο σχολείου και τάξη, με χωριστή εμφάνιση των Ομάδων Προσανατολισμού.</p>
 <span class="button-like">Άνοιγμα εργαλείου →</span>
 </a>
+<a class="tool-card" data-category="ypiresiaka orologio topothetiseis" data-search="διδακτικές ανάγκες σχολικής μονάδας στελέχωση ώρες κλάδος ειδικότητα αναθέσεις ωρολόγιο Γυμνάσιο ΓΕΛ προσανατολισμός ηθική" href="ypologismos-didaktikon-anagkon.php">
+<span class="new-badge">ΝΕΟ</span>
+<div class="card-top"><span class="tool-number">32</span><span class="category-tag green">Υπηρεσιακά / Στελέχωση</span></div>
+<h2>Υπολογισμός διδακτικών αναγκών σχολικής μονάδας</h2>
+<p>Δημιούργησε school profile για Ημερήσιο Γυμνάσιο ή ΓΕΛ και δες τις πραγματικές ώρες curriculum ανά κλάδο και προτεραιότητα ανάθεσης.</p>
+<span class="button-like">Άνοιγμα εργαλείου →</span>
+</a>
 </section>
 <div aria-hidden="true" class="no-results" id="noResults">
       Δεν βρέθηκε εργαλείο που να ταιριάζει στην αναζήτησή σου.

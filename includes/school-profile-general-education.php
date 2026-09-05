@@ -54,6 +54,34 @@ function schoolProfileBuildDayGymnasium2026($config)
         $choiceOptions[$grade]['gym.deyteri_xeni'] = $groups;
     }
 
+    // Υ.Α. 74472/Δ2/2020 (Β΄ 2450): όταν ένα τμήμα έχει πάνω από 21
+    // μαθητές/ήτριες, δημιουργείται δεύτερη ομάδα στο πεδίο Τεχνολογία /
+    // Πληροφορική. Στην Α΄ η ίδια ομαδοποίηση αφορά και την Οικιακή Οικονομία.
+    // Αποθηκεύουμε μόνο τις *επιπλέον* ομάδες, μία ανά τμήμα που χωρίζεται.
+    $techSplit = schoolProfileNormalizeGradeCounts(
+        isset($config['technology_informatics_split_sections'])
+            ? $config['technology_informatics_split_sections'] : array(),
+        $grades
+    );
+    foreach ($grades as $grade) {
+        $techSplit[$grade] = min($techSplit[$grade], $general[$grade]);
+    }
+    $extraCourseSections = array(
+        'Α΄' => array(
+            'gym.texnologia' => $techSplit['Α΄'],
+            'gym.pliroforiki' => $techSplit['Α΄'],
+            'gym.oikiaki_oikonomia' => $techSplit['Α΄'],
+        ),
+        'Β΄' => array(
+            'gym.texnologia' => $techSplit['Β΄'],
+            'gym.pliroforiki' => $techSplit['Β΄'],
+        ),
+        'Γ΄' => array(
+            'gym.texnologia' => $techSplit['Γ΄'],
+            'gym.pliroforiki' => $techSplit['Γ΄'],
+        ),
+    );
+
     return array(
         'profile_id' => isset($config['profile_id']) ? $config['profile_id'] : 'day-gymnasium-2026-2027',
         'school_year' => isset($config['school_year']) ? $config['school_year'] : '2026-2027',
@@ -63,6 +91,8 @@ function schoolProfileBuildDayGymnasium2026($config)
             'gymnasio' => array(
                 'general_sections' => $general,
                 'choice_option_sections' => $choiceOptions,
+                'technology_informatics_split_sections' => $techSplit,
+                'extra_course_sections' => $extraCourseSections,
                 'conditions' => array(),
             ),
         ),

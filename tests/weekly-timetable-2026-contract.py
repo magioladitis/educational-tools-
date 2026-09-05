@@ -80,6 +80,7 @@ check('C PEPAL official source exposed', '5251/2023 — Γ΄ Π.ΕΠΑ.Λ.' in P
 check('professional hour badges avoid duplicate unit', 'function hoursBadgeText(row)' in PAGE and "/[ΘΕΣ]|ΠΑ/.test(text) ? text : text + ' ώρ.'" in PAGE)
 check('professional legend exposed', '<strong>Θ</strong> = θεωρία' in PAGE and '<strong>ΠΑ</strong> = πρακτική άσκηση' in PAGE)
 check('public religion ethics row is combined', "publicRow.subject = 'Θρησκευτικά / Ηθική'" in PAGE)
+check('Gymnasium Technology Informatics split rule is documented', 'Τεχνολογία / Πληροφορική — Ημερήσιο Γυμνάσιο' in PAGE and 'πάνω από <strong>21 μαθητές/ήτριες</strong>' in PAGE and '74472/Δ2/2020' in PAGE)
 check('public roadmap UI removed', 'class="architecture-note"' not in PAGE and 'Έτοιμο για μελλοντική διασύνδεση με αναθέσεις' not in PAGE)
 check('internal course ids stay out of public UI', 'ID: ' not in PAGE and "row.course_id" not in PAGE)
 check('page has no inline style block', '<style>' not in PAGE)

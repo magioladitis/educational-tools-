@@ -20,6 +20,21 @@ $gym=schoolProfileBuildDayGymnasium2026(array(
   'Γ΄'=>array('exempt_students'=>10,'within_fifth_day'=>true),
  ),
 ));
+$gymSplit=schoolProfileBuildDayGymnasium2026(array(
+ 'profile_id'=>'contract-gym-split',
+ 'general_sections'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>1),
+ 'second_foreign_language_groups'=>array(
+  'Α΄'=>array('Γαλλικά'=>1,'Γερμανικά'=>1,'Ιταλικά'=>0),
+  'Β΄'=>array('Γαλλικά'=>2,'Γερμανικά'=>0,'Ιταλικά'=>0),
+  'Γ΄'=>array('Γαλλικά'=>0,'Γερμανικά'=>0,'Ιταλικά'=>1),
+ ),
+ 'technology_informatics_split_sections'=>array('Α΄'=>1,'Β΄'=>1,'Γ΄'=>1),
+ 'ethics_by_grade'=>array(
+  'Α΄'=>array('exempt_students'=>12,'within_fifth_day'=>true,'equivalent_ethics_sections'=>0),
+  'Β΄'=>array('exempt_students'=>8,'within_fifth_day'=>true),
+  'Γ΄'=>array('exempt_students'=>10,'within_fifth_day'=>true),
+ ),
+));
 $gel=schoolProfileBuildDayGel2026(array(
  'profile_id'=>'contract-gel',
  'general_sections'=>array('Α΄'=>3,'Β΄'=>2,'Γ΄'=>3),
@@ -65,6 +80,7 @@ echo json_encode(array(
  'gym_realized'=>schoolProfileRealize($gym),
  'gel_realized'=>schoolProfileRealize($gel),
  'gym_matrix'=>schoolProfileWorkloadMatrix($gym),
+ 'gym_split_matrix'=>schoolProfileWorkloadMatrix($gymSplit),
  'gel_matrix'=>schoolProfileWorkloadMatrix($gel),
  'gym_units'=>selectedUnits(schoolProfileWorkloadMatrix($gym)),
  'gel_units'=>selectedUnits(schoolProfileWorkloadMatrix($gel)),
@@ -97,6 +113,17 @@ check('gel fixed teaching-group hours 293', data['gel_realized']['summary']['fix
 check('gel no unresolved dependencies after complete inputs', data['gel_realized']['summary']['dependency_instances']==0)
 check('gym matrix fully covers realized hours', data['gym_matrix']['summary']['assignment_unit_hours']==171 and data['gym_matrix']['summary']['uncovered_unit_hours']==0)
 check('gel matrix fully covers realized hours', data['gel_matrix']['summary']['assignment_unit_hours']==293 and data['gel_matrix']['summary']['uncovered_unit_hours']==0)
+
+# Technology / Informatics split: one >21 section in every grade adds 8 staffing hours.
+check('gym split total adds 8 teaching-group hours', data['gym_split_matrix']['summary']['assignment_unit_hours']==179)
+split_units=data['gym_split_matrix']['units']
+u=unit(split_units,'gym.pliroforiki@Α΄'); check('gym A Informatics split gives 3 groups / 6 hours', u and u['section_count']==3 and u['school_hours']==6)
+u=unit(split_units,'gym.texnologia@Α΄'); check('gym A Technology split gives 3 groups / 3 hours', u and u['section_count']==3 and u['school_hours']==3)
+u=unit(split_units,'gym.oikiaki_oikonomia@Α΄'); check('gym A Home Economics split gives 3 groups / 3 hours', u and u['section_count']==3 and u['school_hours']==3)
+u=unit(split_units,'gym.pliroforiki@Β΄'); check('gym B Informatics split gives 3 groups / 3 hours', u and u['section_count']==3 and u['school_hours']==3)
+u=unit(split_units,'gym.texnologia@Β΄'); check('gym B Technology split gives 3 groups / 3 hours', u and u['section_count']==3 and u['school_hours']==3)
+u=unit(split_units,'gym.pliroforiki@Γ΄'); check('gym C Informatics split gives 2 groups / 2 hours', u and u['section_count']==2 and u['school_hours']==2)
+u=unit(split_units,'gym.texnologia@Γ΄'); check('gym C Technology split gives 2 groups / 2 hours', u and u['section_count']==2 and u['school_hours']==2)
 
 # Second foreign language becomes real per-language staffing units.
 u=unit(data['gym_units'],'gym.deyteri_xeni@Α΄','Γαλλικά'); check('gym A French group is 2 hours PE05', u and u['school_hours']==2 and u['top_codes']==['ΠΕ05'])
