@@ -110,3 +110,13 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Το Ε.Ε.Ε.ΕΚ. Κέρκυρας παραμένει `structure_only`: επειδή δεν υπάρχει ασφαλής αριθμός τμημάτων, δεν κατασκευάζονται ψευδείς ώρες ανά κλάδο από τις «Εκτιμήσεις myschool».
 - Νέο `tests/school-profile-workload-matrix-contract.py`: 49/49 PASS. Σχετικά regressions πράσινα και PHP lint 75/75.
 - Τεκμηρίωση: `docs/audits/SCHOOL-PROFILE-WORKLOAD-MATRIX-2026-09-05.md`.
+
+## Personnel workload layer — 2026-09-05
+
+- Προστέθηκε το εσωτερικό `includes/personnel-workload.php`, χωρίς αλλαγή στο public UI.
+- Συνδέει πραγματικό εκπαιδευτικό με `school_profile → workload matrix`: κλάδος, υποχρεωτικό ωράριο, ήδη δεσμευμένες ώρες, συγκεκριμένα curriculum units, προτεραιότητα ανάθεσης και υπόλοιπο.
+- Το υποχρεωτικό ωράριο ΠΕ/ΤΕ και οι βασικοί ρόλοι ελέγχονται με parity απέναντι στο υπάρχον `teaching-hours-calculations.js`. Για ΔΕ δεν επιλέγεται αυθαίρετα κλίμακα Αρχιτεχνίτη/Τεχνίτη· απαιτείται ρητό input.
+- Το roster plan ελέγχει eligibility, fallback αναθέσεις, ατομική υπέρβαση ωραρίου και συνολικό over-allocation ανά `unit_id`.
+- Κάθε εκπαιδευτικός μπορεί να πάρει `open_eligible_units` μετά τις ήδη δοσμένες αναθέσεις, αλλά οι ευκαιρίες αυτές δηλώνονται ρητά ως επικαλυπτόμενες και όχι ως επίσημα κενά/ανάγκες.
+- Το Ε.Ε.Ε.ΕΚ. Κέρκυρας παραμένει `structure_only`: καμία συναγωγή staffing hours από τις «Εκτιμήσεις myschool» χωρίς ασφαλή αριθμό τμημάτων.
+- Νέο `tests/personnel-workload-contract.py`: 42/42 PASS. Συνολικό cross-audit 2191/2191, workload model 7383/7383, PHP lint 76/76.
