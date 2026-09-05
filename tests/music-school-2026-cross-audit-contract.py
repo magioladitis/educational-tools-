@@ -44,6 +44,19 @@ for course_id, alias in aliases.items():
     for grade in row.get('hours', {}):
         check(f'{course_id} alias resolves {grade}', assignment_exists(row.get('school'), alias, grade))
 
+# FEK B 2107/2026 does not include Skills Workshops in Music Gymnasium.
+# Keep both timetable and inherited general-assignment whitelist guarded.
+music_skills_timetable = [
+    r for r in rows.values()
+    if r.get('school') == 'mousiko_gymnasio' and r.get('subject') == 'Εργαστήρια Δεξιοτήτων'
+]
+music_skills_assignments = [
+    a for a in assignments
+    if a.get('school') == 'mousiko_gymnasio' and a.get('subject') == 'Εργαστήρια Δεξιοτήτων'
+]
+check('music gym has no Skills Workshops in timetable', len(music_skills_timetable) == 0)
+check('music gym has no Skills Workshops assignment row', len(music_skills_assignments) == 0)
+
 # The Music Gymnasium second foreign language is a real branch choice: the 2026
 # timetable offers French/German, while the assignment table is broader.
 foreign = rows.get('mgym.deyteri_xeni', {})

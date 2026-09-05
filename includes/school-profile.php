@@ -24,6 +24,23 @@ function schoolProfileGeneralSectionCount($structure, $grade)
     return isset($structure['general_sections'][$grade]) ? max(0, (int) $structure['general_sections'][$grade]) : 0;
 }
 
+function schoolProfileTotalGeneralSections($profile)
+{
+    $total = 0;
+    if (!isset($profile['structures']) || !is_array($profile['structures'])) {
+        return 0;
+    }
+    foreach ($profile['structures'] as $structure) {
+        if (!is_array($structure) || !isset($structure['general_sections']) || !is_array($structure['general_sections'])) {
+            continue;
+        }
+        foreach ($structure['general_sections'] as $count) {
+            $total += max(0, (int) $count);
+        }
+    }
+    return $total;
+}
+
 
 function schoolProfileChoiceOptionSections($structure, $grade, $courseId)
 {

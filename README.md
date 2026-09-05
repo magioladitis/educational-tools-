@@ -136,3 +136,11 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Το UI δηλώνει ρητά ότι τα αθροίσματα δεν είναι επίσημα λειτουργικά κενά και δεν εκτελεί αυτόματες τοποθετήσεις. Το personnel layer παραμένει επόμενο στάδιο.
 - Προστέθηκε νέα κάρτα #32 στην `ergaleia.php`.
 - Νέο `tests/school-staffing-simulator-frontend-contract.py` για προστασία του frontend και των synthetic totals Γυμνασίου/ΓΕΛ.
+
+## Frontend tab «Εκπαιδευτικοί» — 2026-09-05
+- Το `ypologismos-didaktikon-anagkon.php` έχει πλέον πραγματικό τρίτο tab «Εκπαιδευτικοί» και όχι placeholder.
+- Κάθε εκπαιδευτικός καταχωρίζεται σε μία συμπαγή γραμμή με κλάδο, ονοματεπώνυμο, υποχρεωτικό ωράριο, ώρες άλλης μονάδας και διαθέσιμο υπόλοιπο. Προϋπηρεσία/ρόλος ανοίγουν πτυσσόμενα.
+- Το υποχρεωτικό ωράριο υπολογίζεται server-side από `personnelWorkloadNormalizePerson()` και live στο browser από τον κοινό `teaching-hours-calculations.js`.
+- Υπάρχει σύνοψη ανά κλάδο που αντιπαραθέτει το διαθέσιμο ωράριο προσωπικού με αποκλειστικές/κοινές κορυφαίες ώρες του school workload, χωρίς χαρακτηρισμό «κενού/πλεονάσματος» πριν γίνει κατανομή μαθημάτων.
+- Νέο `tests/staffing-personnel-tab-contract.py`. Η αυτόματη κατανομή παραμένει σκόπιμα εκτός UI.
+- Τεκμηρίωση: `docs/audits/PERSONNEL-TAB-FRONTEND-2026-09-05.md`.

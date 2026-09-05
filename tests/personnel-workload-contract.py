@@ -24,16 +24,23 @@ $cases=array(
  array('id'=>'te7','p'=>array('person_id'=>'p','specialty_code'=>'ΤΕ01.04','service'=>array('years'=>7))),
  array('id'=>'te7d1','p'=>array('person_id'=>'p','specialty_code'=>'ΤΕ01.04','service'=>array('years'=>7,'days'=>1))),
  array('id'=>'director','p'=>array('person_id'=>'p','specialty_code'=>'ΠΕ03','service'=>array('years'=>20),'role'=>'director','director_sections_band'=>'6-9')),
+ array('id'=>'director_auto','p'=>array('person_id'=>'p','specialty_code'=>'ΠΕ03','service'=>array('years'=>20),'role'=>'director','school_general_section_count'=>8)),
  array('id'=>'sector','p'=>array('person_id'=>'p','specialty_code'=>'ΠΕ03','service'=>array('years'=>7),'role'=>'epal_ek_lab_sector'))
 );
 $out=array(); foreach($cases as $c){$out[$c['id']]=personnelWorkloadSecondaryObligation($c['p']);}
 echo json_encode($out,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 '''
 ob=php_json(php)
-expected={'pe0':23,'pe6':23,'pe6d1':21,'pe12':21,'pe12d1':20,'pe20':18,'te7':24,'te7d1':21,'director':7,'sector':19}
+expected={'pe0':23,'pe6':23,'pe6d1':21,'pe12':21,'pe12d1':20,'pe20':18,'te7':24,'te7d1':21,'director':7,'director_auto':7,'sector':19}
 for k,v in expected.items(): check(f'obligation {k} = {v}', ob[k]['valid'] and ob[k]['required_teaching_hours']==v)
 check('PE branch inferred', ob['pe0']['hours_branch']=='PE' and ob['pe0']['hours_branch_mode']=='inferred_from_specialty')
 check('TE branch inferred', ob['te7']['hours_branch']=='TE01')
+check('director section count derives 6-9 band', ob['director_auto']['director_sections_band']=='6-9' and ob['director_auto']['school_general_section_count']==8)
+check('director count 3 maps 3-5', php_json('require "includes/personnel-workload.php"; echo json_encode(personnelWorkloadDirectorSectionsBandFromCount(3));')=='3-5')
+check('director count 5 maps 3-5', php_json('require "includes/personnel-workload.php"; echo json_encode(personnelWorkloadDirectorSectionsBandFromCount(5));')=='3-5')
+check('director count 6 maps 6-9', php_json('require "includes/personnel-workload.php"; echo json_encode(personnelWorkloadDirectorSectionsBandFromCount(6));')=='6-9')
+check('director count 10 maps 10-12', php_json('require "includes/personnel-workload.php"; echo json_encode(personnelWorkloadDirectorSectionsBandFromCount(10));')=='10-12')
+check('director count 13 maps 13+', php_json('require "includes/personnel-workload.php"; echo json_encode(personnelWorkloadDirectorSectionsBandFromCount(13));')=='13+')
 
 php=r'''
 require "includes/personnel-workload.php";
@@ -131,6 +138,7 @@ const cases={
  te7:{level:'secondary',role:'teacher',branch:'TE01',years:7},
  te7d1:{level:'secondary',role:'teacher',branch:'TE01',years:7,days:1},
  director:{level:'secondary',role:'director',branch:'PE',years:20,sections:'6-9'},
+ director_auto:{level:'secondary',role:'director',branch:'PE',years:20,sections:'6-9'},
  sector:{level:'secondary',role:'epal_ek_lab_sector',branch:'PE',years:7}
 };
 const out={}; for (const [k,v] of Object.entries(cases)) out[k]=H.calculate(v).hours;

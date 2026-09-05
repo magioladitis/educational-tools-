@@ -3,6 +3,8 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/school-profile-general-education.php';
 require_once __DIR__ . '/includes/school-profile-workload.php';
 require_once __DIR__ . '/includes/ethics-class-formation.php';
+require_once __DIR__ . '/includes/personnel-workload.php';
+require_once __DIR__ . '/includes/teaching-workload-aggregation.php';
 
 function staffingUiH($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
@@ -76,6 +78,119 @@ function staffingUiTrackLabel($track) {
         'economics_it' => 'Οικονομίας / Πληροφορικής',
     );
     return isset($map[$track]) ? $map[$track] : $track;
+}
+
+function staffingUiPersonnelRoleLabel($role) {
+    $map = array(
+        'teacher' => 'Εκπαιδευτικός',
+        'director' => 'Διευθυντής/ντρια',
+        'vice_or_sector' => 'Υποδιευθυντής/ντρια',
+    );
+    return isset($map[$role]) ? $map[$role] : $role;
+}
+function staffingUiPersonnelReasonLabel($reason) {
+    $map = array(
+        'unknown_specialty_code' => 'Δεν έχει επιλεγεί έγκυρος κλάδος.',
+        'director_sections_band_required' => 'Για Διευθυντή/ντρια χρειάζονται τα δηλωμένα κανονικά τμήματα της σχολικής μονάδας.',
+        'de_hours_scale_requires_explicit_architect_or_technician' => 'Για κλάδο ΔΕ χρειάζεται ρητή επιλογή κλίμακας ωραρίου Αρχιτεχνίτη ή Τεχνίτη.',
+        'unknown_hours_branch' => 'Η επιλεγμένη κλίμακα ωραρίου δεν είναι έγκυρη.',
+        'unsupported_specialty_for_secondary_hours' => 'Ο κλάδος δεν υποστηρίζεται από τον υπολογισμό ωραρίου Δευτεροβάθμιας.',
+    );
+    return isset($map[$reason]) ? $map[$reason] : $reason;
+}
+function staffingUiPersonnelRowsFromPost() {
+    $keys = array('person_id','display_name','specialty_code','service_years','service_months','service_days','role','assigned_external_hours','director_sections_band','hours_branch');
+    $arrays = array();
+    $count = 0;
+    foreach ($keys as $key) {
+        $name = 'personnel_' . $key;
+        $arrays[$key] = isset($_POST[$name]) && is_array($_POST[$name]) ? $_POST[$name] : array();
+        $count = max($count, count($arrays[$key]));
+    }
+    $rows = array();
+    for ($i=0; $i<$count; $i++) {
+        $name = isset($arrays['display_name'][$i]) ? trim((string)$arrays['display_name'][$i]) : '';
+        $specialty = isset($arrays['specialty_code'][$i]) ? teacherSpecialtyCanonicalCode($arrays['specialty_code'][$i]) : '';
+        $years = isset($arrays['service_years'][$i]) ? (string)$arrays['service_years'][$i] : '';
+        $months = isset($arrays['service_months'][$i]) ? (string)$arrays['service_months'][$i] : '';
+        $days = isset($arrays['service_days'][$i]) ? (string)$arrays['service_days'][$i] : '';
+        $role = isset($arrays['role'][$i]) ? (string)$arrays['role'][$i] : 'teacher';
+        $external = isset($arrays['assigned_external_hours'][$i]) ? (string)$arrays['assigned_external_hours'][$i] : '0';
+        $directorBand = isset($arrays['director_sections_band'][$i]) ? (string)$arrays['director_sections_band'][$i] : '';
+        $hoursBranch = isset($arrays['hours_branch'][$i]) ? (string)$arrays['hours_branch'][$i] : '';
+        // A newly-added but untouched blank row must not become an unresolved person.
+        if ($name === '' && $specialty === '') continue;
+        $id = isset($arrays['person_id'][$i]) ? trim((string)$arrays['person_id'][$i]) : '';
+        if ($id === '') $id = 'person-' . ($i + 1);
+        $rows[] = array(
+            'person_id'=>$id,
+            'display_name'=>$name,
+            'specialty_code'=>$specialty,
+            'service'=>array('years'=>$years === '' ? 0 : $years,'months'=>$months === '' ? 0 : $months,'days'=>$days === '' ? 0 : $days),
+            'role'=>$role,
+            'assigned_external_hours'=>$external === '' ? 0 : $external,
+            'director_sections_band'=>$directorBand,
+            'hours_branch'=>$hoursBranch,
+        );
+    }
+    return $rows;
+}
+function staffingUiSchoolStateKeys() {
+    return array(
+        'school_type','school_name',
+        'gym_general_a','gym_general_b','gym_general_c',
+        'gym_lang_a_fr','gym_lang_a_de','gym_lang_a_it','gym_lang_b_fr','gym_lang_b_de','gym_lang_b_it','gym_lang_c_fr','gym_lang_c_de','gym_lang_c_it',
+        'gym_tech_split_a','gym_tech_split_b','gym_tech_split_c',
+        'gel_general_a','gel_general_b','gel_general_c',
+        'gel_lang_a_fr','gel_lang_a_de','gel_lang_b_fr','gel_lang_b_de',
+        'gel_b_hum','gel_b_sci','gel_c_hum','gel_c_scihealth','gel_c_econit',
+        'gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history',
+        'ethics_a_exempt','ethics_a_timely','ethics_a_equivalent','ethics_b_exempt','ethics_b_timely','ethics_b_equivalent','ethics_c_exempt','ethics_c_timely','ethics_c_equivalent'
+    );
+}
+function staffingUiRenderSchoolStateHiddenInputs() {
+    foreach (staffingUiSchoolStateKeys() as $key) {
+        $value = staffingUiPost($key, '');
+        echo '<input type="hidden" name="' . staffingUiH($key) . '" value="' . staffingUiH($value) . '">';
+    }
+}
+function staffingUiPersonnelSpecialtyOptions($matrix) {
+    $leafCodes = schoolProfileWorkloadStaffingCodes();
+    $knownAssignmentCodes = teachingWorkloadKnownAssignmentCodes();
+    $teachingLeafCodes = array();
+    foreach ($leafCodes as $leaf) {
+        foreach ($knownAssignmentCodes as $assigned) {
+            if (teachingWorkloadAggregationCodeMatches($leaf, $assigned)) {
+                $teachingLeafCodes[] = $leaf;
+                break;
+            }
+        }
+    }
+    $relevant = $matrix && !empty($matrix['codes']) ? array_keys($matrix['codes']) : array();
+    $relevantMap = array();
+    foreach ($relevant as $code) $relevantMap[$code] = true;
+    $other = array();
+    foreach ($teachingLeafCodes as $code) if (!isset($relevantMap[$code])) $other[] = $code;
+    usort($relevant, 'strnatcmp');
+    usort($other, 'strnatcmp');
+    return array('relevant'=>$relevant,'other'=>$other);
+}
+function staffingUiRenderPersonnelSpecialtyOptions($options, $selected) {
+    echo '<option value="">— επιλογή κλάδου —</option>';
+    if (!empty($options['relevant'])) {
+        echo '<optgroup label="Κλάδοι με επιλεξιμότητα στη μονάδα">';
+        foreach ($options['relevant'] as $code) {
+            echo '<option value="' . staffingUiH($code) . '"' . ($selected === $code ? ' selected' : '') . '>' . staffingUiH(teacherSpecialtyDisplay($code)) . '</option>';
+        }
+        echo '</optgroup>';
+    }
+    if (!empty($options['other'])) {
+        echo '<optgroup label="Λοιποί αναγνωρισμένοι κλάδοι">';
+        foreach ($options['other'] as $code) {
+            echo '<option value="' . staffingUiH($code) . '"' . ($selected === $code ? ' selected' : '') . '>' . staffingUiH(teacherSpecialtyDisplay($code)) . '</option>';
+        }
+        echo '</optgroup>';
+    }
 }
 
 /**
@@ -289,6 +404,68 @@ if ($submitted) {
     $displayMatrix = staffingUiSortCodesNatural($presentation['matrix']);
     $collapsedSkills = $presentation['collapsed'];
 }
+$generalSectionTotal = $profile ? schoolProfileTotalGeneralSections($profile) : 0;
+$directorSectionsBandAuto = personnelWorkloadDirectorSectionsBandFromCount($generalSectionTotal);
+
+$staffingAction = staffingUiPost('staffing_action', '');
+$activePanel = staffingUiPost('active_panel', $submitted ? 'results' : 'school');
+if (!in_array($activePanel, array('school','results','personnel'), true)) $activePanel = $submitted ? 'results' : 'school';
+if ($staffingAction === 'personnel') $activePanel = 'personnel';
+
+$personnelRows = staffingUiPersonnelRowsFromPost();
+$personnelEvaluations = array();
+$personnelSummary = array(
+    'people_count'=>0,
+    'resolved_count'=>0,
+    'unresolved_count'=>0,
+    'required_hours'=>0,
+    'external_hours'=>0,
+    'available_here_hours'=>0,
+    'by_code'=>array(),
+);
+if (!empty($personnelRows)) {
+    foreach ($personnelRows as $person) {
+        $personForEvaluation = $person;
+        if (isset($personForEvaluation['role']) && $personForEvaluation['role'] === 'director') {
+            $personForEvaluation['school_general_section_count'] = $generalSectionTotal;
+        }
+        $normalized = personnelWorkloadNormalizePerson($personForEvaluation);
+        $personnelEvaluations[$person['person_id']] = $normalized;
+        $personnelSummary['people_count']++;
+        $code = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
+        if ($code !== '' && !isset($personnelSummary['by_code'][$code])) {
+            $personnelSummary['by_code'][$code] = array(
+                'code'=>$code,
+                'label'=>teacherSpecialtyLabel($code),
+                'people_count'=>0,
+                'resolved_count'=>0,
+                'required_hours'=>0,
+                'external_hours'=>0,
+                'available_here_hours'=>0,
+            );
+        }
+        if ($code !== '') $personnelSummary['by_code'][$code]['people_count']++;
+        if ($normalized['status'] !== 'resolved') {
+            $personnelSummary['unresolved_count']++;
+            continue;
+        }
+        $personnelSummary['resolved_count']++;
+        $required = (int)$normalized['required_teaching_hours'];
+        $external = (int)$normalized['assigned_external_hours'];
+        $available = (int)$normalized['remaining_before_profile_hours'];
+        $personnelSummary['required_hours'] += $required;
+        $personnelSummary['external_hours'] += $external;
+        $personnelSummary['available_here_hours'] += $available;
+        if ($code !== '') {
+            $personnelSummary['by_code'][$code]['resolved_count']++;
+            $personnelSummary['by_code'][$code]['required_hours'] += $required;
+            $personnelSummary['by_code'][$code]['external_hours'] += $external;
+            $personnelSummary['by_code'][$code]['available_here_hours'] += $available;
+        }
+    }
+}
+uksort($personnelSummary['by_code'], 'strnatcmp');
+$personnelSpecialtyOptions = staffingUiPersonnelSpecialtyOptions($displayMatrix);
 ?>
 <!doctype html>
 <html lang="el">
@@ -333,7 +510,45 @@ if ($submitted) {
     .edu-page-staffing-simulator details.option-panel>summary::after{content:'＋';font-size:1.1rem;color:var(--edu-muted)}
     .edu-page-staffing-simulator details.option-panel[open]>summary::after{content:'−'}
     .edu-page-staffing-simulator .option-panel-body{padding:0 15px 14px;border-top:1px solid var(--edu-result-row-separator)}
-    @media(max-width:760px){.edu-page-staffing-simulator .mini-grid,.edu-page-staffing-simulator .mini-grid.two,.edu-page-staffing-simulator .staffing-summary-grid{grid-template-columns:1fr}.edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{position:static}}
+    .edu-page-staffing-simulator .staffing-panel[hidden]{display:none!important}
+    .edu-page-staffing-simulator button.mode-tab{font:inherit;cursor:pointer}
+    .edu-page-staffing-simulator .personnel-toolbar{display:flex;gap:10px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin:12px 0}
+    .edu-page-staffing-simulator .personnel-toolbar .field{min-width:240px;flex:1}
+    .edu-page-staffing-simulator .personnel-list{display:grid;gap:10px;margin-top:12px}
+    .edu-page-staffing-simulator .personnel-row{border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface);overflow:hidden}
+    .edu-page-staffing-simulator .personnel-row-main{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(200px,1.4fr) repeat(3,minmax(92px,.55fr)) auto;gap:10px;align-items:end;padding:12px}
+    .edu-page-staffing-simulator .personnel-row-main .metric{padding:8px 10px;border-radius:9px;background:var(--edu-surface-soft);min-height:42px}
+    .edu-page-staffing-simulator .personnel-row-main .metric strong{display:block;font-size:1.05rem;color:var(--edu-primary-dark);font-variant-numeric:tabular-nums}
+    .edu-page-staffing-simulator .personnel-row-main .metric span{font-size:11.5px;color:var(--edu-muted)}
+    .edu-page-staffing-simulator .personnel-row details{border-top:1px solid var(--edu-result-row-separator)}
+    .edu-page-staffing-simulator .personnel-row details>summary{cursor:pointer;padding:9px 12px;font-weight:700;color:var(--edu-muted);list-style:none}
+    .edu-page-staffing-simulator .personnel-row details>summary::-webkit-details-marker{display:none}
+    .edu-page-staffing-simulator .personnel-row-details{padding:0 12px 12px}
+    .edu-page-staffing-simulator .personnel-remove{border:1px solid var(--edu-border);background:var(--edu-surface-soft);border-radius:9px;padding:9px 10px;cursor:pointer;color:var(--edu-muted)}
+    .edu-page-staffing-simulator .personnel-status-error{color:#9c2f2f;font-size:12px;margin:7px 12px 10px}
+    .edu-page-staffing-simulator .personnel-toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .edu-page-staffing-simulator .personnel-csv-panel{margin:12px 0;padding:14px;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft)}
+    .edu-page-staffing-simulator .personnel-csv-panel[hidden]{display:none!important}
+    .edu-page-staffing-simulator .personnel-csv-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+    .edu-page-staffing-simulator .personnel-csv-meta{color:var(--edu-muted);font-size:12.5px;margin-top:3px}
+    .edu-page-staffing-simulator .personnel-csv-mappings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
+    .edu-page-staffing-simulator .personnel-csv-mappings .field{min-width:0}
+    .edu-page-staffing-simulator .personnel-csv-preview{overflow-x:auto;margin-top:12px;max-height:270px;overflow-y:auto;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface)}
+    .edu-page-staffing-simulator .personnel-csv-preview table{width:100%;border-collapse:collapse;min-width:650px}
+    .edu-page-staffing-simulator .personnel-csv-preview th,.edu-page-staffing-simulator .personnel-csv-preview td{padding:7px 8px;border-bottom:1px solid var(--edu-result-row-separator);text-align:left;font-size:12px;white-space:nowrap}
+    .edu-page-staffing-simulator .personnel-csv-preview th{position:sticky;top:0;background:var(--edu-surface-soft);z-index:1;color:var(--edu-muted)}
+    .edu-page-staffing-simulator .personnel-csv-actions{display:flex;gap:8px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin-top:12px}
+    .edu-page-staffing-simulator .personnel-csv-actions .field{min-width:220px}
+    .edu-page-staffing-simulator .personnel-csv-status{font-size:12.5px;margin-top:10px;color:var(--edu-muted)}
+    .edu-page-staffing-simulator .personnel-csv-status.is-error{color:#9c2f2f}
+    .edu-page-staffing-simulator .personnel-csv-status.is-success{color:var(--edu-success)}
+    .edu-page-staffing-simulator .branch-summary{display:grid;gap:8px;margin:12px 0}
+    .edu-page-staffing-simulator .branch-summary-row{display:grid;grid-template-columns:minmax(140px,.8fr) repeat(4,minmax(110px,.65fr));gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface-soft)}
+    .edu-page-staffing-simulator .branch-summary-row .branch-code{font-weight:800;color:var(--edu-primary-dark)}
+    .edu-page-staffing-simulator .branch-summary-row small{display:block;color:var(--edu-muted)}
+    .edu-page-staffing-simulator .empty-personnel{padding:18px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
+    @media(max-width:960px){.edu-page-staffing-simulator .personnel-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .branch-summary-row{grid-template-columns:1fr 1fr}}
+    @media(max-width:760px){.edu-page-staffing-simulator .mini-grid,.edu-page-staffing-simulator .mini-grid.two,.edu-page-staffing-simulator .staffing-summary-grid,.edu-page-staffing-simulator .personnel-row-main,.edu-page-staffing-simulator .branch-summary-row,.edu-page-staffing-simulator .personnel-csv-mappings{grid-template-columns:1fr}.edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{position:static}}
   </style>
 </head>
 <body class="edu-ui edu-calc-standard edu-page-staffing-simulator">
@@ -348,15 +563,16 @@ if ($submitted) {
     'badges' => array('2026–2027','Στοιχεία σχολικής μονάδας','Ωρολόγιο + Αναθέσεις','Α΄ · Β΄ · Γ΄','Ηθική','Χωρίς αυτόματες τοποθετήσεις')
   )); ?>
 
-  <div class="mode-tabs" aria-label="Στάδια εργαλείου">
-    <span class="mode-tab is-active">1. Σχολική μονάδα</span>
-    <span class="mode-tab<?php echo $submitted ? ' is-active' : ''; ?>">2. Αποτελέσματα ανά κλάδο</span>
-    <span class="mode-tab">3. Εκπαιδευτικοί — επόμενο στάδιο</span>
+  <div class="mode-tabs" aria-label="Στάδια εργαλείου" role="tablist">
+    <button type="button" class="mode-tab<?php echo $activePanel === 'school' ? ' is-active' : ''; ?>" data-staffing-tab="school" role="tab" aria-selected="<?php echo $activePanel === 'school' ? 'true' : 'false'; ?>">1. Σχολική μονάδα</button>
+    <button type="button" class="mode-tab<?php echo $activePanel === 'results' ? ' is-active' : ''; ?>" data-staffing-tab="results" role="tab" aria-selected="<?php echo $activePanel === 'results' ? 'true' : 'false'; ?>"<?php echo !$submitted ? ' disabled' : ''; ?>>2. Αποτελέσματα ανά κλάδο</button>
+    <button type="button" class="mode-tab<?php echo $activePanel === 'personnel' ? ' is-active' : ''; ?>" data-staffing-tab="personnel" role="tab" aria-selected="<?php echo $activePanel === 'personnel' ? 'true' : 'false'; ?>"<?php echo !$submitted ? ' disabled' : ''; ?>>3. Εκπαιδευτικοί</button>
+    <button type="button" class="mode-tab" role="tab" aria-selected="false" disabled>4. Κατανομή μαθημάτων — επόμενο στάδιο</button>
   </div>
 
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
-      <?php calculatorCardStart(); ?>
+      <?php calculatorCardStart(array('class'=>'card staffing-panel','attrs'=>array('data-staffing-panel'=>'school') + ($activePanel !== 'school' ? array('hidden'=>true) : array()))); ?>
         <h2>1. Στοιχεία σχολικής μονάδας</h2>
         <p class="cap">Η πρώτη έκδοση υποστηρίζει τυπικό Ημερήσιο Γυμνάσιο και Ημερήσιο ΓΕΛ. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
 
@@ -495,14 +711,14 @@ if ($submitted) {
           </section>
 
           <div class="actions">
-            <button class="edu-btn-primary" type="submit">Υπολόγισε διδακτικές ανάγκες</button>
+            <button class="edu-btn-primary" type="submit" name="staffing_action" value="profile">Υπολόγισε διδακτικές ανάγκες</button><input type="hidden" name="active_panel" value="results">
             <button class="edu-btn-secondary" type="reset" id="staffingReset">Καθαρισμός</button>
           </div>
         </form>
       <?php calculatorCardEnd(); ?>
 
       <?php if ($submitted && $matrix && $displayMatrix): ?>
-        <?php calculatorCardStart(array('class'=>'card staffing-results-card')); ?>
+        <?php calculatorCardStart(array('class'=>'card staffing-results-card staffing-panel','attrs'=>array('data-staffing-panel'=>'results') + ($activePanel !== 'results' ? array('hidden'=>true) : array()))); ?>
           <h2>2. Αποτελέσματα ανά κλάδο</h2>
           <p class="cap">Τα αθροίσματα είναι ώρες του ωρολογίου προγράμματος για τις οποίες ο κάθε κλάδος είναι επιλέξιμος στη συγκεκριμένη σχολική μονάδα. Δεν αποτελούν ακόμη επίσημα λειτουργικά κενά ούτε τελική κατανομή σε εκπαιδευτικούς.</p>
 
@@ -589,6 +805,187 @@ if ($submitted) {
           <p class="help"><strong>Προσοχή:</strong> οι στήλες επιλεξιμότητας Α΄/Β΄/Γ΄ μπορούν να επικαλύπτονται μεταξύ κλάδων. Οι «Αποκλειστικές κορυφαίες» είναι το πιο αυστηρό κομμάτι της στελέχωσης· οι «Κοινές κορυφαίες» απαιτούν πραγματική κατανομή μεταξύ ισότιμων κλάδων.<?php if (!empty($collapsedSkills['active'])): ?> Τα <strong>Εργαστήρια Δεξιοτήτων</strong> εξαιρούνται από τα επιμέρους αθροίσματα κλάδων της οθόνης και εμφανίζονται μία φορά ως «Οποιαδήποτε ειδικότητα», ώστε να αποφεύγεται η τεχνητή επανάληψη δεκάδων αναθέσεων.<?php endif; ?></p>
         <?php calculatorCardEnd(); ?>
       <?php endif; ?>
+
+      <?php if ($submitted && $matrix): ?>
+        <?php calculatorCardStart(array('class'=>'card staffing-panel personnel-card','attrs'=>array('data-staffing-panel'=>'personnel') + ($activePanel !== 'personnel' ? array('hidden'=>true) : array()))); ?>
+          <h2>3. Εκπαιδευτικοί</h2>
+          <p class="cap">Καταχώρισε το πραγματικό προσωπικό της σχολικής μονάδας. Το υποχρεωτικό διδακτικό ωράριο υπολογίζεται αυτόματα από κλάδο, προϋπηρεσία και ρόλο. Οι ώρες «σε άλλη μονάδα» αφαιρούνται από το διαθέσιμο ωράριο εδώ.</p>
+          <div class="info-note"><strong>Δεν γίνεται ακόμη κατανομή μαθημάτων.</strong> Το «διαθέσιμο εδώ» είναι το υπόλοιπο του ατομικού υποχρεωτικού ωραρίου πριν από τις αναθέσεις μαθημάτων της συγκεκριμένης μονάδας.</div>
+
+          <?php if (!empty($personnelRows)): ?>
+            <div class="staffing-summary-grid">
+              <div class="summary-chip"><strong><?php echo (int)$personnelSummary['people_count']; ?></strong><span>εκπαιδευτικοί στο προσωρινό προσωπικό</span></div>
+              <div class="summary-chip"><strong><?php echo (int)$personnelSummary['required_hours']; ?></strong><span>συνολικό υποχρεωτικό διδακτικό ωράριο</span></div>
+              <div class="summary-chip"><strong><?php echo (int)$personnelSummary['external_hours']; ?></strong><span>ώρες ήδη δεσμευμένες σε άλλη μονάδα</span></div>
+              <div class="summary-chip"><strong><?php echo (int)$personnelSummary['available_here_hours']; ?></strong><span>ώρες διαθέσιμες για τη συγκεκριμένη μονάδα</span></div>
+              <div class="summary-chip"><strong><?php echo (int)$personnelSummary['unresolved_count']; ?></strong><span>εγγραφές που χρειάζονται συμπλήρωση</span></div>
+            </div>
+
+            <h3>Σύνοψη ανά κλάδο</h3>
+            <div class="branch-summary" id="personnelBranchSummary">
+              <?php foreach ($personnelSummary['by_code'] as $code=>$summary): ?>
+                <?php $needRow = $displayMatrix && isset($displayMatrix['codes'][$code]) ? $displayMatrix['codes'][$code] : null; ?>
+                <div class="branch-summary-row" data-personnel-branch="<?php echo staffingUiH($code); ?>">
+                  <div><span class="branch-code"><?php echo staffingUiH($code); ?></span><small><?php echo staffingUiH($summary['label']); ?></small></div>
+                  <div><strong><?php echo (int)$summary['people_count']; ?></strong><small>εκπαιδευτικοί</small></div>
+                  <div><strong><?php echo (int)$summary['available_here_hours']; ?></strong><small>ώρες διαθέσιμες εδώ</small></div>
+                  <div><strong><?php echo $needRow ? (int)$needRow['ordered_exclusive_top_priority_hours'] : 0; ?></strong><small>αποκλειστικές κορυφαίες ώρες</small></div>
+                  <div><strong><?php echo $needRow ? (int)$needRow['ordered_shared_top_priority_hours'] : 0; ?></strong><small>κοινές κορυφαίες ώρες</small></div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+            <p class="help">Η σύγκριση ανά κλάδο είναι ενδεικτική για έλεγχο. Δεν χαρακτηρίζει τη διαφορά ως «κενό» ή «πλεόνασμα», επειδή δεν έχουν ακόμη κατανεμηθεί τα πραγματικά μαθήματα και οι κοινές αναθέσεις.</p>
+          <?php endif; ?>
+
+          <form method="post" id="staffingPersonnelForm">
+            <?php staffingUiRenderSchoolStateHiddenInputs(); ?>
+            <input type="hidden" name="active_panel" value="personnel">
+
+            <div class="personnel-toolbar">
+              <div class="field">
+                <label for="personnelFilter">Φίλτρο προσωπικού</label>
+                <input id="personnelFilter" type="search" placeholder="π.χ. ΠΕ03 ή επώνυμο">
+              </div>
+              <div class="personnel-toolbar-actions">
+                <button class="edu-btn-secondary" type="button" id="addPersonnelRow">+ Προσθήκη εκπαιδευτικού</button>
+                <button class="edu-btn-secondary" type="button" id="openPersonnelCsv">Εισαγωγή CSV</button>
+                <button class="edu-btn-secondary" type="button" id="downloadPersonnelCsvTemplate">Λήψη προτύπου CSV</button>
+              </div>
+            </div>
+
+            <input id="personnelCsvFile" type="file" accept=".csv,text/csv,text/plain" hidden>
+            <div class="personnel-csv-panel" id="personnelCsvPanel" hidden>
+              <div class="personnel-csv-head">
+                <div>
+                  <strong>Εισαγωγή προσωπικού από CSV</strong>
+                  <div class="personnel-csv-meta" id="personnelCsvMeta">Επίλεξε αρχείο CSV για προεπισκόπηση και αντιστοίχιση στηλών.</div>
+                </div>
+                <button class="personnel-remove" type="button" id="closePersonnelCsv">Κλείσιμο</button>
+              </div>
+              <div class="info-note"><strong>Το αρχείο διαβάζεται μόνο στον browser σου.</strong> Δεν μεταφορτώνεται στον διακομιστή. Υποστηρίζονται CSV με ελληνικό ερωτηματικό/semicolon (;), κόμμα ή tab και γίνεται αυτόματη προσπάθεια αναγνώρισης των στηλών.</div>
+              <details class="option-panel" open>
+                <summary>Αντιστοίχιση στηλών CSV</summary>
+                <div class="option-panel-body">
+                  <div class="personnel-csv-mappings" id="personnelCsvMappings"></div>
+                  <p class="help">Απαραίτητος είναι ο <strong>Κλάδος / ειδικότητα</strong>. Το ονοματεπώνυμο μπορεί να προέρχεται από μία στήλη ή από χωριστές στήλες Επώνυμο + Όνομα. Η προϋπηρεσία μπορεί επίσης να δοθεί είτε σε χωριστές στήλες είτε σε μία ενιαία στήλη.</p>
+                </div>
+              </details>
+              <div class="personnel-csv-preview" id="personnelCsvPreview" hidden></div>
+              <div class="personnel-csv-actions">
+                <div class="field">
+                  <label for="personnelCsvMode">Τρόπος εισαγωγής</label>
+                  <select id="personnelCsvMode"><option value="append">Προσθήκη στις υπάρχουσες εγγραφές</option><option value="replace">Αντικατάσταση του προσωρινού προσωπικού</option></select>
+                </div>
+                <button class="edu-btn-primary" type="button" id="importPersonnelCsv" disabled>Εισαγωγή στο προσωπικό</button>
+              </div>
+              <div class="personnel-csv-status" id="personnelCsvStatus"></div>
+            </div>
+
+            <div class="personnel-list" id="personnelList">
+              <?php if (empty($personnelRows)): ?>
+                <div class="empty-personnel" id="emptyPersonnelState">Δεν έχει προστεθεί ακόμη εκπαιδευτικός. Πάτησε «+ Προσθήκη εκπαιδευτικού» ή «Εισαγωγή CSV» για να ξεκινήσεις.</div>
+              <?php endif; ?>
+              <?php foreach ($personnelRows as $person): ?>
+                <?php
+                  $eval = isset($personnelEvaluations[$person['person_id']]) ? $personnelEvaluations[$person['person_id']] : array('status'=>'invalid','reason'=>'unknown');
+                  $resolved = isset($eval['status']) && $eval['status'] === 'resolved';
+                  $requiredHours = $resolved ? (int)$eval['required_teaching_hours'] : null;
+                  $availableHours = $resolved ? (int)$eval['remaining_before_profile_hours'] : null;
+                  $externalHours = isset($person['assigned_external_hours']) ? (int)$person['assigned_external_hours'] : 0;
+                  $selectedCode = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
+                ?>
+                <div class="personnel-row" data-personnel-row data-search="<?php echo staffingUiH($selectedCode . ' ' . $person['display_name']); ?>">
+                  <input type="hidden" name="personnel_person_id[]" value="<?php echo staffingUiH($person['person_id']); ?>">
+                  <div class="personnel-row-main">
+                    <div class="field">
+                      <label>Κλάδος</label>
+                      <select name="personnel_specialty_code[]" class="personnel-specialty"><?php staffingUiRenderPersonnelSpecialtyOptions($personnelSpecialtyOptions, $selectedCode); ?></select>
+                    </div>
+                    <div class="field">
+                      <label>Ονοματεπώνυμο</label>
+                      <input type="text" name="personnel_display_name[]" class="personnel-name" value="<?php echo staffingUiH($person['display_name']); ?>" placeholder="π.χ. Μαρία Παπαδοπούλου">
+                    </div>
+                    <div class="metric"><strong data-required-hours><?php echo $requiredHours === null ? '—' : $requiredHours; ?></strong><span>υποχρεωτικό</span></div>
+                    <div class="field">
+                      <label>Ώρες αλλού</label>
+                      <input type="number" min="0" max="35" step="1" name="personnel_assigned_external_hours[]" class="personnel-external" value="<?php echo $externalHours; ?>">
+                    </div>
+                    <div class="metric"><strong data-available-hours><?php echo $availableHours === null ? '—' : $availableHours; ?></strong><span>διαθέσιμο εδώ</span></div>
+                    <button type="button" class="personnel-remove" title="Αφαίρεση εκπαιδευτικού">Αφαίρεση</button>
+                  </div>
+                  <details<?php echo !$resolved ? ' open' : ''; ?>>
+                    <summary>Στοιχεία υπολογισμού ωραρίου<?php if ($resolved && !empty($eval['obligation']['service_label'])): ?> · <?php echo staffingUiH($eval['obligation']['service_label']); ?><?php endif; ?></summary>
+                    <div class="personnel-row-details">
+                      <div class="mini-grid">
+                        <div class="field"><label>Έτη υπηρεσίας</label><input type="number" min="0" max="50" step="1" name="personnel_service_years[]" class="personnel-years" value="<?php echo staffingUiH($person['service']['years']); ?>"></div>
+                        <div class="field"><label>Μήνες</label><input type="number" min="0" max="11" step="1" name="personnel_service_months[]" class="personnel-months" value="<?php echo staffingUiH($person['service']['months']); ?>"></div>
+                        <div class="field"><label>Ημέρες</label><input type="number" min="0" max="29" step="1" name="personnel_service_days[]" class="personnel-days" value="<?php echo staffingUiH($person['service']['days']); ?>"></div>
+                      </div>
+                      <div class="mini-grid">
+                        <div class="field">
+                          <label>Ρόλος</label>
+                          <select name="personnel_role[]" class="personnel-role">
+                            <?php foreach (array('teacher','director','vice_or_sector') as $role): ?><option value="<?php echo $role; ?>"<?php echo $person['role'] === $role ? ' selected' : ''; ?>><?php echo staffingUiH(staffingUiPersonnelRoleLabel($role)); ?></option><?php endforeach; ?>
+                          </select>
+                        </div>
+                        <div class="field personnel-director-band"<?php echo $person['role'] === 'director' ? '' : ' hidden'; ?>>
+                          <label>Τμήματα σχολικής μονάδας <small>αυτόματα</small></label>
+                          <div class="summary-chip personnel-director-section-info"><strong data-director-section-count><?php echo (int)$generalSectionTotal; ?></strong><span data-director-section-band><?php echo $directorSectionsBandAuto ? 'κλίμακα ' . staffingUiH($directorSectionsBandAuto) : 'χρειάζονται τα κανονικά τμήματα'; ?></span></div>
+                        </div>
+                        <div class="field personnel-de-branch"<?php echo strpos($selectedCode, 'ΔΕ') === 0 ? '' : ' hidden'; ?>>
+                          <label>Κλίμακα ωραρίου ΔΕ</label>
+                          <select name="personnel_hours_branch[]" class="personnel-hours-branch">
+                            <option value="">— επιλογή —</option>
+                            <option value="DE01_ARCH"<?php echo $person['hours_branch'] === 'DE01_ARCH' ? ' selected' : ''; ?>>Αρχιτεχνίτης</option>
+                            <option value="DE01_TECH"<?php echo $person['hours_branch'] === 'DE01_TECH' ? ' selected' : ''; ?>>Τεχνίτης</option>
+                          </select>
+                        </div>
+                      </div>
+                      <?php if ($resolved && !empty($eval['obligation']['rule'])): ?><p class="help" data-personnel-rule><?php echo staffingUiH($eval['obligation']['rule']); ?></p><?php else: ?><p class="help" data-personnel-rule></p><?php endif; ?>
+                    </div>
+                  </details>
+                  <?php if (!$resolved): ?><div class="personnel-status-error" data-personnel-error><?php echo staffingUiH(staffingUiPersonnelReasonLabel(isset($eval['reason']) ? $eval['reason'] : 'Χρειάζεται συμπλήρωση στοιχείων.')); ?></div><?php elseif (!empty($eval['external_overage_hours'])): ?><div class="personnel-status-error" data-personnel-error>Οι ώρες σε άλλη μονάδα υπερβαίνουν το υποχρεωτικό ωράριο κατά <?php echo (int)$eval['external_overage_hours']; ?> ώρες.</div><?php else: ?><div class="personnel-status-error" data-personnel-error hidden></div><?php endif; ?>
+                </div>
+              <?php endforeach; ?>
+            </div>
+
+            <div class="actions">
+              <button class="edu-btn-primary" type="submit" name="staffing_action" value="personnel">Υπολόγισε ωράρια προσωπικού</button>
+            </div>
+          </form>
+
+          <template id="personnelRowTemplate">
+            <div class="personnel-row" data-personnel-row data-search="">
+              <input type="hidden" name="personnel_person_id[]" value="">
+              <div class="personnel-row-main">
+                <div class="field"><label>Κλάδος</label><select name="personnel_specialty_code[]" class="personnel-specialty"><?php staffingUiRenderPersonnelSpecialtyOptions($personnelSpecialtyOptions, ''); ?></select></div>
+                <div class="field"><label>Ονοματεπώνυμο</label><input type="text" name="personnel_display_name[]" class="personnel-name" placeholder="π.χ. Μαρία Παπαδοπούλου"></div>
+                <div class="metric"><strong data-required-hours>—</strong><span>υποχρεωτικό</span></div>
+                <div class="field"><label>Ώρες αλλού</label><input type="number" min="0" max="35" step="1" name="personnel_assigned_external_hours[]" class="personnel-external" value="0"></div>
+                <div class="metric"><strong data-available-hours>—</strong><span>διαθέσιμο εδώ</span></div>
+                <button type="button" class="personnel-remove" title="Αφαίρεση εκπαιδευτικού">Αφαίρεση</button>
+              </div>
+              <details open>
+                <summary>Στοιχεία υπολογισμού ωραρίου</summary>
+                <div class="personnel-row-details">
+                  <div class="mini-grid">
+                    <div class="field"><label>Έτη υπηρεσίας</label><input type="number" min="0" max="50" step="1" name="personnel_service_years[]" class="personnel-years" value="0"></div>
+                    <div class="field"><label>Μήνες</label><input type="number" min="0" max="11" step="1" name="personnel_service_months[]" class="personnel-months" value="0"></div>
+                    <div class="field"><label>Ημέρες</label><input type="number" min="0" max="29" step="1" name="personnel_service_days[]" class="personnel-days" value="0"></div>
+                  </div>
+                  <div class="mini-grid">
+                    <div class="field"><label>Ρόλος</label><select name="personnel_role[]" class="personnel-role"><option value="teacher">Εκπαιδευτικός</option><option value="director">Διευθυντής/ντρια</option><option value="vice_or_sector">Υποδιευθυντής/ντρια</option></select></div>
+                    <div class="field personnel-director-band" hidden><label>Τμήματα σχολικής μονάδας <small>αυτόματα</small></label><div class="summary-chip personnel-director-section-info"><strong data-director-section-count>—</strong><span data-director-section-band>από τα κανονικά τμήματα</span></div></div>
+                    <div class="field personnel-de-branch" hidden><label>Κλίμακα ωραρίου ΔΕ</label><select name="personnel_hours_branch[]" class="personnel-hours-branch"><option value="">— επιλογή —</option><option value="DE01_ARCH">Αρχιτεχνίτης</option><option value="DE01_TECH">Τεχνίτης</option></select></div>
+                  </div>
+                  <p class="help" data-personnel-rule></p>
+                </div>
+              </details>
+              <div class="personnel-status-error" data-personnel-error hidden></div>
+            </div>
+          </template>
+        <?php calculatorCardEnd(); ?>
+      <?php endif; ?>
     <?php calculatorMainEnd(); ?>
 
     <?php calculatorResultsStart(array('class'=>'card results')); ?>
@@ -599,9 +996,9 @@ if ($submitted) {
       <div class="result-row"><span>2η ξένη γλώσσα</span><strong>✓</strong></div>
       <div class="result-row"><span>Ομάδες Προσανατολισμού ΓΕΛ</span><strong>✓</strong></div>
       <div class="result-row"><span>Ηθική</span><strong>✓</strong></div>
-      <div class="result-row"><span>Πραγματικό προσωπικό</span><strong>Επόμενο</strong></div>
+      <div class="result-row"><span>Πραγματικό προσωπικό</span><strong>✓</strong></div>
       <div class="result-row"><span>Αυτόματες τοποθετήσεις</span><strong>Όχι ακόμη</strong></div>
-      <div class="info-note">Το εργαλείο δεν χαρακτηρίζει τις ώρες ως επίσημα «κενά». Για αυτό χρειάζεται το επόμενο επίπεδο με πραγματική κατάσταση εκπαιδευτικών, ώρες υπηρεσίας και ήδη ανατεθειμένο έργο.</div>
+      <div class="info-note">Το εργαλείο δεν χαρακτηρίζει τις ώρες ως επίσημα «κενά». Το προσωπικό και το διαθέσιμο ατομικό ωράριο μπορούν πλέον να καταχωριστούν, αλλά η πραγματική κατανομή μαθημάτων παραμένει επόμενο στάδιο.</div>
       <?php if ($submitted && $matrix): ?>
         <h3>Τρέχων υπολογισμός</h3>
         <div class="result-row"><span>Δομή</span><strong><?php echo $schoolType === 'gel' ? 'Ημερήσιο ΓΕΛ' : 'Ημερήσιο Γυμνάσιο'; ?></strong></div>
@@ -626,6 +1023,8 @@ if ($submitted) {
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 
+<script src="<?php echo staffingUiH(edu_asset_url('includes/teaching-hours-calculations.js')); ?>"></script>
+<script src="<?php echo staffingUiH(edu_asset_url('includes/personnel-csv-import.js')); ?>"></script>
 <script>
 (function(){
   const type=document.getElementById('school_type');
@@ -660,6 +1059,317 @@ if ($submitted) {
       rows.forEach(function(row){
         const hay=(row.getAttribute('data-search')||'').toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
         row.hidden=q!=='' && !hay.includes(q);
+      });
+    });
+  }
+
+  const tabs=Array.from(document.querySelectorAll('[data-staffing-tab]'));
+  const panels=Array.from(document.querySelectorAll('[data-staffing-panel]'));
+  function activatePanel(name){
+    tabs.forEach(function(tab){
+      const active=tab.getAttribute('data-staffing-tab')===name;
+      tab.classList.toggle('is-active',active);
+      tab.setAttribute('aria-selected',active?'true':'false');
+    });
+    panels.forEach(function(panel){ panel.hidden=panel.getAttribute('data-staffing-panel')!==name; });
+  }
+  tabs.forEach(function(tab){
+    tab.addEventListener('click',function(){ if(!tab.disabled) activatePanel(tab.getAttribute('data-staffing-tab')); });
+  });
+
+  const personnelList=document.getElementById('personnelList');
+  const personnelTemplate=document.getElementById('personnelRowTemplate');
+  const addPersonnel=document.getElementById('addPersonnelRow');
+  const personnelFilter=document.getElementById('personnelFilter');
+  const openPersonnelCsv=document.getElementById('openPersonnelCsv');
+  const personnelCsvFile=document.getElementById('personnelCsvFile');
+  const personnelCsvPanel=document.getElementById('personnelCsvPanel');
+  const closePersonnelCsv=document.getElementById('closePersonnelCsv');
+  const personnelCsvMeta=document.getElementById('personnelCsvMeta');
+  const personnelCsvMappings=document.getElementById('personnelCsvMappings');
+  const personnelCsvPreview=document.getElementById('personnelCsvPreview');
+  const personnelCsvStatus=document.getElementById('personnelCsvStatus');
+  const personnelCsvMode=document.getElementById('personnelCsvMode');
+  const importPersonnelCsv=document.getElementById('importPersonnelCsv');
+  const downloadPersonnelCsvTemplate=document.getElementById('downloadPersonnelCsvTemplate');
+  let personnelCounter=Date.now();
+  let personnelCsvData=null;
+  let personnelCsvMapping={};
+
+  const personnelCsvFields=[
+    {key:'specialty_code',label:'Κλάδος / ειδικότητα',required:true},
+    {key:'display_name',label:'Ονοματεπώνυμο'},
+    {key:'surname',label:'Επώνυμο'},
+    {key:'given_name',label:'Όνομα'},
+    {key:'service_years',label:'Έτη υπηρεσίας'},
+    {key:'service_months',label:'Μήνες υπηρεσίας'},
+    {key:'service_days',label:'Ημέρες υπηρεσίας'},
+    {key:'service_combined',label:'Προϋπηρεσία (ενιαία στήλη)'},
+    {key:'role',label:'Ρόλος'},
+    {key:'assigned_external_hours',label:'Ώρες σε άλλη μονάδα'},
+    {key:'hours_branch',label:'Κλίμακα ωραρίου ΔΕ'}
+  ];
+
+  function schoolGeneralSectionCount(){
+    const typeEl=document.getElementById('school_type');
+    const prefix=typeEl && typeEl.value==='gel' ? 'gel_general_' : 'gym_general_';
+    return ['a','b','c'].reduce(function(total,suffix){
+      const input=document.querySelector('[name="'+prefix+suffix+'"]');
+      return total+Math.max(0,parseInt(input&&input.value?input.value:'0',10)||0);
+    },0);
+  }
+  function directorSectionsBandFromCount(count){
+    count=Math.max(0,parseInt(count,10)||0);
+    if(count<3) return '';
+    if(count<=5) return '3-5';
+    if(count<=9) return '6-9';
+    if(count<=12) return '10-12';
+    return '13+';
+  }
+  function updateDirectorSectionInfo(row){
+    const count=schoolGeneralSectionCount();
+    const band=directorSectionsBandFromCount(count);
+    const countEl=row.querySelector('[data-director-section-count]');
+    const bandEl=row.querySelector('[data-director-section-band]');
+    if(countEl) countEl.textContent=String(count);
+    if(bandEl) bandEl.textContent=band ? 'κλίμακα '+band : 'χρειάζονται τα κανονικά τμήματα';
+    return {count:count,band:band};
+  }
+
+  function specialtyBranch(code,row){
+    code=(code||'').trim();
+    if(code.indexOf('ΠΕ')===0) return 'PE';
+    if(code.indexOf('ΤΕ')===0) return 'TE01';
+    if(code.indexOf('ΔΕ')===0){
+      const explicit=row.querySelector('.personnel-hours-branch');
+      return explicit && explicit.value ? explicit.value : '';
+    }
+    return '';
+  }
+  function updatePersonnelRow(row){
+    if(!row || !window.EducationTeachingHours) return;
+    const specialty=row.querySelector('.personnel-specialty');
+    const years=row.querySelector('.personnel-years');
+    const months=row.querySelector('.personnel-months');
+    const days=row.querySelector('.personnel-days');
+    const role=row.querySelector('.personnel-role');
+    const external=row.querySelector('.personnel-external');
+    const directorBandWrap=row.querySelector('.personnel-director-band');
+    const deWrap=row.querySelector('.personnel-de-branch');
+    const rule=row.querySelector('[data-personnel-rule]');
+    const error=row.querySelector('[data-personnel-error]');
+    const requiredEl=row.querySelector('[data-required-hours]');
+    const availableEl=row.querySelector('[data-available-hours]');
+    const branch=specialtyBranch(specialty?specialty.value:'',row);
+    if(directorBandWrap) directorBandWrap.hidden=!(role && role.value==='director');
+    if(deWrap) deWrap.hidden=!(specialty && specialty.value.indexOf('ΔΕ')===0);
+    if(!specialty || !specialty.value){
+      requiredEl.textContent='—'; availableEl.textContent='—'; if(rule) rule.textContent=''; if(error){error.hidden=true;error.textContent='';} return;
+    }
+    if(!branch){
+      requiredEl.textContent='—'; availableEl.textContent='—'; if(rule) rule.textContent=''; if(error){error.hidden=false;error.textContent='Χρειάζεται επιλογή κλίμακας ωραρίου για τον κλάδο ΔΕ.';} return;
+    }
+    const directorSectionInfo=updateDirectorSectionInfo(row);
+    if(role && role.value==='director' && !directorSectionInfo.band){
+      requiredEl.textContent='—'; availableEl.textContent='—'; if(rule) rule.textContent=''; if(error){error.hidden=false;error.textContent='Για Διευθυντή/ντρια χρειάζονται τα δηλωμένα κανονικά τμήματα της σχολικής μονάδας.';} return;
+    }
+    const result=window.EducationTeachingHours.secondary({
+      branch:branch,
+      role:role?role.value:'teacher',
+      years:years?years.value:0,
+      months:months?months.value:0,
+      days:days?days.value:0,
+      sections:directorSectionInfo.band
+    });
+    if(!result || !result.valid){
+      requiredEl.textContent='—'; availableEl.textContent='—'; if(rule) rule.textContent=''; if(error){error.hidden=false;error.textContent=(result&&result.error)?result.error:'Δεν μπορεί να υπολογιστεί το ωράριο.';} return;
+    }
+    const required=Math.max(0,parseInt(result.hours,10)||0);
+    const ext=Math.max(0,parseInt(external&&external.value?external.value:'0',10)||0);
+    requiredEl.textContent=String(required);
+    availableEl.textContent=String(Math.max(0,required-ext));
+    if(rule) rule.textContent=result.rule||'';
+    if(error){
+      if(ext>required){error.hidden=false;error.textContent='Οι ώρες σε άλλη μονάδα υπερβαίνουν το υποχρεωτικό ωράριο κατά '+(ext-required)+' ώρες.';}
+      else{error.hidden=true;error.textContent='';}
+    }
+    const code=specialty.value||'';
+    const name=(row.querySelector('.personnel-name')||{}).value||'';
+    row.setAttribute('data-search',code+' '+name);
+  }
+  function bindPersonnelRow(row){
+    if(!row || row.dataset.bound==='1') return;
+    row.dataset.bound='1';
+    row.querySelectorAll('input,select').forEach(function(el){ el.addEventListener('input',function(){updatePersonnelRow(row);}); el.addEventListener('change',function(){updatePersonnelRow(row);}); });
+    const remove=row.querySelector('.personnel-remove');
+    if(remove) remove.addEventListener('click',function(){ row.remove(); if(personnelList && !personnelList.querySelector('[data-personnel-row]')){ const empty=document.createElement('div'); empty.id='emptyPersonnelState'; empty.className='empty-personnel'; empty.textContent='Δεν έχει προστεθεί ακόμη εκπαιδευτικός. Πάτησε «+ Προσθήκη εκπαιδευτικού» ή «Εισαγωγή CSV» για να ξεκινήσεις.'; personnelList.appendChild(empty); } });
+    const hiddenId=row.querySelector('input[name="personnel_person_id[]"]');
+    if(hiddenId && !hiddenId.value){ personnelCounter+=1; hiddenId.value='person-'+personnelCounter; }
+    updatePersonnelRow(row);
+  }
+  function clearPersonnelRows(){
+    if(!personnelList) return;
+    personnelList.querySelectorAll('[data-personnel-row]').forEach(function(row){row.remove();});
+    const empty=document.getElementById('emptyPersonnelState'); if(empty) empty.remove();
+  }
+  function ensurePersonnelEmptyState(){
+    if(!personnelList || personnelList.querySelector('[data-personnel-row]')) return;
+    const empty=document.createElement('div'); empty.id='emptyPersonnelState'; empty.className='empty-personnel'; empty.textContent='Δεν έχει προστεθεί ακόμη εκπαιδευτικός. Πάτησε «+ Προσθήκη εκπαιδευτικού» ή «Εισαγωγή CSV» για να ξεκινήσεις.'; personnelList.appendChild(empty);
+  }
+  function addPersonnelFromData(person){
+    if(!personnelTemplate || !personnelList) return {ok:false,unknownCode:false};
+    const empty=document.getElementById('emptyPersonnelState'); if(empty) empty.remove();
+    const fragment=personnelTemplate.content.cloneNode(true);
+    const row=fragment.querySelector('[data-personnel-row]');
+    const specialty=row.querySelector('.personnel-specialty');
+    const code=person.specialty_code||'';
+    let matched=false;
+    if(specialty && code){
+      Array.from(specialty.options).forEach(function(opt){ if(opt.value===code){ specialty.value=code; matched=true; } });
+    }
+    const name=row.querySelector('.personnel-name'); if(name) name.value=person.display_name||'';
+    const years=row.querySelector('.personnel-years'); if(years) years.value=String(person.service_years||0);
+    const months=row.querySelector('.personnel-months'); if(months) months.value=String(person.service_months||0);
+    const days=row.querySelector('.personnel-days'); if(days) days.value=String(person.service_days||0);
+    const role=row.querySelector('.personnel-role'); if(role) role.value=person.role||'teacher';
+    const external=row.querySelector('.personnel-external'); if(external) external.value=String(person.assigned_external_hours||0);
+    const hoursBranch=row.querySelector('.personnel-hours-branch'); if(hoursBranch) hoursBranch.value=person.hours_branch||'';
+    personnelList.appendChild(fragment);
+    bindPersonnelRow(row);
+    if(code && !matched){
+      const error=row.querySelector('[data-personnel-error]');
+      if(error){ error.hidden=false; error.textContent='Ο κλάδος «'+code+'» του CSV δεν αναγνωρίζεται από τις διαθέσιμες αναθέσεις. Επίλεξε κλάδο χειροκίνητα.'; }
+    }
+    return {ok:true,unknownCode:!!(code&&!matched)};
+  }
+  function personnelCsvSetStatus(message,type){
+    if(!personnelCsvStatus) return;
+    personnelCsvStatus.textContent=message||'';
+    personnelCsvStatus.classList.toggle('is-error',type==='error');
+    personnelCsvStatus.classList.toggle('is-success',type==='success');
+  }
+  function personnelCsvSelectOptions(select,headers,selected){
+    select.innerHTML='';
+    const empty=document.createElement('option'); empty.value=''; empty.textContent='— δεν χρησιμοποιείται —'; select.appendChild(empty);
+    headers.forEach(function(header){ const opt=document.createElement('option'); opt.value=header; opt.textContent=header; if(header===selected) opt.selected=true; select.appendChild(opt); });
+  }
+  function personnelCsvCurrentMapping(){
+    const map={};
+    if(personnelCsvMappings) personnelCsvMappings.querySelectorAll('select[data-csv-map]').forEach(function(select){ if(select.value) map[select.getAttribute('data-csv-map')]=select.value; });
+    return map;
+  }
+  function renderPersonnelCsvMappings(){
+    if(!personnelCsvData || !personnelCsvMappings || !window.EducationPersonnelCsv) return;
+    const auto=window.EducationPersonnelCsv.autoMap(personnelCsvData.headers);
+    personnelCsvMappings.innerHTML='';
+    personnelCsvFields.forEach(function(field){
+      const wrap=document.createElement('div'); wrap.className='field';
+      const label=document.createElement('label'); label.textContent=field.label+(field.required?' *':'');
+      const select=document.createElement('select'); select.setAttribute('data-csv-map',field.key);
+      personnelCsvSelectOptions(select,personnelCsvData.headers,auto[field.key]||'');
+      select.addEventListener('change',function(){ personnelCsvMapping=personnelCsvCurrentMapping(); renderPersonnelCsvPreview(); validatePersonnelCsvImport(); });
+      wrap.appendChild(label); wrap.appendChild(select); personnelCsvMappings.appendChild(wrap);
+    });
+    personnelCsvMapping=personnelCsvCurrentMapping();
+  }
+  function renderPersonnelCsvPreview(){
+    if(!personnelCsvPreview || !personnelCsvData) return;
+    const headers=personnelCsvData.headers;
+    const rows=personnelCsvData.rows.slice(0,5);
+    if(!rows.length){ personnelCsvPreview.hidden=true; personnelCsvPreview.innerHTML=''; return; }
+    const table=document.createElement('table');
+    const thead=document.createElement('thead'); const hr=document.createElement('tr');
+    headers.forEach(function(h){const th=document.createElement('th');th.textContent=h;hr.appendChild(th);}); thead.appendChild(hr); table.appendChild(thead);
+    const tbody=document.createElement('tbody');
+    rows.forEach(function(r){const tr=document.createElement('tr');headers.forEach(function(h){const td=document.createElement('td');td.textContent=r[h]||'';tr.appendChild(td);});tbody.appendChild(tr);});
+    table.appendChild(tbody); personnelCsvPreview.innerHTML=''; personnelCsvPreview.appendChild(table); personnelCsvPreview.hidden=false;
+  }
+  function validatePersonnelCsvImport(){
+    const ready=!!(personnelCsvData && personnelCsvData.rows.length && personnelCsvMapping.specialty_code);
+    if(importPersonnelCsv) importPersonnelCsv.disabled=!ready;
+    if(personnelCsvData && !personnelCsvMapping.specialty_code) personnelCsvSetStatus('Χρειάζεται αντιστοίχιση της στήλης «Κλάδος / ειδικότητα».','error');
+    else if(personnelCsvData) personnelCsvSetStatus('Έτοιμο για εισαγωγή. Θα εισαχθούν έως '+personnelCsvData.rows.length+' εγγραφές.','');
+  }
+  function decodePersonnelCsvBuffer(buffer){
+    let text='';
+    try{text=new TextDecoder('utf-8',{fatal:false}).decode(buffer);}catch(e){text='';}
+    if(text.indexOf('\uFFFD')>=0){
+      try{const alt=new TextDecoder('windows-1253').decode(buffer); if(alt && alt.indexOf('\uFFFD')<0) text=alt;}catch(e){}
+    }
+    return text.replace(/^\uFEFF/,'');
+  }
+  function openCsvPicker(){ if(personnelCsvFile){ personnelCsvFile.value=''; personnelCsvFile.click(); } }
+  if(openPersonnelCsv) openPersonnelCsv.addEventListener('click',openCsvPicker);
+  if(closePersonnelCsv) closePersonnelCsv.addEventListener('click',function(){ if(personnelCsvPanel) personnelCsvPanel.hidden=true; });
+  if(personnelCsvFile){
+    personnelCsvFile.addEventListener('change',function(){
+      const file=personnelCsvFile.files && personnelCsvFile.files[0]; if(!file) return;
+      const reader=new FileReader();
+      reader.onload=function(){
+        if(!window.EducationPersonnelCsv){ personnelCsvSetStatus('Δεν φορτώθηκε ο μηχανισμός ανάγνωσης CSV.','error'); return; }
+        const text=decodePersonnelCsvBuffer(reader.result);
+        personnelCsvData=window.EducationPersonnelCsv.parse(text);
+        if(personnelCsvPanel) personnelCsvPanel.hidden=false;
+        if(personnelCsvMeta){
+          const delim=personnelCsvData.delimiter==='\t'?'tab':personnelCsvData.delimiter;
+          personnelCsvMeta.textContent=file.name+' · '+personnelCsvData.rows.length+' εγγραφές · διαχωριστικό «'+delim+'»';
+        }
+        renderPersonnelCsvMappings(); renderPersonnelCsvPreview(); validatePersonnelCsvImport();
+      };
+      reader.onerror=function(){ personnelCsvSetStatus('Δεν ήταν δυνατή η ανάγνωση του αρχείου.','error'); };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+  if(importPersonnelCsv){
+    importPersonnelCsv.addEventListener('click',function(){
+      if(!personnelCsvData || !window.EducationPersonnelCsv) return;
+      personnelCsvMapping=personnelCsvCurrentMapping();
+      if(!personnelCsvMapping.specialty_code){ validatePersonnelCsvImport(); return; }
+      if(personnelCsvMode && personnelCsvMode.value==='replace') clearPersonnelRows();
+      let imported=0,skipped=0,unknown=0;
+      personnelCsvData.rows.forEach(function(raw){
+        const person=window.EducationPersonnelCsv.rowToPersonnel(raw,personnelCsvMapping);
+        if(!person.specialty_code && !person.display_name){ skipped++; return; }
+        const result=addPersonnelFromData(person); if(result.ok) imported++; if(result.unknownCode) unknown++;
+      });
+      ensurePersonnelEmptyState();
+      let msg='Εισήχθησαν '+imported+' εκπαιδευτικοί.';
+      if(skipped) msg+=' Παραλείφθηκαν '+skipped+' κενές εγγραφές.';
+      if(unknown) msg+=' '+unknown+' εγγραφές έχουν μη αναγνωρισμένο κλάδο και χρειάζονται χειροκίνητο έλεγχο.';
+      msg+=' Πάτησε «Υπολόγισε ωράρια προσωπικού» για να ενημερωθεί και η σύνοψη ανά κλάδο.';
+      personnelCsvSetStatus(msg,unknown?'error':'success');
+    });
+  }
+  if(downloadPersonnelCsvTemplate){
+    downloadPersonnelCsvTemplate.addEventListener('click',function(){
+      const csv='\uFEFFΚλάδος;Ονοματεπώνυμο;Έτη υπηρεσίας;Μήνες;Ημέρες;Ρόλος;Ώρες αλλού;Κλίμακα ωραρίου ΔΕ\r\nΠΕ03;Μαρία Παπαδοπούλου;7;0;0;Εκπαιδευτικός;0;\r\n';
+      const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='protypo-ekpaideftikon.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},500);
+    });
+  }
+
+  if(personnelList) personnelList.querySelectorAll('[data-personnel-row]').forEach(bindPersonnelRow);
+  document.querySelectorAll('[name="gym_general_a"],[name="gym_general_b"],[name="gym_general_c"],[name="gel_general_a"],[name="gel_general_b"],[name="gel_general_c"],[name="school_type"]').forEach(function(el){
+    el.addEventListener('input',function(){ if(personnelList) personnelList.querySelectorAll('[data-personnel-row]').forEach(updatePersonnelRow); });
+    el.addEventListener('change',function(){ if(personnelList) personnelList.querySelectorAll('[data-personnel-row]').forEach(updatePersonnelRow); });
+  });
+  if(addPersonnel && personnelTemplate && personnelList){
+    addPersonnel.addEventListener('click',function(){
+      const empty=document.getElementById('emptyPersonnelState'); if(empty) empty.remove();
+      const fragment=personnelTemplate.content.cloneNode(true);
+      const row=fragment.querySelector('[data-personnel-row]');
+      personnelList.appendChild(fragment);
+      bindPersonnelRow(row);
+      const first=row.querySelector('.personnel-specialty'); if(first) first.focus();
+    });
+  }
+  if(personnelFilter && personnelList){
+    personnelFilter.addEventListener('input',function(){
+      const q=(personnelFilter.value||'').toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      personnelList.querySelectorAll('[data-personnel-row]').forEach(function(row){
+        const specialty=row.querySelector('.personnel-specialty');
+        const name=row.querySelector('.personnel-name');
+        const hay=((specialty?specialty.value:'')+' '+(name?name.value:'')).toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+        row.hidden=q!==''&&!hay.includes(q);
       });
     });
   }

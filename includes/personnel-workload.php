@@ -86,6 +86,16 @@ function personnelWorkloadHoursBranchForSpecialty($specialtyCode, $explicitBranc
     return array('status'=>'invalid', 'branch'=>null, 'mode'=>'not_safely_inferred', 'reason'=>'unsupported_specialty_for_secondary_hours');
 }
 
+function personnelWorkloadDirectorSectionsBandFromCount($sectionCount)
+{
+    $count = max(0, (int) $sectionCount);
+    if ($count < 3) return null;
+    if ($count <= 5) return '3-5';
+    if ($count <= 9) return '6-9';
+    if ($count <= 12) return '10-12';
+    return '13+';
+}
+
 function personnelWorkloadSecondaryTeacherBaseHours($branch, $serviceDays)
 {
     $days = max(0, (int) $serviceDays);
@@ -160,14 +170,18 @@ function personnelWorkloadSecondaryObligation($person)
     $rule = '';
     $extra = array();
     if ($role === 'director') {
-        $sections = isset($person['director_sections_band']) ? (string) $person['director_sections_band'] : '';
+        $sectionCount = isset($person['school_general_section_count']) ? max(0, (int) $person['school_general_section_count']) : null;
+        $sections = $sectionCount !== null
+            ? personnelWorkloadDirectorSectionsBandFromCount($sectionCount)
+            : (isset($person['director_sections_band']) ? (string) $person['director_sections_band'] : '');
         $bases = array('3-5'=>10,'6-9'=>9,'10-12'=>7,'13+'=>5);
         if (!isset($bases[$sections])) {
             return array('status'=>'needs_input','valid'=>false,'reason'=>'director_sections_band_required');
         }
         $hours = $bases[$sections] - ($twentyYears ? 2 : 0);
-        $rule = 'Διευθυντής/ντρια Γυμνασίου/Λυκείου — κλίμακα τμημάτων ' . $sections . ($twentyYears ? ', με συμπληρωμένα 20 έτη.' : '.');
+        $rule = 'Διευθυντής/ντρια Γυμνασίου/Λυκείου — ' . ($sectionCount !== null ? $sectionCount . ' κανονικά τμήματα, ' : '') . 'κλίμακα ' . $sections . ($twentyYears ? ', με συμπληρωμένα 20 έτη.' : '.');
         $extra['director_sections_band'] = $sections;
+        if ($sectionCount !== null) $extra['school_general_section_count'] = $sectionCount;
     } elseif ($role === 'lab_director') {
         $hours = $twentyYears ? 8 : 10;
         $rule = 'Διευθυντής/ντρια Εργαστηριακού Κέντρου' . ($twentyYears ? ' με συμπληρωμένα 20 έτη.' : '.');
