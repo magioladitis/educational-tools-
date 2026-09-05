@@ -58,13 +58,22 @@ function schoolProfileBuildDayGymnasium2026($config)
     // μαθητές/ήτριες, δημιουργείται δεύτερη ομάδα στο πεδίο Τεχνολογία /
     // Πληροφορική. Στην Α΄ η ίδια ομαδοποίηση αφορά και την Οικιακή Οικονομία.
     // Αποθηκεύουμε μόνο τις *επιπλέον* ομάδες, μία ανά τμήμα που χωρίζεται.
-    $techSplit = schoolProfileNormalizeGradeCounts(
+    $techSplitRequested = schoolProfileNormalizeGradeCounts(
         isset($config['technology_informatics_split_sections'])
             ? $config['technology_informatics_split_sections'] : array(),
         $grades
     );
+    $techSplit = $techSplitRequested;
+    $validationIssues = array();
     foreach ($grades as $grade) {
-        $techSplit[$grade] = min($techSplit[$grade], $general[$grade]);
+        if ($techSplitRequested[$grade] > $general[$grade]) {
+            $validationIssues[] = 'gymnasio:' . $grade . ':technology_informatics_split_sections_exceeds_general_sections:'
+                . $techSplitRequested[$grade] . '>' . $general[$grade];
+        }
+        // Defensive clamp: ακόμη και σε crafted POST ή απευθείας κλήση builder,
+        // δεν επιτρέπουμε να δημιουργηθούν περισσότερες split ομάδες από τα
+        // πραγματικά δηλωμένα τμήματα της τάξης.
+        $techSplit[$grade] = min($techSplitRequested[$grade], $general[$grade]);
     }
     $extraCourseSections = array(
         'Α΄' => array(
@@ -96,6 +105,7 @@ function schoolProfileBuildDayGymnasium2026($config)
                 'conditions' => array(),
             ),
         ),
+        'validation_issues' => $validationIssues,
         'ethics' => array(
             'formation_policy_scope' => 'in_scope',
             'by_structure_grade' => array(
@@ -203,7 +213,8 @@ function schoolProfileBuildDayGel2026($config)
 
 function schoolProfileGeneralEducationReadiness($profile)
 {
-    $issues = array();
+    $issues = isset($profile['validation_issues']) && is_array($profile['validation_issues'])
+        ? array_values($profile['validation_issues']) : array();
     $structures = isset($profile['structures']) && is_array($profile['structures']) ? $profile['structures'] : array();
 
     if (isset($structures['gymnasio'])) {

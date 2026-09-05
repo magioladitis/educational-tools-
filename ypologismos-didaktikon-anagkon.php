@@ -41,6 +41,7 @@ function staffingUiIssueLabel($issue) {
         'at_least_one_orientation_group_required' => 'Χρειάζεται τουλάχιστον μία πραγματική Ομάδα Προσανατολισμού.',
         'science_health_field_groups_required' => 'Χρειάζεται κατανομή ομάδων Μαθηματικών / Βιολογίας στη Γ΄ Θετικών–Υγείας.',
         'science_health_field_groups_empty' => 'Υπάρχει Θετικών–Υγείας αλλά δεν δηλώθηκε ομάδα Μαθηματικών ή Βιολογίας.',
+        'technology_informatics_split_sections_exceeds_general_sections' => 'Τα τμήματα με πάνω από 21 μαθητές δεν μπορούν να είναι περισσότερα από τα δηλωμένα τμήματα της ίδιας τάξης.',
     );
     foreach ($map as $needle => $label) {
         if (strpos($issue, $needle) !== false) return $label . ' (' . $issue . ')';
@@ -270,7 +271,7 @@ if ($submitted) {
                 <p class="help">Όταν ένα τμήμα έχει πάνω από 21 μαθητές/ήτριες, χωρίζεται σε δύο ομάδες. Δήλωσε πόσα από τα κανονικά τμήματα κάθε τάξης ξεπερνούν το όριο. Αν κανένα δεν ξεπερνά τους 21, άφησε 0.</p>
                 <div class="mini-grid">
                   <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
-                    <div class="field"><label for="gym_tech_split_<?php echo $s; ?>"><?php echo $grade; ?> τάξη <small>τμήματα με &gt;21 μαθητές</small></label><input min="0" step="1" type="number" id="gym_tech_split_<?php echo $s; ?>" name="gym_tech_split_<?php echo $s; ?>" data-max-source="gym_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gym_tech_split_'.$s, '0')); ?>"></div>
+                    <div class="field"><label for="gym_tech_split_<?php echo $s; ?>"><?php echo $grade; ?> τάξη <small>τμήματα με &gt;21 μαθητές · μέγιστο <span data-max-label="gym_general_<?php echo $s; ?>"><?php echo (int) staffingUiInt('gym_general_'.$s); ?></span></small></label><input min="0" max="<?php echo (int) staffingUiInt('gym_general_'.$s); ?>" step="1" type="number" id="gym_tech_split_<?php echo $s; ?>" name="gym_tech_split_<?php echo $s; ?>" data-max-source="gym_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gym_tech_split_'.$s, '0')); ?>"></div>
                   <?php endforeach; ?>
                 </div>
                 <p class="help"><strong>Α΄ τάξη:</strong> ο χωρισμός αυξάνει τις ομάδες Πληροφορικής, Τεχνολογίας και Οικιακής Οικονομίας. <strong>Β΄–Γ΄:</strong> αυξάνει τις ομάδες Πληροφορικής και Τεχνολογίας.</p>
@@ -491,6 +492,7 @@ if ($submitted) {
       const source=document.getElementById(input.getAttribute('data-max-source'));
       const max=source ? Math.max(0,parseInt(source.value||'0',10)||0) : 0;
       input.max=String(max);
+      document.querySelectorAll('[data-max-label="'+input.getAttribute('data-max-source')+'"]').forEach(function(label){ label.textContent=String(max); });
       if((parseInt(input.value||'0',10)||0)>max) input.value=String(max);
     });
   }

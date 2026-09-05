@@ -61,6 +61,13 @@ check('Gym split total 179 rendered', re.search(r'<strong>179</strong><span>ώρ
 check('Technology panel reopens when split inputs are positive', 'id="technologyInformaticsPanel" open' in gs)
 check('split inputs preserved', 'name="gym_tech_split_a"' in gs and 'value="1"' in gs)
 
+check('split fields expose declared-section maximum', 'name="gym_tech_split_a"' in gs and 'max="2"' in gs and 'data-max-source="gym_general_a"' in gs)
+invalid_split=dict(gym)
+invalid_split.update({'gym_general_a':2,'gym_tech_split_a':5})
+gi=render(invalid_split)
+check('crafted over-limit split is reported', 'Τα τμήματα με πάνω από 21 μαθητές δεν μπορούν να είναι περισσότερα από τα δηλωμένα τμήματα της ίδιας τάξης.' in gi)
+check('over-limit split makes profile partial', 'Μερικός υπολογισμός' in gi)
+
 gel={
 'school_type':'gel','school_name':'Contract GEL',
 'gel_general_a':3,'gel_general_b':2,'gel_general_c':3,

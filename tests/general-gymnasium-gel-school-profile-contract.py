@@ -81,6 +81,13 @@ echo json_encode(array(
  'gel_realized'=>schoolProfileRealize($gel),
  'gym_matrix'=>schoolProfileWorkloadMatrix($gym),
  'gym_split_matrix'=>schoolProfileWorkloadMatrix($gymSplit),
+ 'gym_invalid_split'=>schoolProfileBuildDayGymnasium2026(array(
+   'general_sections'=>array('Α΄'=>2,'Β΄'=>1,'Γ΄'=>1),
+   'second_foreign_language_groups'=>array(
+     'Α΄'=>array('Γαλλικά'=>1),'Β΄'=>array('Γαλλικά'=>1),'Γ΄'=>array('Γαλλικά'=>1)
+   ),
+   'technology_informatics_split_sections'=>array('Α΄'=>5,'Β΄'=>0,'Γ΄'=>0),
+ )),
  'gel_matrix'=>schoolProfileWorkloadMatrix($gel),
  'gym_units'=>selectedUnits(schoolProfileWorkloadMatrix($gym)),
  'gel_units'=>selectedUnits(schoolProfileWorkloadMatrix($gel)),
@@ -124,6 +131,11 @@ u=unit(split_units,'gym.pliroforiki@Β΄'); check('gym B Informatics split gives
 u=unit(split_units,'gym.texnologia@Β΄'); check('gym B Technology split gives 3 groups / 3 hours', u and u['section_count']==3 and u['school_hours']==3)
 u=unit(split_units,'gym.pliroforiki@Γ΄'); check('gym C Informatics split gives 2 groups / 2 hours', u and u['section_count']==2 and u['school_hours']==2)
 u=unit(split_units,'gym.texnologia@Γ΄'); check('gym C Technology split gives 2 groups / 2 hours', u and u['section_count']==2 and u['school_hours']==2)
+
+# Internal guard: requested split sections can never exceed declared general sections.
+inv=data['gym_invalid_split']
+check('invalid split is clamped to declared sections', inv['structures']['gymnasio']['technology_informatics_split_sections']['Α΄']==2)
+check('invalid split emits profile validation issue', any('technology_informatics_split_sections_exceeds_general_sections' in x for x in inv.get('validation_issues',[])))
 
 # Second foreign language becomes real per-language staffing units.
 u=unit(data['gym_units'],'gym.deyteri_xeni@Α΄','Γαλλικά'); check('gym A French group is 2 hours PE05', u and u['school_hours']==2 and u['top_codes']==['ΠΕ05'])
