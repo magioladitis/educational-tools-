@@ -211,12 +211,12 @@ for row in rows:
 check('ENEEGYL choice-dependent instances classified', choice_by_school['eneegyl_lykeio'] == 7)
 check('Gymnasium choice-dependent instances classified', choice_by_school['gymnasio'] == 3)
 check('GEL choice-dependent instances classified', choice_by_school['gel'] == 2)
-check('EPAL choice-dependent instances classified', choice_by_school['epal'] == 4)
+check('EPAL choice-dependent instances classified', choice_by_school['epal'] == 5)
 check('evening EPAL choice-dependent instances classified', choice_by_school['esperino_epal'] == 5)
 check('PEPAL choice-dependent instances classified', choice_by_school['pepal'] == 3)
 check('Music Gymnasium choice-dependent instances classified', choice_by_school['mousiko_gymnasio'] == 3)
 check('Art Gymnasium choice-dependent instances classified', choice_by_school['kallitexniko_gymnasio'] == 3)
-check('all choice-dependent instances classified', status_instances['choice_dependent'] == 30)
+check('all choice-dependent instances classified', status_instances['choice_dependent'] == 31)
 
 gap_by_school = Counter()
 for row in rows:

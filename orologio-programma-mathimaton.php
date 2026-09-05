@@ -95,9 +95,12 @@
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2018.05_YA_OPS_AB_taxes_EPAL_N_4386_2016_NEO_PHEK_2187B_12.06.2018.pdf', 'ΦΕΚ Β΄ 2187/2018 — Α΄/Β΄ ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/orologio-programma-g-taksi---epaggelmatiki-ekpaidefsi', 'ΥΠΑΙΘΑ — Ισχύοντα ωρολόγια Γ΄ τάξης Επαγγελματικής Εκπαίδευσης ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2017.04_YA_OPS_GD_taxes_EPAL_N.4386%20PHEK%201426%20B_26-4-17.pdf', 'ΦΕΚ Β΄ 1426/2017 — Γ΄ Ημερήσιου ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2017.06_tropop_YA_OPS_G_D_taxes_EPAL_N_4386_2016_PHEK_2072_t.B_15-6-17.pdf', 'ΦΕΚ Β΄ 2072/2017 — Τροποποιήσεις Γ΄ ΕΠΑ.Λ. (Γεωπονία κ.ά.) ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/FEK_2636B.pdf', 'ΦΕΚ Β΄ 2636/2018 — Τριετές Εσπερινό ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-ph2-89289-d4-2018.html', 'ΦΕΚ Β΄ 2122/2018 — Ξένες γλώσσες ειδικότητας Υπαλλήλου Τουριστικών Επιχειρήσεων ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/orologio%CE%9D%CE%91%CE%A5%CE%A4.pdf', 'ΦΕΚ Β΄ 3224/2018 — Ναυτιλιακά ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2018_09_26_tropop_YA_PHEK_1426B_2017_%20OPS_Tomea_EPHARM_TECHNON_EMER_EPAL_PHEK_4373B_01.10.2018.pdf', 'ΦΕΚ Β΄ 4373/2018 — Γραφικών Τεχνών / Σχεδιασμού–Διακόσμησης Γ΄ ΕΠΑ.Λ. ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2018_10_30_tropop_YA_%20OPS_Tomea_EPHARM_TECHNON_PHEK%204373_01.10.2018_DIORTH.SPHAL._PHEK%204815B_30.10.2018.pdf', 'ΦΕΚ Β΄ 4815/2018 — Διορθώσεις σφαλμάτων Γ΄ ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2026_04_08_EXE_44286_tropop_YA_OPS_mathema_ETHIKE_B_PEPAL_PHEK_2136B_09.04.2026.pdf', 'ΦΕΚ Β΄ 2136/2026 — Α΄/Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2021_07_23_EXE_90217_YA_OPS_A_TAXES_P_EPAL_PHEK_3470B_29.07.2021.pdf', 'ΦΕΚ Β΄ 3470/2021 — Α΄ Π.ΕΠΑ.Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2025/epal/%CE%99%CE%A3%CE%A7%CE%A5%CE%9F%CE%9D_%CE%98%CE%95%CE%A3%CE%9C%CE%99%CE%9A%CE%9F_%CE%A0%CE%9B%CE%91%CE%99%CE%A3%CE%99%CE%9F_%CE%95%CE%A0%CE%91%CE%9B_12-02-2025.pdf', 'ΦΕΚ Β΄ 4367/2021 — Α΄ Π.ΕΠΑ.Λ. / Αναθέσεις ανά θεματική ενότητα ↗'); ?>
