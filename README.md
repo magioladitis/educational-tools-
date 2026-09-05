@@ -66,3 +66,14 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Για 6 περιπτώσεις με ωράριο που αλλάζει ανά τετράμηνο διατηρείται `period_hours` και `hours_mode=periodic`. Δεν εκτίθεται παραπλανητικό σταθερό `hours_total`.
 - Η context resolution λαμβάνει υπόψη ειδικότητα/τομέα/ομάδα και όχι μόνο τον τίτλο. Έτσι ομώνυμα μαθήματα, όπως «Στοιχεία Ψύξης - Κλιματισμού», επιλύονται στη σωστή ανάθεση της συγκεκριμένης ειδικότητας.
 - Νέο `tests/teaching-workload-model-contract.py`: 4948/4948 PASS. Στοχευμένα cross-audits/regressions παραμένουν πράσινα και PHP lint 66/66.
+
+## Εσωτερικό Teaching Workload Aggregation ανά κλάδο (2026-09-05)
+- Προστέθηκε το server-side `includes/teaching-workload-aggregation.php`, χωρίς καμία αλλαγή στο public UI.
+- Κάθε κλάδος μπορεί πλέον να ερωτηθεί για τα curriculum slots στα οποία έχει Α΄/Β΄/Γ΄ ή ειδική ανάθεση, με context-aware αντιστοίχιση.
+- Αριθμητικά αθροίζονται μόνο ασφαλή `fixed` slots. `choice`, `variant`, `condition`, `periodic` και `thematic` claims διατηρούνται χωριστά και δεν διογκώνουν τα totals.
+- Υποστηρίζονται `A_all_pe`, `special_all_pe`, `B_all_others`, `C_all_others` και family matching (π.χ. ΠΕ87 → ΠΕ87.01) με ρητό `code_match_mode`.
+- Οι Θ/Ε αναθέσεις κρατούν ακριβείς component ώρες. Οι choices διατηρούν `slot_hours` και δεν αντιγράφονται σε κάθε component όταν η κατανομή δεν είναι θεσμικά καθορισμένη.
+- Τα variants Υγείας αποκτούν `variant_scope_key`, ενώ η Β΄ Π.ΕΠΑ.Λ. Υγείας διατηρεί `required=2`, `distinct=true`.
+- Τα `special_notes` της Α΄ Π.ΕΠΑ.Λ. διατηρούνται πλέον στο workload payload.
+- 76 ρητοί κωδικοί αναθέσεων παράγουν 8.968 aggregation claims: 7.869 fixed, 372 variant, 393 choice, 140 condition, 25 periodic και 169 thematic. Τα 29 regulatory gaps δεν παράγουν assignment claim.
+- Νέο `tests/teaching-workload-aggregation-contract.py`: 222/222 PASS. Τα προηγούμενα workload/cross-audit regressions παραμένουν πράσινα και PHP lint 67/67.

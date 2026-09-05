@@ -117,6 +117,12 @@ function teachingWorkloadAssignmentPayload($assignment)
             $payload[$noteKey] = $assignment[$noteKey];
         }
     }
+    // Τα special_codes χρησιμοποιούν το machine-readable special_notes (όχι
+    // special_codes_notes). Το κρατάμε ρητά ώστε το workload/aggregation layer
+    // να μη χάνει τις ειδικές παρατηρήσεις συνδιδασκαλίας της Α΄ Π.ΕΠΑ.Λ.
+    if (!empty($assignment['special_notes']) && is_array($assignment['special_notes'])) {
+        $payload['special_notes'] = $assignment['special_notes'];
+    }
     if (!empty($assignment['note'])) {
         $payload['note'] = $assignment['note'];
     }
