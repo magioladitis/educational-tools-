@@ -1,5 +1,6 @@
 <?php require_once __DIR__ . '/includes/config.php'; ?>
 <?php require_once __DIR__ . '/includes/weekly-timetable-data.php'; ?>
+<?php require_once __DIR__ . '/includes/ethics-class-formation.php'; ?>
 <!doctype html>
 <html lang="el">
 <head>
@@ -72,6 +73,7 @@
         <p class="help">Στη Γ΄ ΓΕΛ ορισμένα μαθήματα Γενικής Παιδείας εξαρτώνται από την Ομάδα Προσανατολισμού. Δεν πρέπει να αθροίζονται σαν να τα παρακολουθούν όλοι οι μαθητές.</p>
         <p class="help">Στο Β΄ Εσπερινού ΓΕΛ οι ενδείξεις <strong>1/2</strong> και <strong>2/1</strong> διατηρούνται όπως ακριβώς στο ΦΕΚ και δεν μετατρέπονται σε τεχνητό μέσο όρο.</p>
         <p class="help">Στα επαγγελματικά μαθήματα: <strong>Θ</strong> = θεωρία, <strong>Ε</strong> = εργαστήριο, <strong>Σ</strong> = σχέδιο και <strong>ΠΑ</strong> = πρακτική άσκηση.</p>
+        <p class="help"><strong>Ηθική:</strong> από το 2026–2027, στα Γυμνάσια και Γενικά Λύκεια απαιτούνται τουλάχιστον <strong>10 απαλλασσόμενοι/ες ανά τάξη</strong>, με το όριο να έχει συμπληρωθεί έως την πέμπτη ημέρα από την έναρξη των μαθημάτων. Με ένα τμήμα, Θρησκευτικά και Ηθική διδάσκονται την ίδια ώρα σε διακριτές αίθουσες. Σε περισσότερα τμήματα, αν μπορούν να συγκροτηθούν ισοδύναμα τμήματα Ηθικής, αυτά δημιουργούνται χωρίς αύξηση του συνολικού αριθμού τμημάτων· διαφορετικά οι απαλλασσόμενοι/ες συγκεντρώνονται στο τμήμα με τους/τις περισσότερους/ες απαλλασσόμενους/ες και τα δύο μαθήματα διδάσκονται παράλληλα σε διακριτές αίθουσες. Αν το όριο των 10 δεν συμπληρωθεί εμπρόθεσμα, εφαρμόζεται η προβλεπόμενη διαδικασία της Κ.Υ.Α. Β΄ 5130/2024. Σε ΕΠΑ.Λ., Π.ΕΠΑ.Λ. και ΕΝ.Ε.Ε.ΓΥ.-Λ. δεν επεκτείνουμε αυτόματα τον κανόνα χωρίς ειδική κανονιστική βάση.</p>
 <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 </main>
@@ -81,6 +83,7 @@
     Η τρέχουσα έκδοση καλύπτει Ημερήσιο και Εσπερινό Γυμνάσιο/ΓΕΛ, Καλλιτεχνικό και Μουσικό Γυμνάσιο/Γενικό Λύκειο, Γυμνάσιο και Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ., Α΄–Γ΄ τάξη Ημερήσιου και τριετούς Εσπερινού ΕΠΑ.Λ., καθώς και Α΄–Γ΄ τάξη Π.ΕΠΑ.Λ., σύμφωνα με τα ισχύοντα ωρολόγια προγράμματα για το σχολικό έτος 2026–2027. Στην Α΄ Π.ΕΠΑ.Λ. τα έξι μαθήματα Επαγγελματικής Κατεύθυνσης είναι ενιαία εργαστηριακά blocks 2Ε/3Ε· οι αναθέσεις γίνονται ανά θεματική ενότητα και δεν προκύπτει σταθερή κατανομή ωρών ανά ενότητα από το ΦΕΚ αναθέσεων. Για τη Γ΄ Π.ΕΠΑ.Λ. οι τίτλοι μαθημάτων έχουν διασταυρωθεί και με το αυτοτελές ΦΕΚ αναθέσεων Β΄ 5510/2023. Για τα Καλλιτεχνικά Σχολεία η αντιπαραβολή γίνεται με το ΦΕΚ Β΄ 2583/2026 για τη γενική παιδεία και με το ΦΕΚ Β΄ 3418/2024 για την καλλιτεχνική παιδεία. Για τα Μουσικά Σχολεία η αντιπαραβολή τίτλων γίνεται και με το ΦΕΚ αναθέσεων μουσικής παιδείας Β΄ 4202/2018.
   <?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardLinksStart(); ?>
+    <?php sourceCardLink(ethicsClassFormationPolicy()['source_url'], 'Υ.Α. 108070/Δ2/2026 — ΦΕΚ Β΄ 5231/2026 · Διδασκαλία Ηθικής ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf', 'ΦΕΚ Β΄ 2132/2026 — Ημερήσιο Γυμνάσιο ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202106_09_04_26_OP%20EM%20GEL_ESP%20Gymnasio.pdf', 'ΦΕΚ Β΄ 2106/2026 — Ημερήσιο ΓΕΛ & Εσπερινό Γυμνάσιο ↗'); ?>
     <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/04/%CE%A6%CE%95%CE%9A-%CE%92-2102_09_04_26_%CE%A9%CE%A0-%CE%95%CE%A3%CE%A0-%CE%93%CE%95%CE%9B.pdf', 'ΦΕΚ Β΄ 2102/2026 — Εσπερινό ΓΕΛ ↗'); ?>
@@ -120,6 +123,7 @@
 
   var schools = <?php echo json_encode(weeklyTimetableSchoolTypes(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
   var allRows = <?php echo json_encode(weeklyTimetablePublicRows(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+  var ethicsPolicy = <?php echo json_encode(ethicsClassFormationPublicPolicy(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
   var schoolSelect = document.getElementById('schoolType');
   var gradeSelect = document.getElementById('grade');
   var trackField = document.getElementById('trackField');
@@ -317,7 +321,7 @@
     summary.innerHTML = html;
   }
 
-  function combineReligionEthics(rows) {
+  function combineReligionEthics(rows, school) {
     var seen = {};
     var combined = [];
 
@@ -340,7 +344,12 @@
       Object.keys(row).forEach(function (key) { publicRow[key] = row[key]; });
       publicRow.subject = 'Θρησκευτικά / Ηθική';
       publicRow.conditionText = '';
-      publicRow.noteText = 'Η Ηθική διδάσκεται στους/στις μαθητές/ήτριες που απαλλάσσονται από το μάθημα των Θρησκευτικών.';
+      var ethicsInScope = ethicsPolicy.scope_school_codes.indexOf(school) !== -1;
+      if (ethicsInScope) {
+        publicRow.noteText = 'Η Ηθική απευθύνεται αποκλειστικά στους/στις απαλλασσόμενους/ες από τα Θρησκευτικά. Από το 2026–2027 απαιτούνται τουλάχιστον ' + ethicsPolicy.minimum_exempt_students_per_grade + ' απαλλασσόμενοι/ες ανά τάξη, με το όριο να έχει συμπληρωθεί έως την ' + ethicsPolicy.deadline_day_after_classes_start + 'η ημέρα από την έναρξη των μαθημάτων. Αν λειτουργεί ένα τμήμα, τα δύο μαθήματα διδάσκονται την ίδια ώρα σε διακριτές αίθουσες.';
+      } else {
+        publicRow.noteText = 'Η Ηθική προβλέπεται για τους/τις μαθητές/ήτριες που απαλλάσσονται από τα Θρησκευτικά. Ο ειδικός κανόνας συγκρότησης με τουλάχιστον 10 απαλλασσόμενους/ες της Υ.Α. 108070/Δ2/2026 αφορά ρητά Γυμνάσιο/Γενικό Λύκειο και δεν εφαρμόζεται αυτόματα σε αυτή τη δομή.';
+      }
       publicRow.mode = '';
       combined.push(publicRow);
     });
@@ -377,7 +386,7 @@
       return rowForGrade(row, grade);
     }).filter(Boolean);
 
-    rows = combineReligionEthics(rows);
+    rows = combineReligionEthics(rows, school);
 
     var groups = [];
     var grouped = {};

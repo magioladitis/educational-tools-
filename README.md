@@ -77,3 +77,15 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Τα `special_notes` της Α΄ Π.ΕΠΑ.Λ. διατηρούνται πλέον στο workload payload.
 - 76 ρητοί κωδικοί αναθέσεων παράγουν 8.968 aggregation claims: 7.869 fixed, 372 variant, 393 choice, 140 condition, 25 periodic και 169 thematic. Τα 29 regulatory gaps δεν παράγουν assignment claim.
 - Νέο `tests/teaching-workload-aggregation-contract.py`: 222/222 PASS. Τα προηγούμενα workload/cross-audit regressions παραμένουν πράσινα και PHP lint 67/67.
+
+## School Profile layer + κανόνες Ηθικής (2026-09-05)
+- Προστέθηκε το εσωτερικό `includes/school-profile.php`, το οποίο μετατρέπει το γενικό workload catalog σε αποτύπωση συγκεκριμένης σχολικής μονάδας με πραγματικά τμήματα, τομείς, ειδικότητες και επιλογές. Δεν φορτώνεται από τις δημόσιες σελίδες.
+- Πρώτο profile: `includes/school-profile-eneegyl-kerkyra-2026.php` για το ΕΝ.Ε.Ε.ΓΥ.-Λ. Κέρκυρας (`2411001`) με βάση snapshot myschool 2026-2027. Οι τιμές «Εκτίμηση myschool» χρησιμοποιούνται μόνο για δομική inference και **όχι** ως τελικές ώρες στελέχωσης.
+- Profile Γυμνασίου: Α΄/Β΄/Γ΄ = 2 τμήματα, Δ΄ = 1. Profile Λυκείου: Α΄ = 2 κοινά τμήματα, Β΄/Γ΄/Δ΄ = 1 κοινό curriculum group, με τομείς Γεωπονίας + Διοίκησης στη Β΄/Γ΄ και ειδικότητες Τεχνικός Φυτικής Παραγωγής + Υπάλληλος Τουριστικών Επιχειρήσεων στη Δ΄.
+- Στην Α΄ Λυκείου οι πραγματικές επιλογές του profile είναι Αρχές Οικονομίας, Βασικές Αρχές Σύνθεσης και Γεωπονία και Αειφόρος Ανάπτυξη, και οι τρεις για τα δύο τμήματα.
+- Το realization του profile έχει 158 ενεργά instances: 144 fixed staffing-eligible, 10 Ethics/Religion dependencies και 4 ενεργά regulatory gaps. Τα ασφαλή resolved curriculum hours είναι 396 και τα regulatory-gap curriculum hours 8. Με μία μη διπλομετρημένη θέση Θρησκευτικά/Ηθική ανά πραγματικό τμήμα/τάξη ανακατασκευάζεται δομικό σύνολο 417 ωρών.
+- Προστέθηκε `schoolProfileAggregateByCode()` για school-specific eligibility hours ανά κλάδο. Τα αποτελέσματα παραμένουν eligibility και όχι τελική ανάθεση σε συγκεκριμένο εκπαιδευτικό.
+- Προστέθηκε reusable `includes/ethics-class-formation.php` για Υ.Α. 108070/Δ2/13-08-2026 (ΦΕΚ Β΄ 5231/18-08-2026): όριο 10 απαλλασσομένων ανά τάξη, έως την πέμπτη ημέρα, παράλληλη διδασκαλία σε διακριτές αίθουσες όπου προβλέπεται και συντηρητική διαχείριση της «ισοδυναμίας» πολλαπλών τμημάτων χωρίς επινοημένο αριθμητικό αλγόριθμο.
+- Ο κανόνας των 10 εφαρμόζεται στο εσωτερικό taxonomy σε Γυμνάσια/Γενικά Λύκεια (ημερήσια, εσπερινά, Μουσικά, Καλλιτεχνικά). Δεν επεκτείνεται αυτομάτως σε ΕΠΑ.Λ./Π.ΕΠΑ.Λ./ΕΝ.Ε.Ε.ΓΥ.-Λ. χωρίς ειδική κανονιστική βάση.
+- Το `orologio-programma-mathimaton.php` εμφανίζει πλέον μικρή πληροφοριακή σημείωση για τον κανόνα της Ηθικής και την επίσημη Υ.Α., χωρίς αλλαγή layout. Στις εκτός επιβεβαιωμένου scope δομές εμφανίζεται ρητό guard.
+- Νέα tests: `ethics-class-formation-2026-contract.py` 24/24 PASS και `school-profile-eneegyl-kerkyra-2026-contract.py` 30/30 PASS.
