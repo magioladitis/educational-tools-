@@ -54,3 +54,15 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Στις δημόσιες πηγές του Ωρολογίου προστέθηκαν τα ΦΕΚ Β΄ 4367/2021 και Β΄ 7403/2023 για τη διασταύρωση των αναθέσεων της Α΄ Π.ΕΠΑ.Λ.
 - Τα νέα `assignment_*` metadata παραμένουν αποκλειστικά server-side μέσω `weeklyTimetablePublicRows()`.
 - Το cross-audit ταξινομεί πλέον και τις 2.037/2.037 περιπτώσεις. Η πλήρης ταξινόμηση δεν σημαίνει ότι όλες έχουν διαθέσιμη ανάθεση: τα 29 επιβεβαιωμένα κανονιστικά `regulatory_gap` παραμένουν σκόπιμα κενά και φέρουν machine-readable metadata που απαγορεύει αυθαίρετο δανεισμό ανάθεσης από άλλη τάξη/ειδικότητα ή από καταργημένη απόφαση.
+
+## Εσωτερικό Teaching Workload Model (2026-09-05)
+- Προστέθηκε το server-side `includes/teaching-workload-model.php`, χωρίς καμία αλλαγή στο public UI των `anatheseis-mathimaton.php` και `orologio-programma-mathimaton.php`.
+- Το μοντέλο δημιουργεί μία σταθερή εγγραφή ανά `course_id@τάξη` και ενώνει: ωρολόγιο πρόγραμμα → ώρες → κανονιστικό context → Α΄/Β΄/Γ΄ ανάθεση.
+- Και οι 2.037/2.037 περιπτώσεις τάξης ταξινομούνται χωρίς unresolved/ambiguous mapping: 1.792 `direct`, 99 `alias`, 80 `components`, 31 `choice_dependent`, 6 `thematic_dependent`, 29 `regulatory_gap`.
+- Οι 80 συνδυασμένες Θ/Ε γραμμές διατηρούνται ως 160 ξεχωριστά assignment targets, όλα επιλυμένα. Δεν εφαρμόζεται μία ανάθεση αυθαίρετα σε ολόκληρο το Θ+Ε.
+- Οι 31 choice-dependent περιπτώσεις παράγουν 173 πραγματικές επιλογές και 173/173 επιλύονται σε υπαρκτές αναθέσεις. Οι branch-specific ξένες γλώσσες περιορίζονται στον πραγματικό κλάδο της επιλογής.
+- Τα 6 blocks της Α΄ Π.ΕΠΑ.Λ. παραμένουν `thematic_dependent`: συνδέονται με τις πραγματικές θεματικές αναθέσεις, χωρίς επινοημένη κατανομή ωρών ανά υποενότητα.
+- Τα 29 επιβεβαιωμένα `regulatory_gap` παραμένουν hard stop χωρίς assignment payload και διατηρούν inference guard.
+- Για 6 περιπτώσεις με ωράριο που αλλάζει ανά τετράμηνο διατηρείται `period_hours` και `hours_mode=periodic`. Δεν εκτίθεται παραπλανητικό σταθερό `hours_total`.
+- Η context resolution λαμβάνει υπόψη ειδικότητα/τομέα/ομάδα και όχι μόνο τον τίτλο. Έτσι ομώνυμα μαθήματα, όπως «Στοιχεία Ψύξης - Κλιματισμού», επιλύονται στη σωστή ανάθεση της συγκεκριμένης ειδικότητας.
+- Νέο `tests/teaching-workload-model-contract.py`: 4948/4948 PASS. Στοχευμένα cross-audits/regressions παραμένουν πράσινα και PHP lint 66/66.
