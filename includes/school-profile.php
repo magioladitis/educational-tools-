@@ -24,6 +24,100 @@ function schoolProfileGeneralSectionCount($structure, $grade)
     return isset($structure['general_sections'][$grade]) ? max(0, (int) $structure['general_sections'][$grade]) : 0;
 }
 
+
+function schoolProfileChoiceOptionSections($structure, $grade, $courseId)
+{
+    if (!isset($structure['choice_option_sections'][$grade][$courseId])
+        || !is_array($structure['choice_option_sections'][$grade][$courseId])) {
+        return null;
+    }
+    $result = array();
+    foreach ($structure['choice_option_sections'][$grade][$courseId] as $label => $count) {
+        $result[(string) $label] = max(0, (int) $count);
+    }
+    return $result;
+}
+
+function schoolProfileExplicitChoiceSectionCount($structure, $grade, $setId, $courseId)
+{
+    if (!isset($structure['choice_sections'][$grade][$setId])
+        || !array_key_exists($courseId, $structure['choice_sections'][$grade][$setId])) {
+        return null;
+    }
+    return max(0, (int) $structure['choice_sections'][$grade][$setId][$courseId]);
+}
+
+function schoolProfileConditionalSectionCount($structure, $grade, $courseId)
+{
+    if (!isset($structure['conditional_sections'][$grade])
+        || !array_key_exists($courseId, $structure['conditional_sections'][$grade])) {
+        return null;
+    }
+    return max(0, (int) $structure['conditional_sections'][$grade][$courseId]);
+}
+
+function schoolProfileEthicsInputsForGrade($profile, $schoolCode, $grade)
+{
+    if (!isset($profile['ethics']['by_structure_grade'][$schoolCode][$grade])
+        || !is_array($profile['ethics']['by_structure_grade'][$schoolCode][$grade])) {
+        return null;
+    }
+    return $profile['ethics']['by_structure_grade'][$schoolCode][$grade];
+}
+
+function schoolProfileEthicsEvaluationForGrade($profile, $schoolCode, $grade)
+{
+    $structure = schoolProfileStructure($profile, $schoolCode);
+    if ($structure === null) {
+        return null;
+    }
+    $inputs = schoolProfileEthicsInputsForGrade($profile, $schoolCode, $grade);
+    if ($inputs === null) {
+        return null;
+    }
+    $sectionCount = schoolProfileGeneralSectionCount($structure, $grade);
+    $exempt = array_key_exists('exempt_students', $inputs) ? $inputs['exempt_students'] : null;
+    $within = array_key_exists('within_fifth_day', $inputs) ? $inputs['within_fifth_day'] : null;
+    $equivalent = array_key_exists('equivalent_ethics_sections', $inputs)
+        ? $inputs['equivalent_ethics_sections'] : null;
+    return ethicsClassFormationEvaluate($schoolCode, $sectionCount, $exempt, $within, $equivalent);
+}
+
+function schoolProfileEthicsSectionCounts($profile, $schoolCode, $grade)
+{
+    $structure = schoolProfileStructure($profile, $schoolCode);
+    if ($structure === null) {
+        return null;
+    }
+    $general = schoolProfileGeneralSectionCount($structure, $grade);
+    $evaluation = schoolProfileEthicsEvaluationForGrade($profile, $schoolCode, $grade);
+    if ($evaluation === null) {
+        return null;
+    }
+
+    $resolvedStatuses = array(
+        'fallback_article_22_3',
+        'parallel_single_section',
+        'dedicated_equivalent_sections',
+        'consolidated_parallel',
+    );
+    if (!in_array(isset($evaluation['status']) ? $evaluation['status'] : '', $resolvedStatuses, true)) {
+        return null;
+    }
+
+    $ethicsGroups = isset($evaluation['ethics_groups']) ? max(0, (int) $evaluation['ethics_groups']) : 0;
+    $religionGroups = $general;
+    if ($evaluation['status'] === 'dedicated_equivalent_sections') {
+        $religionGroups = max(0, $general - $ethicsGroups);
+    }
+
+    return array(
+        'religion_groups' => $religionGroups,
+        'ethics_groups' => $ethicsGroups,
+        'evaluation' => $evaluation,
+    );
+}
+
 function schoolProfileSectionCountForInstance($profile, $instance)
 {
     $structure = schoolProfileStructure($profile, $instance['school']);
@@ -32,12 +126,50 @@ function schoolProfileSectionCountForInstance($profile, $instance)
     }
     $grade = $instance['grade'];
 
+    if (!empty($instance['slot_id']) && preg_match('/religion_ethics$/', $instance['slot_id'])) {
+        $counts = schoolProfileEthicsSectionCounts($profile, $instance['school'], $grade);
+        if ($counts !== null) {
+            if ($instance['subject'] === 'Ηθική') {
+                return $counts['ethics_groups'];
+            }
+            if ($instance['subject'] === 'Θρησκευτικά') {
+                return $counts['religion_groups'];
+            }
+        }
+        // Μέχρι να λυθούν τα inputs κρατάμε το slot ορατό ως dependency.
+        return schoolProfileGeneralSectionCount($structure, $grade);
+    }
+
     if (!empty($instance['choice_set_id'])) {
         $setId = $instance['choice_set_id'];
-        $courseId = $instance['course_id'];
-        return isset($structure['choice_sections'][$grade][$setId][$courseId])
-            ? max(0, (int) $structure['choice_sections'][$grade][$setId][$courseId])
-            : 0;
+        if (isset($structure['choice_sections'][$grade][$setId])
+            && is_array($structure['choice_sections'][$grade][$setId])) {
+            $explicit = schoolProfileExplicitChoiceSectionCount(
+                $structure,
+                $grade,
+                $setId,
+                $instance['course_id']
+            );
+            // Διατηρούμε την παλιά σημασιολογία των choice sets: όταν το
+            // set έχει δηλωθεί στο profile αλλά ένα course_id απουσιάζει,
+            // το συγκεκριμένο μάθημα δεν λειτουργεί (0), δεν πέφτει στα
+            // general_sections.
+            return $explicit === null ? 0 : $explicit;
+        }
+    }
+
+    if ($instance['resolution_status'] === 'choice_dependent') {
+        $optionSections = schoolProfileChoiceOptionSections($structure, $grade, $instance['course_id']);
+        if ($optionSections !== null) {
+            return array_sum($optionSections);
+        }
+    }
+
+    if (!empty($instance['condition'])) {
+        $conditional = schoolProfileConditionalSectionCount($structure, $grade, $instance['course_id']);
+        if ($conditional !== null) {
+            return $conditional;
+        }
     }
 
     if (!empty($instance['specialty'])) {
@@ -50,6 +182,12 @@ function schoolProfileSectionCountForInstance($profile, $instance)
     if (!empty($instance['track'])) {
         return isset($structure['track_sections'][$grade][$instance['track']])
             ? max(0, (int) $structure['track_sections'][$grade][$instance['track']])
+            : 0;
+    }
+
+    if (!empty($instance['profile_track'])) {
+        return isset($structure['track_sections'][$grade][$instance['profile_track']])
+            ? max(0, (int) $structure['track_sections'][$grade][$instance['profile_track']])
             : 0;
     }
 
@@ -73,7 +211,37 @@ function schoolProfileDependencyState($profile, $instance)
                 'scope_status' => $scope,
             );
         }
-        return array('status' => 'ethics_inputs_required', 'resolved' => false, 'include' => true, 'scope_status' => $scope);
+        $counts = schoolProfileEthicsSectionCounts($profile, $instance['school'], $instance['grade']);
+        if ($counts === null) {
+            $evaluation = schoolProfileEthicsEvaluationForGrade($profile, $instance['school'], $instance['grade']);
+            return array(
+                'status' => $evaluation === null ? 'ethics_inputs_required' : $evaluation['status'],
+                'resolved' => false,
+                'include' => true,
+                'scope_status' => $scope,
+            );
+        }
+        $count = $instance['subject'] === 'Ηθική' ? $counts['ethics_groups'] : $counts['religion_groups'];
+        return array(
+            'status' => 'ethics_' . $counts['evaluation']['status'],
+            'resolved' => true,
+            'include' => $count > 0,
+            'scope_status' => $scope,
+            'ethics_evaluation' => $counts['evaluation'],
+        );
+    }
+
+    if ($instance['resolution_status'] === 'choice_dependent') {
+        $optionSections = schoolProfileChoiceOptionSections($structure, $instance['grade'], $instance['course_id']);
+        if ($optionSections === null) {
+            return array('status' => 'choice_option_sections_required', 'resolved' => false, 'include' => true);
+        }
+        return array(
+            'status' => array_sum($optionSections) > 0 ? 'choice_options_selected' : 'choice_options_not_active',
+            'resolved' => true,
+            'include' => array_sum($optionSections) > 0,
+            'choice_option_sections' => $optionSections,
+        );
     }
 
     if (!empty($instance['variant'])) {
@@ -91,6 +259,32 @@ function schoolProfileDependencyState($profile, $instance)
     }
 
     if (!empty($instance['condition'])) {
+        if (!empty($instance['choice_set_id'])) {
+            $setId = $instance['choice_set_id'];
+            if (isset($structure['choice_sections'][$instance['grade']][$setId])
+                && is_array($structure['choice_sections'][$instance['grade']][$setId])) {
+                $explicit = schoolProfileExplicitChoiceSectionCount(
+                    $structure,
+                    $instance['grade'],
+                    $setId,
+                    $instance['course_id']
+                );
+                $explicit = $explicit === null ? 0 : $explicit;
+                return array(
+                    'status' => $explicit > 0 ? 'choice_section_selected' : 'choice_section_not_selected',
+                    'resolved' => true,
+                    'include' => $explicit > 0,
+                );
+            }
+        }
+        $conditional = schoolProfileConditionalSectionCount($structure, $instance['grade'], $instance['course_id']);
+        if ($conditional !== null) {
+            return array(
+                'status' => $conditional > 0 ? 'conditional_sections_selected' : 'conditional_sections_not_active',
+                'resolved' => true,
+                'include' => $conditional > 0,
+            );
+        }
         $key = $instance['instance_id'];
         if (!array_key_exists($key, isset($structure['conditions']) ? $structure['conditions'] : array())) {
             return array('status' => 'condition_input_required', 'resolved' => false, 'include' => true);
@@ -150,7 +344,7 @@ function schoolProfileRealize($profile, $model = null)
             'resolution_status' => $instance['resolution_status'],
             'dependency' => $dependency,
         );
-        foreach (array('track','specialty','slot_id','choice_set_id','variant') as $key) {
+        foreach (array('track','profile_track','profile_choice_id','specialty','slot_id','choice_set_id','variant') as $key) {
             if (isset($instance[$key])) {
                 $slot[$key] = $instance[$key];
             }

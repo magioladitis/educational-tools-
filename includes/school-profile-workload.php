@@ -75,7 +75,7 @@ function schoolProfileWorkloadAssignmentUnits($profile, $model = null)
             'subject' => $instance['subject'],
             'section_count' => $sections,
         );
-        foreach (array('track','specialty','slot_id','choice_set_id','variant') as $key) {
+        foreach (array('track','profile_track','profile_choice_id','specialty','slot_id','choice_set_id','variant') as $key) {
             if (isset($instance[$key])) {
                 $base[$key] = $instance[$key];
             }
@@ -113,6 +113,40 @@ function schoolProfileWorkloadAssignmentUnits($profile, $model = null)
                 $unit['hours_per_section'] = (int) $component['hours'];
                 $unit['school_hours'] = (int) $component['hours'] * $sections;
                 $unit['assignment'] = $component['assignment'];
+                $units[] = $unit;
+            }
+        }
+
+
+        if ($instance['resolution_status'] === 'choice_dependent' && isset($instance['hours_total'])) {
+            $structure = schoolProfileStructure($profile, $instance['school']);
+            $optionSections = $structure === null
+                ? null
+                : schoolProfileChoiceOptionSections($structure, $instance['grade'], $instance['course_id']);
+            if ($optionSections === null) {
+                continue;
+            }
+            $idx = 0;
+            foreach ($instance['choice_options'] as $option) {
+                $label = isset($option['label']) ? $option['label'] : '';
+                $count = isset($optionSections[$label]) ? max(0, (int) $optionSections[$label]) : 0;
+                if ($count < 1 || empty($option['targets']) || count($option['targets']) !== 1) {
+                    continue;
+                }
+                $target = $option['targets'][0];
+                if (empty($target['assignment']) || $target['status'] !== 'resolved') {
+                    continue;
+                }
+                $idx++;
+                $unit = $base;
+                $safeLabel = preg_replace('/[^A-Za-z0-9._-]+/u', '_', $label);
+                $unit['unit_id'] = $instance['instance_id'] . '|choice|' . $idx . '|' . $safeLabel;
+                $unit['choice_option'] = $label;
+                $unit['section_count'] = $count;
+                $unit['assignment_subject'] = isset($target['subject']) ? $target['subject'] : $instance['subject'];
+                $unit['hours_per_section'] = (int) $instance['hours_total'];
+                $unit['school_hours'] = (int) $instance['hours_total'] * $count;
+                $unit['assignment'] = $target['assignment'];
                 $units[] = $unit;
             }
         }
@@ -260,7 +294,7 @@ function schoolProfileWorkloadMatrix($profile, $model = null)
             if (!empty($match['note'])) {
                 $claim['assignment_note'] = $match['note'];
             }
-            foreach (array('track','specialty','component_kind') as $key) {
+            foreach (array('track','profile_track','specialty','component_kind','choice_option') as $key) {
                 if (isset($unit[$key])) {
                     $claim[$key] = $unit[$key];
                 }

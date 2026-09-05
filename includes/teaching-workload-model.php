@@ -416,7 +416,7 @@ function teachingWorkloadBuildInstance($row, $grade, $assignments)
         $instance['hours_mode'] = 'fixed';
         $instance['hours_total'] = (int) $row['hours'][$grade];
     }
-    foreach (array('track', 'specialty', 'slot_id', 'choice_set_id', 'choice_count', 'mode', 'variant', 'variant_group') as $key) {
+    foreach (array('track', 'profile_track', 'profile_choice_id', 'specialty', 'slot_id', 'choice_set_id', 'choice_count', 'mode', 'variant', 'variant_group') as $key) {
         if (isset($row[$key])) {
             $instance[$key] = $row[$key];
         }

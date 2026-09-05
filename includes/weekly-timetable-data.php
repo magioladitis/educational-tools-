@@ -282,7 +282,7 @@ function weeklyTimetableRows()
         array('course_id'=>'gym.thriskeftika','slot_id'=>'gym.religion_ethics','school'=>'gymnasio','group'=>'Κοινό πρόγραμμα','subject'=>'Θρησκευτικά','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2),'mode'=>'alternative'),
         array('course_id'=>'gym.ithiki','slot_id'=>'gym.religion_ethics','school'=>'gymnasio','group'=>'Κοινό πρόγραμμα','subject'=>'Ηθική','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2),'mode'=>'alternative','condition'=>'Για μαθητές/ήτριες που απαλλάσσονται από το μάθημα των Θρησκευτικών.'),
         array('course_id'=>'gym.agglika','school'=>'gymnasio','group'=>'Κοινό πρόγραμμα','subject'=>'Αγγλικά','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2)),
-        array('course_id'=>'gym.deyteri_xeni','school'=>'gymnasio','group'=>'Κοινό πρόγραμμα','subject'=>'2η Ξένη Γλώσσα (Γαλλικά / Γερμανικά / Ιταλικά)','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2),'note'=>'Η Ιταλική διδάσκεται στα Γυμνάσια όπου εκπαιδευτικοί ΠΕ34 είναι τοποθετημένοι οριστικά ή προσωρινά από το σχολικό έτος 2016-2017.'),
+        array('course_id'=>'gym.deyteri_xeni','profile_choice_id'=>'second_foreign_language','school'=>'gymnasio','group'=>'Κοινό πρόγραμμα','subject'=>'2η Ξένη Γλώσσα (Γαλλικά / Γερμανικά / Ιταλικά)','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2),'note'=>'Η Ιταλική διδάσκεται στα Γυμνάσια όπου εκπαιδευτικοί ΠΕ34 είναι τοποθετημένοι οριστικά ή προσωρινά από το σχολικό έτος 2016-2017.'),
         array('course_id'=>'gym.kpa','school'=>'gymnasio','group'=>'Κοινό πρόγραμμα','subject'=>'Κοινωνική και Πολιτική Αγωγή','hours'=>array('Γ΄'=>3)),
         array('course_id'=>'gym.oikonomika','school'=>'gymnasio','group'=>'Κοινό πρόγραμμα','subject'=>'Οικονομικά','hours'=>array('Γ΄'=>1)),
         array('course_id'=>'gym.oikiaki_oikonomia','school'=>'gymnasio','group'=>'Κοινό πρόγραμμα','subject'=>'Οικιακή Οικονομία','hours'=>array('Α΄'=>1)),
@@ -324,7 +324,7 @@ function weeklyTimetableRows()
         array('course_id'=>'gel.general.ithiki','slot_id'=>'gel.general.religion_ethics','school'=>'gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Ηθική','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>1),'mode'=>'alternative','condition'=>'Για μαθητές/ήτριες που απαλλάσσονται από το μάθημα των Θρησκευτικών.'),
         array('course_id'=>'gel.general.istoria','slot_id'=>'gel.c.general.orientation_choice','school'=>'gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Ιστορία','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>2),'condition_by_grade'=>array('Γ΄'=>'Μόνο για μαθητές/ήτριες των Ομάδων Θετικών Σπουδών & Σπουδών Υγείας ή Σπουδών Οικονομίας & Πληροφορικής.')),
         array('course_id'=>'gel.general.agglika','school'=>'gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Αγγλικά','hours'=>array('Α΄'=>3,'Β΄'=>2,'Γ΄'=>2)),
-        array('course_id'=>'gel.general.deyteri_xeni','school'=>'gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'2η Ξένη Γλώσσα (Γαλλικά ή Γερμανικά)','hours'=>array('Α΄'=>2,'Β΄'=>1)),
+        array('course_id'=>'gel.general.deyteri_xeni','profile_choice_id'=>'second_foreign_language','school'=>'gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'2η Ξένη Γλώσσα (Γαλλικά ή Γερμανικά)','hours'=>array('Α΄'=>2,'Β΄'=>1)),
         array('course_id'=>'gel.general.fysiki_agogi','school'=>'gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Φυσική Αγωγή','hours'=>array('Α΄'=>2,'Β΄'=>2,'Γ΄'=>3)),
         array('course_id'=>'gel.general.politiki_paideia','school'=>'gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Πολιτική Παιδεία (Οικονομία, Πολιτικοί Θεσμοί και Αρχές Δικαίου και Κοινωνιολογία)','hours'=>array('Α΄'=>2)),
         array('course_id'=>'gel.general.efarmoges_pliroforikis','school'=>'gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Εφαρμογές Πληροφορικής','hours'=>array('Α΄'=>2)),
@@ -332,21 +332,21 @@ function weeklyTimetableRows()
         array('course_id'=>'gel.general.filosofia','school'=>'gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Φιλοσοφία','hours'=>array('Β΄'=>2)),
         array('course_id'=>'gel.general.mathimatika_conditional','slot_id'=>'gel.c.general.orientation_choice','school'=>'gel','group'=>'Μαθήματα Γενικής Παιδείας','subject'=>'Μαθηματικά','hours'=>array('Γ΄'=>2),'condition'=>'Μόνο για μαθητές/ήτριες που επιλέγουν την Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών.'),
 
-        array('course_id'=>'gel.b.humanities.archaia','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Αρχαία Ελληνική Γλώσσα και Γραμματεία','hours'=>array('Β΄'=>3)),
-        array('course_id'=>'gel.b.humanities.latinika','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Λατινικά','hours'=>array('Β΄'=>2)),
-        array('course_id'=>'gel.b.science.fysiki','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών','subject'=>'Φυσική','hours'=>array('Β΄'=>2)),
-        array('course_id'=>'gel.b.science.mathimatika','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών','subject'=>'Μαθηματικά','hours'=>array('Β΄'=>3)),
+        array('course_id'=>'gel.b.humanities.archaia','profile_track'=>'humanities','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Αρχαία Ελληνική Γλώσσα και Γραμματεία','hours'=>array('Β΄'=>3)),
+        array('course_id'=>'gel.b.humanities.latinika','profile_track'=>'humanities','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Λατινικά','hours'=>array('Β΄'=>2)),
+        array('course_id'=>'gel.b.science.fysiki','profile_track'=>'science','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών','subject'=>'Φυσική','hours'=>array('Β΄'=>2)),
+        array('course_id'=>'gel.b.science.mathimatika','profile_track'=>'science','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών','subject'=>'Μαθηματικά','hours'=>array('Β΄'=>3)),
 
-        array('course_id'=>'gel.c.humanities.archaia','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Αρχαία Ελληνικά','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'gel.c.humanities.istoria','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Ιστορία','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'gel.c.humanities.latinika','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Λατινικά','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'gel.c.health.mathimatika','slot_id'=>'gel.c.health.field_choice','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Μαθηματικά','hours'=>array('Γ΄'=>6),'mode'=>'choice','condition'=>'Για μαθητές/ήτριες που επιλέγουν το 2ο Επιστημονικό Πεδίο.'),
-        array('course_id'=>'gel.c.health.viologia','slot_id'=>'gel.c.health.field_choice','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Βιολογία','hours'=>array('Γ΄'=>6),'mode'=>'choice','condition'=>'Για μαθητές/ήτριες που επιλέγουν το 3ο Επιστημονικό Πεδίο.'),
-        array('course_id'=>'gel.c.health.fysiki','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Φυσική','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'gel.c.health.ximeia','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Χημεία','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'gel.c.econ.mathimatika','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Μαθηματικά','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'gel.c.econ.pliroforiki','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Πληροφορική','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'gel.c.econ.oikonomia','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Οικονομία','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'gel.c.humanities.archaia','profile_track'=>'humanities','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Αρχαία Ελληνικά','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'gel.c.humanities.istoria','profile_track'=>'humanities','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Ιστορία','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'gel.c.humanities.latinika','profile_track'=>'humanities','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Λατινικά','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'gel.c.health.mathimatika','choice_set_id'=>'gel.c.health.field_choice','profile_track'=>'science_health','slot_id'=>'gel.c.health.field_choice','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Μαθηματικά','hours'=>array('Γ΄'=>6),'mode'=>'choice','condition'=>'Για μαθητές/ήτριες που επιλέγουν το 2ο Επιστημονικό Πεδίο.'),
+        array('course_id'=>'gel.c.health.viologia','choice_set_id'=>'gel.c.health.field_choice','profile_track'=>'science_health','slot_id'=>'gel.c.health.field_choice','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Βιολογία','hours'=>array('Γ΄'=>6),'mode'=>'choice','condition'=>'Για μαθητές/ήτριες που επιλέγουν το 3ο Επιστημονικό Πεδίο.'),
+        array('course_id'=>'gel.c.health.fysiki','profile_track'=>'science_health','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Φυσική','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'gel.c.health.ximeia','profile_track'=>'science_health','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Χημεία','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'gel.c.econ.mathimatika','profile_track'=>'economics_it','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Μαθηματικά','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'gel.c.econ.pliroforiki','profile_track'=>'economics_it','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Πληροφορική','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'gel.c.econ.oikonomia','profile_track'=>'economics_it','school'=>'gel','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Οικονομία','hours'=>array('Γ΄'=>6)),
 
         /* ---------------- ΕΣΠΕΡΙΝΟ ΓΕΛ ---------------- */
         array('course_id'=>'egel.general.archaia','school'=>'esperino_gel','group'=>'Μαθήματα Γενικής Παιδείας','section'=>'Ελληνική Γλώσσα','subject'=>'Αρχαία Ελληνική Γλώσσα και Γραμματεία','hours'=>array('Α΄'=>2,'Β΄'=>1)),
@@ -589,7 +589,7 @@ function weeklyTimetablePublicRows()
     $rows = weeklyTimetableRows();
     foreach ($rows as &$row) {
         foreach (array_keys($row) as $key) {
-            if (strpos($key, 'assignment_') === 0) {
+            if (strpos($key, 'assignment_') === 0 || strpos($key, 'profile_') === 0) {
                 unset($row[$key]);
             }
         }

@@ -120,3 +120,11 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Κάθε εκπαιδευτικός μπορεί να πάρει `open_eligible_units` μετά τις ήδη δοσμένες αναθέσεις, αλλά οι ευκαιρίες αυτές δηλώνονται ρητά ως επικαλυπτόμενες και όχι ως επίσημα κενά/ανάγκες.
 - Το Ε.Ε.Ε.ΕΚ. Κέρκυρας παραμένει `structure_only`: καμία συναγωγή staffing hours από τις «Εκτιμήσεις myschool» χωρίς ασφαλή αριθμό τμημάτων.
 - Νέο `tests/personnel-workload-contract.py`: 42/42 PASS. Συνολικό cross-audit 2191/2191, workload model 7383/7383, PHP lint 76/76.
+
+## General Gymnasium / GEL school-profile hardening — 2026-09-05
+
+- Προστέθηκε το internal `includes/school-profile-general-education.php` για τυπικό Ημερήσιο Γυμνάσιο και Ημερήσιο ΓΕΛ, χωρίς αλλαγή στο public UI.
+- Τα school profiles ξεχωρίζουν πλέον `general_sections`, ομάδες 2ης ξένης γλώσσας, `track_sections`, επιλογές 2ου/3ου επιστημονικού πεδίου, conditional groups και πραγματικά groups Ηθικής.
+- Οι Ομάδες Προσανατολισμού του ΓΕΛ δεν συναγάγονται από τα κανονικά τμήματα τάξης. Η Γ΄ Θετικών/Υγείας απαιτεί ρητό πλήθος ομάδων Μαθηματικών/Βιολογίας.
+- Η Ηθική συνδέθηκε με το school-profile realization: dedicated equivalent και parallel/consolidated groups επηρεάζουν πλέον τις πραγματικές staffing ώρες, ενώ ελλιπή inputs παραμένουν dependency.
+- Νέο `tests/general-gymnasium-gel-school-profile-contract.py`: 35/35 PASS. Τα προηγούμενα workload/personnel/cross-audit regressions παραμένουν πράσινα και PHP lint 77/77.
