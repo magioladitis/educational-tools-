@@ -274,6 +274,41 @@ function teachingTimetableVocationalChoiceOptionsForRow($row)
     return null;
 }
 
+function teachingTimetableChoiceGroupForRow($row)
+{
+    /*
+     * Machine-readable κανόνας για choice-dependent slots που μοιράζονται
+     * κοινό pool επιλογών. Χρειάζεται για μελλοντική κατανομή πραγματικών
+     * ωρών σε εκπαιδευτικούς: δύο slots του ίδιου pool δεν πρέπει να
+     * αντιμετωπίζονται ως ανεξάρτητες, δυνητικά ίδιες, επιλογές.
+     */
+    $school = isset($row['school']) ? $row['school'] : '';
+    $track = isset($row['track']) ? $row['track'] : '';
+    $subject = isset($row['subject']) ? $row['subject'] : '';
+
+    // Β΄ Π.ΕΠΑ.Λ. — Υγεία: επιλέγονται δύο διαφορετικά από τα εννέα
+    // Ειδικά Μαθήματα και καταλαμβάνουν τα slots Α και Β (5 ώρες έκαστο).
+    if ($school === 'pepal' && $track === 'health'
+        && in_array($subject, array('Ειδικό Μάθημα Α', 'Ειδικό Μάθημα Β'), true)) {
+        return array(
+            'id' => 'pepal.b.health.special_courses',
+            'required' => 2,
+            'distinct' => true,
+        );
+    }
+
+    // Β΄ Π.ΕΠΑ.Λ. — Ναυτιλιακά: ένα από τα δύο Ειδικά Μαθήματα.
+    if ($school === 'pepal' && $track === 'naval' && $subject === 'Ειδικό Μάθημα (1 από 2)') {
+        return array(
+            'id' => 'pepal.b.naval.special_course',
+            'required' => 1,
+            'distinct' => true,
+        );
+    }
+
+    return null;
+}
+
 function teachingTimetableEneegylChoiceOptionsForRow($row)
 {
     if (!isset($row['school']) || $row['school'] !== 'eneegyl_lykeio') {
@@ -513,6 +548,13 @@ function teachingTimetableEnrichRows($rows)
         if ($choiceOptions !== null) {
             $rows[$index]['assignment_link_status'] = 'choice_dependent';
             $rows[$index]['assignment_choice_options'] = $choiceOptions;
+
+            $choiceGroup = teachingTimetableChoiceGroupForRow($row);
+            if ($choiceGroup !== null) {
+                $rows[$index]['assignment_choice_group_id'] = $choiceGroup['id'];
+                $rows[$index]['assignment_choice_group_required'] = $choiceGroup['required'];
+                $rows[$index]['assignment_choice_group_distinct'] = $choiceGroup['distinct'];
+            }
         }
 
         $courseId = isset($row['course_id']) ? $row['course_id'] : '';
