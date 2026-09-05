@@ -221,8 +221,15 @@ for school, spec in vocational_common.items():
             expected_groups[(school, grade, group)] = expected
     tracks = payload['schools'][school]['tracks_by_grade']['Β΄']
     for code, label in tracks.items():
-        actual = slot_sum(school, 'Β΄', 'Μαθήματα Τομέα · ' + label, code)
-        check('row sum ' + school + ' / Β΄ / ' + code, actual == spec['sector_total'])
+        variants = (payload['schools'][school].get('variants_by_grade_track', {})
+                    .get('Β΄', {}).get(code))
+        if variants:
+            for variant_code in variants:
+                actual = slot_sum(school, 'Β΄', 'Μαθήματα Τομέα · ' + label, code, variant=variant_code)
+                check('row sum ' + school + ' / Β΄ / ' + code + ' / ' + variant_code, actual == spec['sector_total'])
+        else:
+            actual = slot_sum(school, 'Β΄', 'Μαθήματα Τομέα · ' + label, code)
+            check('row sum ' + school + ' / Β΄ / ' + code, actual == spec['sector_total'])
 
 # Vocational Γ: verify all 35 specialties for each school type.
 expected_c = {'epal': (12, 23, 35), 'esperino_epal': (10, 20, 30), 'pepal': (12, 23, 35)}
