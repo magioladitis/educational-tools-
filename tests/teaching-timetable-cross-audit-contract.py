@@ -216,7 +216,8 @@ check('evening EPAL choice-dependent instances classified', choice_by_school['es
 check('PEPAL choice-dependent instances classified', choice_by_school['pepal'] == 3)
 check('Music Gymnasium choice-dependent instances classified', choice_by_school['mousiko_gymnasio'] == 3)
 check('Art Gymnasium choice-dependent instances classified', choice_by_school['kallitexniko_gymnasio'] == 3)
-check('all choice-dependent instances classified', status_instances['choice_dependent'] == 31)
+check('EEEEK choice-dependent instances classified', choice_by_school['eeeek'] == 14)
+check('all choice-dependent instances classified', status_instances['choice_dependent'] == 45)
 
 gap_by_school = Counter()
 for row in rows:
@@ -237,12 +238,13 @@ for row in rows:
     for _grade in row.get('hours', {}):
         thematic_by_school[row.get('school')] += 1
 check('PEPAL thematic-dependent instances classified', thematic_by_school['pepal'] == 6)
-check('all thematic-dependent instances classified', status_instances['thematic_dependent'] == 6)
+check('EEEEK thematic-dependent instances classified', thematic_by_school['eeeek'] == 1)
+check('all thematic-dependent instances classified', status_instances['thematic_dependent'] == 7)
 
 # Every declared choice target must resolve to a real assignment row in the same
 # school/grade context. This protects the bridge against title drift in either dataset.
 for row in choice_rows:
-    if row.get('school') not in {'gymnasio', 'gel', 'epal', 'esperino_epal', 'pepal', 'mousiko_gymnasio', 'kallitexniko_gymnasio'}:
+    if row.get('school') not in {'gymnasio', 'gel', 'epal', 'esperino_epal', 'pepal', 'mousiko_gymnasio', 'kallitexniko_gymnasio', 'eeeek'}:
         continue
     options = row.get('assignment_choice_options') or []
     check(f'choice options present: {row.get("course_id")}', bool(options))

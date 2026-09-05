@@ -409,6 +409,9 @@ function teachingWorkloadBuildInstance($row, $grade, $assignments)
     if (!empty($row['period_hours'][$grade]) && is_array($row['period_hours'][$grade])) {
         $instance['hours_mode'] = 'periodic';
         $instance['period_hours'] = $row['period_hours'][$grade];
+    } elseif (isset($row['hours_mode']) && $row['hours_mode'] === 'dynamic') {
+        // No numeric weekly total is fixed by regulation (e.g. EEEEΚ ST class).
+        $instance['hours_mode'] = 'dynamic';
     } else {
         $instance['hours_mode'] = 'fixed';
         $instance['hours_total'] = (int) $row['hours'][$grade];

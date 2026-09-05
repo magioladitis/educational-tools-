@@ -99,7 +99,7 @@ check('public payload strips every assignment_* key', all(
 check('internal payload retains gap metadata', any('assignment_gap_kind' in row for row in rows))
 
 readme = (ROOT / 'README.md').read_text(encoding='utf-8')
-check('README classification count current', '2.037/2.037' in readme)
+check('README classification count current', '2.084/2.084' in readme)
 check('README documents confirmed regulatory gaps', '29 επιβεβαιωμένα κανονιστικά `regulatory_gap`' in readme)
 
 audit = ROOT / 'docs' / 'audits' / 'REGULATORY-GAPS-2026-AUDIT-2026-09-05.md'

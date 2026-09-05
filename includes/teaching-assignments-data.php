@@ -275,6 +275,7 @@ function teachingAssignmentsData()
     foreach (array(
         'teaching-assignments-eneegyl.php',
         'teaching-assignments-eneegyl-d.php',
+        'teaching-assignments-eeeek.php',
         'teaching-assignments-kallitexnika.php',
         'teaching-assignments-epal.php',
         'teaching-assignments-pepal.php',

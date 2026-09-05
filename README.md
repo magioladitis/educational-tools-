@@ -53,19 +53,19 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Η εκτύπωση myschool Π.ΕΠΑ.Λ. Κέρκυρας επιβεβαιώνει επιχειρησιακά ότι τα έξι αντικείμενα εμφανίζονται ως ενιαία blocks· χρησιμοποιείται μόνο ως operational cross-check και όχι ως κανονιστική πηγή.
 - Στις δημόσιες πηγές του Ωρολογίου προστέθηκαν τα ΦΕΚ Β΄ 4367/2021 και Β΄ 7403/2023 για τη διασταύρωση των αναθέσεων της Α΄ Π.ΕΠΑ.Λ.
 - Τα νέα `assignment_*` metadata παραμένουν αποκλειστικά server-side μέσω `weeklyTimetablePublicRows()`.
-- Το cross-audit ταξινομεί πλέον και τις 2.037/2.037 περιπτώσεις. Η πλήρης ταξινόμηση δεν σημαίνει ότι όλες έχουν διαθέσιμη ανάθεση: τα 29 επιβεβαιωμένα κανονιστικά `regulatory_gap` παραμένουν σκόπιμα κενά και φέρουν machine-readable metadata που απαγορεύει αυθαίρετο δανεισμό ανάθεσης από άλλη τάξη/ειδικότητα ή από καταργημένη απόφαση.
+- Το cross-audit ταξινομεί πλέον και τις 2.084/2.084 περιπτώσεις. Η πλήρης ταξινόμηση δεν σημαίνει ότι όλες έχουν διαθέσιμη ανάθεση: τα 29 επιβεβαιωμένα κανονιστικά `regulatory_gap` παραμένουν σκόπιμα κενά και φέρουν machine-readable metadata που απαγορεύει αυθαίρετο δανεισμό ανάθεσης από άλλη τάξη/ειδικότητα ή από καταργημένη απόφαση.
 
 ## Εσωτερικό Teaching Workload Model (2026-09-05)
 - Προστέθηκε το server-side `includes/teaching-workload-model.php`, χωρίς καμία αλλαγή στο public UI των `anatheseis-mathimaton.php` και `orologio-programma-mathimaton.php`.
 - Το μοντέλο δημιουργεί μία σταθερή εγγραφή ανά `course_id@τάξη` και ενώνει: ωρολόγιο πρόγραμμα → ώρες → κανονιστικό context → Α΄/Β΄/Γ΄ ανάθεση.
-- Και οι 2.037/2.037 περιπτώσεις τάξης ταξινομούνται χωρίς unresolved/ambiguous mapping: 1.792 `direct`, 99 `alias`, 80 `components`, 31 `choice_dependent`, 6 `thematic_dependent`, 29 `regulatory_gap`.
+- Και οι 2.084/2.084 περιπτώσεις τάξης ταξινομούνται χωρίς unresolved/ambiguous mapping: 1.824 `direct`, 99 `alias`, 80 `components`, 45 `choice_dependent`, 7 `thematic_dependent`, 29 `regulatory_gap`.
 - Οι 80 συνδυασμένες Θ/Ε γραμμές διατηρούνται ως 160 ξεχωριστά assignment targets, όλα επιλυμένα. Δεν εφαρμόζεται μία ανάθεση αυθαίρετα σε ολόκληρο το Θ+Ε.
-- Οι 31 choice-dependent περιπτώσεις παράγουν 173 πραγματικές επιλογές και 173/173 επιλύονται σε υπαρκτές αναθέσεις. Οι branch-specific ξένες γλώσσες περιορίζονται στον πραγματικό κλάδο της επιλογής.
+- Οι 45 choice-dependent περιπτώσεις παράγουν 761 πραγματικές επιλογές και 761/761 επιλύονται σε υπαρκτές αναθέσεις. Οι branch-specific ξένες γλώσσες περιορίζονται στον πραγματικό κλάδο της επιλογής.
 - Τα 6 blocks της Α΄ Π.ΕΠΑ.Λ. παραμένουν `thematic_dependent`: συνδέονται με τις πραγματικές θεματικές αναθέσεις, χωρίς επινοημένη κατανομή ωρών ανά υποενότητα.
 - Τα 29 επιβεβαιωμένα `regulatory_gap` παραμένουν hard stop χωρίς assignment payload και διατηρούν inference guard.
 - Για 6 περιπτώσεις με ωράριο που αλλάζει ανά τετράμηνο διατηρείται `period_hours` και `hours_mode=periodic`. Δεν εκτίθεται παραπλανητικό σταθερό `hours_total`.
 - Η context resolution λαμβάνει υπόψη ειδικότητα/τομέα/ομάδα και όχι μόνο τον τίτλο. Έτσι ομώνυμα μαθήματα, όπως «Στοιχεία Ψύξης - Κλιματισμού», επιλύονται στη σωστή ανάθεση της συγκεκριμένης ειδικότητας.
-- Νέο `tests/teaching-workload-model-contract.py`: 4948/4948 PASS. Στοχευμένα cross-audits/regressions παραμένουν πράσινα και PHP lint 66/66.
+- Νέο `tests/teaching-workload-model-contract.py`: 7383/7383 PASS. Στοχευμένα cross-audits/regressions παραμένουν πράσινα και PHP lint 66/66.
 
 ## Εσωτερικό Teaching Workload Aggregation ανά κλάδο (2026-09-05)
 - Προστέθηκε το server-side `includes/teaching-workload-aggregation.php`, χωρίς καμία αλλαγή στο public UI.
@@ -75,12 +75,23 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Οι Θ/Ε αναθέσεις κρατούν ακριβείς component ώρες. Οι choices διατηρούν `slot_hours` και δεν αντιγράφονται σε κάθε component όταν η κατανομή δεν είναι θεσμικά καθορισμένη.
 - Τα variants Υγείας αποκτούν `variant_scope_key`, ενώ η Β΄ Π.ΕΠΑ.Λ. Υγείας διατηρεί `required=2`, `distinct=true`.
 - Τα `special_notes` της Α΄ Π.ΕΠΑ.Λ. διατηρούνται πλέον στο workload payload.
-- 76 ρητοί κωδικοί αναθέσεων παράγουν 8.968 aggregation claims: 7.869 fixed, 372 variant, 393 choice, 140 condition, 25 periodic και 169 thematic. Τα 29 regulatory gaps δεν παράγουν assignment claim.
-- Νέο `tests/teaching-workload-aggregation-contract.py`: 222/222 PASS. Τα προηγούμενα workload/cross-audit regressions παραμένουν πράσινα και PHP lint 67/67.
+- 78 ρητοί κωδικοί αναθέσεων παράγουν 10.847 aggregation claims: 8.001 fixed, 372 variant, 2.115 choice, 140 condition, 25 periodic και 194 thematic. Τα 29 regulatory gaps δεν παράγουν assignment claim.
+- Νέο `tests/teaching-workload-aggregation-contract.py`: 364/364 PASS. Τα προηγούμενα workload/cross-audit regressions παραμένουν πράσινα και PHP lint 67/67.
+
+## Ε.Ε.Ε.ΕΚ. — Ωρολόγιο, Αναθέσεις και cross-audit (2026-09-05)
+- Προστέθηκε αυτοτελής δομή `eeeek` στα Αναθέσεις Μαθημάτων και στο Ωρολόγιο Πρόγραμμα, με τάξεις Α΄–ΣΤ΄.
+- Το ωρολόγιο Α΄–Ε΄ βασίζεται στην Υ.Α. 57523/Γ6/2002 (ΦΕΚ Β΄ 765): 30 ώρες ανά τάξη, με 14/14/15/16/17 ώρες εργαστηριακών εξειδικεύσεων αντίστοιχα.
+- Η ΣΤ΄ αποτυπώνεται ως `dynamic`/`thematic_dependent`, όχι ως ψευδές σταθερό 0ωρο: πρακτική άσκηση και εξατομικευμένη συμπλήρωση προγράμματος βάσει ν. 4415/2016.
+- Οι αναθέσεις βασίζονται στην Υ.Α. 71105/Δ3/2018 (ΦΕΚ Β΄ 1761): 7 γενικά μαθήματα + 42 επίσημες ονομασίες εργαστηρίων.
+- Τα 14 grade-level εργαστηριακά slots είναι `choice_dependent` απέναντι στα 42 εργαστήρια και δίνουν 588/588 resolved workshop choices.
+- Νέο `tests/eeeek-2026-cross-audit-contract.py`: 50/50 PASS. Το συνολικό cross-audit είναι 2.084/2.084 classified και το workload model 7.383/7.383 PASS.
+- Το αρχικό αρχείο που παραδόθηκε ως `ΕΕΕΕΚ.pdf` αφορούσε στην πραγματικότητα το ΕΝ.Ε.Ε.ΓΥ.-Λ. Κέρκυρας. Στη συνέχεια παραδόθηκε σωστό screenshot myschool του Ε.Ε.Ε.ΕΚ. Κέρκυρας και προστέθηκε το internal `includes/school-profile-eeeek-kerkyra-2026.php` (κωδικός 2441001). Οι «Εκτιμήσεις myschool» διατηρούνται ως παρατηρούμενα δεδομένα, χωρίς αυτόματη συναγωγή αριθμού τμημάτων ή τελικών ωρών στελέχωσης.
+- Πλήρης τεχνική τεκμηρίωση: `docs/audits/EEEEEK-2026-CROSS-AUDIT-2026-09-05.md` και `docs/audits/EEEEEK-KERKYRA-SCHOOL-PROFILE-2026-09-05.md`.
 
 ## School Profile layer + κανόνες Ηθικής (2026-09-05)
 - Προστέθηκε το εσωτερικό `includes/school-profile.php`, το οποίο μετατρέπει το γενικό workload catalog σε αποτύπωση συγκεκριμένης σχολικής μονάδας με πραγματικά τμήματα, τομείς, ειδικότητες και επιλογές. Δεν φορτώνεται από τις δημόσιες σελίδες.
 - Πρώτο profile: `includes/school-profile-eneegyl-kerkyra-2026.php` για το ΕΝ.Ε.Ε.ΓΥ.-Λ. Κέρκυρας (`2411001`) με βάση snapshot myschool 2026-2027. Οι τιμές «Εκτίμηση myschool» χρησιμοποιούνται μόνο για δομική inference και **όχι** ως τελικές ώρες στελέχωσης.
+- Δεύτερο profile: `includes/school-profile-eeeek-kerkyra-2026.php` για το Ε.Ε.Ε.ΕΚ. Κέρκυρας (`2441001`). Καταγράφει τις ενεργές τάξεις Α΄–ΣΤ΄, την κύρια εξειδίκευση Γεωπονίας–Τροφίμων–Περιβάλλοντος και τη Β΄ εξειδίκευση Μαγειρικής–Ζαχαροπλαστικής, χωρίς να εξάγει αριθμό τμημάτων από τις εκτιμήσεις myschool.
 - Profile Γυμνασίου: Α΄/Β΄/Γ΄ = 2 τμήματα, Δ΄ = 1. Profile Λυκείου: Α΄ = 2 κοινά τμήματα, Β΄/Γ΄/Δ΄ = 1 κοινό curriculum group, με τομείς Γεωπονίας + Διοίκησης στη Β΄/Γ΄ και ειδικότητες Τεχνικός Φυτικής Παραγωγής + Υπάλληλος Τουριστικών Επιχειρήσεων στη Δ΄.
 - Στην Α΄ Λυκείου οι πραγματικές επιλογές του profile είναι Αρχές Οικονομίας, Βασικές Αρχές Σύνθεσης και Γεωπονία και Αειφόρος Ανάπτυξη, και οι τρεις για τα δύο τμήματα.
 - Το realization του profile έχει 158 ενεργά instances: 144 fixed staffing-eligible, 10 Ethics/Religion dependencies και 4 ενεργά regulatory gaps. Τα ασφαλή resolved curriculum hours είναι 396 και τα regulatory-gap curriculum hours 8. Με μία μη διπλομετρημένη θέση Θρησκευτικά/Ηθική ανά πραγματικό τμήμα/τάξη ανακατασκευάζεται δομικό σύνολο 417 ωρών.
@@ -88,4 +99,14 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Προστέθηκε reusable `includes/ethics-class-formation.php` για Υ.Α. 108070/Δ2/13-08-2026 (ΦΕΚ Β΄ 5231/18-08-2026): όριο 10 απαλλασσομένων ανά τάξη, έως την πέμπτη ημέρα, παράλληλη διδασκαλία σε διακριτές αίθουσες όπου προβλέπεται και συντηρητική διαχείριση της «ισοδυναμίας» πολλαπλών τμημάτων χωρίς επινοημένο αριθμητικό αλγόριθμο.
 - Ο κανόνας των 10 εφαρμόζεται στο εσωτερικό taxonomy σε Γυμνάσια/Γενικά Λύκεια (ημερήσια, εσπερινά, Μουσικά, Καλλιτεχνικά). Δεν επεκτείνεται αυτομάτως σε ΕΠΑ.Λ./Π.ΕΠΑ.Λ./ΕΝ.Ε.Ε.ΓΥ.-Λ. χωρίς ειδική κανονιστική βάση.
 - Το `orologio-programma-mathimaton.php` εμφανίζει πλέον μικρή πληροφοριακή σημείωση για τον κανόνα της Ηθικής και την επίσημη Υ.Α., χωρίς αλλαγή layout. Στις εκτός επιβεβαιωμένου scope δομές εμφανίζεται ρητό guard.
-- Νέα tests: `ethics-class-formation-2026-contract.py` 24/24 PASS και `school-profile-eneegyl-kerkyra-2026-contract.py` 30/30 PASS.
+- Νέα tests: `ethics-class-formation-2026-contract.py` 24/24 PASS, `school-profile-eneegyl-kerkyra-2026-contract.py` 30/30 PASS και `school-profile-eeeek-kerkyra-2026-contract.py` 47/47 PASS.
+
+## School Profile Workload Matrix ανά κλάδο (2026-09-05)
+- Προστέθηκε το εσωτερικό `includes/school-profile-workload.php`, χωρίς καμία αλλαγή στο public UI.
+- Το layer μετατρέπει fixed resolved slots συγκεκριμένου school profile σε staffing eligibility matrix ανά πραγματικό leaf κλάδο, χωρίς να εμφανίζει parent/family κωδικούς ως ξεχωριστές staffing γραμμές.
+- Διαχωρίζει `ordered_exclusive_top_priority_hours`, `ordered_shared_top_priority_hours`, `special_top_priority_hours` και `fallback_hours`, ώστε να μην ερμηνεύεται ένα απλό eligibility total ως τελική ανάθεση εκπαιδευτικού.
+- Στο ΕΝ.Ε.Ε.ΓΥ.-Λ. Κέρκυρας οι 396 resolved ώρες χωρίζονται σε 353 ώρες κανονικής Α΄/Β΄/Γ΄ ιεραρχίας και 43 ειδικές. Από τις 353, οι 216 έχουν έναν μόνο leaf κλάδο στην κορυφαία ανάθεση και οι 137 έχουν περισσότερους από έναν ισότιμους κλάδους.
+- Τα 10 active dependencies και τα 4 active regulatory gaps (8 ώρες) παραμένουν εκτός της staffing matrix.
+- Το Ε.Ε.Ε.ΕΚ. Κέρκυρας παραμένει `structure_only`: επειδή δεν υπάρχει ασφαλής αριθμός τμημάτων, δεν κατασκευάζονται ψευδείς ώρες ανά κλάδο από τις «Εκτιμήσεις myschool».
+- Νέο `tests/school-profile-workload-matrix-contract.py`: 49/49 PASS. Σχετικά regressions πράσινα και PHP lint 75/75.
+- Τεκμηρίωση: `docs/audits/SCHOOL-PROFILE-WORKLOAD-MATRIX-2026-09-05.md`.

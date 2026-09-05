@@ -137,7 +137,7 @@
     'title_html' => 'Αναθέσεις Μαθημάτων ανά Ειδικότητα',
     'intro' => 'Επίλεξε τον κλάδο / την ειδικότητά σου και δες ποια μαθήματα έχεις σε Α΄, Β΄ ή Γ΄ ανάθεση.',
     'meta_class' => 'meta',
-    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'ΕΠΑ.Λ. / Π.ΕΠΑ.Λ.', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Καλλιτεχνικά', 'Μουσικά', 'Α΄ · Β΄ · Γ΄ ανάθεση')
+    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'ΕΠΑ.Λ. / Π.ΕΠΑ.Λ.', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Ε.Ε.Ε.ΕΚ.', 'Καλλιτεχνικά', 'Μουσικά', 'Α΄ · Β΄ · Γ΄ ανάθεση')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
@@ -225,6 +225,10 @@
               <div class="checkrow">
                 <input type="checkbox" id="schoolEneegylLykeio">
                 <label for="schoolEneegylLykeio">Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ.</label>
+              </div>
+              <div class="checkrow">
+                <input type="checkbox" id="schoolEeeek">
+                <label for="schoolEeeek">Ε.Ε.Ε.ΕΚ.</label>
               </div>
             </div>
           </div>
@@ -349,6 +353,7 @@
   const schoolEaeLykeio = document.getElementById('schoolEaeLykeio');
   const schoolEneegylGym = document.getElementById('schoolEneegylGym');
   const schoolEneegylLykeio = document.getElementById('schoolEneegylLykeio');
+  const schoolEeeek = document.getElementById('schoolEeeek');
   const schoolKallitexnikoGym = document.getElementById('schoolKallitexnikoGym');
   const schoolKallitexnikoLykeio = document.getElementById('schoolKallitexnikoLykeio');
   const schoolMousikoGym = document.getElementById('schoolMousikoGym');
@@ -447,6 +452,7 @@
     if (row.school === 'eae_gymnasio') return 'Γυμνάσιο Ε.Α.Ε.';
     if (row.school === 'eae_lykeio') return row.grade ? `${row.grade} Λύκειο Ε.Α.Ε.` : 'Λύκειο Ε.Α.Ε.';
     if (row.school === 'eneegyl_gymnasio') return 'Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.';
+    if (row.school === 'eeeek') return 'Ε.Ε.Ε.ΕΚ.';
     if (row.school === 'kallitexniko_gymnasio') return 'Καλλιτεχνικό Γυμνάσιο';
     if (row.school === 'kallitexniko_gel') return row.grade ? `${row.grade} Καλλιτεχνικού Λυκείου` : 'Καλλιτεχνικό Λύκειο';
     if (row.school === 'mousiko_gymnasio') {
@@ -473,7 +479,7 @@
     return row.school || '';
   }
 
-  const schoolCheckboxes = [schoolGymnasio, schoolEveningGym, schoolGel, schoolEveningGel, schoolEpal, schoolEveningEpal, schoolPepal, schoolEaeGym, schoolEaeLykeio, schoolEneegylGym, schoolEneegylLykeio, schoolKallitexnikoGym, schoolKallitexnikoLykeio, schoolMousikoGym, schoolMousikoLykeio];
+  const schoolCheckboxes = [schoolGymnasio, schoolEveningGym, schoolGel, schoolEveningGel, schoolEpal, schoolEveningEpal, schoolPepal, schoolEaeGym, schoolEaeLykeio, schoolEneegylGym, schoolEneegylLykeio, schoolEeeek, schoolKallitexnikoGym, schoolKallitexnikoLykeio, schoolMousikoGym, schoolMousikoLykeio];
 
   function syncSchoolAll(){
     const checkedCount = schoolCheckboxes.filter(function(box){ return box.checked; }).length;
@@ -492,6 +498,7 @@
     const includeEaeLykeio = schoolEaeLykeio.checked;
     const includeEneegylGym = schoolEneegylGym.checked;
     const includeEneegylLykeio = schoolEneegylLykeio.checked;
+    const includeEeeek = schoolEeeek.checked;
     const includeKallitexnikoGym = schoolKallitexnikoGym.checked;
     const includeKallitexnikoLykeio = schoolKallitexnikoLykeio.checked;
     const includeEpal = schoolEpal.checked;
@@ -530,6 +537,7 @@
       if (row.school === 'eae_lykeio' && !includeEaeLykeio) return;
       if (row.school === 'eneegyl_gymnasio' && !includeEneegylGym) return;
       if (row.school === 'eneegyl_lykeio' && !includeEneegylLykeio) return;
+      if (row.school === 'eeeek' && !includeEeeek) return;
       if (row.school === 'kallitexniko_gymnasio' && !includeKallitexnikoGym) return;
       if (row.school === 'kallitexniko_gel' && !includeKallitexnikoLykeio) return;
       if (row.school === 'epal' && !includeEpal) return;
@@ -604,6 +612,7 @@
   schoolEaeLykeio.addEventListener('change', render);
   schoolEneegylGym.addEventListener('change', render);
   schoolEneegylLykeio.addEventListener('change', render);
+  schoolEeeek.addEventListener('change', render);
   schoolKallitexnikoGym.addEventListener('change', render);
   schoolKallitexnikoLykeio.addEventListener('change', render);
   schoolMousikoGym.addEventListener('change', render);
@@ -630,6 +639,7 @@
   <p><strong>Π.ΕΠΑ.Λ.:</strong> Α΄ τάξη: Υ.Α. Φ9/116550/Δ4/17-09-2021, ΦΕΚ Β΄ 4367/22-09-2021, όπως τροποποιήθηκε με τα ΦΕΚ Β΄ 5188/2023, 7403/2023, 1832/2025 και 2687/2026. Στα έξι μαθήματα Επαγγελματικής Κατεύθυνσης Προσανατολιστικού Χαρακτήρα οι αναθέσεις γίνονται με βάση τις επιμέρους ενότητες, τη συνάφεια με το βασικό πτυχίο και τα εξειδικευμένα προσόντα· το ΦΕΚ Β΄ 7403/2023 ορίζει ότι η ανάθεση γίνεται από τον Σύλλογο Διδασκόντων του Π.ΕΠΑ.Λ. ύστερα από εισήγηση του/της Διευθυντή/τριας. Β΄ τάξη: Υ.Α. Φ9/114791/Δ4/21-09-2022, ΦΕΚ Β΄ 4983/26-09-2022, όπως τροποποιήθηκε με τα ΦΕΚ Β΄ 418/2023, 5206/2023 και 2624/2026. Γ΄ τάξη: Υ.Α. Φ9/101003/Δ4/13-09-2023, ΦΕΚ Β΄ 5510/18-09-2023. Οι τίτλοι των μαθημάτων της Γ΄ τάξης έχουν διασταυρωθεί και με το αντίστοιχο ωρολόγιο πρόγραμμα, Υ.Α. Φ9/93929/Δ4, ΦΕΚ Β΄ 5251/30-08-2023.</p>
   <p><strong>Καλλιτεχνικά Σχολεία:</strong> για τα μαθήματα καλλιτεχνικής παιδείας εφαρμόζεται η Υ.Α. 65409/Δ2/12-06-2024, ΦΕΚ Β΄ 3418/13-06-2024, η οποία τροποποιεί την Υ.Α. 148262/Δ2/10-09-2018 (ΦΕΚ Β΄ 4077). Για τα μαθήματα γενικής παιδείας εφαρμόζεται το ΦΕΚ Β΄ 2583/2026. Τα εμφανιζόμενα μαθήματα περιορίζονται στο ισχύον ωρολόγιο 43820/Δ2/07-04-2026, ΦΕΚ Β΄ 2104/09-04-2026.</p>
   <p><strong>Μουσικά Σχολεία:</strong> για τα μαθήματα μουσικής παιδείας εφαρμόζεται η Υ.Α. 144236/Δ2/05-09-2018, ΦΕΚ Β΄ 4202/25-09-2018, και για τα μαθήματα γενικής παιδείας το ΦΕΚ Β΄ 2583/2026, σε αντιπαραβολή με το ισχύον ωρολόγιο πρόγραμμα 43787/Δ2/07-04-2026, ΦΕΚ Β΄ 2107/09-04-2026. Όπου η ανάθεση εξαρτάται από μουσική ειδίκευση εφαρμόζονται οι ειδικοί κανόνες του πίνακα αναθέσεων. Για μαθήματα του ωρολογίου χωρίς ρητή ή ασφαλώς ισοδύναμη αντιστοίχιση στον πίνακα του 2018 δεν εμφανίζεται ανάθεση.</p>
+  <p><strong>Ε.Ε.Ε.ΕΚ.:</strong> οι αναθέσεις βασίζονται στην Υ.Α. 71105/Δ3/04-05-2018 (ΦΕΚ Β΄ 1761/17-05-2018). Τα μαθήματα γενικής παιδείας εμφανίζονται χωριστά από τις 42 ονομασίες εργαστηρίων του επίσημου πίνακα. Η Α΄/Β΄ ανάθεση και οι ειδικές προτεραιότητες παλαιών κλάδων διατηρούνται όπως δημοσιεύθηκαν.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/mousika-sxoleia-eisagogi-mathiton-mathitrion/70059-orologio-programma-ton-mathimaton-ton-a-v-kai-g-takseon-tou-esperinoy-gymnasiou-genikoy-lykeiou?filter_tag%5B0%5D=64', 'ΦΕΚ Β΄ 2106/2026 — Ωρολόγιο Εσπερινού Γυμνασίου ↗'); ?>
@@ -667,6 +677,7 @@
     <?php sourceCardLink('https://diavgeia.gov.gr/doc/99%CE%93%CE%A646%CE%9D%CE%9A%CE%A0%CE%94-9%CE%931?inline=true', 'Υ.Α. 65409/Δ2/2024 — ΑΔΑ 99ΓΦ46ΝΚΠΔ-9Γ1 ↗'); ?>
     <?php sourceCardLink('https://dide.ioa.sch.gr/wordpress/wp-content/uploads/2023/09/%CE%A6%CE%95%CE%9A-4202-T%CE%95%CE%A5%CE%A7%CE%9F%CE%A3-%CE%92-25_09_2018_-%CE%91%CF%81%CE%B9%CE%B8%CE%BC-144236_%CE%942_%CE%91%CE%BD%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CE%B9%CF%82-%CE%BC%CE%B1%CE%B8%CE%B7%CE%BC%CE%AC%CF%84%CF%89%CE%BD-%CE%BC%CE%BF%CF%85%CF%83%CE%B9%CE%BA%CE%AE%CF%82-%CF%80%CE%B1%CE%B9%CE%B4%CE%B5%CE%AF%CE%B1%CF%82-%CE%9C%CE%BF%CF%85%CF%83%CE%B9%CE%BA%CF%8E%CE%BD-%CF%83%CF%87%CE%BF%CE%BB%CE%B5%CE%AF%CF%89%CE%BD.pdf', 'ΦΕΚ Β΄ 4202/2018 — Αναθέσεις μουσικής παιδείας Μουσικών Σχολείων ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/4.%20PHEK%20B%202107_09_04_26_OP%20MOUSIKOU%20GYMN%20GEL.pdf', 'ΦΕΚ Β΄ 2107/2026 — Ωρολόγιο Μουσικού Γυμνασίου / Γενικού Μουσικού Λυκείου ↗'); ?>
+    <?php sourceCardLink('https://ia37rg02wpsa01.blob.core.windows.net/fek/02/2018/20180201761.pdf', 'ΦΕΚ Β΄ 1761/2018 — Αναθέσεις μαθημάτων Ε.Ε.Ε.ΕΚ. ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 

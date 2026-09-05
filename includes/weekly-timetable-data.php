@@ -21,6 +21,8 @@
  * - ΦΕΚ Β΄ 2636/05-07-2018, Β΄ 4373/01-10-2018 και Β΄ 4815/30-10-2018:
  *   Γ΄ τριετούς Εσπερινού ΕΠΑ.Λ. (όπως ισχύει).
  * - ΦΕΚ Β΄ 5251/30-08-2023: Γ΄ Π.ΕΠΑ.Λ.
+ * - Υ.Α. 57523/Γ6/04-06-2002, ΦΕΚ Β΄ 765/19-06-2002: Α΄–Ε΄ Ε.Ε.Ε.ΕΚ.
+ * - ν. 4415/2016, άρθρο 48 παρ. 4: ΣΤ΄ Ε.Ε.Ε.ΕΚ. (πρακτική άσκηση / ΕΠΕ).
  *
  * Σχεδιασμός δεδομένων:
  * - Κάθε γραμμή έχει σταθερό `course_id` ώστε αργότερα να συνδεθεί με το
@@ -38,6 +40,7 @@
 
 require_once __DIR__ . '/weekly-timetable-vocational-g-data.php';
 require_once __DIR__ . '/weekly-timetable-eneegyl-data.php';
+require_once __DIR__ . '/weekly-timetable-eeeek-data.php';
 require_once __DIR__ . '/teaching-timetable-crosswalk.php';
 
 function weeklyTimetableSchoolTypes()
@@ -175,6 +178,19 @@ function weeklyTimetableSchoolTypes()
                 'Β΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 15, 'Μαθήματα Τομέα' => 15)),
                 'Γ΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 15, 'Μαθήματα Τομέα' => 15)),
                 'Δ΄' => array('total' => 30, 'parts' => array('Γενική Παιδεία' => 10, 'Μαθήματα Ειδικότητας' => 20)),
+            ),
+        ),
+        'eeeek' => array(
+            'label' => 'Εργαστήριο Ειδικής Επαγγελματικής Εκπαίδευσης (Ε.Ε.Ε.ΕΚ.)',
+            'grades' => array('Α΄', 'Β΄', 'Γ΄', 'Δ΄', 'Ε΄', 'ΣΤ΄'),
+            'source' => 'ΦΕΚ Β΄ 765/2002 · ν. 4415/2016 · εγκ. 81779/Δ3/2026',
+            'program' => array(
+                'Α΄' => array('total' => 30, 'parts' => array('Εξειδικεύσεις Εργαστηρίων' => 14, 'Μαθήματα' => 16)),
+                'Β΄' => array('total' => 30, 'parts' => array('Εξειδικεύσεις Εργαστηρίων' => 14, 'Μαθήματα' => 16)),
+                'Γ΄' => array('total' => 30, 'parts' => array('Εξειδικεύσεις Εργαστηρίων' => 15, 'Μαθήματα' => 15)),
+                'Δ΄' => array('total' => 30, 'parts' => array('Εξειδικεύσεις Εργαστηρίων' => 16, 'Μαθήματα' => 14)),
+                'Ε΄' => array('total' => 30, 'parts' => array('Εξειδικεύσεις Εργαστηρίων' => 17, 'Μαθήματα' => 13)),
+                'ΣΤ΄' => array('total' => 0, 'total_display' => 'Μεταβλητό · πρακτική άσκηση και εξατομικευμένη συμπλήρωση προγράμματος'),
             ),
         ),
         'epal' => array(
@@ -561,7 +577,7 @@ function weeklyTimetableRows()
         array('course_id'=>'mgel.c.choice.choral','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Επεξεργασία Χορικού (Choral)','hours'=>array('Γ΄'=>2),'mode'=>'choice','assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το μάθημα υπάρχει στο ισχύον ωρολόγιο ΦΕΚ Β΄ 2107/2026, αλλά δεν υπάρχει ρητή αντίστοιχη γραμμή στο ΦΕΚ αναθέσεων Β΄ 4202/2018.'),
         array('course_id'=>'mgel.c.choice.ixolipsia2','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Στοιχειώδεις αρχές ηχοληψίας ΙΙ','hours'=>array('Γ΄'=>2),'mode'=>'choice','assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το ΦΕΚ Β΄ 4202/2018 περιλαμβάνει μόνο «Στοιχειώδεις Αρχές Ηχοληψίας» ως επιλογή της Α΄ Λυκείου· δεν τεκμηριώνει ανάθεση για τη νέα «ΙΙ» της Γ΄ τάξης του ΦΕΚ Β΄ 2107/2026.'),
     );
-    return teachingTimetableEnrichRows(array_merge($rows, weeklyTimetableEneegylRows(), weeklyTimetableVocationalRows()));
+    return teachingTimetableEnrichRows(array_merge($rows, weeklyTimetableEneegylRows(), weeklyTimetableEeeekRows(), weeklyTimetableVocationalRows()));
 }
 
 /**

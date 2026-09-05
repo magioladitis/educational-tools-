@@ -37,27 +37,27 @@ def claims(code, **criteria):
             out.append(claim)
     return out
 
-check('76 explicit assignment codes indexed', summary == {
-    'known_codes': 76,
-    'claims_across_known_codes': 8968,
+check('78 explicit assignment codes indexed', summary == {
+    'known_codes': 78,
+    'claims_across_known_codes': 10847,
     'claim_categories': {
-        'choice': 393,
+        'choice': 2115,
         'condition': 140,
-        'fixed': 7869,
+        'fixed': 8001,
         'periodic': 25,
-        'thematic': 169,
+        'thematic': 194,
         'variant': 372,
     },
     'regulatory_gap_instances_excluded': 29,
 })
-check('known code index unique', len(known_codes) == len(set(known_codes)) == 76)
+check('known code index unique', len(known_codes) == len(set(known_codes)) == 78)
 check('core codes present', all(code in known_codes for code in ('ΠΕ03','ΠΕ05','ΠΕ80','ΠΕ87.01','ΤΕ01.19')))
 
 # Fixed totals are intentionally conservative curriculum-eligibility totals.
 pe03 = aggs['ΠΕ03']
-check('PE03 conservative totals exact', pe03['fixed_hours_by_priority'] == {'A':190,'B':43,'C':13,'SPECIAL':28})
-check('PE03 fixed total exact', pe03['fixed_hours_total'] == 274)
-check('PE03 condition rows excluded from fixed total', pe03['category_counts'] == {'condition':8,'fixed':123})
+check('PE03 conservative totals exact', pe03['fixed_hours_by_priority'] == {'A':204,'B':43,'C':13,'SPECIAL':28})
+check('PE03 fixed total exact', pe03['fixed_hours_total'] == 288)
+check('PE03 condition rows excluded from fixed total', pe03['category_counts'] == {'condition':8,'fixed':128})
 check('fixed total recomputes only from fixed claims', all(
     agg['fixed_hours_total'] == sum(int(c.get('hours', 0)) for c in agg['claims'] if c.get('category') == 'fixed')
     for agg in aggs.values()
@@ -106,11 +106,14 @@ check('choice opportunities use slot_hours, not fixed hours', all('slot_hours' i
 
 # Thematic PEPAL A stays non-fractional and now preserves special_notes.
 pe80_thematic = [c for c in aggs['ΠΕ80']['claims'] if c.get('category') == 'thematic']
-check('PE80 has six thematic opportunities', len(pe80_thematic) == 6)
+pe80_pepal_thematic = [c for c in pe80_thematic if c.get('school') == 'pepal']
+pe80_eeeek_thematic = [c for c in pe80_thematic if c.get('school') == 'eeeek']
+check('PE80 has six PEPAL thematic opportunities', len(pe80_pepal_thematic) == 6)
+check('PE80 has one EEEEΚ ST thematic opportunity', len(pe80_eeeek_thematic) == 1 and pe80_eeeek_thematic[0].get('grade') == 'ΣΤ΄')
 check('thematic hours remain unattributed', all(c.get('hours_attribution') == 'not_fixed_by_regulation' and 'hours' not in c for c in pe80_thematic))
 check('special_notes preserved in thematic payload', any(
     any(row.get('note') == 'κύρια διαθεματική ανάθεση · Οικονομίας' for row in c.get('eligible_thematic_rows', []))
-    for c in pe80_thematic
+    for c in pe80_pepal_thematic
 ))
 
 # Wildcards are evaluated dynamically even for a code not present in the explicit index.
