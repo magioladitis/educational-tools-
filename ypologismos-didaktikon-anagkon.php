@@ -79,6 +79,20 @@ function staffingUiTrackLabel($track) {
 }
 
 /**
+ * Ταξινόμηση μόνο για την παρουσίαση του πίνακα ανά κλάδο.
+ *
+ * Το workload matrix διατηρεί τη δική του εσωτερική σειρά αξιολόγησης.
+ * Στο UI όμως οι κλάδοι εμφανίζονται σε φυσική σειρά κωδικού
+ * (ΠΕ01, ΠΕ02, ΠΕ03, ΠΕ04.01, ΠΕ04.02, ...), ώστε ο πίνακας να
+ * λειτουργεί ως ευανάγνωστος κατάλογος ειδικοτήτων.
+ */
+function staffingUiSortCodesNatural($matrix) {
+    if (!$matrix || empty($matrix['codes']) || !is_array($matrix['codes'])) return $matrix;
+    uksort($matrix['codes'], 'strnatcmp');
+    return $matrix;
+}
+
+/**
  * Front-end only collapse for Εργαστήρια Δεξιοτήτων.
  *
  * The regulatory A/B assignment remains intact in the backend workload matrix.
@@ -272,7 +286,7 @@ if ($submitted) {
     $readiness = schoolProfileGeneralEducationReadiness($profile);
     $matrix = schoolProfileWorkloadMatrix($profile);
     $presentation = staffingUiCollapseSkillsWorkshops($matrix);
-    $displayMatrix = $presentation['matrix'];
+    $displayMatrix = staffingUiSortCodesNatural($presentation['matrix']);
     $collapsedSkills = $presentation['collapsed'];
 }
 ?>
