@@ -621,3 +621,265 @@ function personnelWorkloadRosterPlan($profile, $people, $allocations, $model = n
         ),
     );
 }
+
+/**
+ * Επιστρέφει τον αριθμό κανονικών τμημάτων μιας τάξης από το school profile.
+ * Δεν μετρά ομάδες ξένων γλωσσών, προσανατολισμού, Ηθικής ή πρόσθετες ομάδες split.
+ */
+function personnelWorkloadGeneralSectionsForGrade($profile, $grade)
+{
+    if (!isset($profile['structures']) || !is_array($profile['structures'])) return 0;
+    foreach ($profile['structures'] as $structure) {
+        if (!isset($structure['general_sections']) || !is_array($structure['general_sections'])) continue;
+        if (isset($structure['general_sections'][$grade])) return max(0, (int) $structure['general_sections'][$grade]);
+    }
+    return 0;
+}
+
+function personnelWorkloadTrackLabel($track)
+{
+    $map = array(
+        'humanities'=>'Ανθρωπιστικών',
+        'science'=>'Θετικών',
+        'science_health'=>'Θετικών / Υγείας',
+        'economics_it'=>'Οικονομίας / Πληροφορικής',
+    );
+    return isset($map[$track]) ? $map[$track] : (string) $track;
+}
+
+/**
+ * Φιλική ετικέτα για ένα πραγματικό διδακτικό slot.
+ *
+ * Τα κανονικά τμήματα ονομάζονται Α1, Α2, ... επειδή το profile γνωρίζει
+ * μόνο το πλήθος τους. Οι επιλογές/προσανατολισμοί εμφανίζονται ως Ομάδα 1,
+ * Ομάδα 2 κ.ο.κ. ώστε να μην κατασκευάζεται ψεύτικη ταυτότητα τμήματος.
+ * Για πρόσθετες ομάδες split >21 επίσης δεν υποθέτουμε ποιο συγκεκριμένο
+ * κανονικό τμήμα χωρίστηκε.
+ */
+function personnelWorkloadAllocationSlotLabel($profile, $unit, $sectionIndex)
+{
+    $idx = max(1, (int) $sectionIndex);
+    $grade = isset($unit['grade']) ? (string) $unit['grade'] : '';
+    $subject = isset($unit['subject']) ? (string) $unit['subject'] : '';
+
+    if (isset($unit['choice_option']) && $unit['choice_option'] !== '') {
+        return trim($grade . ' · ' . $unit['choice_option'] . ' · Ομάδα ' . $idx, ' ·');
+    }
+    $track = isset($unit['profile_track']) ? $unit['profile_track'] : (isset($unit['track']) ? $unit['track'] : '');
+    if ($track !== '') {
+        return trim($grade . ' · ' . personnelWorkloadTrackLabel($track) . ' · Ομάδα ' . $idx, ' ·');
+    }
+    if (isset($unit['slot_id']) && $unit['slot_id'] === 'gel.c.general.orientation_choice') {
+        return trim($grade . ' · ' . $subject . ' Γ.Π. · Ομάδα ' . $idx, ' ·');
+    }
+
+    $general = personnelWorkloadGeneralSectionsForGrade($profile, $grade);
+    if ($general > 0 && $idx <= $general) {
+        $gradePlain = str_replace(array('΄','’',"'"), '', $grade);
+        return trim($gradePlain) . $idx;
+    }
+    if ($general > 0 && $idx > $general) {
+        return trim($grade . ' · πρόσθετη ομάδα χωρισμού ' . ($idx - $general), ' ·');
+    }
+    return trim($grade . ' · Ομάδα ' . $idx, ' ·');
+}
+
+/**
+ * Σπάει κάθε aggregate workload unit σε πραγματικά slots τμήματος/ομάδας.
+ * Έτσι ο έλεγχος χωρητικότητας γίνεται σε Α1/Α2/Ομάδα 1 και όχι μόνο στο
+ * συνολικό άθροισμα της τάξης.
+ */
+function personnelWorkloadAllocationSlots($profile, $matrix = null)
+{
+    if ($matrix === null) $matrix = schoolProfileWorkloadMatrix($profile);
+    $claimsByUnit = array();
+    if (isset($matrix['codes']) && is_array($matrix['codes'])) {
+        foreach ($matrix['codes'] as $code=>$codeRow) {
+            if (empty($codeRow['claims'])) continue;
+            foreach ($codeRow['claims'] as $claim) {
+                if (!isset($claim['unit_id']) || !isset($claim['priority'])) continue;
+                $uid = (string) $claim['unit_id'];
+                $priority = (string) $claim['priority'];
+                if (!isset($claimsByUnit[$uid])) $claimsByUnit[$uid] = array('A'=>array(),'B'=>array(),'C'=>array(),'SPECIAL'=>array());
+                if (!isset($claimsByUnit[$uid][$priority])) $claimsByUnit[$uid][$priority] = array();
+                $claimsByUnit[$uid][$priority][] = $code;
+            }
+        }
+    }
+    foreach ($claimsByUnit as $uid=>&$byPriority) {
+        foreach ($byPriority as $priority=>&$codes) {
+            usort($codes, 'strnatcmp');
+            $codes = array_values(array_unique($codes));
+        }
+        unset($codes);
+    }
+    unset($byPriority);
+
+    $slots = array();
+    foreach ($matrix['units'] as $unit) {
+        $count = isset($unit['section_count']) ? max(0, (int) $unit['section_count']) : 0;
+        $hours = isset($unit['hours_per_section']) ? max(0, (int) $unit['hours_per_section']) : 0;
+        if ($count < 1 || $hours < 1) continue;
+        $uid = (string) $unit['unit_id'];
+        for ($i=1; $i<=$count; $i++) {
+            $slotId = $uid . '|section|' . $i;
+            $row = array(
+                'slot_id'=>$slotId,
+                'unit_id'=>$uid,
+                'section_index'=>$i,
+                'grade'=>isset($unit['grade']) ? $unit['grade'] : '',
+                'group'=>isset($unit['group']) ? $unit['group'] : '',
+                'subject'=>isset($unit['subject']) ? $unit['subject'] : '',
+                'assignment_subject'=>isset($unit['assignment_subject']) ? $unit['assignment_subject'] : (isset($unit['subject']) ? $unit['subject'] : ''),
+                'slot_label'=>personnelWorkloadAllocationSlotLabel($profile, $unit, $i),
+                'capacity_hours'=>$hours,
+                'eligible_by_priority'=>isset($claimsByUnit[$uid]) ? $claimsByUnit[$uid] : array('A'=>array(),'B'=>array(),'C'=>array(),'SPECIAL'=>array()),
+                'top_priority'=>isset($unit['top_priority']) ? $unit['top_priority'] : null,
+                'top_codes'=>isset($unit['top_codes']) ? $unit['top_codes'] : array(),
+            );
+            foreach (array('choice_option','profile_track','track','specialty','component_kind','slot_id','choice_set_id') as $key) {
+                if ($key === 'slot_id') continue;
+                if (isset($unit[$key])) $row[$key] = $unit[$key];
+            }
+            $slots[$slotId] = $row;
+        }
+    }
+    return $slots;
+}
+
+function personnelWorkloadPriorityForSlotCode($slot, $specialtyCode)
+{
+    $code = teacherSpecialtyCanonicalCode($specialtyCode);
+    if ($code === '' || empty($slot['eligible_by_priority'])) return null;
+    foreach (array('A','B','C','SPECIAL') as $priority) {
+        if (!empty($slot['eligible_by_priority'][$priority]) && in_array($code, $slot['eligible_by_priority'][$priority], true)) return $priority;
+    }
+    return null;
+}
+
+/**
+ * Roster validation σε επίπεδο πραγματικού slot τμήματος/ομάδας.
+ * Μεταφράζει τα slot allocations στο υπάρχον aggregate personnel layer,
+ * αλλά επιπλέον ελέγχει ξεχωριστά τη χωρητικότητα κάθε Α1/Α2/Ομάδας.
+ */
+function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model = null)
+{
+    if ($model === null) $model = teachingWorkloadModel();
+    $matrix = schoolProfileWorkloadMatrix($profile, $model);
+    $slots = personnelWorkloadAllocationSlots($profile, $matrix);
+
+    $peopleIndex = array();
+    foreach ($people as $person) {
+        $id = isset($person['person_id']) ? trim((string) $person['person_id']) : '';
+        if ($id !== '') $peopleIndex[$id] = $person;
+    }
+
+    $aggregate = array();
+    $rowResults = array();
+    $slotAssigned = array();
+    foreach ($slots as $slotId=>$slot) $slotAssigned[$slotId] = 0;
+
+    foreach ($slotAllocations as $i=>$allocation) {
+        $personId = isset($allocation['person_id']) ? trim((string) $allocation['person_id']) : '';
+        $slotId = isset($allocation['slot_id']) ? trim((string) $allocation['slot_id']) : '';
+        $hours = isset($allocation['hours']) ? personnelWorkloadNonNegativeInt($allocation['hours']) : 0;
+        $row = array(
+            'row_index'=>$i,
+            'person_id'=>$personId,
+            'slot_id'=>$slotId,
+            'hours'=>$hours,
+            'valid'=>true,
+            'errors'=>array(),
+            'warnings'=>array(),
+            'priority'=>null,
+        );
+        if ($personId === '' || !isset($peopleIndex[$personId])) {
+            $row['valid'] = false; $row['errors'][] = 'unknown_person';
+        }
+        if ($slotId === '' || !isset($slots[$slotId])) {
+            $row['valid'] = false; $row['errors'][] = 'unknown_slot';
+        }
+        if ($hours < 1) {
+            $row['valid'] = false; $row['errors'][] = 'positive_hours_required';
+        }
+        if (isset($slots[$slotId])) {
+            $slot = $slots[$slotId];
+            $row['unit_id'] = $slot['unit_id'];
+            $row['slot_label'] = $slot['slot_label'];
+            $row['subject'] = $slot['subject'];
+            $row['capacity_hours'] = (int) $slot['capacity_hours'];
+            if ($hours > (int) $slot['capacity_hours']) {
+                $row['valid'] = false; $row['errors'][] = 'hours_exceed_slot_capacity';
+            }
+            if (isset($peopleIndex[$personId])) {
+                $priority = personnelWorkloadPriorityForSlotCode($slot, isset($peopleIndex[$personId]['specialty_code']) ? $peopleIndex[$personId]['specialty_code'] : '');
+                $row['priority'] = $priority;
+                if ($priority === null) {
+                    $row['valid'] = false; $row['errors'][] = 'specialty_not_eligible';
+                } elseif (isset($slot['top_priority']) && $slot['top_priority'] !== null && $priority !== $slot['top_priority']) {
+                    $row['warnings'][] = 'uses_lower_priority_assignment';
+                }
+            }
+        }
+        if ($row['valid']) {
+            $uid = $slots[$slotId]['unit_id'];
+            $key = $personId . "\n" . $uid;
+            if (!isset($aggregate[$key])) $aggregate[$key] = array('person_id'=>$personId,'unit_id'=>$uid,'hours'=>0);
+            $aggregate[$key]['hours'] += $hours;
+            $slotAssigned[$slotId] += $hours;
+        }
+        $rowResults[] = $row;
+    }
+
+    $basePlan = personnelWorkloadRosterPlan($profile, $people, array_values($aggregate), $model);
+    $slotStates = array();
+    $covered = 0; $unassigned = 0; $over = 0; $assignedSlotTotal = 0;
+    foreach ($slots as $slotId=>$slot) {
+        $capacity = (int) $slot['capacity_hours'];
+        $assigned = isset($slotAssigned[$slotId]) ? (int) $slotAssigned[$slotId] : 0;
+        $assignedSlotTotal += $assigned;
+        $remaining = max(0, $capacity - $assigned);
+        $overage = max(0, $assigned - $capacity);
+        if ($remaining === 0 && $overage === 0) $covered += $capacity;
+        $unassigned += $remaining;
+        $over += $overage;
+        $slotStates[$slotId] = array(
+            'slot_id'=>$slotId,
+            'unit_id'=>$slot['unit_id'],
+            'slot_label'=>$slot['slot_label'],
+            'grade'=>$slot['grade'],
+            'subject'=>$slot['subject'],
+            'capacity_hours'=>$capacity,
+            'assigned_hours'=>$assigned,
+            'remaining_hours'=>$remaining,
+            'overallocated_hours'=>$overage,
+            'status'=>$overage > 0 ? 'overallocated' : ($remaining > 0 ? 'partially_or_unassigned' : 'fully_assigned'),
+        );
+    }
+
+    // Mark rows participating in an overallocated slot.
+    if ($over > 0) {
+        foreach ($rowResults as &$row) {
+            if ($row['slot_id'] !== '' && isset($slotStates[$row['slot_id']]) && $slotStates[$row['slot_id']]['overallocated_hours'] > 0) {
+                $row['valid'] = false;
+                $row['errors'][] = 'slot_overallocated_across_roster';
+            }
+        }
+        unset($row);
+    }
+
+    $invalidRows = 0;
+    foreach ($rowResults as $row) if (!$row['valid']) $invalidRows++;
+    $basePlan['valid'] = $basePlan['valid'] && $over === 0 && $invalidRows === 0;
+    $basePlan['allocation_rows'] = $rowResults;
+    $basePlan['slots'] = $slotStates;
+    $basePlan['summary']['assignment_slot_count'] = count($slots);
+    $basePlan['summary']['assigned_slot_hours_total'] = $assignedSlotTotal;
+    $basePlan['summary']['fully_covered_slot_hours'] = $covered;
+    $basePlan['summary']['unassigned_slot_hours'] = $unassigned;
+    $basePlan['summary']['overallocated_slot_hours'] = $over;
+    $basePlan['summary']['invalid_allocation_row_count'] = $invalidRows;
+    $basePlan['semantics']['slot_capacity_checked_per_section_or_group'] = true;
+    $basePlan['semantics']['manual_allocation_only'] = true;
+    return $basePlan;
+}

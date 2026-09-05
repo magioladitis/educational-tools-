@@ -49,6 +49,17 @@ function schoolProfileBuildDayGymnasium2026($config)
         array('Γαλλικά','Γερμανικά','Ιταλικά')
     );
 
+    $validationIssues = array();
+    foreach ($languageGroups as $grade => $groups) {
+        foreach ($groups as $language => $count) {
+            if ($count > $general[$grade]) {
+                $validationIssues[] = 'gymnasio:' . $grade
+                    . ':second_foreign_language_groups_exceeds_general_sections:'
+                    . $language . ':' . $count . '>' . $general[$grade];
+            }
+        }
+    }
+
     $choiceOptions = array();
     foreach ($languageGroups as $grade => $groups) {
         $choiceOptions[$grade]['gym.deyteri_xeni'] = $groups;
@@ -64,7 +75,6 @@ function schoolProfileBuildDayGymnasium2026($config)
         $grades
     );
     $techSplit = $techSplitRequested;
-    $validationIssues = array();
     foreach ($grades as $grade) {
         if ($techSplitRequested[$grade] > $general[$grade]) {
             $validationIssues[] = 'gymnasio:' . $grade . ':technology_informatics_split_sections_exceeds_general_sections:'
@@ -150,6 +160,16 @@ function schoolProfileBuildDayGel2026($config)
         array('Α΄','Β΄'),
         array('Γαλλικά','Γερμανικά')
     );
+    $validationIssues = array();
+    foreach ($languageGroups as $grade => $groups) {
+        foreach ($groups as $language => $count) {
+            if ($count > $general[$grade]) {
+                $validationIssues[] = 'gel:' . $grade
+                    . ':second_foreign_language_groups_exceeds_general_sections:'
+                    . $language . ':' . $count . '>' . $general[$grade];
+            }
+        }
+    }
     $choiceOptionSections = array();
     foreach ($languageGroups as $grade => $groups) {
         $choiceOptionSections[$grade]['gel.general.deyteri_xeni'] = $groups;
@@ -201,6 +221,7 @@ function schoolProfileBuildDayGel2026($config)
                 'conditions' => array(),
             ),
         ),
+        'validation_issues' => $validationIssues,
         'ethics' => array(
             'formation_policy_scope' => 'in_scope',
             'by_structure_grade' => array(

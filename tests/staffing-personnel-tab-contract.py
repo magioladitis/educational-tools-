@@ -37,7 +37,7 @@ base={
 out=render(base)
 check('personnel tab active', 'data-staffing-tab="personnel"' in out and 'aria-selected="true">3. Εκπαιδευτικοί' in out)
 check('personnel card rendered', '<h2>3. Εκπαιδευτικοί</h2>' in out)
-check('allocation tab remains next stage', '4. Κατανομή μαθημάτων — επόμενο στάδιο' in out)
+check('allocation tab enabled after resolved personnel', 'data-staffing-tab="allocation"' in out and '>4. Κατανομή μαθημάτων</button>' in out and 'Κατανομή μαθημάτων — επόμενο στάδιο' not in out)
 check('three people summary', re.search(r'<strong>3</strong><span>εκπαιδευτικοί στο προσωρινό προσωπικό</span>',out) is not None)
 # PE03 7y = 21, external 3 => 18 available
 def row_window(marker):

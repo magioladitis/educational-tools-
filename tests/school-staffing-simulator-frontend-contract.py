@@ -11,6 +11,8 @@ def render(post=None):
     if post is None:
         p=subprocess.run(['php',str(PAGE)],cwd=ROOT,text=True,capture_output=True)
     else:
+        post=dict(post)
+        post.setdefault('staffing_action','profile')
         php=['<?php','$_SERVER["REQUEST_METHOD"]="POST";','$_POST=array(']
         for k,v in post.items():
             if isinstance(v,int): val=str(v)
@@ -71,11 +73,19 @@ check('Technology panel reopens when split inputs are positive', 'id="technology
 check('split inputs preserved', 'name="gym_tech_split_a"' in gs and 'value="1"' in gs)
 
 check('split fields expose declared-section maximum', 'name="gym_tech_split_a"' in gs and 'max="2"' in gs and 'data-max-source="gym_general_a"' in gs)
+check('Gym language fields expose per-language dynamic maximum', 'id="gym_lang_a_fr"' in g and 'max="2"' in g and 'data-language-max-source="gym_general_a"' in g)
 invalid_split=dict(gym)
 invalid_split.update({'gym_general_a':2,'gym_tech_split_a':5})
 gi=render(invalid_split)
 check('crafted over-limit split is reported', 'Τα τμήματα με πάνω από 21 μαθητές δεν μπορούν να είναι περισσότερα από τα δηλωμένα τμήματα της ίδιας τάξης.' in gi)
 check('over-limit split makes profile partial', 'Μερικός υπολογισμός' in gi)
+
+invalid_language=dict(gym)
+invalid_language.update({'gym_general_a':2,'gym_lang_a_fr':3,'gym_lang_a_de':2,'gym_lang_a_it':2})
+gli=render(invalid_language)
+check('crafted over-limit language group is reported clearly', 'Οι ομάδες «Γαλλικά» της Α΄ τάξης (3) δεν μπορούν να ξεπερνούν τα 2 κανονικά τμήματα της ίδιας τάξης.' in gli)
+check('over-limit language group makes profile partial', 'Μερικός υπολογισμός' in gli)
+check('other languages may each equal section count', 'gymnasio:Α΄:second_foreign_language_groups_exceeds_general_sections:Γερμανικά' not in gli and 'gymnasio:Α΄:second_foreign_language_groups_exceeds_general_sections:Ιταλικά' not in gli)
 
 gel={
 'school_type':'gel','school_name':'Contract GEL',
@@ -97,6 +107,7 @@ check('GEL branch rows use natural specialty-code order', gel_codes == sorted(ge
 check('GEL orientation fields preserved', 'name="gel_c_scihealth" value="2"' in l)
 check('GEL 2nd/3rd field inputs preserved', 'name="gel_c_field_math" value="1"' in l and 'name="gel_c_field_bio" value="1"' in l)
 check('GEL conditional inputs preserved', 'name="gel_c_cond_math" value="1"' in l and 'name="gel_c_cond_history" value="3"' in l)
+check('GEL language fields expose per-language dynamic maximum', 'id="gel_lang_a_fr"' in l and 'max="3"' in l and 'data-language-max-source="gel_general_a"' in l)
 
 partial=render({'school_type':'gel','gel_general_a':2,'gel_general_b':2,'gel_general_c':2})
 check('incomplete profile flagged partial', 'Μερικός υπολογισμός' in partial)
@@ -112,6 +123,9 @@ text=PAGE.read_text(encoding='utf-8')
 check('frontend uses common profile builder', 'schoolProfileBuildDayGymnasium2026' in text and 'schoolProfileBuildDayGel2026' in text)
 check('frontend uses workload matrix', 'schoolProfileWorkloadMatrix' in text)
 check('frontend does not use personnel auto allocation', 'personnelWorkloadRosterPlan' not in text and 'personnelWorkloadEvaluatePerson' not in text)
+check('visible calculation buttons are not native submit controls', 'type="submit" name="staffing_action"' not in text and text.count('data-staffing-request-action=') == 3)
+check('only one centralized requestSubmit path exists', text.count('requestSubmit()') == 1)
+check('no fetch or reload request path exists', 'fetch(' not in text and 'location.reload' not in text and '.submit()' not in text)
 
 failed=[n for n,ok in checks if not ok]
 for n,ok in checks: print(('PASS' if ok else 'FAIL')+': '+n)
