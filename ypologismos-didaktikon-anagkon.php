@@ -78,12 +78,129 @@ function staffingUiTrackLabel($track) {
     return isset($map[$track]) ? $map[$track] : $track;
 }
 
+/**
+ * Front-end only collapse for Εργαστήρια Δεξιοτήτων.
+ *
+ * The regulatory A/B assignment remains intact in the backend workload matrix.
+ * For presentation, the same broad slot is removed from every individual branch
+ * and surfaced once as «Οποιαδήποτε ειδικότητα» so it does not create dozens of
+ * repetitive eligibility rows.
+ */
+function staffingUiCollapseSkillsWorkshops($matrix) {
+    $result = array(
+        'matrix' => $matrix,
+        'collapsed' => array(
+            'active' => false,
+            'subject' => 'Εργαστήρια Δεξιοτήτων',
+            'label' => 'Οποιαδήποτε ειδικότητα',
+            'hours' => 0,
+            'unit_count' => 0,
+            'units' => array(),
+        ),
+    );
+    if (!$matrix || empty($matrix['units'])) return $result;
+
+    $unitIds = array();
+    foreach ($matrix['units'] as $unit) {
+        if (!isset($unit['subject']) || $unit['subject'] !== 'Εργαστήρια Δεξιοτήτων') continue;
+        $id = isset($unit['unit_id']) ? (string)$unit['unit_id'] : '';
+        if ($id === '' || isset($unitIds[$id])) continue;
+        $unitIds[$id] = true;
+        $result['collapsed']['active'] = true;
+        $result['collapsed']['unit_count']++;
+        $result['collapsed']['hours'] += isset($unit['school_hours']) ? (int)$unit['school_hours'] : 0;
+        $result['collapsed']['units'][] = array(
+            'unit_id' => $id,
+            'grade' => isset($unit['grade']) ? $unit['grade'] : '',
+            'hours' => isset($unit['school_hours']) ? (int)$unit['school_hours'] : 0,
+        );
+    }
+    if (!$result['collapsed']['active']) return $result;
+
+    $display = $matrix;
+    foreach ($display['codes'] as $code => &$row) {
+        $claims = array();
+        foreach ($row['claims'] as $claim) {
+            $id = isset($claim['unit_id']) ? (string)$claim['unit_id'] : '';
+            if ($id !== '' && isset($unitIds[$id])) continue;
+            $claims[] = $claim;
+        }
+        $row['claims'] = $claims;
+        $row['top_priority_hours'] = 0;
+        $row['exclusive_top_priority_hours'] = 0;
+        $row['shared_top_priority_hours'] = 0;
+        $row['ordered_top_priority_hours'] = 0;
+        $row['ordered_exclusive_top_priority_hours'] = 0;
+        $row['ordered_shared_top_priority_hours'] = 0;
+        $row['fallback_hours'] = 0;
+        $row['special_top_priority_hours'] = 0;
+        $row['eligible_hours_by_priority'] = array('A'=>0,'B'=>0,'C'=>0,'SPECIAL'=>0);
+        $row['top_unit_count'] = 0;
+        $row['fallback_unit_count'] = 0;
+        foreach ($claims as $claim) {
+            $hours = isset($claim['school_hours']) ? (int)$claim['school_hours'] : 0;
+            $priority = isset($claim['priority']) ? $claim['priority'] : '';
+            if (isset($row['eligible_hours_by_priority'][$priority])) {
+                $row['eligible_hours_by_priority'][$priority] += $hours;
+            }
+            $isTop = !empty($claim['is_top_priority']);
+            if (!$isTop) {
+                $row['fallback_hours'] += $hours;
+                $row['fallback_unit_count']++;
+                continue;
+            }
+            $row['top_priority_hours'] += $hours;
+            $row['top_unit_count']++;
+            $topCount = isset($claim['top_code_count']) ? (int)$claim['top_code_count'] : 0;
+            if ($topCount === 1) $row['exclusive_top_priority_hours'] += $hours;
+            else $row['shared_top_priority_hours'] += $hours;
+            $topPriority = isset($claim['top_priority']) ? $claim['top_priority'] : '';
+            if ($topPriority === 'SPECIAL') {
+                $row['special_top_priority_hours'] += $hours;
+            } else {
+                $row['ordered_top_priority_hours'] += $hours;
+                if ($topCount === 1) $row['ordered_exclusive_top_priority_hours'] += $hours;
+                else $row['ordered_shared_top_priority_hours'] += $hours;
+            }
+        }
+    }
+    unset($row);
+    foreach (array_keys($display['codes']) as $code) {
+        if (empty($display['codes'][$code]['claims'])) unset($display['codes'][$code]);
+    }
+    uasort($display['codes'], function ($a, $b) {
+        if ($a['ordered_exclusive_top_priority_hours'] !== $b['ordered_exclusive_top_priority_hours']) {
+            return $b['ordered_exclusive_top_priority_hours'] - $a['ordered_exclusive_top_priority_hours'];
+        }
+        if ($a['top_priority_hours'] !== $b['top_priority_hours']) {
+            return $b['top_priority_hours'] - $a['top_priority_hours'];
+        }
+        return strnatcmp($a['code'], $b['code']);
+    });
+
+    $skillHours = (int)$result['collapsed']['hours'];
+    $skillUnits = (int)$result['collapsed']['unit_count'];
+    // The overall curriculum/assignment total remains untouched. Only branch-level
+    // presentation metrics exclude the collapsed workshop slots.
+    $display['summary']['presentation_collapsed_skills_hours'] = $skillHours;
+    $display['summary']['presentation_collapsed_skills_units'] = $skillUnits;
+    $display['summary']['presentation_staffing_leaf_codes_with_claims'] = count($display['codes']);
+    $display['summary']['ordered_top_unit_hours'] = max(0, (int)$display['summary']['ordered_top_unit_hours'] - $skillHours);
+    $display['summary']['shared_top_unit_hours'] = max(0, (int)$display['summary']['shared_top_unit_hours'] - $skillHours);
+    $display['summary']['ordered_shared_top_unit_hours'] = max(0, (int)$display['summary']['ordered_shared_top_unit_hours'] - $skillHours);
+
+    $result['matrix'] = $display;
+    return $result;
+}
+
 $submitted = isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST';
 $schoolType = staffingUiPost('school_type', 'gymnasio');
 if ($schoolType !== 'gel') $schoolType = 'gymnasio';
 $profile = null;
 $readiness = null;
 $matrix = null;
+$displayMatrix = null;
+$collapsedSkills = array('active'=>false,'hours'=>0,'unit_count'=>0,'units'=>array(),'label'=>'Οποιαδήποτε ειδικότητα','subject'=>'Εργαστήρια Δεξιοτήτων');
 
 if ($submitted) {
     $schoolName = trim((string) staffingUiPost('school_name', ''));
@@ -154,6 +271,9 @@ if ($submitted) {
     }
     $readiness = schoolProfileGeneralEducationReadiness($profile);
     $matrix = schoolProfileWorkloadMatrix($profile);
+    $presentation = staffingUiCollapseSkillsWorkshops($matrix);
+    $displayMatrix = $presentation['matrix'];
+    $collapsedSkills = $presentation['collapsed'];
 }
 ?>
 <!doctype html>
@@ -367,7 +487,7 @@ if ($submitted) {
         </form>
       <?php calculatorCardEnd(); ?>
 
-      <?php if ($submitted && $matrix): ?>
+      <?php if ($submitted && $matrix && $displayMatrix): ?>
         <?php calculatorCardStart(array('class'=>'card staffing-results-card')); ?>
           <h2>2. Αποτελέσματα ανά κλάδο</h2>
           <p class="cap">Τα αθροίσματα είναι ώρες του ωρολογίου προγράμματος για τις οποίες ο κάθε κλάδος είναι επιλέξιμος στη συγκεκριμένη σχολική μονάδα. Δεν αποτελούν ακόμη επίσημα λειτουργικά κενά ούτε τελική κατανομή σε εκπαιδευτικούς.</p>
@@ -386,9 +506,12 @@ if ($submitted) {
 
           <div class="staffing-summary-grid">
             <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['assignment_unit_hours']; ?></strong><span>ώρες με αντιστοιχισμένη ανάθεση</span></div>
-            <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['ordered_exclusive_top_unit_hours']; ?></strong><span>ώρες αποκλειστικής κορυφαίας Α΄/Β΄/Γ΄</span></div>
-            <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['ordered_shared_top_unit_hours']; ?></strong><span>ώρες κοινής κορυφαίας Α΄/Β΄/Γ΄</span></div>
-            <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['special_top_unit_hours']; ?></strong><span>ώρες ειδικής κορυφαίας ανάθεσης</span></div>
+            <?php if (!empty($collapsedSkills['active'])): ?>
+              <div class="summary-chip"><strong><?php echo (int)$collapsedSkills['hours']; ?></strong><span>ώρες Εργαστηρίων Δεξιοτήτων · συγκεντρωτικά</span></div>
+            <?php endif; ?>
+            <div class="summary-chip"><strong><?php echo (int)$displayMatrix['summary']['ordered_exclusive_top_unit_hours']; ?></strong><span>ώρες αποκλειστικής κορυφαίας Α΄/Β΄/Γ΄</span></div>
+            <div class="summary-chip"><strong><?php echo (int)$displayMatrix['summary']['ordered_shared_top_unit_hours']; ?></strong><span>ώρες κοινής κορυφαίας Α΄/Β΄/Γ΄</span></div>
+            <div class="summary-chip"><strong><?php echo (int)$displayMatrix['summary']['special_top_unit_hours']; ?></strong><span>ώρες ειδικής κορυφαίας ανάθεσης</span></div>
             <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_dependency_instances']; ?></strong><span>ενεργές εκκρεμείς εξαρτήσεις</span></div>
             <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_regulatory_gap_instances']; ?></strong><span>επιβεβαιωμένα κανονιστικά κενά</span></div>
           </div>
@@ -402,7 +525,23 @@ if ($submitted) {
             <table class="staffing-table" id="staffingMatrixTable">
               <thead><tr><th>Κλάδος</th><th>Α΄ επιλεξιμότητα</th><th>Β΄</th><th>Γ΄</th><th>Αποκλειστική κορυφαία</th><th>Κοινή κορυφαία</th><th>Ειδική</th><th>Χαμηλότερη ανάθεση</th></tr></thead>
               <tbody>
-              <?php foreach ($matrix['codes'] as $code=>$row): ?>
+              <?php if (!empty($collapsedSkills['active'])): ?>
+                <tr class="staffing-code-row staffing-collapsed-row" data-search="Οποιαδήποτε ειδικότητα Εργαστήρια Δεξιοτήτων">
+                  <td>
+                    <details class="staffing-details">
+                      <summary><span class="code">Οποιαδήποτε ειδικότητα</span> · Εργαστήρια Δεξιοτήτων</summary>
+                      <ul class="claim-list">
+                        <?php foreach ($collapsedSkills['units'] as $skillUnit): ?>
+                          <li><strong><?php echo staffingUiH($skillUnit['grade'] . ' · Εργαστήρια Δεξιοτήτων'); ?></strong> — <?php echo (int)$skillUnit['hours']; ?> ώρες</li>
+                        <?php endforeach; ?>
+                      </ul>
+                      <p class="claim-meta">Συγκεντρωτική εμφάνιση μόνο για το εργαλείο. Η πλήρης Α΄/Β΄ ανάθεση όλων των κλάδων διατηρείται στο εσωτερικό μοντέλο.</p>
+                    </details>
+                  </td>
+                  <td colspan="7"><strong><?php echo (int)$collapsedSkills['hours']; ?> ώρες συνολικά</strong></td>
+                </tr>
+              <?php endif; ?>
+              <?php foreach ($displayMatrix['codes'] as $code=>$row): ?>
                 <tr class="staffing-code-row" data-search="<?php echo staffingUiH($code . ' ' . $row['label'] . ' ' . implode(' ', array_map(function($c){return isset($c['subject'])?$c['subject']:'';}, $row['claims']))); ?>">
                   <td>
                     <details class="staffing-details">
@@ -433,7 +572,7 @@ if ($submitted) {
               </tbody>
             </table>
           </div>
-          <p class="help"><strong>Προσοχή:</strong> οι στήλες επιλεξιμότητας Α΄/Β΄/Γ΄ μπορούν να επικαλύπτονται μεταξύ κλάδων. Οι «Αποκλειστικές κορυφαίες» είναι το πιο αυστηρό κομμάτι της στελέχωσης· οι «Κοινές κορυφαίες» απαιτούν πραγματική κατανομή μεταξύ ισότιμων κλάδων.</p>
+          <p class="help"><strong>Προσοχή:</strong> οι στήλες επιλεξιμότητας Α΄/Β΄/Γ΄ μπορούν να επικαλύπτονται μεταξύ κλάδων. Οι «Αποκλειστικές κορυφαίες» είναι το πιο αυστηρό κομμάτι της στελέχωσης· οι «Κοινές κορυφαίες» απαιτούν πραγματική κατανομή μεταξύ ισότιμων κλάδων.<?php if (!empty($collapsedSkills['active'])): ?> Τα <strong>Εργαστήρια Δεξιοτήτων</strong> εξαιρούνται από τα επιμέρους αθροίσματα κλάδων της οθόνης και εμφανίζονται μία φορά ως «Οποιαδήποτε ειδικότητα», ώστε να αποφεύγεται η τεχνητή επανάληψη δεκάδων αναθέσεων.<?php endif; ?></p>
         <?php calculatorCardEnd(); ?>
       <?php endif; ?>
     <?php calculatorMainEnd(); ?>
@@ -453,7 +592,7 @@ if ($submitted) {
         <h3>Τρέχων υπολογισμός</h3>
         <div class="result-row"><span>Δομή</span><strong><?php echo $schoolType === 'gel' ? 'Ημερήσιο ΓΕΛ' : 'Ημερήσιο Γυμνάσιο'; ?></strong></div>
         <div class="result-row"><span>Μονάδες αντιστοιχισμένης ανάθεσης</span><strong><?php echo (int)$matrix['summary']['assignment_unit_count']; ?></strong></div>
-        <div class="result-row"><span>Κλάδοι με επιλεξιμότητα</span><strong><?php echo (int)$matrix['summary']['staffing_leaf_codes_with_claims']; ?></strong></div>
+        <div class="result-row"><span>Κλάδοι με επιλεξιμότητα</span><strong><?php echo (int)$displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims']; ?></strong></div>
         <div class="result-row"><span>Κατάσταση</span><strong><?php echo staffingUiH(staffingUiReadinessLabel($matrix['readiness'])); ?></strong></div>
       <?php endif; ?>
     <?php calculatorResultsEnd(); ?>
