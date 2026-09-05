@@ -303,6 +303,7 @@ function personnelWorkloadNormalizePerson($person)
         return array('status'=>'invalid','reason'=>'person_id_required');
     }
     $specialty = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
+    $secondarySpecialty = isset($person['secondary_specialty_code']) ? teacherSpecialtyCanonicalCode($person['secondary_specialty_code']) : '';
     $obligation = personnelWorkloadSecondaryObligation($person);
     $external = isset($person['assigned_external_hours']) ? personnelWorkloadNonNegativeInt($person['assigned_external_hours']) : 0;
     $result = array(
@@ -311,6 +312,8 @@ function personnelWorkloadNormalizePerson($person)
         'display_name'=>isset($person['display_name']) ? trim((string) $person['display_name']) : '',
         'specialty_code'=>$specialty,
         'specialty_label'=>teacherSpecialtyLabel($specialty),
+        'secondary_specialty_code'=>$secondarySpecialty,
+        'secondary_specialty_label'=>$secondarySpecialty !== '' ? teacherSpecialtyLabel($secondarySpecialty) : '',
         'assigned_external_hours'=>$external,
         'obligation'=>$obligation,
     );

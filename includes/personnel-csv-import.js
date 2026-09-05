@@ -72,7 +72,10 @@
   }
 
   var FIELD_SYNONYMS={
+    schema_version:['εκδοση μητρωου','εκδοση μητρωου προσωπικου','schema version','registry version'],
+    person_id:['αναγνωριστικο','αναγνωριστικο εκπαιδευτικου','person id','person_id'],
     specialty_code:['κλαδος','κλαδος ειδικοτητα','ειδικοτητα','κωδικος ειδικοτητας','specialty','specialty code','branch','branch code','code'],
+    secondary_specialty_code:['2η ειδικοτητα','δευτερη ειδικοτητα','κωδικος 2ης ειδικοτητας','κωδικος δευτερης ειδικοτητας','second specialty','secondary specialty','secondary specialty code'],
     display_name:['ονοματεπωνυμο','ονομα εκπαιδευτικου','εκπαιδευτικος','full name','fullname','name'],
     surname:['επωνυμο','surname','last name','lastname'],
     given_name:['ονομα','first name','firstname','given name'],
@@ -87,7 +90,10 @@
     hours_branch:['κλιμακα ωραριου δε','κλιμακα δε','ωραριο δε','de scale','hours branch']
   };
   var FIELD_FUZZY_SYNONYMS={
+    schema_version:['εκδοση μητρωου','schema version','registry version'],
+    person_id:['αναγνωριστικο εκπαιδευτικου','person id'],
     specialty_code:['κλαδος ειδικοτητα','κωδικος ειδικοτητας','specialty code','branch code'],
+    secondary_specialty_code:['2η ειδικοτητα','δευτερη ειδικοτητα','κωδικος 2ης ειδικοτητας','secondary specialty'],
     display_name:['ονοματεπωνυμο','ονομα εκπαιδευτικου','full name'],
     service_years:['ετη υπηρεσιας','ετη προυπηρεσιας','service years'],
     service_months:['μηνες υπηρεσιας','μηνες προυπηρεσιας','service months'],
@@ -183,7 +189,10 @@
       display=(surname+' '+given).trim();
     }
     return {
+      schema_version:String(get(row,mapping,'schema_version')||'').trim(),
+      person_id:String(get(row,mapping,'person_id')||'').trim(),
       specialty_code:normalizeSpecialtyCode(get(row,mapping,'specialty_code')),
+      secondary_specialty_code:normalizeSpecialtyCode(get(row,mapping,'secondary_specialty_code')),
       display_name:display,
       service_years:mapping.service_years ? nonNegativeInt(get(row,mapping,'service_years'),50) : Math.min(50,combined.years),
       service_months:mapping.service_months ? nonNegativeInt(get(row,mapping,'service_months'),11) : combined.months,
@@ -197,6 +206,10 @@
   }
 
   var api={
+    schemaVersion:'2026-09-05-staff-registry-v1',
+    registrySchemaVersion:'staff_registry_v1',
+    supportsManualRequiredTeachingHours:true,
+    supportsSecondarySpecialty:true,
     normalizeHeader:normalizeHeader,
     normalizeSpecialtyCode:normalizeSpecialtyCode,
     parseDelimited:parseDelimited,

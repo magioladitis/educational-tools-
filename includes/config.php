@@ -26,7 +26,23 @@ if (!function_exists('edu_asset_url')) {
     function edu_asset_url($path)
     {
         $path = (string) $path;
+        $version = EDU_TOOLS_VERSION;
+
+        // Keep the release version, but also include the actual local asset
+        // modification time so changed JS/CSS can never reuse a stale URL.
+        $urlPath = parse_url($path, PHP_URL_PATH);
+        if (is_string($urlPath) && $urlPath !== '' && !preg_match('~^(?:https?:)?//~i', $urlPath)) {
+            $relativePath = ltrim(str_replace('\\', '/', $urlPath), '/');
+            if ($relativePath !== '' && strpos($relativePath, '../') === false) {
+                $localPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relativePath);
+                if (is_file($localPath)) {
+                    $mtime = @filemtime($localPath);
+                    if ($mtime !== false) $version .= '-' . (string) $mtime;
+                }
+            }
+        }
+
         $sep = (strpos($path, '?') === false) ? '?' : '&';
-        return $path . $sep . 'v=' . rawurlencode(EDU_TOOLS_VERSION);
+        return $path . $sep . 'v=' . rawurlencode($version);
     }
 }

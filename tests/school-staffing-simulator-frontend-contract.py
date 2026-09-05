@@ -115,7 +115,7 @@ check('missing orientations explained', 'προσανατολισμού' in part
 check('matrix semantics warning exists', 'οι στήλες επιλεξιμότητας Α΄/Β΄/Γ΄ μπορούν να επικαλύπτονται' in l)
 
 check('Greek terminology in summary', 'ενεργές εκκρεμείς εξαρτήσεις' in l and 'επιβεβαιωμένα κανονιστικά κενά' in l)
-check('Greek terminology in matrix', 'Α΄ επιλεξιμότητα' in l and 'Χαμηλότερη ανάθεση' in l)
+check('Greek terminology in matrix', '<th>Α΄</th><th>Β΄</th><th>Γ΄</th>' in l and 'Χαμηλότερη ανάθεση' in l)
 check('Greek readiness label', 'Έτοιμο για πίνακα επιλεξιμότητας' in l)
 check('English UI terminology removed', all(term not in l for term in ['School profile','assignment units','Assignment units','eligibility','Fallback','unresolved dependencies','regulatory gaps','simulator / test harness','backend','roster']))
 

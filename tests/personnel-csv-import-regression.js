@@ -41,5 +41,15 @@ check('DE technician maps', p.hours_branch==='DE01_TECH');
 check('PE latin canonicalized', csv.normalizeSpecialtyCode('PE 3 - Μαθηματικοί')==='ΠΕ03');
 check('TE subcode canonicalized', csv.normalizeSpecialtyCode('TE 01.02')==='ΤΕ01.02');
 check('blank specialty remains blank', csv.normalizeSpecialtyCode('Μαθηματικοί')==='');
+
+const portable='Έκδοση μητρώου;Αναγνωριστικό;Κλάδος;2η ειδικότητα;Ονοματεπώνυμο;Υποχρεωτικό ωράριο;Ρόλος;Έτη υπηρεσίας;Μήνες;Ημέρες;Ώρες αλλού\n'
+  +'staff_registry_v1;p-100;ΠΕ86;ΠΕ03;Διπλή Ειδικότητα;20;Εκπαιδευτικός;;;;1';
+parsed=csv.parse(portable);
+map=csv.autoMap(parsed.headers);
+p=csv.rowToPersonnel(parsed.rows[0],map);
+check('portable registry version advertised', csv.registrySchemaVersion==='staff_registry_v1' && csv.supportsSecondarySpecialty===true);
+check('portable registry maps person id', map.person_id==='Αναγνωριστικό' && p.person_id==='p-100');
+check('portable registry maps secondary specialty', map.secondary_specialty_code==='2η ειδικότητα' && p.secondary_specialty_code==='ΠΕ03');
+check('portable registry keeps primary specialty and hours', p.specialty_code==='ΠΕ86' && p.required_teaching_hours===20 && p.assigned_external_hours===1);
 console.log(`RESULT ${pass} PASS / ${fail} FAIL`);
 process.exit(fail?1:0);

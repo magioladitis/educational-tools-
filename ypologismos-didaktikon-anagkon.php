@@ -103,11 +103,12 @@ function staffingUiPersonnelReasonLabel($reason) {
         'required_teaching_hours_required' => 'Συμπλήρωσε το υποχρεωτικό διδακτικό ωράριο του εκπαιδευτικού.',
         'required_teaching_hours_invalid' => 'Το υποχρεωτικό διδακτικό ωράριο πρέπει να είναι ακέραιος αριθμός από 1 έως 35 ώρες.',
         'required_teaching_hours_exceeds_pe_max' => 'Για κλάδο ΠΕ το υποχρεωτικό διδακτικό ωράριο δεν μπορεί να ξεπερνά τις 23 ώρες.',
+        'multiple_directors_not_allowed' => 'Μπορεί να δηλωθεί μόνο ένας/μία Διευθυντής/ντρια στη σχολική μονάδα.',
     );
     return isset($map[$reason]) ? $map[$reason] : $reason;
 }
 function staffingUiPersonnelRowsFromPost() {
-    $keys = array('person_id','display_name','specialty_code','required_teaching_hours','service_years','service_months','service_days','role','assigned_external_hours','director_sections_band','hours_branch');
+    $keys = array('person_id','display_name','specialty_code','secondary_specialty_code','required_teaching_hours','service_years','service_months','service_days','role','assigned_external_hours','director_sections_band','hours_branch');
     $arrays = array();
     $count = 0;
     foreach ($keys as $key) {
@@ -119,6 +120,7 @@ function staffingUiPersonnelRowsFromPost() {
     for ($i=0; $i<$count; $i++) {
         $name = isset($arrays['display_name'][$i]) ? trim((string)$arrays['display_name'][$i]) : '';
         $specialty = isset($arrays['specialty_code'][$i]) ? teacherSpecialtyCanonicalCode($arrays['specialty_code'][$i]) : '';
+        $secondarySpecialty = isset($arrays['secondary_specialty_code'][$i]) ? teacherSpecialtyCanonicalCode($arrays['secondary_specialty_code'][$i]) : '';
         $requiredHours = isset($arrays['required_teaching_hours'][$i]) ? trim((string)$arrays['required_teaching_hours'][$i]) : '';
         $years = isset($arrays['service_years'][$i]) ? (string)$arrays['service_years'][$i] : '';
         $months = isset($arrays['service_months'][$i]) ? (string)$arrays['service_months'][$i] : '';
@@ -135,6 +137,7 @@ function staffingUiPersonnelRowsFromPost() {
             'person_id'=>$id,
             'display_name'=>$name,
             'specialty_code'=>$specialty,
+            'secondary_specialty_code'=>$secondarySpecialty,
             'required_teaching_hours'=>$requiredHours,
             'service'=>array('years'=>$years === '' ? 0 : $years,'months'=>$months === '' ? 0 : $months,'days'=>$days === '' ? 0 : $days),
             'role'=>$role,
@@ -169,6 +172,7 @@ function staffingUiRenderPersonnelStateHiddenInputs($rows) {
         echo '<input type="hidden" name="personnel_person_id[]" value="' . staffingUiH($person['person_id']) . '">';
         echo '<input type="hidden" name="personnel_display_name[]" value="' . staffingUiH($person['display_name']) . '">';
         echo '<input type="hidden" name="personnel_specialty_code[]" value="' . staffingUiH($person['specialty_code']) . '">';
+        echo '<input type="hidden" name="personnel_secondary_specialty_code[]" value="' . staffingUiH(isset($person['secondary_specialty_code']) ? $person['secondary_specialty_code'] : '') . '">';
         echo '<input type="hidden" name="personnel_required_teaching_hours[]" value="' . staffingUiH(isset($person['required_teaching_hours']) ? $person['required_teaching_hours'] : '') . '">';
         echo '<input type="hidden" name="personnel_service_years[]" value="' . staffingUiH(isset($person['service']['years']) ? $person['service']['years'] : 0) . '">';
         echo '<input type="hidden" name="personnel_service_months[]" value="' . staffingUiH(isset($person['service']['months']) ? $person['service']['months'] : 0) . '">';
@@ -187,9 +191,12 @@ function staffingUiRenderAllocationStateHiddenInputs($rows) {
 }
 function staffingUiAllocationPersonLabel($person) {
     $code = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
+    $secondary = isset($person['secondary_specialty_code']) ? teacherSpecialtyCanonicalCode($person['secondary_specialty_code']) : '';
     $name = isset($person['display_name']) ? trim((string)$person['display_name']) : '';
     if ($name === '') $name = 'Χωρίς ονοματεπώνυμο';
-    return trim($code . ' · ' . $name, ' ·');
+    $codes = $code;
+    if ($secondary !== '') $codes .= ' / 2η ' . $secondary;
+    return trim($codes . ' · ' . $name, ' ·');
 }
 function staffingUiRenderAllocationPersonOptions($people, $selected) {
     echo '<option value="">— επιλογή εκπαιδευτικού —</option>';
@@ -531,6 +538,17 @@ if ($staffingAction === 'personnel') $activePanel = 'personnel';
 if ($staffingAction === 'allocation') $activePanel = 'allocation';
 
 $personnelRows = staffingUiPersonnelRowsFromPost();
+$duplicateDirectorIndexes = array();
+$seenDirector = false;
+foreach ($personnelRows as $personnelIndex=>$person) {
+    if (isset($person['role']) && $person['role'] === 'director') {
+        if ($seenDirector) {
+            $duplicateDirectorIndexes[$personnelIndex] = true;
+        } else {
+            $seenDirector = true;
+        }
+    }
+}
 $personnelEvaluations = array();
 $personnelSummary = array(
     'people_count'=>0,
@@ -542,12 +560,21 @@ $personnelSummary = array(
     'by_code'=>array(),
 );
 if (!empty($personnelRows)) {
-    foreach ($personnelRows as $person) {
+    foreach ($personnelRows as $personnelIndex=>$person) {
         $personForEvaluation = $person;
         if (isset($personForEvaluation['role']) && $personForEvaluation['role'] === 'director') {
             $personForEvaluation['school_general_section_count'] = $generalSectionTotal;
         }
-        $normalized = personnelWorkloadNormalizePerson($personForEvaluation);
+        if (isset($duplicateDirectorIndexes[$personnelIndex])) {
+            $normalized = array(
+                'status'=>'invalid',
+                'valid'=>false,
+                'reason'=>'multiple_directors_not_allowed',
+                'specialty_code'=>isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '',
+            );
+        } else {
+            $normalized = personnelWorkloadNormalizePerson($personForEvaluation);
+        }
         $personnelEvaluations[$person['person_id']] = $normalized;
         $personnelSummary['people_count']++;
         $code = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
@@ -593,7 +620,8 @@ $personnelSpecialtyOptions = $submitted
 $allocationRows = staffingUiAllocationRowsFromPost();
 $allocationSlots = ($profile && $matrix) ? staffingUiSortAllocationSlots(personnelWorkloadAllocationSlots($profile, $matrix)) : array();
 $allocationPeople = array();
-foreach ($personnelRows as $person) {
+foreach ($personnelRows as $personnelIndex=>$person) {
+    if (isset($duplicateDirectorIndexes[$personnelIndex])) continue;
     $p = $person;
     if (isset($p['role']) && $p['role'] === 'director') $p['school_general_section_count'] = $generalSectionTotal;
     $allocationPeople[] = $p;
@@ -604,7 +632,7 @@ if ($profile && $matrix && !empty($allocationPeople) && !empty($allocationRows))
     $allocationPlan = personnelWorkloadRosterSlotPlan($profile, $allocationPeople, $allocationRows);
     if (isset($allocationPlan['allocation_rows'])) $allocationRowResults = $allocationPlan['allocation_rows'];
 }
-$allocationEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only' && $personnelSummary['resolved_count'] > 0;
+$allocationEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only' && $personnelSummary['resolved_count'] > 0 && empty($duplicateDirectorIndexes);
 $allocationPeopleClient = array();
 foreach ($allocationPeople as $person) {
     $normalized = personnelWorkloadNormalizePerson($person);
@@ -613,6 +641,7 @@ foreach ($allocationPeople as $person) {
         'person_id'=>$person['person_id'],
         'display_name'=>$person['display_name'],
         'specialty_code'=>$person['specialty_code'],
+        'secondary_specialty_code'=>isset($person['secondary_specialty_code']) ? $person['secondary_specialty_code'] : '',
         'required_hours'=>(int)$normalized['required_teaching_hours'],
         'external_hours'=>(int)$normalized['assigned_external_hours'],
         'available_here_hours'=>(int)$normalized['remaining_before_profile_hours'],
@@ -663,7 +692,9 @@ foreach ($allocationSlots as $slotId=>$slot) {
     .edu-page-staffing-simulator .claim-list{margin:8px 0 0;padding:0;list-style:none;min-width:360px}
     .edu-page-staffing-simulator .claim-list li{padding:7px 0;border-top:1px solid var(--edu-result-row-separator);line-height:1.35}
     .edu-page-staffing-simulator .claim-meta{display:block;color:var(--edu-muted);font-size:12px;margin-top:2px}
-    .edu-page-staffing-simulator .mode-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+    .edu-page-staffing-simulator .staffing-stage-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 14px}
+    .edu-page-staffing-simulator .mode-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0}
+    .edu-page-staffing-simulator .staffing-print-btn{white-space:nowrap}
     .edu-page-staffing-simulator .mode-tab{padding:9px 12px;border:1px solid var(--edu-border);border-radius:999px;background:var(--edu-surface-soft);font-weight:800;color:var(--edu-muted)}
     .edu-page-staffing-simulator .mode-tab.is-active{background:var(--edu-primary-soft);border-color:var(--edu-primary);color:var(--edu-primary-dark)}
     .edu-page-staffing-simulator .result-filter{margin:12px 0 4px}
@@ -730,6 +761,41 @@ foreach ($allocationSlots as $slotId=>$slot) {
     .edu-page-staffing-simulator .allocation-person-summary-row{display:grid;grid-template-columns:minmax(180px,1fr) repeat(4,minmax(100px,.55fr));gap:8px;align-items:center;padding:9px 11px;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface-soft)}
     .edu-page-staffing-simulator .allocation-person-summary-row small{display:block;color:var(--edu-muted)}
     .edu-page-staffing-simulator .allocation-empty{padding:18px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
+    .staffing-print-report{display:none}
+    @media print{
+      @page{size:A4 landscape;margin:10mm}
+      body.edu-page-staffing-simulator{background:#fff!important;color:#111!important;font-family:Arial,Helvetica,sans-serif!important}
+      body.edu-page-staffing-simulator> *:not(.staffing-print-report):not(script){display:none!important}
+      body.edu-page-staffing-simulator .staffing-print-report{display:block!important;width:100%;max-width:none;margin:0;padding:0;color:#111;background:#fff}
+      .staffing-print-report *{box-sizing:border-box}
+      .staffing-print-report .print-header{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:2px solid #222;padding:0 0 8px;margin:0 0 10px}
+      .staffing-print-report h1{font-size:18pt;line-height:1.15;margin:0 0 4px;color:#111}
+      .staffing-print-report .print-subtitle{font-size:10pt;margin:0;color:#444}
+      .staffing-print-report .print-meta{text-align:right;font-size:8.5pt;line-height:1.35;color:#555;white-space:nowrap}
+      .staffing-print-report h2{font-size:12pt;margin:14px 0 6px;padding-bottom:3px;border-bottom:1px solid #777;color:#111;break-after:avoid}
+      .staffing-print-report .print-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:7px 0 10px}
+      .staffing-print-report .print-summary-item{border:1px solid #bbb;border-radius:5px;padding:6px 7px;min-height:43px}
+      .staffing-print-report .print-summary-item strong{display:block;font-size:12pt;line-height:1.1}
+      .staffing-print-report .print-summary-item span{display:block;font-size:7.5pt;line-height:1.25;color:#555;margin-top:2px}
+      .staffing-print-report table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4px 0 10px;font-size:7.8pt}
+      .staffing-print-report th,.staffing-print-report td{border:1px solid #b9b9b9;padding:4px 5px;vertical-align:top;overflow-wrap:anywhere}
+      .staffing-print-report th{background:#efefef;font-weight:700;text-align:left}
+      .staffing-print-report td.num,.staffing-print-report th.num{text-align:center;font-variant-numeric:tabular-nums}
+      .staffing-print-report tr{break-inside:avoid}
+      .staffing-print-report .print-code{font-weight:700;white-space:nowrap}
+      .staffing-print-report .print-note{font-size:7.7pt;line-height:1.35;color:#444;margin:5px 0 9px}
+      .staffing-print-report .print-status-ok{font-weight:700}
+      .staffing-print-report .print-status-warn{font-weight:700}
+      .staffing-print-report .print-status-error{font-weight:700}
+      .staffing-print-report .print-footer{margin-top:12px;padding-top:6px;border-top:1px solid #999;font-size:7.2pt;line-height:1.35;color:#555}
+      .staffing-print-report .print-personnel th:nth-child(1){width:11%}
+      .staffing-print-report .print-personnel th:nth-child(2){width:28%}
+      .staffing-print-report .print-personnel th:nth-child(3){width:17%}
+      .staffing-print-report .print-allocation th:nth-child(1){width:25%}
+      .staffing-print-report .print-allocation th:nth-child(2){width:39%}
+      .staffing-print-report .print-allocation th:nth-child(3){width:7%}
+      .staffing-print-report .print-allocation th:nth-child(4){width:29%}
+    }
     @media(max-width:960px){.edu-page-staffing-simulator .personnel-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .branch-summary-row{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main .allocation-status{grid-column:1/-1;grid-row:auto}.edu-page-staffing-simulator .allocation-row-main .allocation-remove{grid-column:auto;grid-row:auto}.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr 1fr}}
     @media(max-width:760px){.edu-page-staffing-simulator .mini-grid,.edu-page-staffing-simulator .mini-grid.two,.edu-page-staffing-simulator .staffing-summary-grid,.edu-page-staffing-simulator .personnel-row-main,.edu-page-staffing-simulator .branch-summary-row,.edu-page-staffing-simulator .personnel-csv-mappings{grid-template-columns:1fr}.edu-page-staffing-simulator .allocation-row-main,.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr}.edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{position:static}}
   </style>
@@ -746,11 +812,16 @@ foreach ($allocationSlots as $slotId=>$slot) {
     'badges' => array('2026–2027','Στοιχεία σχολικής μονάδας','Ωρολόγιο + Αναθέσεις','Α΄ · Β΄ · Γ΄','Ηθική','Χωρίς αυτόματες τοποθετήσεις')
   )); ?>
 
-  <div class="mode-tabs" aria-label="Στάδια εργαλείου" role="tablist">
-    <button type="button" class="mode-tab<?php echo $activePanel === 'school' ? ' is-active' : ''; ?>" data-staffing-tab="school" role="tab" aria-selected="<?php echo $activePanel === 'school' ? 'true' : 'false'; ?>">1. Σχολική μονάδα</button>
-    <button type="button" class="mode-tab<?php echo $activePanel === 'results' ? ' is-active' : ''; ?>" data-staffing-tab="results" role="tab" aria-selected="<?php echo $activePanel === 'results' ? 'true' : 'false'; ?>"<?php echo !$submitted ? ' disabled' : ''; ?>>2. Αποτελέσματα ανά κλάδο</button>
-    <button type="button" class="mode-tab<?php echo $activePanel === 'personnel' ? ' is-active' : ''; ?>" data-staffing-tab="personnel" role="tab" aria-selected="<?php echo $activePanel === 'personnel' ? 'true' : 'false'; ?>"<?php echo !$submitted ? ' disabled' : ''; ?>>3. Εκπαιδευτικοί</button>
-    <button type="button" class="mode-tab<?php echo $activePanel === 'allocation' ? ' is-active' : ''; ?>" data-staffing-tab="allocation" role="tab" aria-selected="<?php echo $activePanel === 'allocation' ? 'true' : 'false'; ?>"<?php echo !$allocationEnabled ? ' disabled' : ''; ?>>4. Κατανομή μαθημάτων</button>
+  <div class="staffing-stage-toolbar">
+    <div class="mode-tabs" aria-label="Στάδια εργαλείου" role="tablist">
+      <button type="button" class="mode-tab<?php echo $activePanel === 'school' ? ' is-active' : ''; ?>" data-staffing-tab="school" role="tab" aria-selected="<?php echo $activePanel === 'school' ? 'true' : 'false'; ?>">1. Σχολική μονάδα</button>
+      <button type="button" class="mode-tab<?php echo $activePanel === 'results' ? ' is-active' : ''; ?>" data-staffing-tab="results" role="tab" aria-selected="<?php echo $activePanel === 'results' ? 'true' : 'false'; ?>"<?php echo !$submitted ? ' disabled' : ''; ?>>2. Αποτελέσματα ανά κλάδο</button>
+      <button type="button" class="mode-tab<?php echo $activePanel === 'personnel' ? ' is-active' : ''; ?>" data-staffing-tab="personnel" role="tab" aria-selected="<?php echo $activePanel === 'personnel' ? 'true' : 'false'; ?>"<?php echo !$submitted ? ' disabled' : ''; ?>>3. Εκπαιδευτικοί</button>
+      <button type="button" class="mode-tab<?php echo $activePanel === 'allocation' ? ' is-active' : ''; ?>" data-staffing-tab="allocation" role="tab" aria-selected="<?php echo $activePanel === 'allocation' ? 'true' : 'false'; ?>"<?php echo !$allocationEnabled ? ' disabled' : ''; ?>>4. Κατανομή μαθημάτων</button>
+    </div>
+    <?php if ($submitted && $matrix && $displayMatrix): ?>
+      <button type="button" class="edu-btn-secondary staffing-print-btn" id="staffingPrintButton">Εκτύπωση</button>
+    <?php endif; ?>
   </div>
 
   <?php calculatorColumnsStart(); ?>
@@ -938,7 +1009,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
 
           <div class="matrix-wrap">
             <table class="staffing-table" id="staffingMatrixTable">
-              <thead><tr><th>Κλάδος</th><th>Α΄ επιλεξιμότητα</th><th>Β΄</th><th>Γ΄</th><th>Αποκλειστική κορυφαία</th><th>Κοινή κορυφαία</th><th>Ειδική</th><th>Χαμηλότερη ανάθεση</th></tr></thead>
+              <thead><tr><th>Κλάδος</th><th>Α΄</th><th>Β΄</th><th>Γ΄</th><th>Αποκλειστική κορυφαία</th><th>Κοινή κορυφαία</th><th>Ειδική</th><th>Χαμηλότερη ανάθεση</th></tr></thead>
               <tbody>
               <?php if (!empty($collapsedSkills['active'])): ?>
                 <tr class="staffing-code-row staffing-collapsed-row" data-search="Οποιαδήποτε ειδικότητα Εργαστήρια Δεξιοτήτων">
@@ -994,7 +1065,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
       <?php if ($submitted && $matrix): ?>
         <?php calculatorCardStart(array('class'=>'card staffing-panel personnel-card','attrs'=>array('data-staffing-panel'=>'personnel') + ($activePanel !== 'personnel' ? array('hidden'=>true) : array()))); ?>
           <h2>3. Εκπαιδευτικοί</h2>
-          <p class="cap">Καταχώρισε το πραγματικό προσωπικό της σχολικής μονάδας. Το υποχρεωτικό διδακτικό ωράριο υπολογίζεται αυτόματα από κλάδο, προϋπηρεσία και ρόλο. Οι ώρες «σε άλλη μονάδα» αφαιρούνται από το διαθέσιμο ωράριο εδώ.</p>
+          <p class="cap">Καταχώρισε το πραγματικό προσωπικό της σχολικής μονάδας. Για τον απλό εκπαιδευτικό δήλωσε απευθείας το υποχρεωτικό διδακτικό ωράριο· για Διευθυντή/ντρια ή Υποδιευθυντή/ντρια εφαρμόζεται η ειδική αυτόματη λογική της θέσης. Οι ώρες «σε άλλη μονάδα» αφαιρούνται από το διαθέσιμο ωράριο εδώ.</p>
           <div class="info-note"><strong>Η κατανομή μαθημάτων γίνεται στο επόμενο tab.</strong> Το «διαθέσιμο εδώ» είναι το υπόλοιπο του ατομικού υποχρεωτικού ωραρίου πριν από τις αναθέσεις μαθημάτων της συγκεκριμένης μονάδας.</div>
 
           <?php if (!empty($personnelRows)): ?>
@@ -1036,6 +1107,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
               <div class="personnel-toolbar-actions">
                 <button class="edu-btn-secondary" type="button" id="addPersonnelRow">+ Προσθήκη εκπαιδευτικού</button>
                 <button class="edu-btn-secondary" type="button" id="openPersonnelCsv">Εισαγωγή CSV</button>
+                <button class="edu-btn-secondary" type="button" id="exportPersonnelRegistryCsv">Εξαγωγή μητρώου CSV</button>
                 <button class="edu-btn-secondary" type="button" id="downloadPersonnelCsvTemplate">Λήψη προτύπου CSV</button>
               </div>
             </div>
@@ -1054,7 +1126,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
                 <summary>Αντιστοίχιση στηλών CSV</summary>
                 <div class="option-panel-body">
                   <div class="personnel-csv-mappings" id="personnelCsvMappings"></div>
-                  <p class="help">Απαραίτητος είναι ο <strong>Κλάδος / ειδικότητα</strong>. Για απλό εκπαιδευτικό δήλωσε απευθείας το <strong>υποχρεωτικό διδακτικό ωράριο</strong>. Τα έτη/μήνες/ημέρες υπηρεσίας χρησιμοποιούνται μόνο όταν ο ρόλος είναι Διευθυντής/ντρια ή Υποδιευθυντής/ντρια. Το ονοματεπώνυμο μπορεί να προέρχεται από μία στήλη ή από χωριστές στήλες Επώνυμο + Όνομα.</p>
+                  <p class="help">Απαραίτητος είναι ο <strong>Κλάδος / ειδικότητα</strong>. Η <strong>2η ειδικότητα</strong> είναι προαιρετική και ανήκει στον ίδιο εκπαιδευτικό. Για απλό εκπαιδευτικό δήλωσε απευθείας το <strong>υποχρεωτικό διδακτικό ωράριο</strong>. Τα έτη/μήνες/ημέρες υπηρεσίας χρησιμοποιούνται μόνο όταν ο ρόλος είναι Διευθυντής/ντρια ή Υποδιευθυντής/ντρια. Το ονοματεπώνυμο μπορεί να προέρχεται από μία στήλη ή από χωριστές στήλες Επώνυμο + Όνομα.</p>
                 </div>
               </details>
               <div class="personnel-csv-preview" id="personnelCsvPreview" hidden></div>
@@ -1085,8 +1157,9 @@ foreach ($allocationSlots as $slotId=>$slot) {
                   $availableHours = $resolved ? (int)$eval['remaining_before_profile_hours'] : null;
                   $externalHours = isset($person['assigned_external_hours']) ? (int)$person['assigned_external_hours'] : 0;
                   $selectedCode = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
+                  $selectedSecondaryCode = isset($person['secondary_specialty_code']) ? teacherSpecialtyCanonicalCode($person['secondary_specialty_code']) : '';
                 ?>
-                <div class="personnel-row" data-personnel-row data-search="<?php echo staffingUiH($selectedCode . ' ' . $person['display_name']); ?>">
+                <div class="personnel-row" data-personnel-row data-search="<?php echo staffingUiH(trim($selectedCode . ($selectedSecondaryCode !== '' ? ' ' . $selectedSecondaryCode : '') . ' ' . $person['display_name'])); ?>">
                   <input type="hidden" name="personnel_person_id[]" value="<?php echo staffingUiH($person['person_id']); ?>">
                   <div class="personnel-row-main">
                     <div class="field">
@@ -1108,9 +1181,15 @@ foreach ($allocationSlots as $slotId=>$slot) {
                     <div class="metric"><strong data-available-hours><?php echo $availableHours === null ? '—' : $availableHours; ?></strong><span>διαθέσιμο εδώ</span></div>
                     <button type="button" class="personnel-remove" title="Αφαίρεση εκπαιδευτικού">Αφαίρεση</button>
                   </div>
-                  <details<?php echo $person['role'] !== 'teacher' || !$resolved ? ' open' : ''; ?>>
-                    <summary>Ρόλος και στοιχεία διοίκησης<?php if ($person['role'] !== 'teacher' && $resolved && !empty($eval['obligation']['service_label'])): ?> · <?php echo staffingUiH($eval['obligation']['service_label']); ?><?php endif; ?></summary>
+                  <details<?php echo $person['role'] !== 'teacher' || !$resolved || $selectedSecondaryCode !== '' ? ' open' : ''; ?>>
+                    <summary>2η ειδικότητα, ρόλος και στοιχεία διοίκησης<?php if ($selectedSecondaryCode !== ''): ?> · 2η <?php echo staffingUiH($selectedSecondaryCode); ?><?php endif; ?><?php if ($person['role'] !== 'teacher' && $resolved && !empty($eval['obligation']['service_label'])): ?> · <?php echo staffingUiH($eval['obligation']['service_label']); ?><?php endif; ?></summary>
                     <div class="personnel-row-details">
+                      <div class="mini-grid">
+                        <div class="field">
+                          <label>2η ειδικότητα <small>προαιρετική</small></label>
+                          <select name="personnel_secondary_specialty_code[]" class="personnel-secondary-specialty"><?php staffingUiRenderPersonnelSpecialtyOptions($personnelSpecialtyOptions, $selectedSecondaryCode); ?></select>
+                        </div>
+                      </div>
                       <div class="mini-grid personnel-service-fields"<?php echo $person['role'] === 'teacher' ? ' hidden' : ''; ?>>
                         <div class="field"><label>Έτη υπηρεσίας</label><input type="number" min="0" max="50" step="1" name="personnel_service_years[]" class="personnel-years" value="<?php echo staffingUiH($person['service']['years']); ?>"></div>
                         <div class="field"><label>Μήνες</label><input type="number" min="0" max="11" step="1" name="personnel_service_months[]" class="personnel-months" value="<?php echo staffingUiH($person['service']['months']); ?>"></div>
@@ -1153,8 +1232,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
                 <button type="button" class="personnel-remove" title="Αφαίρεση εκπαιδευτικού">Αφαίρεση</button>
               </div>
               <details>
-                <summary>Ρόλος και στοιχεία διοίκησης</summary>
+                <summary>2η ειδικότητα, ρόλος και στοιχεία διοίκησης</summary>
                 <div class="personnel-row-details">
+                  <div class="mini-grid">
+                    <div class="field"><label>2η ειδικότητα <small>προαιρετική</small></label><select name="personnel_secondary_specialty_code[]" class="personnel-secondary-specialty"><?php staffingUiRenderPersonnelSpecialtyOptions($personnelSpecialtyOptions, ''); ?></select></div>
+                  </div>
                   <div class="mini-grid personnel-service-fields" hidden>
                     <div class="field"><label>Έτη υπηρεσίας</label><input type="number" min="0" max="50" step="1" name="personnel_service_years[]" class="personnel-years" value="0"></div>
                     <div class="field"><label>Μήνες</label><input type="number" min="0" max="11" step="1" name="personnel_service_months[]" class="personnel-months" value="0"></div>
@@ -1323,6 +1405,122 @@ foreach ($allocationSlots as $slotId=>$slot) {
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 
+<?php if ($submitted && $matrix && $displayMatrix): ?>
+<section class="staffing-print-report" id="staffingPrintReport" aria-label="Εκτυπώσιμο αποτέλεσμα διδακτικών αναγκών">
+  <div class="print-header">
+    <div>
+      <h1>Υπολογισμός διδακτικών αναγκών σχολικής μονάδας</h1>
+      <p class="print-subtitle"><strong><?php echo staffingUiH($schoolName !== '' ? $schoolName : ($schoolType === 'gel' ? 'Ημερήσιο Γενικό Λύκειο' : 'Ημερήσιο Γυμνάσιο')); ?></strong> · <?php echo $schoolType === 'gel' ? 'Ημερήσιο ΓΕΛ' : 'Ημερήσιο Γυμνάσιο'; ?> · σχολικό έτος 2026–2027</p>
+    </div>
+    <div class="print-meta">Εργαλειοθήκη Εκπαιδευτικού<br><span data-print-generated-at>—</span></div>
+  </div>
+
+  <h2>Συνοπτική εικόνα</h2>
+  <div class="print-summary">
+    <div class="print-summary-item"><strong><?php echo (int)$generalSectionTotal; ?></strong><span>κανονικά τμήματα σχολικής μονάδας</span></div>
+    <div class="print-summary-item"><strong><?php echo (int)$matrix['summary']['assignment_unit_hours']; ?></strong><span>ώρες με αντιστοιχισμένη ανάθεση</span></div>
+    <div class="print-summary-item"><strong><?php echo (int)$displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims']; ?></strong><span>κλάδοι με επιλεξιμότητα</span></div>
+    <div class="print-summary-item"><strong><?php echo (int)$personnelSummary['available_here_hours']; ?></strong><span>ώρες προσωπικού διαθέσιμες εδώ</span></div>
+    <div class="print-summary-item"><strong><?php echo staffingUiH(staffingUiReadinessLabel($matrix['readiness'])); ?></strong><span>κατάσταση δομικών στοιχείων</span></div>
+  </div>
+
+  <h2>Διδακτικές ανάγκες ανά κλάδο</h2>
+  <table class="print-matrix">
+    <thead><tr><th>Κλάδος</th><th class="num">Α΄</th><th class="num">Β΄</th><th class="num">Γ΄</th><th class="num">Αποκλ. κορυφαία</th><th class="num">Κοινή κορυφαία</th><th class="num">Ειδική</th><th class="num">Χαμηλότερη</th></tr></thead>
+    <tbody>
+      <?php if (!empty($collapsedSkills['active'])): ?>
+        <tr><td><span class="print-code">Οποιαδήποτε ειδικότητα</span> · Εργαστήρια Δεξιοτήτων</td><td class="num" colspan="7"><?php echo (int)$collapsedSkills['hours']; ?> ώρες συνολικά</td></tr>
+      <?php endif; ?>
+      <?php foreach ($displayMatrix['codes'] as $code=>$row): ?>
+        <tr>
+          <td><span class="print-code"><?php echo staffingUiH($code); ?></span><?php if (!empty($row['label'])): ?> · <?php echo staffingUiH($row['label']); ?><?php endif; ?></td>
+          <td class="num"><?php echo (int)$row['eligible_hours_by_priority']['A']; ?></td>
+          <td class="num"><?php echo (int)$row['eligible_hours_by_priority']['B']; ?></td>
+          <td class="num"><?php echo (int)$row['eligible_hours_by_priority']['C']; ?></td>
+          <td class="num"><?php echo (int)$row['ordered_exclusive_top_priority_hours']; ?></td>
+          <td class="num"><?php echo (int)$row['ordered_shared_top_priority_hours']; ?></td>
+          <td class="num"><?php echo (int)$row['special_top_priority_hours']; ?></td>
+          <td class="num"><?php echo (int)$row['fallback_hours']; ?></td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+  <p class="print-note">Οι ώρες επιλεξιμότητας μπορούν να επικαλύπτονται μεταξύ κλάδων. Ο πίνακας δεν αποτελεί από μόνος του επίσημο προσδιορισμό λειτουργικών κενών.</p>
+
+  <?php if (!empty($personnelRows)): ?>
+    <h2>Εκπαιδευτικοί και διαθέσιμο ωράριο</h2>
+    <table class="print-personnel">
+      <thead><tr><th>Κλάδος</th><th>Ονοματεπώνυμο</th><th>Ρόλος</th><th class="num">Υποχρ.</th><th class="num">Ώρες αλλού</th><th class="num">Διαθέσιμο εδώ</th><th>Κατάσταση</th></tr></thead>
+      <tbody>
+        <?php foreach ($personnelRows as $person): ?>
+          <?php
+            $personEval = isset($personnelEvaluations[$person['person_id']]) ? $personnelEvaluations[$person['person_id']] : null;
+            $personResolved = $personEval && $personEval['status'] === 'resolved';
+            $personStatus = $personResolved ? 'OK' : staffingUiPersonnelReasonLabel($personEval && isset($personEval['reason']) ? $personEval['reason'] : 'Χρειάζεται συμπλήρωση στοιχείων.');
+          ?>
+          <tr>
+            <td class="print-code"><?php echo staffingUiH(isset($person['specialty_code']) ? $person['specialty_code'] : ''); ?><?php if (!empty($person['secondary_specialty_code'])): ?><br><small>2η <?php echo staffingUiH($person['secondary_specialty_code']); ?></small><?php endif; ?></td>
+            <td><?php echo staffingUiH($person['display_name'] !== '' ? $person['display_name'] : 'Χωρίς ονοματεπώνυμο'); ?></td>
+            <td><?php echo staffingUiH(staffingUiPersonnelRoleLabel(isset($person['role']) ? $person['role'] : 'teacher')); ?></td>
+            <td class="num"><?php echo $personResolved ? (int)$personEval['required_teaching_hours'] : '—'; ?></td>
+            <td class="num"><?php echo $personResolved ? (int)$personEval['assigned_external_hours'] : (int)$person['assigned_external_hours']; ?></td>
+            <td class="num"><?php echo $personResolved ? (int)$personEval['remaining_before_profile_hours'] : '—'; ?></td>
+            <td class="<?php echo $personResolved ? 'print-status-ok' : 'print-status-error'; ?>"><?php echo staffingUiH($personStatus); ?></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  <?php endif; ?>
+
+  <?php if (!empty($allocationRows)): ?>
+    <h2>Κατανομή μαθημάτων</h2>
+    <?php if ($allocationPlan): ?>
+      <div class="print-summary">
+        <div class="print-summary-item"><strong><?php echo (int)$matrix['summary']['assignment_unit_hours']; ?></strong><span>ώρες μαθημάτων προς κατανομή</span></div>
+        <div class="print-summary-item"><strong><?php echo (int)$allocationPlan['summary']['assigned_slot_hours_total']; ?></strong><span>κατανεμημένες ώρες</span></div>
+        <div class="print-summary-item"><strong><?php echo (int)$allocationPlan['summary']['unassigned_slot_hours']; ?></strong><span>ώρες χωρίς κατανομή</span></div>
+        <div class="print-summary-item"><strong><?php echo (int)$allocationPlan['summary']['overallocated_slot_hours']; ?></strong><span>ώρες υπέρβασης slot</span></div>
+        <div class="print-summary-item"><strong><?php echo (int)$allocationPlan['summary']['invalid_allocation_row_count']; ?></strong><span>γραμμές για διόρθωση</span></div>
+      </div>
+    <?php endif; ?>
+    <table class="print-allocation">
+      <thead><tr><th>Εκπαιδευτικός</th><th>Τμήμα / ομάδα · μάθημα</th><th class="num">Ώρες</th><th>Έλεγχος</th></tr></thead>
+      <tbody>
+        <?php foreach ($allocationRows as $allocationIndex=>$allocation): ?>
+          <?php
+            $allocationResult = isset($allocationRowResults[$allocationIndex]) ? $allocationRowResults[$allocationIndex] : null;
+            $allocationPerson = isset($allocationPeopleClient[$allocation['person_id']]) ? $allocationPeopleClient[$allocation['person_id']] : null;
+            $allocationPersonText = $allocationPerson
+                ? $allocationPerson['specialty_code'] . ' · ' . ($allocationPerson['display_name'] !== '' ? $allocationPerson['display_name'] : 'Χωρίς ονοματεπώνυμο')
+                : 'Μη έγκυρος εκπαιδευτικός';
+            $allocationSlot = isset($allocationSlots[$allocation['slot_id']]) ? $allocationSlots[$allocation['slot_id']] : null;
+            $allocationSlotText = $allocationSlot ? $allocationSlot['slot_label'] . ' · ' . $allocationSlot['subject'] : 'Μη έγκυρο μάθημα / ομάδα';
+            if ($allocationResult && !$allocationResult['valid']) {
+                $labels = array(); foreach ($allocationResult['errors'] as $error) $labels[] = staffingUiAllocationErrorLabel($error);
+                $allocationStatus = implode(' ', $labels); $allocationStatusClass = 'print-status-error';
+            } elseif ($allocationResult && !empty($allocationResult['warnings'])) {
+                $allocationStatus = staffingUiPriorityLabel($allocationResult['priority']) . ' ανάθεση · χαμηλότερη προτεραιότητα'; $allocationStatusClass = 'print-status-warn';
+            } elseif ($allocationResult && $allocationResult['valid']) {
+                $allocationStatus = staffingUiPriorityLabel($allocationResult['priority']) . ' ανάθεση ✓'; $allocationStatusClass = 'print-status-ok';
+            } else {
+                $allocationStatus = 'Δεν έχει ελεγχθεί'; $allocationStatusClass = 'print-status-warn';
+            }
+          ?>
+          <tr>
+            <td><?php echo staffingUiH($allocationPersonText); ?></td>
+            <td><?php echo staffingUiH($allocationSlotText); ?></td>
+            <td class="num"><?php echo (int)$allocation['hours']; ?></td>
+            <td class="<?php echo $allocationStatusClass; ?>"><?php echo staffingUiH($allocationStatus); ?></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  <?php endif; ?>
+
+  <div class="print-footer">Το παρόν αποτελεί αποτέλεσμα εργαλείου προσομοίωσης/ελέγχου. Δεν συνιστά από μόνο του επίσημη πράξη προσδιορισμού λειτουργικών κενών ή τοποθέτησης εκπαιδευτικών. Οι αναθέσεις και το ωρολόγιο πρόγραμμα ακολουθούν τις κανονιστικές πηγές που χρησιμοποιεί η Εργαλειοθήκη Εκπαιδευτικού.</div>
+</section>
+<?php endif; ?>
+
 <script src="<?php echo staffingUiH(edu_asset_url('includes/teaching-hours-calculations.js')); ?>"></script>
 <script src="<?php echo staffingUiH(edu_asset_url('includes/personnel-csv-import.js')); ?>"></script>
 <script>
@@ -1331,6 +1529,17 @@ foreach ($allocationSlots as $slotId=>$slot) {
   const gym=document.getElementById('gymProfileFields');
   const gel=document.getElementById('gelProfileFields');
   const reset=document.getElementById('staffingReset');
+  const staffingPrintButton=document.getElementById('staffingPrintButton');
+  if(staffingPrintButton){
+    staffingPrintButton.addEventListener('click',function(){
+      const stamp=document.querySelector('[data-print-generated-at]');
+      if(stamp){
+        const now=new Date();
+        stamp.textContent='Εκτύπωση: '+now.toLocaleDateString('el-GR')+' '+now.toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit'});
+      }
+      window.print();
+    });
+  }
   function installExplicitRequestGate(form){
     if(!form || form.dataset.requestGateBound==='1') return;
     form.dataset.requestGateBound='1';
@@ -1444,13 +1653,16 @@ foreach ($allocationSlots as $slotId=>$slot) {
   const personnelCsvStatus=document.getElementById('personnelCsvStatus');
   const personnelCsvMode=document.getElementById('personnelCsvMode');
   const importPersonnelCsv=document.getElementById('importPersonnelCsv');
+  const exportPersonnelRegistryCsv=document.getElementById('exportPersonnelRegistryCsv');
   const downloadPersonnelCsvTemplate=document.getElementById('downloadPersonnelCsvTemplate');
   let personnelCounter=Date.now();
   let personnelCsvData=null;
   let personnelCsvMapping={};
 
   const personnelCsvFields=[
+    {key:'person_id',label:'Αναγνωριστικό εκπαιδευτικού'},
     {key:'specialty_code',label:'Κλάδος / ειδικότητα',required:true},
+    {key:'secondary_specialty_code',label:'2η ειδικότητα'},
     {key:'display_name',label:'Ονοματεπώνυμο'},
     {key:'surname',label:'Επώνυμο'},
     {key:'given_name',label:'Όνομα'},
@@ -1489,9 +1701,40 @@ foreach ($allocationSlots as $slotId=>$slot) {
     return {count:count,band:band};
   }
 
+  const singleDirectorMessage='Μπορεί να δηλωθεί μόνο ένας/μία Διευθυντής/ντρια στη σχολική μονάδα.';
+  function refreshDirectorRoleConstraints(){
+    if(!personnelList) return;
+    const rows=Array.from(personnelList.querySelectorAll('[data-personnel-row]'));
+    const directorRows=rows.filter(function(row){
+      const role=row.querySelector('.personnel-role');
+      return role && role.value==='director';
+    });
+    const hasDirector=directorRows.length>0;
+    rows.forEach(function(row){
+      const role=row.querySelector('.personnel-role');
+      if(!role) return;
+      const directorOption=role.querySelector('option[value="director"]');
+      const isDirector=role.value==='director';
+      const duplicateDirector=isDirector && directorRows.indexOf(row)>0;
+      if(directorOption) directorOption.disabled=hasDirector && !isDirector;
+      role.setCustomValidity(duplicateDirector?singleDirectorMessage:'');
+      if(duplicateDirector) role.setAttribute('aria-invalid','true');
+      else role.removeAttribute('aria-invalid');
+      const error=row.querySelector('[data-personnel-error]');
+      if(duplicateDirector && error){
+        error.hidden=false;
+        error.textContent=singleDirectorMessage;
+      }else if(error && error.textContent===singleDirectorMessage){
+        error.hidden=true;
+        error.textContent='';
+      }
+    });
+  }
+
   function updatePersonnelRow(row){
     if(!row) return;
     const specialty=row.querySelector('.personnel-specialty');
+    const secondarySpecialty=row.querySelector('.personnel-secondary-specialty');
     const years=row.querySelector('.personnel-years');
     const months=row.querySelector('.personnel-months');
     const days=row.querySelector('.personnel-days');
@@ -1522,10 +1765,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
       }
     }
     const code=specialty?specialty.value:'';
+    const secondaryCode=secondarySpecialty?secondarySpecialty.value:'';
     const manualHoursMax=code.indexOf('ΠΕ')===0 ? 23 : 35;
     if(requiredInput && !managementRole) requiredInput.max=String(manualHoursMax);
     const name=(row.querySelector('.personnel-name')||{}).value||'';
-    row.setAttribute('data-search',code+' '+name);
+    row.setAttribute('data-search',code+' '+secondaryCode+' '+name);
     if(!specialty || !specialty.value){
       if(managementRole && requiredInput) requiredInput.value='';
       if(availableEl) availableEl.textContent='—';
@@ -1601,6 +1845,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
     const hiddenId=row.querySelector('input[name="personnel_person_id[]"]');
     if(hiddenId && !hiddenId.value){ personnelCounter+=1; hiddenId.value='person-'+personnelCounter; }
     updatePersonnelRow(row);
+    refreshDirectorRoleConstraints();
   }
   if(personnelList && personnelList.dataset.eventsBound!=='1'){
     personnelList.dataset.eventsBound='1';
@@ -1608,26 +1853,27 @@ foreach ($allocationSlots as $slotId=>$slot) {
       if(!event.target.matches('input:not([type="hidden"])')) return;
       const row=event.target.closest('[data-personnel-row]');
       if(!row) return;
-      updatePersonnelRow(row); markPersonnelDirty();
+      updatePersonnelRow(row); refreshDirectorRoleConstraints(); markPersonnelDirty();
     });
     personnelList.addEventListener('change',function(event){
       if(!event.target.matches('select')) return;
       const row=event.target.closest('[data-personnel-row]');
       if(!row) return;
-      updatePersonnelRow(row); markPersonnelDirty();
+      updatePersonnelRow(row); refreshDirectorRoleConstraints(); markPersonnelDirty();
     });
     personnelList.addEventListener('click',function(event){
       const remove=event.target.closest('.personnel-remove');
       if(!remove || !personnelList.contains(remove)) return;
       const row=remove.closest('[data-personnel-row]');
       if(!row) return;
-      row.remove(); markPersonnelDirty(); ensurePersonnelEmptyState();
+      row.remove(); refreshDirectorRoleConstraints(); markPersonnelDirty(); ensurePersonnelEmptyState();
     });
   }
   function clearPersonnelRows(){
     if(!personnelList) return;
     personnelList.querySelectorAll('[data-personnel-row]').forEach(function(row){row.remove();});
     const empty=document.getElementById('emptyPersonnelState'); if(empty) empty.remove();
+    refreshDirectorRoleConstraints();
   }
   function ensurePersonnelEmptyState(){
     if(!personnelList || personnelList.querySelector('[data-personnel-row]')) return;
@@ -1638,11 +1884,23 @@ foreach ($allocationSlots as $slotId=>$slot) {
     const empty=document.getElementById('emptyPersonnelState'); if(empty) empty.remove();
     const fragment=personnelTemplate.content.cloneNode(true);
     const row=fragment.querySelector('[data-personnel-row]');
+    const hiddenId=row.querySelector('input[name="personnel_person_id[]"]');
+    const requestedId=String(person.person_id||'').trim();
+    if(hiddenId && requestedId){
+      const duplicateId=Array.from(personnelList.querySelectorAll('input[name="personnel_person_id[]"]')).some(function(input){return input.value===requestedId;});
+      if(!duplicateId) hiddenId.value=requestedId;
+    }
     const specialty=row.querySelector('.personnel-specialty');
     const code=person.specialty_code||'';
     let matched=false;
     if(specialty && code){
       Array.from(specialty.options).forEach(function(opt){ if(opt.value===code){ specialty.value=code; matched=true; } });
+    }
+    const secondarySpecialty=row.querySelector('.personnel-secondary-specialty');
+    const secondaryCode=person.secondary_specialty_code||'';
+    let secondaryMatched=false;
+    if(secondarySpecialty && secondaryCode){
+      Array.from(secondarySpecialty.options).forEach(function(opt){ if(opt.value===secondaryCode){ secondarySpecialty.value=secondaryCode; secondaryMatched=true; } });
     }
     const name=row.querySelector('.personnel-name'); if(name) name.value=person.display_name||'';
     const years=row.querySelector('.personnel-years'); if(years) years.value=String(person.service_years||0);
@@ -1657,7 +1915,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
       const error=row.querySelector('[data-personnel-error]');
       if(error){ error.hidden=false; error.textContent='Ο κλάδος «'+code+'» του CSV δεν αναγνωρίζεται από τις διαθέσιμες αναθέσεις. Επίλεξε κλάδο χειροκίνητα.'; }
     }
-    return {ok:true,unknownCode:!!(code&&!matched)};
+    if(secondaryCode && !secondaryMatched){
+      const error=row.querySelector('[data-personnel-error]');
+      if(error){ error.hidden=false; error.textContent='Η 2η ειδικότητα «'+secondaryCode+'» του CSV δεν αναγνωρίζεται. Επίλεξέ την χειροκίνητα.'; }
+    }
+    return {ok:true,unknownCode:!!((code&&!matched)||(secondaryCode&&!secondaryMatched))};
   }
   function personnelCsvSetStatus(message,type){
     if(!personnelCsvStatus) return;
@@ -1700,7 +1962,17 @@ foreach ($allocationSlots as $slotId=>$slot) {
     rows.forEach(function(r){const tr=document.createElement('tr');headers.forEach(function(h){const td=document.createElement('td');td.textContent=r[h]||'';tr.appendChild(td);});tbody.appendChild(tr);});
     table.appendChild(tbody); personnelCsvPreview.innerHTML=''; personnelCsvPreview.appendChild(table); personnelCsvPreview.hidden=false;
   }
+  function personnelCsvImporterSupportsRegistry(){
+    return !!(window.EducationPersonnelCsv
+      && window.EducationPersonnelCsv.supportsManualRequiredTeachingHours===true
+      && window.EducationPersonnelCsv.supportsSecondarySpecialty===true);
+  }
   function validatePersonnelCsvImport(){
+    if(!personnelCsvImporterSupportsRegistry()){
+      if(importPersonnelCsv) importPersonnelCsv.disabled=true;
+      personnelCsvSetStatus('Έχει φορτωθεί παλαιότερη cached έκδοση του CSV importer. Κάνε ανανέωση της σελίδας για να φορτωθεί η έκδοση που υποστηρίζει το portable μητρώο και τη 2η ειδικότητα.','error');
+      return;
+    }
     const ready=!!(personnelCsvData && personnelCsvData.rows.length && personnelCsvMapping.specialty_code);
     if(importPersonnelCsv) importPersonnelCsv.disabled=!ready;
     if(personnelCsvData && !personnelCsvMapping.specialty_code) personnelCsvSetStatus('Χρειάζεται αντιστοίχιση της στήλης «Κλάδος / ειδικότητα».','error');
@@ -1730,6 +2002,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
       const reader=new FileReader();
       reader.onload=function(){
         if(!window.EducationPersonnelCsv){ personnelCsvSetStatus('Δεν φορτώθηκε ο μηχανισμός ανάγνωσης CSV.','error'); return; }
+        if(!personnelCsvImporterSupportsRegistry()){
+          personnelCsvSetStatus('Έχει φορτωθεί παλαιότερη cached έκδοση του CSV importer. Κάνε ανανέωση της σελίδας και επίλεξε ξανά το αρχείο.','error');
+          if(importPersonnelCsv) importPersonnelCsv.disabled=true;
+          return;
+        }
         const text=decodePersonnelCsvBuffer(reader.result);
         personnelCsvData=window.EducationPersonnelCsv.parse(text);
         if(personnelCsvPanel) personnelCsvPanel.hidden=false;
@@ -1746,6 +2023,10 @@ foreach ($allocationSlots as $slotId=>$slot) {
   if(importPersonnelCsv){
     importPersonnelCsv.addEventListener('click',function(){
       if(!personnelCsvData || !window.EducationPersonnelCsv) return;
+      if(!personnelCsvImporterSupportsRegistry()){
+        personnelCsvSetStatus('Η εισαγωγή σταμάτησε επειδή ο browser έχει παλιότερη cached έκδοση του CSV importer. Ανανέωσε τη σελίδα και δοκίμασε ξανά.','error');
+        return;
+      }
       personnelCsvMapping=personnelCsvCurrentMapping();
       if(!personnelCsvMapping.specialty_code){ validatePersonnelCsvImport(); return; }
       if(personnelCsvMode && personnelCsvMode.value==='replace') clearPersonnelRows();
@@ -1760,14 +2041,62 @@ foreach ($allocationSlots as $slotId=>$slot) {
       let msg='Εισήχθησαν '+imported+' εκπαιδευτικοί.';
       if(skipped) msg+=' Παραλείφθηκαν '+skipped+' κενές εγγραφές.';
       if(unknown) msg+=' '+unknown+' εγγραφές έχουν μη αναγνωρισμένο κλάδο και χρειάζονται χειροκίνητο έλεγχο.';
+      refreshDirectorRoleConstraints();
+      const importedDirectorCount=personnelList ? Array.from(personnelList.querySelectorAll('.personnel-role')).filter(function(role){return role.value==='director';}).length : 0;
+      if(importedDirectorCount>1) msg+=' Έχουν δηλωθεί '+importedDirectorCount+' Διευθυντές/ντριες· επιτρέπεται μόνο ένας/μία.';
       msg+=' Πάτησε «Έλεγχος ωραρίων προσωπικού» για να ενημερωθεί και η σύνοψη ανά κλάδο.';
-      personnelCsvSetStatus(msg,unknown?'error':'success');
+      personnelCsvSetStatus(msg,(unknown||importedDirectorCount>1)?'error':'success');
+    });
+  }
+  function personnelRegistryCsvEscape(value){
+    const text=String(value==null?'':value);
+    return /[;"\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text;
+  }
+  function personnelRegistryRoleLabel(value){
+    if(value==='director') return 'Διευθυντής';
+    if(value==='vice_or_sector') return 'Υποδιευθυντής';
+    return 'Εκπαιδευτικός';
+  }
+  function personnelRegistryRows(){
+    if(!personnelList) return [];
+    return Array.from(personnelList.querySelectorAll('[data-personnel-row]')).map(function(row){
+      const value=function(selector){ const el=row.querySelector(selector); return el?String(el.value||'').trim():''; };
+      const role=value('.personnel-role')||'teacher';
+      return [
+        'staff_registry_v1',
+        value('input[name="personnel_person_id[]"]'),
+        value('.personnel-specialty'),
+        value('.personnel-secondary-specialty'),
+        value('.personnel-name'),
+        role==='teacher'?value('.personnel-required'):'',
+        personnelRegistryRoleLabel(role),
+        role==='teacher'?'':value('.personnel-years'),
+        role==='teacher'?'':value('.personnel-months'),
+        role==='teacher'?'':value('.personnel-days'),
+        value('.personnel-external')
+      ];
+    });
+  }
+  function downloadPersonnelRegistryCsv(rows,filename){
+    const headers=['Έκδοση μητρώου','Αναγνωριστικό','Κλάδος','2η ειδικότητα','Ονοματεπώνυμο','Υποχρεωτικό ωράριο','Ρόλος','Έτη υπηρεσίας','Μήνες','Ημέρες','Ώρες αλλού'];
+    const lines=[headers].concat(rows).map(function(cols){return cols.map(personnelRegistryCsvEscape).join(';');});
+    const csv='\uFEFF'+lines.join('\r\n')+'\r\n';
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a');
+    a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},500);
+  }
+  if(exportPersonnelRegistryCsv){
+    exportPersonnelRegistryCsv.addEventListener('click',function(){
+      const rows=personnelRegistryRows();
+      if(!rows.length){ window.alert('Δεν υπάρχει προσωπικό για εξαγωγή.'); return; }
+      downloadPersonnelRegistryCsv(rows,'mitroo-ekpaideftikon.csv');
     });
   }
   if(downloadPersonnelCsvTemplate){
     downloadPersonnelCsvTemplate.addEventListener('click',function(){
-      const csv='\uFEFFΚλάδος;Ονοματεπώνυμο;Υποχρεωτικό ωράριο;Ρόλος;Έτη υπηρεσίας;Μήνες;Ημέρες;Ώρες αλλού\r\nΠΕ03;Μαρία Παπαδοπούλου;20;Εκπαιδευτικός;;;;0\r\nΠΕ02;Γιώργος Διευθυντής;;Διευθυντής;20;0;0;0\r\n';
-      const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='protypo-ekpaideftikon.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},500);
+      downloadPersonnelRegistryCsv([
+        ['staff_registry_v1','', 'ΠΕ03','ΠΕ86','Μαρία Παπαδοπούλου','20','Εκπαιδευτικός','','','','0'],
+        ['staff_registry_v1','', 'ΠΕ02','','Γιώργος Διευθυντής','','Διευθυντής','20','0','0','0']
+      ],'protypo-mitroou-ekpaideftikon.csv');
     });
   }
 
@@ -1791,8 +2120,9 @@ foreach ($allocationSlots as $slotId=>$slot) {
       const q=(personnelFilter.value||'').toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
       personnelList.querySelectorAll('[data-personnel-row]').forEach(function(row){
         const specialty=row.querySelector('.personnel-specialty');
+        const secondary=row.querySelector('.personnel-secondary-specialty');
         const name=row.querySelector('.personnel-name');
-        const hay=((specialty?specialty.value:'')+' '+(name?name.value:'')).toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+        const hay=((specialty?specialty.value:'')+' '+(secondary?secondary.value:'')+' '+(name?name.value:'')).toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
         row.hidden=q!==''&&!hay.includes(q);
       });
     });

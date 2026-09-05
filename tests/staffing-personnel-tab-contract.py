@@ -120,7 +120,31 @@ check('backend preserves rejected PE value 24', 'value="24"' in row_window('ΠΕ
 check('DE scale removed from personnel UI', 'Κλίμακα ωραρίου ΔΕ' not in out)
 check('teaching-hours calculator link present', 'href="ypologismos-didaktikou-orariou.php"' in out)
 
+# A school may have only one Director.  A second Director must remain visible
+# for correction, but must invalidate the roster rather than being silently changed.
+duplicate_director=dict(base)
+duplicate_director['personnel_person_id']=['d1','d2']
+duplicate_director['personnel_display_name']=['Πρώτος Διευθυντής','Δεύτερος Διευθυντής']
+duplicate_director['personnel_specialty_code']=['ΠΕ03','ΠΕ02']
+duplicate_director['personnel_required_teaching_hours']=['','']
+duplicate_director['personnel_service_years']=[20,20]
+duplicate_director['personnel_service_months']=[0,0]
+duplicate_director['personnel_service_days']=[0,0]
+duplicate_director['personnel_role']=['director','director']
+duplicate_director['personnel_assigned_external_hours']=[0,0]
+duplicate_director['personnel_hours_branch']=['','']
+dup=render(duplicate_director)
+single_director_message='Μπορεί να δηλωθεί μόνο ένας/μία Διευθυντής/ντρια στη σχολική μονάδα.'
+check('backend rejects second Director explicitly', single_director_message in dup)
+check('second Director remains in rendered form for correction', 'Δεύτερος Διευθυντής' in dup and dup.count('value="director" selected')>=2)
+check('duplicate Director contributes unresolved roster entry', re.search(r'<strong>1</strong><span>εγγραφές που χρειάζονται συμπλήρωση</span>',dup) is not None)
+check('allocation stays locked while duplicate Director exists', 'data-staffing-tab="allocation" role="tab" aria-selected="false" disabled' in dup)
+
 text=PAGE.read_text(encoding='utf-8')
+check('frontend disables Director choice in other rows once one exists', 'directorOption.disabled=hasDirector && !isDirector' in text)
+check('frontend marks imported duplicate Directors invalid without silent rewrite', "role.setCustomValidity(duplicateDirector?singleDirectorMessage:'')" in text and 'importedDirectorCount>1' in text)
+check('staffing matrix headings are simply A B C', '<th>Α΄</th><th>Β΄</th><th>Γ΄</th>' in text and '<th>Α΄ επιλεξιμότητα</th>' not in text)
+
 check('frontend uses personnel workload normalize', 'personnelWorkloadNormalizePerson' in text)
 check('frontend still does not auto allocate', 'personnelWorkloadRosterPlan' not in text and 'personnelWorkloadEvaluatePerson' not in text)
 
