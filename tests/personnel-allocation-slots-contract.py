@@ -40,6 +40,9 @@ $over=personnelWorkloadRosterSlotPlan($p,$people,array(
  array('person_id'=>'m1','slot_id'=>'gym.mathimatika@Α΄|whole|section|1','hours'=>4),
  array('person_id'=>'m2','slot_id'=>'gym.mathimatika@Α΄|whole|section|1','hours'=>4)
 ));
+$partial=personnelWorkloadRosterSlotPlan($p,$people,array(
+ array('person_id'=>'m1','slot_id'=>'gym.mathimatika@Α΄|whole|section|1','hours'=>3)
+));
 $fallback=personnelWorkloadRosterSlotPlan($p,$people,array(
  array('person_id'=>'f1','slot_id'=>'gym.mathimatika@Α΄|whole|section|1','hours'=>4)
 ));
@@ -69,7 +72,7 @@ $blimit=personnelWorkloadRosterSlotPlan($p3,$bpeople,array(
  array('person_id'=>'b1','slot_id'=>'gym.kpa@Γ΄|whole|section|2','hours'=>3),
  array('person_id'=>'b1','slot_id'=>'gym.kpa@Γ΄|whole|section|3','hours'=>3)
 ));
-echo json_encode(array('slots'=>$s,'ok'=>$ok,'over'=>$over,'fallback'=>$fallback,'bad'=>$bad,'secondary'=>$secondary,'tie'=>$tie,'blimit'=>$blimit),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+echo json_encode(array('slots'=>$s,'ok'=>$ok,'over'=>$over,'partial'=>$partial,'fallback'=>$fallback,'bad'=>$bad,'secondary'=>$secondary,'tie'=>$tie,'blimit'=>$blimit),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 '''
 x=php_json(php)
 slots=x['slots']
@@ -86,9 +89,10 @@ check('two separate A slots valid', x['ok']['valid'] is True and x['ok']['summar
 check('same A1 twice caught without counting invalid coverage', x['over']['valid'] is False and x['over']['slots'][a1]['attempted_assigned_hours']==8 and x['over']['slots'][a1]['assigned_hours']==0 and x['over']['slots'][a1]['remaining_hours']==4 and x['over']['slots'][a1]['overallocated_hours']==4 and x['over']['summary']['assigned_slot_hours_total']==0 and x['over']['summary']['overallocated_slot_hours']==4)
 check('overallocated rows marked invalid', x['over']['summary']['invalid_allocation_row_count']==2 and all('slot_overallocated_across_roster' in r['errors'] for r in x['over']['allocation_rows']))
 check('overallocated rows do not consume teacher workload', x['over']['people']['m1']['assigned_profile_hours']==0 and x['over']['people']['m2']['assigned_profile_hours']==0 and x['over']['semantics']['invalid_slot_allocations_do_not_count_as_coverage'] is True)
+check('partial course-section allocation is invalid', x['partial']['valid'] is False and 'atomic_slot_requires_full_hours' in x['partial']['allocation_rows'][0]['errors'] and x['partial']['summary']['assigned_slot_hours_total']==0)
 check('lower assignment valid but warned', x['fallback']['valid'] is True and x['fallback']['allocation_rows'][0]['priority']=='B' and 'uses_lower_priority_assignment' in x['fallback']['allocation_rows'][0]['warnings'])
 check('ineligible teacher rejected', x['bad']['valid'] is False and 'specialty_not_eligible' in x['bad']['allocation_rows'][0]['errors'])
-check('manual semantics explicit', x['ok']['semantics']['manual_allocation_only'] is True and x['ok']['semantics']['slot_capacity_checked_per_section_or_group'] is True and x['ok']['semantics']['automatic_placement'] is False)
+check('manual semantics explicit', x['ok']['semantics']['manual_allocation_only'] is True and x['ok']['semantics']['slot_capacity_checked_per_section_or_group'] is True and x['ok']['semantics']['course_section_assignment_is_atomic'] is True and x['ok']['semantics']['automatic_placement'] is False)
 check('secondary specialty can provide better A assignment', x['secondary']['valid'] is True and x['secondary']['allocation_rows'][0]['priority']=='A' and x['secondary']['allocation_rows'][0]['used_specialty_code']=='ΠΕ03' and x['secondary']['allocation_rows'][0]['specialty_source']=='secondary')
 check('tie between primary and secondary prefers primary', x['tie']['priority']=='A' and x['tie']['used_specialty_code']=='ΠΕ04.02' and x['tie']['specialty_source']=='primary')
 check('B hours combine across primary and secondary without hard block', x['blimit']['valid'] is True and x['blimit']['people']['b1']['b_assignment_hours']==13 and x['blimit']['people']['b1']['b_assignment_limit_exceeded'] is True and x['blimit']['summary']['people_over_b_assignment_limit_count']==1)

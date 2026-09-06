@@ -33,6 +33,11 @@ $people=array(array(
  'required_teaching_hours'=>20,'role'=>'teacher','assigned_external_hours'=>0,
 ));
 $proposal=teachingAllocationEngineProposal($complete,$people);
+$religionPeople=array(array(
+ 'person_id'=>'pe01','display_name'=>'Θεολόγος','specialty_code'=>'ΠΕ01',
+ 'required_teaching_hours'=>3,'role'=>'teacher','assigned_external_hours'=>0,
+));
+$pendingProposal=teachingAllocationEngineProposal($pending,$religionPeople);
 echo json_encode(array(
  'complete'=>$complete,
  'complete_readiness'=>schoolProfileGeneralEducationReadiness($complete),
@@ -40,6 +45,7 @@ echo json_encode(array(
  'matrix'=>$matrix,
  'pending_matrix'=>$pendingMatrix,
  'proposal'=>$proposal,
+ 'pending_proposal'=>$pendingProposal,
 ),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 ''').replace("__DIR__ . '/includes/", "'"+str(ROOT).replace("'","\\'")+"/includes/")
 p=subprocess.run(['php'],cwd=ROOT,text=True,input=php,capture_output=True)
@@ -59,8 +65,11 @@ check('all 74 hours have assignment mapping', summary['uncovered_unit_hours']==0
 check('complete Ethics inputs leave no active dependencies', summary['active_dependency_instances']==0)
 check('no regulatory gaps in evening gymnasium', summary['active_regulatory_gap_instances']==0)
 pending=data['pending_matrix']['summary']
-check('without Ethics inputs fixed non-religion hours remain 71', pending['assignment_unit_hours']==71)
-check('without Ethics inputs only religion-Ethics dependencies remain active', pending['active_dependency_instances']==6)
+check('without Ethics inputs Religion remains in baseline 74 hours', pending['assignment_unit_hours']==74)
+check('without Ethics inputs only Ethics dependencies remain active', pending['active_dependency_instances']==3)
+pending_units=data['pending_matrix']['units']
+pending_religion=[u for u in pending_units if u.get('subject')=='Θρησκευτικά']
+check('Religion remains assignment-ready without Ethics inputs', len(pending_religion)==3 and all(u.get('school_hours')==1 and 'ΠΕ01' in u.get('top_codes',[]) for u in pending_religion))
 units=data['matrix']['units']
 def find(instance):
     return next((u for u in units if u.get('instance_id')==instance),None)
@@ -75,6 +84,9 @@ check('allocation engine accepts evening gymnasium profile', prop['status']=='ok
 check('allocation engine fills PE03 full 20-hour capacity', prop['summary']['auto_covered_hours']==20)
 check('allocation engine preserves all 12 Math hours as A assignment', prop['summary']['priority_hours']['A']==12)
 check('automatic B hours respect 10-hour cap', prop['summary']['priority_hours']['B']<=10)
+rprop=data['pending_proposal']
+religion_alloc=[a for a in rprop.get('proposed_allocations',[]) if a.get('subject')=='Θρησκευτικά']
+check('PE01 receives Religion even before Ethics inputs', rprop['status']=='ok' and sum(a['hours'] for a in religion_alloc)==3 and all(a['person_id']=='pe01' for a in religion_alloc))
 
 # Render contract: active school type, compact profile fields, no day-only input dependency.
 post={

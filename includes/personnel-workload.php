@@ -1037,6 +1037,9 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
             if ($hours > (int) $slot['capacity_hours']) {
                 $row['valid'] = false; $row['errors'][] = 'hours_exceed_slot_capacity';
             }
+            if ($hours > 0 && $hours !== (int) $slot['capacity_hours']) {
+                $row['valid'] = false; $row['errors'][] = 'atomic_slot_requires_full_hours';
+            }
             if (isset($peopleIndex[$personId])) {
                 $assignment = personnelWorkloadBestAssignmentForSlot($slot, $peopleIndex[$personId]);
                 if ($assignment === null) {
@@ -1184,6 +1187,7 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
     $basePlan['semantics']['b_assignment_10_hour_limit_is_warning_only'] = true;
     $basePlan['semantics']['secondary_specialty_participates_in_slot_eligibility'] = true;
     $basePlan['semantics']['slot_capacity_checked_per_section_or_group'] = true;
+    $basePlan['semantics']['course_section_assignment_is_atomic'] = true;
     $basePlan['semantics']['invalid_slot_allocations_do_not_count_as_coverage'] = true;
     $basePlan['semantics']['manual_allocation_only'] = true;
     return $basePlan;
@@ -1328,9 +1332,10 @@ function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAlloc
             $match = $routesBySlot[$slotId][$personId];
             $available = (int) $personState[$personId]['remaining_hours'];
             if ($match['priority'] === 'B') $available = min($available, (int) $personState[$personId]['b_remaining_hours']);
-            if ($available < 1) continue;
-            $hours = min($slotRemaining, $available);
-            if ($hours < 1) continue;
+            // Κάθε μάθημα/τμήμα είναι αδιαίρετη μονάδα: δεν μοιράζουμε
+            // π.χ. 4 ώρες Μαθηματικών ως 3+1 σε δύο εκπαιδευτικούς.
+            if ($available < $slotRemaining) continue;
+            $hours = $slotRemaining;
             $proposal[] = array(
                 'person_id'=>$personId,
                 'slot_id'=>$slotId,
@@ -1346,8 +1351,9 @@ function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAlloc
                 $personState[$personId]['b_assignment_hours'] += $hours;
                 $personState[$personId]['b_remaining_hours'] = max(0, 10 - $personState[$personId]['b_assignment_hours']);
             }
-            $slotRemaining -= $hours;
+            $slotRemaining = 0;
             $covered += $hours;
+            break;
         }
         $slotState[$slotId]['remaining_hours'] = max(0, $slotRemaining);
     }
@@ -1372,6 +1378,7 @@ function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAlloc
             'constrained_slots_first_heuristic'=>true,
             'b_assignment_limit_10_respected_without_exception'=>true,
             'primary_and_secondary_specialty_used'=>true,
+            'course_section_assignment_is_atomic'=>true,
         ),
     );
 }

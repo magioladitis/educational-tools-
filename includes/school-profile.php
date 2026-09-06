@@ -250,6 +250,23 @@ function schoolProfileDependencyState($profile, $instance)
         $counts = schoolProfileEthicsSectionCounts($profile, $instance['school'], $instance['grade']);
         if ($counts === null) {
             $evaluation = schoolProfileEthicsEvaluationForGrade($profile, $instance['school'], $instance['grade']);
+            /*
+             * Χωρίς στοιχεία απαλλαγών δεν εξαφανίζουμε τα Θρησκευτικά από
+             * τις διδακτικές ανάγκες. Η ασφαλής βασική εικόνα είναι ότι τα
+             * κανονικά τμήματα της τάξης διδάσκονται Θρησκευτικά. Μόνο το
+             * πρόσθετο/εναλλακτικό σκέλος της Ηθικής παραμένει dependency.
+             * Όταν ο χρήστης δώσει τα πραγματικά στοιχεία Ηθικής, οι ομάδες
+             * Θρησκευτικών επανυπολογίζονται από τον κανονικό κανόνα.
+             */
+            if (isset($instance['subject']) && $instance['subject'] === 'Θρησκευτικά') {
+                return array(
+                    'status' => 'religion_baseline_until_ethics_input',
+                    'resolved' => true,
+                    'include' => true,
+                    'scope_status' => $scope,
+                    'provisional_ethics_baseline' => true,
+                );
+            }
             return array(
                 'status' => $evaluation === null ? 'ethics_inputs_required' : $evaluation['status'],
                 'resolved' => false,

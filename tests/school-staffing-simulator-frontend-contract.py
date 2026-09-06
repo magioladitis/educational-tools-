@@ -115,7 +115,7 @@ check('missing orientations explained', 'προσανατολισμού' in part
 check('matrix semantics warning exists', 'οι ώρες Α΄/Β΄/Γ΄ δείχνουν επιλεξιμότητα' in l and 'μπορούν να επικαλύπτονται μεταξύ κλάδων' in l)
 
 check('technical pending counters hidden from summary', 'ενεργές εκκρεμείς εξαρτήσεις' not in l and 'περιπτώσεις κανονιστικών εκκρεμοτήτων' not in l and 'Ακάλυπτες ώρες μετά τον έλεγχο κατανομής' not in l)
-check('specific unresolved dependency notice replaces counter', 'Εκκρεμούν στοιχεία για Ηθική / Θρησκευτικά στις τάξεις Α΄, Β΄, Γ΄' in partial)
+check('specific unresolved dependency notice replaces counter', 'Εκκρεμούν στοιχεία για Ηθική στις τάξεις Α΄, Β΄, Γ΄' in partial and 'Τα Θρησκευτικά έχουν υπολογιστεί προσωρινά στα κανονικά τμήματα' in partial)
 check('regulatory issues are contextual rather than counters', "staffingNotices['regulatory']" in PAGE.read_text(encoding='utf-8') and 'Υπάρχει κανονιστική εκκρεμότητα που επηρεάζει τον υπολογισμό.' in PAGE.read_text(encoding='utf-8'))
 check('Greek terminology in matrix', '<th>Α΄</th><th>Β΄</th><th>Γ΄</th>' in l and 'Αποκλειστική κορυφαία' not in l and 'Χαμηλότερη ανάθεση</th>' not in l)
 check('Greek readiness label', 'Έτοιμο για πίνακα επιλεξιμότητας' in l)

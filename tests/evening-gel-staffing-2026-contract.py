@@ -93,8 +93,8 @@ p3=subprocess.run(['php'],cwd=ROOT,text=True,input=php3,capture_output=True)
 if p3.returncode:
     print(p3.stderr); raise SystemExit(p3.returncode)
 d3=json.loads(p3.stdout)
-check('without Ethics inputs fixed non-religion hours remain 115', d3['matrix']['summary']['assignment_unit_hours']==115)
-check('without Ethics inputs only religion-Ethics dependencies remain active', d3['matrix']['summary']['active_dependency_instances']==6)
+check('without Ethics inputs Religion remains in baseline 118 hours', d3['matrix']['summary']['assignment_unit_hours']==118)
+check('without Ethics inputs only Ethics dependencies remain active', d3['matrix']['summary']['active_dependency_instances']==3)
 
 # Public page render contract.
 post={
