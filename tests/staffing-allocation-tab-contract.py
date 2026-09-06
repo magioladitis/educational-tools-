@@ -45,6 +45,8 @@ check('personnel rows use compact required-hours label', '<label title="Υποχ
 slot_selects=re.findall(r'<select name="allocation_slot_id\[\]" class="allocation-slot">([\s\S]*?)</select>',out)
 check('slot selectors omit lessons with no eligible teacher', bool(slot_selects) and all('Θρησκευτικά' not in block for block in slot_selects))
 check('hidden no-eligible slots are explained without removing their uncovered hours', 'χωρίς επιλέξιμο εκπαιδευτικό' in out and 'Οι ώρες τους εξακολουθούν να υπολογίζονται στις ακάλυπτες ώρες.' in out)
+check('fully covered slots become unavailable in other allocation rows', 'function updateAllocationSlotOptionAvailability(slotAssigned)' in PAGE.read_text(encoding='utf-8') and "dynamicallyDisabled=full&&current!==sid" in PAGE.read_text(encoding='utf-8') and '· καλύφθηκε' in PAGE.read_text(encoding='utf-8'))
+check('allocation UI explains automatic slot deactivation', 'η επιλογή του γίνεται αυτόματα ανενεργή στις υπόλοιπες γραμμές κατανομής' in out)
 
 bad=dict(base)
 bad['allocation_person_id']=['p2']
@@ -61,6 +63,7 @@ over['allocation_hours']=[4,4]
 o=render(over)
 check('same slot over-allocation surfaced', 'Το ίδιο τμήμα / ομάδα έχει κατανεμηθεί πάνω από τις διαθέσιμες ώρες του.' in o)
 check('slot over summary four', re.search(r'<strong data-allocation-over>4</strong>',o) is not None)
+check('overallocated rows are not counted as valid assigned hours', re.search(r'<strong data-allocation-assigned>0</strong>',o) is not None and re.search(r'data-allocation-person-summary="p1"[\s\S]*?<strong data-person-assigned>0</strong>',o) is not None)
 
 
 secondary=dict(base)

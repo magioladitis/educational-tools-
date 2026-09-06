@@ -37,6 +37,12 @@ check('client vacancy view recomputes from allocations', 'function updateVacancy
 check('current staff check includes both specialties', 'allocationBestAssignment(person,slot)' in SRC and 'vacancyEligiblePeopleWithRemaining' in SRC)
 check('personnel edits stale both allocation and vacancy tabs', "const vacanciesTab=document.querySelector('[data-staffing-tab=\"vacancies\"]');" in SRC and "vacanciesTab.disabled=true" in SRC)
 check('primary assignment labels are compact', 'Α΄ ανάθεση ✓' in out and 'μέσω κύριας ειδικότητας ΠΕ03' not in out)
+over=dict(base)
+over['allocation_person_id']=['p1','p1']
+over['allocation_slot_id']=['gym.mathimatika@Α΄|whole|section|1','gym.mathimatika@Α΄|whole|section|1']
+over['allocation_hours']=[4,4]
+over_out=render(over)
+check('invalid overallocated rows do not hide vacancy', re.search(r'<tr data-vacancy-row="gym\.mathimatika@Α΄\|whole\|section\|1"[^>]*>[\s\S]*?<span class="vacancy-hours" data-vacancy-hours>4</span>',over_out) is not None)
 secondary=dict(base)
 secondary.update({
 'personnel_person_id':['p2'],'personnel_display_name':['Πληροφορικός / Μαθηματικός'],'personnel_specialty_code':['ΠΕ86'],'personnel_secondary_specialty_code':['ΠΕ03'],

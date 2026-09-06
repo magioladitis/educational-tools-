@@ -924,6 +924,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
       <?php calculatorCardStart(array('class'=>'card staffing-panel','attrs'=>array('data-staffing-panel'=>'school') + ($activePanel !== 'school' ? array('hidden'=>true) : array()))); ?>
         <h2>1. Στοιχεία σχολικής μονάδας</h2>
         <p class="cap">Η πρώτη έκδοση υποστηρίζει τυπικό Ημερήσιο Γυμνάσιο και Ημερήσιο ΓΕΛ. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
+        <div class="status-warn" id="schoolProfileStaleNotice" hidden><strong>Τα στοιχεία της σχολικής μονάδας άλλαξαν.</strong> Τα προηγούμενα αποτελέσματα, το προσωπικό, η κατανομή και τα κενά έχουν κλειδωθεί μέχρι να πατήσεις ξανά «Υπολόγισε διδακτικές ανάγκες».</div>
 
         <form method="post" id="staffingProfileForm">
           <input type="hidden" name="staffing_action" value="">
@@ -1129,7 +1130,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
             <div class="summary-chip"><strong><?php echo (int)$displayMatrix['summary']['ordered_shared_top_unit_hours']; ?></strong><span>ώρες κοινής κορυφαίας Α΄/Β΄/Γ΄</span></div>
             <div class="summary-chip"><strong><?php echo (int)$displayMatrix['summary']['special_top_unit_hours']; ?></strong><span>ώρες ειδικής κορυφαίας ανάθεσης</span></div>
             <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_dependency_instances']; ?></strong><span>ενεργές εκκρεμείς εξαρτήσεις</span></div>
-            <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_regulatory_gap_instances']; ?></strong><span>Ακάλυπτες ώρες μετά τον έλεγχο κατανομής</span></div>
+            <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_regulatory_gap_instances']; ?></strong><span>περιπτώσεις κανονιστικών εκκρεμοτήτων</span></div>
           </div>
 
           <div class="field result-filter">
@@ -1471,6 +1472,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
                     <strong>Κατανομή ανά μάθημα / τμήμα</strong>
                     <div class="help">Επίλεξε πρώτα συγκεκριμένο τμήμα / ομάδα + μάθημα και μετά έναν από τους επιλέξιμους εκπαιδευτικούς. Η επιλεξιμότητα ελέγχει μαζί κύρια και 2η ειδικότητα και επιλέγει την καλύτερη ανάθεση.</div>
                     <?php if ($allocationNoEligibleSlotCount > 0): ?><div class="help"><strong>Δεν εμφανίζονται <?php echo (int)$allocationNoEligibleSlotCount; ?> μαθήματα / τμήματα χωρίς επιλέξιμο εκπαιδευτικό</strong> (<?php echo (int)$allocationNoEligibleHours; ?> ώρες). Οι ώρες τους εξακολουθούν να υπολογίζονται στις ακάλυπτες ώρες.</div><?php endif; ?>
+                    <div class="help">Όταν καλυφθούν πλήρως οι ώρες ενός μαθήματος / τμήματος, η επιλογή του γίνεται αυτόματα ανενεργή στις υπόλοιπες γραμμές κατανομής.</div>
                   </div>
                   <button class="edu-btn-secondary" type="button" id="addAllocationRow">+ Προσθήκη μαθήματος</button>
                 </div>
@@ -1971,6 +1973,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
       schoolCsvActive.innerHTML='<strong>Τρέχουσα εγγραφή CSV:</strong> '+escapeHtml(record.school_name||record.school_id)+' · '+escapeHtml(record.school_type_label||record.school_type)+'. Τα στοιχεία φορτώθηκαν στη φόρμα χωρίς server request. Πάτησε «Υπολόγισε διδακτικές ανάγκες» όταν θέλεις νέο υπολογισμό.';
     }
     schoolCsvSetStatus('Φορτώθηκε το «'+(record.school_name||record.school_id)+'». Μπορείς να επιλέξεις άλλο σχολείο από το ίδιο μητρώο οποιαδήποτε στιγμή.','success');
+    markSchoolProfileDirty();
   }
   function escapeHtml(value){
     return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch];});
@@ -2091,6 +2094,8 @@ foreach ($allocationSlots as $slotId=>$slot) {
 
   const tabs=Array.from(document.querySelectorAll('[data-staffing-tab]'));
   const panels=Array.from(document.querySelectorAll('[data-staffing-panel]'));
+  const schoolProfileHasCalculatedResults=<?php echo $submitted ? 'true' : 'false'; ?>;
+  const schoolProfileStaleNotice=document.getElementById('schoolProfileStaleNotice');
   function activatePanel(name){
     tabs.forEach(function(tab){
       const active=tab.getAttribute('data-staffing-tab')===name;
@@ -2102,6 +2107,26 @@ foreach ($allocationSlots as $slotId=>$slot) {
   tabs.forEach(function(tab){
     tab.addEventListener('click',function(){ if(!tab.disabled) activatePanel(tab.getAttribute('data-staffing-tab')); });
   });
+  function markSchoolProfileDirty(){
+    if(!schoolProfileHasCalculatedResults) return;
+    ['results','personnel','allocation','vacancies'].forEach(function(name){
+      const tab=document.querySelector('[data-staffing-tab="'+name+'"]');
+      if(!tab) return;
+      tab.disabled=true;
+      tab.title='Τα στοιχεία της σχολικής μονάδας άλλαξαν. Υπολόγισε ξανά τις διδακτικές ανάγκες.';
+    });
+    if(schoolProfileStaleNotice) schoolProfileStaleNotice.hidden=false;
+    activatePanel('school');
+  }
+  if(schoolProfileForm){
+    schoolProfileForm.addEventListener('input',function(event){
+      if(event.target && event.target.matches('input[name]:not([type="hidden"]), select[name]')) markSchoolProfileDirty();
+    });
+    schoolProfileForm.addEventListener('change',function(event){
+      if(event.target && event.target.matches('input[name]:not([type="hidden"]), select[name]')) markSchoolProfileDirty();
+    });
+    schoolProfileForm.addEventListener('reset',function(){ setTimeout(markSchoolProfileDirty,0); });
+  }
 
   const personnelList=document.getElementById('personnelList');
   const allocationTab=document.querySelector('[data-staffing-tab="allocation"]');
@@ -2706,20 +2731,92 @@ foreach ($allocationSlots as $slotId=>$slot) {
     });
     return count;
   }
-  function currentAllocationTotals(){
-    const personAssigned={}, slotAssigned={};
-    Object.keys(allocationPeopleData||{}).forEach(function(id){personAssigned[id]=0;});
-    Object.keys(allocationSlotsData||{}).forEach(function(id){slotAssigned[id]=0;});
+  function allocationCollectState(){
+    const personAssigned={}, personPriority={}, personSource={}, slotAssigned={}, slotAttempted={}, rowState=[];
+    Object.keys(allocationPeopleData||{}).forEach(function(id){
+      personAssigned[id]=0;
+      personPriority[id]={A:0,B:0,C:0,SPECIAL:0};
+      personSource[id]={primary:0,secondary:0};
+    });
+    Object.keys(allocationSlotsData||{}).forEach(function(id){ slotAssigned[id]=0; slotAttempted[id]=0; });
+
     allocationRows().forEach(function(row){
       const personEl=row.querySelector('.allocation-person'), slotEl=row.querySelector('.allocation-slot'), hoursEl=row.querySelector('.allocation-hours');
       const pid=personEl?personEl.value:'', sid=slotEl?slotEl.value:'', hours=Math.max(0,parseInt(hoursEl&&hoursEl.value?hoursEl.value:'0',10)||0);
       const person=allocationPeopleData[pid]||null, slot=allocationSlotsData[sid]||null, match=person&&slot?allocationBestAssignment(person,slot):null;
-      if(person&&slot&&match&&hours>0&&hours<=slot.capacity_hours){
-        personAssigned[pid]=(personAssigned[pid]||0)+hours;
-        slotAssigned[sid]=(slotAssigned[sid]||0)+hours;
+      let error='', warnings=[];
+      if((pid||sid||hours)&&!slot) error='Δεν έχει επιλεγεί έγκυρο τμήμα / ομάδα και μάθημα.';
+      else if((pid||sid||hours)&&!person) error='Δεν έχει επιλεγεί έγκυρος εκπαιδευτικός.';
+      else if((pid||sid)&&hours<1) error='Οι ώρες πρέπει να είναι θετικές.';
+      else if(person&&slot&&hours>slot.capacity_hours) error='Οι ώρες υπερβαίνουν τις '+slot.capacity_hours+' ώρες του συγκεκριμένου τμήματος / ομάδας.';
+      else if(person&&slot&&hours>0&&!match) error='Οι ειδικότητες '+person.specialty_code+(person.secondary_specialty_code?' / '+person.secondary_specialty_code:'')+' δεν έχουν ανάθεση στο συγκεκριμένο μάθημα.';
+      if(!error&&person&&slot&&hours>0&&match){
+        slotAttempted[sid]=(slotAttempted[sid]||0)+hours;
+        if(slot.top_priority&&match.priority!==slot.top_priority) warnings.push('χαμηλότερη προτεραιότητα');
       }
+      rowState.push({row:row,pid:pid,sid:sid,hours:hours,person:person,slot:slot,match:match,error:error,warnings:warnings,finalError:''});
     });
-    return {personAssigned:personAssigned,slotAssigned:slotAssigned};
+
+    const overallocatedSlots={};
+    let overSlots=0;
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const cap=allocationSlotsData[sid].capacity_hours||0, attempted=slotAttempted[sid]||0, over=Math.max(0,attempted-cap);
+      if(over>0){ overallocatedSlots[sid]=over; overSlots+=over; }
+    });
+
+    let basicAssigned=0;
+    rowState.forEach(function(st){
+      st.finalError=st.error;
+      if(!st.finalError&&st.sid&&overallocatedSlots[st.sid]){
+        st.finalError='Το ίδιο τμήμα / ομάδα έχει συνολικά '+(slotAttempted[st.sid]||0)+' ώρες, ενώ διαθέτει '+st.slot.capacity_hours+'.';
+      }
+      if(st.finalError||!st.person||!st.slot||st.hours<1||!st.match) return;
+      personAssigned[st.pid]=(personAssigned[st.pid]||0)+st.hours;
+      personPriority[st.pid][st.match.priority]=(personPriority[st.pid][st.match.priority]||0)+st.hours;
+      personSource[st.pid][st.match.specialty_source]=(personSource[st.pid][st.match.specialty_source]||0)+st.hours;
+      slotAssigned[st.sid]=(slotAssigned[st.sid]||0)+st.hours;
+      basicAssigned+=st.hours;
+    });
+
+    let unassigned=0;
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const cap=allocationSlotsData[sid].capacity_hours||0, assigned=slotAssigned[sid]||0;
+      unassigned+=Math.max(0,cap-assigned);
+    });
+    return {
+      rowState:rowState,
+      personAssigned:personAssigned,
+      personPriority:personPriority,
+      personSource:personSource,
+      slotAssigned:slotAssigned,
+      slotAttempted:slotAttempted,
+      overallocatedSlots:overallocatedSlots,
+      overSlots:overSlots,
+      unassigned:unassigned,
+      basicAssigned:basicAssigned
+    };
+  }
+  function currentAllocationTotals(){
+    const state=allocationCollectState();
+    return {personAssigned:state.personAssigned,slotAssigned:state.slotAssigned};
+  }
+  function updateAllocationSlotOptionAvailability(slotAssigned){
+    allocationRows().forEach(function(row){
+      const select=row.querySelector('.allocation-slot');
+      if(!select) return;
+      const current=select.value||'';
+      Array.from(select.querySelectorAll('option[value]')).forEach(function(option){
+        const sid=option.value||'';
+        if(sid==='') return;
+        if(option.dataset.baseAllocationLabel===undefined) option.dataset.baseAllocationLabel=option.textContent||'';
+        if(option.dataset.staticDisabled===undefined) option.dataset.staticDisabled=option.disabled?'1':'0';
+        const slot=allocationSlotsData[sid]||null;
+        const full=!!(slot&&(slotAssigned[sid]||0)>=slot.capacity_hours);
+        const dynamicallyDisabled=full&&current!==sid;
+        option.disabled=option.dataset.staticDisabled==='1'||dynamicallyDisabled;
+        option.textContent=option.dataset.baseAllocationLabel+(dynamicallyDisabled?' · καλύφθηκε':'');
+      });
+    });
   }
   function updateVacancyView(slotAssigned,personAssigned){
     if(!vacancyRows.length) return;
@@ -2754,49 +2851,17 @@ foreach ($allocationSlots as $slotId=>$slot) {
   if(vacancyFilter) vacancyFilter.addEventListener('input',function(){ const totals=currentAllocationTotals(); updateVacancyView(totals.slotAssigned,totals.personAssigned); });
   function updateAllocationSummary(){
     if(!allocationList) return;
-    const rows=allocationRows();
-    const personAssigned={}, personPriority={}, personSource={}, slotAssigned={}, rowState=[];
-    Object.keys(allocationPeopleData||{}).forEach(function(id){ personAssigned[id]=0; personPriority[id]={A:0,B:0,C:0,SPECIAL:0}; personSource[id]={primary:0,secondary:0}; });
-    Object.keys(allocationSlotsData||{}).forEach(id=>slotAssigned[id]=0);
-    let basicAssigned=0;
-    rows.forEach(function(row){
-      const personEl=row.querySelector('.allocation-person'), slotEl=row.querySelector('.allocation-slot'), hoursEl=row.querySelector('.allocation-hours');
-      const pid=personEl?personEl.value:'', sid=slotEl?slotEl.value:'', hours=Math.max(0,parseInt(hoursEl&&hoursEl.value?hoursEl.value:'0',10)||0);
-      const person=allocationPeopleData[pid]||null, slot=allocationSlotsData[sid]||null, match=person&&slot?allocationBestAssignment(person,slot):null;
-      let error='', warnings=[];
-      if((pid||sid||hours)&&!slot) error='Δεν έχει επιλεγεί έγκυρο τμήμα / ομάδα και μάθημα.';
-      else if((pid||sid||hours)&&!person) error='Δεν έχει επιλεγεί έγκυρος εκπαιδευτικός.';
-      else if((pid||sid)&&hours<1) error='Οι ώρες πρέπει να είναι θετικές.';
-      else if(person&&slot&&hours>slot.capacity_hours) error='Οι ώρες υπερβαίνουν τις '+slot.capacity_hours+' ώρες του συγκεκριμένου τμήματος / ομάδας.';
-      else if(person&&slot&&hours>0&&!match) error='Οι ειδικότητες '+person.specialty_code+(person.secondary_specialty_code?' / '+person.secondary_specialty_code:'')+' δεν έχουν ανάθεση στο συγκεκριμένο μάθημα.';
-      if(!error&&person&&slot&&hours>0&&match){
-        personAssigned[pid]=(personAssigned[pid]||0)+hours;
-        personPriority[pid][match.priority]=(personPriority[pid][match.priority]||0)+hours;
-        personSource[pid][match.specialty_source]=(personSource[pid][match.specialty_source]||0)+hours;
-        slotAssigned[sid]=(slotAssigned[sid]||0)+hours;
-        basicAssigned+=hours;
-        if(slot.top_priority&&match.priority!==slot.top_priority) warnings.push('χαμηλότερη προτεραιότητα');
-      }
-      rowState.push({row:row,pid:pid,sid:sid,hours:hours,person:person,slot:slot,match:match,error:error,warnings:warnings,finalError:''});
-    });
-    let overSlots=0, unassigned=0;
-    Object.keys(allocationSlotsData||{}).forEach(function(sid){
-      const cap=allocationSlotsData[sid].capacity_hours||0, assigned=slotAssigned[sid]||0;
-      unassigned+=Math.max(0,cap-assigned); overSlots+=Math.max(0,assigned-cap);
-    });
+    const state=allocationCollectState();
+    const rowState=state.rowState, personAssigned=state.personAssigned, personPriority=state.personPriority, personSource=state.personSource, slotAssigned=state.slotAssigned;
     let errorRows=0;
     rowState.forEach(function(st){
-      let error=st.error, warnings=st.warnings.slice();
-      if(!error&&st.sid&&st.slot&&(slotAssigned[st.sid]||0)>st.slot.capacity_hours){
-        error='Το ίδιο τμήμα / ομάδα έχει συνολικά '+slotAssigned[st.sid]+' ώρες, ενώ διαθέτει '+st.slot.capacity_hours+'.';
-      }
+      let error=st.finalError, warnings=st.warnings.slice();
       if(!error&&st.pid&&st.person&&(personAssigned[st.pid]||0)>st.person.available_here_hours){
         warnings.push('Υπέρβαση ατομικού διαθέσιμου ωραρίου κατά '+((personAssigned[st.pid]||0)-st.person.available_here_hours)+' ώρες.');
       }
       if(!error&&st.pid&&st.match&&st.match.priority==='B'&&(personPriority[st.pid].B||0)>10){
         warnings.push(allocationBAssignmentWarning);
       }
-      st.finalError=error;
       if(error){ allocationSetStatus(st.row,error,'error'); errorRows++; }
       else if(st.person&&st.slot&&st.hours>0&&st.match){
         const base=allocationAssignmentLabel(st.match);
@@ -2805,10 +2870,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
       } else allocationSetStatus(st.row,'Συμπλήρωσε μάθημα και εκπαιδευτικό.','');
     });
     const assignedEl=document.querySelector('[data-allocation-assigned]'), unassignedEl=document.querySelector('[data-allocation-unassigned]'), overEl=document.querySelector('[data-allocation-over]'), errorsEl=document.querySelector('[data-allocation-errors]');
-    if(assignedEl) assignedEl.textContent=String(basicAssigned);
-    if(unassignedEl) unassignedEl.textContent=String(unassigned);
-    if(overEl) overEl.textContent=String(overSlots);
+    if(assignedEl) assignedEl.textContent=String(state.basicAssigned);
+    if(unassignedEl) unassignedEl.textContent=String(state.unassigned);
+    if(overEl) overEl.textContent=String(state.overSlots);
     if(errorsEl) errorsEl.textContent=String(errorRows);
+    updateAllocationSlotOptionAvailability(slotAssigned);
     updateVacancyView(slotAssigned,personAssigned);
     Object.keys(allocationPeopleData||{}).forEach(function(pid){
       const summary=document.querySelector('[data-allocation-person-summary="'+CSS.escape(pid)+'"]'); if(!summary) return;

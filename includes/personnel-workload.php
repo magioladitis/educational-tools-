@@ -924,10 +924,12 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
         if ($id !== '') $peopleIndex[$id] = $person;
     }
 
-    $aggregate = array();
+    // 1ο πέρασμα: βασική εγκυρότητα γραμμής και ακατέργαστη (attempted)
+    // κάλυψη ανά slot. Το attempted σύνολο χρησιμοποιείται μόνο για να
+    // εντοπιστεί υπέρβαση της χωρητικότητας του ίδιου τμήματος / ομάδας.
     $rowResults = array();
-    $slotAssigned = array();
-    foreach ($slots as $slotId=>$slot) $slotAssigned[$slotId] = 0;
+    $slotAttempted = array();
+    foreach ($slots as $slotId=>$slot) $slotAttempted[$slotId] = 0;
 
     foreach ($slotAllocations as $i=>$allocation) {
         $personId = isset($allocation['person_id']) ? trim((string) $allocation['person_id']) : '';
@@ -977,34 +979,70 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
                 }
             }
         }
-        if ($row['valid']) {
-            $uid = $slots[$slotId]['unit_id'];
-            $key = $personId . "\n" . $uid . "\n" . $row['used_specialty_code'];
-            if (!isset($aggregate[$key])) $aggregate[$key] = array(
-                'person_id'=>$personId,
-                'unit_id'=>$uid,
-                'hours'=>0,
-                'used_specialty_code'=>$row['used_specialty_code'],
-                'specialty_source'=>$row['specialty_source'],
-            );
-            $aggregate[$key]['hours'] += $hours;
-            $slotAssigned[$slotId] += $hours;
-        }
+        if ($row['valid']) $slotAttempted[$slotId] += $hours;
         $rowResults[] = $row;
+    }
+
+    // Αν το ίδιο slot έχει δηλωθεί πάνω από τη χωρητικότητά του, όλες οι
+    // γραμμές που συμμετέχουν σε αυτή την υπέρβαση είναι άκυρες. Κρίσιμο:
+    // οι άκυρες γραμμές ΔΕΝ πρέπει να μετρούν ούτε σε ώρες εκπαιδευτικού,
+    // ούτε σε έγκυρη κάλυψη slot, ούτε στα κενά.
+    $overallocatedSlots = array();
+    $rawOver = 0;
+    foreach ($slots as $slotId=>$slot) {
+        $capacity = (int) $slot['capacity_hours'];
+        $attempted = isset($slotAttempted[$slotId]) ? (int) $slotAttempted[$slotId] : 0;
+        $overage = max(0, $attempted - $capacity);
+        if ($overage > 0) {
+            $overallocatedSlots[$slotId] = $overage;
+            $rawOver += $overage;
+        }
+    }
+    if (!empty($overallocatedSlots)) {
+        foreach ($rowResults as &$row) {
+            if ($row['slot_id'] !== '' && isset($overallocatedSlots[$row['slot_id']])) {
+                $row['valid'] = false;
+                if (!in_array('slot_overallocated_across_roster', $row['errors'], true)) $row['errors'][] = 'slot_overallocated_across_roster';
+            }
+        }
+        unset($row);
+    }
+
+    // 2ο πέρασμα: χτίζουμε το πραγματικό aggregate και την έγκυρη κάλυψη
+    // ΜΟΝΟ από γραμμές που παρέμειναν έγκυρες μετά τον cross-row έλεγχο.
+    $aggregate = array();
+    $slotAssigned = array();
+    foreach ($slots as $slotId=>$slot) $slotAssigned[$slotId] = 0;
+    foreach ($rowResults as $row) {
+        if (!$row['valid']) continue;
+        $personId = $row['person_id'];
+        $slotId = $row['slot_id'];
+        $hours = (int) $row['hours'];
+        $uid = $slots[$slotId]['unit_id'];
+        $key = $personId . "\n" . $uid . "\n" . $row['used_specialty_code'];
+        if (!isset($aggregate[$key])) $aggregate[$key] = array(
+            'person_id'=>$personId,
+            'unit_id'=>$uid,
+            'hours'=>0,
+            'used_specialty_code'=>$row['used_specialty_code'],
+            'specialty_source'=>$row['specialty_source'],
+        );
+        $aggregate[$key]['hours'] += $hours;
+        $slotAssigned[$slotId] += $hours;
     }
 
     $basePlan = personnelWorkloadRosterPlan($profile, $people, array_values($aggregate), $model);
     $slotStates = array();
-    $covered = 0; $unassigned = 0; $over = 0; $assignedSlotTotal = 0;
+    $covered = 0; $unassigned = 0; $assignedSlotTotal = 0;
     foreach ($slots as $slotId=>$slot) {
         $capacity = (int) $slot['capacity_hours'];
+        $attempted = isset($slotAttempted[$slotId]) ? (int) $slotAttempted[$slotId] : 0;
         $assigned = isset($slotAssigned[$slotId]) ? (int) $slotAssigned[$slotId] : 0;
         $assignedSlotTotal += $assigned;
         $remaining = max(0, $capacity - $assigned);
-        $overage = max(0, $assigned - $capacity);
+        $overage = isset($overallocatedSlots[$slotId]) ? (int) $overallocatedSlots[$slotId] : 0;
         if ($remaining === 0 && $overage === 0) $covered += $capacity;
         $unassigned += $remaining;
-        $over += $overage;
         $slotStates[$slotId] = array(
             'slot_id'=>$slotId,
             'unit_id'=>$slot['unit_id'],
@@ -1012,22 +1050,12 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
             'grade'=>$slot['grade'],
             'subject'=>$slot['subject'],
             'capacity_hours'=>$capacity,
+            'attempted_assigned_hours'=>$attempted,
             'assigned_hours'=>$assigned,
             'remaining_hours'=>$remaining,
             'overallocated_hours'=>$overage,
             'status'=>$overage > 0 ? 'overallocated' : ($remaining > 0 ? 'partially_or_unassigned' : 'fully_assigned'),
         );
-    }
-
-    // Mark rows participating in an overallocated slot.
-    if ($over > 0) {
-        foreach ($rowResults as &$row) {
-            if ($row['slot_id'] !== '' && isset($slotStates[$row['slot_id']]) && $slotStates[$row['slot_id']]['overallocated_hours'] > 0) {
-                $row['valid'] = false;
-                $row['errors'][] = 'slot_overallocated_across_roster';
-            }
-        }
-        unset($row);
     }
 
     // Το όριο των 10 ωρών Β΄ ανάθεσης ελέγχεται συνολικά ανά εκπαιδευτικό
@@ -1070,20 +1098,21 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
 
     $invalidRows = 0;
     foreach ($rowResults as $row) if (!$row['valid']) $invalidRows++;
-    $basePlan['valid'] = $basePlan['valid'] && $over === 0 && $invalidRows === 0;
+    $basePlan['valid'] = $basePlan['valid'] && $rawOver === 0 && $invalidRows === 0;
     $basePlan['allocation_rows'] = $rowResults;
     $basePlan['slots'] = $slotStates;
     $basePlan['summary']['assignment_slot_count'] = count($slots);
     $basePlan['summary']['assigned_slot_hours_total'] = $assignedSlotTotal;
     $basePlan['summary']['fully_covered_slot_hours'] = $covered;
     $basePlan['summary']['unassigned_slot_hours'] = $unassigned;
-    $basePlan['summary']['overallocated_slot_hours'] = $over;
+    $basePlan['summary']['overallocated_slot_hours'] = $rawOver;
     $basePlan['summary']['invalid_allocation_row_count'] = $invalidRows;
     $basePlan['summary']['people_over_b_assignment_limit_count'] = $peopleOverBLimit;
     $basePlan['summary']['b_assignment_hours_over_limit_total'] = $bHoursOverLimitTotal;
     $basePlan['semantics']['b_assignment_10_hour_limit_is_warning_only'] = true;
     $basePlan['semantics']['secondary_specialty_participates_in_slot_eligibility'] = true;
     $basePlan['semantics']['slot_capacity_checked_per_section_or_group'] = true;
+    $basePlan['semantics']['invalid_slot_allocations_do_not_count_as_coverage'] = true;
     $basePlan['semantics']['manual_allocation_only'] = true;
     return $basePlan;
 }

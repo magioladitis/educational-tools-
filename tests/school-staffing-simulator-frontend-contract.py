@@ -114,7 +114,7 @@ check('incomplete profile flagged partial', 'Μερικός υπολογισμό
 check('missing orientations explained', 'προσανατολισμού' in partial.lower())
 check('matrix semantics warning exists', 'οι στήλες επιλεξιμότητας Α΄/Β΄/Γ΄ μπορούν να επικαλύπτονται' in l)
 
-check('Greek terminology in summary', 'ενεργές εκκρεμείς εξαρτήσεις' in l and 'Ακάλυπτες ώρες μετά τον έλεγχο κατανομής' in l)
+check('Greek terminology in summary', 'ενεργές εκκρεμείς εξαρτήσεις' in l and 'περιπτώσεις κανονιστικών εκκρεμοτήτων' in l and 'Ακάλυπτες ώρες μετά τον έλεγχο κατανομής' not in l)
 check('Greek terminology in matrix', '<th>Α΄</th><th>Β΄</th><th>Γ΄</th>' in l and 'Χαμηλότερη ανάθεση' in l)
 check('Greek readiness label', 'Έτοιμο για πίνακα επιλεξιμότητας' in l)
 check('English UI terminology removed', all(term not in l for term in ['School profile','assignment units','Assignment units','eligibility','Fallback','unresolved dependencies','regulatory gaps','simulator / test harness','backend','roster']))
@@ -126,6 +126,8 @@ check('frontend does not use personnel auto allocation', 'personnelWorkloadRoste
 check('visible calculation buttons are not native submit controls', 'type="submit" name="staffing_action"' not in text and text.count('data-staffing-request-action=') == 3)
 check('only one centralized requestSubmit path exists', text.count('requestSubmit()') == 1)
 check('no fetch or reload request path exists', 'fetch(' not in text and 'location.reload' not in text and '.submit()' not in text)
+check('school profile edits invalidate downstream tabs', 'function markSchoolProfileDirty()' in text and "['results','personnel','allocation','vacancies']" in text and "schoolProfileStaleNotice.hidden=false" in text)
+check('school CSV load also invalidates stale downstream state', "schoolCsvSetStatus('Φορτώθηκε το «'" in text and 'markSchoolProfileDirty();' in text)
 
 failed=[n for n,ok in checks if not ok]
 for n,ok in checks: print(('PASS' if ok else 'FAIL')+': '+n)
