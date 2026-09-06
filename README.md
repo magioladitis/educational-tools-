@@ -1,3 +1,8 @@
+## 2026-09-06 — όριο 120 βασικών τμημάτων / καθαρότερη ένδειξη Β΄ ανάθεσης
+- Το ενεργό τεχνικό όριο ασφαλείας του `ypologismos-didaktikon-anagkon.php` μειώθηκε από 150 σε **120 βασικά τμήματα συνολικά (Α΄ + Β΄ + Γ΄)**, περίπου 3.500 μαθητές.
+- Το ίδιο όριο εφαρμόζεται backend, στα native `max` των πεδίων, στον live frontend guard και στον importer μητρώου CSV.
+- Η τεχνική προειδοποίηση «χαμηλότερη προτεραιότητα» δεν εμφανίζεται πλέον δίπλα στη Β΄/Γ΄ ανάθεση· η ίδια η ένδειξη της ανάθεσης είναι επαρκής. Οι εσωτερικές πληροφορίες προτεραιότητας διατηρούνται για audits/optimizer.
+
 ## 2026-09-06 — καθαρισμός ειδικών γραμμών Καρτέλας 6
 - Οι εσωτερικοί κωδικοί `GYM_SKILLS` / `GYM_TECHNOLOGY` παραμένουν μόνο ως machine keys (`report_key`, data attributes) και δεν εμφανίζονται πλέον στον πίνακα ή στην εκτύπωση.
 - Οι γραμμές εμφανίζονται με τα ανθρώπινα labels «ΔΕΞΙΟΤΗΤΕΣ ΓΥΜΝΑΣΙΟΥ» / «ΤΕΧΝΟΛΟΓΙΑ ΓΥΜΝΑΣΙΟΥ».
@@ -205,9 +210,9 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 ## 2026-09-06 — preventive yellow audit fixes
 
 - `school_registry_v1`: `school_id` and `school_code` are now validated independently for uniqueness, so the same internal ID cannot be reused with a different ministry code (and vice versa for ministry codes).
-- Safety cap: at most 150 basic sections total (`Α + Β + Γ`) per school. The cap is enforced in the form (live/native validation), CSV registry import/session restore, and backend before the workload/profile model is built.
+- Safety cap: at most 120 basic sections total (`Α + Β + Γ`) per school. The cap is enforced in the form (live/native validation), CSV registry import/session restore, and backend before the workload/profile model is built.
 - Oversized direct POST requests do not unlock result tabs and do not build the workload matrix.
-- Added `tests/staffing-school-safety-limits-contract.py` and expanded the school-registry contract for duplicate-ID/code and 150/151 boundary checks.
+- Added `tests/staffing-school-safety-limits-contract.py` and expanded the school-registry contract for duplicate-ID/code and 120/121 boundary checks.
 
 ## 2026-09-06 — πλήρης ενσωματωμένος κατάλογος Κέρκυρας 2026-2027
 - Το κουμπί «Κατάλογος ΔΔΕ Κέρκυρας 2026-27» φορτώνει πλέον τον εμπλουτισμένο `school_registry_v1` 38 σχολικών μονάδων και όχι το παλιό identity-only directory.

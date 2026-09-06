@@ -42,7 +42,7 @@ check('print output includes simulation disclaimer', 'Δεν συνιστά απ
 check('print click invokes browser print only', 'window.print();' in text)
 check('print click does not submit or request', 'staffingPrintButton.addEventListener' in text and 'data-staffing-request-action="print"' not in text)
 check('print media uses dedicated report', '@page{size:A4 landscape' in text and 'body.edu-page-staffing-simulator> *:not(.staffing-print-report):not(script)' in text)
-check('explicit server request actions remain exactly three', text.count('data-staffing-request-action="')==3)
+check('explicit server request actions remain exactly four', text.count('data-staffing-request-action="')==4)
 
 failed=[n for n,ok in checks if not ok]
 for n,ok in checks: print(('PASS' if ok else 'FAIL')+': '+n)

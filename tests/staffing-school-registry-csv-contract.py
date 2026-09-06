@@ -33,7 +33,7 @@ check('school CSV remains client-side only', 'FileReader' in page and 'Δεν γ
 check('school registry survives explicit recalculation in same browser tab', 'sessionStorage.setItem(schoolCsvStorageKey' in page and 'restoreSchoolCsvRegistry()' in page)
 check('school registry can be cleared explicitly', 'id="clearSchoolCsvRegistry"' in html and 'sessionStorage.removeItem(schoolCsvStorageKey)' in page)
 check('duplicate school ids and real codes are rejected independently', 'διπλό αναγνωριστικό σχολείου' in page and 'διπλό κωδικό Υπουργείου / myschool' in page)
-check('150 basic-section safety limit is advertised in schema and UI', 'maxBasicSections:MAX_BASIC_SECTIONS' in js and 'έως <strong>150 βασικά τμήματα συνολικά</strong>' in page and 'max="150"' in page)
+check('120 basic-section safety limit is advertised in schema and UI', 'maxBasicSections:MAX_BASIC_SECTIONS' in js and 'έως <strong>120 βασικά τμήματα συνολικά</strong>' in page and 'max="120"' in page)
 check('school CSV does not add request path', 'fetch(' not in page and 'location.reload' not in page and '.submit()' not in page and page.count('requestSubmit()')==1)
 
 node=r'''
@@ -43,11 +43,11 @@ const parsed=csv.parse(text);
 const map=csv.autoMap(parsed.headers);
 const rows=parsed.rows.map((row,i)=>csv.rowToSchool(row,map,i));
 const gelForm=csv.schoolToFormValues(rows[1]);
-const valid150=csv.validateRegistry([{school_id:'a',school_code:'1',general_a:75,general_b:50,general_c:25}]);
-const over151=csv.validateRegistry([{school_id:'a',school_code:'1',general_a:75,general_b:50,general_c:26}]);
+const valid120=csv.validateRegistry([{school_id:'a',school_code:'1',general_a:60,general_b:40,general_c:20}]);
+const over121=csv.validateRegistry([{school_id:'a',school_code:'1',general_a:60,general_b:40,general_c:21}]);
 const dupId=csv.validateRegistry([{school_id:'same',school_code:'1'},{school_id:'same',school_code:'2'}]);
 const dupCode=csv.validateRegistry([{school_id:'a',school_code:'9'},{school_id:'b',school_code:'9'}]);
-console.log(JSON.stringify({count:rows.length,types:rows.map(r=>r.school_type),supported:rows.map(r=>r.supported),gymA:rows[0].general_a,gelHum:rows[1].gel_b_hum,gelFormType:gelForm.school_type,gelFormA:gelForm.gel_general_a,gelFormId:gelForm.school_registry_id,gelCode:rows[1].school_code,gelFormCode:gelForm.school_code,max:csv.maxBasicSections,valid150:valid150.valid,over151:over151.valid,overTotal:over151.oversized[0].total,dupId:dupId.duplicate_ids,dupCode:dupCode.duplicate_codes}));
+console.log(JSON.stringify({count:rows.length,types:rows.map(r=>r.school_type),supported:rows.map(r=>r.supported),gymA:rows[0].general_a,gelHum:rows[1].gel_b_hum,gelFormType:gelForm.school_type,gelFormA:gelForm.gel_general_a,gelFormId:gelForm.school_registry_id,gelCode:rows[1].school_code,gelFormCode:gelForm.school_code,max:csv.maxBasicSections,valid120:valid120.valid,over121:over121.valid,overTotal:over121.oversized[0].total,dupId:dupId.duplicate_ids,dupCode:dupCode.duplicate_codes}));
 '''
 n=subprocess.run(['node'],input=node,text=True,capture_output=True,cwd=ROOT)
 check('school CSV parser executes', n.returncode==0)
@@ -58,8 +58,8 @@ check('general sections preserved', '"gymA":2' in n.stdout and '"gelFormA":3' in
 check('stable school id preserved into active form', '"gelFormId":"s2"' in n.stdout)
 check('real ministry code preserved independently', '"gelCode":"2451010"' in n.stdout and '"gelFormCode":"2451010"' in n.stdout)
 check('GEL specialist groups preserved', '"gelHum":1' in n.stdout)
-check('exact 150 basic sections accepted by registry validator', '"max":150' in n.stdout and '"valid150":true' in n.stdout)
-check('151 basic sections rejected by registry validator', '"over151":false' in n.stdout and '"overTotal":151' in n.stdout)
+check('exact 120 basic sections accepted by registry validator', '"max":120' in n.stdout and '"valid120":true' in n.stdout)
+check('121 basic sections rejected by registry validator', '"over121":false' in n.stdout and '"overTotal":121' in n.stdout)
 check('duplicate school_id rejected even with different real codes', '"dupId":["same"]' in n.stdout)
 check('duplicate real code rejected even with different school_ids', '"dupCode":["9"]' in n.stdout)
 

@@ -4,6 +4,7 @@ require_once __DIR__ . '/includes/school-profile-general-education.php';
 require_once __DIR__ . '/includes/school-profile-workload.php';
 require_once __DIR__ . '/includes/ethics-class-formation.php';
 require_once __DIR__ . '/includes/personnel-workload.php';
+require_once __DIR__ . '/includes/teaching-allocation-engine.php';
 require_once __DIR__ . '/includes/teaching-workload-aggregation.php';
 
 function staffingUiH($value) {
@@ -17,7 +18,7 @@ function staffingUiInt($key, $default = 0) {
     if ($value === '' || $value === null) return (int) $default;
     return max(0, (int) $value);
 }
-if (!defined('STAFFING_UI_MAX_BASIC_SECTIONS')) define('STAFFING_UI_MAX_BASIC_SECTIONS', 150);
+if (!defined('STAFFING_UI_MAX_BASIC_SECTIONS')) define('STAFFING_UI_MAX_BASIC_SECTIONS', 120);
 function staffingUiBasicSectionPostCounts($schoolType) {
     $prefix = $schoolType === 'gel' ? 'gel_general_' : 'gym_general_';
     return array(
@@ -171,13 +172,20 @@ function staffingUiPersonnelReasonLabel($reason) {
     );
     return isset($map[$reason]) ? $map[$reason] : $reason;
 }
+function staffingUiPayloadArrays($name) {
+    if (!isset($_POST[$name]) || !is_string($_POST[$name]) || trim($_POST[$name]) === '') return array();
+    $decoded = json_decode($_POST[$name], true);
+    return is_array($decoded) ? $decoded : array();
+}
 function staffingUiPersonnelRowsFromPost() {
     $keys = array('person_id','display_name','specialty_code','secondary_specialty_code','required_teaching_hours','service_years','service_months','service_days','role','assigned_external_hours','director_sections_band','hours_branch','obligation_source','source_base_required_hours','source_reduction_hours','source_hours_at_unit');
+    $payload = staffingUiPayloadArrays('personnel_payload_json');
     $arrays = array();
     $count = 0;
     foreach ($keys as $key) {
         $name = 'personnel_' . $key;
-        $arrays[$key] = isset($_POST[$name]) && is_array($_POST[$name]) ? $_POST[$name] : array();
+        if (isset($payload[$name]) && is_array($payload[$name])) $arrays[$key] = $payload[$name];
+        else $arrays[$key] = isset($_POST[$name]) && is_array($_POST[$name]) ? $_POST[$name] : array();
         $count = max($count, count($arrays[$key]));
     }
     $rows = array();
@@ -221,9 +229,10 @@ function staffingUiPersonnelRowsFromPost() {
     return $rows;
 }
 function staffingUiAllocationRowsFromPost() {
-    $personIds = isset($_POST['allocation_person_id']) && is_array($_POST['allocation_person_id']) ? $_POST['allocation_person_id'] : array();
-    $slotIds = isset($_POST['allocation_slot_id']) && is_array($_POST['allocation_slot_id']) ? $_POST['allocation_slot_id'] : array();
-    $hours = isset($_POST['allocation_hours']) && is_array($_POST['allocation_hours']) ? $_POST['allocation_hours'] : array();
+    $payload = staffingUiPayloadArrays('allocation_payload_json');
+    $personIds = isset($payload['allocation_person_id']) && is_array($payload['allocation_person_id']) ? $payload['allocation_person_id'] : (isset($_POST['allocation_person_id']) && is_array($_POST['allocation_person_id']) ? $_POST['allocation_person_id'] : array());
+    $slotIds = isset($payload['allocation_slot_id']) && is_array($payload['allocation_slot_id']) ? $payload['allocation_slot_id'] : (isset($_POST['allocation_slot_id']) && is_array($_POST['allocation_slot_id']) ? $_POST['allocation_slot_id'] : array());
+    $hours = isset($payload['allocation_hours']) && is_array($payload['allocation_hours']) ? $payload['allocation_hours'] : (isset($_POST['allocation_hours']) && is_array($_POST['allocation_hours']) ? $_POST['allocation_hours'] : array());
     $count = max(count($personIds), count($slotIds), count($hours));
     $rows = array();
     for ($i=0; $i<$count; $i++) {
@@ -240,30 +249,60 @@ function staffingUiAllocationRowsFromPost() {
     return $rows;
 }
 function staffingUiRenderPersonnelStateHiddenInputs($rows) {
+    $payload = array(
+        'personnel_person_id'=>array(),
+        'personnel_display_name'=>array(),
+        'personnel_specialty_code'=>array(),
+        'personnel_secondary_specialty_code'=>array(),
+        'personnel_required_teaching_hours'=>array(),
+        'personnel_service_years'=>array(),
+        'personnel_service_months'=>array(),
+        'personnel_service_days'=>array(),
+        'personnel_role'=>array(),
+        'personnel_assigned_external_hours'=>array(),
+        'personnel_director_sections_band'=>array(),
+        'personnel_hours_branch'=>array(),
+        'personnel_obligation_source'=>array(),
+        'personnel_source_base_required_hours'=>array(),
+        'personnel_source_reduction_hours'=>array(),
+        'personnel_source_hours_at_unit'=>array(),
+    );
     foreach ($rows as $person) {
-        echo '<input type="hidden" name="personnel_person_id[]" value="' . staffingUiH($person['person_id']) . '">';
-        echo '<input type="hidden" name="personnel_display_name[]" value="' . staffingUiH($person['display_name']) . '">';
-        echo '<input type="hidden" name="personnel_specialty_code[]" value="' . staffingUiH($person['specialty_code']) . '">';
-        echo '<input type="hidden" name="personnel_secondary_specialty_code[]" value="' . staffingUiH(isset($person['secondary_specialty_code']) ? $person['secondary_specialty_code'] : '') . '">';
-        echo '<input type="hidden" name="personnel_required_teaching_hours[]" value="' . staffingUiH(isset($person['required_teaching_hours']) ? $person['required_teaching_hours'] : '') . '">';
-        echo '<input type="hidden" name="personnel_service_years[]" value="' . staffingUiH(isset($person['service']['years']) ? $person['service']['years'] : 0) . '">';
-        echo '<input type="hidden" name="personnel_service_months[]" value="' . staffingUiH(isset($person['service']['months']) ? $person['service']['months'] : 0) . '">';
-        echo '<input type="hidden" name="personnel_service_days[]" value="' . staffingUiH(isset($person['service']['days']) ? $person['service']['days'] : 0) . '">';
-        echo '<input type="hidden" name="personnel_role[]" value="' . staffingUiH(isset($person['role']) ? $person['role'] : 'teacher') . '">';
-        echo '<input type="hidden" name="personnel_assigned_external_hours[]" value="' . staffingUiH(isset($person['assigned_external_hours']) ? $person['assigned_external_hours'] : 0) . '">';
-        echo '<input type="hidden" name="personnel_hours_branch[]" value="' . staffingUiH(isset($person['hours_branch']) ? $person['hours_branch'] : '') . '">';
-        echo '<input type="hidden" name="personnel_obligation_source[]" value="' . staffingUiH(isset($person['obligation_source']) ? $person['obligation_source'] : '') . '">';
-        echo '<input type="hidden" name="personnel_source_base_required_hours[]" value="' . staffingUiH(isset($person['source_base_required_hours']) ? $person['source_base_required_hours'] : '') . '">';
-        echo '<input type="hidden" name="personnel_source_reduction_hours[]" value="' . staffingUiH(isset($person['source_reduction_hours']) ? $person['source_reduction_hours'] : '') . '">';
-        echo '<input type="hidden" name="personnel_source_hours_at_unit[]" value="' . staffingUiH(isset($person['source_hours_at_unit']) ? $person['source_hours_at_unit'] : '') . '">';
+        $payload['personnel_person_id'][] = isset($person['person_id']) ? $person['person_id'] : '';
+        $payload['personnel_display_name'][] = isset($person['display_name']) ? $person['display_name'] : '';
+        $payload['personnel_specialty_code'][] = isset($person['specialty_code']) ? $person['specialty_code'] : '';
+        $payload['personnel_secondary_specialty_code'][] = isset($person['secondary_specialty_code']) ? $person['secondary_specialty_code'] : '';
+        $payload['personnel_required_teaching_hours'][] = isset($person['required_teaching_hours']) ? $person['required_teaching_hours'] : '';
+        $payload['personnel_service_years'][] = isset($person['service']['years']) ? $person['service']['years'] : 0;
+        $payload['personnel_service_months'][] = isset($person['service']['months']) ? $person['service']['months'] : 0;
+        $payload['personnel_service_days'][] = isset($person['service']['days']) ? $person['service']['days'] : 0;
+        $payload['personnel_role'][] = isset($person['role']) ? $person['role'] : 'teacher';
+        $payload['personnel_assigned_external_hours'][] = isset($person['assigned_external_hours']) ? $person['assigned_external_hours'] : 0;
+        $payload['personnel_director_sections_band'][] = isset($person['director_sections_band']) ? $person['director_sections_band'] : '';
+        $payload['personnel_hours_branch'][] = isset($person['hours_branch']) ? $person['hours_branch'] : '';
+        $payload['personnel_obligation_source'][] = isset($person['obligation_source']) ? $person['obligation_source'] : '';
+        $payload['personnel_source_base_required_hours'][] = isset($person['source_base_required_hours']) ? $person['source_base_required_hours'] : '';
+        $payload['personnel_source_reduction_hours'][] = isset($person['source_reduction_hours']) ? $person['source_reduction_hours'] : '';
+        $payload['personnel_source_hours_at_unit'][] = isset($person['source_hours_at_unit']) ? $person['source_hours_at_unit'] : '';
     }
+    $json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if (!is_string($json)) $json = '{}';
+    echo '<input type="hidden" name="personnel_payload_json" value="' . staffingUiH($json) . '">';
 }
 function staffingUiRenderAllocationStateHiddenInputs($rows) {
+    $payload = array(
+        'allocation_person_id'=>array(),
+        'allocation_slot_id'=>array(),
+        'allocation_hours'=>array(),
+    );
     foreach ($rows as $row) {
-        echo '<input type="hidden" name="allocation_person_id[]" value="' . staffingUiH(isset($row['person_id']) ? $row['person_id'] : '') . '">';
-        echo '<input type="hidden" name="allocation_slot_id[]" value="' . staffingUiH(isset($row['slot_id']) ? $row['slot_id'] : '') . '">';
-        echo '<input type="hidden" name="allocation_hours[]" value="' . staffingUiH(isset($row['hours']) ? $row['hours'] : 0) . '">';
+        $payload['allocation_person_id'][] = isset($row['person_id']) ? $row['person_id'] : '';
+        $payload['allocation_slot_id'][] = isset($row['slot_id']) ? $row['slot_id'] : '';
+        $payload['allocation_hours'][] = isset($row['hours']) ? $row['hours'] : 0;
     }
+    $json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if (!is_string($json)) $json = '{}';
+    echo '<input type="hidden" name="allocation_payload_json" value="' . staffingUiH($json) . '">';
 }
 function staffingUiAllocationPersonLabel($person) {
     $code = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
@@ -355,7 +394,7 @@ function staffingUiAllocationWarningLabels($rowResult) {
     $labels = array();
     if (!$rowResult || empty($rowResult['warnings'])) return $labels;
     foreach ($rowResult['warnings'] as $warning) {
-        if ($warning === 'uses_lower_priority_assignment') $labels[] = 'χαμηλότερη προτεραιότητα';
+        if ($warning === 'uses_lower_priority_assignment') continue;
         elseif ($warning === 'b_assignment_hours_exceed_10_limit') $labels[] = staffingUiBAssignmentLimitWarning();
         else $labels[] = $warning;
     }
@@ -551,7 +590,7 @@ function staffingUiCollapseSkillsWorkshops($matrix) {
 $requestMethod = isset($_SERVER['REQUEST_METHOD']) ? strtoupper((string) $_SERVER['REQUEST_METHOD']) : 'GET';
 $staffingAction = $requestMethod === 'POST' ? staffingUiPost('staffing_action', '') : '';
 $submitted = $requestMethod === 'POST'
-    && in_array($staffingAction, array('profile','personnel','allocation'), true);
+    && in_array($staffingAction, array('profile','personnel','allocation','allocation_auto'), true);
 $schoolType = staffingUiPost('school_type', 'gymnasio');
 if ($schoolType !== 'gel') $schoolType = 'gymnasio';
 $profile = null;
@@ -659,7 +698,7 @@ $activePanel = staffingUiPost('active_panel', $calculationAvailable ? 'results' 
 if (!in_array($activePanel, array('school','results','personnel','allocation','vacancies','specialties'), true)) $activePanel = $calculationAvailable ? 'results' : 'school';
 if (!$calculationAvailable) $activePanel = 'school';
 if ($calculationAvailable && $staffingAction === 'personnel') $activePanel = 'personnel';
-if ($calculationAvailable && $staffingAction === 'allocation') $activePanel = 'allocation';
+if ($calculationAvailable && in_array($staffingAction, array('allocation','allocation_auto'), true)) $activePanel = 'allocation';
 
 $personnelRows = staffingUiPersonnelRowsFromPost();
 $duplicateDirectorIndexes = array();
@@ -757,6 +796,15 @@ if ($profile && $matrix && !empty($allocationPeople) && !empty($allocationRows))
     if (isset($allocationPlan['allocation_rows'])) $allocationRowResults = $allocationPlan['allocation_rows'];
 }
 $allocationEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only' && $personnelSummary['resolved_count'] > 0 && empty($duplicateDirectorIndexes);
+$allocationAutoProposal = null;
+if ($allocationEnabled && $staffingAction === 'allocation_auto') {
+    $allocationAutoProposal = teachingAllocationEngineProposal($profile, $allocationPeople, $allocationRows, $teachingModel);
+    if (isset($allocationAutoProposal['status']) && $allocationAutoProposal['status'] === 'ok') {
+        $allocationRows = isset($allocationAutoProposal['combined_allocations']) ? $allocationAutoProposal['combined_allocations'] : $allocationRows;
+        $allocationPlan = isset($allocationAutoProposal['combined_plan']) ? $allocationAutoProposal['combined_plan'] : $allocationPlan;
+        $allocationRowResults = $allocationPlan && isset($allocationPlan['allocation_rows']) ? $allocationPlan['allocation_rows'] : array();
+    }
+}
 $vacanciesEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only';
 $specialtyBalanceEnabled = $vacanciesEnabled;
 $allocationPeopleClient = array();
@@ -945,6 +993,9 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     .edu-page-staffing-simulator .allocation-subtab.is-active{background:var(--edu-primary);border-color:var(--edu-primary);color:#fff}
     .edu-page-staffing-simulator [data-allocation-view-panel][hidden]{display:none!important}
     .edu-page-staffing-simulator .allocation-toolbar{display:flex;justify-content:space-between;gap:10px;align-items:end;flex-wrap:wrap;margin:12px 0}
+    .edu-page-staffing-simulator .allocation-toolbar-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .edu-page-staffing-simulator .allocation-auto-result.is-success{border-color:rgba(39,128,85,.35)}
+    .edu-page-staffing-simulator .allocation-auto-result.is-warning{border-color:rgba(138,100,0,.3)}
     .edu-page-staffing-simulator .allocation-list{display:grid;gap:10px;margin:12px 0}
     .edu-page-staffing-simulator .allocation-row{border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface);padding:12px}
     .edu-page-staffing-simulator .allocation-row-main{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,.9fr) minmax(86px,.42fr) auto;gap:10px;align-items:end}
@@ -1142,10 +1193,10 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           <div id="gymProfileFields"<?php echo $schoolType === 'gymnasio' ? '' : ' hidden'; ?>>
             <section class="staffing-section">
               <h3>Κανονικά τμήματα ανά τάξη</h3>
-              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>150 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 4.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
+              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
               <div class="mini-grid">
                 <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
-                  <div class="field"><label for="gym_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="150" inputmode="numeric" step="1" type="number" data-basic-section="gym" id="gym_general_<?php echo $s; ?>" name="gym_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gym_general_'.$s, '0')); ?>"></div>
+                  <div class="field"><label for="gym_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="120" inputmode="numeric" step="1" type="number" data-basic-section="gym" id="gym_general_<?php echo $s; ?>" name="gym_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gym_general_'.$s, '0')); ?>"></div>
                 <?php endforeach; ?>
               </div>
               <small class="profile-validation-error" id="gymBasicSectionsError" data-basic-sections-error="gym" hidden></small>
@@ -1182,10 +1233,10 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           <div id="gelProfileFields"<?php echo $schoolType === 'gel' ? '' : ' hidden'; ?>>
             <section class="staffing-section">
               <h3>Κανονικά τμήματα ανά τάξη</h3>
-              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>150 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 4.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
+              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
               <div class="mini-grid">
                 <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
-                  <div class="field"><label for="gel_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="150" inputmode="numeric" step="1" type="number" data-basic-section="gel" id="gel_general_<?php echo $s; ?>" name="gel_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gel_general_'.$s, '0')); ?>"></div>
+                  <div class="field"><label for="gel_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="120" inputmode="numeric" step="1" type="number" data-basic-section="gel" id="gel_general_<?php echo $s; ?>" name="gel_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gel_general_'.$s, '0')); ?>"></div>
                 <?php endforeach; ?>
               </div>
               <small class="profile-validation-error" id="gelBasicSectionsError" data-basic-sections-error="gel" hidden></small>
@@ -1403,6 +1454,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           <form method="post" id="staffingPersonnelForm">
             <?php staffingUiRenderSchoolStateHiddenInputs(); ?>
             <?php staffingUiRenderAllocationStateHiddenInputs($allocationRows); ?>
+            <input type="hidden" name="personnel_payload_json" value="">
             <input type="hidden" name="staffing_action" value="">
             <input type="hidden" name="active_panel" value="personnel">
 
@@ -1593,8 +1645,8 @@ uksort($specialtyLabelsClient, 'strnatcmp');
 
         <?php calculatorCardStart(array('class'=>'card staffing-panel allocation-card','attrs'=>array('data-staffing-panel'=>'allocation') + ($activePanel !== 'allocation' ? array('hidden'=>true) : array()))); ?>
           <h2>4. Κατανομή μαθημάτων</h2>
-          <p class="cap">Κατάνειμε χειροκίνητα τα πραγματικά μαθήματα και τις ομάδες στους εκπαιδευτικούς. Το εργαλείο ελέγχει την ισχύουσα ανάθεση, το ατομικό υπόλοιπο ωραρίου και τη χωρητικότητα κάθε συγκεκριμένου τμήματος / ομάδας.</p>
-          <div class="info-note"><strong>Χειροκίνητη κατανομή με αυτόματο έλεγχο — όχι αυτόματη τοποθέτηση.</strong> Τα κανονικά τμήματα εμφανίζονται ως Α1, Α2, Β1 κ.λπ. Οι ομάδες ξένων γλωσσών, προσανατολισμού και οι πρόσθετες ομάδες χωρισμού εμφανίζονται ως «Ομάδα 1», «Ομάδα 2» ώστε να μη δημιουργείται ψεύτικη ταυτότητα τμήματος.</div>
+          <p class="cap">Δημιούργησε αυτόματη πρόταση ή άλλαξε χειροκίνητα την κατανομή των πραγματικών μαθημάτων / ομάδων στους διαθέσιμους εκπαιδευτικούς. Το εργαλείο ελέγχει την ισχύουσα ανάθεση, το ατομικό υπόλοιπο ωραρίου και τη χωρητικότητα κάθε συγκεκριμένου τμήματος / ομάδας.</p>
+          <div class="info-note"><strong>Πρόταση βέλτιστης κάλυψης — πάντα επεξεργάσιμη.</strong> Ο αυτόματος μηχανισμός μεγιστοποιεί πρώτα τις ώρες που μπορούν να καλυφθούν σε ολόκληρη τη σχολική μονάδα και έπειτα προτιμά Α΄/ειδική ανάθεση πριν από Β΄ και Β΄ πριν από Γ΄. Οι γραμμές που έχει ήδη ορίσει ο χρήστης διατηρούνται και η πρόταση συμπληρώνει μόνο το υπόλοιπο. Ο Διευθυντής μπορεί στη συνέχεια να αλλάξει οποιοδήποτε όνομα ή μάθημα και να ξαναελέγξει αμέσως κενά / πλεονάσματα.</div>
 
           <?php if (!$allocationEnabled): ?>
             <div class="allocation-empty">Για να ενεργοποιηθεί η κατανομή χρειάζεται τουλάχιστον ένας εκπαιδευτικός με πλήρως υπολογισμένο ωράριο στο tab «Εκπαιδευτικοί».</div>
@@ -1605,10 +1657,19 @@ uksort($specialtyLabelsClient, 'strnatcmp');
               $allocationUnassignedHours = $allocationPlan ? (int)$allocationPlan['summary']['unassigned_slot_hours'] : $allocationTotalHours;
               $allocationOverHours = $allocationPlan ? (int)$allocationPlan['summary']['overallocated_slot_hours'] : 0;
               $allocationInvalidRows = $allocationPlan ? (int)$allocationPlan['summary']['invalid_allocation_row_count'] : 0;
+              $allocationCoverage = $allocationTotalHours > 0 ? (100 * $allocationAssignedHours / $allocationTotalHours) : 0;
             ?>
+            <?php if ($allocationAutoProposal): ?>
+              <?php if (isset($allocationAutoProposal['status']) && $allocationAutoProposal['status'] === 'ok'): ?>
+                <div class="info-note allocation-auto-result is-success"><strong>Η αυτόματη πρόταση δημιουργήθηκε.</strong> Προστέθηκαν <?php echo (int)$allocationAutoProposal['summary']['auto_covered_hours']; ?> ώρες πάνω στις ήδη ορισμένες <?php echo (int)$allocationAutoProposal['summary']['locked_hours']; ?> ώρες. Απομένουν <?php echo (int)$allocationAutoProposal['summary']['final_uncovered_hours']; ?> ακάλυπτες ώρες.<?php if (!empty($allocationAutoProposal['summary']['split_slot_count'])): ?> Σε <?php echo (int)$allocationAutoProposal['summary']['split_slot_count']; ?> μάθημα/μαθήματα χρειάστηκε επιμερισμός ωρών σε περισσότερους εκπαιδευτικούς για να επιτευχθεί η μέγιστη κάλυψη — έλεγξέ τα πριν οριστικοποιήσεις.<?php endif; ?></div>
+              <?php else: ?>
+                <div class="info-note allocation-auto-result is-warning"><strong>Δεν δημιουργήθηκε αυτόματη πρόταση.</strong> <?php echo staffingUiH(isset($allocationAutoProposal['message']) ? $allocationAutoProposal['message'] : 'Χρειάζεται πρώτα διόρθωση της τρέχουσας κατανομής.'); ?></div>
+              <?php endif; ?>
+            <?php endif; ?>
             <div class="staffing-summary-grid" id="allocationGlobalSummary">
               <div class="summary-chip"><strong data-allocation-total><?php echo $allocationTotalHours; ?></strong><span>ώρες μαθημάτων προς κατανομή</span></div>
               <div class="summary-chip"><strong data-allocation-assigned><?php echo $allocationAssignedHours; ?></strong><span>ώρες που έχουν κατανεμηθεί έγκυρα</span></div>
+              <div class="summary-chip"><strong data-allocation-coverage><?php echo number_format($allocationCoverage, 1, ',', ''); ?>%</strong><span>κάλυψη διδακτικών ωρών</span></div>
               <div class="summary-chip"><strong data-allocation-unassigned><?php echo $allocationUnassignedHours; ?></strong><span>ώρες που απομένουν χωρίς κατανομή</span></div>
               <div class="summary-chip"><strong data-allocation-over><?php echo $allocationOverHours; ?></strong><span>ώρες υπέρβασης τμήματος / ομάδας</span></div>
               <div class="summary-chip"><strong data-allocation-errors><?php echo $allocationInvalidRows; ?></strong><span>γραμμές που χρειάζονται διόρθωση</span></div>
@@ -1670,6 +1731,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
               <form method="post" id="staffingAllocationForm">
                 <?php staffingUiRenderSchoolStateHiddenInputs(); ?>
                 <?php staffingUiRenderPersonnelStateHiddenInputs($personnelRows); ?>
+                <input type="hidden" name="allocation_payload_json" value="">
                 <input type="hidden" name="staffing_action" value="">
                 <input type="hidden" name="active_panel" value="allocation">
 
@@ -1680,7 +1742,11 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                     <?php if ($allocationNoEligibleSlotCount > 0): ?><div class="help"><strong>Δεν εμφανίζονται <?php echo (int)$allocationNoEligibleSlotCount; ?> μαθήματα / τμήματα χωρίς επιλέξιμο εκπαιδευτικό</strong> (<?php echo (int)$allocationNoEligibleHours; ?> ώρες). Οι ώρες τους εξακολουθούν να υπολογίζονται στις ακάλυπτες ώρες.</div><?php endif; ?>
                     <div class="help">Όταν καλυφθούν πλήρως οι ώρες ενός μαθήματος / τμήματος, η επιλογή του γίνεται αυτόματα ανενεργή στις υπόλοιπες γραμμές κατανομής.</div>
                   </div>
-                  <button class="edu-btn-secondary" type="button" id="addAllocationRow">+ Προσθήκη μαθήματος</button>
+                  <div class="allocation-toolbar-actions">
+                    <button class="edu-btn-primary" type="button" data-staffing-request-action="allocation_auto" id="autoAllocateRemaining">Αυτόματη πρόταση κάλυψης</button>
+                    <button class="edu-btn-secondary" type="button" id="addAllocationRow">+ Προσθήκη μαθήματος</button>
+                    <button class="edu-btn-secondary" type="button" id="clearAllocationRows">Καθαρισμός κατανομής</button>
+                  </div>
                 </div>
 
                 <div class="allocation-list" id="allocationList">
@@ -1877,11 +1943,11 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       <div class="result-row"><span>Ομάδες Προσανατολισμού ΓΕΛ</span><strong>✓</strong></div>
       <div class="result-row"><span>Ηθική</span><strong>✓</strong></div>
       <div class="result-row"><span>Πραγματικό προσωπικό</span><strong>✓</strong></div>
-      <div class="result-row"><span>Χειροκίνητη κατανομή μαθημάτων</span><strong>✓</strong></div>
+      <div class="result-row"><span>Αυτόματη πρόταση + χειροκίνητη κατανομή μαθημάτων</span><strong>✓</strong></div>
       <div class="result-row"><span>Κενά μαθημάτων μετά την κατανομή</span><strong>✓</strong></div>
       <div class="result-row"><span>Προτεινόμενα κενά / πλεονάσματα ανά ειδικότητα</span><strong>✓</strong></div>
-      <div class="result-row"><span>Αυτόματες τοποθετήσεις</span><strong>Όχι — μόνο πρόταση εσωτερικής εξισορρόπησης</strong></div>
-      <div class="info-note">Το εργαλείο δεν χαρακτηρίζει τις ώρες ως επίσημα «κενά». Η κατανομή μαθημάτων παραμένει χειροκίνητη. Η Καρτέλα 6 κάνει ξεχωριστή, διαφανή πρόταση εσωτερικής εξισορρόπησης μόνο για να παραχθεί η υπηρεσιακή εικόνα κενών / πλεονασμάτων.</div>
+      <div class="result-row"><span>Βελτιστοποίηση κάλυψης</span><strong>Μέγιστη κάλυψη → Α΄/ειδική → Β΄ → Γ΄</strong></div>
+      <div class="info-note">Η αυτόματη λειτουργία δημιουργεί <strong>πρόταση</strong>, όχι διοικητική πράξη τοποθέτησης. Οι ήδη καταχωρισμένες γραμμές θεωρούνται επιλογές του χρήστη και δεν αλλάζουν· ο engine συμπληρώνει το υπόλοιπο και ο Διευθυντής μπορεί μετά να τροποποιήσει οποιαδήποτε ανάθεση. Οι καρτέλες 5–6 επανυπολογίζουν την εικόνα κενών / πλεονασμάτων από την τελική κατανομή.</div>
       <?php if ($submitted && $matrix): ?>
         <h3>Τρέχων υπολογισμός</h3>
         <div class="result-row"><span>Δομή</span><strong><?php echo $schoolType === 'gel' ? 'Ημερήσιο ΓΕΛ' : 'Ημερήσιο Γυμνάσιο'; ?></strong></div>
@@ -2130,6 +2196,22 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       window.print();
     });
   }
+  function compactRepeatedFormState(form,prefix,payloadName){
+    if(!form) return;
+    const payloadInput=form.querySelector('input[name="'+payloadName+'"]');
+    if(!payloadInput) return;
+    const payload={};
+    const fields=Array.from(form.querySelectorAll('[name^="'+prefix+'"]')).filter(function(el){
+      return el.name!==payloadName && /\[\]$/.test(el.name) && !el.disabled;
+    });
+    fields.forEach(function(el){
+      const key=el.name.replace(/\[\]$/,'');
+      if(!payload[key]) payload[key]=[];
+      payload[key].push(el.value);
+    });
+    payloadInput.value=JSON.stringify(payload);
+    fields.forEach(function(el){el.disabled=true;});
+  }
   function installExplicitRequestGate(form){
     if(!form || form.dataset.requestGateBound==='1') return;
     form.dataset.requestGateBound='1';
@@ -2150,6 +2232,8 @@ uksort($specialtyLabelsClient, 'strnatcmp');
         const action=button.getAttribute('data-staffing-request-action')||'';
         if(action==='') return;
         if(!form.reportValidity()) return;
+        if(form.id==='staffingPersonnelForm') compactRepeatedFormState(form,'personnel_','personnel_payload_json');
+        if(form.id==='staffingAllocationForm') compactRepeatedFormState(form,'allocation_','allocation_payload_json');
         actionInput.value=action;
         form.dataset.explicitRequest='1';
         form.requestSubmit();
@@ -3340,6 +3424,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   const allocationList=document.getElementById('allocationList');
   const allocationTemplate=document.getElementById('allocationRowTemplate');
   const addAllocation=document.getElementById('addAllocationRow');
+  const clearAllocation=document.getElementById('clearAllocationRows');
   const allocationBAssignmentWarning='Οι ώρες μαθημάτων Β΄ ανάθεσης, από τη βασική και τη δεύτερη ειδικότητα συνολικά, υπερβαίνουν το όριο των 10 διδακτικών ωρών. Υπέρβαση επιτρέπεται μόνο κατ’ εξαίρεση, ύστερα από απόφαση ΠΥΣΔΕ και υπό τις προβλεπόμενες προϋποθέσεις.';
   function allocationPriority(code,slot){
     if(!code||!slot||!slot.eligible_by_priority) return '';
@@ -3468,8 +3553,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       else if(person&&slot&&hours>0&&!match) error='Οι ειδικότητες '+person.specialty_code+(person.secondary_specialty_code?' / '+person.secondary_specialty_code:'')+' δεν έχουν ανάθεση στο συγκεκριμένο μάθημα.';
       if(!error&&person&&slot&&hours>0&&match){
         slotAttempted[sid]=(slotAttempted[sid]||0)+hours;
-        if(slot.top_priority&&match.priority!==slot.top_priority) warnings.push('χαμηλότερη προτεραιότητα');
-      }
+              }
       rowState.push({row:row,pid:pid,sid:sid,hours:hours,person:person,slot:slot,match:match,error:error,warnings:warnings,finalError:''});
     });
 
@@ -3836,8 +3920,13 @@ uksort($specialtyLabelsClient, 'strnatcmp');
         else allocationSetStatus(st.row,base+' ✓','ok');
       } else allocationSetStatus(st.row,'Συμπλήρωσε μάθημα και εκπαιδευτικό.','');
     });
-    const assignedEl=document.querySelector('[data-allocation-assigned]'), unassignedEl=document.querySelector('[data-allocation-unassigned]'), overEl=document.querySelector('[data-allocation-over]'), errorsEl=document.querySelector('[data-allocation-errors]');
+    const assignedEl=document.querySelector('[data-allocation-assigned]'), coverageEl=document.querySelector('[data-allocation-coverage]'), unassignedEl=document.querySelector('[data-allocation-unassigned]'), overEl=document.querySelector('[data-allocation-over]'), errorsEl=document.querySelector('[data-allocation-errors]');
     if(assignedEl) assignedEl.textContent=String(state.basicAssigned);
+    if(coverageEl){
+      let totalHours=0; Object.keys(allocationSlotsData||{}).forEach(function(sid){ totalHours+=Math.max(0,allocationSlotsData[sid].capacity_hours||0); });
+      const pct=totalHours>0?(100*state.basicAssigned/totalHours):0;
+      coverageEl.textContent=pct.toLocaleString('el-GR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+    }
     if(unassignedEl) unassignedEl.textContent=String(state.unassigned);
     if(overEl) overEl.textContent=String(state.overSlots);
     if(errorsEl) errorsEl.textContent=String(errorRows);
@@ -3900,6 +3989,16 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     addAllocation.addEventListener('click',function(){
       const empty=document.getElementById('emptyAllocationState'); if(empty) empty.remove();
       const fragment=allocationTemplate.content.cloneNode(true), row=fragment.querySelector('[data-allocation-row]'); allocationList.appendChild(fragment); bindAllocationRow(row); const first=row.querySelector('.allocation-slot'); if(first) first.focus(); updateAllocationSummary();
+    });
+  }
+  if(clearAllocation&&allocationList){
+    clearAllocation.addEventListener('click',function(){
+      const rows=allocationRows();
+      if(rows.length&&!window.confirm('Να καθαριστεί όλη η τρέχουσα κατανομή μαθημάτων;')) return;
+      rows.forEach(function(row){row.remove();});
+      let empty=document.getElementById('emptyAllocationState');
+      if(!empty){ empty=document.createElement('div'); empty.id='emptyAllocationState'; empty.className='allocation-empty'; empty.textContent='Δεν έχει γίνει ακόμη κατανομή. Πάτησε «Αυτόματη πρόταση κάλυψης» ή «+ Προσθήκη μαθήματος» για να ξεκινήσεις.'; allocationList.appendChild(empty); }
+      updateAllocationSummary();
     });
   }
   const allocationViewButtons=Array.from(document.querySelectorAll('[data-allocation-view]'));

@@ -24,7 +24,7 @@ base={
 out=render(base)
 check('allocation tab active', 'data-staffing-tab="allocation"' in out and 'aria-selected="true">4. Κατανομή μαθημάτων' in out)
 check('allocation card rendered', '<h2>4. Κατανομή μαθημάτων</h2>' in out)
-check('manual not automatic note', 'Χειροκίνητη κατανομή με αυτόματο έλεγχο — όχι αυτόματη τοποθέτηση.' in out)
+check('automatic proposal note explains editable optimization', 'Πρόταση βέλτιστης κάλυψης — πάντα επεξεργάσιμη.' in out and 'μεγιστοποιεί πρώτα τις ώρες που μπορούν να καλυφθούν' in out)
 check('A1 math option visible', 'Α1 · Μαθηματικά · 4 ώρ.' in out)
 check('split group safe label visible', 'πρόσθετη ομάδα χωρισμού 1 · Πληροφορική' in out)
 check('valid primary A assignment uses compact label', 'Α΄ ανάθεση ✓' in out and 'μέσω κύριας ειδικότητας ΠΕ03' not in out)
@@ -36,17 +36,32 @@ check('two synchronized allocation views exist', 'data-allocation-view="slots"' 
 check('add allocation button exists', 'id="addAllocationRow"' in out)
 check('allocation template exists', 'id="allocationRowTemplate"' in out)
 check('server slot plan used', 'personnelWorkloadRosterSlotPlan' in PAGE.read_text(encoding='utf-8'))
+check('allocation engine is wired server-side', 'teaching-allocation-engine.php' in PAGE.read_text(encoding='utf-8') and 'teachingAllocationEngineProposal' in PAGE.read_text(encoding='utf-8'))
+check('coverage metric visible', 'data-allocation-coverage' in out)
 check('live validation data embedded', 'allocationPeopleData=' in out and 'allocationSlotsData=' in out)
 check('eligible slot filter wired', 'allocationPopulateSlotsForPerson' in PAGE.read_text(encoding='utf-8'))
 check('personnel changes stale allocation tab', 'markPersonnelDirty' in PAGE.read_text(encoding='utf-8'))
-check('sidebar marks manual allocation ready', '<span>Χειροκίνητη κατανομή μαθημάτων</span><strong>✓</strong>' in out)
-check('automatic placements still disabled', '<span>Αυτόματες τοποθετήσεις</span><strong>Όχι — μόνο πρόταση εσωτερικής εξισορρόπησης</strong>' in out and 'Πρότεινε κατανομή' not in out)
+check('sidebar marks automatic plus manual allocation ready', '<span>Αυτόματη πρόταση + χειροκίνητη κατανομή μαθημάτων</span><strong>✓</strong>' in out)
+check('automatic proposal controls visible', 'id="autoAllocateRemaining"' in out and 'Αυτόματη πρόταση κάλυψης' in out and 'id="clearAllocationRows"' in out and 'Μέγιστη κάλυψη → Α΄/ειδική → Β΄ → Γ΄' in out)
 check('personnel rows use compact required-hours label', '<label title="Υποχρεωτικό ωράριο">Υ.Ω.</label>' in out and 'Υ.Ω. = Υποχρεωτικό ωράριο.' in out)
 slot_selects=re.findall(r'<select name="allocation_slot_id\[\]" class="allocation-slot">([\s\S]*?)</select>',out)
 check('slot selectors omit lessons with no eligible teacher', bool(slot_selects) and all('Θρησκευτικά' not in block for block in slot_selects))
 check('hidden no-eligible slots are explained without removing their uncovered hours', 'χωρίς επιλέξιμο εκπαιδευτικό' in out and 'Οι ώρες τους εξακολουθούν να υπολογίζονται στις ακάλυπτες ώρες.' in out)
 check('fully covered slots become unavailable in other allocation rows', 'function updateAllocationSlotOptionAvailability(slotAssigned)' in PAGE.read_text(encoding='utf-8') and "dynamicallyDisabled=full&&current!==sid" in PAGE.read_text(encoding='utf-8') and '· καλύφθηκε' in PAGE.read_text(encoding='utf-8'))
 check('allocation UI explains automatic slot deactivation', 'η επιλογή του γίνεται αυτόματα ανενεργή στις υπόλοιπες γραμμές κατανομής' in out)
+
+
+auto=dict(base)
+auto['staffing_action']='allocation_auto'
+auto['allocation_person_id']=[]
+auto['allocation_slot_id']=[]
+auto['allocation_hours']=[]
+aout=render(auto)
+check('automatic proposal is created server-side', 'Η αυτόματη πρόταση δημιουργήθηκε.' in aout)
+m=re.search(r'<strong data-allocation-assigned>(\d+)</strong>',aout)
+check('automatic proposal assigns positive hours', m is not None and int(m.group(1))>0)
+check('automatic proposal remains editable rows', 'name="allocation_slot_id[]" class="allocation-slot"' in aout and 'name="allocation_person_id[]" class="allocation-person"' in aout)
+check('automatic proposal reports remaining uncovered hours', re.search(r'Απομένουν \d+ ακάλυπτες ώρες',aout) is not None)
 
 bad=dict(base)
 bad['allocation_person_id']=['p2']
