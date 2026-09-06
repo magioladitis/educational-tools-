@@ -395,6 +395,17 @@ function teachingTimetableConfirmedRegulatoryGapMetadataForRow($row)
      */
     $courseId = isset($row['course_id']) ? $row['course_id'] : '';
 
+    if ($courseId === 'pes.gym.deuteri_xeni') {
+        return array(
+            'confirmed' => true,
+            'kind' => 'partial_language_assignment_gap',
+            'timetable_source' => 'ΦΕΚ Β΄ 4438/2021, όπως ισχύει με ΦΕΚ Β΄ 4881/2025',
+            'assignment_source' => 'ΦΕΚ Β΄ 2583/2026 + ισχύουσες οδηγίες στελέχωσης Π.Ε.Σ. 2026-2027',
+            'inference_guard' => 'no_unpublished_language_specialty_inference',
+            'related_scope' => 'Ρωσικά / Αραβικά / Τουρκικά· Γαλλικά/Γερμανικά παραμένουν ΠΕ05/ΠΕ07 στο εργαλείο αναθέσεων',
+        );
+    }
+
     if (in_array($courseId, teachingTimetableEneegylRegulatoryGapCourseIds(), true)) {
         return array(
             'confirmed' => true,

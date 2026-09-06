@@ -126,6 +126,12 @@ function teachingWorkloadAssignmentPayload($assignment)
     if (!empty($assignment['note'])) {
         $payload['note'] = $assignment['note'];
     }
+    // Πρόσθετα προσόντα ειδικών αναθέσεων (π.χ. Βυζαντινή Μουσική,
+    // Εικονογραφία Π.Ε.Σ.) πρέπει να επιβιώνουν μέχρι το aggregation layer,
+    // ώστε να μη μετατρέπονται σε fixed ώρες μόνο από τον κωδικό κλάδου.
+    if (!empty($assignment['qualification_key'])) {
+        $payload['qualification_key'] = $assignment['qualification_key'];
+    }
     return $payload;
 }
 
@@ -451,6 +457,15 @@ function teachingWorkloadBuildInstance($row, $grade, $assignments)
             if (isset($row[$source])) {
                 $instance['regulatory_gap'][$target] = $row[$source];
             }
+        }
+        return $instance;
+    }
+
+    if ($linkStatus === 'pending_assignment_integration') {
+        $instance['resolution_status'] = 'pending_assignment_integration';
+        $instance['assignment'] = null;
+        if (!empty($row['assignment_link_note'])) {
+            $instance['assignment_integration_note'] = $row['assignment_link_note'];
         }
         return $instance;
     }

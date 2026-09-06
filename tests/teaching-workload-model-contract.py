@@ -26,7 +26,7 @@ def check(name, condition):
 def by_id(instance_id):
     return next((x for x in model if x.get('instance_id') == instance_id), None)
 
-check('2084 grade instances preserved', len(model) == 2084 and summary.get('instances') == 2084)
+check('2197 grade instances preserved', len(model) == 2197 and summary.get('instances') == 2197)
 check('instance ids unique', len({x.get('instance_id') for x in model}) == len(model))
 check('UTF-8 lowercase works without mbstring dependency', payload.get('lowercase_probe') is True)
 
@@ -36,18 +36,27 @@ check('periodic instances do not expose a misleading fixed total', all('hours_to
 check('fixed instances expose exact total hours', all(x.get('hours_total') == x.get('hours_value') for x in model if x.get('hours_mode') == 'fixed'))
 
 expected_statuses = {
-    'direct': 1824,
+    'direct': 1931,
     'alias': 99,
     'components': 80,
-    'choice_dependent': 45,
+    'choice_dependent': 48,
     'thematic_dependent': 7,
-    'regulatory_gap': 29,
+    'regulatory_gap': 32,
 }
 check('resolution status counts exact', summary.get('statuses') == expected_statuses)
 check('no unresolved/ambiguous top-level instances', not any(
     x.get('resolution_status') in {'unresolved_assignment', 'ambiguous_assignment_context'}
     for x in model
 ))
+
+# Πρότυπα Εκκλησιαστικά are now bridged into the assignment model.
+# Special qualification-dependent subjects must carry their qualification metadata;
+# the extended Gymnasium language slot remains a deliberate regulatory gap.
+check('no pending PES integration instances', not any(x.get('resolution_status') == 'pending_assignment_integration' for x in model))
+byz = by_id('pes.gym.vyzantini_mousiki@Α΄')
+icon = by_id('pes.gym.eikonografia@Α΄')
+check('PES Byzantine Music qualification metadata preserved', byz and (byz.get('assignment_resolution') or {}).get('assignment', {}).get('qualification_key') == 'pes_byzantine_music_diploma')
+check('PES Iconography qualification metadata preserved', icon and (icon.get('assignment_resolution') or {}).get('assignment', {}).get('qualification_key') == 'pes_iconography_eligibility')
 
 # Direct/alias rows must resolve to a real priority-preserving assignment payload.
 for x in model:
@@ -74,7 +83,7 @@ check('160/160 component assignment targets resolved', summary.get('component_ta
 
 # Every choice branch must lead to a real assignment target; total slot hours stay on the option.
 choice_rows = [x for x in model if x.get('resolution_status') == 'choice_dependent']
-check('45 choice-dependent workload instances', len(choice_rows) == 45)
+check('48 choice-dependent workload instances', len(choice_rows) == 48)
 for x in choice_rows:
     options = x.get('choice_options') or []
     check(f'choice options present: {x.get("instance_id")}', bool(options))
@@ -83,7 +92,7 @@ for x in choice_rows:
         check(f'choice option preserves slot hours: {x.get("instance_id")} / {option.get("label")}', option.get('hours_total') == x.get('hours_value'))
         check(f'choice targets present: {x.get("instance_id")} / {option.get("label")}', bool(option.get('targets')))
         check(f'choice targets resolved: {x.get("instance_id")} / {option.get("label")}', all(t.get('status') == 'resolved' for t in option.get('targets', [])))
-check('761/761 choice options resolved', summary.get('choice_options') == 761 and summary.get('choice_options_resolved') == 761)
+check('770/770 choice options resolved', summary.get('choice_options') == 770 and summary.get('choice_options_resolved') == 770)
 
 # PEPAL health group semantics survive into the workload layer.
 pepal_health_a = by_id('pepal.b.health.eidiko_a@Β΄')
@@ -138,7 +147,7 @@ if eeeek_thematic:
 
 # Confirmed regulatory gaps remain hard stops: no assignment payload is invented.
 gaps = [x for x in model if x.get('resolution_status') == 'regulatory_gap']
-check('29 regulatory gaps preserved', len(gaps) == 29)
+check('32 regulatory gaps preserved', len(gaps) == 32)
 for x in gaps:
     check(f'gap has no assignment: {x.get("instance_id")}', x.get('assignment') is None)
     check(f'gap confirmed metadata: {x.get("instance_id")}', x.get('regulatory_gap', {}).get('confirmed') is True)

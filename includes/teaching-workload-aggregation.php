@@ -190,7 +190,21 @@ function teachingWorkloadAggregationResolvedClaim($instance, $assignment, $code,
     if ($eligibility['note'] !== '') {
         $claim['assignment_note'] = $eligibility['note'];
     }
-    $claim = teachingWorkloadAggregationAttachHours($claim, $instance, $hours);
+
+    // Ειδικές αναθέσεις που απαιτούν πρόσθετο προσόν δεν είναι ασφαλές να
+    // αθροίζονται ως fixed ώρες μόνο από τον κωδικό ειδικότητας. Το slot
+    // παραμένει ορατό ως υπό όρο μέχρι να δηλωθεί/ελεγχθεί το προσόν.
+    if (!empty($assignment['qualification_key'])) {
+        $claim['category'] = 'condition';
+        $claim['qualification_required'] = true;
+        $claim['qualification_key'] = $assignment['qualification_key'];
+        $claim['slot_hours'] = $hours !== null
+            ? (int) $hours
+            : (isset($instance['hours_total']) ? (int) $instance['hours_total'] : (int) $instance['hours_value']);
+        $claim['hours_attribution'] = 'qualification_required';
+    } else {
+        $claim = teachingWorkloadAggregationAttachHours($claim, $instance, $hours);
+    }
     foreach ($extra as $key => $value) {
         $claim[$key] = $value;
     }
@@ -453,10 +467,17 @@ function teachingWorkloadAggregationSummary($model = null)
         }
     }
     ksort($categoryCounts);
+    $regulatoryGapCount = 0;
+    foreach ($model as $instance) {
+        if (isset($instance['resolution_status']) && $instance['resolution_status'] === 'regulatory_gap') {
+            $regulatoryGapCount++;
+        }
+    }
+
     return array(
         'known_codes' => count($codes),
         'claims_across_known_codes' => $claimCount,
         'claim_categories' => $categoryCounts,
-        'regulatory_gap_instances_excluded' => 29,
+        'regulatory_gap_instances_excluded' => $regulatoryGapCount,
     );
 }

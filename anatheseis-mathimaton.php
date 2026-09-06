@@ -137,7 +137,7 @@
     'title_html' => 'Αναθέσεις Μαθημάτων ανά Ειδικότητα',
     'intro' => 'Επίλεξε τον κλάδο / την ειδικότητά σου και δες ποια μαθήματα έχεις σε Α΄, Β΄ ή Γ΄ ανάθεση.',
     'meta_class' => 'meta',
-    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'ΕΠΑ.Λ. / Π.ΕΠΑ.Λ.', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Ε.Ε.Ε.ΕΚ.', 'Καλλιτεχνικά', 'Μουσικά', 'Α΄ · Β΄ · Γ΄ ανάθεση')
+    'badges' => array('2026–2027', 'Ημερήσια & Εσπερινά', 'ΕΠΑ.Λ. / Π.ΕΠΑ.Λ.', 'Ε.Α.Ε.', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.', 'Ε.Ε.Ε.ΕΚ.', 'Καλλιτεχνικά', 'Μουσικά', 'Πρότυπα Εκκλησιαστικά', 'Α΄ · Β΄ · Γ΄ ανάθεση')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
@@ -187,6 +187,19 @@
               <div class="checkrow">
                 <input type="checkbox" id="schoolEveningGel">
                 <label for="schoolEveningGel">Εσπερινό ΓΕΛ</label>
+              </div>
+            </div>
+          </div>
+          <div class="school-type-group">
+            <div class="school-type-group__title">Πρότυπα Εκκλησιαστικά Σχολεία</div>
+            <div class="school-type-options">
+              <div class="checkrow">
+                <input type="checkbox" id="schoolEcclesiasticalGym">
+                <label for="schoolEcclesiasticalGym">Πρότυπο Εκκλησιαστικό Γυμνάσιο</label>
+              </div>
+              <div class="checkrow">
+                <input type="checkbox" id="schoolEcclesiasticalLykeio">
+                <label for="schoolEcclesiasticalLykeio">Πρότυπο Εκκλησιαστικό Λύκειο</label>
               </div>
             </div>
           </div>
@@ -347,6 +360,8 @@
   const specialty = document.getElementById('specialty');
   const schoolGymnasio = document.getElementById('schoolGymnasio');
   const schoolGel = document.getElementById('schoolGel');
+  const schoolEcclesiasticalGym = document.getElementById('schoolEcclesiasticalGym');
+  const schoolEcclesiasticalLykeio = document.getElementById('schoolEcclesiasticalLykeio');
   const schoolEveningGym = document.getElementById('schoolEveningGym');
   const schoolEveningGel = document.getElementById('schoolEveningGel');
   const schoolEaeGym = document.getElementById('schoolEaeGym');
@@ -448,6 +463,13 @@
     if (row.school === 'gymnasio') return 'Γυμνάσιο';
     if (row.school === 'gel') return row.grade ? `${row.grade} ΓΕΛ` : 'ΓΕΛ';
     if (row.school === 'esperino_gymnasio') return 'Εσπερινό Γυμνάσιο';
+    if (row.school === 'protypo_ekklisiastiko_gymnasio') {
+      const shownGrade = (row.grades && row.grades.length)
+        ? (gradeFilter.value !== 'all' && row.grades.includes(gradeFilter.value) ? gradeFilter.value : row.grades.join('/'))
+        : row.grade;
+      return shownGrade ? `${shownGrade} Πρότυπου Εκκλησιαστικού Γυμνασίου` : 'Πρότυπο Εκκλησιαστικό Γυμνάσιο';
+    }
+    if (row.school === 'protypo_ekklisiastiko_lykeio') return row.grade ? `${row.grade} Πρότυπου Εκκλησιαστικού Λυκείου` : 'Πρότυπο Εκκλησιαστικό Λύκειο';
     if (row.school === 'esperino_gel') return row.grade ? `${row.grade} Εσπερινού ΓΕΛ` : 'Εσπερινό ΓΕΛ';
     if (row.school === 'eae_gymnasio') return 'Γυμνάσιο Ε.Α.Ε.';
     if (row.school === 'eae_lykeio') return row.grade ? `${row.grade} Λύκειο Ε.Α.Ε.` : 'Λύκειο Ε.Α.Ε.';
@@ -479,7 +501,7 @@
     return row.school || '';
   }
 
-  const schoolCheckboxes = [schoolGymnasio, schoolEveningGym, schoolGel, schoolEveningGel, schoolEpal, schoolEveningEpal, schoolPepal, schoolEaeGym, schoolEaeLykeio, schoolEneegylGym, schoolEneegylLykeio, schoolEeeek, schoolKallitexnikoGym, schoolKallitexnikoLykeio, schoolMousikoGym, schoolMousikoLykeio];
+  const schoolCheckboxes = [schoolGymnasio, schoolEveningGym, schoolGel, schoolEveningGel, schoolEcclesiasticalGym, schoolEcclesiasticalLykeio, schoolEpal, schoolEveningEpal, schoolPepal, schoolEaeGym, schoolEaeLykeio, schoolEneegylGym, schoolEneegylLykeio, schoolEeeek, schoolKallitexnikoGym, schoolKallitexnikoLykeio, schoolMousikoGym, schoolMousikoLykeio];
 
   function syncSchoolAll(){
     const checkedCount = schoolCheckboxes.filter(function(box){ return box.checked; }).length;
@@ -494,6 +516,8 @@
     const includeGel = schoolGel.checked;
     const includeEveningGym = schoolEveningGym.checked;
     const includeEveningGel = schoolEveningGel.checked;
+    const includeEcclesiasticalGym = schoolEcclesiasticalGym.checked;
+    const includeEcclesiasticalLykeio = schoolEcclesiasticalLykeio.checked;
     const includeEaeGym = schoolEaeGym.checked;
     const includeEaeLykeio = schoolEaeLykeio.checked;
     const includeEneegylGym = schoolEneegylGym.checked;
@@ -507,7 +531,7 @@
     const includeMousikoGym = schoolMousikoGym.checked;
     const includeMousikoLykeio = schoolMousikoLykeio.checked;
     const grade = gradeFilter.value;
-    gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEaeLykeio || includeEneegylLykeio || includeEpal || includeEveningEpal || includePepal || includeKallitexnikoLykeio || includeMousikoGym || includeMousikoLykeio));
+    gradeWrap.classList.toggle('hidden', !(includeGel || includeEveningGel || includeEaeLykeio || includeEneegylLykeio || includeEpal || includeEveningEpal || includePepal || includeKallitexnikoLykeio || includeMousikoGym || includeMousikoLykeio || includeEcclesiasticalGym || includeEcclesiasticalLykeio));
     const isMusicTeacher = code === 'ΠΕ79.01' || code === 'ΠΕ79.02' || code === 'ΤΕ16';
     const showMusicSpecialization = isMusicTeacher && (includeMousikoGym || includeMousikoLykeio);
     musicSpecializationWrap.classList.toggle('hidden', !showMusicSpecialization);
@@ -533,6 +557,8 @@
       if (row.school === 'gel' && !includeGel) return;
       if (row.school === 'esperino_gymnasio' && !includeEveningGym) return;
       if (row.school === 'esperino_gel' && !includeEveningGel) return;
+      if (row.school === 'protypo_ekklisiastiko_gymnasio' && !includeEcclesiasticalGym) return;
+      if (row.school === 'protypo_ekklisiastiko_lykeio' && !includeEcclesiasticalLykeio) return;
       if (row.school === 'eae_gymnasio' && !includeEaeGym) return;
       if (row.school === 'eae_lykeio' && !includeEaeLykeio) return;
       if (row.school === 'eneegyl_gymnasio' && !includeEneegylGym) return;
@@ -545,7 +571,7 @@
       if (row.school === 'pepal' && !includePepal) return;
       if (row.school === 'mousiko_gymnasio' && !includeMousikoGym) return;
       if (row.school === 'mousiko_gel' && !includeMousikoLykeio) return;
-      if (row.school === 'gel' || row.school === 'esperino_gel' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio' || row.school === 'epal' || row.school === 'esperino_epal' || row.school === 'pepal' || row.school === 'kallitexniko_gel' || row.school === 'mousiko_gymnasio' || row.school === 'mousiko_gel') {
+      if (row.school === 'gel' || row.school === 'esperino_gel' || row.school === 'eae_lykeio' || row.school === 'eneegyl_lykeio' || row.school === 'epal' || row.school === 'esperino_epal' || row.school === 'pepal' || row.school === 'kallitexniko_gel' || row.school === 'mousiko_gymnasio' || row.school === 'mousiko_gel' || row.school === 'protypo_ekklisiastiko_gymnasio' || row.school === 'protypo_ekklisiastiko_lykeio') {
         const rowGrades = Array.isArray(row.grades) ? row.grades : (row.grade ? [row.grade] : []);
         if (grade !== 'all' && !rowGrades.includes(grade)) return;
       }
@@ -608,6 +634,8 @@
   schoolGel.addEventListener('change', render);
   schoolEveningGym.addEventListener('change', render);
   schoolEveningGel.addEventListener('change', render);
+  schoolEcclesiasticalGym.addEventListener('change', render);
+  schoolEcclesiasticalLykeio.addEventListener('change', render);
   schoolEaeGym.addEventListener('change', render);
   schoolEaeLykeio.addEventListener('change', render);
   schoolEneegylGym.addEventListener('change', render);
@@ -634,6 +662,7 @@
 
 <?php sourceCardStart(); ?>
   <p><strong>Γυμνάσιο / Εσπερινό Γυμνάσιο / ΓΕΛ / Εσπερινό ΓΕΛ:</strong> Υ.Α. 54058/Δ2/05-05-2026, ΦΕΚ Β΄ 2583/07-05-2026. Η απόφαση έχει ενιαίο πίνακα αναθέσεων για Γυμνάσιο και ΓΕΛ. Στα εσπερινά εμφανίζονται μόνο τα μαθήματα που περιλαμβάνονται στο ισχύον ωρολόγιο του αντίστοιχου σχολείου: Υ.Α. 43751/Δ2/2026, ΦΕΚ Β΄ 2106/09-04-2026 για το Εσπερινό Γυμνάσιο και Υ.Α. 43706/Δ2/2026, ΦΕΚ Β΄ 2102/09-04-2026 για το Εσπερινό ΓΕΛ.</p>
+  <p><strong>Πρότυπα Εκκλησιαστικά Σχολεία:</strong> για τα μαθήματα του κοινού προγράμματος εφαρμόζονται οι ισχύουσες διατάξεις αναθέσεων Γυμνασίου/ΓΕΛ (ΦΕΚ Β΄ 2583/2026), περιορισμένες στο ειδικό ωρολόγιο των Π.Ε.Σ. (118380/Θ2/2021, ΦΕΚ Β΄ 4438/2021, όπως ισχύει). Η Βυζαντινή Μουσική ανατίθεται σε ΠΕ79.01 και, ελλείψει αυτών, ΤΕ16, πάντοτε με Δίπλωμα Βυζαντινής Μουσικής. Η Εικονογραφία εμφανίζεται μόνο ως ειδική πρόβλεψη ΠΕ01/ΠΕ08 και απαιτεί τις ειδικές προϋποθέσεις της 71346/Θ2/2020 (Β΄ 2466), όπως τροποποιήθηκε με την 4404/Θ2/2023 (Β΄ 253). Τα έξι θεολογικά μαθήματα εξειδίκευσης εμφανίζονται στον ΠΕ01 ως ειδικές προβλέψεις, όχι ως βαθμίδες Α΄/Β΄/Γ΄ του γενικού πίνακα.</p>
   <p><strong>Ε.Α.Ε.:</strong> Υ.Α. 72559/Δ3, ΦΕΚ Β΄ 3275/11-06-2026. <strong>ΕΝ.Ε.Ε.ΓΥ.-Λ.:</strong> Υ.Α. 69785/Δ3/29-05-2026, ΦΕΚ Β΄ 3216/05-06-2026. Οι αποφάσεις αφορούν το σχολικό έτος 2026-2027 και περιλαμβάνουν και το μάθημα <strong>Ηθική</strong>.</p>
   <p><strong>ΕΠΑ.Λ. / Εσπερινά ΕΠΑ.Λ.:</strong> Υ.Α. Φ22/75401/Δ4/10-05-2018, ΦΕΚ Β΄ 1664/15-05-2018, όπως τροποποιήθηκε και ισχύει με τα ΦΕΚ Β΄ 2637/2018, 3520/2018, 2779/2019, 453/2020, 3609/2020, 418/2023, 5206/2023, 1975/2025 και 2625/2026. Για τη Γ΄ τάξη του τριετούς Εσπερινού ΕΠΑ.Λ. οι αναθέσεις περιορίζονται στα μαθήματα του ωρολογίου του ΦΕΚ Β΄ 2636/2018, όπως τροποποιήθηκε με το ΦΕΚ Β΄ 4373/2018, διορθώθηκε με το ΦΕΚ Β΄ 4815/2018 και συμπληρώνεται για τα Ναυτιλιακά από το ΦΕΚ Β΄ 3224/2018. Για την ειδικότητα «Υπάλληλος Τουριστικών Επιχειρήσεων» η επιλογή Γαλλικών/Γερμανικών/Ισπανικών/Ιταλικών προβλέπεται στο ημερήσιο από το ΦΕΚ Β΄ 2122/2018 και διατηρείται στο τριετές εσπερινό από το ΦΕΚ Β΄ 2636/2018.</p>
   <p><strong>Π.ΕΠΑ.Λ.:</strong> Α΄ τάξη: Υ.Α. Φ9/116550/Δ4/17-09-2021, ΦΕΚ Β΄ 4367/22-09-2021, όπως τροποποιήθηκε με τα ΦΕΚ Β΄ 5188/2023, 7403/2023, 1832/2025 και 2687/2026. Στα έξι μαθήματα Επαγγελματικής Κατεύθυνσης Προσανατολιστικού Χαρακτήρα οι αναθέσεις γίνονται με βάση τις επιμέρους ενότητες, τη συνάφεια με το βασικό πτυχίο και τα εξειδικευμένα προσόντα· το ΦΕΚ Β΄ 7403/2023 ορίζει ότι η ανάθεση γίνεται από τον Σύλλογο Διδασκόντων του Π.ΕΠΑ.Λ. ύστερα από εισήγηση του/της Διευθυντή/τριας. Β΄ τάξη: Υ.Α. Φ9/114791/Δ4/21-09-2022, ΦΕΚ Β΄ 4983/26-09-2022, όπως τροποποιήθηκε με τα ΦΕΚ Β΄ 418/2023, 5206/2023 και 2624/2026. Γ΄ τάξη: Υ.Α. Φ9/101003/Δ4/13-09-2023, ΦΕΚ Β΄ 5510/18-09-2023. Οι τίτλοι των μαθημάτων της Γ΄ τάξης έχουν διασταυρωθεί και με το αντίστοιχο ωρολόγιο πρόγραμμα, Υ.Α. Φ9/93929/Δ4, ΦΕΚ Β΄ 5251/30-08-2023.</p>
@@ -644,6 +673,8 @@
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/mousika-sxoleia-eisagogi-mathiton-mathitrion/70059-orologio-programma-ton-mathimaton-ton-a-v-kai-g-takseon-tou-esperinoy-gymnasiou-genikoy-lykeiou?filter_tag%5B0%5D=64', 'ΦΕΚ Β΄ 2106/2026 — Ωρολόγιο Εσπερινού Γυμνασίου ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/ya-43706-d2-2026.html', 'ΦΕΚ Β΄ 2102/2026 — Ωρολόγιο Εσπερινού ΓΕΛ ↗'); ?>
+    <?php sourceCardLink('https://religiousaffairs.minedu.gov.gr/el/allcategories-el-gr/epiloges-kategorias-el-gr/organotiki-domi-diefthynseis/dieythynsi-thriskeftikis-ekpaidefsis-diathriskeftikon-sxeseon/tmima-ekklisiastikis-ekpaidefsis-thriskeftikis-agogis/protypa-ekklisiastika-sxoleia/themata-ekpaideftikoy-prosopikoy-protypa-ekklisiastika-sxoleia', 'ΥΠΑΙΘΑ — Θέματα εκπαιδευτικού προσωπικού Π.Ε.Σ. ↗'); ?>
+    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/ekklesiastike-ekpaideuse/upourgike-apophase-118380-th2-2021.html', 'ΦΕΚ Β΄ 4438/2021 — Ωρολόγιο Εκκλησιαστικών Σχολείων ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/anatheseis-mathimaton---eidiki-kai-entaksiaki-ekpaidefsi', 'ΥΠΑΙΘΑ — Αναθέσεις Ειδικής & Ενταξιακής Εκπαίδευσης ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3275_B_2026_ANATHESEIS%20EAE_GYMN_LYK_2026-2027.pdf', 'ΦΕΚ Β΄ 3275/2026 — Ε.Α.Ε. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK_3216_B_2026_ANATHESEIS%20ENEEGYL_2026-2027.pdf', 'ΦΕΚ Β΄ 3216/2026 — ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>

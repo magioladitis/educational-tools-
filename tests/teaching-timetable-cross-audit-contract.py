@@ -42,7 +42,8 @@ check('no legacy school ids in assignments', not (legacy_ids & {r.get('school') 
 canonical_overlap = {
     'gymnasio', 'esperino_gymnasio', 'gel', 'esperino_gel',
     'kallitexniko_gymnasio', 'kallitexniko_gel', 'mousiko_gymnasio', 'mousiko_gel',
-    'epal', 'esperino_epal', 'pepal', 'eneegyl_gymnasio', 'eneegyl_lykeio'
+    'epal', 'esperino_epal', 'pepal', 'eneegyl_gymnasio', 'eneegyl_lykeio',
+    'protypo_ekklisiastiko_gymnasio', 'protypo_ekklisiastiko_lykeio'
 }
 assignment_schools = {r.get('school') for r in assignments}
 timetable_schools = {r.get('school') for r in rows}
@@ -217,7 +218,8 @@ check('PEPAL choice-dependent instances classified', choice_by_school['pepal'] =
 check('Music Gymnasium choice-dependent instances classified', choice_by_school['mousiko_gymnasio'] == 3)
 check('Art Gymnasium choice-dependent instances classified', choice_by_school['kallitexniko_gymnasio'] == 3)
 check('EEEEK choice-dependent instances classified', choice_by_school['eeeek'] == 14)
-check('all choice-dependent instances classified', status_instances['choice_dependent'] == 45)
+check('PES Lyceum choice-dependent instances classified', choice_by_school['protypo_ekklisiastiko_lykeio'] == 3)
+check('all choice-dependent instances classified', status_instances['choice_dependent'] == 48)
 
 gap_by_school = Counter()
 for row in rows:
@@ -229,7 +231,8 @@ for row in rows:
 check('ENEEGYL regulatory-gap instances classified', gap_by_school['eneegyl_lykeio'] == 17)
 check('Music Gymnasium regulatory-gap instances classified', gap_by_school['mousiko_gymnasio'] == 4)
 check('Music Lyceum regulatory-gap instances classified', gap_by_school['mousiko_gel'] == 8)
-check('all regulatory-gap instances classified', status_instances['regulatory_gap'] == 29)
+check('PES Gym regulatory-gap instances classified', gap_by_school['protypo_ekklisiastiko_gymnasio'] == 3)
+check('all regulatory-gap instances classified', status_instances['regulatory_gap'] == 32)
 
 thematic_by_school = Counter()
 for row in rows:
@@ -241,10 +244,16 @@ check('PEPAL thematic-dependent instances classified', thematic_by_school['pepal
 check('EEEEK thematic-dependent instances classified', thematic_by_school['eeeek'] == 1)
 check('all thematic-dependent instances classified', status_instances['thematic_dependent'] == 7)
 
+# Πρότυπα Εκκλησιαστικά: η ειδική χαρτογράφηση αναθέσεων έχει πλέον
+# ενσωματωθεί. Δεν επιτρέπεται να μείνει pending integration status.
+pes_schools = {'protypo_ekklisiastiko_gymnasio', 'protypo_ekklisiastiko_lykeio'}
+check('no pending assignment integration statuses remain', status_instances['pending_assignment_integration'] == 0)
+check('PES assignment schools present', pes_schools <= assignment_schools)
+
 # Every declared choice target must resolve to a real assignment row in the same
 # school/grade context. This protects the bridge against title drift in either dataset.
 for row in choice_rows:
-    if row.get('school') not in {'gymnasio', 'gel', 'epal', 'esperino_epal', 'pepal', 'mousiko_gymnasio', 'kallitexniko_gymnasio', 'eeeek'}:
+    if row.get('school') not in {'gymnasio', 'gel', 'epal', 'esperino_epal', 'pepal', 'mousiko_gymnasio', 'kallitexniko_gymnasio', 'eeeek', 'protypo_ekklisiastiko_lykeio'}:
         continue
     options = row.get('assignment_choice_options') or []
     check(f'choice options present: {row.get("course_id")}', bool(options))
@@ -279,6 +288,6 @@ check('all timetable instances classified', classified_instances == total_instan
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:
     print(('PASS' if ok else 'FAIL') + ': ' + name)
-print(f'AUDIT direct={direct_matches}/{total_instances} resolved={resolved_instances}/{total_instances} choice={status_instances["choice_dependent"]} thematic={status_instances["thematic_dependent"]} regulatory_gap={status_instances["regulatory_gap"]} classified={classified_instances}/{total_instances} component_rows={len(component_rows)} aliases={len(alias_rows)}')
+print(f'AUDIT direct={direct_matches}/{total_instances} resolved={resolved_instances}/{total_instances} choice={status_instances["choice_dependent"]} thematic={status_instances["thematic_dependent"]} regulatory_gap={status_instances["regulatory_gap"]} pending={status_instances["pending_assignment_integration"]} classified={classified_instances}/{total_instances} component_rows={len(component_rows)} aliases={len(alias_rows)}')
 print(f'RESULT {len(checks)-len(failed)} PASS / {len(failed)} FAIL')
 raise SystemExit(1 if failed else 0)

@@ -9,6 +9,8 @@
  * - ΦΕΚ Β΄ 2102/09-04-2026, Υ.Α. 43706/Δ2: Εσπερινό ΓΕΛ.
  * - ΦΕΚ Β΄ 2104/09-04-2026, Υ.Α. 43820/Δ2: Καλλιτεχνικό Γυμνάσιο και Γενικό Καλλιτεχνικό Λύκειο.
  * - ΦΕΚ Β΄ 2107/09-04-2026, Υ.Α. 43787/Δ2: Μουσικό Γυμνάσιο και Γενικό Μουσικό Λύκειο.
+ * - ΦΕΚ Β΄ 4438/25-09-2021, διορθώσεις Β΄ 4569/02-10-2021 και Β΄ 4728/12-10-2021,
+ *   ΦΕΚ Β΄ 2781/03-06-2022 και Β΄ 4881/15-09-2025: Πρότυπα Εκκλησιαστικά Σχολεία.
  * - ΦΕΚ Β΄ 2151/16-04-2026: Α΄/Β΄ Ημερήσιου ΕΠΑ.Λ. και Α΄ Εσπερινού ΕΠΑ.Λ. (τροποποίηση Γενικής Παιδείας).
  * - ΦΕΚ Β΄ 2187/12-06-2018: Α΄/Β΄ Ημερήσιου ΕΠΑ.Λ. (Προσανατολισμός, Επιλογές και Τομείς).
  * - ΦΕΚ Β΄ 2636/05-07-2018: τριετές Εσπερινό ΕΠΑ.Λ.
@@ -41,6 +43,7 @@
 require_once __DIR__ . '/weekly-timetable-vocational-g-data.php';
 require_once __DIR__ . '/weekly-timetable-eneegyl-data.php';
 require_once __DIR__ . '/weekly-timetable-eeeek-data.php';
+require_once __DIR__ . '/weekly-timetable-ecclesiastical-data.php';
 require_once __DIR__ . '/teaching-timetable-crosswalk.php';
 
 function weeklyTimetableSchoolTypes()
@@ -134,6 +137,26 @@ function weeklyTimetableSchoolTypes()
                 'Α΄' => array('total' => 42, 'parts' => array('Γενική Παιδεία' => 29, 'Μουσική Παιδεία' => 13)),
                 'Β΄' => array('total' => 42, 'parts' => array('Γενική Παιδεία' => 26, 'Ομάδα Προσανατολισμού' => 5, 'Μουσική Παιδεία' => 11)),
                 'Γ΄' => array('total' => 42, 'parts' => array('Γενική Παιδεία' => 12, 'Ομάδα Προσανατολισμού' => 18, 'Μουσική Παιδεία' => 12)),
+            ),
+        ),
+        'protypo_ekklisiastiko_gymnasio' => array(
+            'label' => 'Πρότυπο Εκκλησιαστικό Γυμνάσιο',
+            'grades' => array('Α΄', 'Β΄', 'Γ΄'),
+            'source' => 'ΦΕΚ Β΄ 4881/2025 · Β΄ 4438/2021',
+            'program' => array(
+                'Α΄' => array('total' => 36, 'parts' => array('Κοινό πρόγραμμα' => 30, 'Θρησκευτική Εξειδίκευση' => 6)),
+                'Β΄' => array('total' => 36, 'parts' => array('Κοινό πρόγραμμα' => 30, 'Θρησκευτική Εξειδίκευση' => 6)),
+                'Γ΄' => array('total' => 36, 'parts' => array('Κοινό πρόγραμμα' => 30, 'Θρησκευτική Εξειδίκευση' => 6)),
+            ),
+        ),
+        'protypo_ekklisiastiko_lykeio' => array(
+            'label' => 'Πρότυπο Εκκλησιαστικό Λύκειο',
+            'grades' => array('Α΄', 'Β΄', 'Γ΄'),
+            'source' => 'ΦΕΚ Β΄ 4438/2021 · Β΄ 2781/2022',
+            'program' => array(
+                'Α΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 29, 'Θρησκευτική Εξειδίκευση' => 6)),
+                'Β΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 24, 'Θρησκευτική Εξειδίκευση' => 6, 'Ομάδα Προσανατολισμού' => 5)),
+                'Γ΄' => array('total' => 35, 'parts' => array('Γενική Παιδεία' => 11, 'Θρησκευτική Εξειδίκευση' => 6, 'Ομάδα Προσανατολισμού' => 18)),
             ),
         ),
         'eneegyl_gymnasio' => array(
@@ -577,7 +600,7 @@ function weeklyTimetableRows()
         array('course_id'=>'mgel.c.choice.choral','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Επεξεργασία Χορικού (Choral)','hours'=>array('Γ΄'=>2),'mode'=>'choice','assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το μάθημα υπάρχει στο ισχύον ωρολόγιο ΦΕΚ Β΄ 2107/2026, αλλά δεν υπάρχει ρητή αντίστοιχη γραμμή στο ΦΕΚ αναθέσεων Β΄ 4202/2018.'),
         array('course_id'=>'mgel.c.choice.ixolipsia2','slot_id'=>'mgel.c.music_choice','school'=>'mousiko_gel','group'=>'Μάθημα Επιλογής Μουσικής Παιδείας (1 από 10)','subject'=>'Στοιχειώδεις αρχές ηχοληψίας ΙΙ','hours'=>array('Γ΄'=>2),'mode'=>'choice','assignment_link_status'=>'regulatory_gap','assignment_link_note'=>'Το ΦΕΚ Β΄ 4202/2018 περιλαμβάνει μόνο «Στοιχειώδεις Αρχές Ηχοληψίας» ως επιλογή της Α΄ Λυκείου· δεν τεκμηριώνει ανάθεση για τη νέα «ΙΙ» της Γ΄ τάξης του ΦΕΚ Β΄ 2107/2026.'),
     );
-    return teachingTimetableEnrichRows(array_merge($rows, weeklyTimetableEneegylRows(), weeklyTimetableEeeekRows(), weeklyTimetableVocationalRows()));
+    return teachingTimetableEnrichRows(array_merge($rows, weeklyTimetableEcclesiasticalRows(), weeklyTimetableEneegylRows(), weeklyTimetableEeeekRows(), weeklyTimetableVocationalRows()));
 }
 
 /**

@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 php = r'''
 require "includes/teaching-workload-aggregation.php";
 $model = teachingWorkloadModel();
-$codes = array("ΠΕ03","ΠΕ87.01","ΠΕ80","ΠΕ05","ΠΕ07","ΠΕ34","ΠΕ40","ΠΕ99","ΤΕ99.99");
+$codes = array("ΠΕ03","ΠΕ87.01","ΠΕ80","ΠΕ05","ΠΕ07","ΠΕ34","ΠΕ40","ΠΕ79.01","ΠΕ08","ΠΕ99","ΤΕ99.99");
 $aggregates = array();
 foreach ($codes as $code) {
     $aggregates[$code] = teachingWorkloadAggregateByCode($code, $model);
@@ -39,25 +39,25 @@ def claims(code, **criteria):
 
 check('78 explicit assignment codes indexed', summary == {
     'known_codes': 78,
-    'claims_across_known_codes': 10847,
+    'claims_across_known_codes': 11384,
     'claim_categories': {
-        'choice': 2115,
-        'condition': 140,
-        'fixed': 8001,
+        'choice': 2124,
+        'condition': 175,
+        'fixed': 8494,
         'periodic': 25,
         'thematic': 194,
         'variant': 372,
     },
-    'regulatory_gap_instances_excluded': 29,
+    'regulatory_gap_instances_excluded': 32,
 })
 check('known code index unique', len(known_codes) == len(set(known_codes)) == 78)
 check('core codes present', all(code in known_codes for code in ('ΠΕ03','ΠΕ05','ΠΕ80','ΠΕ87.01','ΤΕ01.19')))
 
 # Fixed totals are intentionally conservative curriculum-eligibility totals.
 pe03 = aggs['ΠΕ03']
-check('PE03 conservative totals exact', pe03['fixed_hours_by_priority'] == {'A':204,'B':43,'C':13,'SPECIAL':28})
-check('PE03 fixed total exact', pe03['fixed_hours_total'] == 288)
-check('PE03 condition rows excluded from fixed total', pe03['category_counts'] == {'condition':8,'fixed':128})
+check('PE03 conservative totals exact', pe03['fixed_hours_by_priority'] == {'A':232,'B':51,'C':16,'SPECIAL':28})
+check('PE03 fixed total exact', pe03['fixed_hours_total'] == 327)
+check('PE03 condition rows excluded from fixed total', pe03['category_counts'] == {'condition':10,'fixed':145})
 check('fixed total recomputes only from fixed claims', all(
     agg['fixed_hours_total'] == sum(int(c.get('hours', 0)) for c in agg['claims'] if c.get('category') == 'fixed')
     for agg in aggs.values()
@@ -116,9 +116,22 @@ check('special_notes preserved in thematic payload', any(
     for c in pe80_pepal_thematic
 ))
 
+# PES special subjects with mandatory additional qualifications must never become
+# fixed hours merely because the teacher code matches.
+for code, key in [('ΠΕ79.01', 'pes_byzantine_music_diploma'), ('ΠΕ08', 'pes_iconography_eligibility')]:
+    qclaims = [c for c in aggs[code]['claims'] if c.get('qualification_key') == key]
+    check(f'PES qualification claims visible for {code}', len(qclaims) == 6)
+    check(f'PES qualification claims conditional for {code}', all(
+        c.get('category') == 'condition'
+        and c.get('qualification_required') is True
+        and c.get('hours_attribution') == 'qualification_required'
+        and 'slot_hours' in c and 'hours' not in c
+        for c in qclaims
+    ))
+
 # Wildcards are evaluated dynamically even for a code not present in the explicit index.
-check('unknown PE code receives all-PE/all-others rules dynamically', aggs['ΠΕ99']['fixed_hours_by_priority'] == {'A':9,'B':10,'C':0,'SPECIAL':28})
-check('unknown TE code receives all-others but not all-PE', aggs['ΤΕ99.99']['fixed_hours_by_priority'] == {'A':0,'B':10,'C':0,'SPECIAL':0})
+check('unknown PE code receives all-PE/all-others rules dynamically', aggs['ΠΕ99']['fixed_hours_by_priority'] == {'A':9,'B':13,'C':0,'SPECIAL':28})
+check('unknown TE code receives all-others but not all-PE', aggs['ΤΕ99.99']['fixed_hours_by_priority'] == {'A':0,'B':13,'C':0,'SPECIAL':0})
 check('ad-hoc wildcard probes are not injected into explicit code index', 'ΠΕ99' not in known_codes and 'ΤΕ99.99' not in known_codes)
 
 # UI isolation remains absolute.

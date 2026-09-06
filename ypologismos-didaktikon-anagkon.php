@@ -1024,6 +1024,8 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                   <option value="eeeek" disabled>Ε.Ε.Ε.ΕΚ.</option>
                   <option value="mousiko" disabled>Μουσικό Σχολείο</option>
                   <option value="kallitexniko" disabled>Καλλιτεχνικό Σχολείο</option>
+                  <option value="protypo_ekklisiastiko_gymnasio" disabled>Πρότυπο Εκκλησιαστικό Γυμνάσιο</option>
+                  <option value="protypo_ekklisiastiko_lykeio" disabled>Πρότυπο Εκκλησιαστικό Λύκειο</option>
                   <option value="sek" disabled>Εργαστηριακό Κέντρο (Ε.Κ.)</option>
                 </optgroup>
               </select>
