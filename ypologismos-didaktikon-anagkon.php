@@ -97,6 +97,58 @@ function staffingUiTrackLabel($track) {
     return isset($map[$track]) ? $map[$track] : $track;
 }
 
+function staffingUiMatrixNotices($profile, $model) {
+    $result = array('dependencies'=>array(), 'regulatory'=>array());
+    if (!$profile || !$model) return $result;
+
+    $realized = schoolProfileRealize($profile, $model);
+    $ethicsGrades = array();
+    $dependencySeen = array();
+    $regulatorySeen = array();
+
+    foreach ($realized['slots'] as $slot) {
+        $staffingStatus = isset($slot['staffing_status']) ? (string)$slot['staffing_status'] : '';
+        $dependency = isset($slot['dependency']) && is_array($slot['dependency']) ? $slot['dependency'] : array();
+        $dependencyResolved = !empty($dependency['resolved']);
+        $isDependency = in_array($staffingStatus, array('dependency_unresolved','periodic_hours','thematic_hours_not_fixed'), true)
+            || (!$dependencyResolved && $staffingStatus !== 'regulatory_gap');
+
+        if ($isDependency) {
+            $slotId = isset($slot['slot_id']) ? (string)$slot['slot_id'] : '';
+            if ($slotId !== '' && preg_match('/religion_ethics$/', $slotId)) {
+                $ethicsGrades[(string)$slot['grade']] = true;
+            } else {
+                $label = trim((string)$slot['grade'] . ' · ' . (string)$slot['subject']);
+                $dependencySeen[$label] = true;
+            }
+        }
+
+        if ($staffingStatus === 'regulatory_gap') {
+            $label = trim((string)$slot['grade'] . ' · ' . (string)$slot['subject']);
+            $regulatorySeen[$label] = true;
+        }
+    }
+
+    if (!empty($ethicsGrades)) {
+        $gradeOrder = array('Α΄'=>1,'Β΄'=>2,'Γ΄'=>3,'Δ΄'=>4);
+        $grades = array_keys($ethicsGrades);
+        usort($grades, function($a,$b) use ($gradeOrder) {
+            $aa = isset($gradeOrder[$a]) ? $gradeOrder[$a] : 99;
+            $bb = isset($gradeOrder[$b]) ? $gradeOrder[$b] : 99;
+            if ($aa === $bb) return strcmp($a,$b);
+            return $aa - $bb;
+        });
+        $result['dependencies'][] = 'Εκκρεμούν στοιχεία για Ηθική / Θρησκευτικά στις τάξεις ' . implode(', ', $grades) . '. Οι αντίστοιχες ώρες δεν περιλαμβάνονται ακόμη στα σύνολα.';
+    }
+    foreach (array_keys($dependencySeen) as $label) {
+        $result['dependencies'][] = 'Εκκρεμούν πρόσθετα στοιχεία για ' . $label . '. Οι αντίστοιχες ώρες δεν περιλαμβάνονται ακόμη στα σύνολα.';
+    }
+    foreach (array_keys($regulatorySeen) as $label) {
+        $result['regulatory'][] = 'Για ' . $label . ' δεν υπάρχει ρητή αντιστοίχιση ανάθεσης στην ισχύουσα κανονιστική βάση. Οι αντίστοιχες ώρες εξαιρούνται από τον υπολογισμό.';
+    }
+    return $result;
+}
+
 function staffingUiPersonnelRoleLabel($role) {
     $map = array(
         'teacher' => 'Εκπαιδευτικός',
@@ -508,6 +560,7 @@ $matrix = null;
 $teachingModel = null;
 $displayMatrix = null;
 $collapsedSkills = array('active'=>false,'hours'=>0,'unit_count'=>0,'units'=>array(),'label'=>'Οποιαδήποτε ειδικότητα','subject'=>'Εργαστήρια Δεξιοτήτων');
+$staffingNotices = array('dependencies'=>array(),'regulatory'=>array());
 $schoolProfileInputErrors = array();
 $postedBasicSectionTotal = $submitted ? staffingUiBasicSectionPostTotal($schoolType) : 0;
 if ($submitted && $postedBasicSectionTotal > STAFFING_UI_MAX_BASIC_SECTIONS) {
@@ -596,6 +649,7 @@ if ($submitted && empty($schoolProfileInputErrors)) {
     $presentation = staffingUiCollapseSkillsWorkshops($matrix);
     $displayMatrix = staffingUiSortCodesNatural($presentation['matrix']);
     $collapsedSkills = $presentation['collapsed'];
+    $staffingNotices = staffingUiMatrixNotices($profile, $teachingModel);
 }
 $generalSectionTotal = $profile ? schoolProfileTotalGeneralSections($profile) : 0;
 $directorSectionsBandAuto = personnelWorkloadDirectorSectionsBandFromCount($generalSectionTotal);
@@ -811,6 +865,9 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     .edu-page-staffing-simulator .summary-chip span{display:block;margin-top:3px;color:var(--edu-muted);font-size:12.5px;line-height:1.3}
     .edu-page-staffing-simulator .matrix-wrap{overflow-x:auto;margin-top:14px}
     .edu-page-staffing-simulator .staffing-table{width:100%;border-collapse:collapse;min-width:850px}
+    .edu-page-staffing-simulator #staffingMatrixTable{width:auto;min-width:0}
+    .edu-page-staffing-simulator #staffingMatrixTable th:first-child,.edu-page-staffing-simulator #staffingMatrixTable td:first-child{width:clamp(240px,32vw,420px);max-width:420px}
+    .edu-page-staffing-simulator #staffingMatrixTable th:nth-child(n+2),.edu-page-staffing-simulator #staffingMatrixTable td:nth-child(n+2){width:64px;min-width:64px}
     .edu-page-staffing-simulator .staffing-table th,.edu-page-staffing-simulator .staffing-table td{padding:9px 8px;border-bottom:1px solid var(--edu-result-row-separator);text-align:right;vertical-align:top;font-size:13.5px}
     .edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{text-align:left;position:sticky;left:0;background:var(--edu-surface);z-index:1}
     .edu-page-staffing-simulator .staffing-table th{color:var(--edu-muted);font-size:12px;white-space:nowrap}
@@ -965,7 +1022,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       .staffing-print-report .print-allocation th:nth-child(4){width:29%}
     }
     @media(max-width:960px){.edu-page-staffing-simulator .personnel-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .branch-summary-row{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main .allocation-status{grid-column:1/-1;grid-row:auto}.edu-page-staffing-simulator .allocation-row-main .allocation-remove{grid-column:auto;grid-row:auto}.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr 1fr}}
-    @media(max-width:760px){.edu-page-staffing-simulator .mini-grid,.edu-page-staffing-simulator .mini-grid.two,.edu-page-staffing-simulator .staffing-summary-grid,.edu-page-staffing-simulator .personnel-row-main,.edu-page-staffing-simulator .branch-summary-row,.edu-page-staffing-simulator .personnel-csv-mappings{grid-template-columns:1fr}.edu-page-staffing-simulator .allocation-row-main,.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr}.edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{position:static}}
+    @media(max-width:760px){.edu-page-staffing-simulator .mini-grid,.edu-page-staffing-simulator .mini-grid.two,.edu-page-staffing-simulator .staffing-summary-grid,.edu-page-staffing-simulator .personnel-row-main,.edu-page-staffing-simulator .branch-summary-row,.edu-page-staffing-simulator .personnel-csv-mappings{grid-template-columns:1fr}.edu-page-staffing-simulator .allocation-row-main,.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr}.edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{position:static}.edu-page-staffing-simulator #staffingMatrixTable th:first-child,.edu-page-staffing-simulator #staffingMatrixTable td:first-child{width:180px;max-width:180px}.edu-page-staffing-simulator #staffingMatrixTable th:nth-child(n+2),.edu-page-staffing-simulator #staffingMatrixTable td:nth-child(n+2){width:52px;min-width:52px}}
   </style>
 </head>
 <body class="edu-ui edu-calc-standard edu-page-staffing-simulator">
@@ -1205,7 +1262,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           <p class="cap">Τα αθροίσματα είναι ώρες του ωρολογίου προγράμματος για τις οποίες ο κάθε κλάδος είναι επιλέξιμος στη συγκεκριμένη σχολική μονάδα. Δεν αποτελούν ακόμη επίσημα λειτουργικά κενά ούτε τελική κατανομή σε εκπαιδευτικούς.</p>
 
           <?php if ($readiness && $readiness['ready']): ?>
-            <div class="status-good"><strong>Τα στοιχεία της σχολικής μονάδας είναι δομικά πλήρη.</strong> Οι τυχόν εκκρεμότητες της Ηθικής ή τα κανονιστικά κενά εμφανίζονται χωριστά.</div>
+            <div class="status-good"><strong>Τα στοιχεία της σχολικής μονάδας είναι δομικά πλήρη.</strong> Τυχόν ειδικές εκκρεμότητες εμφανίζονται μόνο όταν υπάρχουν.</div>
           <?php else: ?>
             <div class="status-warn"><strong>Μερικός υπολογισμός.</strong> Λείπουν στοιχεία της σχολικής μονάδας, επομένως τα παρακάτω σύνολα δεν είναι πλήρη.
               <?php if ($readiness && !empty($readiness['issues'])): ?>
@@ -1221,9 +1278,25 @@ uksort($specialtyLabelsClient, 'strnatcmp');
             <?php if (!empty($collapsedSkills['active'])): ?>
               <div class="summary-chip"><strong><?php echo (int)$collapsedSkills['hours']; ?></strong><span>ώρες Εργαστηρίων Δεξιοτήτων · συγκεντρωτικά</span></div>
             <?php endif; ?>
-            <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_dependency_instances']; ?></strong><span>ενεργές εκκρεμείς εξαρτήσεις</span></div>
-            <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_regulatory_gap_instances']; ?></strong><span>περιπτώσεις κανονιστικών εκκρεμοτήτων</span></div>
           </div>
+
+          <?php if (!empty($staffingNotices['dependencies'])): ?>
+            <div class="status-warn">
+              <strong>Χρειάζονται επιπλέον στοιχεία πριν οριστικοποιηθούν όλες οι ώρες.</strong>
+              <ul>
+                <?php foreach ($staffingNotices['dependencies'] as $notice): ?><li><?php echo staffingUiH($notice); ?></li><?php endforeach; ?>
+              </ul>
+            </div>
+          <?php endif; ?>
+
+          <?php if (!empty($staffingNotices['regulatory'])): ?>
+            <div class="status-warn">
+              <strong>Υπάρχει κανονιστική εκκρεμότητα που επηρεάζει τον υπολογισμό.</strong>
+              <ul>
+                <?php foreach ($staffingNotices['regulatory'] as $notice): ?><li><?php echo staffingUiH($notice); ?></li><?php endforeach; ?>
+              </ul>
+            </div>
+          <?php endif; ?>
 
           <div class="field result-filter">
             <label for="staffingResultFilter">Φίλτρο κλάδου / μαθήματος</label>
