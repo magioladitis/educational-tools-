@@ -110,7 +110,7 @@
   function get(row,mapping,field){
     var h=mapping[field]; return h && Object.prototype.hasOwnProperty.call(row,h) ? row[h] : '';
   }
-  var MAX_BASIC_SECTIONS=200;
+  var MAX_BASIC_SECTIONS=150;
   function nonNegativeInt(value){
     var raw=String(value == null ? '' : value).trim();
     if(raw==='') return 0;

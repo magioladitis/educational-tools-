@@ -17,7 +17,7 @@ function staffingUiInt($key, $default = 0) {
     if ($value === '' || $value === null) return (int) $default;
     return max(0, (int) $value);
 }
-if (!defined('STAFFING_UI_MAX_BASIC_SECTIONS')) define('STAFFING_UI_MAX_BASIC_SECTIONS', 200);
+if (!defined('STAFFING_UI_MAX_BASIC_SECTIONS')) define('STAFFING_UI_MAX_BASIC_SECTIONS', 150);
 function staffingUiBasicSectionPostCounts($schoolType) {
     $prefix = $schoolType === 'gel' ? 'gel_general_' : 'gym_general_';
     return array(
@@ -1059,7 +1059,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                 <button type="button" class="edu-btn-secondary" id="closeSchoolCsv">Κλείσιμο</button>
               </div>
             </div>
-            <div class="info-note"><strong>Δεν γίνεται μεταφόρτωση στον διακομιστή.</strong> Υποστηρίζονται semicolon (;), κόμμα ή tab. Ελάχιστες στήλες: «Ονομασία σχολείου» και «Είδος σχολείου». Προαιρετικά μπορούν να υπάρχουν «Κωδικός Υπουργείου» και «Διεύθυνση σχολείου». Τα «Α τμήματα / Β τμήματα / Γ τμήματα» και τα ειδικότερα πεδία μπορούν να συμπληρώνονται στην ίδια γραμμή. Το άθροισμα των βασικών τμημάτων ανά σχολείο δεν μπορεί να υπερβαίνει τα 200.</div>
+            <div class="info-note"><strong>Δεν γίνεται μεταφόρτωση στον διακομιστή.</strong> Υποστηρίζονται semicolon (;), κόμμα ή tab. Ελάχιστες στήλες: «Ονομασία σχολείου» και «Είδος σχολείου». Προαιρετικά μπορούν να υπάρχουν «Κωδικός Υπουργείου» και «Διεύθυνση σχολείου». Τα «Α τμήματα / Β τμήματα / Γ τμήματα» και τα ειδικότερα πεδία μπορούν να συμπληρώνονται στην ίδια γραμμή. Το άθροισμα των βασικών τμημάτων ανά σχολείο δεν μπορεί να υπερβαίνει τα 150.</div>
             <div class="field school-registry-search"><label for="schoolRegistrySearch">Αναζήτηση στο μητρώο</label><input type="search" id="schoolRegistrySearch" placeholder="π.χ. 2401020, 2ο Γυμνάσιο, Λευκίμμη"></div>
             <div class="personnel-csv-preview" id="schoolCsvPreview"><div class="empty-personnel">Δεν έχει επιλεγεί ακόμη CSV.</div></div>
             <div class="personnel-csv-status" id="schoolCsvStatus"></div>
@@ -1069,10 +1069,10 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           <div id="gymProfileFields"<?php echo $schoolType === 'gymnasio' ? '' : ' hidden'; ?>>
             <section class="staffing-section">
               <h3>Κανονικά τμήματα ανά τάξη</h3>
-              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>200 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 5.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
+              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>150 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 4.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
               <div class="mini-grid">
                 <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
-                  <div class="field"><label for="gym_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="200" step="1" type="number" data-basic-section="gym" id="gym_general_<?php echo $s; ?>" name="gym_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gym_general_'.$s, '0')); ?>"></div>
+                  <div class="field"><label for="gym_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="150" inputmode="numeric" step="1" type="number" data-basic-section="gym" id="gym_general_<?php echo $s; ?>" name="gym_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gym_general_'.$s, '0')); ?>"></div>
                 <?php endforeach; ?>
               </div>
               <small class="profile-validation-error" id="gymBasicSectionsError" data-basic-sections-error="gym" hidden></small>
@@ -1109,10 +1109,10 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           <div id="gelProfileFields"<?php echo $schoolType === 'gel' ? '' : ' hidden'; ?>>
             <section class="staffing-section">
               <h3>Κανονικά τμήματα ανά τάξη</h3>
-              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>200 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 5.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
+              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>150 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 4.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
               <div class="mini-grid">
                 <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
-                  <div class="field"><label for="gel_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="200" step="1" type="number" data-basic-section="gel" id="gel_general_<?php echo $s; ?>" name="gel_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gel_general_'.$s, '0')); ?>"></div>
+                  <div class="field"><label for="gel_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="150" inputmode="numeric" step="1" type="number" data-basic-section="gel" id="gel_general_<?php echo $s; ?>" name="gel_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gel_general_'.$s, '0')); ?>"></div>
                 <?php endforeach; ?>
               </div>
               <small class="profile-validation-error" id="gelBasicSectionsError" data-basic-sections-error="gel" hidden></small>
@@ -2122,20 +2122,80 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   document.querySelectorAll('[id^="gym_general_"],[id^="gel_general_"]').forEach(function(input){ input.addEventListener('input',syncLanguageGroupMaximums); });
   syncLanguageGroupMaximums();
 
-  function syncBasicSectionLimit(){
+  const maxBasicSections=<?php echo (int) STAFFING_UI_MAX_BASIC_SECTIONS; ?>;
+  function basicSectionSafeInteger(input){
+    const raw=String(input.value==null?'':input.value).trim();
+    if(raw==='') return 0;
+    if(!/^\d+$/.test(raw)){
+      input.value=input.dataset.lastBasicSectionValue||'0';
+      return parseInt(input.value||'0',10)||0;
+    }
+    const digits=raw.replace(/^0+(?=\d)/,'');
+    const maxDigits=String(maxBasicSections);
+    let value=0;
+    if(digits.length>maxDigits.length || (digits.length===maxDigits.length && digits>maxDigits)){
+      value=maxBasicSections;
+    }else{
+      value=parseInt(digits||'0',10)||0;
+    }
+    input.value=String(value);
+    input.dataset.lastBasicSectionValue=String(value);
+    return value;
+  }
+  function syncBasicSectionLimit(changedInput){
     ['gym','gel'].forEach(function(kind){
       const inputs=Array.from(document.querySelectorAll('[data-basic-section="'+kind+'"]'));
+      if(!inputs.length) return;
+      if(changedInput && inputs.indexOf(changedInput)<0) return;
+      let clamped=false;
+      if(changedInput){
+        const value=basicSectionSafeInteger(changedInput);
+        const otherTotal=inputs.reduce(function(sum,input){
+          if(input===changedInput) return sum;
+          return sum+basicSectionSafeInteger(input);
+        },0);
+        const allowed=Math.max(0,maxBasicSections-otherTotal);
+        if(value>allowed){
+          changedInput.value=String(allowed);
+          changedInput.dataset.lastBasicSectionValue=String(allowed);
+          clamped=true;
+        }
+      }else{
+        let remaining=maxBasicSections;
+        inputs.forEach(function(input){
+          const value=basicSectionSafeInteger(input);
+          const allowed=Math.min(value,remaining);
+          if(value!==allowed){
+            input.value=String(allowed);
+            input.dataset.lastBasicSectionValue=String(allowed);
+            clamped=true;
+          }
+          remaining-=allowed;
+        });
+      }
       const total=inputs.reduce(function(sum,input){return sum+(parseInt(input.value||'0',10)||0);},0);
       const error=document.querySelector('[data-basic-sections-error="'+kind+'"]');
-      const message=total>200?'Το σύνολο των βασικών τμημάτων Α΄ + Β΄ + Γ΄ είναι '+total+' και δεν μπορεί να υπερβαίνει τα 200.':'';
       inputs.forEach(function(input){
-        input.setCustomValidity(message);
-        if(message) input.setAttribute('aria-invalid','true'); else input.removeAttribute('aria-invalid');
+        const current=parseInt(input.value||'0',10)||0;
+        const others=total-current;
+        input.max=String(Math.max(0,maxBasicSections-others));
+        input.setCustomValidity('');
+        input.removeAttribute('aria-invalid');
       });
-      if(error){error.hidden=!message;error.textContent=message;}
+      if(error){
+        error.hidden=!clamped;
+        error.textContent=clamped?'Η τιμή περιορίστηκε αυτόματα ώστε το σύνολο Α΄ + Β΄ + Γ΄ να μην υπερβαίνει τα '+maxBasicSections+' βασικά τμήματα.':'';
+      }
     });
+    syncSplitMaximums();
+    syncLanguageGroupMaximums();
   }
-  document.querySelectorAll('[data-basic-section]').forEach(function(input){input.addEventListener('input',syncBasicSectionLimit);});
+  document.querySelectorAll('[data-basic-section]').forEach(function(input){
+    input.addEventListener('keydown',function(event){
+      if(['e','E','+','-','.'].indexOf(event.key)>=0) event.preventDefault();
+    });
+    input.addEventListener('input',function(){syncBasicSectionLimit(input);},true);
+  });
   syncBasicSectionLimit();
 
   const schoolProfileForm=document.getElementById('staffingProfileForm');
@@ -2155,7 +2215,6 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   const schoolRegistrySearch=document.getElementById('schoolRegistrySearch');
   let schoolCsvRegistry=[];
   const schoolCsvStorageKey='education_school_registry_v1';
-  const maxBasicSections=200;
 
   function schoolCsvSetStatus(message,kind){
     if(!schoolCsvStatus) return;
