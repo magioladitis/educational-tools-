@@ -1221,9 +1221,6 @@ uksort($specialtyLabelsClient, 'strnatcmp');
             <?php if (!empty($collapsedSkills['active'])): ?>
               <div class="summary-chip"><strong><?php echo (int)$collapsedSkills['hours']; ?></strong><span>ώρες Εργαστηρίων Δεξιοτήτων · συγκεντρωτικά</span></div>
             <?php endif; ?>
-            <div class="summary-chip"><strong><?php echo (int)$displayMatrix['summary']['ordered_exclusive_top_unit_hours']; ?></strong><span>ώρες αποκλειστικής κορυφαίας Α΄/Β΄/Γ΄</span></div>
-            <div class="summary-chip"><strong><?php echo (int)$displayMatrix['summary']['ordered_shared_top_unit_hours']; ?></strong><span>ώρες κοινής κορυφαίας Α΄/Β΄/Γ΄</span></div>
-            <div class="summary-chip"><strong><?php echo (int)$displayMatrix['summary']['special_top_unit_hours']; ?></strong><span>ώρες ειδικής κορυφαίας ανάθεσης</span></div>
             <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_dependency_instances']; ?></strong><span>ενεργές εκκρεμείς εξαρτήσεις</span></div>
             <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_regulatory_gap_instances']; ?></strong><span>περιπτώσεις κανονιστικών εκκρεμοτήτων</span></div>
           </div>
@@ -1235,7 +1232,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
 
           <div class="matrix-wrap">
             <table class="staffing-table" id="staffingMatrixTable">
-              <thead><tr><th>Κλάδος</th><th>Α΄</th><th>Β΄</th><th>Γ΄</th><th>Αποκλειστική κορυφαία</th><th>Κοινή κορυφαία</th><th>Ειδική</th><th>Χαμηλότερη ανάθεση</th></tr></thead>
+              <thead><tr><th>Κλάδος</th><th>Α΄</th><th>Β΄</th><th>Γ΄</th></tr></thead>
               <tbody>
               <?php if (!empty($collapsedSkills['active'])): ?>
                 <tr class="staffing-code-row staffing-collapsed-row" data-search="Οποιαδήποτε ειδικότητα Εργαστήρια Δεξιοτήτων">
@@ -1250,7 +1247,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                       <p class="claim-meta">Συγκεντρωτική εμφάνιση μόνο για το εργαλείο. Η πλήρης Α΄/Β΄ ανάθεση όλων των κλάδων διατηρείται στο εσωτερικό μοντέλο.</p>
                     </details>
                   </td>
-                  <td colspan="7"><strong><?php echo (int)$collapsedSkills['hours']; ?> ώρες συνολικά</strong></td>
+                  <td colspan="3"><strong><?php echo (int)$collapsedSkills['hours']; ?> ώρες συνολικά</strong></td>
                 </tr>
               <?php endif; ?>
               <?php foreach ($displayMatrix['codes'] as $code=>$row): ?>
@@ -1263,7 +1260,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                           <li>
                             <strong><?php echo staffingUiH($claim['grade'] . ' · ' . $claim['subject']); ?></strong> — <?php echo (int)$claim['school_hours']; ?> ώρες
                             <span class="claim-meta">
-                              <?php echo staffingUiH(staffingUiPriorityLabel($claim['priority'])); ?> ανάθεση<?php echo !empty($claim['is_top_priority']) ? ' · κορυφαία' : ' · χαμηλότερη ανάθεση'; ?><?php echo !empty($claim['top_code_count']) && $claim['top_code_count'] > 1 ? ' · κοινή με ' . ((int)$claim['top_code_count'] - 1) . ' ακόμη κλάδο/υς' : ''; ?>
+                              <?php echo staffingUiH(staffingUiPriorityLabel($claim['priority'])); ?> ανάθεση
                               <?php if (!empty($claim['track'])): ?> · <?php echo staffingUiH(staffingUiTrackLabel($claim['track'])); ?><?php endif; ?>
                               <?php if (!empty($claim['choice_option'])): ?> · <?php echo staffingUiH($claim['choice_option']); ?><?php endif; ?>
                             </span>
@@ -1275,16 +1272,15 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                   <td><?php echo (int)$row['eligible_hours_by_priority']['A']; ?></td>
                   <td><?php echo (int)$row['eligible_hours_by_priority']['B']; ?></td>
                   <td><?php echo (int)$row['eligible_hours_by_priority']['C']; ?></td>
-                  <td><?php echo (int)$row['ordered_exclusive_top_priority_hours']; ?></td>
-                  <td><?php echo (int)$row['ordered_shared_top_priority_hours']; ?></td>
-                  <td><?php echo (int)$row['special_top_priority_hours']; ?></td>
-                  <td><?php echo (int)$row['fallback_hours']; ?></td>
                 </tr>
               <?php endforeach; ?>
               </tbody>
             </table>
           </div>
-          <p class="help"><strong>Προσοχή:</strong> οι στήλες επιλεξιμότητας Α΄/Β΄/Γ΄ μπορούν να επικαλύπτονται μεταξύ κλάδων. Οι «Αποκλειστικές κορυφαίες» είναι το πιο αυστηρό κομμάτι της στελέχωσης· οι «Κοινές κορυφαίες» απαιτούν πραγματική κατανομή μεταξύ ισότιμων κλάδων.<?php if (!empty($collapsedSkills['active'])): ?> Τα <strong>Εργαστήρια Δεξιοτήτων</strong> εξαιρούνται από τα επιμέρους αθροίσματα κλάδων της οθόνης και εμφανίζονται μία φορά ως «Οποιαδήποτε ειδικότητα», ώστε να αποφεύγεται η τεχνητή επανάληψη δεκάδων αναθέσεων.<?php endif; ?></p>
+          <p class="help"><strong>Προσοχή:</strong> οι ώρες Α΄/Β΄/Γ΄ δείχνουν επιλεξιμότητα βάσει της αντίστοιχης ανάθεσης και μπορούν να επικαλύπτονται μεταξύ κλάδων. Η πραγματική κατανομή γίνεται στην επόμενη καρτέλα.<?php if (!empty($collapsedSkills['active'])): ?> Τα <strong>Εργαστήρια Δεξιοτήτων</strong> εξαιρούνται από τα επιμέρους αθροίσματα κλάδων της οθόνης και εμφανίζονται μία φορά ως «Οποιαδήποτε ειδικότητα», ώστε να αποφεύγεται η τεχνητή επανάληψη δεκάδων αναθέσεων.<?php endif; ?></p>
+          <?php if (in_array($schoolType, array('protypo_ekklisiastiko_gymnasio','protypo_ekklisiastiko_lykeio'), true)): ?>
+            <div class="info-note"><strong>Πρότυπα Εκκλησιαστικά Σχολεία:</strong> η <strong>Εικονογραφία</strong> ακολουθεί ειδική πρόβλεψη ανάθεσης και απαιτεί έλεγχο των προβλεπόμενων πρόσθετων προϋποθέσεων. Για τον λόγο αυτό δεν αποτυπώνεται ως συνηθισμένη Α΄/Β΄/Γ΄ ανάθεση στον παραπάνω πίνακα.</div>
+          <?php endif; ?>
         <?php calculatorCardEnd(); ?>
       <?php endif; ?>
 
@@ -1311,12 +1307,10 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                   <div><span class="branch-code"><?php echo staffingUiH($code); ?></span><small><?php echo staffingUiH($summary['label']); ?></small></div>
                   <div><strong><?php echo (int)$summary['people_count']; ?></strong><small>εκπαιδευτικοί</small></div>
                   <div><strong><?php echo (int)$summary['available_here_hours']; ?></strong><small>ώρες διαθέσιμες εδώ</small></div>
-                  <div><strong><?php echo $needRow ? (int)$needRow['ordered_exclusive_top_priority_hours'] : 0; ?></strong><small>αποκλειστικές κορυφαίες ώρες</small></div>
-                  <div><strong><?php echo $needRow ? (int)$needRow['ordered_shared_top_priority_hours'] : 0; ?></strong><small>κοινές κορυφαίες ώρες</small></div>
                 </div>
               <?php endforeach; ?>
             </div>
-            <p class="help">Η σύγκριση ανά κλάδο είναι ενδεικτική για έλεγχο. Δεν χαρακτηρίζει τη διαφορά ως «κενό» ή «πλεόνασμα», επειδή δεν έχουν ακόμη κατανεμηθεί τα πραγματικά μαθήματα και οι κοινές αναθέσεις.</p>
+            <p class="help">Η σύνοψη δείχνει το διαθέσιμο διδακτικό ωράριο του προσωπικού ανά κλάδο. Η αντιστοίχιση με συγκεκριμένα μαθήματα γίνεται στην επόμενη καρτέλα.</p>
           <?php endif; ?>
 
           <form method="post" id="staffingPersonnelForm">
@@ -1851,10 +1845,10 @@ uksort($specialtyLabelsClient, 'strnatcmp');
 
   <h2>Διδακτικές ανάγκες ανά κλάδο</h2>
   <table class="print-matrix">
-    <thead><tr><th>Κλάδος</th><th class="num">Α΄</th><th class="num">Β΄</th><th class="num">Γ΄</th><th class="num">Αποκλ. κορυφαία</th><th class="num">Κοινή κορυφαία</th><th class="num">Ειδική</th><th class="num">Χαμηλότερη</th></tr></thead>
+    <thead><tr><th>Κλάδος</th><th class="num">Α΄</th><th class="num">Β΄</th><th class="num">Γ΄</th></tr></thead>
     <tbody>
       <?php if (!empty($collapsedSkills['active'])): ?>
-        <tr><td><span class="print-code">Οποιαδήποτε ειδικότητα</span> · Εργαστήρια Δεξιοτήτων</td><td class="num" colspan="7"><?php echo (int)$collapsedSkills['hours']; ?> ώρες συνολικά</td></tr>
+        <tr><td><span class="print-code">Οποιαδήποτε ειδικότητα</span> · Εργαστήρια Δεξιοτήτων</td><td class="num" colspan="3"><?php echo (int)$collapsedSkills['hours']; ?> ώρες συνολικά</td></tr>
       <?php endif; ?>
       <?php foreach ($displayMatrix['codes'] as $code=>$row): ?>
         <tr>
@@ -1862,10 +1856,6 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           <td class="num"><?php echo (int)$row['eligible_hours_by_priority']['A']; ?></td>
           <td class="num"><?php echo (int)$row['eligible_hours_by_priority']['B']; ?></td>
           <td class="num"><?php echo (int)$row['eligible_hours_by_priority']['C']; ?></td>
-          <td class="num"><?php echo (int)$row['ordered_exclusive_top_priority_hours']; ?></td>
-          <td class="num"><?php echo (int)$row['ordered_shared_top_priority_hours']; ?></td>
-          <td class="num"><?php echo (int)$row['special_top_priority_hours']; ?></td>
-          <td class="num"><?php echo (int)$row['fallback_hours']; ?></td>
         </tr>
       <?php endforeach; ?>
     </tbody>

@@ -60,7 +60,7 @@ check('director auto 5 sections with 20y = 8 hours', 'name="personnel_required_t
 check('director auto section info rendered', 'data-director-section-count>5</strong>' in pedir and 'κλίμακα 3-5' in pedir)
 check('director band is not editable', 'personnel-director-sections' not in pedir)
 check('branch summary rendered', 'Σύνοψη ανά κλάδο' in out and 'data-personnel-branch="ΠΕ03"' in out)
-check('branch summary avoids vacancy/surplus conclusion', 'Δεν χαρακτηρίζει τη διαφορά ως «κενό» ή «πλεόνασμα»' in out)
+check('branch summary stays allocation-neutral', 'Η αντιστοίχιση με συγκεκριμένα μαθήματα γίνεται στην επόμενη καρτέλα.' in out and 'αποκλειστικές κορυφαίες ώρες' not in out and 'κοινές κορυφαίες ώρες' not in out)
 check('personnel add button exists', 'id="addPersonnelRow"' in out)
 check('personnel filter exists', 'id="personnelFilter"' in out)
 check('personnel template exists', 'id="personnelRowTemplate"' in out)
