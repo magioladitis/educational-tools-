@@ -145,6 +145,58 @@ function personnelWorkloadSecondaryObligation($person)
     );
     $twentyYears = $serviceDays >= 20 * 360;
 
+    // A myschool stat4_8 import may provide the effective compulsory teaching
+    // obligation directly (base obligation minus the source reduction). This
+    // source override is deliberately explicit and never changes the normal
+    // role/service calculation used for manually entered personnel.
+    $obligationSource = isset($person['obligation_source']) ? trim((string) $person['obligation_source']) : '';
+    if ($obligationSource === 'myschool_stat4_8' && array_key_exists('required_teaching_hours', $person)) {
+        $rawHours = trim((string) $person['required_teaching_hours']);
+        if (!preg_match('/^\d+$/', $rawHours) || (int) $rawHours < 1 || (int) $rawHours > 35) {
+            return array(
+                'status'=>'invalid',
+                'valid'=>false,
+                'reason'=>'required_teaching_hours_invalid',
+                'specialty_code'=>$specialty,
+                'service_days'=>$serviceDays,
+                'service_label'=>personnelWorkloadServiceLabel($serviceDays),
+            );
+        }
+        if (strpos($specialty, 'ΠΕ') === 0 && (int) $rawHours > 23) {
+            return array(
+                'status'=>'invalid',
+                'valid'=>false,
+                'reason'=>'required_teaching_hours_exceeds_pe_max',
+                'specialty_code'=>$specialty,
+                'service_days'=>$serviceDays,
+                'service_label'=>personnelWorkloadServiceLabel($serviceDays),
+            );
+        }
+        $base = isset($person['source_base_required_hours']) ? max(0, (int) $person['source_base_required_hours']) : null;
+        $reduction = isset($person['source_reduction_hours']) ? max(0, (int) $person['source_reduction_hours']) : null;
+        $atUnit = isset($person['source_hours_at_unit']) ? max(0, (int) $person['source_hours_at_unit']) : null;
+        $rule = 'Υ.Ω. από myschool stat4_8.';
+        if ($base !== null && $reduction !== null) $rule .= ' Βάση ' . $base . ' − μείωση ' . $reduction . ' = ' . (int) $rawHours . ' ώρες.';
+        if ($atUnit !== null) $rule .= ' Ώρες Υ.Ω. στον φορέα: ' . $atUnit . '.';
+        return array(
+            'status'=>'resolved',
+            'valid'=>true,
+            'specialty_code'=>$specialty,
+            'specialty_label'=>teacherSpecialtyLabel($specialty),
+            'role'=>$role,
+            'hours_branch'=>null,
+            'hours_branch_mode'=>'myschool_source_required_hours',
+            'service_days'=>$serviceDays,
+            'service_label'=>personnelWorkloadServiceLabel($serviceDays),
+            'required_teaching_hours'=>(int) $rawHours,
+            'obligation_source'=>$obligationSource,
+            'source_base_required_hours'=>$base,
+            'source_reduction_hours'=>$reduction,
+            'source_hours_at_unit'=>$atUnit,
+            'rule'=>$rule,
+        );
+    }
+
     // In the staffing UI an ordinary teacher supplies the already-known
     // compulsory teaching hours directly.  Presence of the key is deliberate:
     // callers that do not use the staffing UI retain the legacy calculated path.

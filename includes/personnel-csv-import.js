@@ -87,7 +87,11 @@
     required_teaching_hours:['υποχρεωτικο ωραριο','υποχρεωτικες ωρες','διδακτικο ωραριο','ωραριο','required teaching hours','required hours','teaching hours'],
     assigned_external_hours:['ωρες αλλου','ωρες σε αλλη μοναδα','ωρες αλλης μοναδας','διαθεση ωρες','external hours','hours elsewhere'],
     director_sections_band:['τμηματα διευθυντη','κλιμακα τμηματων','αριθμος τμηματων','director sections','sections band'],
-    hours_branch:['κλιμακα ωραριου δε','κλιμακα δε','ωραριο δε','de scale','hours branch']
+    hours_branch:['κλιμακα ωραριου δε','κλιμακα δε','ωραριο δε','de scale','hours branch'],
+    obligation_source:['πηγη ωραριου','πηγη υποχρεωτικου ωραριου','obligation source','hours source'],
+    source_base_required_hours:['υω πηγης','βασικο υω πηγης','source base required hours','source required hours'],
+    source_reduction_hours:['μειωση πηγης','μειωση ωραριου πηγης','source reduction hours'],
+    source_hours_at_unit:['ωρες υω στον φορεα','ωρες στον φορεα πηγης','source hours at unit','hours at unit']
   };
   var FIELD_FUZZY_SYNONYMS={
     schema_version:['εκδοση μητρωου','schema version','registry version'],
@@ -102,7 +106,11 @@
     required_teaching_hours:['υποχρεωτικο ωραριο','υποχρεωτικες ωρες','διδακτικο ωραριο','required teaching hours','required hours'],
     assigned_external_hours:['ωρες σε αλλη μοναδα','ωρες αλλης μοναδας','external hours','hours elsewhere'],
     director_sections_band:['κλιμακα τμηματων','αριθμος τμηματων','director sections','sections band'],
-    hours_branch:['κλιμακα ωραριου δε','de scale','hours branch']
+    hours_branch:['κλιμακα ωραριου δε','de scale','hours branch'],
+    obligation_source:['πηγη ωραριου','obligation source','hours source'],
+    source_base_required_hours:['υω πηγης','source required hours'],
+    source_reduction_hours:['μειωση πηγης','source reduction hours'],
+    source_hours_at_unit:['ωρες υω στον φορεα','source hours at unit']
   };
   function autoMap(headers){
     var normalized=headers.map(normalizeHeader), map={};
@@ -177,6 +185,12 @@
     if(t.indexOf('τεχνιτ')>=0 || t.indexOf('tech')>=0) return 'DE01_TECH';
     return ['DE01_ARCH','DE01_TECH'].indexOf(String(value).trim())>=0?String(value).trim():'';
   }
+  function normalizeObligationSource(value){
+    var t=normalizeHeader(value).replace(/\s+/g,' ');
+    if(t.indexOf('myschool')>=0 && t.indexOf('stat4')>=0) return 'myschool_stat4_8';
+    if(String(value||'').trim()==='myschool_stat4_8') return 'myschool_stat4_8';
+    return '';
+  }
   function get(row,mapping,field){
     var h=mapping[field]; return h && Object.prototype.hasOwnProperty.call(row,h) ? row[h] : '';
   }
@@ -201,7 +215,11 @@
       required_teaching_hours:optionalPositiveInt(get(row,mapping,'required_teaching_hours'),35),
       assigned_external_hours:nonNegativeInt(get(row,mapping,'assigned_external_hours'),35),
       director_sections_band:normalizeDirectorBand(get(row,mapping,'director_sections_band')),
-      hours_branch:normalizeHoursBranch(get(row,mapping,'hours_branch'))
+      hours_branch:normalizeHoursBranch(get(row,mapping,'hours_branch')),
+      obligation_source:normalizeObligationSource(get(row,mapping,'obligation_source')),
+      source_base_required_hours:optionalPositiveInt(get(row,mapping,'source_base_required_hours'),35),
+      source_reduction_hours:optionalPositiveInt(get(row,mapping,'source_reduction_hours'),35),
+      source_hours_at_unit:optionalPositiveInt(get(row,mapping,'source_hours_at_unit'),35)
     };
   }
 
@@ -210,7 +228,9 @@
     registrySchemaVersion:'staff_registry_v1',
     supportsManualRequiredTeachingHours:true,
     supportsSecondarySpecialty:true,
+    supportsSourceObligation:true,
     normalizeHeader:normalizeHeader,
+    normalizeObligationSource:normalizeObligationSource,
     normalizeSpecialtyCode:normalizeSpecialtyCode,
     parseDelimited:parseDelimited,
     detectDelimiter:detectDelimiter,
