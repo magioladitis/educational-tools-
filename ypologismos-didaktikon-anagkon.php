@@ -483,14 +483,16 @@ $collapsedSkills = array('active'=>false,'hours'=>0,'unit_count'=>0,'units'=>arr
 
 if ($submitted) {
     $schoolName = trim((string) staffingUiPost('school_name', ''));
+    $schoolRegistryId = trim((string) staffingUiPost('school_registry_id', ''));
     if ($schoolType === 'gymnasio') {
         $profile = schoolProfileBuildDayGymnasium2026(array(
             'profile_id' => 'ui-gymnasio-' . date('YmdHis'),
             'school' => array(
                 'type' => 'Ημερήσιο Γυμνάσιο',
+                'registry_id' => $schoolRegistryId,
                 'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Γυμνασίου',
             ),
-            'source' => array('kind' => 'manual_frontend_test'),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
             'general_sections' => array(
                 'Α΄' => staffingUiInt('gym_general_a'),
                 'Β΄' => staffingUiInt('gym_general_b'),
@@ -517,9 +519,10 @@ if ($submitted) {
             'profile_id' => 'ui-gel-' . date('YmdHis'),
             'school' => array(
                 'type' => 'Ημερήσιο Γενικό Λύκειο',
+                'registry_id' => $schoolRegistryId,
                 'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ ΓΕΛ',
             ),
-            'source' => array('kind' => 'manual_frontend_test'),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
             'general_sections' => array(
                 'Α΄' => staffingUiInt('gel_general_a'),
                 'Β΄' => staffingUiInt('gel_general_b'),
@@ -788,6 +791,13 @@ foreach ($allocationSlots as $slotId=>$slot) {
     .edu-page-staffing-simulator .personnel-csv-status{font-size:12.5px;margin-top:10px;color:var(--edu-muted)}
     .edu-page-staffing-simulator .personnel-csv-status.is-error{color:#9c2f2f}
     .edu-page-staffing-simulator .personnel-csv-status.is-success{color:var(--edu-success)}
+    .edu-page-staffing-simulator .school-registry-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
+    .edu-page-staffing-simulator .school-registry-note{margin-bottom:12px}
+    .edu-page-staffing-simulator .school-csv-active{margin:10px 0 14px}
+    .edu-page-staffing-simulator .school-csv-head-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .edu-page-staffing-simulator .school-registry-table .school-load-btn{white-space:nowrap}
+    .edu-page-staffing-simulator .school-registry-table .school-type-soon{color:#8a6400;font-weight:700}
+    .edu-page-staffing-simulator .school-registry-table .school-type-unknown{color:#9c2f2f;font-weight:700}
     .edu-page-staffing-simulator .branch-summary{display:grid;gap:8px;margin:12px 0}
     .edu-page-staffing-simulator .branch-summary-row{display:grid;grid-template-columns:minmax(140px,.8fr) repeat(4,minmax(110px,.65fr));gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface-soft)}
     .edu-page-staffing-simulator .branch-summary-row .branch-code{font-weight:800;color:var(--edu-primary-dark)}
@@ -890,12 +900,23 @@ foreach ($allocationSlots as $slotId=>$slot) {
 
         <form method="post" id="staffingProfileForm">
           <input type="hidden" name="staffing_action" value="">
+          <input type="hidden" name="school_registry_id" id="school_registry_id" value="<?php echo staffingUiH(staffingUiPost('school_registry_id')); ?>">
           <div class="field-grid">
             <div class="field">
               <label for="school_type">Τύπος σχολείου</label>
               <select id="school_type" name="school_type">
                 <option value="gymnasio"<?php echo $schoolType === 'gymnasio' ? ' selected' : ''; ?>>Ημερήσιο Γυμνάσιο</option>
                 <option value="gel"<?php echo $schoolType === 'gel' ? ' selected' : ''; ?>>Ημερήσιο Γενικό Λύκειο (ΓΕΛ)</option>
+                <optgroup label="Προσεχώς — προσωρινά ανενεργά">
+                  <option value="esperino_gymnasio" disabled>Εσπερινό Γυμνάσιο</option>
+                  <option value="esperino_gel" disabled>Εσπερινό ΓΕΛ</option>
+                  <option value="epal" disabled>ΕΠΑΛ</option>
+                  <option value="pepal" disabled>Πρότυπο ΕΠΑΛ</option>
+                  <option value="eneegyl" disabled>ΕΝ.Ε.Ε.ΓΥ.-Λ.</option>
+                  <option value="eeeek" disabled>Ε.Ε.Ε.ΕΚ.</option>
+                  <option value="mousiko" disabled>Μουσικό Σχολείο</option>
+                  <option value="kallitexniko" disabled>Καλλιτεχνικό Σχολείο</option>
+                </optgroup>
               </select>
             </div>
             <div class="field">
@@ -903,6 +924,30 @@ foreach ($allocationSlots as $slotId=>$slot) {
               <input id="school_name" name="school_name" type="text" value="<?php echo staffingUiH(staffingUiPost('school_name')); ?>" placeholder="π.χ. 1ο Γυμνάσιο Κέρκυρας">
             </div>
           </div>
+
+          <div class="school-registry-toolbar">
+            <button class="edu-btn-secondary" type="button" id="openSchoolCsv">Εισαγωγή / μητρώο σχολείων CSV</button>
+            <button class="edu-btn-secondary" type="button" id="downloadSchoolCsvTemplate">Λήψη προτύπου CSV</button>
+            <input type="file" id="schoolCsvFile" accept=".csv,text/csv,text/plain" hidden>
+          </div>
+          <div class="info-note school-registry-note"><strong>Πολλαπλές σχολικές μονάδες στο ίδιο CSV.</strong> Το portable schema <code>school_registry_v1</code> κρατά μία γραμμή ανά σχολείο. Στην τρέχουσα έκδοση μπορείς να φορτώνεις μία μονάδα κάθε φορά στην Καρτέλα 1· το μητρώο του CSV παραμένει διαθέσιμο στον browser ώστε να αλλάζεις σχολείο χωρίς νέο αρχείο. Οι τύποι που εμφανίζονται ως «προσεχώς» αναγνωρίζονται από το μητρώο αλλά δεν φορτώνονται ακόμη στον υπολογισμό.</div>
+          <div class="personnel-csv-panel school-csv-panel" id="schoolCsvPanel" hidden>
+            <div class="personnel-csv-head">
+              <div>
+                <strong>Μητρώο σχολικών μονάδων από CSV</strong>
+                <div class="personnel-csv-meta" id="schoolCsvMeta">Επίλεξε αρχείο CSV. Η ανάγνωση γίνεται μόνο στον browser σου.</div>
+              </div>
+              <div class="school-csv-head-actions">
+                <button type="button" class="edu-btn-secondary" id="chooseSchoolCsvFile">Επιλογή CSV</button>
+                <button type="button" class="edu-btn-secondary" id="clearSchoolCsvRegistry">Καθαρισμός μητρώου</button>
+                <button type="button" class="edu-btn-secondary" id="closeSchoolCsv">Κλείσιμο</button>
+              </div>
+            </div>
+            <div class="info-note"><strong>Δεν γίνεται μεταφόρτωση στον διακομιστή.</strong> Υποστηρίζονται semicolon (;), κόμμα ή tab. Ελάχιστες στήλες: «Ονομασία σχολείου» και «Είδος σχολείου». Τα «Α τμήματα / Β τμήματα / Γ τμήματα» και τα ειδικότερα πεδία μπορούν να συμπληρώνονται στην ίδια γραμμή.</div>
+            <div class="personnel-csv-preview" id="schoolCsvPreview"><div class="empty-personnel">Δεν έχει επιλεγεί ακόμη CSV.</div></div>
+            <div class="personnel-csv-status" id="schoolCsvStatus"></div>
+          </div>
+          <div class="info-note school-csv-active" id="schoolCsvActive" hidden></div>
 
           <div id="gymProfileFields"<?php echo $schoolType === 'gymnasio' ? '' : ' hidden'; ?>>
             <section class="staffing-section">
@@ -1652,6 +1697,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
 <?php endif; ?>
 
 <script src="<?php echo staffingUiH(edu_asset_url('includes/teaching-hours-calculations.js')); ?>"></script>
+<script src="<?php echo staffingUiH(edu_asset_url('includes/school-profile-csv-import.js')); ?>"></script>
 <script src="<?php echo staffingUiH(edu_asset_url('includes/personnel-csv-import.js')); ?>"></script>
 <script>
 (function(){
@@ -1740,7 +1786,219 @@ foreach ($allocationSlots as $slotId=>$slot) {
   document.querySelectorAll('[data-language-max-source]').forEach(function(input){ input.addEventListener('input',syncLanguageGroupMaximums); });
   document.querySelectorAll('[id^="gym_general_"],[id^="gel_general_"]').forEach(function(input){ input.addEventListener('input',syncLanguageGroupMaximums); });
   syncLanguageGroupMaximums();
-  if(reset){ reset.addEventListener('click',function(){ setTimeout(function(){ type.value='gymnasio'; sync(); syncSplitMaximums(); syncLanguageGroupMaximums(); },0); }); }
+
+  const schoolProfileForm=document.getElementById('staffingProfileForm');
+  const openSchoolCsv=document.getElementById('openSchoolCsv');
+  const schoolCsvFile=document.getElementById('schoolCsvFile');
+  const chooseSchoolCsvFile=document.getElementById('chooseSchoolCsvFile');
+  const clearSchoolCsvRegistry=document.getElementById('clearSchoolCsvRegistry');
+  const schoolCsvPanel=document.getElementById('schoolCsvPanel');
+  const closeSchoolCsv=document.getElementById('closeSchoolCsv');
+  const schoolCsvMeta=document.getElementById('schoolCsvMeta');
+  const schoolCsvPreview=document.getElementById('schoolCsvPreview');
+  const schoolCsvStatus=document.getElementById('schoolCsvStatus');
+  const schoolCsvActive=document.getElementById('schoolCsvActive');
+  const downloadSchoolCsvTemplate=document.getElementById('downloadSchoolCsvTemplate');
+  let schoolCsvRegistry=[];
+  const schoolCsvStorageKey='education_school_registry_v1';
+
+  function schoolCsvSetStatus(message,kind){
+    if(!schoolCsvStatus) return;
+    schoolCsvStatus.className='personnel-csv-status'+(kind?' is-'+kind:'');
+    schoolCsvStatus.textContent=message||'';
+  }
+  function persistSchoolCsvRegistry(){
+    try{
+      if(schoolCsvRegistry.length) sessionStorage.setItem(schoolCsvStorageKey,JSON.stringify(schoolCsvRegistry));
+      else sessionStorage.removeItem(schoolCsvStorageKey);
+    }catch(e){}
+  }
+  function restoreSchoolCsvRegistry(){
+    try{
+      const raw=sessionStorage.getItem(schoolCsvStorageKey);
+      if(!raw) return false;
+      const parsed=JSON.parse(raw);
+      if(!Array.isArray(parsed)) return false;
+      schoolCsvRegistry=parsed;
+      return schoolCsvRegistry.length>0;
+    }catch(e){return false;}
+  }
+  function schoolCsvKnownPlaceholder(typeValue){
+    return !!(window.EducationSchoolCsv && Array.isArray(window.EducationSchoolCsv.placeholderTypes) && window.EducationSchoolCsv.placeholderTypes.indexOf(typeValue)>=0);
+  }
+  function schoolCsvTotalSections(record){
+    return ['general_a','general_b','general_c'].reduce(function(total,key){return total+(parseInt(record[key]||0,10)||0);},0);
+  }
+  function renderSchoolCsvRegistry(){
+    if(!schoolCsvPreview) return;
+    schoolCsvPreview.innerHTML='';
+    if(!schoolCsvRegistry.length){
+      const empty=document.createElement('div');
+      empty.className='empty-personnel';
+      empty.textContent='Το CSV δεν περιέχει σχολικές μονάδες.';
+      schoolCsvPreview.appendChild(empty);
+      return;
+    }
+    const table=document.createElement('table');
+    table.className='school-registry-table';
+    const thead=document.createElement('thead');
+    thead.innerHTML='<tr><th>Σχολική μονάδα</th><th>Είδος</th><th>Α΄</th><th>Β΄</th><th>Γ΄</th><th>Σύνολο τμημάτων</th><th>Κατάσταση</th><th></th></tr>';
+    table.appendChild(thead);
+    const tbody=document.createElement('tbody');
+    schoolCsvRegistry.forEach(function(record,index){
+      const tr=document.createElement('tr');
+      const knownSoon=schoolCsvKnownPlaceholder(record.school_type);
+      const status=record.supported?'Έτοιμο για φόρτωση':(knownSoon?'Προσεχώς':'Μη αναγνωρισμένο είδος');
+      const statusClass=record.supported?'':(knownSoon?'school-type-soon':'school-type-unknown');
+      const cells=[record.school_name||record.school_id||('Σχολείο '+(index+1)),record.school_type_label||record.school_type,record.general_a,record.general_b,record.general_c,schoolCsvTotalSections(record)];
+      cells.forEach(function(value){const td=document.createElement('td');td.textContent=String(value==null?'':value);tr.appendChild(td);});
+      const statusTd=document.createElement('td');
+      statusTd.className=statusClass;
+      statusTd.textContent=status;
+      tr.appendChild(statusTd);
+      const actionTd=document.createElement('td');
+      const button=document.createElement('button');
+      button.type='button';
+      button.className='edu-btn-secondary school-load-btn';
+      button.textContent=record.supported?'Φόρτωση':'Ανενεργό';
+      button.disabled=!record.supported;
+      button.dataset.schoolRegistryIndex=String(index);
+      actionTd.appendChild(button);
+      tr.appendChild(actionTd);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    schoolCsvPreview.appendChild(table);
+  }
+  function loadSchoolRegistryRecord(record){
+    if(!record || !record.supported || !schoolProfileForm || !window.EducationSchoolCsv) return;
+    const values=window.EducationSchoolCsv.schoolToFormValues(record);
+    Object.keys(values).forEach(function(name){
+      const field=schoolProfileForm.elements.namedItem(name);
+      if(field) field.value=values[name];
+    });
+    sync();
+    syncSplitMaximums();
+    syncLanguageGroupMaximums();
+    const techPanel=document.getElementById('technologyInformaticsPanel');
+    if(techPanel){
+      techPanel.open=record.school_type==='gymnasio' && ['tech_split_a','tech_split_b','tech_split_c'].some(function(key){return (parseInt(record[key]||0,10)||0)>0;});
+    }
+    const ethicsPanel=document.getElementById('ethicsPanel');
+    if(ethicsPanel){
+      ethicsPanel.open=['a','b','c'].some(function(g){return record['ethics_'+g+'_exempt']!=='' || record['ethics_'+g+'_timely']!=='' || record['ethics_'+g+'_equivalent']!=='';});
+    }
+    if(schoolCsvActive){
+      schoolCsvActive.hidden=false;
+      schoolCsvActive.innerHTML='<strong>Τρέχουσα εγγραφή CSV:</strong> '+escapeHtml(record.school_name||record.school_id)+' · '+escapeHtml(record.school_type_label||record.school_type)+'. Τα στοιχεία φορτώθηκαν στη φόρμα χωρίς server request. Πάτησε «Υπολόγισε διδακτικές ανάγκες» όταν θέλεις νέο υπολογισμό.';
+    }
+    schoolCsvSetStatus('Φορτώθηκε το «'+(record.school_name||record.school_id)+'». Μπορείς να επιλέξεις άλλο σχολείο από το ίδιο μητρώο οποιαδήποτε στιγμή.','success');
+  }
+  function escapeHtml(value){
+    return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch];});
+  }
+  function schoolCsvImporterSupportsRegistry(){
+    return !!(window.EducationSchoolCsv && window.EducationSchoolCsv.supportsMultipleSchools===true && window.EducationSchoolCsv.registrySchemaVersion==='school_registry_v1');
+  }
+  function decodeSchoolCsvBuffer(buffer){
+    let text='';
+    try{text=new TextDecoder('utf-8',{fatal:false}).decode(buffer);}catch(e){text='';}
+    if(text.indexOf('\uFFFD')>=0){
+      try{const alt=new TextDecoder('windows-1253').decode(buffer); if(alt && alt.indexOf('\uFFFD')<0) text=alt;}catch(e){}
+    }
+    return text.replace(/^\uFEFF/,'');
+  }
+  function parseSchoolCsvFile(file){
+    if(!file || !schoolCsvImporterSupportsRegistry()){
+      schoolCsvSetStatus('Δεν φορτώθηκε η έκδοση του CSV importer που υποστηρίζει το school_registry_v1. Κάνε ανανέωση της σελίδας και δοκίμασε ξανά.','error');
+      return;
+    }
+    const reader=new FileReader();
+    reader.onload=function(){
+      try{
+        const parsed=window.EducationSchoolCsv.parse(decodeSchoolCsvBuffer(reader.result));
+        const mapping=window.EducationSchoolCsv.autoMap(parsed.headers);
+        if(!mapping.school_name || !mapping.school_type){
+          schoolCsvRegistry=[];
+          renderSchoolCsvRegistry();
+          schoolCsvSetStatus('Δεν βρέθηκαν οι απαιτούμενες στήλες «Ονομασία σχολείου» και «Είδος σχολείου». Χρησιμοποίησε το πρότυπο school_registry_v1 ή αντίστοιχες ονομασίες στηλών.','error');
+          return;
+        }
+        schoolCsvRegistry=parsed.rows.map(function(row,index){return window.EducationSchoolCsv.rowToSchool(row,mapping,index);});
+        persistSchoolCsvRegistry();
+        renderSchoolCsvRegistry();
+        const supported=schoolCsvRegistry.filter(function(r){return r.supported;}).length;
+        const soon=schoolCsvRegistry.filter(function(r){return !r.supported && schoolCsvKnownPlaceholder(r.school_type);}).length;
+        if(schoolCsvMeta) schoolCsvMeta.textContent=file.name+' · '+schoolCsvRegistry.length+' σχολικές μονάδες · delimiter '+(parsed.delimiter==='\t'?'tab':parsed.delimiter);
+        schoolCsvSetStatus('Διαβάστηκαν '+schoolCsvRegistry.length+' σχολικές μονάδες: '+supported+' μπορούν να φορτωθούν τώρα'+(soon?' και '+soon+' ανήκουν σε προσωρινά ανενεργούς τύπους.':'.'),'success');
+      }catch(error){
+        schoolCsvRegistry=[];
+        renderSchoolCsvRegistry();
+        schoolCsvSetStatus('Αποτυχία ανάγνωσης CSV: '+(error&&error.message?error.message:'άγνωστο σφάλμα')+'.','error');
+      }
+    };
+    reader.onerror=function(){schoolCsvSetStatus('Δεν ήταν δυνατή η ανάγνωση του αρχείου CSV.','error');};
+    reader.readAsArrayBuffer(file);
+  }
+  function openSchoolCsvPicker(){
+    if(!schoolCsvFile) return;
+    schoolCsvFile.value='';
+    schoolCsvFile.click();
+  }
+  if(openSchoolCsv && schoolCsvPanel){
+    openSchoolCsv.addEventListener('click',function(){schoolCsvPanel.hidden=false;if(!schoolCsvRegistry.length) openSchoolCsvPicker();});
+  }
+  if(chooseSchoolCsvFile) chooseSchoolCsvFile.addEventListener('click',openSchoolCsvPicker);
+  if(schoolCsvFile){
+    schoolCsvFile.addEventListener('change',function(){if(schoolCsvFile.files && schoolCsvFile.files[0]) parseSchoolCsvFile(schoolCsvFile.files[0]);});
+  }
+  if(clearSchoolCsvRegistry){
+    clearSchoolCsvRegistry.addEventListener('click',function(){
+      schoolCsvRegistry=[];
+      persistSchoolCsvRegistry();
+      renderSchoolCsvRegistry();
+      if(schoolCsvMeta) schoolCsvMeta.textContent='Δεν υπάρχει ενεργό μητρώο σχολικών μονάδων.';
+      schoolCsvSetStatus('Το προσωρινό μητρώο σχολικών μονάδων καθαρίστηκε.','');
+      if(schoolCsvActive) schoolCsvActive.hidden=true;
+    });
+  }
+  if(closeSchoolCsv && schoolCsvPanel){closeSchoolCsv.addEventListener('click',function(){schoolCsvPanel.hidden=true;});}
+  if(schoolCsvPreview){
+    schoolCsvPreview.addEventListener('click',function(event){
+      const button=event.target.closest('[data-school-registry-index]');
+      if(!button) return;
+      const index=parseInt(button.dataset.schoolRegistryIndex||'-1',10);
+      if(index>=0 && schoolCsvRegistry[index]) loadSchoolRegistryRecord(schoolCsvRegistry[index]);
+    });
+  }
+  if(restoreSchoolCsvRegistry()){
+    renderSchoolCsvRegistry();
+    if(schoolCsvMeta) schoolCsvMeta.textContent='Προσωρινό μητρώο browser · '+schoolCsvRegistry.length+' σχολικές μονάδες · school_registry_v1';
+    schoolCsvSetStatus('Το μητρώο αποκαταστάθηκε από την τρέχουσα καρτέλα του browser. Μπορείς να φορτώσεις άλλο σχολείο χωρίς να επιλέξεις ξανά το CSV.','success');
+  }
+
+  function schoolCsvEscape(value){
+    const text=String(value==null?'':value);
+    return /[;"\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text;
+  }
+  function downloadSchoolRegistryTemplate(){
+    const headers=['Έκδοση μητρώου','Αναγνωριστικό σχολείου','Ονομασία σχολείου','Είδος σχολείου','Α τμήματα','Β τμήματα','Γ τμήματα','Α Γαλλικά ομάδες','Α Γερμανικά ομάδες','Α Ιταλικά ομάδες','Β Γαλλικά ομάδες','Β Γερμανικά ομάδες','Β Ιταλικά ομάδες','Γ Γαλλικά ομάδες','Γ Γερμανικά ομάδες','Γ Ιταλικά ομάδες','Α τμήματα άνω 21','Β τμήματα άνω 21','Γ τμήματα άνω 21','Β ομάδες Ανθρωπιστικών','Β ομάδες Θετικών','Γ ομάδες Ανθρωπιστικών','Γ ομάδες Θετικών Υγείας','Γ ομάδες Οικονομίας Πληροφορικής','Γ Μαθηματικά 2ου πεδίου','Γ Βιολογία 3ου πεδίου','Γ Μαθηματικά Γενικής Παιδείας','Γ Ιστορία Γενικής Παιδείας','Α απαλλασσόμενοι','Α Ηθική εντός 5ης','Α τμήματα Ηθικής','Β απαλλασσόμενοι','Β Ηθική εντός 5ης','Β τμήματα Ηθικής','Γ απαλλασσόμενοι','Γ Ηθική εντός 5ης','Γ τμήματα Ηθικής'];
+    const blank=new Array(headers.length).fill('');
+    const gym=blank.slice();
+    gym[0]='school_registry_v1'; gym[1]='school-001'; gym[2]='Παράδειγμα Γυμνασίου'; gym[3]='Ημερήσιο Γυμνάσιο'; gym[4]='2'; gym[5]='2'; gym[6]='2'; gym[7]='1'; gym[8]='1'; gym[10]='1'; gym[11]='1'; gym[13]='1'; gym[14]='1';
+    const gelRow=blank.slice();
+    gelRow[0]='school_registry_v1'; gelRow[1]='school-002'; gelRow[2]='Παράδειγμα ΓΕΛ'; gelRow[3]='Ημερήσιο ΓΕΛ'; gelRow[4]='3'; gelRow[5]='2'; gelRow[6]='3'; gelRow[7]='1'; gelRow[8]='1'; gelRow[10]='1'; gelRow[11]='1'; gelRow[19]='1'; gelRow[20]='1'; gelRow[21]='1'; gelRow[22]='2'; gelRow[23]='1'; gelRow[24]='1'; gelRow[25]='1';
+    const csv='\uFEFF'+[headers,gym,gelRow].map(function(row){return row.map(schoolCsvEscape).join(';');}).join('\r\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download='school_registry_v1-template.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},0);
+  }
+  if(downloadSchoolCsvTemplate){downloadSchoolCsvTemplate.addEventListener('click',downloadSchoolRegistryTemplate);}
+
+  if(reset){ reset.addEventListener('click',function(){ setTimeout(function(){ type.value='gymnasio'; sync(); syncSplitMaximums(); syncLanguageGroupMaximums(); if(schoolCsvActive) schoolCsvActive.hidden=true; },0); }); }
   const filter=document.getElementById('staffingResultFilter');
   if(filter){
     const rows=Array.from(document.querySelectorAll('.staffing-code-row'));
