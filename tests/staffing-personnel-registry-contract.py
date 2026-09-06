@@ -43,7 +43,7 @@ check('portable registry exports secondary specialty', "value('.personnel-second
 check('portable registry exports stable person id', "value('input[name=\"personnel_person_id[]\"]')" in text)
 check('portable registry omits irrelevant personal ids', 'ΑΦΜ' not in text and 'Αριθμός Μητρώου' not in text)
 check('secondary specialty participates in personnel filter', "(secondary?secondary.value:'')" in text)
-check('secondary specialty is included in allocation labels but not yet eligibility logic', '/ 2η ' in text)
+check('secondary specialty participates in allocation eligibility logic', '/ 2η ' in text and 'allocationBestAssignment' in text and 'personnelWorkloadBestAssignmentForSlot' in WORKLOAD.read_text(encoding='utf-8'))
 
 php2='''<?php
 require %s;

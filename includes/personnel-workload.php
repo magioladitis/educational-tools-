@@ -369,6 +369,7 @@ function personnelWorkloadEvaluatePerson($profile, $person, $allocations = array
         'allocations'=>array(),
         'assigned_profile_hours'=>0,
         'assigned_hours_by_priority'=>array('A'=>0,'B'=>0,'C'=>0,'SPECIAL'=>0),
+        'assigned_hours_by_specialty_source'=>array('primary'=>0,'secondary'=>0),
         'assigned_top_priority_hours'=>0,
         'assigned_exclusive_top_hours'=>0,
         'assigned_shared_top_hours'=>0,
@@ -387,7 +388,6 @@ function personnelWorkloadEvaluatePerson($profile, $person, $allocations = array
     }
 
     $unitIndex = personnelWorkloadUnitIndex($matrix);
-    $claimIndex = personnelWorkloadClaimIndexForCode($matrix, $normalized['specialty_code']);
     foreach ($allocations as $i=>$allocation) {
         $unitId = isset($allocation['unit_id']) ? (string) $allocation['unit_id'] : '';
         $hours = isset($allocation['hours']) ? personnelWorkloadNonNegativeInt($allocation['hours']) : 0;
@@ -407,12 +407,24 @@ function personnelWorkloadEvaluatePerson($profile, $person, $allocations = array
             $result['allocation_errors'][] = 'allocation_' . $i . '_exceeds_unit_capacity';
             continue;
         }
+        $primaryCode = isset($normalized['specialty_code']) ? teacherSpecialtyCanonicalCode($normalized['specialty_code']) : '';
+        $secondaryCode = isset($normalized['secondary_specialty_code']) ? teacherSpecialtyCanonicalCode($normalized['secondary_specialty_code']) : '';
+        $usedCode = isset($allocation['used_specialty_code']) && trim((string) $allocation['used_specialty_code']) !== ''
+            ? teacherSpecialtyCanonicalCode($allocation['used_specialty_code'])
+            : $primaryCode;
+        if ($usedCode === '' || ($usedCode !== $primaryCode && $usedCode !== $secondaryCode)) {
+            $result['valid'] = false;
+            $result['allocation_errors'][] = 'allocation_' . $i . '_used_specialty_not_owned';
+            continue;
+        }
+        $claimIndex = personnelWorkloadClaimIndexForCode($matrix, $usedCode);
         if (!isset($claimIndex[$unitId])) {
             $result['valid'] = false;
             $result['allocation_errors'][] = 'allocation_' . $i . '_specialty_not_eligible';
             continue;
         }
         $claim = $claimIndex[$unitId];
+        $specialtySource = $usedCode === $secondaryCode && $secondaryCode !== '' && $secondaryCode !== $primaryCode ? 'secondary' : 'primary';
         $row = array(
             'unit_id'=>$unitId,
             'hours'=>$hours,
@@ -420,6 +432,8 @@ function personnelWorkloadEvaluatePerson($profile, $person, $allocations = array
             'subject'=>$unit['subject'],
             'assignment_subject'=>$unit['assignment_subject'],
             'priority'=>$claim['priority'],
+            'used_specialty_code'=>$usedCode,
+            'specialty_source'=>$specialtySource,
             'top_priority'=>$claim['top_priority'],
             'is_top_priority'=>(bool) $claim['is_top_priority'],
             'top_code_count'=>(int) $claim['top_code_count'],
@@ -432,6 +446,9 @@ function personnelWorkloadEvaluatePerson($profile, $person, $allocations = array
         $result['assigned_profile_hours'] += $hours;
         if (isset($result['assigned_hours_by_priority'][$claim['priority']])) {
             $result['assigned_hours_by_priority'][$claim['priority']] += $hours;
+        }
+        if (isset($result['assigned_hours_by_specialty_source'][$specialtySource])) {
+            $result['assigned_hours_by_specialty_source'][$specialtySource] += $hours;
         }
         if ($claim['is_top_priority']) {
             $result['assigned_top_priority_hours'] += $hours;
@@ -458,6 +475,13 @@ function personnelWorkloadEvaluatePerson($profile, $person, $allocations = array
     $result['hours_status'] = $result['overage_hours'] > 0 ? 'over_required' : ($result['remaining_hours'] > 0 ? 'under_required' : 'exact_required');
     if ($result['overage_hours'] > 0) {
         $result['allocation_warnings'][] = 'assigned_hours_exceed_required_teaching_hours';
+    }
+    $result['b_assignment_hours'] = isset($result['assigned_hours_by_priority']['B']) ? (int) $result['assigned_hours_by_priority']['B'] : 0;
+    $result['b_assignment_limit_hours'] = 10;
+    $result['b_assignment_limit_exceeded'] = $result['b_assignment_hours'] > $result['b_assignment_limit_hours'];
+    if ($result['b_assignment_limit_exceeded']) {
+        // Προειδοποίηση μόνο: υπέρβαση μπορεί να επιτραπεί κατ' εξαίρεση με απόφαση ΠΥΣΔΕ.
+        $result['allocation_warnings'][] = 'b_assignment_hours_exceed_10_limit';
     }
     $result['allocation_errors'] = array_values(array_unique($result['allocation_errors']));
     $result['allocation_warnings'] = array_values(array_unique($result['allocation_warnings']));
@@ -556,6 +580,8 @@ function personnelWorkloadRosterPlan($profile, $people, $allocations, $model = n
         $byPerson[$personId][] = array(
             'unit_id'=>isset($allocation['unit_id']) ? $allocation['unit_id'] : '',
             'hours'=>isset($allocation['hours']) ? $allocation['hours'] : 0,
+            'used_specialty_code'=>isset($allocation['used_specialty_code']) ? $allocation['used_specialty_code'] : '',
+            'specialty_source'=>isset($allocation['specialty_source']) ? $allocation['specialty_source'] : '',
         );
     }
 
@@ -584,8 +610,13 @@ function personnelWorkloadRosterPlan($profile, $people, $allocations, $model = n
         if (!isset($peopleIndex[$personId]) || !isset($unitIndex[$unitId]) || $hours < 1) {
             continue;
         }
-        // Μόνο έγκυρη eligibility μετρά για κάλυψη unit.
-        $claims = personnelWorkloadClaimIndexForCode($matrix, isset($peopleIndex[$personId]['specialty_code']) ? $peopleIndex[$personId]['specialty_code'] : '');
+        // Μόνο έγκυρη eligibility μετρά για κάλυψη unit. Στο slot layer
+        // μπορεί να έχει επιλεγεί νόμιμα η 2η ειδικότητα του ίδιου προσώπου.
+        $primaryCode = isset($peopleIndex[$personId]['specialty_code']) ? teacherSpecialtyCanonicalCode($peopleIndex[$personId]['specialty_code']) : '';
+        $secondaryCode = isset($peopleIndex[$personId]['secondary_specialty_code']) ? teacherSpecialtyCanonicalCode($peopleIndex[$personId]['secondary_specialty_code']) : '';
+        $usedCode = isset($allocation['used_specialty_code']) ? teacherSpecialtyCanonicalCode($allocation['used_specialty_code']) : $primaryCode;
+        if ($usedCode === '' || ($usedCode !== $primaryCode && $usedCode !== $secondaryCode)) continue;
+        $claims = personnelWorkloadClaimIndexForCode($matrix, $usedCode);
         if (!isset($claims[$unitId])) {
             continue;
         }
@@ -834,6 +865,48 @@ function personnelWorkloadPriorityForSlotCode($slot, $specialtyCode)
     return null;
 }
 
+function personnelWorkloadPriorityRank($priority)
+{
+    $order = array('A'=>1, 'B'=>2, 'C'=>3, 'SPECIAL'=>4);
+    return isset($order[$priority]) ? $order[$priority] : 99;
+}
+
+/**
+ * Επιλέγει την καλύτερη πραγματική διαδρομή ανάθεσης για ένα slot.
+ * Ελέγχει κύρια και 2η ειδικότητα χωρίς να αλλάζει τους πίνακες αναθέσεων:
+ * Α΄ προηγείται Β΄, Β΄ προηγείται Γ΄ και σε ισοβαθμία προηγείται η κύρια.
+ */
+function personnelWorkloadBestAssignmentForSlot($slot, $person)
+{
+    $primary = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
+    $secondary = isset($person['secondary_specialty_code']) ? teacherSpecialtyCanonicalCode($person['secondary_specialty_code']) : '';
+    $candidates = array();
+    if ($primary !== '') {
+        $priority = personnelWorkloadPriorityForSlotCode($slot, $primary);
+        if ($priority !== null) $candidates[] = array(
+            'priority'=>$priority,
+            'used_specialty_code'=>$primary,
+            'specialty_source'=>'primary',
+        );
+    }
+    if ($secondary !== '' && $secondary !== $primary) {
+        $priority = personnelWorkloadPriorityForSlotCode($slot, $secondary);
+        if ($priority !== null) $candidates[] = array(
+            'priority'=>$priority,
+            'used_specialty_code'=>$secondary,
+            'specialty_source'=>'secondary',
+        );
+    }
+    if (empty($candidates)) return null;
+    usort($candidates, function ($a, $b) {
+        $rank = personnelWorkloadPriorityRank($a['priority']) - personnelWorkloadPriorityRank($b['priority']);
+        if ($rank !== 0) return $rank;
+        if ($a['specialty_source'] === $b['specialty_source']) return 0;
+        return $a['specialty_source'] === 'primary' ? -1 : 1;
+    });
+    return $candidates[0];
+}
+
 /**
  * Roster validation σε επίπεδο πραγματικού slot τμήματος/ομάδας.
  * Μεταφράζει τα slot allocations στο υπάρχον aggregate personnel layer,
@@ -869,6 +942,8 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
             'errors'=>array(),
             'warnings'=>array(),
             'priority'=>null,
+            'used_specialty_code'=>'',
+            'specialty_source'=>'',
         );
         if ($personId === '' || !isset($peopleIndex[$personId])) {
             $row['valid'] = false; $row['errors'][] = 'unknown_person';
@@ -889,19 +964,29 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
                 $row['valid'] = false; $row['errors'][] = 'hours_exceed_slot_capacity';
             }
             if (isset($peopleIndex[$personId])) {
-                $priority = personnelWorkloadPriorityForSlotCode($slot, isset($peopleIndex[$personId]['specialty_code']) ? $peopleIndex[$personId]['specialty_code'] : '');
-                $row['priority'] = $priority;
-                if ($priority === null) {
+                $assignment = personnelWorkloadBestAssignmentForSlot($slot, $peopleIndex[$personId]);
+                if ($assignment === null) {
                     $row['valid'] = false; $row['errors'][] = 'specialty_not_eligible';
-                } elseif (isset($slot['top_priority']) && $slot['top_priority'] !== null && $priority !== $slot['top_priority']) {
-                    $row['warnings'][] = 'uses_lower_priority_assignment';
+                } else {
+                    $row['priority'] = $assignment['priority'];
+                    $row['used_specialty_code'] = $assignment['used_specialty_code'];
+                    $row['specialty_source'] = $assignment['specialty_source'];
+                    if (isset($slot['top_priority']) && $slot['top_priority'] !== null && $row['priority'] !== $slot['top_priority']) {
+                        $row['warnings'][] = 'uses_lower_priority_assignment';
+                    }
                 }
             }
         }
         if ($row['valid']) {
             $uid = $slots[$slotId]['unit_id'];
-            $key = $personId . "\n" . $uid;
-            if (!isset($aggregate[$key])) $aggregate[$key] = array('person_id'=>$personId,'unit_id'=>$uid,'hours'=>0);
+            $key = $personId . "\n" . $uid . "\n" . $row['used_specialty_code'];
+            if (!isset($aggregate[$key])) $aggregate[$key] = array(
+                'person_id'=>$personId,
+                'unit_id'=>$uid,
+                'hours'=>0,
+                'used_specialty_code'=>$row['used_specialty_code'],
+                'specialty_source'=>$row['specialty_source'],
+            );
             $aggregate[$key]['hours'] += $hours;
             $slotAssigned[$slotId] += $hours;
         }
@@ -945,6 +1030,44 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
         unset($row);
     }
 
+    // Το όριο των 10 ωρών Β΄ ανάθεσης ελέγχεται συνολικά ανά εκπαιδευτικό
+    // και για τις δύο ειδικότητες. Είναι ισχυρή προειδοποίηση, όχι hard block.
+    $bHoursByPerson = array();
+    foreach ($peopleIndex as $personId=>$person) $bHoursByPerson[$personId] = 0;
+    foreach ($rowResults as $row) {
+        if ($row['valid'] && $row['priority'] === 'B' && isset($bHoursByPerson[$row['person_id']])) {
+            $bHoursByPerson[$row['person_id']] += (int) $row['hours'];
+        }
+    }
+    $peopleOverBLimit = 0;
+    $bHoursOverLimitTotal = 0;
+    foreach ($bHoursByPerson as $personId=>$bHours) {
+        if ($bHours <= 10) continue;
+        $peopleOverBLimit++;
+        $bHoursOverLimitTotal += $bHours - 10;
+        if (isset($basePlan['people'][$personId])) {
+            $basePlan['people'][$personId]['b_assignment_hours'] = $bHours;
+            $basePlan['people'][$personId]['b_assignment_limit_hours'] = 10;
+            $basePlan['people'][$personId]['b_assignment_limit_exceeded'] = true;
+            if (!isset($basePlan['people'][$personId]['allocation_warnings'])) $basePlan['people'][$personId]['allocation_warnings'] = array();
+            $basePlan['people'][$personId]['allocation_warnings'][] = 'b_assignment_hours_exceed_10_limit';
+            $basePlan['people'][$personId]['allocation_warnings'] = array_values(array_unique($basePlan['people'][$personId]['allocation_warnings']));
+        }
+        foreach ($rowResults as &$row) {
+            if ($row['valid'] && $row['person_id'] === $personId && $row['priority'] === 'B') {
+                $row['warnings'][] = 'b_assignment_hours_exceed_10_limit';
+                $row['warnings'] = array_values(array_unique($row['warnings']));
+            }
+        }
+        unset($row);
+    }
+    foreach ($peopleIndex as $personId=>$person) {
+        if (!isset($basePlan['people'][$personId])) continue;
+        if (!isset($basePlan['people'][$personId]['b_assignment_hours'])) $basePlan['people'][$personId]['b_assignment_hours'] = isset($bHoursByPerson[$personId]) ? (int) $bHoursByPerson[$personId] : 0;
+        if (!isset($basePlan['people'][$personId]['b_assignment_limit_hours'])) $basePlan['people'][$personId]['b_assignment_limit_hours'] = 10;
+        if (!isset($basePlan['people'][$personId]['b_assignment_limit_exceeded'])) $basePlan['people'][$personId]['b_assignment_limit_exceeded'] = $basePlan['people'][$personId]['b_assignment_hours'] > 10;
+    }
+
     $invalidRows = 0;
     foreach ($rowResults as $row) if (!$row['valid']) $invalidRows++;
     $basePlan['valid'] = $basePlan['valid'] && $over === 0 && $invalidRows === 0;
@@ -956,6 +1079,10 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
     $basePlan['summary']['unassigned_slot_hours'] = $unassigned;
     $basePlan['summary']['overallocated_slot_hours'] = $over;
     $basePlan['summary']['invalid_allocation_row_count'] = $invalidRows;
+    $basePlan['summary']['people_over_b_assignment_limit_count'] = $peopleOverBLimit;
+    $basePlan['summary']['b_assignment_hours_over_limit_total'] = $bHoursOverLimitTotal;
+    $basePlan['semantics']['b_assignment_10_hour_limit_is_warning_only'] = true;
+    $basePlan['semantics']['secondary_specialty_participates_in_slot_eligibility'] = true;
     $basePlan['semantics']['slot_capacity_checked_per_section_or_group'] = true;
     $basePlan['semantics']['manual_allocation_only'] = true;
     return $basePlan;

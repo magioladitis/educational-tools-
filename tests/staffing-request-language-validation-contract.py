@@ -28,7 +28,7 @@ check('no native staffing submit button', 'type="submit" name="staffing_action"'
 check('initial GET defers specialty workload-model build', re.search(r'\$personnelSpecialtyOptions\s*=\s*\$submitted\s*\?\s*staffingUiPersonnelSpecialtyOptions', text) is not None)
 check('explicit calculation reuses one workload model for matrix and specialty catalogue', '$teachingModel = teachingWorkloadModel();' in text and 'schoolProfileWorkloadMatrix($profile, $teachingModel)' in text and 'staffingUiPersonnelSpecialtyOptions($displayMatrix, $teachingModel)' in text)
 check('allocation status uses its own full-width row', '.allocation-status{grid-column:1/-1;grid-row:2;' in text)
-check('allocation grid uses shrinkable columns', 'grid-template-columns:minmax(0,.9fr) minmax(0,1.65fr) minmax(86px,.42fr) auto' in text)
+check('allocation grid uses shrinkable columns', 'grid-template-columns:minmax(0,1.65fr) minmax(0,.9fr) minmax(86px,.42fr) auto' in text)
 
 # A POST without an explicit action must not execute the expensive profile/workload branch.
 rogue=render({'school_type':'gymnasio','gym_general_a':2,'gym_general_b':2,'gym_general_c':2})

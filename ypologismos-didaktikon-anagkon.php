@@ -226,8 +226,11 @@ function staffingUiAllocationSlotOptionLabel($slot) {
     $hours = isset($slot['capacity_hours']) ? (int)$slot['capacity_hours'] : 0;
     return $label . ' · ' . $subject . ' · ' . $hours . ' ώρ.';
 }
-function staffingUiRenderAllocationSlotOptions($slots, $selected) {
+function staffingUiRenderAllocationSlotOptions($slots, $selected, $allSlots = null) {
     echo '<option value="">— επιλογή τμήματος / ομάδας και μαθήματος —</option>';
+    if ($selected !== '' && !isset($slots[$selected]) && is_array($allSlots) && isset($allSlots[$selected])) {
+        echo '<option value="' . staffingUiH($selected) . '" selected disabled>' . staffingUiH(staffingUiAllocationSlotOptionLabel($allSlots[$selected]) . ' · χωρίς επιλέξιμο εκπαιδευτικό') . '</option>';
+    }
     $lastGrade = null;
     $openGroup = false;
     foreach ($slots as $slotId=>$slot) {
@@ -248,10 +251,35 @@ function staffingUiAllocationErrorLabel($error) {
         'unknown_slot'=>'Δεν έχει επιλεγεί έγκυρο τμήμα / ομάδα και μάθημα.',
         'positive_hours_required'=>'Οι ώρες πρέπει να είναι θετικές.',
         'hours_exceed_slot_capacity'=>'Οι ώρες υπερβαίνουν τις ώρες του συγκεκριμένου τμήματος / ομάδας.',
-        'specialty_not_eligible'=>'Ο κλάδος του εκπαιδευτικού δεν έχει ανάθεση στο συγκεκριμένο μάθημα.',
+        'specialty_not_eligible'=>'Οι δηλωμένες ειδικότητες του εκπαιδευτικού δεν έχουν ανάθεση στο συγκεκριμένο μάθημα.',
         'slot_overallocated_across_roster'=>'Το ίδιο τμήμα / ομάδα έχει κατανεμηθεί πάνω από τις διαθέσιμες ώρες του.',
     );
     return isset($map[$error]) ? $map[$error] : $error;
+}
+function staffingUiBAssignmentLimitWarning() {
+    return 'Οι ώρες μαθημάτων Β΄ ανάθεσης, από τη βασική και τη δεύτερη ειδικότητα συνολικά, υπερβαίνουν το όριο των 10 διδακτικών ωρών. Υπέρβαση επιτρέπεται μόνο κατ’ εξαίρεση, ύστερα από απόφαση ΠΥΣΔΕ και υπό τις προβλεπόμενες προϋποθέσεις.';
+}
+function staffingUiAllocationAssignmentLabel($rowResult) {
+    if (!$rowResult || empty($rowResult['priority'])) return '';
+    $label = staffingUiPriorityLabel($rowResult['priority']) . ' ανάθεση';
+    $usedCode = isset($rowResult['used_specialty_code']) ? teacherSpecialtyCanonicalCode($rowResult['used_specialty_code']) : '';
+    $source = isset($rowResult['specialty_source']) ? $rowResult['specialty_source'] : '';
+    if ($source === 'secondary' && $usedCode !== '') {
+        $label .= ' · μέσω 2ης ειδικότητας ' . $usedCode;
+    } elseif ($source === 'primary' && $usedCode !== '') {
+        $label .= ' · μέσω κύριας ειδικότητας ' . $usedCode;
+    }
+    return $label;
+}
+function staffingUiAllocationWarningLabels($rowResult) {
+    $labels = array();
+    if (!$rowResult || empty($rowResult['warnings'])) return $labels;
+    foreach ($rowResult['warnings'] as $warning) {
+        if ($warning === 'uses_lower_priority_assignment') $labels[] = 'χαμηλότερη προτεραιότητα';
+        elseif ($warning === 'b_assignment_hours_exceed_10_limit') $labels[] = staffingUiBAssignmentLimitWarning();
+        else $labels[] = $warning;
+    }
+    return array_values(array_unique($labels));
 }
 function staffingUiSchoolStateKeys() {
     return array(
@@ -640,12 +668,31 @@ foreach ($allocationPeople as $person) {
     $allocationPeopleClient[$person['person_id']] = array(
         'person_id'=>$person['person_id'],
         'display_name'=>$person['display_name'],
+        'label'=>staffingUiAllocationPersonLabel($person),
         'specialty_code'=>$person['specialty_code'],
         'secondary_specialty_code'=>isset($person['secondary_specialty_code']) ? $person['secondary_specialty_code'] : '',
         'required_hours'=>(int)$normalized['required_teaching_hours'],
         'external_hours'=>(int)$normalized['assigned_external_hours'],
         'available_here_hours'=>(int)$normalized['remaining_before_profile_hours'],
     );
+}
+$allocationSelectableSlots = array();
+$allocationNoEligibleSlotCount = 0;
+$allocationNoEligibleHours = 0;
+foreach ($allocationSlots as $slotId=>$slot) {
+    $hasEligiblePerson = false;
+    foreach ($allocationPeopleClient as $personData) {
+        if (personnelWorkloadBestAssignmentForSlot($slot, $personData) !== null) {
+            $hasEligiblePerson = true;
+            break;
+        }
+    }
+    if ($hasEligiblePerson) {
+        $allocationSelectableSlots[$slotId] = $slot;
+    } else {
+        $allocationNoEligibleSlotCount++;
+        $allocationNoEligibleHours += isset($slot['capacity_hours']) ? (int)$slot['capacity_hours'] : 0;
+    }
 }
 $allocationSlotsClient = array();
 foreach ($allocationSlots as $slotId=>$slot) {
@@ -658,6 +705,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
         'capacity_hours'=>(int)$slot['capacity_hours'],
         'eligible_by_priority'=>$slot['eligible_by_priority'],
         'top_priority'=>isset($slot['top_priority']) ? $slot['top_priority'] : null,
+        'has_eligible_person'=>isset($allocationSelectableSlots[$slotId]),
     );
 }
 ?>
@@ -745,10 +793,14 @@ foreach ($allocationSlots as $slotId=>$slot) {
     .edu-page-staffing-simulator .branch-summary-row .branch-code{font-weight:800;color:var(--edu-primary-dark)}
     .edu-page-staffing-simulator .branch-summary-row small{display:block;color:var(--edu-muted)}
     .edu-page-staffing-simulator .empty-personnel{padding:18px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
+    .edu-page-staffing-simulator .allocation-subtabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px}
+    .edu-page-staffing-simulator .allocation-subtab{border:1px solid var(--edu-border);background:var(--edu-surface-soft);color:var(--edu-muted);border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer}
+    .edu-page-staffing-simulator .allocation-subtab.is-active{background:var(--edu-primary);border-color:var(--edu-primary);color:#fff}
+    .edu-page-staffing-simulator [data-allocation-view-panel][hidden]{display:none!important}
     .edu-page-staffing-simulator .allocation-toolbar{display:flex;justify-content:space-between;gap:10px;align-items:end;flex-wrap:wrap;margin:12px 0}
     .edu-page-staffing-simulator .allocation-list{display:grid;gap:10px;margin:12px 0}
     .edu-page-staffing-simulator .allocation-row{border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface);padding:12px}
-    .edu-page-staffing-simulator .allocation-row-main{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.65fr) minmax(86px,.42fr) auto;gap:10px;align-items:end}
+    .edu-page-staffing-simulator .allocation-row-main{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,.9fr) minmax(86px,.42fr) auto;gap:10px;align-items:end}
     .edu-page-staffing-simulator .allocation-row-main>*{min-width:0}
     .edu-page-staffing-simulator .allocation-row-main .field select,.edu-page-staffing-simulator .allocation-row-main .field input{min-width:0;width:100%}
     .edu-page-staffing-simulator .allocation-status{grid-column:1/-1;grid-row:2;min-width:0;min-height:38px;display:flex;align-items:center;padding:8px 10px;border-radius:9px;background:var(--edu-surface-soft);border:1px solid var(--edu-border);font-size:12.5px;font-weight:700;color:var(--edu-muted);overflow-wrap:anywhere}
@@ -757,9 +809,15 @@ foreach ($allocationSlots as $slotId=>$slot) {
     .edu-page-staffing-simulator .allocation-status.is-warning{color:#8a6400;border-color:rgba(138,100,0,.3)}
     .edu-page-staffing-simulator .allocation-status.is-error{color:#9c2f2f;border-color:rgba(156,47,47,.3)}
     .edu-page-staffing-simulator .profile-validation-error{display:block;margin-top:6px;color:#9c2f2f;font-size:.86rem;line-height:1.35}
-    .edu-page-staffing-simulator .allocation-person-summary{display:grid;gap:8px;margin:12px 0}
-    .edu-page-staffing-simulator .allocation-person-summary-row{display:grid;grid-template-columns:minmax(180px,1fr) repeat(4,minmax(100px,.55fr));gap:8px;align-items:center;padding:9px 11px;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface-soft)}
+    .edu-page-staffing-simulator .allocation-person-summary{display:grid;gap:10px;margin:12px 0}
+    .edu-page-staffing-simulator .allocation-person-summary-row{display:grid;grid-template-columns:minmax(190px,1.15fr) repeat(5,minmax(92px,.5fr));gap:8px;align-items:center;padding:10px 11px;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface-soft)}
     .edu-page-staffing-simulator .allocation-person-summary-row small{display:block;color:var(--edu-muted)}
+    .edu-page-staffing-simulator .allocation-person-summary-row .b-limit-over{color:#9c2f2f}
+    .edu-page-staffing-simulator .allocation-person-meta{grid-column:1/-1;font-size:12px;color:var(--edu-muted);padding-top:2px}
+    .edu-page-staffing-simulator .allocation-person-assignments{grid-column:1/-1;display:grid;gap:5px;padding-top:3px}
+    .edu-page-staffing-simulator .allocation-person-assignment-item{font-size:12.5px;padding:6px 8px;border-radius:8px;background:var(--edu-surface);border:1px solid var(--edu-border)}
+    .edu-page-staffing-simulator .b-limit-warning{grid-column:1/-1;padding:9px 10px;border-radius:9px;border:1px solid rgba(156,47,47,.35);background:rgba(156,47,47,.06);color:#9c2f2f;font-size:12.5px;font-weight:800}
+    .edu-page-staffing-simulator .b-limit-warning[hidden]{display:none!important}
     .edu-page-staffing-simulator .allocation-empty{padding:18px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
     .staffing-print-report{display:none}
     @media print{
@@ -999,7 +1057,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
             <div class="summary-chip"><strong><?php echo (int)$displayMatrix['summary']['ordered_shared_top_unit_hours']; ?></strong><span>ώρες κοινής κορυφαίας Α΄/Β΄/Γ΄</span></div>
             <div class="summary-chip"><strong><?php echo (int)$displayMatrix['summary']['special_top_unit_hours']; ?></strong><span>ώρες ειδικής κορυφαίας ανάθεσης</span></div>
             <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_dependency_instances']; ?></strong><span>ενεργές εκκρεμείς εξαρτήσεις</span></div>
-            <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_regulatory_gap_instances']; ?></strong><span>επιβεβαιωμένα κανονιστικά κενά</span></div>
+            <div class="summary-chip"><strong><?php echo (int)$matrix['summary']['active_regulatory_gap_instances']; ?></strong><span>Ακάλυπτες ώρες μετά τον έλεγχο κατανομής</span></div>
           </div>
 
           <div class="field result-filter">
@@ -1140,7 +1198,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
               <div class="personnel-csv-status" id="personnelCsvStatus"></div>
             </div>
 
-            <div class="info-note"><strong>Το υποχρεωτικό ωράριο του απλού εκπαιδευτικού καταχωρίζεται απευθείας.</strong> Αν δεν το γνωρίζεις, χρησιμοποίησε τον <a href="ypologismos-didaktikou-orariou.php">Υπολογισμό υποχρεωτικού διδακτικού ωραρίου</a> και επέστρεψε εδώ με το αποτέλεσμα. Για Διευθυντή/Υποδιευθυντή το ωράριο υπολογίζεται από τον ρόλο και την υπηρεσία.</div>
+            <div class="info-note"><strong>Υ.Ω. = Υποχρεωτικό ωράριο.</strong> Το Υ.Ω. του απλού εκπαιδευτικού καταχωρίζεται απευθείας. Αν δεν το γνωρίζεις, χρησιμοποίησε τον <a href="ypologismos-didaktikou-orariou.php">Υπολογισμό υποχρεωτικού διδακτικού ωραρίου</a> και επέστρεψε εδώ με το αποτέλεσμα. Για Διευθυντή/Υποδιευθυντή το ωράριο υπολογίζεται από τον ρόλο και την υπηρεσία.</div>
 
             <div class="personnel-list" id="personnelList">
               <?php if (empty($personnelRows)): ?>
@@ -1171,7 +1229,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
                       <input type="text" name="personnel_display_name[]" class="personnel-name" value="<?php echo staffingUiH($person['display_name']); ?>" placeholder="π.χ. Μαρία Παπαδοπούλου">
                     </div>
                     <div class="field">
-                      <label>Υποχρεωτικό ωράριο</label>
+                      <label title="Υποχρεωτικό ωράριο">Υ.Ω.</label>
                       <input type="number" min="1" max="<?php echo (int)$manualRequiredHoursMax; ?>" step="1" name="personnel_required_teaching_hours[]" class="personnel-required" data-required-hours data-manual-value="<?php echo staffingUiH($manualRequiredHours); ?>" value="<?php echo staffingUiH($requiredInputHours); ?>"<?php echo $person['role'] === 'teacher' ? ' required' : ' readonly'; ?>>
                     </div>
                     <div class="field">
@@ -1226,7 +1284,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
               <div class="personnel-row-main">
                 <div class="field"><label>Κλάδος</label><select name="personnel_specialty_code[]" class="personnel-specialty"><?php staffingUiRenderPersonnelSpecialtyOptions($personnelSpecialtyOptions, ''); ?></select></div>
                 <div class="field"><label>Ονοματεπώνυμο</label><input type="text" name="personnel_display_name[]" class="personnel-name" placeholder="π.χ. Μαρία Παπαδοπούλου"></div>
-                <div class="field"><label>Υποχρεωτικό ωράριο</label><input type="number" min="1" max="35" step="1" name="personnel_required_teaching_hours[]" class="personnel-required" data-required-hours data-manual-value="" value="" required></div>
+                <div class="field"><label title="Υποχρεωτικό ωράριο">Υ.Ω.</label><input type="number" min="1" max="35" step="1" name="personnel_required_teaching_hours[]" class="personnel-required" data-required-hours data-manual-value="" value="" required></div>
                 <div class="field"><label>Ώρες αλλού</label><input type="number" min="0" max="35" step="1" name="personnel_assigned_external_hours[]" class="personnel-external" value="0"></div>
                 <div class="metric"><strong data-available-hours>—</strong><span>διαθέσιμο εδώ</span></div>
                 <button type="button" class="personnel-remove" title="Αφαίρεση εκπαιδευτικού">Αφαίρεση</button>
@@ -1277,89 +1335,127 @@ foreach ($allocationSlots as $slotId=>$slot) {
               <div class="summary-chip"><strong data-allocation-errors><?php echo $allocationInvalidRows; ?></strong><span>γραμμές που χρειάζονται διόρθωση</span></div>
             </div>
 
-            <h3>Κατάσταση εκπαιδευτικών</h3>
-            <div class="allocation-person-summary" id="allocationPersonSummary">
-              <?php foreach ($allocationPeopleClient as $personId=>$personData): ?>
-                <?php
-                  $pResult = $allocationPlan && isset($allocationPlan['people'][$personId]) ? $allocationPlan['people'][$personId] : null;
-                  $assignedHere = $pResult ? (int)$pResult['assigned_profile_hours'] : 0;
-                  $remainingHere = $pResult ? (int)$pResult['remaining_hours'] : (int)$personData['available_here_hours'];
-                  $overageHere = $pResult ? (int)$pResult['overage_hours'] : 0;
-                ?>
-                <div class="allocation-person-summary-row" data-allocation-person-summary="<?php echo staffingUiH($personId); ?>">
-                  <div><strong><?php echo staffingUiH($personData['specialty_code'] . ' · ' . ($personData['display_name'] !== '' ? $personData['display_name'] : 'Χωρίς ονοματεπώνυμο')); ?></strong></div>
-                  <div><strong><?php echo (int)$personData['available_here_hours']; ?></strong><small>διαθέσιμο εδώ</small></div>
-                  <div><strong data-person-assigned><?php echo $assignedHere; ?></strong><small>κατανεμημένες ώρες</small></div>
-                  <div><strong data-person-remaining><?php echo $remainingHere; ?></strong><small>υπόλοιπο</small></div>
-                  <div><strong data-person-over><?php echo $overageHere; ?></strong><small>υπέρβαση</small></div>
-                </div>
-              <?php endforeach; ?>
+            <div class="allocation-subtabs" role="tablist" aria-label="Προβολή κατανομής μαθημάτων">
+              <button type="button" class="allocation-subtab is-active" data-allocation-view="slots" role="tab" aria-selected="true">Ανά μάθημα / τμήμα</button>
+              <button type="button" class="allocation-subtab" data-allocation-view="people" role="tab" aria-selected="false">Ανά εκπαιδευτικό</button>
             </div>
 
-            <form method="post" id="staffingAllocationForm">
-              <?php staffingUiRenderSchoolStateHiddenInputs(); ?>
-              <?php staffingUiRenderPersonnelStateHiddenInputs($personnelRows); ?>
-              <input type="hidden" name="staffing_action" value="">
-              <input type="hidden" name="active_panel" value="allocation">
-
-              <div class="allocation-toolbar">
-                <div>
-                  <strong>Γραμμές κατανομής</strong>
-                  <div class="help">Επίλεξε εκπαιδευτικό και μετά συγκεκριμένο τμήμα / ομάδα + μάθημα. Οι ώρες συμπληρώνονται αρχικά με το πλήρες ωράριο του slot και μπορούν να μειωθούν.</div>
-                </div>
-                <button class="edu-btn-secondary" type="button" id="addAllocationRow">+ Προσθήκη μαθήματος</button>
-              </div>
-
-              <div class="allocation-list" id="allocationList">
-                <?php if (empty($allocationRows)): ?>
-                  <div class="allocation-empty" id="emptyAllocationState">Δεν έχει γίνει ακόμη κατανομή. Πάτησε «+ Προσθήκη μαθήματος» για να ξεκινήσεις.</div>
-                <?php endif; ?>
-                <?php foreach ($allocationRows as $allocationIndex=>$allocation): ?>
+            <div data-allocation-view-panel="people" hidden>
+              <h3>Κατάσταση και αναθέσεις ανά εκπαιδευτικό</h3>
+              <div class="allocation-person-summary" id="allocationPersonSummary">
+                <?php foreach ($allocationPeopleClient as $personId=>$personData): ?>
                   <?php
-                    $rowResult = isset($allocationRowResults[$allocationIndex]) ? $allocationRowResults[$allocationIndex] : null;
-                    $rowStatusClass = '';
-                    $rowStatusText = 'Συμπλήρωσε εκπαιδευτικό και μάθημα.';
-                    if ($rowResult) {
-                        if (!$rowResult['valid']) {
-                            $labels = array(); foreach ($rowResult['errors'] as $error) $labels[] = staffingUiAllocationErrorLabel($error);
-                            $rowStatusClass = ' is-error'; $rowStatusText = implode(' ', $labels);
-                        } elseif (!empty($rowResult['warnings'])) {
-                            $rowStatusClass = ' is-warning';
-                            $rowStatusText = staffingUiPriorityLabel($rowResult['priority']) . ' ανάθεση · χαμηλότερη προτεραιότητα';
-                        } else {
-                            $rowStatusClass = ' is-ok';
-                            $rowStatusText = staffingUiPriorityLabel($rowResult['priority']) . ' ανάθεση ✓';
-                        }
+                    $pResult = $allocationPlan && isset($allocationPlan['people'][$personId]) ? $allocationPlan['people'][$personId] : null;
+                    $assignedHere = $pResult ? (int)$pResult['assigned_profile_hours'] : 0;
+                    $remainingHere = $pResult ? (int)$pResult['remaining_hours'] : (int)$personData['available_here_hours'];
+                    $aHours = $pResult && isset($pResult['assigned_hours_by_priority']['A']) ? (int)$pResult['assigned_hours_by_priority']['A'] : 0;
+                    $bHours = $pResult && isset($pResult['assigned_hours_by_priority']['B']) ? (int)$pResult['assigned_hours_by_priority']['B'] : 0;
+                    $primarySourceHours = $pResult && isset($pResult['assigned_hours_by_specialty_source']['primary']) ? (int)$pResult['assigned_hours_by_specialty_source']['primary'] : 0;
+                    $secondarySourceHours = $pResult && isset($pResult['assigned_hours_by_specialty_source']['secondary']) ? (int)$pResult['assigned_hours_by_specialty_source']['secondary'] : 0;
+                    $bLimitExceeded = $bHours > 10;
+                    $personAllocationDetails = array();
+                    foreach ($allocationRowResults as $detailIndex=>$detailResult) {
+                        if (!$detailResult || !$detailResult['valid'] || $detailResult['person_id'] !== $personId || (int)$detailResult['hours'] < 1) continue;
+                        $detailSlot = isset($allocationSlots[$detailResult['slot_id']]) ? $allocationSlots[$detailResult['slot_id']] : null;
+                        $detailLabel = $detailSlot ? $detailSlot['slot_label'] . ' · ' . $detailSlot['subject'] : $detailResult['slot_id'];
+                        $personAllocationDetails[] = $detailLabel . ' · ' . (int)$detailResult['hours'] . ' ώρ. — ' . staffingUiAllocationAssignmentLabel($detailResult);
                     }
                   ?>
-                  <div class="allocation-row" data-allocation-row>
-                    <div class="allocation-row-main">
-                      <div class="field"><label>Εκπαιδευτικός</label><select name="allocation_person_id[]" class="allocation-person"><?php staffingUiRenderAllocationPersonOptions($allocationPeople, isset($allocation['person_id']) ? $allocation['person_id'] : ''); ?></select></div>
-                      <div class="field"><label>Τμήμα / ομάδα · μάθημα</label><select name="allocation_slot_id[]" class="allocation-slot"><?php staffingUiRenderAllocationSlotOptions($allocationSlots, isset($allocation['slot_id']) ? $allocation['slot_id'] : ''); ?></select></div>
-                      <div class="field"><label>Ώρες</label><input type="number" min="1" max="35" step="1" name="allocation_hours[]" class="allocation-hours" value="<?php echo staffingUiH(isset($allocation['hours']) ? $allocation['hours'] : 0); ?>"></div>
-                      <div class="allocation-status<?php echo $rowStatusClass; ?>" data-allocation-status><?php echo staffingUiH($rowStatusText); ?></div>
-                      <button type="button" class="personnel-remove allocation-remove">Αφαίρεση</button>
+                  <div class="allocation-person-summary-row" data-allocation-person-summary="<?php echo staffingUiH($personId); ?>">
+                    <div>
+                      <strong><?php echo staffingUiH($personData['specialty_code'] . ' · ' . ($personData['display_name'] !== '' ? $personData['display_name'] : 'Χωρίς ονοματεπώνυμο')); ?></strong>
+                      <?php if ($personData['secondary_specialty_code'] !== ''): ?><small>2η ειδικότητα <?php echo staffingUiH($personData['secondary_specialty_code']); ?></small><?php endif; ?>
+                    </div>
+                    <div><strong data-person-required><?php echo (int)$personData['required_hours']; ?></strong><small>υποχρεωτικό ωράριο</small></div>
+                    <div><strong data-person-assigned><?php echo $assignedHere; ?></strong><small>ανατεθειμένες ώρες</small></div>
+                    <div><strong data-person-remaining><?php echo $remainingHere; ?></strong><small>υπόλοιπο</small></div>
+                    <div><strong data-person-a><?php echo $aHours; ?></strong><small>Α΄ ανάθεση</small></div>
+                    <div><strong data-person-b class="<?php echo $bLimitExceeded ? 'b-limit-over' : ''; ?>"><?php echo $bHours; ?>/10</strong><small>Β΄ ανάθεση</small></div>
+                    <div class="allocation-person-meta" data-person-source-summary>
+                      <?php if ($personData['secondary_specialty_code'] !== ''): ?>Μέσω κύριας <?php echo staffingUiH($personData['specialty_code']); ?>: <?php echo $primarySourceHours; ?> ώρ. · μέσω 2ης <?php echo staffingUiH($personData['secondary_specialty_code']); ?>: <?php echo $secondarySourceHours; ?> ώρ.<?php else: ?>Μέσω κύριας <?php echo staffingUiH($personData['specialty_code']); ?>: <?php echo $primarySourceHours; ?> ώρ.<?php endif; ?><?php if ((int)$personData['external_hours'] > 0): ?> · <?php echo (int)$personData['external_hours']; ?> ώρ. σε άλλη μονάδα<?php endif; ?>
+                    </div>
+                    <div class="b-limit-warning" data-person-b-warning<?php echo $bLimitExceeded ? '' : ' hidden'; ?>><?php echo staffingUiH(staffingUiBAssignmentLimitWarning()); ?></div>
+                    <div class="allocation-person-assignments" data-person-assignments>
+                      <?php if (empty($personAllocationDetails)): ?>
+                        <div class="allocation-person-assignment-item" data-empty-assignment>Δεν έχουν κατανεμηθεί μαθήματα.</div>
+                      <?php else: ?>
+                        <?php foreach ($personAllocationDetails as $detailText): ?><div class="allocation-person-assignment-item"><?php echo staffingUiH($detailText); ?></div><?php endforeach; ?>
+                      <?php endif; ?>
                     </div>
                   </div>
                 <?php endforeach; ?>
               </div>
+            </div>
 
-              <div class="actions">
-                <button class="edu-btn-primary" type="button" data-staffing-request-action="allocation">Έλεγχος κατανομής</button>
-              </div>
-            </form>
+            <div data-allocation-view-panel="slots">
+              <form method="post" id="staffingAllocationForm">
+                <?php staffingUiRenderSchoolStateHiddenInputs(); ?>
+                <?php staffingUiRenderPersonnelStateHiddenInputs($personnelRows); ?>
+                <input type="hidden" name="staffing_action" value="">
+                <input type="hidden" name="active_panel" value="allocation">
 
-            <template id="allocationRowTemplate">
-              <div class="allocation-row" data-allocation-row>
-                <div class="allocation-row-main">
-                  <div class="field"><label>Εκπαιδευτικός</label><select name="allocation_person_id[]" class="allocation-person"><?php staffingUiRenderAllocationPersonOptions($allocationPeople, ''); ?></select></div>
-                  <div class="field"><label>Τμήμα / ομάδα · μάθημα</label><select name="allocation_slot_id[]" class="allocation-slot"><?php staffingUiRenderAllocationSlotOptions($allocationSlots, ''); ?></select></div>
-                  <div class="field"><label>Ώρες</label><input type="number" min="1" max="35" step="1" name="allocation_hours[]" class="allocation-hours" value="0"></div>
-                  <div class="allocation-status" data-allocation-status>Συμπλήρωσε εκπαιδευτικό και μάθημα.</div>
-                  <button type="button" class="personnel-remove allocation-remove">Αφαίρεση</button>
+                <div class="allocation-toolbar">
+                  <div>
+                    <strong>Κατανομή ανά μάθημα / τμήμα</strong>
+                    <div class="help">Επίλεξε πρώτα συγκεκριμένο τμήμα / ομάδα + μάθημα και μετά έναν από τους επιλέξιμους εκπαιδευτικούς. Η επιλεξιμότητα ελέγχει μαζί κύρια και 2η ειδικότητα και επιλέγει την καλύτερη ανάθεση.</div>
+                    <?php if ($allocationNoEligibleSlotCount > 0): ?><div class="help"><strong>Δεν εμφανίζονται <?php echo (int)$allocationNoEligibleSlotCount; ?> μαθήματα / τμήματα χωρίς επιλέξιμο εκπαιδευτικό</strong> (<?php echo (int)$allocationNoEligibleHours; ?> ώρες). Οι ώρες τους εξακολουθούν να υπολογίζονται στις ακάλυπτες ώρες.</div><?php endif; ?>
+                  </div>
+                  <button class="edu-btn-secondary" type="button" id="addAllocationRow">+ Προσθήκη μαθήματος</button>
                 </div>
-              </div>
-            </template>
+
+                <div class="allocation-list" id="allocationList">
+                  <?php if (empty($allocationRows)): ?>
+                    <div class="allocation-empty" id="emptyAllocationState">Δεν έχει γίνει ακόμη κατανομή. Πάτησε «+ Προσθήκη μαθήματος» για να ξεκινήσεις.</div>
+                  <?php endif; ?>
+                  <?php foreach ($allocationRows as $allocationIndex=>$allocation): ?>
+                    <?php
+                      $rowResult = isset($allocationRowResults[$allocationIndex]) ? $allocationRowResults[$allocationIndex] : null;
+                      $rowStatusClass = '';
+                      $rowStatusText = 'Συμπλήρωσε μάθημα και εκπαιδευτικό.';
+                      if ($rowResult) {
+                          if (!$rowResult['valid']) {
+                              $labels = array(); foreach ($rowResult['errors'] as $error) $labels[] = staffingUiAllocationErrorLabel($error);
+                              $rowStatusClass = ' is-error'; $rowStatusText = implode(' ', $labels);
+                          } else {
+                              $rowStatusText = staffingUiAllocationAssignmentLabel($rowResult);
+                              $warningLabels = staffingUiAllocationWarningLabels($rowResult);
+                              if (!empty($warningLabels)) {
+                                  $rowStatusClass = ' is-warning'; $rowStatusText .= ' · ' . implode(' ', $warningLabels);
+                              } else {
+                                  $rowStatusClass = ' is-ok'; $rowStatusText .= ' ✓';
+                              }
+                          }
+                      }
+                    ?>
+                    <div class="allocation-row" data-allocation-row>
+                      <div class="allocation-row-main">
+                        <div class="field"><label>Τμήμα / ομάδα · μάθημα</label><select name="allocation_slot_id[]" class="allocation-slot"><?php staffingUiRenderAllocationSlotOptions($allocationSelectableSlots, isset($allocation['slot_id']) ? $allocation['slot_id'] : '', $allocationSlots); ?></select></div>
+                        <div class="field"><label>Εκπαιδευτικός</label><select name="allocation_person_id[]" class="allocation-person"><?php staffingUiRenderAllocationPersonOptions($allocationPeople, isset($allocation['person_id']) ? $allocation['person_id'] : ''); ?></select></div>
+                        <div class="field"><label>Ώρες</label><input type="number" min="1" max="35" step="1" name="allocation_hours[]" class="allocation-hours" value="<?php echo staffingUiH(isset($allocation['hours']) ? $allocation['hours'] : 0); ?>"></div>
+                        <div class="allocation-status<?php echo $rowStatusClass; ?>" data-allocation-status><?php echo staffingUiH($rowStatusText); ?></div>
+                        <button type="button" class="personnel-remove allocation-remove">Αφαίρεση</button>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+
+                <div class="actions">
+                  <button class="edu-btn-primary" type="button" data-staffing-request-action="allocation">Έλεγχος κατανομής</button>
+                </div>
+              </form>
+
+              <template id="allocationRowTemplate">
+                <div class="allocation-row" data-allocation-row>
+                  <div class="allocation-row-main">
+                    <div class="field"><label>Τμήμα / ομάδα · μάθημα</label><select name="allocation_slot_id[]" class="allocation-slot"><?php staffingUiRenderAllocationSlotOptions($allocationSelectableSlots, '', $allocationSlots); ?></select></div>
+                    <div class="field"><label>Εκπαιδευτικός</label><select name="allocation_person_id[]" class="allocation-person"><?php staffingUiRenderAllocationPersonOptions($allocationPeople, ''); ?></select></div>
+                    <div class="field"><label>Ώρες</label><input type="number" min="1" max="35" step="1" name="allocation_hours[]" class="allocation-hours" value="0"></div>
+                    <div class="allocation-status" data-allocation-status>Συμπλήρωσε μάθημα και εκπαιδευτικό.</div>
+                    <button type="button" class="personnel-remove allocation-remove">Αφαίρεση</button>
+                  </div>
+                </div>
+              </template>
+            </div>
           <?php endif; ?>
         <?php calculatorCardEnd(); ?>
       <?php endif; ?>
@@ -1491,17 +1587,21 @@ foreach ($allocationSlots as $slotId=>$slot) {
             $allocationResult = isset($allocationRowResults[$allocationIndex]) ? $allocationRowResults[$allocationIndex] : null;
             $allocationPerson = isset($allocationPeopleClient[$allocation['person_id']]) ? $allocationPeopleClient[$allocation['person_id']] : null;
             $allocationPersonText = $allocationPerson
-                ? $allocationPerson['specialty_code'] . ' · ' . ($allocationPerson['display_name'] !== '' ? $allocationPerson['display_name'] : 'Χωρίς ονοματεπώνυμο')
+                ? $allocationPerson['label']
                 : 'Μη έγκυρος εκπαιδευτικός';
             $allocationSlot = isset($allocationSlots[$allocation['slot_id']]) ? $allocationSlots[$allocation['slot_id']] : null;
             $allocationSlotText = $allocationSlot ? $allocationSlot['slot_label'] . ' · ' . $allocationSlot['subject'] : 'Μη έγκυρο μάθημα / ομάδα';
             if ($allocationResult && !$allocationResult['valid']) {
                 $labels = array(); foreach ($allocationResult['errors'] as $error) $labels[] = staffingUiAllocationErrorLabel($error);
                 $allocationStatus = implode(' ', $labels); $allocationStatusClass = 'print-status-error';
-            } elseif ($allocationResult && !empty($allocationResult['warnings'])) {
-                $allocationStatus = staffingUiPriorityLabel($allocationResult['priority']) . ' ανάθεση · χαμηλότερη προτεραιότητα'; $allocationStatusClass = 'print-status-warn';
             } elseif ($allocationResult && $allocationResult['valid']) {
-                $allocationStatus = staffingUiPriorityLabel($allocationResult['priority']) . ' ανάθεση ✓'; $allocationStatusClass = 'print-status-ok';
+                $allocationStatus = staffingUiAllocationAssignmentLabel($allocationResult);
+                $allocationWarningLabels = staffingUiAllocationWarningLabels($allocationResult);
+                if (!empty($allocationWarningLabels)) {
+                    $allocationStatus .= ' · ' . implode(' ', $allocationWarningLabels); $allocationStatusClass = 'print-status-warn';
+                } else {
+                    $allocationStatus .= ' ✓'; $allocationStatusClass = 'print-status-ok';
+                }
             } else {
                 $allocationStatus = 'Δεν έχει ελεγχθεί'; $allocationStatusClass = 'print-status-warn';
             }
@@ -1515,6 +1615,36 @@ foreach ($allocationSlots as $slotId=>$slot) {
         <?php endforeach; ?>
       </tbody>
     </table>
+    <?php if ($allocationPlan): ?>
+      <h2>Σύνοψη κατανομής ανά εκπαιδευτικό</h2>
+      <table>
+        <thead><tr><th>Εκπαιδευτικός</th><th class="num">Υποχρ.</th><th class="num">Ανατεθ.</th><th class="num">Υπόλοιπο</th><th class="num">Α΄</th><th class="num">Β΄ / 10</th><th>Ειδικότητα που χρησιμοποιήθηκε</th></tr></thead>
+        <tbody>
+          <?php foreach ($allocationPeopleClient as $personId=>$personData): ?>
+            <?php
+              $printPersonResult = isset($allocationPlan['people'][$personId]) ? $allocationPlan['people'][$personId] : null;
+              $printAssigned = $printPersonResult ? (int)$printPersonResult['assigned_profile_hours'] : 0;
+              $printRemaining = $printPersonResult ? (int)$printPersonResult['remaining_hours'] : (int)$personData['available_here_hours'];
+              $printA = $printPersonResult && isset($printPersonResult['assigned_hours_by_priority']['A']) ? (int)$printPersonResult['assigned_hours_by_priority']['A'] : 0;
+              $printB = $printPersonResult && isset($printPersonResult['assigned_hours_by_priority']['B']) ? (int)$printPersonResult['assigned_hours_by_priority']['B'] : 0;
+              $printPrimarySource = $printPersonResult && isset($printPersonResult['assigned_hours_by_specialty_source']['primary']) ? (int)$printPersonResult['assigned_hours_by_specialty_source']['primary'] : 0;
+              $printSecondarySource = $printPersonResult && isset($printPersonResult['assigned_hours_by_specialty_source']['secondary']) ? (int)$printPersonResult['assigned_hours_by_specialty_source']['secondary'] : 0;
+              $printSourceText = 'κύρια ' . $personData['specialty_code'] . ': ' . $printPrimarySource . ' ώρ.';
+              if ($personData['secondary_specialty_code'] !== '') $printSourceText .= ' · 2η ' . $personData['secondary_specialty_code'] . ': ' . $printSecondarySource . ' ώρ.';
+            ?>
+            <tr>
+              <td><?php echo staffingUiH($personData['label']); ?></td>
+              <td class="num"><?php echo (int)$personData['required_hours']; ?></td>
+              <td class="num"><?php echo $printAssigned; ?></td>
+              <td class="num"><?php echo $printRemaining; ?></td>
+              <td class="num"><?php echo $printA; ?></td>
+              <td class="num <?php echo $printB > 10 ? 'print-status-warn' : ''; ?>"><?php echo $printB; ?>/10</td>
+              <td><?php echo staffingUiH($printSourceText); ?><?php if ($printB > 10): ?><br><strong><?php echo staffingUiH(staffingUiBAssignmentLimitWarning()); ?></strong><?php endif; ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    <?php endif; ?>
   <?php endif; ?>
 
   <div class="print-footer">Το παρόν αποτελεί αποτέλεσμα εργαλείου προσομοίωσης/ελέγχου. Δεν συνιστά από μόνο του επίσημη πράξη προσδιορισμού λειτουργικών κενών ή τοποθέτησης εκπαιδευτικών. Οι αναθέσεις και το ωρολόγιο πρόγραμμα ακολουθούν τις κανονιστικές πηγές που χρησιμοποιεί η Εργαλειοθήκη Εκπαιδευτικού.</div>
@@ -2133,6 +2263,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
   const allocationList=document.getElementById('allocationList');
   const allocationTemplate=document.getElementById('allocationRowTemplate');
   const addAllocation=document.getElementById('addAllocationRow');
+  const allocationBAssignmentWarning='Οι ώρες μαθημάτων Β΄ ανάθεσης, από τη βασική και τη δεύτερη ειδικότητα συνολικά, υπερβαίνουν το όριο των 10 διδακτικών ωρών. Υπέρβαση επιτρέπεται μόνο κατ’ εξαίρεση, ύστερα από απόφαση ΠΥΣΔΕ και υπό τις προβλεπόμενες προϋποθέσεις.';
   function allocationPriority(code,slot){
     if(!code||!slot||!slot.eligible_by_priority) return '';
     const order=['A','B','C','SPECIAL'];
@@ -2142,6 +2273,10 @@ foreach ($allocationSlots as $slotId=>$slot) {
     }
     return '';
   }
+  function allocationPriorityRank(priority){
+    const rank={A:1,B:2,C:3,SPECIAL:4};
+    return rank[priority]||99;
+  }
   function allocationPriorityLabel(priority){
     if(priority==='A') return 'Α΄';
     if(priority==='B') return 'Β΄';
@@ -2149,23 +2284,68 @@ foreach ($allocationSlots as $slotId=>$slot) {
     if(priority==='SPECIAL') return 'Ειδική';
     return priority||'';
   }
+  function allocationBestAssignment(person,slot){
+    if(!person||!slot) return null;
+    const candidates=[];
+    const primary=person.specialty_code||'';
+    const secondary=person.secondary_specialty_code||'';
+    const p1=allocationPriority(primary,slot);
+    if(p1) candidates.push({priority:p1,used_specialty_code:primary,specialty_source:'primary'});
+    if(secondary&&secondary!==primary){
+      const p2=allocationPriority(secondary,slot);
+      if(p2) candidates.push({priority:p2,used_specialty_code:secondary,specialty_source:'secondary'});
+    }
+    if(!candidates.length) return null;
+    candidates.sort(function(a,b){
+      const d=allocationPriorityRank(a.priority)-allocationPriorityRank(b.priority);
+      if(d) return d;
+      if(a.specialty_source===b.specialty_source) return 0;
+      return a.specialty_source==='primary'?-1:1;
+    });
+    return candidates[0];
+  }
+  function allocationAssignmentLabel(match){
+    if(!match) return '';
+    let text=allocationPriorityLabel(match.priority)+' ανάθεση';
+    if(match.specialty_source==='secondary') text+=' · μέσω 2ης ειδικότητας '+match.used_specialty_code;
+    else if(match.used_specialty_code) text+=' · μέσω κύριας ειδικότητας '+match.used_specialty_code;
+    return text;
+  }
+  function allocationPopulatePeopleForSlot(row,preserveSelected){
+    const personEl=row.querySelector('.allocation-person'), slotEl=row.querySelector('.allocation-slot');
+    if(!personEl) return;
+    const oldSelected=personEl.value||'';
+    const slot=slotEl?allocationSlotsData[slotEl.value]||null:null;
+    personEl.innerHTML='';
+    const placeholder=document.createElement('option'); placeholder.value=''; placeholder.textContent=slot?'— επιλογή επιλέξιμου εκπαιδευτικού —':'— επίλεξε πρώτα μάθημα / τμήμα —'; personEl.appendChild(placeholder);
+    if(!slot){ personEl.disabled=true; return; }
+    personEl.disabled=false;
+    Object.keys(allocationPeopleData||{}).forEach(function(pid){
+      const person=allocationPeopleData[pid], match=allocationBestAssignment(person,slot);
+      if(!match) return;
+      const option=document.createElement('option'); option.value=pid; option.textContent=(person.label||pid)+' · '+allocationAssignmentLabel(match); if(oldSelected===pid) option.selected=true; personEl.appendChild(option);
+    });
+    if(preserveSelected&&oldSelected&&allocationPeopleData[oldSelected]&&!allocationBestAssignment(allocationPeopleData[oldSelected],slot)){
+      const invalid=document.createElement('option'); invalid.value=oldSelected; invalid.textContent=(allocationPeopleData[oldSelected].label||oldSelected)+' · ΜΗ ΕΠΙΤΡΕΠΤΟ'; invalid.selected=true; personEl.insertBefore(invalid,personEl.children[1]||null);
+    }
+  }
+  // Διατηρείται ως μικρό compatibility helper, αλλά η κύρια προβολή είναι slot-first.
   function allocationPopulateSlotsForPerson(row,preserveSelected){
     const personEl=row.querySelector('.allocation-person'), slotEl=row.querySelector('.allocation-slot');
     if(!slotEl) return;
     const oldSelected=slotEl.value||'';
     const person=personEl?allocationPeopleData[personEl.value]||null:null;
     slotEl.innerHTML='';
-    const placeholder=document.createElement('option'); placeholder.value=''; placeholder.textContent=person?'— επιλογή επιλέξιμου μαθήματος —':'— επίλεξε πρώτα εκπαιδευτικό —'; slotEl.appendChild(placeholder);
-    if(!person){ slotEl.disabled=true; return; }
-    slotEl.disabled=false;
-    const eligible=[];
-    Object.keys(allocationSlotsData||{}).forEach(function(sid){ const slot=allocationSlotsData[sid]; if(allocationPriority(person.specialty_code,slot)) eligible.push(slot); });
+    const placeholder=document.createElement('option'); placeholder.value=''; placeholder.textContent=person?'— επιλογή επιλέξιμου μαθήματος —':'— επιλογή τμήματος / ομάδας και μαθήματος —'; slotEl.appendChild(placeholder);
     let currentGrade=null, group=null;
-    eligible.forEach(function(slot){
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const slot=allocationSlotsData[sid];
+      if(!slot.has_eligible_person) return;
+      if(person&&!allocationBestAssignment(person,slot)) return;
       if(slot.grade!==currentGrade){ group=document.createElement('optgroup'); group.label=(slot.grade||'Άλλο')+' τάξη'; slotEl.appendChild(group); currentGrade=slot.grade; }
       const option=document.createElement('option'); option.value=slot.slot_id; option.textContent=slot.label; option.setAttribute('data-capacity',String(slot.capacity_hours)); if(oldSelected===slot.slot_id) option.selected=true; group.appendChild(option);
     });
-    if(preserveSelected && oldSelected && !allocationPriority(person.specialty_code,allocationSlotsData[oldSelected]||null) && allocationSlotsData[oldSelected]){
+    if(preserveSelected&&oldSelected&&allocationSlotsData[oldSelected]&&person&&!allocationBestAssignment(person,allocationSlotsData[oldSelected])){
       const invalid=document.createElement('option'); invalid.value=oldSelected; invalid.textContent=allocationSlotsData[oldSelected].label+' · ΜΗ ΕΠΙΤΡΕΠΤΟ'; invalid.selected=true; slotEl.insertBefore(invalid,slotEl.children[1]||null);
     }
   }
@@ -2178,28 +2358,29 @@ foreach ($allocationSlots as $slotId=>$slot) {
   function updateAllocationSummary(){
     if(!allocationList) return;
     const rows=allocationRows();
-    const personAssigned={}, slotAssigned={}, rowState=[];
-    Object.keys(allocationPeopleData||{}).forEach(id=>personAssigned[id]=0);
+    const personAssigned={}, personPriority={}, personSource={}, slotAssigned={}, rowState=[];
+    Object.keys(allocationPeopleData||{}).forEach(function(id){ personAssigned[id]=0; personPriority[id]={A:0,B:0,C:0,SPECIAL:0}; personSource[id]={primary:0,secondary:0}; });
     Object.keys(allocationSlotsData||{}).forEach(id=>slotAssigned[id]=0);
     let basicAssigned=0;
     rows.forEach(function(row){
       const personEl=row.querySelector('.allocation-person'), slotEl=row.querySelector('.allocation-slot'), hoursEl=row.querySelector('.allocation-hours');
       const pid=personEl?personEl.value:'', sid=slotEl?slotEl.value:'', hours=Math.max(0,parseInt(hoursEl&&hoursEl.value?hoursEl.value:'0',10)||0);
-      const person=allocationPeopleData[pid]||null, slot=allocationSlotsData[sid]||null;
-      const priority=person&&slot?allocationPriority(person.specialty_code,slot):'';
-      let error='', warning='';
-      if((pid||sid||hours) && !person) error='Δεν έχει επιλεγεί έγκυρος εκπαιδευτικός.';
-      else if((pid||sid||hours) && !slot) error='Δεν έχει επιλεγεί έγκυρο τμήμα / ομάδα και μάθημα.';
-      else if((pid||sid) && hours<1) error='Οι ώρες πρέπει να είναι θετικές.';
+      const person=allocationPeopleData[pid]||null, slot=allocationSlotsData[sid]||null, match=person&&slot?allocationBestAssignment(person,slot):null;
+      let error='', warnings=[];
+      if((pid||sid||hours)&&!slot) error='Δεν έχει επιλεγεί έγκυρο τμήμα / ομάδα και μάθημα.';
+      else if((pid||sid||hours)&&!person) error='Δεν έχει επιλεγεί έγκυρος εκπαιδευτικός.';
+      else if((pid||sid)&&hours<1) error='Οι ώρες πρέπει να είναι θετικές.';
       else if(person&&slot&&hours>slot.capacity_hours) error='Οι ώρες υπερβαίνουν τις '+slot.capacity_hours+' ώρες του συγκεκριμένου τμήματος / ομάδας.';
-      else if(person&&slot&&hours>0&&!priority) error='Ο κλάδος '+person.specialty_code+' δεν έχει ανάθεση στο συγκεκριμένο μάθημα.';
-      if(!error && person&&slot&&hours>0){
+      else if(person&&slot&&hours>0&&!match) error='Οι ειδικότητες '+person.specialty_code+(person.secondary_specialty_code?' / '+person.secondary_specialty_code:'')+' δεν έχουν ανάθεση στο συγκεκριμένο μάθημα.';
+      if(!error&&person&&slot&&hours>0&&match){
         personAssigned[pid]=(personAssigned[pid]||0)+hours;
+        personPriority[pid][match.priority]=(personPriority[pid][match.priority]||0)+hours;
+        personSource[pid][match.specialty_source]=(personSource[pid][match.specialty_source]||0)+hours;
         slotAssigned[sid]=(slotAssigned[sid]||0)+hours;
         basicAssigned+=hours;
-        if(slot.top_priority && priority!==slot.top_priority) warning=allocationPriorityLabel(priority)+' ανάθεση · χαμηλότερη προτεραιότητα';
+        if(slot.top_priority&&match.priority!==slot.top_priority) warnings.push('χαμηλότερη προτεραιότητα');
       }
-      rowState.push({row:row,pid:pid,sid:sid,hours:hours,person:person,slot:slot,priority:priority,error:error,warning:warning});
+      rowState.push({row:row,pid:pid,sid:sid,hours:hours,person:person,slot:slot,match:match,error:error,warnings:warnings,finalError:''});
     });
     let overSlots=0, unassigned=0;
     Object.keys(allocationSlotsData||{}).forEach(function(sid){
@@ -2208,17 +2389,23 @@ foreach ($allocationSlots as $slotId=>$slot) {
     });
     let errorRows=0;
     rowState.forEach(function(st){
-      let error=st.error, warning=st.warning;
-      if(!error && st.sid && st.slot && (slotAssigned[st.sid]||0)>st.slot.capacity_hours){
+      let error=st.error, warnings=st.warnings.slice();
+      if(!error&&st.sid&&st.slot&&(slotAssigned[st.sid]||0)>st.slot.capacity_hours){
         error='Το ίδιο τμήμα / ομάδα έχει συνολικά '+slotAssigned[st.sid]+' ώρες, ενώ διαθέτει '+st.slot.capacity_hours+'.';
       }
-      if(!error && st.pid && st.person && (personAssigned[st.pid]||0)>st.person.available_here_hours){
-        warning='Υπέρβαση ατομικού διαθέσιμου ωραρίου κατά '+((personAssigned[st.pid]||0)-st.person.available_here_hours)+' ώρες.';
+      if(!error&&st.pid&&st.person&&(personAssigned[st.pid]||0)>st.person.available_here_hours){
+        warnings.push('Υπέρβαση ατομικού διαθέσιμου ωραρίου κατά '+((personAssigned[st.pid]||0)-st.person.available_here_hours)+' ώρες.');
       }
+      if(!error&&st.pid&&st.match&&st.match.priority==='B'&&(personPriority[st.pid].B||0)>10){
+        warnings.push(allocationBAssignmentWarning);
+      }
+      st.finalError=error;
       if(error){ allocationSetStatus(st.row,error,'error'); errorRows++; }
-      else if(warning){ allocationSetStatus(st.row,warning,'warning'); }
-      else if(st.person&&st.slot&&st.hours>0){ allocationSetStatus(st.row,allocationPriorityLabel(st.priority)+' ανάθεση ✓','ok'); }
-      else allocationSetStatus(st.row,'Συμπλήρωσε εκπαιδευτικό και μάθημα.','');
+      else if(st.person&&st.slot&&st.hours>0&&st.match){
+        const base=allocationAssignmentLabel(st.match);
+        if(warnings.length) allocationSetStatus(st.row,base+' · '+warnings.join(' '),'warning');
+        else allocationSetStatus(st.row,base+' ✓','ok');
+      } else allocationSetStatus(st.row,'Συμπλήρωσε μάθημα και εκπαιδευτικό.','');
     });
     const assignedEl=document.querySelector('[data-allocation-assigned]'), unassignedEl=document.querySelector('[data-allocation-unassigned]'), overEl=document.querySelector('[data-allocation-over]'), errorsEl=document.querySelector('[data-allocation-errors]');
     if(assignedEl) assignedEl.textContent=String(basicAssigned);
@@ -2227,35 +2414,49 @@ foreach ($allocationSlots as $slotId=>$slot) {
     if(errorsEl) errorsEl.textContent=String(errorRows);
     Object.keys(allocationPeopleData||{}).forEach(function(pid){
       const summary=document.querySelector('[data-allocation-person-summary="'+CSS.escape(pid)+'"]'); if(!summary) return;
-      const p=allocationPeopleData[pid], assigned=personAssigned[pid]||0, remain=Math.max(0,p.available_here_hours-assigned), over=Math.max(0,assigned-p.available_here_hours);
-      const a=summary.querySelector('[data-person-assigned]'), r=summary.querySelector('[data-person-remaining]'), o=summary.querySelector('[data-person-over]');
-      if(a) a.textContent=String(assigned); if(r) r.textContent=String(remain); if(o) o.textContent=String(over);
+      const p=allocationPeopleData[pid], assigned=personAssigned[pid]||0, remain=Math.max(0,p.available_here_hours-assigned), aHours=personPriority[pid].A||0, bHours=personPriority[pid].B||0;
+      const a=summary.querySelector('[data-person-assigned]'), r=summary.querySelector('[data-person-remaining]'), av=summary.querySelector('[data-person-a]'), bv=summary.querySelector('[data-person-b]');
+      if(a) a.textContent=String(assigned); if(r) r.textContent=String(remain); if(av) av.textContent=String(aHours); if(bv){ bv.textContent=String(bHours)+'/10'; bv.classList.toggle('b-limit-over',bHours>10); }
+      const source=summary.querySelector('[data-person-source-summary]');
+      if(source){
+        let text='Μέσω κύριας '+p.specialty_code+': '+(personSource[pid].primary||0)+' ώρ.';
+        if(p.secondary_specialty_code) text+=' · μέσω 2ης '+p.secondary_specialty_code+': '+(personSource[pid].secondary||0)+' ώρ.';
+        if((p.external_hours||0)>0) text+=' · '+p.external_hours+' ώρ. σε άλλη μονάδα';
+        source.textContent=text;
+      }
+      const limitWarning=summary.querySelector('[data-person-b-warning]');
+      if(limitWarning){ limitWarning.hidden=bHours<=10; limitWarning.textContent=allocationBAssignmentWarning; }
+      const assignments=summary.querySelector('[data-person-assignments]');
+      if(assignments){
+        assignments.innerHTML='';
+        const personRows=rowState.filter(function(st){return st.pid===pid&&!st.finalError&&st.match&&st.slot&&st.hours>0;});
+        if(!personRows.length){ const empty=document.createElement('div'); empty.className='allocation-person-assignment-item'; empty.setAttribute('data-empty-assignment',''); empty.textContent='Δεν έχουν κατανεμηθεί μαθήματα.'; assignments.appendChild(empty); }
+        else personRows.forEach(function(st){ const item=document.createElement('div'); item.className='allocation-person-assignment-item'; item.textContent=st.slot.slot_label+' · '+st.slot.subject+' · '+st.hours+' ώρ. — '+allocationAssignmentLabel(st.match); assignments.appendChild(item); });
+      }
     });
   }
   function bindAllocationRow(row){
     if(!row||row.dataset.initialized==='1') return; row.dataset.initialized='1';
-    const person=row.querySelector('.allocation-person'), slot=row.querySelector('.allocation-slot'), hours=row.querySelector('.allocation-hours');
-    allocationPopulateSlotsForPerson(row,true);
-    if(slot){
-      const initial=allocationSlotsData[slot.value]||null; if(initial&&hours) hours.max=String(initial.capacity_hours);
-    }
+    const slot=row.querySelector('.allocation-slot'), hours=row.querySelector('.allocation-hours');
+    allocationPopulatePeopleForSlot(row,true);
+    if(slot){ const initial=allocationSlotsData[slot.value]||null; if(initial&&hours) hours.max=String(initial.capacity_hours); }
   }
-  if(allocationList && allocationList.dataset.eventsBound!=='1'){
+  if(allocationList&&allocationList.dataset.eventsBound!=='1'){
     allocationList.dataset.eventsBound='1';
     allocationList.addEventListener('change',function(event){
       const row=event.target.closest('[data-allocation-row]'); if(!row) return;
-      if(event.target.matches('.allocation-person')){
-        const hours=row.querySelector('.allocation-hours'); allocationPopulateSlotsForPerson(row,false); if(hours) hours.value='0'; updateAllocationSummary(); return;
-      }
       if(event.target.matches('.allocation-slot')){
         const slot=event.target, hours=row.querySelector('.allocation-hours'), data=allocationSlotsData[slot.value]||null;
-        if(data&&hours){ hours.max=String(data.capacity_hours); if((parseInt(hours.value||'0',10)||0)<1) hours.value=String(data.capacity_hours); }
-        updateAllocationSummary();
+        allocationPopulatePeopleForSlot(row,false);
+        if(data&&hours){ hours.max=String(data.capacity_hours); hours.value=String(data.capacity_hours); }
+        else if(hours) hours.value='0';
+        updateAllocationSummary(); return;
       }
+      if(event.target.matches('.allocation-person')){ updateAllocationSummary(); return; }
     });
     allocationList.addEventListener('input',function(event){ if(event.target.matches('.allocation-hours')) updateAllocationSummary(); });
     allocationList.addEventListener('click',function(event){
-      const remove=event.target.closest('.allocation-remove'); if(!remove || !allocationList.contains(remove)) return;
+      const remove=event.target.closest('.allocation-remove'); if(!remove||!allocationList.contains(remove)) return;
       const row=remove.closest('[data-allocation-row]'); if(!row) return;
       row.remove();
       if(!allocationList.querySelector('[data-allocation-row]')){const empty=document.createElement('div');empty.id='emptyAllocationState';empty.className='allocation-empty';empty.textContent='Δεν έχει γίνει ακόμη κατανομή. Πάτησε «+ Προσθήκη μαθήματος» για να ξεκινήσεις.';allocationList.appendChild(empty);}
@@ -2266,9 +2467,18 @@ foreach ($allocationSlots as $slotId=>$slot) {
   if(addAllocation&&allocationTemplate&&allocationList){
     addAllocation.addEventListener('click',function(){
       const empty=document.getElementById('emptyAllocationState'); if(empty) empty.remove();
-      const fragment=allocationTemplate.content.cloneNode(true), row=fragment.querySelector('[data-allocation-row]'); allocationList.appendChild(fragment); bindAllocationRow(row); const first=row.querySelector('.allocation-person'); if(first) first.focus(); updateAllocationSummary();
+      const fragment=allocationTemplate.content.cloneNode(true), row=fragment.querySelector('[data-allocation-row]'); allocationList.appendChild(fragment); bindAllocationRow(row); const first=row.querySelector('.allocation-slot'); if(first) first.focus(); updateAllocationSummary();
     });
   }
+  const allocationViewButtons=Array.from(document.querySelectorAll('[data-allocation-view]'));
+  const allocationViewPanels=Array.from(document.querySelectorAll('[data-allocation-view-panel]'));
+  allocationViewButtons.forEach(function(button){
+    button.addEventListener('click',function(){
+      const view=button.getAttribute('data-allocation-view');
+      allocationViewButtons.forEach(function(b){ const active=b===button; b.classList.toggle('is-active',active); b.setAttribute('aria-selected',active?'true':'false'); });
+      allocationViewPanels.forEach(function(panel){ panel.hidden=panel.getAttribute('data-allocation-view-panel')!==view; });
+    });
+  });
   updateAllocationSummary();
 })();
 </script>
