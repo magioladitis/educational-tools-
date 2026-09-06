@@ -259,6 +259,12 @@ function staffingUiAllocationErrorLabel($error) {
 function staffingUiBAssignmentLimitWarning() {
     return 'Οι ώρες μαθημάτων Β΄ ανάθεσης, από τη βασική και τη δεύτερη ειδικότητα συνολικά, υπερβαίνουν το όριο των 10 διδακτικών ωρών. Υπέρβαση επιτρέπεται μόνο κατ’ εξαίρεση, ύστερα από απόφαση ΠΥΣΔΕ και υπό τις προβλεπόμενες προϋποθέσεις.';
 }
+function staffingUiCompactSpecialtyCodes($codes, $limit = 8) {
+    $codes = is_array($codes) ? array_values(array_unique(array_filter($codes))) : array();
+    if (count($codes) <= $limit) return implode(', ', $codes);
+    $visible = array_slice($codes, 0, $limit);
+    return implode(', ', $visible) . ' +' . (count($codes) - $limit);
+}
 function staffingUiAllocationAssignmentLabel($rowResult) {
     if (!$rowResult || empty($rowResult['priority'])) return '';
     $label = staffingUiPriorityLabel($rowResult['priority']) . ' ανάθεση';
@@ -266,8 +272,6 @@ function staffingUiAllocationAssignmentLabel($rowResult) {
     $source = isset($rowResult['specialty_source']) ? $rowResult['specialty_source'] : '';
     if ($source === 'secondary' && $usedCode !== '') {
         $label .= ' · μέσω 2ης ειδικότητας ' . $usedCode;
-    } elseif ($source === 'primary' && $usedCode !== '') {
-        $label .= ' · μέσω κύριας ειδικότητας ' . $usedCode;
     }
     return $label;
 }
@@ -564,7 +568,7 @@ $generalSectionTotal = $profile ? schoolProfileTotalGeneralSections($profile) : 
 $directorSectionsBandAuto = personnelWorkloadDirectorSectionsBandFromCount($generalSectionTotal);
 
 $activePanel = staffingUiPost('active_panel', $submitted ? 'results' : 'school');
-if (!in_array($activePanel, array('school','results','personnel','allocation'), true)) $activePanel = $submitted ? 'results' : 'school';
+if (!in_array($activePanel, array('school','results','personnel','allocation','vacancies'), true)) $activePanel = $submitted ? 'results' : 'school';
 if ($staffingAction === 'personnel') $activePanel = 'personnel';
 if ($staffingAction === 'allocation') $activePanel = 'allocation';
 
@@ -711,6 +715,18 @@ foreach ($allocationSlots as $slotId=>$slot) {
         'has_eligible_person'=>isset($allocationSelectableSlots[$slotId]),
     );
 }
+$vacancySlotState = array();
+foreach ($allocationSlots as $slotId=>$slot) {
+    $capacity = isset($slot['capacity_hours']) ? (int)$slot['capacity_hours'] : 0;
+    $remaining = $capacity;
+    if ($allocationPlan && isset($allocationPlan['slots'][$slotId])) {
+        $remaining = isset($allocationPlan['slots'][$slotId]['remaining_hours']) ? (int)$allocationPlan['slots'][$slotId]['remaining_hours'] : $capacity;
+    }
+    $vacancySlotState[$slotId] = array(
+        'remaining_hours'=>max(0, $remaining),
+        'has_eligible_person'=>isset($allocationSelectableSlots[$slotId]),
+    );
+}
 ?>
 <!doctype html>
 <html lang="el">
@@ -829,6 +845,16 @@ foreach ($allocationSlots as $slotId=>$slot) {
     .edu-page-staffing-simulator .b-limit-warning{grid-column:1/-1;padding:9px 10px;border-radius:9px;border:1px solid rgba(156,47,47,.35);background:rgba(156,47,47,.06);color:#9c2f2f;font-size:12.5px;font-weight:800}
     .edu-page-staffing-simulator .b-limit-warning[hidden]{display:none!important}
     .edu-page-staffing-simulator .allocation-empty{padding:18px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
+    .edu-page-staffing-simulator .vacancy-toolbar{display:flex;gap:10px;justify-content:space-between;align-items:end;flex-wrap:wrap;margin:12px 0}
+    .edu-page-staffing-simulator .vacancy-filter{min-width:min(360px,100%);margin:0}
+    .edu-page-staffing-simulator .vacancy-table td{vertical-align:top}
+    .edu-page-staffing-simulator .vacancy-hours{font-size:1.08rem;font-weight:900;white-space:nowrap}
+    .edu-page-staffing-simulator .vacancy-assignments{display:grid;gap:3px;font-size:12.5px;color:var(--edu-muted)}
+    .edu-page-staffing-simulator .vacancy-assignments strong{color:var(--edu-text)}
+    .edu-page-staffing-simulator .vacancy-status{font-size:12.5px;font-weight:800}
+    .edu-page-staffing-simulator .vacancy-status.has-staff{color:#8a6400}
+    .edu-page-staffing-simulator .vacancy-status.no-staff{color:#9c2f2f}
+    .edu-page-staffing-simulator .vacancy-empty{padding:22px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
     .staffing-print-report{display:none}
     @media print{
       @page{size:A4 landscape;margin:10mm}
@@ -886,6 +912,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
       <button type="button" class="mode-tab<?php echo $activePanel === 'results' ? ' is-active' : ''; ?>" data-staffing-tab="results" role="tab" aria-selected="<?php echo $activePanel === 'results' ? 'true' : 'false'; ?>"<?php echo !$submitted ? ' disabled' : ''; ?>>2. Αποτελέσματα ανά κλάδο</button>
       <button type="button" class="mode-tab<?php echo $activePanel === 'personnel' ? ' is-active' : ''; ?>" data-staffing-tab="personnel" role="tab" aria-selected="<?php echo $activePanel === 'personnel' ? 'true' : 'false'; ?>"<?php echo !$submitted ? ' disabled' : ''; ?>>3. Εκπαιδευτικοί</button>
       <button type="button" class="mode-tab<?php echo $activePanel === 'allocation' ? ' is-active' : ''; ?>" data-staffing-tab="allocation" role="tab" aria-selected="<?php echo $activePanel === 'allocation' ? 'true' : 'false'; ?>"<?php echo !$allocationEnabled ? ' disabled' : ''; ?>>4. Κατανομή μαθημάτων</button>
+      <button type="button" class="mode-tab<?php echo $activePanel === 'vacancies' ? ' is-active' : ''; ?>" data-staffing-tab="vacancies" role="tab" aria-selected="<?php echo $activePanel === 'vacancies' ? 'true' : 'false'; ?>"<?php echo !$allocationEnabled ? ' disabled' : ''; ?>>5. Κενά μαθημάτων</button>
     </div>
     <?php if ($submitted && $matrix && $displayMatrix): ?>
       <button type="button" class="edu-btn-secondary staffing-print-btn" id="staffingPrintButton">Εκτύπωση</button>
@@ -1503,6 +1530,56 @@ foreach ($allocationSlots as $slotId=>$slot) {
             </div>
           <?php endif; ?>
         <?php calculatorCardEnd(); ?>
+
+        <?php calculatorCardStart(array('class'=>'card staffing-panel vacancies-card','attrs'=>array('data-staffing-panel'=>'vacancies') + ($activePanel !== 'vacancies' ? array('hidden'=>true) : array()))); ?>
+          <h2>5. Κενά μαθημάτων</h2>
+          <p class="cap">Συγκεντρώνει τις ώρες μαθημάτων που απομένουν ακάλυπτες μετά την τρέχουσα κατανομή. Είναι η πρακτική λίστα που μπορεί να χρησιμοποιηθεί για αναζήτηση εκπαιδευτικών, χωρίς να χαρακτηρίζει από μόνη της τις ώρες ως επίσημα λειτουργικά κενά.</p>
+          <div class="info-note"><strong>Ζωντανή εικόνα της Καρτέλας 4.</strong> Η λίστα ενημερώνεται αμέσως όταν αλλάζει η κατανομή. Αν υπάρχει ήδη επιλέξιμος εκπαιδευτικός με υπόλοιπο ωραρίου, το εργαλείο το επισημαίνει ώστε να ελεγχθεί πρώτα η εσωτερική κατανομή.</div>
+
+          <div class="staffing-summary-grid" id="vacancySummary">
+            <div class="summary-chip"><strong data-vacancy-total>0</strong><span>ακάλυπτες ώρες</span></div>
+            <div class="summary-chip"><strong data-vacancy-slots>0</strong><span>μαθήματα / τμήματα με υπόλοιπο</span></div>
+            <div class="summary-chip"><strong data-vacancy-no-staff>0</strong><span>μαθήματα / τμήματα χωρίς διαθέσιμο επιλέξιμο προσωπικό</span></div>
+            <div class="summary-chip"><strong data-vacancy-has-staff>0</strong><span>μαθήματα / τμήματα με επιλέξιμο προσωπικό και υπόλοιπο</span></div>
+          </div>
+
+          <div class="vacancy-toolbar">
+            <div class="field vacancy-filter">
+              <label for="vacancyFilter">Φίλτρο τάξης / μαθήματος / κλάδου</label>
+              <input id="vacancyFilter" type="search" placeholder="π.χ. Β1, Μαθηματικά ή ΠΕ03">
+            </div>
+          </div>
+
+          <div class="matrix-wrap" id="vacancyTableWrap">
+            <table class="staffing-table vacancy-table" id="vacancyTable">
+              <thead><tr><th>Τμήμα / ομάδα</th><th>Μάθημα</th><th>Ακάλυπτες ώρες</th><th>Κλάδοι ανάθεσης</th><th>Τρέχον προσωπικό</th></tr></thead>
+              <tbody>
+              <?php foreach ($allocationSlots as $vacancySlotId=>$vacancySlot): ?>
+                <?php
+                  $vacancyState = isset($vacancySlotState[$vacancySlotId]) ? $vacancySlotState[$vacancySlotId] : array('remaining_hours'=>(int)$vacancySlot['capacity_hours'],'has_eligible_person'=>false);
+                  $vacancyRemaining = isset($vacancyState['remaining_hours']) ? (int)$vacancyState['remaining_hours'] : 0;
+                  $vacancyEligibility = isset($vacancySlot['eligible_by_priority']) ? $vacancySlot['eligible_by_priority'] : array();
+                  $vacancySearchParts = array(isset($vacancySlot['slot_label'])?$vacancySlot['slot_label']:'', isset($vacancySlot['subject'])?$vacancySlot['subject']:'');
+                  foreach (array('A','B','C','SPECIAL') as $vp) if (!empty($vacancyEligibility[$vp])) $vacancySearchParts = array_merge($vacancySearchParts, $vacancyEligibility[$vp]);
+                ?>
+                <tr data-vacancy-row="<?php echo staffingUiH($vacancySlotId); ?>" data-search="<?php echo staffingUiH(implode(' ', $vacancySearchParts)); ?>"<?php echo $vacancyRemaining < 1 ? ' hidden' : ''; ?>>
+                  <td><strong><?php echo staffingUiH(isset($vacancySlot['slot_label']) ? $vacancySlot['slot_label'] : ''); ?></strong></td>
+                  <td><?php echo staffingUiH(isset($vacancySlot['subject']) ? $vacancySlot['subject'] : ''); ?></td>
+                  <td><span class="vacancy-hours" data-vacancy-hours><?php echo $vacancyRemaining; ?></span></td>
+                  <td><div class="vacancy-assignments">
+                    <?php foreach (array('A'=>'Α΄','B'=>'Β΄','C'=>'Γ΄','SPECIAL'=>'Ειδική') as $vp=>$vpLabel): ?>
+                      <?php if (!empty($vacancyEligibility[$vp])): ?><span><strong><?php echo $vpLabel; ?>:</strong> <?php echo staffingUiH(staffingUiCompactSpecialtyCodes($vacancyEligibility[$vp])); ?></span><?php endif; ?>
+                    <?php endforeach; ?>
+                  </div></td>
+                  <td><span class="vacancy-status" data-vacancy-status>—</span></td>
+                </tr>
+              <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+          <div class="vacancy-empty" id="vacancyEmpty" hidden>Δεν υπάρχουν ακάλυπτες ώρες μαθημάτων στην τρέχουσα κατανομή.</div>
+          <p class="help"><strong>Σημείωση:</strong> οι κλάδοι ανάθεσης προέρχονται από την ίδια κανονιστική λογική της Καρτέλας 2. Η ένδειξη «τρέχον προσωπικό» εξετάζει κύρια και 2η ειδικότητα και το διαθέσιμο υπόλοιπο ωραρίου των εκπαιδευτικών της μονάδας.</p>
+        <?php calculatorCardEnd(); ?>
       <?php endif; ?>
     <?php calculatorMainEnd(); ?>
 
@@ -1516,6 +1593,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
       <div class="result-row"><span>Ηθική</span><strong>✓</strong></div>
       <div class="result-row"><span>Πραγματικό προσωπικό</span><strong>✓</strong></div>
       <div class="result-row"><span>Χειροκίνητη κατανομή μαθημάτων</span><strong>✓</strong></div>
+      <div class="result-row"><span>Κενά μαθημάτων μετά την κατανομή</span><strong>✓</strong></div>
       <div class="result-row"><span>Αυτόματες τοποθετήσεις</span><strong>Όχι ακόμη</strong></div>
       <div class="info-note">Το εργαλείο δεν χαρακτηρίζει τις ώρες ως επίσημα «κενά». Η κατανομή μαθημάτων είναι χειροκίνητη και ελέγχεται απέναντι στις αναθέσεις, στο ατομικό ωράριο και στη χωρητικότητα κάθε τμήματος / ομάδας.</div>
       <?php if ($submitted && $matrix): ?>
@@ -2027,7 +2105,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
 
   const personnelList=document.getElementById('personnelList');
   const allocationTab=document.querySelector('[data-staffing-tab="allocation"]');
-  function markPersonnelDirty(){ if(allocationTab){ allocationTab.disabled=true; allocationTab.title='Υπολόγισε ξανά τα ωράρια προσωπικού πριν από νέα κατανομή.'; } }
+  const vacanciesTab=document.querySelector('[data-staffing-tab="vacancies"]');
+  function markPersonnelDirty(){
+    if(allocationTab){ allocationTab.disabled=true; allocationTab.title='Υπολόγισε ξανά τα ωράρια προσωπικού πριν από νέα κατανομή.'; }
+    if(vacanciesTab){ vacanciesTab.disabled=true; vacanciesTab.title='Υπολόγισε ξανά τα ωράρια προσωπικού πριν από τον έλεγχο κενών.'; }
+  }
   const personnelTemplate=document.getElementById('personnelRowTemplate');
   const addPersonnel=document.getElementById('addPersonnelRow');
   const personnelFilter=document.getElementById('personnelFilter');
@@ -2566,7 +2648,6 @@ foreach ($allocationSlots as $slotId=>$slot) {
     if(!match) return '';
     let text=allocationPriorityLabel(match.priority)+' ανάθεση';
     if(match.specialty_source==='secondary') text+=' · μέσω 2ης ειδικότητας '+match.used_specialty_code;
-    else if(match.used_specialty_code) text+=' · μέσω κύριας ειδικότητας '+match.used_specialty_code;
     return text;
   }
   function allocationPopulatePeopleForSlot(row,preserveSelected){
@@ -2613,6 +2694,64 @@ foreach ($allocationSlots as $slotId=>$slot) {
     if(kind) el.classList.add('is-'+kind);
   }
   function allocationRows(){ return allocationList ? Array.from(allocationList.querySelectorAll('[data-allocation-row]')) : []; }
+  const vacancyRows=Array.from(document.querySelectorAll('[data-vacancy-row]'));
+  const vacancyFilter=document.getElementById('vacancyFilter');
+  function vacancyEligiblePeopleWithRemaining(slot,personAssigned){
+    let count=0;
+    Object.keys(allocationPeopleData||{}).forEach(function(pid){
+      const person=allocationPeopleData[pid], match=allocationBestAssignment(person,slot);
+      if(!match) return;
+      const remaining=Math.max(0,(person.available_here_hours||0)-(personAssigned[pid]||0));
+      if(remaining>0) count++;
+    });
+    return count;
+  }
+  function currentAllocationTotals(){
+    const personAssigned={}, slotAssigned={};
+    Object.keys(allocationPeopleData||{}).forEach(function(id){personAssigned[id]=0;});
+    Object.keys(allocationSlotsData||{}).forEach(function(id){slotAssigned[id]=0;});
+    allocationRows().forEach(function(row){
+      const personEl=row.querySelector('.allocation-person'), slotEl=row.querySelector('.allocation-slot'), hoursEl=row.querySelector('.allocation-hours');
+      const pid=personEl?personEl.value:'', sid=slotEl?slotEl.value:'', hours=Math.max(0,parseInt(hoursEl&&hoursEl.value?hoursEl.value:'0',10)||0);
+      const person=allocationPeopleData[pid]||null, slot=allocationSlotsData[sid]||null, match=person&&slot?allocationBestAssignment(person,slot):null;
+      if(person&&slot&&match&&hours>0&&hours<=slot.capacity_hours){
+        personAssigned[pid]=(personAssigned[pid]||0)+hours;
+        slotAssigned[sid]=(slotAssigned[sid]||0)+hours;
+      }
+    });
+    return {personAssigned:personAssigned,slotAssigned:slotAssigned};
+  }
+  function updateVacancyView(slotAssigned,personAssigned){
+    if(!vacancyRows.length) return;
+    let total=0, slots=0, noStaff=0, hasStaff=0;
+    const q=vacancyFilter?(vacancyFilter.value||'').toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,''):'';
+    vacancyRows.forEach(function(row){
+      const sid=row.getAttribute('data-vacancy-row')||'', slot=allocationSlotsData[sid]||null;
+      if(!slot){ row.hidden=true; return; }
+      const remaining=Math.max(0,(slot.capacity_hours||0)-(slotAssigned[sid]||0));
+      const availableCount=remaining>0?vacancyEligiblePeopleWithRemaining(slot,personAssigned):0;
+      const hoursEl=row.querySelector('[data-vacancy-hours]'); if(hoursEl) hoursEl.textContent=String(remaining);
+      const status=row.querySelector('[data-vacancy-status]');
+      if(status){
+        status.classList.remove('has-staff','no-staff');
+        if(remaining<1) status.textContent='—';
+        else if(availableCount>0){ status.textContent='Υπάρχει επιλέξιμο προσωπικό με υπόλοιπο ('+availableCount+')'; status.classList.add('has-staff'); }
+        else { status.textContent='Δεν υπάρχει επιλέξιμο προσωπικό με διαθέσιμο υπόλοιπο'; status.classList.add('no-staff'); }
+      }
+      const hay=(row.getAttribute('data-search')||'').toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      row.hidden=remaining<1||(q!==''&&!hay.includes(q));
+      if(remaining>0){ total+=remaining; slots++; if(availableCount>0) hasStaff++; else noStaff++; }
+    });
+    const totalEl=document.querySelector('[data-vacancy-total]'), slotsEl=document.querySelector('[data-vacancy-slots]'), noStaffEl=document.querySelector('[data-vacancy-no-staff]'), hasStaffEl=document.querySelector('[data-vacancy-has-staff]');
+    if(totalEl) totalEl.textContent=String(total);
+    if(slotsEl) slotsEl.textContent=String(slots);
+    if(noStaffEl) noStaffEl.textContent=String(noStaff);
+    if(hasStaffEl) hasStaffEl.textContent=String(hasStaff);
+    const tableWrap=document.getElementById('vacancyTableWrap'), empty=document.getElementById('vacancyEmpty');
+    if(tableWrap) tableWrap.hidden=slots===0;
+    if(empty) empty.hidden=slots!==0;
+  }
+  if(vacancyFilter) vacancyFilter.addEventListener('input',function(){ const totals=currentAllocationTotals(); updateVacancyView(totals.slotAssigned,totals.personAssigned); });
   function updateAllocationSummary(){
     if(!allocationList) return;
     const rows=allocationRows();
@@ -2670,6 +2809,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
     if(unassignedEl) unassignedEl.textContent=String(unassigned);
     if(overEl) overEl.textContent=String(overSlots);
     if(errorsEl) errorsEl.textContent=String(errorRows);
+    updateVacancyView(slotAssigned,personAssigned);
     Object.keys(allocationPeopleData||{}).forEach(function(pid){
       const summary=document.querySelector('[data-allocation-person-summary="'+CSS.escape(pid)+'"]'); if(!summary) return;
       const p=allocationPeopleData[pid], assigned=personAssigned[pid]||0, remain=Math.max(0,p.available_here_hours-assigned), aHours=personPriority[pid].A||0, bHours=personPriority[pid].B||0;

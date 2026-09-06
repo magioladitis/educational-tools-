@@ -27,7 +27,7 @@ check('allocation card rendered', '<h2>4. Κατανομή μαθημάτων</h
 check('manual not automatic note', 'Χειροκίνητη κατανομή με αυτόματο έλεγχο — όχι αυτόματη τοποθέτηση.' in out)
 check('A1 math option visible', 'Α1 · Μαθηματικά · 4 ώρ.' in out)
 check('split group safe label visible', 'πρόσθετη ομάδα χωρισμού 1 · Πληροφορική' in out)
-check('valid A assignment status records primary specialty', 'Α΄ ανάθεση · μέσω κύριας ειδικότητας ΠΕ03 ✓' in out)
+check('valid primary A assignment uses compact label', 'Α΄ ανάθεση ✓' in out and 'μέσω κύριας ειδικότητας ΠΕ03' not in out)
 check('assigned summary four', re.search(r'<strong data-allocation-assigned>4</strong>',out) is not None)
 check('person assigned four', re.search(r'data-allocation-person-summary="p1"[\s\S]*?<strong data-person-assigned>4</strong>',out) is not None)
 check('person remaining 14 after external 3 and allocation 4', re.search(r'data-allocation-person-summary="p1"[\s\S]*?<strong data-person-remaining>14</strong>',out) is not None)
