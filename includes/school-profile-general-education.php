@@ -359,6 +359,73 @@ function schoolProfileBuildDayGel2026($config)
     );
 }
 
+
+/**
+ * Composite profile για Ημερήσιο Γυμνάσιο με Λυκειακές Τάξεις.
+ *
+ * Δεν αντιγράφει κανονιστικά δεδομένα: συνθέτει αυτούσια τα δύο ήδη
+ * ελεγμένα profiles Ημερήσιου Γυμνασίου και Ημερήσιου ΓΕΛ σε μία σχολική
+ * μονάδα, ώστε προσωπικό, υποχρεωτικό ωράριο και allocation engine να
+ * λειτουργούν πάνω σε κοινό pool.
+ */
+function schoolProfileBuildGymnasiumWithLyceumClasses2026($config)
+{
+    $commonSchool = isset($config['school']) ? $config['school'] : array('type'=>'Γυμνάσιο με Λυκειακές Τάξεις');
+    $commonSource = isset($config['source']) ? $config['source'] : array('kind'=>'manual_school_profile');
+    $schoolYear = isset($config['school_year']) ? $config['school_year'] : '2026-2027';
+
+    $gym = schoolProfileBuildDayGymnasium2026(array(
+        'profile_id' => 'composite-gymnasium-part',
+        'school_year' => $schoolYear,
+        'school' => $commonSchool,
+        'source' => $commonSource,
+        'general_sections' => isset($config['gymnasium_general_sections']) ? $config['gymnasium_general_sections'] : array(),
+        'second_foreign_language_groups' => isset($config['gymnasium_second_foreign_language_groups']) ? $config['gymnasium_second_foreign_language_groups'] : array(),
+        'technology_informatics_split_sections' => isset($config['gymnasium_technology_informatics_split_sections']) ? $config['gymnasium_technology_informatics_split_sections'] : array(),
+        'ethics_by_grade' => isset($config['gymnasium_ethics_by_grade']) ? $config['gymnasium_ethics_by_grade'] : array(),
+    ));
+
+    $gel = schoolProfileBuildDayGel2026(array(
+        'profile_id' => 'composite-lyceum-part',
+        'school_year' => $schoolYear,
+        'school' => $commonSchool,
+        'source' => $commonSource,
+        'general_sections' => isset($config['lyceum_general_sections']) ? $config['lyceum_general_sections'] : array(),
+        'second_foreign_language_groups' => isset($config['lyceum_second_foreign_language_groups']) ? $config['lyceum_second_foreign_language_groups'] : array(),
+        'orientation_sections' => isset($config['lyceum_orientation_sections']) ? $config['lyceum_orientation_sections'] : array(),
+        'grade_c_science_health_field_groups' => isset($config['lyceum_grade_c_science_health_field_groups']) ? $config['lyceum_grade_c_science_health_field_groups'] : array(),
+        'grade_c_conditional_groups' => isset($config['lyceum_grade_c_conditional_groups']) ? $config['lyceum_grade_c_conditional_groups'] : array(),
+        'ethics_by_grade' => isset($config['lyceum_ethics_by_grade']) ? $config['lyceum_ethics_by_grade'] : array(),
+    ));
+
+    return array(
+        'profile_id' => isset($config['profile_id']) ? $config['profile_id'] : 'gymnasium-with-lyceum-classes-2026-2027',
+        'school_year' => $schoolYear,
+        'school' => $commonSchool,
+        'source' => $commonSource,
+        'structures' => array(
+            'gymnasio' => $gym['structures']['gymnasio'],
+            'gel' => $gel['structures']['gel'],
+        ),
+        'validation_issues' => array_values(array_merge(
+            isset($gym['validation_issues']) ? $gym['validation_issues'] : array(),
+            isset($gel['validation_issues']) ? $gel['validation_issues'] : array()
+        )),
+        'ethics' => array(
+            'formation_policy_scope' => 'in_scope',
+            'by_structure_grade' => array(
+                'gymnasio' => isset($gym['ethics']['by_structure_grade']['gymnasio']) ? $gym['ethics']['by_structure_grade']['gymnasio'] : array(),
+                'gel' => isset($gel['ethics']['by_structure_grade']['gel']) ? $gel['ethics']['by_structure_grade']['gel'] : array(),
+            ),
+        ),
+        'composite' => array(
+            'kind' => 'gymnasium_with_lyceum_classes',
+            'shared_personnel_pool' => true,
+            'structures' => array('gymnasio','gel'),
+        ),
+    );
+}
+
 function schoolProfileGeneralEducationReadiness($profile)
 {
     $issues = isset($profile['validation_issues']) && is_array($profile['validation_issues'])

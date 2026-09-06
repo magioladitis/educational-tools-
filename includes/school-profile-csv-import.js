@@ -95,7 +95,32 @@
     ethics_b_equivalent:['β τμηματα ηθικης','β ισοδυναμα τμηματα ηθικης','b ethics sections'],
     ethics_c_exempt:['γ απαλλασσομενοι','γ ηθικη απαλλασσομενοι','c ethics exempt'],
     ethics_c_timely:['γ ηθικη εντος 5ης','γ εως 5η ημερα','c ethics timely'],
-    ethics_c_equivalent:['γ τμηματα ηθικης','γ ισοδυναμα τμηματα ηθικης','c ethics sections']
+    ethics_c_equivalent:['γ τμηματα ηθικης','γ ισοδυναμα τμηματα ηθικης','c ethics sections'],
+    lt_general_a:['λτ α γενικης','λυκειακες ταξεις α γενικης','lt general a'],
+    lt_general_b:['λτ β γενικης','λυκειακες ταξεις β γενικης','lt general b'],
+    lt_general_c:['λτ γ γενικης','λυκειακες ταξεις γ γενικης','lt general c'],
+    lt_b_hum:['λτ β ανθρωπιστικων','lt b humanities'],
+    lt_b_sci:['λτ β θετικων','lt b science'],
+    lt_c_hum:['λτ γ ανθρωπιστικων','lt c humanities'],
+    lt_c_scihealth:['λτ γ θετικων υγειας','lt c science health'],
+    lt_c_econit:['λτ γ οικονομιας πληροφορικης','lt c economics it'],
+    lt_lang_a_fr:['λτ α γαλλικα','λτ α γαλλικα ομαδες','lt a french groups'],
+    lt_lang_a_de:['λτ α γερμανικα','λτ α γερμανικα ομαδες','lt a german groups'],
+    lt_lang_b_fr:['λτ β γαλλικα','λτ β γαλλικα ομαδες','lt b french groups'],
+    lt_lang_b_de:['λτ β γερμανικα','λτ β γερμανικα ομαδες','lt b german groups'],
+    lt_c_field_math:['λτ γ μαθηματικα 2ου πεδιου','lt c field math'],
+    lt_c_field_bio:['λτ γ βιολογια 3ου πεδιου','lt c field biology'],
+    lt_c_cond_math:['λτ γ μαθηματικα γενικης παιδειας','lt c conditional math'],
+    lt_c_cond_history:['λτ γ ιστορια γενικης παιδειας','lt c conditional history'],
+    lt_ethics_a_exempt:['λτ α απαλλασσομενοι','lt a ethics exempt'],
+    lt_ethics_a_timely:['λτ α ηθικη εντος 5ης','lt a ethics timely'],
+    lt_ethics_a_equivalent:['λτ α τμηματα ηθικης','lt a ethics sections'],
+    lt_ethics_b_exempt:['λτ β απαλλασσομενοι','lt b ethics exempt'],
+    lt_ethics_b_timely:['λτ β ηθικη εντος 5ης','lt b ethics timely'],
+    lt_ethics_b_equivalent:['λτ β τμηματα ηθικης','lt b ethics sections'],
+    lt_ethics_c_exempt:['λτ γ απαλλασσομενοι','lt c ethics exempt'],
+    lt_ethics_c_timely:['λτ γ ηθικη εντος 5ης','lt c ethics timely'],
+    lt_ethics_c_equivalent:['λτ γ τμηματα ηθικης','lt c ethics sections']
   };
 
   function autoMap(headers){
@@ -167,7 +192,7 @@
     kallitexniko:'Καλλιτεχνικό Σχολείο',
     sek:'Εργαστηριακό Κέντρο (Ε.Κ.)'
   };
-  function isSupportedType(type){ return type==='gymnasio' || type==='gel' || type==='esperino_gymnasio' || type==='esperino_gel'; }
+  function isSupportedType(type){ return type==='gymnasio' || type==='gel' || type==='esperino_gymnasio' || type==='esperino_gel' || type==='gymnasio_lt'; }
   function typeLabel(type){ return TYPE_LABELS[type] || String(type || 'Άγνωστος τύπος'); }
 
   function rowToSchool(row,mapping,index){
@@ -213,13 +238,40 @@
       ethics_b_equivalent:nullableInt(get(row,mapping,'ethics_b_equivalent')),
       ethics_c_exempt:nullableInt(get(row,mapping,'ethics_c_exempt')),
       ethics_c_timely:normalizeBool(get(row,mapping,'ethics_c_timely')),
-      ethics_c_equivalent:nullableInt(get(row,mapping,'ethics_c_equivalent'))
+      ethics_c_equivalent:nullableInt(get(row,mapping,'ethics_c_equivalent')),
+      lt_general_a:nonNegativeInt(get(row,mapping,'lt_general_a')),
+      lt_general_b:nonNegativeInt(get(row,mapping,'lt_general_b')),
+      lt_general_c:nonNegativeInt(get(row,mapping,'lt_general_c')),
+      lt_b_hum:nonNegativeInt(get(row,mapping,'lt_b_hum')),
+      lt_b_sci:nonNegativeInt(get(row,mapping,'lt_b_sci')),
+      lt_c_hum:nonNegativeInt(get(row,mapping,'lt_c_hum')),
+      lt_c_scihealth:nonNegativeInt(get(row,mapping,'lt_c_scihealth')),
+      lt_c_econit:nonNegativeInt(get(row,mapping,'lt_c_econit')),
+      lt_lang_a_fr:nonNegativeInt(get(row,mapping,'lt_lang_a_fr')),
+      lt_lang_a_de:nonNegativeInt(get(row,mapping,'lt_lang_a_de')),
+      lt_lang_b_fr:nonNegativeInt(get(row,mapping,'lt_lang_b_fr')),
+      lt_lang_b_de:nonNegativeInt(get(row,mapping,'lt_lang_b_de')),
+      lt_c_field_math:nonNegativeInt(get(row,mapping,'lt_c_field_math')),
+      lt_c_field_bio:nonNegativeInt(get(row,mapping,'lt_c_field_bio')),
+      lt_c_cond_math:nonNegativeInt(get(row,mapping,'lt_c_cond_math')),
+      lt_c_cond_history:nonNegativeInt(get(row,mapping,'lt_c_cond_history')),
+      lt_ethics_a_exempt:nullableInt(get(row,mapping,'lt_ethics_a_exempt')),
+      lt_ethics_a_timely:normalizeBool(get(row,mapping,'lt_ethics_a_timely')),
+      lt_ethics_a_equivalent:nullableInt(get(row,mapping,'lt_ethics_a_equivalent')),
+      lt_ethics_b_exempt:nullableInt(get(row,mapping,'lt_ethics_b_exempt')),
+      lt_ethics_b_timely:normalizeBool(get(row,mapping,'lt_ethics_b_timely')),
+      lt_ethics_b_equivalent:nullableInt(get(row,mapping,'lt_ethics_b_equivalent')),
+      lt_ethics_c_exempt:nullableInt(get(row,mapping,'lt_ethics_c_exempt')),
+      lt_ethics_c_timely:normalizeBool(get(row,mapping,'lt_ethics_c_timely')),
+      lt_ethics_c_equivalent:nullableInt(get(row,mapping,'lt_ethics_c_equivalent'))
     };
     if(!school.school_id) school.school_id=school.school_code || 'school-'+String((index || 0)+1);
     return school;
   }
   function basicSectionTotal(school){
-    return ['general_a','general_b','general_c'].reduce(function(total,key){return total+nonNegativeInt(school&&school[key]);},0);
+    var total=['general_a','general_b','general_c'].reduce(function(sum,key){return sum+nonNegativeInt(school&&school[key]);},0);
+    if(school && school.school_type==='gymnasio_lt') total+=['lt_general_a','lt_general_b','lt_general_c'].reduce(function(sum,key){return sum+nonNegativeInt(school&&school[key]);},0);
+    return total;
   }
   function validateRegistry(records){
     var seenIds={},seenCodes={},duplicateIds=[],duplicateCodes=[],oversized=[];
@@ -240,33 +292,55 @@
     'gel_general_a','gel_general_b','gel_general_c',
     'gel_lang_a_fr','gel_lang_a_de','gel_lang_b_fr','gel_lang_b_de',
     'gel_b_hum','gel_b_sci','gel_c_hum','gel_c_scihealth','gel_c_econit','gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history','egel_b_period',
-    'ethics_a_exempt','ethics_a_timely','ethics_a_equivalent','ethics_b_exempt','ethics_b_timely','ethics_b_equivalent','ethics_c_exempt','ethics_c_timely','ethics_c_equivalent'
+    'ethics_a_exempt','ethics_a_timely','ethics_a_equivalent','ethics_b_exempt','ethics_b_timely','ethics_b_equivalent','ethics_c_exempt','ethics_c_timely','ethics_c_equivalent',
+    'lt_ethics_a_exempt','lt_ethics_a_timely','lt_ethics_a_equivalent','lt_ethics_b_exempt','lt_ethics_b_timely','lt_ethics_b_equivalent','lt_ethics_c_exempt','lt_ethics_c_timely','lt_ethics_c_equivalent'
   ];
   function schoolToFormValues(school){
     var out={school_registry_id:school.school_id || '',school_code:school.school_code || '',school_name:school.school_name || '',school_type:school.school_type || ''};
     FORM_FIELDS.forEach(function(field){out[field]='';});
     var isGelFamily=school.school_type==='gel' || school.school_type==='esperino_gel';
+    var isComposite=school.school_type==='gymnasio_lt';
     ['a','b','c'].forEach(function(g){
-      out[(isGelFamily?'gel':'gym')+'_general_'+g]=school['general_'+g];
+      if(isComposite){
+        out['gym_general_'+g]=school['general_'+g];
+        out['gel_general_'+g]=school['lt_general_'+g];
+      }else{
+        out[(isGelFamily?'gel':'gym')+'_general_'+g]=school['general_'+g];
+      }
       out['ethics_'+g+'_exempt']=school['ethics_'+g+'_exempt'];
       out['ethics_'+g+'_timely']=school['ethics_'+g+'_timely'];
       out['ethics_'+g+'_equivalent']=school['ethics_'+g+'_equivalent'];
     });
-    if(school.school_type==='gymnasio'){
+    if(school.school_type==='gymnasio' || isComposite){
       ['a','b','c'].forEach(function(g){
         out['gym_lang_'+g+'_fr']=school['lang_'+g+'_fr'];
         out['gym_lang_'+g+'_de']=school['lang_'+g+'_de'];
         out['gym_lang_'+g+'_it']=school['lang_'+g+'_it'];
         out['gym_tech_split_'+g]=school['tech_split_'+g];
       });
-    }else if(isGelFamily){
+    }
+    if(isGelFamily || isComposite){
       if(school.school_type==='gel'){
         ['a','b'].forEach(function(g){
           out['gel_lang_'+g+'_fr']=school['lang_'+g+'_fr'];
           out['gel_lang_'+g+'_de']=school['lang_'+g+'_de'];
         });
       }
-      ['gel_b_hum','gel_b_sci','gel_c_hum','gel_c_scihealth','gel_c_econit','gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history'].forEach(function(field){out[field]=school[field];});
+      if(isComposite){
+        out['gel_b_hum']=school.lt_b_hum; out['gel_b_sci']=school.lt_b_sci;
+        out['gel_c_hum']=school.lt_c_hum; out['gel_c_scihealth']=school.lt_c_scihealth; out['gel_c_econit']=school.lt_c_econit;
+        out['gel_lang_a_fr']=school.lt_lang_a_fr; out['gel_lang_a_de']=school.lt_lang_a_de;
+        out['gel_lang_b_fr']=school.lt_lang_b_fr; out['gel_lang_b_de']=school.lt_lang_b_de;
+        out['gel_c_field_math']=school.lt_c_field_math; out['gel_c_field_bio']=school.lt_c_field_bio;
+        out['gel_c_cond_math']=school.lt_c_cond_math; out['gel_c_cond_history']=school.lt_c_cond_history;
+        ['a','b','c'].forEach(function(g){
+          out['lt_ethics_'+g+'_exempt']=school['lt_ethics_'+g+'_exempt'];
+          out['lt_ethics_'+g+'_timely']=school['lt_ethics_'+g+'_timely'];
+          out['lt_ethics_'+g+'_equivalent']=school['lt_ethics_'+g+'_equivalent'];
+        });
+      }else{
+        ['gel_b_hum','gel_b_sci','gel_c_hum','gel_c_scihealth','gel_c_econit','gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history'].forEach(function(field){out[field]=school[field];});
+      }
       if(school.school_type==='esperino_gel') out['egel_b_period']='Α΄ τετράμηνο';
     }
     return out;
@@ -303,6 +377,9 @@
       school.sections_source=String(row['Πηγή τμημάτων'] || '').trim();
       school.notes=String(row['Σημειώσεις'] || '').trim();
       school.approved_small_groups=String(row['Ολιγομελή εγκεκριμένα 2026-27'] || '').trim();
+      if(school.school_type==='gymnasio_lt' && school.completeness_status.indexOf('προσωρινά ανενεργός')>=0){
+        school.completeness_status='Τμήματα Γυμνασίου/Λυκειακών Τάξεων και ομάδες προσανατολισμού καταχωρισμένα · συμπλήρωσε όπου χρειάζεται 2η ξένη γλώσσα ΛΤ και ειδικές ομάδες Γ΄.';
+      }
       school.registry_source_row=row;
       return school;
     });
@@ -320,8 +397,8 @@
     maxBasicSections:MAX_BASIC_SECTIONS,
     basicSectionTotal:basicSectionTotal,
     validateRegistry:validateRegistry,
-    supportedTypes:['gymnasio','gel','esperino_gymnasio','esperino_gel'],
-    placeholderTypes:['gymnasio_lt','epal','esperino_epal','pepal','eneegyl','eeeek','mousiko','kallitexniko','sek'],
+    supportedTypes:['gymnasio','gel','esperino_gymnasio','esperino_gel','gymnasio_lt'],
+    placeholderTypes:['epal','esperino_epal','pepal','eneegyl','eeeek','mousiko','kallitexniko','sek'],
     normalizeHeader:normalizeHeader,
     normalizeSchoolType:normalizeSchoolType,
     typeLabel:typeLabel,

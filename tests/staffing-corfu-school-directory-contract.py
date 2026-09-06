@@ -20,11 +20,10 @@ check('full 2026-2027 dataset is embedded', "dataset_version:'2026-2027-full-v2-
 check('full CSV download uses embedded raw dataset', 'directory.raw_csv' in page and "a.download=directory.filename" in page)
 check('richer built-in dataset refreshes old identity-only registry', 'existing.directory_id===directoryId || existing.directory_only===true || schoolCsvTotalSections(existing)===0' in page)
 check('directory status explains populated structural data', 'διαθέσιμα στοιχεία βασικών τμημάτων' in page and 'πλήρες μητρώο 2026-2027' in page and 'myschool stat3_10' in page)
-check('new inactive placeholders exist', all(x in page for x in [
-    '<option value="gymnasio_lt" disabled>Γυμνάσιο με Λυκειακές Τάξεις</option>',
+check('remaining inactive placeholders exist', all(x in page for x in [
     '<option value="esperino_epal" disabled>Εσπερινό ΕΠΑΛ</option>',
     '<option value="sek" disabled>Εργαστηριακό Κέντρο (Ε.Κ.)</option>',
-]))
+]) and '<option value="gymnasio_lt" disabled>' not in page)
 check('school address supported in schema', "school_address:['διευθυνση σχολειου'" in js and "school_address:String(get(row,mapping,'school_address')" in js)
 check('specific types normalized before generic gymnasium', "if(t.indexOf('μουσικ')>=0) return 'mousiko';" in js and "return 'gymnasio';" in js)
 check('canonical full Corfu registry CSV exists', CSV_FILE.exists())
@@ -64,7 +63,7 @@ check('Corfu directory has 38 schools', data.get('count')==38)
 check('Corfu directory codes are unique', data.get('unique')==38)
 check('full registry exposes all 62 CSV columns', data.get('headers')==62)
 check('full raw CSV is available to downloader', data.get('rawCsvHasFullHeader') is True and data.get('filename')=='school_registry_v1-dde-kerkyras-2026-2027-full.csv')
-check('currently supported Gymnasium/GEL profiles count is 26', data.get('supported')==26)
+check('currently supported Gymnasium/GEL/composite profiles count is 30', data.get('supported')==30)
 check('structural section data exists for almost all units', data.get('withSections')==37)
 check('type distribution stable', data.get('counts')=={
     'gymnasio':16,'gymnasio_lt':4,'eneegyl':1,'esperino_gymnasio':1,'mousiko':1,'eeeek':1,

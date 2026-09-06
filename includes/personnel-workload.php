@@ -786,14 +786,29 @@ function personnelWorkloadRosterPlan($profile, $people, $allocations, $model = n
  * Επιστρέφει τον αριθμό κανονικών τμημάτων μιας τάξης από το school profile.
  * Δεν μετρά ομάδες ξένων γλωσσών, προσανατολισμού, Ηθικής ή πρόσθετες ομάδες split.
  */
-function personnelWorkloadGeneralSectionsForGrade($profile, $grade)
+function personnelWorkloadGeneralSectionsForGrade($profile, $grade, $schoolCode = null)
 {
     if (!isset($profile['structures']) || !is_array($profile['structures'])) return 0;
+    if ($schoolCode !== null && isset($profile['structures'][$schoolCode])) {
+        $structure = $profile['structures'][$schoolCode];
+        return isset($structure['general_sections'][$grade]) ? max(0, (int) $structure['general_sections'][$grade]) : 0;
+    }
     foreach ($profile['structures'] as $structure) {
         if (!isset($structure['general_sections']) || !is_array($structure['general_sections'])) continue;
         if (isset($structure['general_sections'][$grade])) return max(0, (int) $structure['general_sections'][$grade]);
     }
     return 0;
+}
+
+function personnelWorkloadStructureShortLabel($schoolCode)
+{
+    $map = array(
+        'gymnasio'=>'Γυμν.',
+        'gel'=>'ΛΤ',
+        'esperino_gymnasio'=>'Εσπ. Γυμν.',
+        'esperino_gel'=>'Εσπ. ΓΕΛ',
+    );
+    return isset($map[$schoolCode]) ? $map[$schoolCode] : (string) $schoolCode;
 }
 
 function personnelWorkloadTrackLabel($track)
@@ -821,27 +836,30 @@ function personnelWorkloadAllocationSlotLabel($profile, $unit, $sectionIndex)
     $idx = max(1, (int) $sectionIndex);
     $grade = isset($unit['grade']) ? (string) $unit['grade'] : '';
     $subject = isset($unit['subject']) ? (string) $unit['subject'] : '';
+    $schoolCode = isset($unit['school']) ? (string) $unit['school'] : '';
+    $isComposite = isset($profile['structures']) && is_array($profile['structures']) && count($profile['structures']) > 1;
+    $prefix = $isComposite && $schoolCode !== '' ? personnelWorkloadStructureShortLabel($schoolCode) . ' ' : '';
 
     if (isset($unit['choice_option']) && $unit['choice_option'] !== '') {
-        return trim($grade . ' · ' . $unit['choice_option'] . ' · Ομάδα ' . $idx, ' ·');
+        return trim($prefix . $grade . ' · ' . $unit['choice_option'] . ' · Ομάδα ' . $idx, ' ·');
     }
     $track = isset($unit['profile_track']) ? $unit['profile_track'] : (isset($unit['track']) ? $unit['track'] : '');
     if ($track !== '') {
-        return trim($grade . ' · ' . personnelWorkloadTrackLabel($track) . ' · Ομάδα ' . $idx, ' ·');
+        return trim($prefix . $grade . ' · ' . personnelWorkloadTrackLabel($track) . ' · Ομάδα ' . $idx, ' ·');
     }
     if (isset($unit['slot_id']) && $unit['slot_id'] === 'gel.c.general.orientation_choice') {
-        return trim($grade . ' · ' . $subject . ' Γ.Π. · Ομάδα ' . $idx, ' ·');
+        return trim($prefix . $grade . ' · ' . $subject . ' Γ.Π. · Ομάδα ' . $idx, ' ·');
     }
 
-    $general = personnelWorkloadGeneralSectionsForGrade($profile, $grade);
+    $general = personnelWorkloadGeneralSectionsForGrade($profile, $grade, $schoolCode !== '' ? $schoolCode : null);
     if ($general > 0 && $idx <= $general) {
         $gradePlain = str_replace(array('΄','’',"'"), '', $grade);
-        return trim($gradePlain) . $idx;
+        return $prefix . trim($gradePlain) . $idx;
     }
     if ($general > 0 && $idx > $general) {
-        return trim($grade . ' · πρόσθετη ομάδα χωρισμού ' . ($idx - $general), ' ·');
+        return trim($prefix . $grade . ' · πρόσθετη ομάδα χωρισμού ' . ($idx - $general), ' ·');
     }
-    return trim($grade . ' · Ομάδα ' . $idx, ' ·');
+    return trim($prefix . $grade . ' · Ομάδα ' . $idx, ' ·');
 }
 
 /**
@@ -887,6 +905,8 @@ function personnelWorkloadAllocationSlots($profile, $matrix = null)
                 'slot_id'=>$slotId,
                 'unit_id'=>$uid,
                 'section_index'=>$i,
+                'school'=>isset($unit['school']) ? $unit['school'] : '',
+                'structure_label'=>isset($unit['school']) ? personnelWorkloadStructureShortLabel($unit['school']) : '',
                 'grade'=>isset($unit['grade']) ? $unit['grade'] : '',
                 'group'=>isset($unit['group']) ? $unit['group'] : '',
                 'subject'=>isset($unit['subject']) ? $unit['subject'] : '',
@@ -1178,7 +1198,8 @@ function personnelWorkloadReportingBucketForSlot($profile, $slot)
 {
     $schoolType = isset($profile['school']['type']) ? (string) $profile['school']['type'] : '';
     $subject = isset($slot['subject']) ? trim((string) $slot['subject']) : '';
-    $isGymnasium = strpos($schoolType, 'Γυμνάσιο') !== false;
+    $slotSchool = isset($slot['school']) ? (string) $slot['school'] : '';
+    $isGymnasium = $slotSchool !== '' ? in_array($slotSchool, array('gymnasio','esperino_gymnasio'), true) : strpos($schoolType, 'Γυμνάσιο') !== false;
     if (!$isGymnasium) return null;
     if ($subject === 'Εργαστήρια Δεξιοτήτων') {
         return array('key'=>'GYM_SKILLS','label'=>'ΔΕΞΙΟΤΗΤΕΣ ΓΥΜΝΑΣΙΟΥ');

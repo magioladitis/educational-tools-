@@ -20,7 +20,13 @@ function staffingUiInt($key, $default = 0) {
 }
 if (!defined('STAFFING_UI_MAX_BASIC_SECTIONS')) define('STAFFING_UI_MAX_BASIC_SECTIONS', 120);
 function staffingUiBasicSectionPostCounts($schoolType) {
-    $prefix = in_array($schoolType, array('gel','esperino_gel'), true) ? 'gel_general_' : 'gym_general_';
+    if ($schoolType === 'gymnasio_lt') {
+        return array(
+            'gym_a'=>staffingUiInt('gym_general_a'), 'gym_b'=>staffingUiInt('gym_general_b'), 'gym_c'=>staffingUiInt('gym_general_c'),
+            'lt_a'=>staffingUiInt('gel_general_a'), 'lt_b'=>staffingUiInt('gel_general_b'), 'lt_c'=>staffingUiInt('gel_general_c'),
+        );
+    }
+    $prefix = in_array($schoolType, array('gel','esperino_gel','gymnasio_lt'), true) ? 'gel_general_' : 'gym_general_';
     return array(
         'a' => staffingUiInt($prefix . 'a'),
         'b' => staffingUiInt($prefix . 'b'),
@@ -46,6 +52,7 @@ function staffingUiSchoolTypeLabel($schoolType, $long = false) {
         'gel' => array('short'=>'Ημερήσιο ΓΕΛ','long'=>'Ημερήσιο Γενικό Λύκειο'),
         'esperino_gymnasio' => array('short'=>'Εσπερινό Γυμνάσιο','long'=>'Εσπερινό Γυμνάσιο'),
         'esperino_gel' => array('short'=>'Εσπερινό ΓΕΛ','long'=>'Εσπερινό Γενικό Λύκειο'),
+        'gymnasio_lt' => array('short'=>'Γυμνάσιο με Λ.Τ.','long'=>'Γυμνάσιο με Λυκειακές Τάξεις'),
     );
     if (!isset($labels[$schoolType])) $schoolType = 'gymnasio';
     return $labels[$schoolType][$long ? 'long' : 'short'];
@@ -58,16 +65,19 @@ function staffingUiNullableBool($key) {
     if (!isset($_POST[$key]) || $_POST[$key] === '') return null;
     return $_POST[$key] === '1';
 }
-function staffingUiEthicsGrade($suffix) {
-    $exempt = staffingUiNullableInt('ethics_' . $suffix . '_exempt');
-    $timely = staffingUiNullableBool('ethics_' . $suffix . '_timely');
-    $equivalent = staffingUiNullableInt('ethics_' . $suffix . '_equivalent');
+function staffingUiEthicsGradeWithPrefix($prefix, $suffix) {
+    $exempt = staffingUiNullableInt($prefix . $suffix . '_exempt');
+    $timely = staffingUiNullableBool($prefix . $suffix . '_timely');
+    $equivalent = staffingUiNullableInt($prefix . $suffix . '_equivalent');
     if ($exempt === null && $timely === null && $equivalent === null) return array();
     return array(
         'exempt_students' => $exempt,
         'within_fifth_day' => $timely,
         'equivalent_ethics_sections' => $equivalent,
     );
+}
+function staffingUiEthicsGrade($suffix) {
+    return staffingUiEthicsGradeWithPrefix('ethics_', $suffix);
 }
 function staffingUiIssueLabel($issue) {
     if (preg_match('/^(gymnasio|gel):([^:]+):second_foreign_language_groups_exceeds_general_sections:([^:]+):(\d+)>(\d+)$/u', $issue, $m)) {
@@ -93,6 +103,29 @@ function staffingUiIssueLabel($issue) {
         return 'Χρειάζεται ο πραγματικός αριθμός ομάδων προσανατολισμού. (' . $issue . ')';
     }
     return $issue;
+}
+function staffingUiEthicsPanelHasInput($prefix) {
+    foreach (array('a','b','c') as $suffix) {
+        if (staffingUiPost($prefix.$suffix.'_exempt') !== ''
+            || staffingUiPost($prefix.$suffix.'_timely') !== ''
+            || staffingUiPost($prefix.$suffix.'_equivalent') !== '') return true;
+    }
+    return false;
+}
+function staffingUiRenderEthicsPanel($prefix, $title, $panelId) {
+    $hasInput = staffingUiEthicsPanelHasInput($prefix);
+    echo '<details class="option-panel" id="' . staffingUiH($panelId) . '"' . ($hasInput ? ' open' : '') . '>';
+    echo '<summary>' . staffingUiH($title) . ' <small style="font-weight:400;color:var(--edu-muted)">άνοιξέ το μόνο αν θέλεις να υπολογιστεί</small></summary>';
+    echo '<div class="option-panel-body">';
+    echo '<p class="help">Αν δεν έχεις ακόμη τα στοιχεία απαλλαγών, άφησε την ενότητα κλειστή. Οι αντίστοιχες ώρες θα παραμείνουν σε εκκρεμότητα και δεν θα προστεθούν τεχνητά στα αποτελέσματα.</p>';
+    foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade) {
+        echo '<div class="grade-box"><h4>' . staffingUiH($grade) . ' τάξη</h4><div class="mini-grid">';
+        echo '<div class="field"><label>Απαλλασσόμενοι/ες</label><input min="0" step="1" type="number" name="' . staffingUiH($prefix.$s.'_exempt') . '" value="' . staffingUiH(staffingUiPost($prefix.$s.'_exempt')) . '" placeholder="άγνωστο"></div>';
+        echo '<div class="field"><label>Συμπληρώθηκαν έως 5η ημέρα;</label><select name="' . staffingUiH($prefix.$s.'_timely') . '"><option value=""' . (staffingUiPost($prefix.$s.'_timely')===''?' selected':'') . '>— άγνωστο —</option><option value="1"' . (staffingUiPost($prefix.$s.'_timely')==='1'?' selected':'') . '>Ναι</option><option value="0"' . (staffingUiPost($prefix.$s.'_timely')==='0'?' selected':'') . '>Όχι</option></select></div>';
+        echo '<div class="field"><label>Ισοδύναμα τμήματα Ηθικής <small>0 = κρίθηκε ότι δεν σχηματίζεται</small></label><input min="0" step="1" type="number" name="' . staffingUiH($prefix.$s.'_equivalent') . '" value="' . staffingUiH(staffingUiPost($prefix.$s.'_equivalent')) . '" placeholder="άγνωστο"></div>';
+        echo '</div></div>';
+    }
+    echo '</div></details>';
 }
 function staffingUiPriorityLabel($priority) {
     if ($priority === 'A') return 'Α΄';
@@ -123,6 +156,7 @@ function staffingUiMatrixNotices($profile, $model) {
     if (!$profile || !$model) return $result;
 
     $realized = schoolProfileRealize($profile, $model);
+    $isComposite = isset($profile['structures']) && is_array($profile['structures']) && count($profile['structures']) > 1;
     $ethicsGrades = array();
     $dependencySeen = array();
     $regulatorySeen = array();
@@ -133,32 +167,28 @@ function staffingUiMatrixNotices($profile, $model) {
         $dependencyResolved = !empty($dependency['resolved']);
         $isDependency = in_array($staffingStatus, array('dependency_unresolved','periodic_hours','thematic_hours_not_fixed'), true)
             || (!$dependencyResolved && $staffingStatus !== 'regulatory_gap');
+        $structure = isset($slot['school']) ? (string)$slot['school'] : '';
+        $structureLabel = $isComposite ? personnelWorkloadStructureShortLabel($structure) . ' ' : '';
 
         if ($isDependency) {
             $slotId = isset($slot['slot_id']) ? (string)$slot['slot_id'] : '';
             if ($slotId !== '' && preg_match('/religion_ethics$/', $slotId)) {
-                $ethicsGrades[(string)$slot['grade']] = true;
+                $ethicsGrades[$structureLabel . (string)$slot['grade']] = true;
             } else {
-                $label = trim((string)$slot['grade'] . ' · ' . (string)$slot['subject']);
+                $label = trim($structureLabel . (string)$slot['grade'] . ' · ' . (string)$slot['subject']);
                 $dependencySeen[$label] = true;
             }
         }
 
         if ($staffingStatus === 'regulatory_gap') {
-            $label = trim((string)$slot['grade'] . ' · ' . (string)$slot['subject']);
+            $label = trim($structureLabel . (string)$slot['grade'] . ' · ' . (string)$slot['subject']);
             $regulatorySeen[$label] = true;
         }
     }
 
     if (!empty($ethicsGrades)) {
-        $gradeOrder = array('Α΄'=>1,'Β΄'=>2,'Γ΄'=>3,'Δ΄'=>4);
         $grades = array_keys($ethicsGrades);
-        usort($grades, function($a,$b) use ($gradeOrder) {
-            $aa = isset($gradeOrder[$a]) ? $gradeOrder[$a] : 99;
-            $bb = isset($gradeOrder[$b]) ? $gradeOrder[$b] : 99;
-            if ($aa === $bb) return strcmp($a,$b);
-            return $aa - $bb;
-        });
+        sort($grades, SORT_NATURAL);
         $result['dependencies'][] = 'Εκκρεμούν στοιχεία για Ηθική / Θρησκευτικά στις τάξεις ' . implode(', ', $grades) . '. Οι αντίστοιχες ώρες δεν περιλαμβάνονται ακόμη στα σύνολα.';
     }
     foreach (array_keys($dependencySeen) as $label) {
@@ -343,6 +373,10 @@ function staffingUiRenderAllocationPersonOptions($people, $selected) {
 }
 function staffingUiSortAllocationSlots($slots) {
     uasort($slots, function ($a, $b) {
+        $structureOrder = array('gymnasio'=>1,'esperino_gymnasio'=>1,'gel'=>2,'esperino_gel'=>2);
+        $sa = isset($structureOrder[$a['school'] ?? '']) ? $structureOrder[$a['school']] : 99;
+        $sb = isset($structureOrder[$b['school'] ?? '']) ? $structureOrder[$b['school']] : 99;
+        if ($sa !== $sb) return $sa - $sb;
         $order = array('Α΄'=>1,'Β΄'=>2,'Γ΄'=>3,'Δ΄'=>4,'Ε΄'=>5,'ΣΤ΄'=>6);
         $ga = isset($order[$a['grade']]) ? $order[$a['grade']] : 99;
         $gb = isset($order[$b['grade']]) ? $order[$b['grade']] : 99;
@@ -366,15 +400,17 @@ function staffingUiRenderAllocationSlotOptions($slots, $selected, $allSlots = nu
     if ($selected !== '' && !isset($slots[$selected]) && is_array($allSlots) && isset($allSlots[$selected])) {
         echo '<option value="' . staffingUiH($selected) . '" selected disabled>' . staffingUiH(staffingUiAllocationSlotOptionLabel($allSlots[$selected]) . ' · χωρίς επιλέξιμο εκπαιδευτικό') . '</option>';
     }
-    $lastGrade = null;
+    $lastGroup = null;
     $openGroup = false;
     foreach ($slots as $slotId=>$slot) {
         $grade = isset($slot['grade']) ? $slot['grade'] : 'Άλλο';
-        if ($grade !== $lastGrade) {
+        $structureLabel = isset($slot['structure_label']) ? trim((string)$slot['structure_label']) : '';
+        $groupLabel = ($structureLabel !== '' ? $structureLabel . ' · ' : '') . $grade . ' τάξη';
+        if ($groupLabel !== $lastGroup) {
             if ($openGroup) echo '</optgroup>';
-            echo '<optgroup label="' . staffingUiH($grade . ' τάξη') . '">';
+            echo '<optgroup label="' . staffingUiH($groupLabel) . '">';
             $openGroup = true;
-            $lastGrade = $grade;
+            $lastGroup = $groupLabel;
         }
         echo '<option value="' . staffingUiH($slotId) . '" data-capacity="' . (int)$slot['capacity_hours'] . '"' . ($selected === $slotId ? ' selected' : '') . '>' . staffingUiH(staffingUiAllocationSlotOptionLabel($slot)) . '</option>';
     }
@@ -430,7 +466,8 @@ function staffingUiSchoolStateKeys() {
         'gel_lang_a_fr','gel_lang_a_de','gel_lang_b_fr','gel_lang_b_de',
         'gel_b_hum','gel_b_sci','gel_c_hum','gel_c_scihealth','gel_c_econit',
         'gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history','egel_b_period',
-        'ethics_a_exempt','ethics_a_timely','ethics_a_equivalent','ethics_b_exempt','ethics_b_timely','ethics_b_equivalent','ethics_c_exempt','ethics_c_timely','ethics_c_equivalent'
+        'ethics_a_exempt','ethics_a_timely','ethics_a_equivalent','ethics_b_exempt','ethics_b_timely','ethics_b_equivalent','ethics_c_exempt','ethics_c_timely','ethics_c_equivalent',
+        'lt_ethics_a_exempt','lt_ethics_a_timely','lt_ethics_a_equivalent','lt_ethics_b_exempt','lt_ethics_b_timely','lt_ethics_b_equivalent','lt_ethics_c_exempt','lt_ethics_c_timely','lt_ethics_c_equivalent'
     );
 }
 function staffingUiRenderSchoolStateHiddenInputs() {
@@ -612,7 +649,7 @@ $staffingAction = $requestMethod === 'POST' ? staffingUiPost('staffing_action', 
 $submitted = $requestMethod === 'POST'
     && in_array($staffingAction, array('profile','personnel','allocation','allocation_auto'), true);
 $schoolType = staffingUiPost('school_type', 'gymnasio');
-if (!in_array($schoolType, array('gymnasio','gel','esperino_gymnasio','esperino_gel'), true)) $schoolType = 'gymnasio';
+if (!in_array($schoolType, array('gymnasio','gel','esperino_gymnasio','esperino_gel','gymnasio_lt'), true)) $schoolType = 'gymnasio';
 $profile = null;
 $readiness = null;
 $matrix = null;
@@ -623,7 +660,7 @@ $staffingNotices = array('dependencies'=>array(),'regulatory'=>array());
 $schoolProfileInputErrors = array();
 $postedBasicSectionTotal = $submitted ? staffingUiBasicSectionPostTotal($schoolType) : 0;
 if ($submitted && $postedBasicSectionTotal > STAFFING_UI_MAX_BASIC_SECTIONS) {
-    $schoolProfileInputErrors[] = 'Το σύνολο των βασικών τμημάτων Α΄ + Β΄ + Γ΄ είναι ' . $postedBasicSectionTotal
+    $schoolProfileInputErrors[] = 'Το σύνολο των βασικών τμημάτων της σχολικής μονάδας είναι ' . $postedBasicSectionTotal
         . ' και υπερβαίνει το τεχνικό όριο ασφαλείας των ' . STAFFING_UI_MAX_BASIC_SECTIONS . ' τμημάτων.';
 }
 
@@ -631,7 +668,64 @@ if ($submitted && empty($schoolProfileInputErrors)) {
     $schoolName = trim((string) staffingUiPost('school_name', ''));
     $schoolRegistryId = trim((string) staffingUiPost('school_registry_id', ''));
     $schoolCode = trim((string) staffingUiPost('school_code', ''));
-    if ($schoolType === 'esperino_gymnasio') {
+    if ($schoolType === 'gymnasio_lt') {
+        $profile = schoolProfileBuildGymnasiumWithLyceumClasses2026(array(
+            'profile_id' => 'ui-gymnasio-lt-' . date('YmdHis'),
+            'school' => array(
+                'type' => 'Γυμνάσιο με Λυκειακές Τάξεις',
+                'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
+                'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Γυμνασίου με Λυκειακές Τάξεις',
+            ),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
+            'gymnasium_general_sections' => array(
+                'Α΄' => staffingUiInt('gym_general_a'),
+                'Β΄' => staffingUiInt('gym_general_b'),
+                'Γ΄' => staffingUiInt('gym_general_c'),
+            ),
+            'gymnasium_second_foreign_language_groups' => array(
+                'Α΄' => array('Γαλλικά'=>staffingUiInt('gym_lang_a_fr'),'Γερμανικά'=>staffingUiInt('gym_lang_a_de'),'Ιταλικά'=>staffingUiInt('gym_lang_a_it')),
+                'Β΄' => array('Γαλλικά'=>staffingUiInt('gym_lang_b_fr'),'Γερμανικά'=>staffingUiInt('gym_lang_b_de'),'Ιταλικά'=>staffingUiInt('gym_lang_b_it')),
+                'Γ΄' => array('Γαλλικά'=>staffingUiInt('gym_lang_c_fr'),'Γερμανικά'=>staffingUiInt('gym_lang_c_de'),'Ιταλικά'=>staffingUiInt('gym_lang_c_it')),
+            ),
+            'gymnasium_technology_informatics_split_sections' => array(
+                'Α΄' => staffingUiInt('gym_tech_split_a'),
+                'Β΄' => staffingUiInt('gym_tech_split_b'),
+                'Γ΄' => staffingUiInt('gym_tech_split_c'),
+            ),
+            'gymnasium_ethics_by_grade' => array(
+                'Α΄' => staffingUiEthicsGrade('a'),
+                'Β΄' => staffingUiEthicsGrade('b'),
+                'Γ΄' => staffingUiEthicsGrade('c'),
+            ),
+            'lyceum_general_sections' => array(
+                'Α΄' => staffingUiInt('gel_general_a'),
+                'Β΄' => staffingUiInt('gel_general_b'),
+                'Γ΄' => staffingUiInt('gel_general_c'),
+            ),
+            'lyceum_second_foreign_language_groups' => array(
+                'Α΄' => array('Γαλλικά'=>staffingUiInt('gel_lang_a_fr'),'Γερμανικά'=>staffingUiInt('gel_lang_a_de')),
+                'Β΄' => array('Γαλλικά'=>staffingUiInt('gel_lang_b_fr'),'Γερμανικά'=>staffingUiInt('gel_lang_b_de')),
+            ),
+            'lyceum_orientation_sections' => array(
+                'Β΄' => array('humanities'=>staffingUiInt('gel_b_hum'),'science'=>staffingUiInt('gel_b_sci')),
+                'Γ΄' => array('humanities'=>staffingUiInt('gel_c_hum'),'science_health'=>staffingUiInt('gel_c_scihealth'),'economics_it'=>staffingUiInt('gel_c_econit')),
+            ),
+            'lyceum_grade_c_science_health_field_groups' => array(
+                'Μαθηματικά' => staffingUiInt('gel_c_field_math'),
+                'Βιολογία' => staffingUiInt('gel_c_field_bio'),
+            ),
+            'lyceum_grade_c_conditional_groups' => array(
+                'Μαθηματικά' => staffingUiInt('gel_c_cond_math'),
+                'Ιστορία' => staffingUiInt('gel_c_cond_history'),
+            ),
+            'lyceum_ethics_by_grade' => array(
+                'Α΄' => staffingUiEthicsGradeWithPrefix('lt_ethics_', 'a'),
+                'Β΄' => staffingUiEthicsGradeWithPrefix('lt_ethics_', 'b'),
+                'Γ΄' => staffingUiEthicsGradeWithPrefix('lt_ethics_', 'c'),
+            ),
+        ));
+    } elseif ($schoolType === 'esperino_gymnasio') {
         $profile = schoolProfileBuildEveningGymnasium2026(array(
             'profile_id' => 'ui-esperino-gymnasio-' . date('YmdHis'),
             'school' => array(
@@ -922,6 +1016,8 @@ foreach ($allocationSlots as $slotId=>$slot) {
         'slot_id'=>$slotId,
         'label'=>staffingUiAllocationSlotOptionLabel($slot),
         'slot_label'=>$slot['slot_label'],
+        'school'=>isset($slot['school']) ? $slot['school'] : '',
+        'structure_label'=>isset($slot['structure_label']) ? $slot['structure_label'] : '',
         'grade'=>$slot['grade'],
         'subject'=>$slot['subject'],
         'capacity_hours'=>(int)$slot['capacity_hours'],
@@ -983,9 +1079,9 @@ uksort($specialtyLabelsClient, 'strnatcmp');
 <main id="schoolStaffingSimulator" class="app">
   <?php calculatorHero(array(
     'title_html' => 'Υπολογισμός διδακτικών αναγκών σχολικής μονάδας',
-    'intro' => 'Καταχώρισε τα πραγματικά στοιχεία ενός Ημερήσιου Γυμνασίου ή ΓΕΛ και δες πώς μετατρέπεται το ωρολόγιο πρόγραμμα σε ώρες ανά κλάδο και προτεραιότητα ανάθεσης.',
+    'intro' => 'Καταχώρισε τα πραγματικά στοιχεία της σχολικής μονάδας και δες πώς μετατρέπεται το ωρολόγιο πρόγραμμα σε ώρες ανά κλάδο, διαθέσιμο προσωπικό και προτεινόμενη κατανομή.',
     'meta_class' => 'meta',
-    'badges' => array('2026–2027','Στοιχεία σχολικής μονάδας','Ωρολόγιο + Αναθέσεις','Α΄ · Β΄ · Γ΄','Ηθική','Χωρίς αυτόματες τοποθετήσεις')
+    'badges' => array('2026–2027','Στοιχεία σχολικής μονάδας','Ωρολόγιο + Αναθέσεις','Α΄ · Β΄ · Γ΄','Ηθική','Αυτόματη πρόταση + χειροκίνητες αλλαγές')
   )); ?>
 
   <div class="staffing-stage-toolbar">
@@ -1006,7 +1102,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('class'=>'card staffing-panel','attrs'=>array('data-staffing-panel'=>'school') + ($activePanel !== 'school' ? array('hidden'=>true) : array()))); ?>
         <h2>1. Στοιχεία σχολικής μονάδας</h2>
-        <p class="cap">Η τρέχουσα έκδοση υποστηρίζει Ημερήσιο Γυμνάσιο, Εσπερινό Γυμνάσιο, Ημερήσιο ΓΕΛ και Εσπερινό ΓΕΛ. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
+        <p class="cap">Η τρέχουσα έκδοση υποστηρίζει Ημερήσιο Γυμνάσιο, Εσπερινό Γυμνάσιο, Ημερήσιο ΓΕΛ, Εσπερινό ΓΕΛ και Γυμνάσιο με Λυκειακές Τάξεις. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
         <div class="status-warn" id="schoolProfileStaleNotice" hidden><strong>Τα στοιχεία της σχολικής μονάδας άλλαξαν.</strong> Τα προηγούμενα αποτελέσματα, το προσωπικό, η κατανομή και τα κενά έχουν κλειδωθεί μέχρι να πατήσεις ξανά «Υπολόγισε διδακτικές ανάγκες».</div>
         <?php if (!empty($schoolProfileInputErrors)): ?>
           <div class="status-warn"><strong>Ο υπολογισμός δεν εκτελέστηκε.</strong><ul><?php foreach ($schoolProfileInputErrors as $inputError): ?><li><?php echo staffingUiH($inputError); ?></li><?php endforeach; ?></ul></div>
@@ -1023,8 +1119,8 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                 <option value="esperino_gymnasio"<?php echo $schoolType === 'esperino_gymnasio' ? ' selected' : ''; ?>>Εσπερινό Γυμνάσιο</option>
                 <option value="gel"<?php echo $schoolType === 'gel' ? ' selected' : ''; ?>>Ημερήσιο Γενικό Λύκειο (ΓΕΛ)</option>
                 <option value="esperino_gel"<?php echo $schoolType === 'esperino_gel' ? ' selected' : ''; ?>>Εσπερινό ΓΕΛ</option>
+                <option value="gymnasio_lt"<?php echo $schoolType === 'gymnasio_lt' ? ' selected' : ''; ?>>Γυμνάσιο με Λυκειακές Τάξεις</option>
                 <optgroup label="Προσεχώς — προσωρινά ανενεργά">
-                  <option value="gymnasio_lt" disabled>Γυμνάσιο με Λυκειακές Τάξεις</option>
                   <option value="epal" disabled>ΕΠΑΛ</option>
                   <option value="esperino_epal" disabled>Εσπερινό ΕΠΑΛ</option>
                   <option value="pepal" disabled>Πρότυπο ΕΠΑΛ</option>
@@ -1076,10 +1172,10 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           </div>
           <div class="info-note school-csv-active" id="schoolCsvActive" hidden></div>
 
-          <div id="gymProfileFields"<?php echo in_array($schoolType, array('gymnasio','esperino_gymnasio'), true) ? '' : ' hidden'; ?>>
+          <div id="gymProfileFields"<?php echo in_array($schoolType, array('gymnasio','esperino_gymnasio','gymnasio_lt'), true) ? '' : ' hidden'; ?>>
             <section class="staffing-section">
-              <h3>Κανονικά τμήματα ανά τάξη</h3>
-              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
+              <h3><?php echo $schoolType === 'gymnasio_lt' ? 'Γυμνάσιο — κανονικά τμήματα ανά τάξη' : 'Κανονικά τμήματα ανά τάξη'; ?></h3>
+              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong><?php echo $schoolType === 'gymnasio_lt' ? ' στο άθροισμα Γυμνασίου + Λυκειακών Τάξεων' : ' (Α΄ + Β΄ + Γ΄)'; ?>, μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
               <?php staffingUiRenderBasicSectionFields('gym'); ?>
               <small class="profile-validation-error" id="gymBasicSectionsError" data-basic-sections-error="gym" hidden></small>
             </section>
@@ -1098,7 +1194,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
               <?php endforeach; ?>
             </section>
 
-            <details class="option-panel" id="technologyInformaticsPanel"<?php echo $schoolType === 'gymnasio' && (staffingUiInt('gym_tech_split_a') + staffingUiInt('gym_tech_split_b') + staffingUiInt('gym_tech_split_c')) > 0 ? ' open' : ''; ?> data-day-gym-only<?php echo $schoolType === 'esperino_gymnasio' ? ' hidden' : ''; ?>>
+            <details class="option-panel" id="technologyInformaticsPanel"<?php echo in_array($schoolType, array('gymnasio','gymnasio_lt'), true) && (staffingUiInt('gym_tech_split_a') + staffingUiInt('gym_tech_split_b') + staffingUiInt('gym_tech_split_c')) > 0 ? ' open' : ''; ?> data-day-gym-only<?php echo $schoolType === 'esperino_gymnasio' ? ' hidden' : ''; ?>>
               <summary>Χωρισμός Τεχνολογίας / Πληροφορικής <small style="font-weight:400;color:var(--edu-muted)">μόνο για τμήματα άνω των 21 μαθητών</small></summary>
               <div class="option-panel-body">
                 <p class="help">Όταν ένα τμήμα έχει πάνω από 21 μαθητές/ήτριες, χωρίζεται σε δύο ομάδες. Δήλωσε πόσα από τα κανονικά τμήματα κάθε τάξης ξεπερνούν το όριο. Αν κανένα δεν ξεπερνά τους 21, άφησε 0.</p>
@@ -1112,10 +1208,10 @@ uksort($specialtyLabelsClient, 'strnatcmp');
             </details>
           </div>
 
-          <div id="gelProfileFields"<?php echo in_array($schoolType, array('gel','esperino_gel'), true) ? '' : ' hidden'; ?>>
+          <div id="gelProfileFields"<?php echo in_array($schoolType, array('gel','esperino_gel','gymnasio_lt'), true) ? '' : ' hidden'; ?>>
             <section class="staffing-section">
-              <h3>Κανονικά τμήματα ανά τάξη</h3>
-              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
+              <h3><?php echo $schoolType === 'gymnasio_lt' ? 'Λυκειακές Τάξεις — κανονικά τμήματα ανά τάξη' : 'Κανονικά τμήματα ανά τάξη'; ?></h3>
+              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong><?php echo $schoolType === 'gymnasio_lt' ? ' στο άθροισμα Γυμνασίου + Λυκειακών Τάξεων' : ' (Α΄ + Β΄ + Γ΄)'; ?>, μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
               <?php staffingUiRenderBasicSectionFields('gel'); ?>
               <small class="profile-validation-error" id="gelBasicSectionsError" data-basic-sections-error="gel" hidden></small>
             </section>
@@ -1185,23 +1281,12 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           </div>
 
           <section class="staffing-section">
-            <?php $ethicsHasInput = false; foreach (array('a','b','c') as $ethicsSuffix) { if (staffingUiPost('ethics_'.$ethicsSuffix.'_exempt') !== '' || staffingUiPost('ethics_'.$ethicsSuffix.'_timely') !== '' || staffingUiPost('ethics_'.$ethicsSuffix.'_equivalent') !== '') { $ethicsHasInput = true; break; } } ?>
-            <details class="option-panel" id="ethicsPanel"<?php echo $ethicsHasInput ? ' open' : ''; ?>>
-              <summary>Ηθική / Θρησκευτικά <small style="font-weight:400;color:var(--edu-muted)">άνοιξέ το μόνο αν θέλεις να υπολογιστεί</small></summary>
-              <div class="option-panel-body">
-                <p class="help">Αν δεν έχεις ακόμη τα στοιχεία απαλλαγών, άφησε την ενότητα κλειστή. Οι αντίστοιχες ώρες θα παραμείνουν σε εκκρεμότητα και δεν θα προστεθούν τεχνητά στα αποτελέσματα.</p>
-                <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
-                  <div class="grade-box">
-                    <h4><?php echo $grade; ?> τάξη</h4>
-                    <div class="mini-grid">
-                      <div class="field"><label>Απαλλασσόμενοι/ες</label><input min="0" step="1" type="number" name="ethics_<?php echo $s; ?>_exempt" value="<?php echo staffingUiH(staffingUiPost('ethics_'.$s.'_exempt')); ?>" placeholder="άγνωστο"></div>
-                      <div class="field"><label>Συμπληρώθηκαν έως 5η ημέρα;</label><select name="ethics_<?php echo $s; ?>_timely"><option value=""<?php echo staffingUiPost('ethics_'.$s.'_timely')===''?' selected':''; ?>>— άγνωστο —</option><option value="1"<?php echo staffingUiPost('ethics_'.$s.'_timely')==='1'?' selected':''; ?>>Ναι</option><option value="0"<?php echo staffingUiPost('ethics_'.$s.'_timely')==='0'?' selected':''; ?>>Όχι</option></select></div>
-                      <div class="field"><label>Ισοδύναμα τμήματα Ηθικής <small>0 = κρίθηκε ότι δεν σχηματίζεται</small></label><input min="0" step="1" type="number" name="ethics_<?php echo $s; ?>_equivalent" value="<?php echo staffingUiH(staffingUiPost('ethics_'.$s.'_equivalent')); ?>" placeholder="άγνωστο"></div>
-                    </div>
-                  </div>
-                <?php endforeach; ?>
-              </div>
-            </details>
+            <?php if ($schoolType === 'gymnasio_lt'): ?>
+              <?php staffingUiRenderEthicsPanel('ethics_', 'Ηθική / Θρησκευτικά — Γυμνάσιο', 'ethicsPanelGym'); ?>
+              <?php staffingUiRenderEthicsPanel('lt_ethics_', 'Ηθική / Θρησκευτικά — Λυκειακές Τάξεις', 'ethicsPanelLt'); ?>
+            <?php else: ?>
+              <?php staffingUiRenderEthicsPanel('ethics_', 'Ηθική / Θρησκευτικά', 'ethicsPanel'); ?>
+            <?php endif; ?>
           </section>
 
           <div class="actions">
@@ -2135,25 +2220,30 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   function sync(){
     const isGel=type.value==='gel';
     const isEveningGel=type.value==='esperino_gel';
-    const isGelFamily=isGel||isEveningGel;
     const isEveningGym=type.value==='esperino_gymnasio';
-    gym.hidden=isGelFamily;
-    gel.hidden=!isGelFamily;
-    gym.querySelectorAll('input,select').forEach(el=>{ el.disabled=isGelFamily; });
-    gel.querySelectorAll('input,select').forEach(el=>{ el.disabled=!isGelFamily; });
+    const isComposite=type.value==='gymnasio_lt';
+    const showGym=type.value==='gymnasio'||isEveningGym||isComposite;
+    const showGel=isGel||isEveningGel||isComposite;
+    gym.hidden=!showGym;
+    gel.hidden=!showGel;
+    gym.querySelectorAll('input,select').forEach(el=>{ el.disabled=!showGym; });
+    gel.querySelectorAll('input,select').forEach(el=>{ el.disabled=!showGel; });
     gym.querySelectorAll('[data-day-gym-only]').forEach(function(panel){
-      panel.hidden=isEveningGym;
-      panel.querySelectorAll('input,select').forEach(function(el){el.disabled=isGelFamily||isEveningGym;});
-      if(isEveningGym && panel.tagName==='DETAILS') panel.open=false;
+      const visible=showGym&&!isEveningGym;
+      panel.hidden=!visible;
+      panel.querySelectorAll('input,select').forEach(function(el){el.disabled=!visible;});
+      if(!visible && panel.tagName==='DETAILS') panel.open=false;
     });
     gel.querySelectorAll('[data-day-gel-only]').forEach(function(panel){
-      panel.hidden=isEveningGel;
-      panel.querySelectorAll('input,select').forEach(function(el){el.disabled=!isGel||isEveningGel;});
+      const visible=showGel&&!isEveningGel;
+      panel.hidden=!visible;
+      panel.querySelectorAll('input,select').forEach(function(el){el.disabled=!visible;});
     });
     gel.querySelectorAll('[data-evening-gel-only]').forEach(function(panel){
       panel.hidden=!isEveningGel;
       panel.querySelectorAll('input,select').forEach(function(el){el.disabled=!isEveningGel;});
     });
+    syncBasicSectionLimit();
   }
   type.addEventListener('change',sync); sync();
   function syncSplitMaximums(){
@@ -2213,8 +2303,10 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     return value;
   }
   function syncBasicSectionLimit(changedInput){
-    ['gym','gel'].forEach(function(kind){
-      const inputs=Array.from(document.querySelectorAll('[data-basic-section="'+kind+'"]'));
+    const isComposite=type && type.value==='gymnasio_lt';
+    const groups=isComposite ? [['composite',Array.from(document.querySelectorAll('[data-basic-section]'))]] : ['gym','gel'].map(function(kind){return [kind,Array.from(document.querySelectorAll('[data-basic-section="'+kind+'"]'))];});
+    groups.forEach(function(entry){
+      const kind=entry[0], inputs=entry[1];
       if(!inputs.length) return;
       if(changedInput && inputs.indexOf(changedInput)<0) return;
       let clamped=false;
@@ -2244,7 +2336,6 @@ uksort($specialtyLabelsClient, 'strnatcmp');
         });
       }
       const total=inputs.reduce(function(sum,input){return sum+(parseInt(input.value||'0',10)||0);},0);
-      const error=document.querySelector('[data-basic-sections-error="'+kind+'"]');
       inputs.forEach(function(input){
         const current=parseInt(input.value||'0',10)||0;
         const others=total-current;
@@ -2252,10 +2343,11 @@ uksort($specialtyLabelsClient, 'strnatcmp');
         input.setCustomValidity('');
         input.removeAttribute('aria-invalid');
       });
-      if(error){
+      const errorTargets=isComposite ? Array.from(document.querySelectorAll('[data-basic-sections-error]')) : Array.from(document.querySelectorAll('[data-basic-sections-error="'+kind+'"]'));
+      errorTargets.forEach(function(error){
         error.hidden=!clamped;
-        error.textContent=clamped?'Η τιμή περιορίστηκε αυτόματα ώστε το σύνολο Α΄ + Β΄ + Γ΄ να μην υπερβαίνει τα '+maxBasicSections+' βασικά τμήματα.':'';
-      }
+        error.textContent=clamped?'Η τιμή περιορίστηκε αυτόματα ώστε το σύνολο των βασικών τμημάτων της σχολικής μονάδας να μην υπερβαίνει τα '+maxBasicSections+'.':'';
+      });
     });
     syncSplitMaximums();
     syncLanguageGroupMaximums();
@@ -2317,7 +2409,9 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     return !!(window.EducationSchoolCsv && Array.isArray(window.EducationSchoolCsv.placeholderTypes) && window.EducationSchoolCsv.placeholderTypes.indexOf(typeValue)>=0);
   }
   function schoolCsvTotalSections(record){
-    return ['general_a','general_b','general_c'].reduce(function(total,key){return total+(parseInt(record[key]||0,10)||0);},0);
+    let total=['general_a','general_b','general_c'].reduce(function(sum,key){return sum+(parseInt(record[key]||0,10)||0);},0);
+    if(record && record.school_type==='gymnasio_lt') total+=['lt_general_a','lt_general_b','lt_general_c'].reduce(function(sum,key){return sum+(parseInt(record[key]||0,10)||0);},0);
+    return total;
   }
   function schoolRegistryValidationProblems(records){
     const seenIds=new Map(), seenCodes=new Map(), duplicateIds=new Set(), duplicateCodes=new Set(), oversized=[];
@@ -2418,7 +2512,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   function loadSchoolRegistryRecord(record){
     if(!record || !record.supported || !schoolProfileForm || !window.EducationSchoolCsv) return;
     if(schoolCsvTotalSections(record)>maxBasicSections){
-      schoolCsvSetStatus('Δεν φορτώθηκε το «'+(record.school_name||record.school_id)+'»: το σύνολο Α΄ + Β΄ + Γ΄ υπερβαίνει τα '+maxBasicSections+' βασικά τμήματα.','error');
+      schoolCsvSetStatus('Δεν φορτώθηκε το «'+(record.school_name||record.school_id)+'»: το σύνολο των βασικών τμημάτων της σχολικής μονάδας υπερβαίνει τα '+maxBasicSections+' βασικά τμήματα.','error');
       return;
     }
     const values=window.EducationSchoolCsv.schoolToFormValues(record);
@@ -2432,11 +2526,15 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     syncBasicSectionLimit();
     const techPanel=document.getElementById('technologyInformaticsPanel');
     if(techPanel){
-      techPanel.open=record.school_type==='gymnasio' && ['tech_split_a','tech_split_b','tech_split_c'].some(function(key){return (parseInt(record[key]||0,10)||0)>0;});
+      techPanel.open=(record.school_type==='gymnasio' || record.school_type==='gymnasio_lt') && ['tech_split_a','tech_split_b','tech_split_c'].some(function(key){return (parseInt(record[key]||0,10)||0)>0;});
     }
-    const ethicsPanel=document.getElementById('ethicsPanel');
+    const ethicsPanel=document.getElementById('ethicsPanel')||document.getElementById('ethicsPanelGym');
     if(ethicsPanel){
       ethicsPanel.open=['a','b','c'].some(function(g){return record['ethics_'+g+'_exempt']!=='' || record['ethics_'+g+'_timely']!=='' || record['ethics_'+g+'_equivalent']!=='';});
+    }
+    const ethicsPanelLt=document.getElementById('ethicsPanelLt');
+    if(ethicsPanelLt){
+      ethicsPanelLt.open=['a','b','c'].some(function(g){return record['lt_ethics_'+g+'_exempt']!=='' || record['lt_ethics_'+g+'_timely']!=='' || record['lt_ethics_'+g+'_equivalent']!=='';});
     }
     if(schoolCsvActive){
       schoolCsvActive.hidden=false;
@@ -2604,12 +2702,13 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     return /[;"\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text;
   }
   function downloadSchoolRegistryTemplate(){
-    const headers=['Έκδοση μητρώου','Αναγνωριστικό σχολείου','Κωδικός Υπουργείου','Ονομασία σχολείου','Είδος σχολείου','Διεύθυνση σχολείου','Α τμήματα','Β τμήματα','Γ τμήματα','Α Γαλλικά ομάδες','Α Γερμανικά ομάδες','Α Ιταλικά ομάδες','Β Γαλλικά ομάδες','Β Γερμανικά ομάδες','Β Ιταλικά ομάδες','Γ Γαλλικά ομάδες','Γ Γερμανικά ομάδες','Γ Ιταλικά ομάδες','Α τμήματα άνω 21','Β τμήματα άνω 21','Γ τμήματα άνω 21','Β ομάδες Ανθρωπιστικών','Β ομάδες Θετικών','Γ ομάδες Ανθρωπιστικών','Γ ομάδες Θετικών Υγείας','Γ ομάδες Οικονομίας Πληροφορικής','Γ Μαθηματικά 2ου πεδίου','Γ Βιολογία 3ου πεδίου','Γ Μαθηματικά Γενικής Παιδείας','Γ Ιστορία Γενικής Παιδείας','Α απαλλασσόμενοι','Α Ηθική εντός 5ης','Α τμήματα Ηθικής','Β απαλλασσόμενοι','Β Ηθική εντός 5ης','Β τμήματα Ηθικής','Γ απαλλασσόμενοι','Γ Ηθική εντός 5ης','Γ τμήματα Ηθικής'];
+    const headers=['Έκδοση μητρώου','Αναγνωριστικό σχολείου','Κωδικός Υπουργείου','Ονομασία σχολείου','Είδος σχολείου','Διεύθυνση σχολείου','Α τμήματα','Β τμήματα','Γ τμήματα','Α Γαλλικά ομάδες','Α Γερμανικά ομάδες','Α Ιταλικά ομάδες','Β Γαλλικά ομάδες','Β Γερμανικά ομάδες','Β Ιταλικά ομάδες','Γ Γαλλικά ομάδες','Γ Γερμανικά ομάδες','Γ Ιταλικά ομάδες','Α τμήματα άνω 21','Β τμήματα άνω 21','Γ τμήματα άνω 21','Β ομάδες Ανθρωπιστικών','Β ομάδες Θετικών','Γ ομάδες Ανθρωπιστικών','Γ ομάδες Θετικών Υγείας','Γ ομάδες Οικονομίας Πληροφορικής','Γ Μαθηματικά 2ου πεδίου','Γ Βιολογία 3ου πεδίου','Γ Μαθηματικά Γενικής Παιδείας','Γ Ιστορία Γενικής Παιδείας','Α απαλλασσόμενοι','Α Ηθική εντός 5ης','Α τμήματα Ηθικής','Β απαλλασσόμενοι','Β Ηθική εντός 5ης','Β τμήματα Ηθικής','Γ απαλλασσόμενοι','Γ Ηθική εντός 5ης','Γ τμήματα Ηθικής','ΛΤ Α Γενικής','ΛΤ Β Γενικής','ΛΤ Γ Γενικής','ΛΤ Α Γαλλικά ομάδες','ΛΤ Α Γερμανικά ομάδες','ΛΤ Β Γαλλικά ομάδες','ΛΤ Β Γερμανικά ομάδες','ΛΤ Β Ανθρωπιστικών','ΛΤ Β Θετικών','ΛΤ Γ Ανθρωπιστικών','ΛΤ Γ Θετικών Υγείας','ΛΤ Γ Οικονομίας Πληροφορικής','ΛΤ Γ Μαθηματικά 2ου πεδίου','ΛΤ Γ Βιολογία 3ου πεδίου','ΛΤ Γ Μαθηματικά Γενικής Παιδείας','ΛΤ Γ Ιστορία Γενικής Παιδείας','ΛΤ Α απαλλασσόμενοι','ΛΤ Α Ηθική εντός 5ης','ΛΤ Α τμήματα Ηθικής','ΛΤ Β απαλλασσόμενοι','ΛΤ Β Ηθική εντός 5ης','ΛΤ Β τμήματα Ηθικής','ΛΤ Γ απαλλασσόμενοι','ΛΤ Γ Ηθική εντός 5ης','ΛΤ Γ τμήματα Ηθικής'];
     const blank=new Array(headers.length).fill('');
     function exampleRow(values){ const row=blank.slice(); Object.keys(values).forEach(function(key){ const i=headers.indexOf(key); if(i>=0) row[i]=values[key]; }); return row; }
     const gym=exampleRow({'Έκδοση μητρώου':'school_registry_v1','Αναγνωριστικό σχολείου':'school-001','Κωδικός Υπουργείου':'','Ονομασία σχολείου':'Παράδειγμα Γυμνασίου','Είδος σχολείου':'Ημερήσιο Γυμνάσιο','Α τμήματα':'2','Β τμήματα':'2','Γ τμήματα':'2','Α Γαλλικά ομάδες':'1','Α Γερμανικά ομάδες':'1','Β Γαλλικά ομάδες':'1','Β Γερμανικά ομάδες':'1','Γ Γαλλικά ομάδες':'1','Γ Γερμανικά ομάδες':'1'});
     const gelRow=exampleRow({'Έκδοση μητρώου':'school_registry_v1','Αναγνωριστικό σχολείου':'school-002','Κωδικός Υπουργείου':'','Ονομασία σχολείου':'Παράδειγμα ΓΕΛ','Είδος σχολείου':'Ημερήσιο ΓΕΛ','Α τμήματα':'3','Β τμήματα':'2','Γ τμήματα':'3','Α Γαλλικά ομάδες':'1','Α Γερμανικά ομάδες':'1','Β Γαλλικά ομάδες':'1','Β Γερμανικά ομάδες':'1','Β ομάδες Ανθρωπιστικών':'1','Β ομάδες Θετικών':'1','Γ ομάδες Ανθρωπιστικών':'1','Γ ομάδες Θετικών Υγείας':'2','Γ ομάδες Οικονομίας Πληροφορικής':'1','Γ Μαθηματικά 2ου πεδίου':'1','Γ Βιολογία 3ου πεδίου':'1'});
-    const csv='\uFEFF'+[headers,gym,gelRow].map(function(row){return row.map(schoolCsvEscape).join(';');}).join('\r\n');
+    const composite=exampleRow({'Έκδοση μητρώου':'school_registry_v1','Αναγνωριστικό σχολείου':'school-003','Ονομασία σχολείου':'Παράδειγμα Γυμνασίου με Λ.Τ.','Είδος σχολείου':'Γυμνάσιο με Λυκειακές Τάξεις','Α τμήματα':'2','Β τμήματα':'2','Γ τμήματα':'1','Α Γαλλικά ομάδες':'1','Α Γερμανικά ομάδες':'1','Β Γαλλικά ομάδες':'1','Β Γερμανικά ομάδες':'1','Γ Γαλλικά ομάδες':'1','ΛΤ Α Γενικής':'1','ΛΤ Β Γενικής':'1','ΛΤ Γ Γενικής':'1','ΛΤ Α Γαλλικά ομάδες':'1','ΛΤ Β Γερμανικά ομάδες':'1','ΛΤ Β Ανθρωπιστικών':'1','ΛΤ Β Θετικών':'1','ΛΤ Γ Ανθρωπιστικών':'1','ΛΤ Γ Θετικών Υγείας':'1','ΛΤ Γ Μαθηματικά 2ου πεδίου':'1','ΛΤ Γ Μαθηματικά Γενικής Παιδείας':'1','ΛΤ Γ Ιστορία Γενικής Παιδείας':'1'});
+    const csv='\uFEFF'+[headers,gym,gelRow,composite].map(function(row){return row.map(schoolCsvEscape).join(';');}).join('\r\n');
     const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
