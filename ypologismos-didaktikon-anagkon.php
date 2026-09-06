@@ -648,7 +648,11 @@ function staffingUiCollapseSkillsWorkshops($matrix) {
 }
 
 $requestMethod = isset($_SERVER['REQUEST_METHOD']) ? strtoupper((string) $_SERVER['REQUEST_METHOD']) : 'GET';
-$staffingAction = $requestMethod === 'POST' ? staffingUiPost('staffing_action', '') : '';
+$staffingAction = '';
+if ($requestMethod === 'POST') {
+    $staffingAction = staffingUiPost('staffing_action', '');
+    if ($staffingAction === '') $staffingAction = staffingUiPost('staffing_action_fallback', '');
+}
 $submitted = $requestMethod === 'POST'
     && in_array($staffingAction, array('profile','personnel','allocation','allocation_auto'), true);
 $schoolType = staffingUiPost('school_type', 'gymnasio');
@@ -1303,7 +1307,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           </section>
 
           <div class="actions">
-            <button class="edu-btn-primary" type="button" data-staffing-request-action="profile">Υπολόγισε διδακτικές ανάγκες</button><input type="hidden" name="active_panel" value="results">
+            <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="profile" data-staffing-request-action="profile">Υπολόγισε διδακτικές ανάγκες</button><input type="hidden" name="active_panel" value="results">
             <button class="edu-btn-secondary" type="reset" id="staffingReset">Καθαρισμός</button>
           </div>
         </form>
@@ -1589,7 +1593,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
             </div>
 
             <div class="actions">
-              <button class="edu-btn-primary" type="button" data-staffing-request-action="personnel">Έλεγχος ωραρίων προσωπικού</button>
+              <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="personnel" data-staffing-request-action="personnel">Έλεγχος ωραρίων προσωπικού</button>
             </div>
           </form>
 
@@ -1731,7 +1735,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                     <div class="help">Όταν καλυφθούν πλήρως οι ώρες ενός μαθήματος / τμήματος, η επιλογή του γίνεται αυτόματα ανενεργή στις υπόλοιπες γραμμές κατανομής.</div>
                   </div>
                   <div class="allocation-toolbar-actions">
-                    <button class="edu-btn-primary" type="button" data-staffing-request-action="allocation_auto" id="autoAllocateRemaining">Αυτόματη πρόταση κάλυψης</button>
+                    <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="allocation_auto" data-staffing-request-action="allocation_auto" id="autoAllocateRemaining">Αυτόματη πρόταση κάλυψης</button>
                     <button class="edu-btn-secondary" type="button" id="addAllocationRow">+ Προσθήκη μαθήματος</button>
                     <button class="edu-btn-secondary" type="button" id="clearAllocationRows">Καθαρισμός κατανομής</button>
                   </div>
@@ -1774,7 +1778,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                 </div>
 
                 <div class="actions">
-                  <button class="edu-btn-primary" type="button" data-staffing-request-action="allocation">Έλεγχος κατανομής</button>
+                  <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="allocation" data-staffing-request-action="allocation">Έλεγχος κατανομής</button>
                 </div>
               </form>
 
@@ -2206,8 +2210,32 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     form.dataset.requestGateBound='1';
     const actionInput=form.querySelector('input[name="staffing_action"]');
     const requestButtons=Array.from(form.querySelectorAll('[data-staffing-request-action]'));
+    requestButtons.forEach(function(button){
+      button.addEventListener('click',function(event){
+        if(form.dataset.requestInFlight==='1'){
+          event.preventDefault();
+          return;
+        }
+        const action=button.getAttribute('data-staffing-request-action')||'';
+        if(action===''){
+          event.preventDefault();
+          return;
+        }
+        if(typeof form.reportValidity==='function' && !form.reportValidity()){
+          event.preventDefault();
+          return;
+        }
+        if(form.id==='staffingPersonnelForm') compactRepeatedFormState(form,'personnel_','personnel_payload_json');
+        if(form.id==='staffingAllocationForm') compactRepeatedFormState(form,'allocation_','allocation_payload_json');
+        if(actionInput) actionInput.value=action;
+        form.dataset.explicitRequest='1';
+      });
+    });
     form.addEventListener('submit',function(event){
-      const armed=form.dataset.explicitRequest==='1' && actionInput && actionInput.value!=='';
+      var submitter=event.submitter || null;
+      var submitterAction=submitter && submitter.getAttribute ? (submitter.getAttribute('data-staffing-request-action')||'') : '';
+      if(actionInput && actionInput.value==='' && submitterAction!=='') actionInput.value=submitterAction;
+      const armed=(actionInput && actionInput.value!=='') || submitterAction!=='' || form.dataset.explicitRequest==='1';
       if(!armed || form.dataset.requestInFlight==='1'){
         event.preventDefault();
         return;
@@ -2215,21 +2243,22 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       form.dataset.requestInFlight='1';
       requestButtons.forEach(function(button){button.disabled=true;});
     });
-    requestButtons.forEach(function(button){
-      button.addEventListener('click',function(){
-        if(form.dataset.requestInFlight==='1' || !actionInput) return;
-        const action=button.getAttribute('data-staffing-request-action')||'';
-        if(action==='') return;
-        if(!form.reportValidity()) return;
-        if(form.id==='staffingPersonnelForm') compactRepeatedFormState(form,'personnel_','personnel_payload_json');
-        if(form.id==='staffingAllocationForm') compactRepeatedFormState(form,'allocation_','allocation_payload_json');
-        actionInput.value=action;
-        form.dataset.explicitRequest='1';
-        form.requestSubmit();
-      });
-    });
   }
   ['staffingProfileForm','staffingPersonnelForm','staffingAllocationForm'].forEach(function(id){ installExplicitRequestGate(document.getElementById(id)); });
+
+  const tabs=Array.from(document.querySelectorAll('[data-staffing-tab]'));
+  const panels=Array.from(document.querySelectorAll('[data-staffing-panel]'));
+  function activatePanel(name){
+    tabs.forEach(function(tab){
+      const active=tab.getAttribute('data-staffing-tab')===name;
+      tab.classList.toggle('is-active',active);
+      tab.setAttribute('aria-selected',active?'true':'false');
+    });
+    panels.forEach(function(panel){ panel.hidden=panel.getAttribute('data-staffing-panel')!==name; });
+  }
+  tabs.forEach(function(tab){
+    tab.addEventListener('click',function(){ if(!tab.disabled) activatePanel(tab.getAttribute('data-staffing-tab')); });
+  });
   function sync(){
     const isGel=type.value==='gel';
     const isEveningGel=type.value==='esperino_gel';
@@ -2764,21 +2793,8 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     });
   }
 
-  const tabs=Array.from(document.querySelectorAll('[data-staffing-tab]'));
-  const panels=Array.from(document.querySelectorAll('[data-staffing-panel]'));
   const schoolProfileHasCalculatedResults=<?php echo $calculationAvailable ? 'true' : 'false'; ?>;
   const schoolProfileStaleNotice=document.getElementById('schoolProfileStaleNotice');
-  function activatePanel(name){
-    tabs.forEach(function(tab){
-      const active=tab.getAttribute('data-staffing-tab')===name;
-      tab.classList.toggle('is-active',active);
-      tab.setAttribute('aria-selected',active?'true':'false');
-    });
-    panels.forEach(function(panel){ panel.hidden=panel.getAttribute('data-staffing-panel')!==name; });
-  }
-  tabs.forEach(function(tab){
-    tab.addEventListener('click',function(){ if(!tab.disabled) activatePanel(tab.getAttribute('data-staffing-tab')); });
-  });
   function markSchoolProfileDirty(){
     if(!schoolProfileHasCalculatedResults) return;
     ['results','personnel','allocation','vacancies','specialties'].forEach(function(name){
