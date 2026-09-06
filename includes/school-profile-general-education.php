@@ -1,6 +1,6 @@
 <?php
 /**
- * Builders / validators για τυπικό Ημερήσιο Γυμνάσιο και Ημερήσιο ΓΕΛ.
+ * Builders / validators για Γυμνάσιο / ΓΕΛ γενικής εκπαίδευσης.
  *
  * Σκοπός: να τροφοδοτούν το κοινό school-profile -> workload -> personnel
  * pipeline χωρίς να συγχέουν τα κανονικά τμήματα τάξης με ομάδες ξένης
@@ -120,6 +120,39 @@ function schoolProfileBuildDayGymnasium2026($config)
             'formation_policy_scope' => 'in_scope',
             'by_structure_grade' => array(
                 'gymnasio' => isset($config['ethics_by_grade']) && is_array($config['ethics_by_grade'])
+                    ? $config['ethics_by_grade'] : array(),
+            ),
+        ),
+    );
+}
+
+
+function schoolProfileBuildEveningGymnasium2026($config)
+{
+    $grades = array('Α΄','Β΄','Γ΄');
+    $general = schoolProfileNormalizeGradeCounts(
+        isset($config['general_sections']) ? $config['general_sections'] : array(),
+        $grades
+    );
+
+    return array(
+        'profile_id' => isset($config['profile_id']) ? $config['profile_id'] : 'evening-gymnasium-2026-2027',
+        'school_year' => isset($config['school_year']) ? $config['school_year'] : '2026-2027',
+        'school' => isset($config['school']) ? $config['school'] : array('type'=>'Εσπερινό Γυμνάσιο'),
+        'source' => isset($config['source']) ? $config['source'] : array('kind'=>'manual_school_profile'),
+        'structures' => array(
+            'esperino_gymnasio' => array(
+                'general_sections' => $general,
+                'choice_option_sections' => array(),
+                'extra_course_sections' => array(),
+                'conditions' => array(),
+            ),
+        ),
+        'validation_issues' => array(),
+        'ethics' => array(
+            'formation_policy_scope' => 'in_scope',
+            'by_structure_grade' => array(
+                'esperino_gymnasio' => isset($config['ethics_by_grade']) && is_array($config['ethics_by_grade'])
                     ? $config['ethics_by_grade'] : array(),
             ),
         ),
@@ -247,6 +280,15 @@ function schoolProfileGeneralEducationReadiness($profile)
             $language = schoolProfileChoiceOptionSections($s, $grade, 'gym.deyteri_xeni');
             if ($language === null || array_sum($language) < 1) {
                 $issues[] = 'gymnasio:' . $grade . ':second_foreign_language_groups_required';
+            }
+        }
+    }
+
+    if (isset($structures['esperino_gymnasio'])) {
+        $s = $structures['esperino_gymnasio'];
+        foreach (array('Α΄','Β΄','Γ΄') as $grade) {
+            if (schoolProfileGeneralSectionCount($s, $grade) < 1) {
+                $issues[] = 'esperino_gymnasio:' . $grade . ':general_sections_required';
             }
         }
     }

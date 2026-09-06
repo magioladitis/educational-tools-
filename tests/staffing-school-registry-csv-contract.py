@@ -17,9 +17,8 @@ check('portable school registry schema exposed', 'school_registry_v1' in html an
 check('stable school registry id carried by form', 'name="school_registry_id"' in html and "school_registry_id:school.school_id || ''" in js)
 check('real ministry school code is supported separately', 'name="school_code"' in html and "school_code:['κωδικος υπουργειου'" in js and "school_code:school.school_code || ''" in js)
 check('multiple-school capability declared', 'supportsMultipleSchools:true' in js)
-check('current supported school types remain enabled', re.search(r'<option value="gymnasio"[^>]*>Ημερήσιο Γυμνάσιο</option>',html) is not None and re.search(r'<option value="gel"[^>]*>Ημερήσιο Γενικό Λύκειο \(ΓΕΛ\)</option>',html) is not None)
+check('current supported school types remain enabled', re.search(r'<option value="gymnasio"[^>]*>Ημερήσιο Γυμνάσιο</option>',html) is not None and re.search(r'<option value="esperino_gymnasio"[^>]*>Εσπερινό Γυμνάσιο</option>',html) is not None and re.search(r'<option value="gel"[^>]*>Ημερήσιο Γενικό Λύκειο \(ΓΕΛ\)</option>',html) is not None)
 check('future school-type placeholders are disabled', all(fragment in html for fragment in [
-    '<option value="esperino_gymnasio" disabled>Εσπερινό Γυμνάσιο</option>',
     '<option value="esperino_gel" disabled>Εσπερινό ΓΕΛ</option>',
     '<option value="epal" disabled>ΕΠΑΛ</option>',
     '<option value="pepal" disabled>Πρότυπο ΕΠΑΛ</option>',

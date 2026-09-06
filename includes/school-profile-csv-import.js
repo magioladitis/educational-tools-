@@ -167,7 +167,7 @@
     kallitexniko:'Καλλιτεχνικό Σχολείο',
     sek:'Εργαστηριακό Κέντρο (Ε.Κ.)'
   };
-  function isSupportedType(type){ return type==='gymnasio' || type==='gel'; }
+  function isSupportedType(type){ return type==='gymnasio' || type==='gel' || type==='esperino_gymnasio'; }
   function typeLabel(type){ return TYPE_LABELS[type] || String(type || 'Άγνωστος τύπος'); }
 
   function rowToSchool(row,mapping,index){
@@ -316,8 +316,8 @@
     maxBasicSections:MAX_BASIC_SECTIONS,
     basicSectionTotal:basicSectionTotal,
     validateRegistry:validateRegistry,
-    supportedTypes:['gymnasio','gel'],
-    placeholderTypes:['gymnasio_lt','esperino_gymnasio','esperino_gel','epal','esperino_epal','pepal','eneegyl','eeeek','mousiko','kallitexniko','sek'],
+    supportedTypes:['gymnasio','gel','esperino_gymnasio'],
+    placeholderTypes:['gymnasio_lt','esperino_gel','epal','esperino_epal','pepal','eneegyl','eeeek','mousiko','kallitexniko','sek'],
     normalizeHeader:normalizeHeader,
     normalizeSchoolType:normalizeSchoolType,
     typeLabel:typeLabel,

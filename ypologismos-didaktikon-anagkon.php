@@ -30,6 +30,15 @@ function staffingUiBasicSectionPostCounts($schoolType) {
 function staffingUiBasicSectionPostTotal($schoolType) {
     return array_sum(staffingUiBasicSectionPostCounts($schoolType));
 }
+function staffingUiSchoolTypeLabel($schoolType, $long = false) {
+    $labels = array(
+        'gymnasio' => array('short'=>'Ημερήσιο Γυμνάσιο','long'=>'Ημερήσιο Γυμνάσιο'),
+        'gel' => array('short'=>'Ημερήσιο ΓΕΛ','long'=>'Ημερήσιο Γενικό Λύκειο'),
+        'esperino_gymnasio' => array('short'=>'Εσπερινό Γυμνάσιο','long'=>'Εσπερινό Γυμνάσιο'),
+    );
+    if (!isset($labels[$schoolType])) $schoolType = 'gymnasio';
+    return $labels[$schoolType][$long ? 'long' : 'short'];
+}
 function staffingUiNullableInt($key) {
     if (!isset($_POST[$key]) || $_POST[$key] === '') return null;
     return max(0, (int) $_POST[$key]);
@@ -592,7 +601,7 @@ $staffingAction = $requestMethod === 'POST' ? staffingUiPost('staffing_action', 
 $submitted = $requestMethod === 'POST'
     && in_array($staffingAction, array('profile','personnel','allocation','allocation_auto'), true);
 $schoolType = staffingUiPost('school_type', 'gymnasio');
-if ($schoolType !== 'gel') $schoolType = 'gymnasio';
+if (!in_array($schoolType, array('gymnasio','gel','esperino_gymnasio'), true)) $schoolType = 'gymnasio';
 $profile = null;
 $readiness = null;
 $matrix = null;
@@ -611,7 +620,28 @@ if ($submitted && empty($schoolProfileInputErrors)) {
     $schoolName = trim((string) staffingUiPost('school_name', ''));
     $schoolRegistryId = trim((string) staffingUiPost('school_registry_id', ''));
     $schoolCode = trim((string) staffingUiPost('school_code', ''));
-    if ($schoolType === 'gymnasio') {
+    if ($schoolType === 'esperino_gymnasio') {
+        $profile = schoolProfileBuildEveningGymnasium2026(array(
+            'profile_id' => 'ui-esperino-gymnasio-' . date('YmdHis'),
+            'school' => array(
+                'type' => 'Εσπερινό Γυμνάσιο',
+                'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
+                'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Εσπερινού Γυμνασίου',
+            ),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
+            'general_sections' => array(
+                'Α΄' => staffingUiInt('gym_general_a'),
+                'Β΄' => staffingUiInt('gym_general_b'),
+                'Γ΄' => staffingUiInt('gym_general_c'),
+            ),
+            'ethics_by_grade' => array(
+                'Α΄' => staffingUiEthicsGrade('a'),
+                'Β΄' => staffingUiEthicsGrade('b'),
+                'Γ΄' => staffingUiEthicsGrade('c'),
+            ),
+        ));
+    } elseif ($schoolType === 'gymnasio') {
         $profile = schoolProfileBuildDayGymnasium2026(array(
             'profile_id' => 'ui-gymnasio-' . date('YmdHis'),
             'school' => array(
@@ -1120,7 +1150,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('class'=>'card staffing-panel','attrs'=>array('data-staffing-panel'=>'school') + ($activePanel !== 'school' ? array('hidden'=>true) : array()))); ?>
         <h2>1. Στοιχεία σχολικής μονάδας</h2>
-        <p class="cap">Η πρώτη έκδοση υποστηρίζει τυπικό Ημερήσιο Γυμνάσιο και Ημερήσιο ΓΕΛ. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
+        <p class="cap">Η τρέχουσα έκδοση υποστηρίζει Ημερήσιο Γυμνάσιο, Εσπερινό Γυμνάσιο και Ημερήσιο ΓΕΛ. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
         <div class="status-warn" id="schoolProfileStaleNotice" hidden><strong>Τα στοιχεία της σχολικής μονάδας άλλαξαν.</strong> Τα προηγούμενα αποτελέσματα, το προσωπικό, η κατανομή και τα κενά έχουν κλειδωθεί μέχρι να πατήσεις ξανά «Υπολόγισε διδακτικές ανάγκες».</div>
         <?php if (!empty($schoolProfileInputErrors)): ?>
           <div class="status-warn"><strong>Ο υπολογισμός δεν εκτελέστηκε.</strong><ul><?php foreach ($schoolProfileInputErrors as $inputError): ?><li><?php echo staffingUiH($inputError); ?></li><?php endforeach; ?></ul></div>
@@ -1134,10 +1164,10 @@ uksort($specialtyLabelsClient, 'strnatcmp');
               <label for="school_type">Τύπος σχολείου</label>
               <select id="school_type" name="school_type">
                 <option value="gymnasio"<?php echo $schoolType === 'gymnasio' ? ' selected' : ''; ?>>Ημερήσιο Γυμνάσιο</option>
+                <option value="esperino_gymnasio"<?php echo $schoolType === 'esperino_gymnasio' ? ' selected' : ''; ?>>Εσπερινό Γυμνάσιο</option>
                 <option value="gel"<?php echo $schoolType === 'gel' ? ' selected' : ''; ?>>Ημερήσιο Γενικό Λύκειο (ΓΕΛ)</option>
                 <optgroup label="Προσεχώς — προσωρινά ανενεργά">
                   <option value="gymnasio_lt" disabled>Γυμνάσιο με Λυκειακές Τάξεις</option>
-                  <option value="esperino_gymnasio" disabled>Εσπερινό Γυμνάσιο</option>
                   <option value="esperino_gel" disabled>Εσπερινό ΓΕΛ</option>
                   <option value="epal" disabled>ΕΠΑΛ</option>
                   <option value="esperino_epal" disabled>Εσπερινό ΕΠΑΛ</option>
@@ -1183,14 +1213,14 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                 <button type="button" class="edu-btn-secondary" id="closeSchoolCsv">Κλείσιμο</button>
               </div>
             </div>
-            <div class="info-note"><strong>Δεν γίνεται μεταφόρτωση στον διακομιστή.</strong> Υποστηρίζονται semicolon (;), κόμμα ή tab. Ελάχιστες στήλες: «Ονομασία σχολείου» και «Είδος σχολείου». Προαιρετικά μπορούν να υπάρχουν «Κωδικός Υπουργείου» και «Διεύθυνση σχολείου». Τα «Α τμήματα / Β τμήματα / Γ τμήματα» και τα ειδικότερα πεδία μπορούν να συμπληρώνονται στην ίδια γραμμή. Το άθροισμα των βασικών τμημάτων ανά σχολείο δεν μπορεί να υπερβαίνει τα 150.</div>
+            <div class="info-note"><strong>Δεν γίνεται μεταφόρτωση στον διακομιστή.</strong> Υποστηρίζονται semicolon (;), κόμμα ή tab. Ελάχιστες στήλες: «Ονομασία σχολείου» και «Είδος σχολείου». Προαιρετικά μπορούν να υπάρχουν «Κωδικός Υπουργείου» και «Διεύθυνση σχολείου». Τα «Α τμήματα / Β τμήματα / Γ τμήματα» και τα ειδικότερα πεδία μπορούν να συμπληρώνονται στην ίδια γραμμή. Το άθροισμα των βασικών τμημάτων ανά σχολείο δεν μπορεί να υπερβαίνει τα 120.</div>
             <div class="field school-registry-search"><label for="schoolRegistrySearch">Αναζήτηση στο μητρώο</label><input type="search" id="schoolRegistrySearch" placeholder="π.χ. 2401020, 2ο Γυμνάσιο, Λευκίμμη"></div>
             <div class="personnel-csv-preview" id="schoolCsvPreview"><div class="empty-personnel">Δεν έχει επιλεγεί ακόμη CSV.</div></div>
             <div class="personnel-csv-status" id="schoolCsvStatus"></div>
           </div>
           <div class="info-note school-csv-active" id="schoolCsvActive" hidden></div>
 
-          <div id="gymProfileFields"<?php echo $schoolType === 'gymnasio' ? '' : ' hidden'; ?>>
+          <div id="gymProfileFields"<?php echo in_array($schoolType, array('gymnasio','esperino_gymnasio'), true) ? '' : ' hidden'; ?>>
             <section class="staffing-section">
               <h3>Κανονικά τμήματα ανά τάξη</h3>
               <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
@@ -1201,7 +1231,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
               </div>
               <small class="profile-validation-error" id="gymBasicSectionsError" data-basic-sections-error="gym" hidden></small>
             </section>
-            <section class="staffing-section">
+            <section class="staffing-section" id="gymLanguageGroupsSection" data-day-gym-only<?php echo $schoolType === 'esperino_gymnasio' ? ' hidden' : ''; ?>>
               <h3>Ομάδες 2ης ξένης γλώσσας</h3>
               <p class="help">Δήλωσε τις πραγματικές ομάδες γλώσσας, όχι τον αριθμό μαθητών. <strong>Κάθε γλώσσα ελέγχεται χωριστά</strong> και δεν μπορεί να έχει περισσότερες ομάδες από τα κανονικά τμήματα της ίδιας τάξης· το άθροισμα Γαλλικών + Γερμανικών + Ιταλικών δεν περιορίζεται σε αυτόν τον αριθμό.</p>
               <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
@@ -1216,7 +1246,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
               <?php endforeach; ?>
             </section>
 
-            <details class="option-panel" id="technologyInformaticsPanel"<?php echo (staffingUiInt('gym_tech_split_a') + staffingUiInt('gym_tech_split_b') + staffingUiInt('gym_tech_split_c')) > 0 ? ' open' : ''; ?>>
+            <details class="option-panel" id="technologyInformaticsPanel"<?php echo $schoolType === 'gymnasio' && (staffingUiInt('gym_tech_split_a') + staffingUiInt('gym_tech_split_b') + staffingUiInt('gym_tech_split_c')) > 0 ? ' open' : ''; ?> data-day-gym-only<?php echo $schoolType === 'esperino_gymnasio' ? ' hidden' : ''; ?>>
               <summary>Χωρισμός Τεχνολογίας / Πληροφορικής <small style="font-weight:400;color:var(--edu-muted)">μόνο για τμήματα άνω των 21 μαθητών</small></summary>
               <div class="option-panel-body">
                 <p class="help">Όταν ένα τμήμα έχει πάνω από 21 μαθητές/ήτριες, χωρίζεται σε δύο ομάδες. Δήλωσε πόσα από τα κανονικά τμήματα κάθε τάξης ξεπερνούν το όριο. Αν κανένα δεν ξεπερνά τους 21, άφησε 0.</p>
@@ -1950,7 +1980,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       <div class="info-note">Η αυτόματη λειτουργία δημιουργεί <strong>πρόταση</strong>, όχι διοικητική πράξη τοποθέτησης. Οι ήδη καταχωρισμένες γραμμές θεωρούνται επιλογές του χρήστη και δεν αλλάζουν· ο engine συμπληρώνει το υπόλοιπο και ο Διευθυντής μπορεί μετά να τροποποιήσει οποιαδήποτε ανάθεση. Οι καρτέλες 5–6 επανυπολογίζουν την εικόνα κενών / πλεονασμάτων από την τελική κατανομή.</div>
       <?php if ($submitted && $matrix): ?>
         <h3>Τρέχων υπολογισμός</h3>
-        <div class="result-row"><span>Δομή</span><strong><?php echo $schoolType === 'gel' ? 'Ημερήσιο ΓΕΛ' : 'Ημερήσιο Γυμνάσιο'; ?></strong></div>
+        <div class="result-row"><span>Δομή</span><strong><?php echo staffingUiH(staffingUiSchoolTypeLabel($schoolType)); ?></strong></div>
         <?php if (!empty($schoolCode)): ?><div class="result-row"><span>Κωδικός Υπουργείου / myschool</span><strong><?php echo staffingUiH($schoolCode); ?></strong></div><?php endif; ?>
         <div class="result-row"><span>Μονάδες αντιστοιχισμένης ανάθεσης</span><strong><?php echo (int)$matrix['summary']['assignment_unit_count']; ?></strong></div>
         <div class="result-row"><span>Κλάδοι με επιλεξιμότητα</span><strong><?php echo (int)$displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims']; ?></strong></div>
@@ -1971,7 +2001,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf', 'ΦΕΚ Β΄ 2132/2026 — Ημερήσιο Γυμνάσιο ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-74472-d2-2020.html', 'Υ.Α. 74472/Δ2/2020 — ΦΕΚ Β΄ 2450/2020 · Τεχνολογία / Πληροφορική Γυμνασίου ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202106_09_04_26_OP%20EM%20GEL_ESP%20Gymnasio.pdf', 'ΦΕΚ Β΄ 2106/2026 — Ημερήσιο ΓΕΛ ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202106_09_04_26_OP%20EM%20GEL_ESP%20Gymnasio.pdf', 'ΦΕΚ Β΄ 2106/2026 — Ημερήσιο ΓΕΛ / Εσπερινό Γυμνάσιο ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink(ethicsClassFormationPolicy()['source_url'], 'Υ.Α. 108070/Δ2/2026 — ΦΕΚ Β΄ 5231/2026 · Ηθική ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
@@ -1982,7 +2012,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   <div class="print-header">
     <div>
       <h1>Υπολογισμός διδακτικών αναγκών σχολικής μονάδας</h1>
-      <p class="print-subtitle"><strong><?php echo staffingUiH($schoolName !== '' ? $schoolName : ($schoolType === 'gel' ? 'Ημερήσιο Γενικό Λύκειο' : 'Ημερήσιο Γυμνάσιο')); ?></strong> · <?php echo $schoolType === 'gel' ? 'Ημερήσιο ΓΕΛ' : 'Ημερήσιο Γυμνάσιο'; ?><?php if (!empty($schoolCode)): ?> · κωδ. <?php echo staffingUiH($schoolCode); ?><?php endif; ?> · σχολικό έτος 2026–2027</p>
+      <p class="print-subtitle"><strong><?php echo staffingUiH($schoolName !== '' ? $schoolName : staffingUiSchoolTypeLabel($schoolType, true)); ?></strong> · <?php echo staffingUiH(staffingUiSchoolTypeLabel($schoolType)); ?><?php if (!empty($schoolCode)): ?> · κωδ. <?php echo staffingUiH($schoolCode); ?><?php endif; ?> · σχολικό έτος 2026–2027</p>
     </div>
     <div class="print-meta">Εργαλειοθήκη Εκπαιδευτικού<br><span data-print-generated-at>—</span></div>
   </div>
@@ -2243,10 +2273,16 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   ['staffingProfileForm','staffingPersonnelForm','staffingAllocationForm'].forEach(function(id){ installExplicitRequestGate(document.getElementById(id)); });
   function sync(){
     const isGel=type.value==='gel';
+    const isEveningGym=type.value==='esperino_gymnasio';
     gym.hidden=isGel;
     gel.hidden=!isGel;
     gym.querySelectorAll('input,select').forEach(el=>{ el.disabled=isGel; });
     gel.querySelectorAll('input,select').forEach(el=>{ el.disabled=!isGel; });
+    gym.querySelectorAll('[data-day-gym-only]').forEach(function(panel){
+      panel.hidden=isEveningGym;
+      panel.querySelectorAll('input,select').forEach(function(el){el.disabled=isGel||isEveningGym;});
+      if(isEveningGym && panel.tagName==='DETAILS') panel.open=false;
+    });
   }
   type.addEventListener('change',sync); sync();
   function syncSplitMaximums(){
