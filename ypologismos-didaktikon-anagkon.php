@@ -977,7 +977,13 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     .edu-page-staffing-simulator .vacancy-status.no-staff{color:#9c2f2f}
     .edu-page-staffing-simulator .vacancy-empty{padding:22px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
     .edu-page-staffing-simulator .specialty-balance-toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:12px 0}
-    .edu-page-staffing-simulator .specialty-balance-table td{vertical-align:top}
+    .edu-page-staffing-simulator .specialty-balance-table{min-width:0;table-layout:fixed}
+    .edu-page-staffing-simulator .specialty-balance-table th,.edu-page-staffing-simulator .specialty-balance-table td{padding-left:6px;padding-right:6px;vertical-align:top}
+    .edu-page-staffing-simulator .specialty-balance-table th{white-space:normal;line-height:1.2}
+    .edu-page-staffing-simulator .specialty-balance-table th:nth-child(1),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(1){width:19%}
+    .edu-page-staffing-simulator .specialty-balance-table th:nth-child(2),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(2){width:23%;text-align:left}
+    .edu-page-staffing-simulator .specialty-balance-table th:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(5),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(5){width:10%;text-align:center}
+    .edu-page-staffing-simulator .specialty-balance-table th:nth-child(6),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(6){width:28%;text-align:left;overflow-wrap:anywhere}
     .edu-page-staffing-simulator .specialty-balance-value{font-size:1.05rem;font-weight:900;white-space:nowrap}
     .edu-page-staffing-simulator .specialty-balance-deficit{color:#9c2f2f}
     .edu-page-staffing-simulator .specialty-balance-surplus{color:var(--edu-success)}
@@ -1022,6 +1028,14 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       .staffing-print-report .print-allocation th:nth-child(4){width:29%}
     }
     @media(max-width:960px){.edu-page-staffing-simulator .personnel-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .branch-summary-row{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main .allocation-status{grid-column:1/-1;grid-row:auto}.edu-page-staffing-simulator .allocation-row-main .allocation-remove{grid-column:auto;grid-row:auto}.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr 1fr}}
+    @media(max-width:760px){
+      .edu-page-staffing-simulator .specialty-balance-table{font-size:12px}
+      .edu-page-staffing-simulator .specialty-balance-table th,.edu-page-staffing-simulator .specialty-balance-table td{padding-left:4px;padding-right:4px}
+      .edu-page-staffing-simulator .specialty-balance-table th:nth-child(1),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(1){width:18%}
+      .edu-page-staffing-simulator .specialty-balance-table th:nth-child(2),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(2){width:22%}
+      .edu-page-staffing-simulator .specialty-balance-table th:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(5),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(5){width:10%}
+      .edu-page-staffing-simulator .specialty-balance-table th:nth-child(6),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(6){width:30%}
+    }
     @media(max-width:760px){.edu-page-staffing-simulator .mini-grid,.edu-page-staffing-simulator .mini-grid.two,.edu-page-staffing-simulator .staffing-summary-grid,.edu-page-staffing-simulator .personnel-row-main,.edu-page-staffing-simulator .branch-summary-row,.edu-page-staffing-simulator .personnel-csv-mappings{grid-template-columns:1fr}.edu-page-staffing-simulator .allocation-row-main,.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr}.edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{position:static}.edu-page-staffing-simulator #staffingMatrixTable th:first-child,.edu-page-staffing-simulator #staffingMatrixTable td:first-child{width:180px;max-width:180px}.edu-page-staffing-simulator #staffingMatrixTable th:nth-child(n+2),.edu-page-staffing-simulator #staffingMatrixTable td:nth-child(n+2){width:52px;min-width:52px}}
   </style>
 </head>

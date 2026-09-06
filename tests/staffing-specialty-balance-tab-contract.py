@@ -24,6 +24,8 @@ check('smart choice wording explains equal best assignment only', 'περισσ�
 check('gymnasium DDE special rows rendered', 'GYM_SKILLS' in out and 'ΔΕΞΙΟΤΗΤΕΣ ΓΥΜΝΑΣΙΟΥ' in out and 'GYM_TECHNOLOGY' in out and 'ΤΕΧΝΟΛΟΓΙΑ ΓΥΜΝΑΣΙΟΥ' in out)
 check('internal special bucket keys are not visible as table cell labels', '>GYM_SKILLS</td>' not in out and '>GYM_TECHNOLOGY</td>' not in out)
 check('special rows use normal row typography', '.specialty-balance-special{font-weight:800}' not in SRC and '.specialty-balance-special td:first-child{font-weight:800' in SRC)
+check('specialty balance table overrides legacy 850px minimum width', '.specialty-balance-table{min-width:0;table-layout:fixed}' in SRC)
+check('specialty balance numeric columns are compact', '.specialty-balance-table th:nth-child(3)' in SRC and 'width:10%;text-align:center' in SRC)
 check('signed declaration convention visible', 'έλλειμμα με πρόσημο −, πλεόνασμα χωρίς πρόσημο' in out)
 check('portable DDE export schema declared', 'staffing_balance_v1' in out and 'Λήψη CSV για ΔΔΕ' in out)
 check('CSV carries school identity columns', all(x in SRC for x in ['school_code','school_name','report_key','deficit_hours','surplus_hours','balance_hours']))
