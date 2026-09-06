@@ -20,7 +20,7 @@ function staffingUiInt($key, $default = 0) {
 }
 if (!defined('STAFFING_UI_MAX_BASIC_SECTIONS')) define('STAFFING_UI_MAX_BASIC_SECTIONS', 120);
 function staffingUiBasicSectionPostCounts($schoolType) {
-    $prefix = $schoolType === 'gel' ? 'gel_general_' : 'gym_general_';
+    $prefix = in_array($schoolType, array('gel','esperino_gel'), true) ? 'gel_general_' : 'gym_general_';
     return array(
         'a' => staffingUiInt($prefix . 'a'),
         'b' => staffingUiInt($prefix . 'b'),
@@ -30,11 +30,22 @@ function staffingUiBasicSectionPostCounts($schoolType) {
 function staffingUiBasicSectionPostTotal($schoolType) {
     return array_sum(staffingUiBasicSectionPostCounts($schoolType));
 }
+function staffingUiRenderBasicSectionFields($prefix) {
+    $prefix = $prefix === 'gel' ? 'gel' : 'gym';
+    echo '<div class="mini-grid">';
+    foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $suffix=>$grade) {
+        $name = $prefix . '_general_' . $suffix;
+        echo '<div class="field"><label for="' . staffingUiH($name) . '">' . staffingUiH($grade) . ' τάξη</label>';
+        echo '<input min="0" max="' . (int) STAFFING_UI_MAX_BASIC_SECTIONS . '" inputmode="numeric" step="1" type="number" data-basic-section="' . staffingUiH($prefix) . '" id="' . staffingUiH($name) . '" name="' . staffingUiH($name) . '" value="' . staffingUiH(staffingUiPost($name, '0')) . '"></div>';
+    }
+    echo '</div>';
+}
 function staffingUiSchoolTypeLabel($schoolType, $long = false) {
     $labels = array(
         'gymnasio' => array('short'=>'Ημερήσιο Γυμνάσιο','long'=>'Ημερήσιο Γυμνάσιο'),
         'gel' => array('short'=>'Ημερήσιο ΓΕΛ','long'=>'Ημερήσιο Γενικό Λύκειο'),
         'esperino_gymnasio' => array('short'=>'Εσπερινό Γυμνάσιο','long'=>'Εσπερινό Γυμνάσιο'),
+        'esperino_gel' => array('short'=>'Εσπερινό ΓΕΛ','long'=>'Εσπερινό Γενικό Λύκειο'),
     );
     if (!isset($labels[$schoolType])) $schoolType = 'gymnasio';
     return $labels[$schoolType][$long ? 'long' : 'short'];
@@ -418,7 +429,7 @@ function staffingUiSchoolStateKeys() {
         'gel_general_a','gel_general_b','gel_general_c',
         'gel_lang_a_fr','gel_lang_a_de','gel_lang_b_fr','gel_lang_b_de',
         'gel_b_hum','gel_b_sci','gel_c_hum','gel_c_scihealth','gel_c_econit',
-        'gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history',
+        'gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history','egel_b_period',
         'ethics_a_exempt','ethics_a_timely','ethics_a_equivalent','ethics_b_exempt','ethics_b_timely','ethics_b_equivalent','ethics_c_exempt','ethics_c_timely','ethics_c_equivalent'
     );
 }
@@ -601,7 +612,7 @@ $staffingAction = $requestMethod === 'POST' ? staffingUiPost('staffing_action', 
 $submitted = $requestMethod === 'POST'
     && in_array($staffingAction, array('profile','personnel','allocation','allocation_auto'), true);
 $schoolType = staffingUiPost('school_type', 'gymnasio');
-if (!in_array($schoolType, array('gymnasio','gel','esperino_gymnasio'), true)) $schoolType = 'gymnasio';
+if (!in_array($schoolType, array('gymnasio','gel','esperino_gymnasio','esperino_gel'), true)) $schoolType = 'gymnasio';
 $profile = null;
 $readiness = null;
 $matrix = null;
@@ -666,6 +677,40 @@ if ($submitted && empty($schoolProfileInputErrors)) {
                 'Β΄' => staffingUiInt('gym_tech_split_b'),
                 'Γ΄' => staffingUiInt('gym_tech_split_c'),
             ),
+            'ethics_by_grade' => array(
+                'Α΄' => staffingUiEthicsGrade('a'),
+                'Β΄' => staffingUiEthicsGrade('b'),
+                'Γ΄' => staffingUiEthicsGrade('c'),
+            ),
+        ));
+    } elseif ($schoolType === 'esperino_gel') {
+        $profile = schoolProfileBuildEveningGel2026(array(
+            'profile_id' => 'ui-esperino-gel-' . date('YmdHis'),
+            'school' => array(
+                'type' => 'Εσπερινό Γενικό Λύκειο',
+                'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
+                'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Εσπερινού ΓΕΛ',
+            ),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
+            'general_sections' => array(
+                'Α΄' => staffingUiInt('gel_general_a'),
+                'Β΄' => staffingUiInt('gel_general_b'),
+                'Γ΄' => staffingUiInt('gel_general_c'),
+            ),
+            'orientation_sections' => array(
+                'Β΄' => array('humanities'=>staffingUiInt('gel_b_hum'),'science'=>staffingUiInt('gel_b_sci')),
+                'Γ΄' => array('humanities'=>staffingUiInt('gel_c_hum'),'science_health'=>staffingUiInt('gel_c_scihealth'),'economics_it'=>staffingUiInt('gel_c_econit')),
+            ),
+            'grade_c_science_health_field_groups' => array(
+                'Μαθηματικά' => staffingUiInt('gel_c_field_math'),
+                'Βιολογία' => staffingUiInt('gel_c_field_bio'),
+            ),
+            'grade_c_conditional_groups' => array(
+                'Μαθηματικά' => staffingUiInt('gel_c_cond_math'),
+                'Ιστορία' => staffingUiInt('gel_c_cond_history'),
+            ),
+            'grade_b_period' => staffingUiPost('egel_b_period', 'Α΄ τετράμηνο'),
             'ethics_by_grade' => array(
                 'Α΄' => staffingUiEthicsGrade('a'),
                 'Β΄' => staffingUiEthicsGrade('b'),
@@ -929,196 +974,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Υπολογισμός διδακτικών αναγκών σχολικής μονάδας</title>
   <link rel="stylesheet" href="<?php echo staffingUiH(edu_asset_url('assets/common.css')); ?>">
-  <style>
-    .edu-page-staffing-simulator .staffing-section{margin-top:18px;padding-top:4px;border-top:1px solid var(--edu-result-row-separator)}
-    .edu-page-staffing-simulator .staffing-section:first-of-type{border-top:0;margin-top:8px}
-    .edu-page-staffing-simulator .staffing-section h3{margin:12px 0 10px}
-    .edu-page-staffing-simulator .mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-    .edu-page-staffing-simulator .mini-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .edu-page-staffing-simulator .grade-box{padding:13px;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft);margin:10px 0}
-    .edu-page-staffing-simulator .grade-box h4{margin:0 0 10px;color:var(--edu-primary-dark)}
-    .edu-page-staffing-simulator .staffing-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
-    .edu-page-staffing-simulator .summary-chip{padding:12px;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft)}
-    .edu-page-staffing-simulator .summary-chip strong{display:block;font-size:1.35rem;color:var(--edu-primary-dark);font-variant-numeric:tabular-nums}
-    .edu-page-staffing-simulator .summary-chip span{display:block;margin-top:3px;color:var(--edu-muted);font-size:12.5px;line-height:1.3}
-    .edu-page-staffing-simulator .matrix-wrap{overflow-x:auto;margin-top:14px}
-    .edu-page-staffing-simulator .staffing-table{width:100%;border-collapse:collapse;min-width:850px}
-    .edu-page-staffing-simulator #staffingMatrixTable{width:auto;min-width:0}
-    .edu-page-staffing-simulator #staffingMatrixTable th:first-child,.edu-page-staffing-simulator #staffingMatrixTable td:first-child{width:clamp(240px,32vw,420px);max-width:420px}
-    .edu-page-staffing-simulator #staffingMatrixTable th:nth-child(n+2),.edu-page-staffing-simulator #staffingMatrixTable td:nth-child(n+2){width:64px;min-width:64px}
-    .edu-page-staffing-simulator .staffing-table th,.edu-page-staffing-simulator .staffing-table td{padding:9px 8px;border-bottom:1px solid var(--edu-result-row-separator);text-align:right;vertical-align:top;font-size:13.5px}
-    .edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{text-align:left;position:sticky;left:0;background:var(--edu-surface);z-index:1}
-    .edu-page-staffing-simulator .staffing-table th{color:var(--edu-muted);font-size:12px;white-space:nowrap}
-    .edu-page-staffing-simulator .staffing-table .code{font-weight:800;color:var(--edu-primary-dark);white-space:nowrap}
-    .edu-page-staffing-simulator details.staffing-details{margin:0}
-    .edu-page-staffing-simulator details.staffing-details summary{cursor:pointer;font-weight:800;color:var(--edu-primary-dark);list-style:none}
-    .edu-page-staffing-simulator details.staffing-details summary::-webkit-details-marker{display:none}
-    .edu-page-staffing-simulator .claim-list{margin:8px 0 0;padding:0;list-style:none;min-width:360px}
-    .edu-page-staffing-simulator .claim-list li{padding:7px 0;border-top:1px solid var(--edu-result-row-separator);line-height:1.35}
-    .edu-page-staffing-simulator .claim-meta{display:block;color:var(--edu-muted);font-size:12px;margin-top:2px}
-    .edu-page-staffing-simulator .staffing-stage-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 14px}
-    .edu-page-staffing-simulator .mode-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0}
-    .edu-page-staffing-simulator .staffing-print-btn{white-space:nowrap}
-    .edu-page-staffing-simulator .mode-tab{padding:9px 12px;border:1px solid var(--edu-border);border-radius:999px;background:var(--edu-surface-soft);font-weight:800;color:var(--edu-muted)}
-    .edu-page-staffing-simulator .mode-tab.is-active{background:var(--edu-primary-soft);border-color:var(--edu-primary);color:var(--edu-primary-dark)}
-    .edu-page-staffing-simulator .result-filter{margin:12px 0 4px}
-    .edu-page-staffing-simulator .status-good{background:var(--edu-success-soft);border:1px solid var(--edu-success-border);color:var(--edu-success);padding:11px 12px;border-radius:10px;margin:12px 0}
-    .edu-page-staffing-simulator .status-warn{background:var(--edu-warning-soft);border:1px solid var(--edu-warning-border);color:#7b4900;padding:11px 12px;border-radius:10px;margin:12px 0}
-    .edu-page-staffing-simulator details.option-panel{margin:14px 0;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft);overflow:hidden}
-    .edu-page-staffing-simulator details.option-panel>summary{cursor:pointer;padding:13px 15px;font-weight:800;color:var(--edu-primary-dark);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .edu-page-staffing-simulator details.option-panel>summary::-webkit-details-marker{display:none}
-    .edu-page-staffing-simulator details.option-panel>summary::after{content:'＋';font-size:1.1rem;color:var(--edu-muted)}
-    .edu-page-staffing-simulator details.option-panel[open]>summary::after{content:'−'}
-    .edu-page-staffing-simulator .option-panel-body{padding:0 15px 14px;border-top:1px solid var(--edu-result-row-separator)}
-    .edu-page-staffing-simulator .staffing-panel[hidden]{display:none!important}
-    .edu-page-staffing-simulator button.mode-tab{font:inherit;cursor:pointer}
-    .edu-page-staffing-simulator .personnel-toolbar{display:flex;gap:10px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin:12px 0}
-    .edu-page-staffing-simulator .personnel-toolbar .field{min-width:240px;flex:1}
-    .edu-page-staffing-simulator .personnel-list{display:grid;gap:10px;margin-top:12px}
-    .edu-page-staffing-simulator .personnel-row{border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface);overflow:hidden}
-    .edu-page-staffing-simulator .personnel-row-main{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(200px,1.4fr) repeat(3,minmax(92px,.55fr)) auto;gap:10px;align-items:end;padding:12px}
-    .edu-page-staffing-simulator .personnel-row-main .metric{padding:8px 10px;border-radius:9px;background:var(--edu-surface-soft);min-height:42px}
-    .edu-page-staffing-simulator .personnel-row-main .metric strong{display:block;font-size:1.05rem;color:var(--edu-primary-dark);font-variant-numeric:tabular-nums}
-    .edu-page-staffing-simulator .personnel-row-main .metric span{font-size:11.5px;color:var(--edu-muted)}
-    .edu-page-staffing-simulator .personnel-required[readonly]{background:var(--edu-surface-soft);color:var(--edu-primary-dark);font-weight:800}
-    .edu-page-staffing-simulator .personnel-service-fields[hidden]{display:none!important}
-    .edu-page-staffing-simulator .personnel-row details{border-top:1px solid var(--edu-result-row-separator)}
-    .edu-page-staffing-simulator .personnel-row details>summary{cursor:pointer;padding:9px 12px;font-weight:700;color:var(--edu-muted);list-style:none}
-    .edu-page-staffing-simulator .personnel-row details>summary::-webkit-details-marker{display:none}
-    .edu-page-staffing-simulator .personnel-row-details{padding:0 12px 12px}
-    .edu-page-staffing-simulator .personnel-remove{border:1px solid var(--edu-border);background:var(--edu-surface-soft);border-radius:9px;padding:9px 10px;cursor:pointer;color:var(--edu-muted)}
-    .edu-page-staffing-simulator .personnel-status-error{color:#9c2f2f;font-size:12px;margin:7px 12px 10px}
-    .edu-page-staffing-simulator .personnel-toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .edu-page-staffing-simulator .personnel-csv-panel{margin:12px 0;padding:14px;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft)}
-    .edu-page-staffing-simulator .personnel-csv-panel[hidden]{display:none!important}
-    .edu-page-staffing-simulator .personnel-csv-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
-    .edu-page-staffing-simulator .personnel-csv-meta{color:var(--edu-muted);font-size:12.5px;margin-top:3px}
-    .edu-page-staffing-simulator .personnel-csv-mappings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
-    .edu-page-staffing-simulator .personnel-csv-mappings .field{min-width:0}
-    .edu-page-staffing-simulator .personnel-csv-preview{overflow-x:auto;margin-top:12px;max-height:270px;overflow-y:auto;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface)}
-    .edu-page-staffing-simulator .personnel-csv-preview table{width:100%;border-collapse:collapse;min-width:650px}
-    .edu-page-staffing-simulator .personnel-csv-preview th,.edu-page-staffing-simulator .personnel-csv-preview td{padding:7px 8px;border-bottom:1px solid var(--edu-result-row-separator);text-align:left;font-size:12px;white-space:nowrap}
-    .edu-page-staffing-simulator .personnel-csv-preview th{position:sticky;top:0;background:var(--edu-surface-soft);z-index:1;color:var(--edu-muted)}
-    .edu-page-staffing-simulator .personnel-csv-actions{display:flex;gap:8px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin-top:12px}
-    .edu-page-staffing-simulator .personnel-csv-actions .field{min-width:220px}
-    .edu-page-staffing-simulator .personnel-csv-status{font-size:12.5px;margin-top:10px;color:var(--edu-muted)}
-    .edu-page-staffing-simulator .personnel-csv-status.is-error{color:#9c2f2f}
-    .edu-page-staffing-simulator .personnel-csv-status.is-success{color:var(--edu-success)}
-    .edu-page-staffing-simulator .school-registry-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
-    .edu-page-staffing-simulator .school-registry-note{margin-bottom:12px}
-    .edu-page-staffing-simulator .school-csv-active{margin:10px 0 14px}
-    .edu-page-staffing-simulator .school-csv-head-actions{display:flex;gap:8px;flex-wrap:wrap}
-    .edu-page-staffing-simulator .school-registry-table .school-load-btn{white-space:nowrap}
-    .edu-page-staffing-simulator .school-registry-table .school-type-soon{color:#8a6400;font-weight:700}
-    .edu-page-staffing-simulator .school-registry-table .school-type-unknown{color:#9c2f2f;font-weight:700}
-    .edu-page-staffing-simulator .school-registry-table .school-address{display:block;margin-top:3px;color:var(--edu-muted);font-size:.82em;line-height:1.25}
-    .edu-page-staffing-simulator .school-registry-search{max-width:520px;margin:10px 0}
-    .edu-page-staffing-simulator .branch-summary{display:grid;gap:8px;margin:12px 0}
-    .edu-page-staffing-simulator .branch-summary-row{display:grid;grid-template-columns:minmax(140px,.8fr) repeat(4,minmax(110px,.65fr));gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface-soft)}
-    .edu-page-staffing-simulator .branch-summary-row .branch-code{font-weight:800;color:var(--edu-primary-dark)}
-    .edu-page-staffing-simulator .branch-summary-row small{display:block;color:var(--edu-muted)}
-    .edu-page-staffing-simulator .empty-personnel{padding:18px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
-    .edu-page-staffing-simulator .allocation-subtabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px}
-    .edu-page-staffing-simulator .allocation-subtab{border:1px solid var(--edu-border);background:var(--edu-surface-soft);color:var(--edu-muted);border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer}
-    .edu-page-staffing-simulator .allocation-subtab.is-active{background:var(--edu-primary);border-color:var(--edu-primary);color:#fff}
-    .edu-page-staffing-simulator [data-allocation-view-panel][hidden]{display:none!important}
-    .edu-page-staffing-simulator .allocation-toolbar{display:flex;justify-content:space-between;gap:10px;align-items:end;flex-wrap:wrap;margin:12px 0}
-    .edu-page-staffing-simulator .allocation-toolbar-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-    .edu-page-staffing-simulator .allocation-auto-result.is-success{border-color:rgba(39,128,85,.35)}
-    .edu-page-staffing-simulator .allocation-auto-result.is-warning{border-color:rgba(138,100,0,.3)}
-    .edu-page-staffing-simulator .allocation-list{display:grid;gap:10px;margin:12px 0}
-    .edu-page-staffing-simulator .allocation-row{border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface);padding:12px}
-    .edu-page-staffing-simulator .allocation-row-main{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,.9fr) minmax(86px,.42fr) auto;gap:10px;align-items:end}
-    .edu-page-staffing-simulator .allocation-row-main>*{min-width:0}
-    .edu-page-staffing-simulator .allocation-row-main .field select,.edu-page-staffing-simulator .allocation-row-main .field input{min-width:0;width:100%}
-    .edu-page-staffing-simulator .allocation-status{grid-column:1/-1;grid-row:2;min-width:0;min-height:38px;display:flex;align-items:center;padding:8px 10px;border-radius:9px;background:var(--edu-surface-soft);border:1px solid var(--edu-border);font-size:12.5px;font-weight:700;color:var(--edu-muted);overflow-wrap:anywhere}
-    .edu-page-staffing-simulator .allocation-row-main .allocation-remove{grid-column:4;grid-row:1}
-    .edu-page-staffing-simulator .allocation-status.is-ok{color:var(--edu-success);border-color:rgba(39,128,85,.35)}
-    .edu-page-staffing-simulator .allocation-status.is-warning{color:#8a6400;border-color:rgba(138,100,0,.3)}
-    .edu-page-staffing-simulator .allocation-status.is-error{color:#9c2f2f;border-color:rgba(156,47,47,.3)}
-    .edu-page-staffing-simulator .profile-validation-error{display:block;margin-top:6px;color:#9c2f2f;font-size:.86rem;line-height:1.35}
-    .edu-page-staffing-simulator .allocation-person-summary{display:grid;gap:10px;margin:12px 0}
-    .edu-page-staffing-simulator .allocation-person-summary-row{display:grid;grid-template-columns:minmax(190px,1.15fr) repeat(5,minmax(92px,.5fr));gap:8px;align-items:center;padding:10px 11px;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface-soft)}
-    .edu-page-staffing-simulator .allocation-person-summary-row small{display:block;color:var(--edu-muted)}
-    .edu-page-staffing-simulator .allocation-person-summary-row .b-limit-over{color:#9c2f2f}
-    .edu-page-staffing-simulator .allocation-person-meta{grid-column:1/-1;font-size:12px;color:var(--edu-muted);padding-top:2px}
-    .edu-page-staffing-simulator .allocation-person-assignments{grid-column:1/-1;display:grid;gap:5px;padding-top:3px}
-    .edu-page-staffing-simulator .allocation-person-assignment-item{font-size:12.5px;padding:6px 8px;border-radius:8px;background:var(--edu-surface);border:1px solid var(--edu-border)}
-    .edu-page-staffing-simulator .b-limit-warning{grid-column:1/-1;padding:9px 10px;border-radius:9px;border:1px solid rgba(156,47,47,.35);background:rgba(156,47,47,.06);color:#9c2f2f;font-size:12.5px;font-weight:800}
-    .edu-page-staffing-simulator .b-limit-warning[hidden]{display:none!important}
-    .edu-page-staffing-simulator .allocation-empty{padding:18px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
-    .edu-page-staffing-simulator .vacancy-toolbar{display:flex;gap:10px;justify-content:space-between;align-items:end;flex-wrap:wrap;margin:12px 0}
-    .edu-page-staffing-simulator .vacancy-filter{min-width:min(360px,100%);margin:0}
-    .edu-page-staffing-simulator .vacancy-table td{vertical-align:top}
-    .edu-page-staffing-simulator .vacancy-hours{font-size:1.08rem;font-weight:900;white-space:nowrap}
-    .edu-page-staffing-simulator .vacancy-assignments{display:grid;gap:3px;font-size:12.5px;color:var(--edu-muted)}
-    .edu-page-staffing-simulator .vacancy-assignments strong{color:var(--edu-text)}
-    .edu-page-staffing-simulator .vacancy-status{font-size:12.5px;font-weight:800}
-    .edu-page-staffing-simulator .vacancy-status.has-staff{color:#8a6400}
-    .edu-page-staffing-simulator .vacancy-status.no-staff{color:#9c2f2f}
-    .edu-page-staffing-simulator .vacancy-empty{padding:22px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
-    .edu-page-staffing-simulator .specialty-balance-toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:12px 0}
-    .edu-page-staffing-simulator .specialty-balance-table{min-width:0;table-layout:fixed}
-    .edu-page-staffing-simulator .specialty-balance-table th,.edu-page-staffing-simulator .specialty-balance-table td{padding-left:6px;padding-right:6px;vertical-align:top}
-    .edu-page-staffing-simulator .specialty-balance-table th{white-space:normal;line-height:1.2}
-    .edu-page-staffing-simulator .specialty-balance-table th:nth-child(1),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(1){width:19%}
-    .edu-page-staffing-simulator .specialty-balance-table th:nth-child(2),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(2){width:23%;text-align:left}
-    .edu-page-staffing-simulator .specialty-balance-table th:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(5),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(5){width:10%;text-align:center}
-    .edu-page-staffing-simulator .specialty-balance-table th:nth-child(6),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(6){width:28%;text-align:left;overflow-wrap:anywhere}
-    .edu-page-staffing-simulator .specialty-balance-value{font-size:1.05rem;font-weight:900;white-space:nowrap}
-    .edu-page-staffing-simulator .specialty-balance-deficit{color:#9c2f2f}
-    .edu-page-staffing-simulator .specialty-balance-surplus{color:var(--edu-success)}
-    .edu-page-staffing-simulator .specialty-balance-special td:first-child{font-weight:800;color:var(--edu-primary-dark)}
-    .edu-page-staffing-simulator .specialty-balance-note{font-size:12.5px;color:var(--edu-muted)}
-    .edu-page-staffing-simulator .specialty-balance-details{margin-top:14px}
-    .edu-page-staffing-simulator .specialty-balance-details summary{cursor:pointer;font-weight:800;color:var(--edu-primary-dark)}
-    .edu-page-staffing-simulator .specialty-smart-table,.edu-page-staffing-simulator .specialty-auto-table{margin-top:9px}
-    .staffing-print-report{display:none}
-    @media print{
-      @page{size:A4 landscape;margin:10mm}
-      body.edu-page-staffing-simulator{background:#fff!important;color:#111!important;font-family:Arial,Helvetica,sans-serif!important}
-      body.edu-page-staffing-simulator> *:not(.staffing-print-report):not(script){display:none!important}
-      body.edu-page-staffing-simulator .staffing-print-report{display:block!important;width:100%;max-width:none;margin:0;padding:0;color:#111;background:#fff}
-      .staffing-print-report *{box-sizing:border-box}
-      .staffing-print-report .print-header{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:2px solid #222;padding:0 0 8px;margin:0 0 10px}
-      .staffing-print-report h1{font-size:18pt;line-height:1.15;margin:0 0 4px;color:#111}
-      .staffing-print-report .print-subtitle{font-size:10pt;margin:0;color:#444}
-      .staffing-print-report .print-meta{text-align:right;font-size:8.5pt;line-height:1.35;color:#555;white-space:nowrap}
-      .staffing-print-report h2{font-size:12pt;margin:14px 0 6px;padding-bottom:3px;border-bottom:1px solid #777;color:#111;break-after:avoid}
-      .staffing-print-report .print-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:7px 0 10px}
-      .staffing-print-report .print-summary-item{border:1px solid #bbb;border-radius:5px;padding:6px 7px;min-height:43px}
-      .staffing-print-report .print-summary-item strong{display:block;font-size:12pt;line-height:1.1}
-      .staffing-print-report .print-summary-item span{display:block;font-size:7.5pt;line-height:1.25;color:#555;margin-top:2px}
-      .staffing-print-report table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4px 0 10px;font-size:7.8pt}
-      .staffing-print-report th,.staffing-print-report td{border:1px solid #b9b9b9;padding:4px 5px;vertical-align:top;overflow-wrap:anywhere}
-      .staffing-print-report th{background:#efefef;font-weight:700;text-align:left}
-      .staffing-print-report td.num,.staffing-print-report th.num{text-align:center;font-variant-numeric:tabular-nums}
-      .staffing-print-report tr{break-inside:avoid}
-      .staffing-print-report .print-code{font-weight:700;white-space:nowrap}
-      .staffing-print-report .print-note{font-size:7.7pt;line-height:1.35;color:#444;margin:5px 0 9px}
-      .staffing-print-report .print-status-ok{font-weight:700}
-      .staffing-print-report .print-status-warn{font-weight:700}
-      .staffing-print-report .print-status-error{font-weight:700}
-      .staffing-print-report .print-footer{margin-top:12px;padding-top:6px;border-top:1px solid #999;font-size:7.2pt;line-height:1.35;color:#555}
-      .staffing-print-report .print-personnel th:nth-child(1){width:11%}
-      .staffing-print-report .print-personnel th:nth-child(2){width:28%}
-      .staffing-print-report .print-personnel th:nth-child(3){width:17%}
-      .staffing-print-report .print-allocation th:nth-child(1){width:25%}
-      .staffing-print-report .print-allocation th:nth-child(2){width:39%}
-      .staffing-print-report .print-allocation th:nth-child(3){width:7%}
-      .staffing-print-report .print-allocation th:nth-child(4){width:29%}
-    }
-    @media(max-width:960px){.edu-page-staffing-simulator .personnel-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .branch-summary-row{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main .allocation-status{grid-column:1/-1;grid-row:auto}.edu-page-staffing-simulator .allocation-row-main .allocation-remove{grid-column:auto;grid-row:auto}.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr 1fr}}
-    @media(max-width:760px){
-      .edu-page-staffing-simulator .specialty-balance-table{font-size:12px}
-      .edu-page-staffing-simulator .specialty-balance-table th,.edu-page-staffing-simulator .specialty-balance-table td{padding-left:4px;padding-right:4px}
-      .edu-page-staffing-simulator .specialty-balance-table th:nth-child(1),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(1){width:18%}
-      .edu-page-staffing-simulator .specialty-balance-table th:nth-child(2),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(2){width:22%}
-      .edu-page-staffing-simulator .specialty-balance-table th:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(5),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(5){width:10%}
-      .edu-page-staffing-simulator .specialty-balance-table th:nth-child(6),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(6){width:30%}
-    }
-    @media(max-width:760px){.edu-page-staffing-simulator .mini-grid,.edu-page-staffing-simulator .mini-grid.two,.edu-page-staffing-simulator .staffing-summary-grid,.edu-page-staffing-simulator .personnel-row-main,.edu-page-staffing-simulator .branch-summary-row,.edu-page-staffing-simulator .personnel-csv-mappings{grid-template-columns:1fr}.edu-page-staffing-simulator .allocation-row-main,.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr}.edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{position:static}.edu-page-staffing-simulator #staffingMatrixTable th:first-child,.edu-page-staffing-simulator #staffingMatrixTable td:first-child{width:180px;max-width:180px}.edu-page-staffing-simulator #staffingMatrixTable th:nth-child(n+2),.edu-page-staffing-simulator #staffingMatrixTable td:nth-child(n+2){width:52px;min-width:52px}}
-  </style>
+  <link rel="stylesheet" href="<?php echo staffingUiH(edu_asset_url('assets/staffing-simulator.css')); ?>">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-staffing-simulator">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -1150,7 +1006,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('class'=>'card staffing-panel','attrs'=>array('data-staffing-panel'=>'school') + ($activePanel !== 'school' ? array('hidden'=>true) : array()))); ?>
         <h2>1. Στοιχεία σχολικής μονάδας</h2>
-        <p class="cap">Η τρέχουσα έκδοση υποστηρίζει Ημερήσιο Γυμνάσιο, Εσπερινό Γυμνάσιο και Ημερήσιο ΓΕΛ. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
+        <p class="cap">Η τρέχουσα έκδοση υποστηρίζει Ημερήσιο Γυμνάσιο, Εσπερινό Γυμνάσιο, Ημερήσιο ΓΕΛ και Εσπερινό ΓΕΛ. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
         <div class="status-warn" id="schoolProfileStaleNotice" hidden><strong>Τα στοιχεία της σχολικής μονάδας άλλαξαν.</strong> Τα προηγούμενα αποτελέσματα, το προσωπικό, η κατανομή και τα κενά έχουν κλειδωθεί μέχρι να πατήσεις ξανά «Υπολόγισε διδακτικές ανάγκες».</div>
         <?php if (!empty($schoolProfileInputErrors)): ?>
           <div class="status-warn"><strong>Ο υπολογισμός δεν εκτελέστηκε.</strong><ul><?php foreach ($schoolProfileInputErrors as $inputError): ?><li><?php echo staffingUiH($inputError); ?></li><?php endforeach; ?></ul></div>
@@ -1166,9 +1022,9 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                 <option value="gymnasio"<?php echo $schoolType === 'gymnasio' ? ' selected' : ''; ?>>Ημερήσιο Γυμνάσιο</option>
                 <option value="esperino_gymnasio"<?php echo $schoolType === 'esperino_gymnasio' ? ' selected' : ''; ?>>Εσπερινό Γυμνάσιο</option>
                 <option value="gel"<?php echo $schoolType === 'gel' ? ' selected' : ''; ?>>Ημερήσιο Γενικό Λύκειο (ΓΕΛ)</option>
+                <option value="esperino_gel"<?php echo $schoolType === 'esperino_gel' ? ' selected' : ''; ?>>Εσπερινό ΓΕΛ</option>
                 <optgroup label="Προσεχώς — προσωρινά ανενεργά">
                   <option value="gymnasio_lt" disabled>Γυμνάσιο με Λυκειακές Τάξεις</option>
-                  <option value="esperino_gel" disabled>Εσπερινό ΓΕΛ</option>
                   <option value="epal" disabled>ΕΠΑΛ</option>
                   <option value="esperino_epal" disabled>Εσπερινό ΕΠΑΛ</option>
                   <option value="pepal" disabled>Πρότυπο ΕΠΑΛ</option>
@@ -1224,11 +1080,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
             <section class="staffing-section">
               <h3>Κανονικά τμήματα ανά τάξη</h3>
               <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
-              <div class="mini-grid">
-                <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
-                  <div class="field"><label for="gym_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="120" inputmode="numeric" step="1" type="number" data-basic-section="gym" id="gym_general_<?php echo $s; ?>" name="gym_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gym_general_'.$s, '0')); ?>"></div>
-                <?php endforeach; ?>
-              </div>
+              <?php staffingUiRenderBasicSectionFields('gym'); ?>
               <small class="profile-validation-error" id="gymBasicSectionsError" data-basic-sections-error="gym" hidden></small>
             </section>
             <section class="staffing-section" id="gymLanguageGroupsSection" data-day-gym-only<?php echo $schoolType === 'esperino_gymnasio' ? ' hidden' : ''; ?>>
@@ -1260,18 +1112,14 @@ uksort($specialtyLabelsClient, 'strnatcmp');
             </details>
           </div>
 
-          <div id="gelProfileFields"<?php echo $schoolType === 'gel' ? '' : ' hidden'; ?>>
+          <div id="gelProfileFields"<?php echo in_array($schoolType, array('gel','esperino_gel'), true) ? '' : ' hidden'; ?>>
             <section class="staffing-section">
               <h3>Κανονικά τμήματα ανά τάξη</h3>
               <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
-              <div class="mini-grid">
-                <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
-                  <div class="field"><label for="gel_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="120" inputmode="numeric" step="1" type="number" data-basic-section="gel" id="gel_general_<?php echo $s; ?>" name="gel_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gel_general_'.$s, '0')); ?>"></div>
-                <?php endforeach; ?>
-              </div>
+              <?php staffingUiRenderBasicSectionFields('gel'); ?>
               <small class="profile-validation-error" id="gelBasicSectionsError" data-basic-sections-error="gel" hidden></small>
             </section>
-            <section class="staffing-section">
+            <section class="staffing-section" id="gelLanguageGroupsSection" data-day-gel-only<?php echo $schoolType === 'esperino_gel' ? ' hidden' : ''; ?>>
               <h3>Ομάδες 2ης ξένης γλώσσας</h3>
               <p class="help"><strong>Κάθε γλώσσα ελέγχεται χωριστά</strong> και δεν μπορεί να έχει περισσότερες ομάδες από τα κανονικά τμήματα της ίδιας τάξης. Δεν περιορίζεται το άθροισμα Γαλλικών + Γερμανικών.</p>
               <div class="mini-grid two">
@@ -1284,6 +1132,18 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                     </div>
                   </div>
                 <?php endforeach; ?>
+              </div>
+            </section>
+            <section class="staffing-section" id="eveningGelPeriodSection" data-evening-gel-only<?php echo $schoolType === 'esperino_gel' ? '' : ' hidden'; ?>>
+              <h3>Β΄ Εσπερινού ΓΕΛ — τετράμηνο υπολογισμού</h3>
+              <p class="help">Στη Β΄ τάξη η Χημεία διδάσκεται <strong>1 / 2</strong> ώρες και η Βιολογία <strong>2 / 1</strong> ώρες στα Α΄ / Β΄ τετράμηνα αντίστοιχα. Επίλεξε το τετράμηνο για το οποίο θέλεις να αποτυπωθούν τα κενά / πλεονάσματα και η αυτόματη κατανομή.</p>
+              <div class="field">
+                <label for="egel_b_period">Τετράμηνο</label>
+                <?php $egelPeriod = staffingUiPost('egel_b_period', 'Α΄ τετράμηνο'); ?>
+                <select id="egel_b_period" name="egel_b_period">
+                  <option value="Α΄ τετράμηνο"<?php echo $egelPeriod === 'Α΄ τετράμηνο' ? ' selected' : ''; ?>>Α΄ τετράμηνο</option>
+                  <option value="Β΄ τετράμηνο"<?php echo $egelPeriod === 'Β΄ τετράμηνο' ? ' selected' : ''; ?>>Β΄ τετράμηνο</option>
+                </select>
               </div>
             </section>
             <section class="staffing-section">
@@ -1967,27 +1827,27 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     <?php calculatorResultsStart(array('class'=>'card results')); ?>
       <h2>Τι κάνει αυτή η έκδοση</h2>
       <p class="cap">Είναι εργαλείο προσομοίωσης και ελέγχου της εσωτερικής λογικής που έχουμε ήδη χτίσει.</p>
-      <div class="result-row"><span>Ωρολόγιο πρόγραμμα</span><strong>✓</strong></div>
-      <div class="result-row"><span>Α΄/Β΄/Γ΄ αναθέσεις</span><strong>✓</strong></div>
-      <div class="result-row"><span>2η ξένη γλώσσα</span><strong>✓</strong></div>
-      <div class="result-row"><span>Ομάδες Προσανατολισμού ΓΕΛ</span><strong>✓</strong></div>
-      <div class="result-row"><span>Ηθική</span><strong>✓</strong></div>
-      <div class="result-row"><span>Πραγματικό προσωπικό</span><strong>✓</strong></div>
-      <div class="result-row"><span>Αυτόματη πρόταση + χειροκίνητη κατανομή μαθημάτων</span><strong>✓</strong></div>
-      <div class="result-row"><span>Κενά μαθημάτων μετά την κατανομή</span><strong>✓</strong></div>
-      <div class="result-row"><span>Προτεινόμενα κενά / πλεονάσματα ανά ειδικότητα</span><strong>✓</strong></div>
-      <div class="result-row"><span>Βελτιστοποίηση κάλυψης</span><strong>Μέγιστη κάλυψη → Α΄/ειδική → Β΄ → Γ΄</strong></div>
+      <?php calculatorResultRow(array('label'=>'Ωρολόγιο πρόγραμμα','value'=>'✓')); ?>
+      <?php calculatorResultRow(array('label'=>'Α΄/Β΄/Γ΄ αναθέσεις','value'=>'✓')); ?>
+      <?php calculatorResultRow(array('label'=>'2η ξένη γλώσσα','value'=>'✓')); ?>
+      <?php calculatorResultRow(array('label'=>'Ομάδες Προσανατολισμού ΓΕΛ','value'=>'✓')); ?>
+      <?php calculatorResultRow(array('label'=>'Ηθική','value'=>'✓')); ?>
+      <?php calculatorResultRow(array('label'=>'Πραγματικό προσωπικό','value'=>'✓')); ?>
+      <?php calculatorResultRow(array('label'=>'Αυτόματη πρόταση + χειροκίνητη κατανομή μαθημάτων','value'=>'✓')); ?>
+      <?php calculatorResultRow(array('label'=>'Κενά μαθημάτων μετά την κατανομή','value'=>'✓')); ?>
+      <?php calculatorResultRow(array('label'=>'Προτεινόμενα κενά / πλεονάσματα ανά ειδικότητα','value'=>'✓')); ?>
+      <?php calculatorResultRow(array('label'=>'Βελτιστοποίηση κάλυψης','value'=>'Μέγιστη κάλυψη → Α΄/ειδική → Β΄ → Γ΄')); ?>
       <div class="info-note">Η αυτόματη λειτουργία δημιουργεί <strong>πρόταση</strong>, όχι διοικητική πράξη τοποθέτησης. Οι ήδη καταχωρισμένες γραμμές θεωρούνται επιλογές του χρήστη και δεν αλλάζουν· ο engine συμπληρώνει το υπόλοιπο και ο Διευθυντής μπορεί μετά να τροποποιήσει οποιαδήποτε ανάθεση. Οι καρτέλες 5–6 επανυπολογίζουν την εικόνα κενών / πλεονασμάτων από την τελική κατανομή.</div>
       <?php if ($submitted && $matrix): ?>
         <h3>Τρέχων υπολογισμός</h3>
-        <div class="result-row"><span>Δομή</span><strong><?php echo staffingUiH(staffingUiSchoolTypeLabel($schoolType)); ?></strong></div>
-        <?php if (!empty($schoolCode)): ?><div class="result-row"><span>Κωδικός Υπουργείου / myschool</span><strong><?php echo staffingUiH($schoolCode); ?></strong></div><?php endif; ?>
-        <div class="result-row"><span>Μονάδες αντιστοιχισμένης ανάθεσης</span><strong><?php echo (int)$matrix['summary']['assignment_unit_count']; ?></strong></div>
-        <div class="result-row"><span>Κλάδοι με επιλεξιμότητα</span><strong><?php echo (int)$displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims']; ?></strong></div>
-        <div class="result-row"><span>Κατάσταση</span><strong><?php echo staffingUiH(staffingUiReadinessLabel($matrix['readiness'])); ?></strong></div>
+        <?php calculatorResultRow(array('label'=>'Δομή','value'=>staffingUiSchoolTypeLabel($schoolType))); ?>
+        <?php if (!empty($schoolCode)) calculatorResultRow(array('label'=>'Κωδικός Υπουργείου / myschool','value'=>$schoolCode)); ?>
+        <?php calculatorResultRow(array('label'=>'Μονάδες αντιστοιχισμένης ανάθεσης','value'=>(int)$matrix['summary']['assignment_unit_count'])); ?>
+        <?php calculatorResultRow(array('label'=>'Κλάδοι με επιλεξιμότητα','value'=>(int)$displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims'])); ?>
+        <?php calculatorResultRow(array('label'=>'Κατάσταση','value'=>staffingUiReadinessLabel($matrix['readiness']))); ?>
         <?php if ($allocationPlan): ?>
-          <div class="result-row"><span>Κατανεμημένες ώρες</span><strong><?php echo (int)$allocationPlan['summary']['assigned_slot_hours_total']; ?></strong></div>
-          <div class="result-row"><span>Ώρες χωρίς κατανομή</span><strong><?php echo (int)$allocationPlan['summary']['unassigned_slot_hours']; ?></strong></div>
+          <?php calculatorResultRow(array('label'=>'Κατανεμημένες ώρες','value'=>(int)$allocationPlan['summary']['assigned_slot_hours_total'])); ?>
+          <?php calculatorResultRow(array('label'=>'Ώρες χωρίς κατανομή','value'=>(int)$allocationPlan['summary']['unassigned_slot_hours'])); ?>
         <?php endif; ?>
       <?php endif; ?>
     <?php calculatorResultsEnd(); ?>
@@ -2002,6 +1862,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf', 'ΦΕΚ Β΄ 2132/2026 — Ημερήσιο Γυμνάσιο ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-74472-d2-2020.html', 'Υ.Α. 74472/Δ2/2020 — ΦΕΚ Β΄ 2450/2020 · Τεχνολογία / Πληροφορική Γυμνασίου ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202106_09_04_26_OP%20EM%20GEL_ESP%20Gymnasio.pdf', 'ΦΕΚ Β΄ 2106/2026 — Ημερήσιο ΓΕΛ / Εσπερινό Γυμνάσιο ↗'); ?>
+    <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/04/%CE%A6%CE%95%CE%9A-%CE%92-2102_09_04_26_%CE%A9%CE%A0-%CE%95%CE%A3%CE%A0-%CE%93%CE%95%CE%9B.pdf', 'ΦΕΚ Β΄ 2102/2026 — Εσπερινό ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink(ethicsClassFormationPolicy()['source_url'], 'Υ.Α. 108070/Δ2/2026 — ΦΕΚ Β΄ 5231/2026 · Ηθική ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
@@ -2273,15 +2134,25 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   ['staffingProfileForm','staffingPersonnelForm','staffingAllocationForm'].forEach(function(id){ installExplicitRequestGate(document.getElementById(id)); });
   function sync(){
     const isGel=type.value==='gel';
+    const isEveningGel=type.value==='esperino_gel';
+    const isGelFamily=isGel||isEveningGel;
     const isEveningGym=type.value==='esperino_gymnasio';
-    gym.hidden=isGel;
-    gel.hidden=!isGel;
-    gym.querySelectorAll('input,select').forEach(el=>{ el.disabled=isGel; });
-    gel.querySelectorAll('input,select').forEach(el=>{ el.disabled=!isGel; });
+    gym.hidden=isGelFamily;
+    gel.hidden=!isGelFamily;
+    gym.querySelectorAll('input,select').forEach(el=>{ el.disabled=isGelFamily; });
+    gel.querySelectorAll('input,select').forEach(el=>{ el.disabled=!isGelFamily; });
     gym.querySelectorAll('[data-day-gym-only]').forEach(function(panel){
       panel.hidden=isEveningGym;
-      panel.querySelectorAll('input,select').forEach(function(el){el.disabled=isGel||isEveningGym;});
+      panel.querySelectorAll('input,select').forEach(function(el){el.disabled=isGelFamily||isEveningGym;});
       if(isEveningGym && panel.tagName==='DETAILS') panel.open=false;
+    });
+    gel.querySelectorAll('[data-day-gel-only]').forEach(function(panel){
+      panel.hidden=isEveningGel;
+      panel.querySelectorAll('input,select').forEach(function(el){el.disabled=!isGel||isEveningGel;});
+    });
+    gel.querySelectorAll('[data-evening-gel-only]').forEach(function(panel){
+      panel.hidden=!isEveningGel;
+      panel.querySelectorAll('input,select').forEach(function(el){el.disabled=!isEveningGel;});
     });
   }
   type.addEventListener('change',sync); sync();

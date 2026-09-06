@@ -15,6 +15,7 @@ def render(payload, method='POST'):
     return p.stdout
 
 text=PAGE.read_text(encoding='utf-8')
+css=(ROOT/'assets/staffing-simulator.css').read_text(encoding='utf-8')
 get=render({},'GET')
 check('print button hidden before first calculation', 'id="staffingPrintButton"' not in get)
 check('print report hidden before first calculation', 'id="staffingPrintReport"' not in get)
@@ -41,7 +42,7 @@ check('print report contains vacancies table', '<h2>Κενά μαθημάτων<
 check('print output includes simulation disclaimer', 'Δεν συνιστά από μόνο του επίσημη πράξη προσδιορισμού λειτουργικών κενών' in out)
 check('print click invokes browser print only', 'window.print();' in text)
 check('print click does not submit or request', 'staffingPrintButton.addEventListener' in text and 'data-staffing-request-action="print"' not in text)
-check('print media uses dedicated report', '@page{size:A4 landscape' in text and 'body.edu-page-staffing-simulator> *:not(.staffing-print-report):not(script)' in text)
+check('print media uses dedicated report', '@page{size:A4 landscape' in css and 'body.edu-page-staffing-simulator> *:not(.staffing-print-report):not(script)' in css)
 check('explicit server request actions remain exactly four', text.count('data-staffing-request-action="')==4)
 
 failed=[n for n,ok in checks if not ok]

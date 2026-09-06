@@ -1,0 +1,188 @@
+.edu-page-staffing-simulator .staffing-section{margin-top:18px;padding-top:4px;border-top:1px solid var(--edu-result-row-separator)}
+.edu-page-staffing-simulator .staffing-section:first-of-type{border-top:0;margin-top:8px}
+.edu-page-staffing-simulator .staffing-section h3{margin:12px 0 10px}
+.edu-page-staffing-simulator .mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.edu-page-staffing-simulator .mini-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.edu-page-staffing-simulator .grade-box{padding:13px;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft);margin:10px 0}
+.edu-page-staffing-simulator .grade-box h4{margin:0 0 10px;color:var(--edu-primary-dark)}
+.edu-page-staffing-simulator .staffing-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.edu-page-staffing-simulator .summary-chip{padding:12px;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft)}
+.edu-page-staffing-simulator .summary-chip strong{display:block;font-size:1.35rem;color:var(--edu-primary-dark);font-variant-numeric:tabular-nums}
+.edu-page-staffing-simulator .summary-chip span{display:block;margin-top:3px;color:var(--edu-muted);font-size:12.5px;line-height:1.3}
+.edu-page-staffing-simulator .matrix-wrap{overflow-x:auto;margin-top:14px}
+.edu-page-staffing-simulator .staffing-table{width:100%;border-collapse:collapse;min-width:850px}
+.edu-page-staffing-simulator #staffingMatrixTable{width:auto;min-width:0}
+.edu-page-staffing-simulator #staffingMatrixTable th:first-child,.edu-page-staffing-simulator #staffingMatrixTable td:first-child{width:clamp(240px,32vw,420px);max-width:420px}
+.edu-page-staffing-simulator #staffingMatrixTable th:nth-child(n+2),.edu-page-staffing-simulator #staffingMatrixTable td:nth-child(n+2){width:64px;min-width:64px}
+.edu-page-staffing-simulator .staffing-table th,.edu-page-staffing-simulator .staffing-table td{padding:9px 8px;border-bottom:1px solid var(--edu-result-row-separator);text-align:right;vertical-align:top;font-size:13.5px}
+.edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{text-align:left;position:sticky;left:0;background:var(--edu-surface);z-index:1}
+.edu-page-staffing-simulator .staffing-table th{color:var(--edu-muted);font-size:12px;white-space:nowrap}
+.edu-page-staffing-simulator .staffing-table .code{font-weight:800;color:var(--edu-primary-dark);white-space:nowrap}
+.edu-page-staffing-simulator details.staffing-details{margin:0}
+.edu-page-staffing-simulator details.staffing-details summary{cursor:pointer;font-weight:800;color:var(--edu-primary-dark);list-style:none}
+.edu-page-staffing-simulator details.staffing-details summary::-webkit-details-marker{display:none}
+.edu-page-staffing-simulator .claim-list{margin:8px 0 0;padding:0;list-style:none;min-width:360px}
+.edu-page-staffing-simulator .claim-list li{padding:7px 0;border-top:1px solid var(--edu-result-row-separator);line-height:1.35}
+.edu-page-staffing-simulator .claim-meta{display:block;color:var(--edu-muted);font-size:12px;margin-top:2px}
+.edu-page-staffing-simulator .staffing-stage-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 14px}
+.edu-page-staffing-simulator .mode-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0}
+.edu-page-staffing-simulator .staffing-print-btn{white-space:nowrap}
+.edu-page-staffing-simulator .mode-tab{padding:9px 12px;border:1px solid var(--edu-border);border-radius:999px;background:var(--edu-surface-soft);font-weight:800;color:var(--edu-muted)}
+.edu-page-staffing-simulator .mode-tab.is-active{background:var(--edu-primary-soft);border-color:var(--edu-primary);color:var(--edu-primary-dark)}
+.edu-page-staffing-simulator .result-filter{margin:12px 0 4px}
+.edu-page-staffing-simulator .status-good{background:var(--edu-success-soft);border:1px solid var(--edu-success-border);color:var(--edu-success);padding:11px 12px;border-radius:10px;margin:12px 0}
+.edu-page-staffing-simulator .status-warn{background:var(--edu-warning-soft);border:1px solid var(--edu-warning-border);color:#7b4900;padding:11px 12px;border-radius:10px;margin:12px 0}
+.edu-page-staffing-simulator details.option-panel{margin:14px 0;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft);overflow:hidden}
+.edu-page-staffing-simulator details.option-panel>summary{cursor:pointer;padding:13px 15px;font-weight:800;color:var(--edu-primary-dark);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.edu-page-staffing-simulator details.option-panel>summary::-webkit-details-marker{display:none}
+.edu-page-staffing-simulator details.option-panel>summary::after{content:'＋';font-size:1.1rem;color:var(--edu-muted)}
+.edu-page-staffing-simulator details.option-panel[open]>summary::after{content:'−'}
+.edu-page-staffing-simulator .option-panel-body{padding:0 15px 14px;border-top:1px solid var(--edu-result-row-separator)}
+.edu-page-staffing-simulator .staffing-panel[hidden]{display:none!important}
+.edu-page-staffing-simulator button.mode-tab{font:inherit;cursor:pointer}
+.edu-page-staffing-simulator .personnel-toolbar{display:flex;gap:10px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin:12px 0}
+.edu-page-staffing-simulator .personnel-toolbar .field{min-width:240px;flex:1}
+.edu-page-staffing-simulator .personnel-list{display:grid;gap:10px;margin-top:12px}
+.edu-page-staffing-simulator .personnel-row{border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface);overflow:hidden}
+.edu-page-staffing-simulator .personnel-row-main{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(200px,1.4fr) repeat(3,minmax(92px,.55fr)) auto;gap:10px;align-items:end;padding:12px}
+.edu-page-staffing-simulator .personnel-row-main .metric{padding:8px 10px;border-radius:9px;background:var(--edu-surface-soft);min-height:42px}
+.edu-page-staffing-simulator .personnel-row-main .metric strong{display:block;font-size:1.05rem;color:var(--edu-primary-dark);font-variant-numeric:tabular-nums}
+.edu-page-staffing-simulator .personnel-row-main .metric span{font-size:11.5px;color:var(--edu-muted)}
+.edu-page-staffing-simulator .personnel-required[readonly]{background:var(--edu-surface-soft);color:var(--edu-primary-dark);font-weight:800}
+.edu-page-staffing-simulator .personnel-service-fields[hidden]{display:none!important}
+.edu-page-staffing-simulator .personnel-row details{border-top:1px solid var(--edu-result-row-separator)}
+.edu-page-staffing-simulator .personnel-row details>summary{cursor:pointer;padding:9px 12px;font-weight:700;color:var(--edu-muted);list-style:none}
+.edu-page-staffing-simulator .personnel-row details>summary::-webkit-details-marker{display:none}
+.edu-page-staffing-simulator .personnel-row-details{padding:0 12px 12px}
+.edu-page-staffing-simulator .personnel-remove{border:1px solid var(--edu-border);background:var(--edu-surface-soft);border-radius:9px;padding:9px 10px;cursor:pointer;color:var(--edu-muted)}
+.edu-page-staffing-simulator .personnel-status-error{color:#9c2f2f;font-size:12px;margin:7px 12px 10px}
+.edu-page-staffing-simulator .personnel-toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.edu-page-staffing-simulator .personnel-csv-panel{margin:12px 0;padding:14px;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft)}
+.edu-page-staffing-simulator .personnel-csv-panel[hidden]{display:none!important}
+.edu-page-staffing-simulator .personnel-csv-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.edu-page-staffing-simulator .personnel-csv-meta{color:var(--edu-muted);font-size:12.5px;margin-top:3px}
+.edu-page-staffing-simulator .personnel-csv-mappings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
+.edu-page-staffing-simulator .personnel-csv-mappings .field{min-width:0}
+.edu-page-staffing-simulator .personnel-csv-preview{overflow-x:auto;margin-top:12px;max-height:270px;overflow-y:auto;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface)}
+.edu-page-staffing-simulator .personnel-csv-preview table{width:100%;border-collapse:collapse;min-width:650px}
+.edu-page-staffing-simulator .personnel-csv-preview th,.edu-page-staffing-simulator .personnel-csv-preview td{padding:7px 8px;border-bottom:1px solid var(--edu-result-row-separator);text-align:left;font-size:12px;white-space:nowrap}
+.edu-page-staffing-simulator .personnel-csv-preview th{position:sticky;top:0;background:var(--edu-surface-soft);z-index:1;color:var(--edu-muted)}
+.edu-page-staffing-simulator .personnel-csv-actions{display:flex;gap:8px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin-top:12px}
+.edu-page-staffing-simulator .personnel-csv-actions .field{min-width:220px}
+.edu-page-staffing-simulator .personnel-csv-status{font-size:12.5px;margin-top:10px;color:var(--edu-muted)}
+.edu-page-staffing-simulator .personnel-csv-status.is-error{color:#9c2f2f}
+.edu-page-staffing-simulator .personnel-csv-status.is-success{color:var(--edu-success)}
+.edu-page-staffing-simulator .school-registry-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
+.edu-page-staffing-simulator .school-registry-note{margin-bottom:12px}
+.edu-page-staffing-simulator .school-csv-active{margin:10px 0 14px}
+.edu-page-staffing-simulator .school-csv-head-actions{display:flex;gap:8px;flex-wrap:wrap}
+.edu-page-staffing-simulator .school-registry-table .school-load-btn{white-space:nowrap}
+.edu-page-staffing-simulator .school-registry-table .school-type-soon{color:#8a6400;font-weight:700}
+.edu-page-staffing-simulator .school-registry-table .school-type-unknown{color:#9c2f2f;font-weight:700}
+.edu-page-staffing-simulator .school-registry-table .school-address{display:block;margin-top:3px;color:var(--edu-muted);font-size:.82em;line-height:1.25}
+.edu-page-staffing-simulator .school-registry-search{max-width:520px;margin:10px 0}
+.edu-page-staffing-simulator .branch-summary{display:grid;gap:8px;margin:12px 0}
+.edu-page-staffing-simulator .branch-summary-row{display:grid;grid-template-columns:minmax(140px,.8fr) repeat(4,minmax(110px,.65fr));gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface-soft)}
+.edu-page-staffing-simulator .branch-summary-row .branch-code{font-weight:800;color:var(--edu-primary-dark)}
+.edu-page-staffing-simulator .branch-summary-row small{display:block;color:var(--edu-muted)}
+.edu-page-staffing-simulator .empty-personnel{padding:18px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
+.edu-page-staffing-simulator .allocation-subtabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px}
+.edu-page-staffing-simulator .allocation-subtab{border:1px solid var(--edu-border);background:var(--edu-surface-soft);color:var(--edu-muted);border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer}
+.edu-page-staffing-simulator .allocation-subtab.is-active{background:var(--edu-primary);border-color:var(--edu-primary);color:#fff}
+.edu-page-staffing-simulator [data-allocation-view-panel][hidden]{display:none!important}
+.edu-page-staffing-simulator .allocation-toolbar{display:flex;justify-content:space-between;gap:10px;align-items:end;flex-wrap:wrap;margin:12px 0}
+.edu-page-staffing-simulator .allocation-toolbar-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.edu-page-staffing-simulator .allocation-auto-result.is-success{border-color:rgba(39,128,85,.35)}
+.edu-page-staffing-simulator .allocation-auto-result.is-warning{border-color:rgba(138,100,0,.3)}
+.edu-page-staffing-simulator .allocation-list{display:grid;gap:10px;margin:12px 0}
+.edu-page-staffing-simulator .allocation-row{border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface);padding:12px}
+.edu-page-staffing-simulator .allocation-row-main{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,.9fr) minmax(86px,.42fr) auto;gap:10px;align-items:end}
+.edu-page-staffing-simulator .allocation-row-main>*{min-width:0}
+.edu-page-staffing-simulator .allocation-row-main .field select,.edu-page-staffing-simulator .allocation-row-main .field input{min-width:0;width:100%}
+.edu-page-staffing-simulator .allocation-status{grid-column:1/-1;grid-row:2;min-width:0;min-height:38px;display:flex;align-items:center;padding:8px 10px;border-radius:9px;background:var(--edu-surface-soft);border:1px solid var(--edu-border);font-size:12.5px;font-weight:700;color:var(--edu-muted);overflow-wrap:anywhere}
+.edu-page-staffing-simulator .allocation-row-main .allocation-remove{grid-column:4;grid-row:1}
+.edu-page-staffing-simulator .allocation-status.is-ok{color:var(--edu-success);border-color:rgba(39,128,85,.35)}
+.edu-page-staffing-simulator .allocation-status.is-warning{color:#8a6400;border-color:rgba(138,100,0,.3)}
+.edu-page-staffing-simulator .allocation-status.is-error{color:#9c2f2f;border-color:rgba(156,47,47,.3)}
+.edu-page-staffing-simulator .profile-validation-error{display:block;margin-top:6px;color:#9c2f2f;font-size:.86rem;line-height:1.35}
+.edu-page-staffing-simulator .allocation-person-summary{display:grid;gap:10px;margin:12px 0}
+.edu-page-staffing-simulator .allocation-person-summary-row{display:grid;grid-template-columns:minmax(190px,1.15fr) repeat(5,minmax(92px,.5fr));gap:8px;align-items:center;padding:10px 11px;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface-soft)}
+.edu-page-staffing-simulator .allocation-person-summary-row small{display:block;color:var(--edu-muted)}
+.edu-page-staffing-simulator .allocation-person-summary-row .b-limit-over{color:#9c2f2f}
+.edu-page-staffing-simulator .allocation-person-meta{grid-column:1/-1;font-size:12px;color:var(--edu-muted);padding-top:2px}
+.edu-page-staffing-simulator .allocation-person-assignments{grid-column:1/-1;display:grid;gap:5px;padding-top:3px}
+.edu-page-staffing-simulator .allocation-person-assignment-item{font-size:12.5px;padding:6px 8px;border-radius:8px;background:var(--edu-surface);border:1px solid var(--edu-border)}
+.edu-page-staffing-simulator .b-limit-warning{grid-column:1/-1;padding:9px 10px;border-radius:9px;border:1px solid rgba(156,47,47,.35);background:rgba(156,47,47,.06);color:#9c2f2f;font-size:12.5px;font-weight:800}
+.edu-page-staffing-simulator .b-limit-warning[hidden]{display:none!important}
+.edu-page-staffing-simulator .allocation-empty{padding:18px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
+.edu-page-staffing-simulator .vacancy-toolbar{display:flex;gap:10px;justify-content:space-between;align-items:end;flex-wrap:wrap;margin:12px 0}
+.edu-page-staffing-simulator .vacancy-filter{min-width:min(360px,100%);margin:0}
+.edu-page-staffing-simulator .vacancy-table td{vertical-align:top}
+.edu-page-staffing-simulator .vacancy-hours{font-size:1.08rem;font-weight:900;white-space:nowrap}
+.edu-page-staffing-simulator .vacancy-assignments{display:grid;gap:3px;font-size:12.5px;color:var(--edu-muted)}
+.edu-page-staffing-simulator .vacancy-assignments strong{color:var(--edu-text)}
+.edu-page-staffing-simulator .vacancy-status{font-size:12.5px;font-weight:800}
+.edu-page-staffing-simulator .vacancy-status.has-staff{color:#8a6400}
+.edu-page-staffing-simulator .vacancy-status.no-staff{color:#9c2f2f}
+.edu-page-staffing-simulator .vacancy-empty{padding:22px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
+.edu-page-staffing-simulator .specialty-balance-toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:12px 0}
+.edu-page-staffing-simulator .specialty-balance-table{min-width:0;table-layout:fixed}
+.edu-page-staffing-simulator .specialty-balance-table th,.edu-page-staffing-simulator .specialty-balance-table td{padding-left:6px;padding-right:6px;vertical-align:top}
+.edu-page-staffing-simulator .specialty-balance-table th{white-space:normal;line-height:1.2}
+.edu-page-staffing-simulator .specialty-balance-table th:nth-child(1),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(1){width:19%}
+.edu-page-staffing-simulator .specialty-balance-table th:nth-child(2),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(2){width:23%;text-align:left}
+.edu-page-staffing-simulator .specialty-balance-table th:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(5),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(5){width:10%;text-align:center}
+.edu-page-staffing-simulator .specialty-balance-table th:nth-child(6),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(6){width:28%;text-align:left;overflow-wrap:anywhere}
+.edu-page-staffing-simulator .specialty-balance-value{font-size:1.05rem;font-weight:900;white-space:nowrap}
+.edu-page-staffing-simulator .specialty-balance-deficit{color:#9c2f2f}
+.edu-page-staffing-simulator .specialty-balance-surplus{color:var(--edu-success)}
+.edu-page-staffing-simulator .specialty-balance-special td:first-child{font-weight:800;color:var(--edu-primary-dark)}
+.edu-page-staffing-simulator .specialty-balance-note{font-size:12.5px;color:var(--edu-muted)}
+.edu-page-staffing-simulator .specialty-balance-details{margin-top:14px}
+.edu-page-staffing-simulator .specialty-balance-details summary{cursor:pointer;font-weight:800;color:var(--edu-primary-dark)}
+.edu-page-staffing-simulator .specialty-smart-table,.edu-page-staffing-simulator .specialty-auto-table{margin-top:9px}
+.staffing-print-report{display:none}
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  body.edu-page-staffing-simulator{background:#fff!important;color:#111!important;font-family:Arial,Helvetica,sans-serif!important}
+  body.edu-page-staffing-simulator> *:not(.staffing-print-report):not(script){display:none!important}
+  body.edu-page-staffing-simulator .staffing-print-report{display:block!important;width:100%;max-width:none;margin:0;padding:0;color:#111;background:#fff}
+  .staffing-print-report *{box-sizing:border-box}
+  .staffing-print-report .print-header{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:2px solid #222;padding:0 0 8px;margin:0 0 10px}
+  .staffing-print-report h1{font-size:18pt;line-height:1.15;margin:0 0 4px;color:#111}
+  .staffing-print-report .print-subtitle{font-size:10pt;margin:0;color:#444}
+  .staffing-print-report .print-meta{text-align:right;font-size:8.5pt;line-height:1.35;color:#555;white-space:nowrap}
+  .staffing-print-report h2{font-size:12pt;margin:14px 0 6px;padding-bottom:3px;border-bottom:1px solid #777;color:#111;break-after:avoid}
+  .staffing-print-report .print-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:7px 0 10px}
+  .staffing-print-report .print-summary-item{border:1px solid #bbb;border-radius:5px;padding:6px 7px;min-height:43px}
+  .staffing-print-report .print-summary-item strong{display:block;font-size:12pt;line-height:1.1}
+  .staffing-print-report .print-summary-item span{display:block;font-size:7.5pt;line-height:1.25;color:#555;margin-top:2px}
+  .staffing-print-report table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4px 0 10px;font-size:7.8pt}
+  .staffing-print-report th,.staffing-print-report td{border:1px solid #b9b9b9;padding:4px 5px;vertical-align:top;overflow-wrap:anywhere}
+  .staffing-print-report th{background:#efefef;font-weight:700;text-align:left}
+  .staffing-print-report td.num,.staffing-print-report th.num{text-align:center;font-variant-numeric:tabular-nums}
+  .staffing-print-report tr{break-inside:avoid}
+  .staffing-print-report .print-code{font-weight:700;white-space:nowrap}
+  .staffing-print-report .print-note{font-size:7.7pt;line-height:1.35;color:#444;margin:5px 0 9px}
+  .staffing-print-report .print-status-ok{font-weight:700}
+  .staffing-print-report .print-status-warn{font-weight:700}
+  .staffing-print-report .print-status-error{font-weight:700}
+  .staffing-print-report .print-footer{margin-top:12px;padding-top:6px;border-top:1px solid #999;font-size:7.2pt;line-height:1.35;color:#555}
+  .staffing-print-report .print-personnel th:nth-child(1){width:11%}
+  .staffing-print-report .print-personnel th:nth-child(2){width:28%}
+  .staffing-print-report .print-personnel th:nth-child(3){width:17%}
+  .staffing-print-report .print-allocation th:nth-child(1){width:25%}
+  .staffing-print-report .print-allocation th:nth-child(2){width:39%}
+  .staffing-print-report .print-allocation th:nth-child(3){width:7%}
+  .staffing-print-report .print-allocation th:nth-child(4){width:29%}
+}
+@media(max-width:960px){.edu-page-staffing-simulator .personnel-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .branch-summary-row{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main .allocation-status{grid-column:1/-1;grid-row:auto}.edu-page-staffing-simulator .allocation-row-main .allocation-remove{grid-column:auto;grid-row:auto}.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){
+  .edu-page-staffing-simulator .specialty-balance-table{font-size:12px}
+  .edu-page-staffing-simulator .specialty-balance-table th,.edu-page-staffing-simulator .specialty-balance-table td{padding-left:4px;padding-right:4px}
+  .edu-page-staffing-simulator .specialty-balance-table th:nth-child(1),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(1){width:18%}
+  .edu-page-staffing-simulator .specialty-balance-table th:nth-child(2),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(2){width:22%}
+  .edu-page-staffing-simulator .specialty-balance-table th:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(3),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(4),.edu-page-staffing-simulator .specialty-balance-table th:nth-child(5),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(5){width:10%}
+  .edu-page-staffing-simulator .specialty-balance-table th:nth-child(6),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(6){width:30%}
+}
+@media(max-width:760px){.edu-page-staffing-simulator .mini-grid,.edu-page-staffing-simulator .mini-grid.two,.edu-page-staffing-simulator .staffing-summary-grid,.edu-page-staffing-simulator .personnel-row-main,.edu-page-staffing-simulator .branch-summary-row,.edu-page-staffing-simulator .personnel-csv-mappings{grid-template-columns:1fr}.edu-page-staffing-simulator .allocation-row-main,.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr}.edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{position:static}.edu-page-staffing-simulator #staffingMatrixTable th:first-child,.edu-page-staffing-simulator #staffingMatrixTable td:first-child{width:180px;max-width:180px}.edu-page-staffing-simulator #staffingMatrixTable th:nth-child(n+2),.edu-page-staffing-simulator #staffingMatrixTable td:nth-child(n+2){width:52px;min-width:52px}}

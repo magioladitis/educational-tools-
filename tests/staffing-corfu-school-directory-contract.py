@@ -64,7 +64,7 @@ check('Corfu directory has 38 schools', data.get('count')==38)
 check('Corfu directory codes are unique', data.get('unique')==38)
 check('full registry exposes all 62 CSV columns', data.get('headers')==62)
 check('full raw CSV is available to downloader', data.get('rawCsvHasFullHeader') is True and data.get('filename')=='school_registry_v1-dde-kerkyras-2026-2027-full.csv')
-check('currently supported day Gymnasium/GEL count is 24', data.get('supported')==24)
+check('currently supported Gymnasium/GEL profiles count is 26', data.get('supported')==26)
 check('structural section data exists for almost all units', data.get('withSections')==37)
 check('type distribution stable', data.get('counts')=={
     'gymnasio':16,'gymnasio_lt':4,'eneegyl':1,'esperino_gymnasio':1,'mousiko':1,'eeeek':1,

@@ -73,6 +73,15 @@ function schoolProfileConditionalSectionCount($structure, $grade, $courseId)
     return max(0, (int) $structure['conditional_sections'][$grade][$courseId]);
 }
 
+function schoolProfilePeriodSelection($structure, $grade)
+{
+    if (!isset($structure['period_selection'][$grade])) {
+        return null;
+    }
+    $value = trim((string) $structure['period_selection'][$grade]);
+    return $value === '' ? null : $value;
+}
+
 function schoolProfileExtraCourseSectionCount($structure, $grade, $courseId)
 {
     if (!isset($structure['extra_course_sections'][$grade])
@@ -380,12 +389,24 @@ function schoolProfileRealize($profile, $model = null)
             $slot['period_hours'] = $instance['period_hours'];
         }
 
+        $resolvedPeriodicHours = null;
+        if ($instance['hours_mode'] === 'periodic' && !empty($instance['period_hours'])) {
+            $periodStructure = schoolProfileStructure($profile, $instance['school']);
+            $selectedPeriod = $periodStructure === null ? null : schoolProfilePeriodSelection($periodStructure, $instance['grade']);
+            if ($selectedPeriod !== null && array_key_exists($selectedPeriod, $instance['period_hours'])) {
+                $resolvedPeriodicHours = max(0, (int) $instance['period_hours'][$selectedPeriod]);
+                $slot['selected_period'] = $selectedPeriod;
+                $slot['hours_per_section'] = $resolvedPeriodicHours;
+            }
+        }
+
         $isRegulatoryGap = $instance['resolution_status'] === 'regulatory_gap';
-        $isFixedHours = $instance['hours_mode'] === 'fixed' && isset($instance['hours_total']);
+        $isFixedHours = ($instance['hours_mode'] === 'fixed' && isset($instance['hours_total'])) || $resolvedPeriodicHours !== null;
         $dependencyResolved = !empty($dependency['resolved']);
 
         if ($isFixedHours) {
-            $slot['curriculum_hours'] = (int) $instance['hours_total'] * $sectionCount;
+            $hoursPerSection = $resolvedPeriodicHours !== null ? $resolvedPeriodicHours : (int) $instance['hours_total'];
+            $slot['curriculum_hours'] = $hoursPerSection * $sectionCount;
         }
 
         if ($isRegulatoryGap) {
@@ -444,10 +465,17 @@ function schoolProfileAggregateByCode($profile, $code, $model = null)
             continue;
         }
         $slot = $slotMap[$claim['instance_id']];
-        if (!isset($claim['hours'])) {
+        $claimHours = isset($claim['hours']) ? (int) $claim['hours'] : null;
+        if ($claimHours === null && isset($slot['hours_per_section'])) {
+            $claimHours = (int) $slot['hours_per_section'];
+        }
+        if ($claimHours === null) {
             continue;
         }
-        $hours = (int) $claim['hours'] * (int) $slot['section_count'];
+        $hours = $claimHours * (int) $slot['section_count'];
+        if (isset($slot['selected_period'])) {
+            $claim['selected_period'] = $slot['selected_period'];
+        }
         $priority = isset($claim['priority']) ? $claim['priority'] : '';
         if (isset($totals[$priority])) {
             $totals[$priority] += $hours;

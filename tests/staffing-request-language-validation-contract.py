@@ -16,6 +16,7 @@ def render(payload, method='POST'):
     return p.stdout
 
 text=PAGE.read_text(encoding='utf-8')
+css=(ROOT/'assets/staffing-simulator.css').read_text(encoding='utf-8')
 check('no fetch to endpoint', 'fetch(' not in text)
 check('no direct form.submit path', re.search(r'\bform\.submit\s*\(', text) is None)
 check('no reload or redirect path', not any(x in text for x in ['location.reload','location.assign','location.replace','window.location=','window.location =']))
@@ -23,12 +24,12 @@ check('exactly one centralized requestSubmit', text.count('form.requestSubmit()'
 check('requestSubmit is behind explicit click action', "button.addEventListener('click'" in text and "data-staffing-request-action" in text and "form.dataset.explicitRequest='1'" in text)
 check('submit guard blocks unarmed submits', "if(!armed || form.dataset.requestInFlight==='1')" in text and 'event.preventDefault()' in text)
 check('request gate has in-flight duplicate protection', "form.dataset.requestInFlight='1'" in text)
-check('three explicit request actions only', text.count('data-staffing-request-action="')==3)
+check('four explicit request actions only', text.count('data-staffing-request-action="')==4)
 check('no native staffing submit button', 'type="submit" name="staffing_action"' not in text)
 check('initial GET defers specialty workload-model build', re.search(r'\$personnelSpecialtyOptions\s*=\s*\$submitted\s*\?\s*staffingUiPersonnelSpecialtyOptions', text) is not None)
 check('explicit calculation reuses one workload model for matrix and specialty catalogue', '$teachingModel = teachingWorkloadModel();' in text and 'schoolProfileWorkloadMatrix($profile, $teachingModel)' in text and 'staffingUiPersonnelSpecialtyOptions($displayMatrix, $teachingModel)' in text)
-check('allocation status uses its own full-width row', '.allocation-status{grid-column:1/-1;grid-row:2;' in text)
-check('allocation grid uses shrinkable columns', 'grid-template-columns:minmax(0,1.65fr) minmax(0,.9fr) minmax(86px,.42fr) auto' in text)
+check('allocation status uses its own full-width row', '.allocation-status{grid-column:1/-1;grid-row:2;' in css)
+check('allocation grid uses shrinkable columns', 'grid-template-columns:minmax(0,1.65fr) minmax(0,.9fr) minmax(86px,.42fr) auto' in css)
 
 # A POST without an explicit action must not execute the expensive profile/workload branch.
 rogue=render({'school_type':'gymnasio','gym_general_a':2,'gym_general_b':2,'gym_general_c':2})

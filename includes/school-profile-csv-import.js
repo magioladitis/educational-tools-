@@ -167,7 +167,7 @@
     kallitexniko:'Καλλιτεχνικό Σχολείο',
     sek:'Εργαστηριακό Κέντρο (Ε.Κ.)'
   };
-  function isSupportedType(type){ return type==='gymnasio' || type==='gel' || type==='esperino_gymnasio'; }
+  function isSupportedType(type){ return type==='gymnasio' || type==='gel' || type==='esperino_gymnasio' || type==='esperino_gel'; }
   function typeLabel(type){ return TYPE_LABELS[type] || String(type || 'Άγνωστος τύπος'); }
 
   function rowToSchool(row,mapping,index){
@@ -239,14 +239,15 @@
     'gym_tech_split_a','gym_tech_split_b','gym_tech_split_c',
     'gel_general_a','gel_general_b','gel_general_c',
     'gel_lang_a_fr','gel_lang_a_de','gel_lang_b_fr','gel_lang_b_de',
-    'gel_b_hum','gel_b_sci','gel_c_hum','gel_c_scihealth','gel_c_econit','gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history',
+    'gel_b_hum','gel_b_sci','gel_c_hum','gel_c_scihealth','gel_c_econit','gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history','egel_b_period',
     'ethics_a_exempt','ethics_a_timely','ethics_a_equivalent','ethics_b_exempt','ethics_b_timely','ethics_b_equivalent','ethics_c_exempt','ethics_c_timely','ethics_c_equivalent'
   ];
   function schoolToFormValues(school){
     var out={school_registry_id:school.school_id || '',school_code:school.school_code || '',school_name:school.school_name || '',school_type:school.school_type || ''};
     FORM_FIELDS.forEach(function(field){out[field]='';});
+    var isGelFamily=school.school_type==='gel' || school.school_type==='esperino_gel';
     ['a','b','c'].forEach(function(g){
-      out[(school.school_type==='gel'?'gel':'gym')+'_general_'+g]=school['general_'+g];
+      out[(isGelFamily?'gel':'gym')+'_general_'+g]=school['general_'+g];
       out['ethics_'+g+'_exempt']=school['ethics_'+g+'_exempt'];
       out['ethics_'+g+'_timely']=school['ethics_'+g+'_timely'];
       out['ethics_'+g+'_equivalent']=school['ethics_'+g+'_equivalent'];
@@ -258,12 +259,15 @@
         out['gym_lang_'+g+'_it']=school['lang_'+g+'_it'];
         out['gym_tech_split_'+g]=school['tech_split_'+g];
       });
-    }else if(school.school_type==='gel'){
-      ['a','b'].forEach(function(g){
-        out['gel_lang_'+g+'_fr']=school['lang_'+g+'_fr'];
-        out['gel_lang_'+g+'_de']=school['lang_'+g+'_de'];
-      });
+    }else if(isGelFamily){
+      if(school.school_type==='gel'){
+        ['a','b'].forEach(function(g){
+          out['gel_lang_'+g+'_fr']=school['lang_'+g+'_fr'];
+          out['gel_lang_'+g+'_de']=school['lang_'+g+'_de'];
+        });
+      }
       ['gel_b_hum','gel_b_sci','gel_c_hum','gel_c_scihealth','gel_c_econit','gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history'].forEach(function(field){out[field]=school[field];});
+      if(school.school_type==='esperino_gel') out['egel_b_period']='Α΄ τετράμηνο';
     }
     return out;
   }
@@ -316,8 +320,8 @@
     maxBasicSections:MAX_BASIC_SECTIONS,
     basicSectionTotal:basicSectionTotal,
     validateRegistry:validateRegistry,
-    supportedTypes:['gymnasio','gel','esperino_gymnasio'],
-    placeholderTypes:['gymnasio_lt','esperino_gel','epal','esperino_epal','pepal','eneegyl','eeeek','mousiko','kallitexniko','sek'],
+    supportedTypes:['gymnasio','gel','esperino_gymnasio','esperino_gel'],
+    placeholderTypes:['gymnasio_lt','epal','esperino_epal','pepal','eneegyl','eeeek','mousiko','kallitexniko','sek'],
     normalizeHeader:normalizeHeader,
     normalizeSchoolType:normalizeSchoolType,
     typeLabel:typeLabel,

@@ -17,9 +17,8 @@ check('portable school registry schema exposed', 'school_registry_v1' in html an
 check('stable school registry id carried by form', 'name="school_registry_id"' in html and "school_registry_id:school.school_id || ''" in js)
 check('real ministry school code is supported separately', 'name="school_code"' in html and "school_code:['κωδικος υπουργειου'" in js and "school_code:school.school_code || ''" in js)
 check('multiple-school capability declared', 'supportsMultipleSchools:true' in js)
-check('current supported school types remain enabled', re.search(r'<option value="gymnasio"[^>]*>Ημερήσιο Γυμνάσιο</option>',html) is not None and re.search(r'<option value="esperino_gymnasio"[^>]*>Εσπερινό Γυμνάσιο</option>',html) is not None and re.search(r'<option value="gel"[^>]*>Ημερήσιο Γενικό Λύκειο \(ΓΕΛ\)</option>',html) is not None)
+check('current supported school types remain enabled', re.search(r'<option value="gymnasio"[^>]*>Ημερήσιο Γυμνάσιο</option>',html) is not None and re.search(r'<option value="esperino_gymnasio"[^>]*>Εσπερινό Γυμνάσιο</option>',html) is not None and re.search(r'<option value="gel"[^>]*>Ημερήσιο Γενικό Λύκειο \(ΓΕΛ\)</option>',html) is not None and re.search(r'<option value="esperino_gel"[^>]*>Εσπερινό ΓΕΛ</option>',html) is not None)
 check('future school-type placeholders are disabled', all(fragment in html for fragment in [
-    '<option value="esperino_gel" disabled>Εσπερινό ΓΕΛ</option>',
     '<option value="epal" disabled>ΕΠΑΛ</option>',
     '<option value="pepal" disabled>Πρότυπο ΕΠΑΛ</option>',
     '<option value="eneegyl" disabled>ΕΝ.Ε.Ε.ΓΥ.-Λ.</option>',
@@ -32,7 +31,7 @@ check('school CSV remains client-side only', 'FileReader' in page and 'Δεν γ
 check('school registry survives explicit recalculation in same browser tab', 'sessionStorage.setItem(schoolCsvStorageKey' in page and 'restoreSchoolCsvRegistry()' in page)
 check('school registry can be cleared explicitly', 'id="clearSchoolCsvRegistry"' in html and 'sessionStorage.removeItem(schoolCsvStorageKey)' in page)
 check('duplicate school ids and real codes are rejected independently', 'διπλό αναγνωριστικό σχολείου' in page and 'διπλό κωδικό Υπουργείου / myschool' in page)
-check('120 basic-section safety limit is advertised in schema and UI', 'maxBasicSections:MAX_BASIC_SECTIONS' in js and 'έως <strong>120 βασικά τμήματα συνολικά</strong>' in page and 'max="120"' in page)
+check('120 basic-section safety limit is advertised in schema and UI', 'maxBasicSections:MAX_BASIC_SECTIONS' in js and 'έως <strong>120 βασικά τμήματα συνολικά</strong>' in page and "STAFFING_UI_MAX_BASIC_SECTIONS', 120" in page and 'staffingUiRenderBasicSectionFields' in page)
 check('school CSV does not add request path', 'fetch(' not in page and 'location.reload' not in page and '.submit()' not in page and page.count('requestSubmit()')==1)
 
 node=r'''
@@ -42,11 +41,12 @@ const parsed=csv.parse(text);
 const map=csv.autoMap(parsed.headers);
 const rows=parsed.rows.map((row,i)=>csv.rowToSchool(row,map,i));
 const gelForm=csv.schoolToFormValues(rows[1]);
+const egelForm=csv.schoolToFormValues({school_id:'e1',school_code:'2459999',school_name:'Εσπερινό ΓΕΛ',school_type:'esperino_gel',general_a:1,general_b:1,general_c:1,gel_b_hum:1,gel_b_sci:1,gel_c_hum:1,gel_c_scihealth:1,gel_c_econit:1});
 const valid120=csv.validateRegistry([{school_id:'a',school_code:'1',general_a:60,general_b:40,general_c:20}]);
 const over121=csv.validateRegistry([{school_id:'a',school_code:'1',general_a:60,general_b:40,general_c:21}]);
 const dupId=csv.validateRegistry([{school_id:'same',school_code:'1'},{school_id:'same',school_code:'2'}]);
 const dupCode=csv.validateRegistry([{school_id:'a',school_code:'9'},{school_id:'b',school_code:'9'}]);
-console.log(JSON.stringify({count:rows.length,types:rows.map(r=>r.school_type),supported:rows.map(r=>r.supported),gymA:rows[0].general_a,gelHum:rows[1].gel_b_hum,gelFormType:gelForm.school_type,gelFormA:gelForm.gel_general_a,gelFormId:gelForm.school_registry_id,gelCode:rows[1].school_code,gelFormCode:gelForm.school_code,max:csv.maxBasicSections,valid120:valid120.valid,over121:over121.valid,overTotal:over121.oversized[0].total,dupId:dupId.duplicate_ids,dupCode:dupCode.duplicate_codes}));
+console.log(JSON.stringify({count:rows.length,types:rows.map(r=>r.school_type),supported:rows.map(r=>r.supported),gymA:rows[0].general_a,gelHum:rows[1].gel_b_hum,gelFormType:gelForm.school_type,gelFormA:gelForm.gel_general_a,gelFormId:gelForm.school_registry_id,gelCode:rows[1].school_code,gelFormCode:gelForm.school_code,egelType:egelForm.school_type,egelA:egelForm.gel_general_a,egelPeriod:egelForm.egel_b_period,max:csv.maxBasicSections,valid120:valid120.valid,over121:over121.valid,overTotal:over121.oversized[0].total,dupId:dupId.duplicate_ids,dupCode:dupCode.duplicate_codes}));
 '''
 n=subprocess.run(['node'],input=node,text=True,capture_output=True,cwd=ROOT)
 check('school CSV parser executes', n.returncode==0)
@@ -57,6 +57,7 @@ check('general sections preserved', '"gymA":2' in n.stdout and '"gelFormA":3' in
 check('stable school id preserved into active form', '"gelFormId":"s2"' in n.stdout)
 check('real ministry code preserved independently', '"gelCode":"2451010"' in n.stdout and '"gelFormCode":"2451010"' in n.stdout)
 check('GEL specialist groups preserved', '"gelHum":1' in n.stdout)
+check('Evening GEL registry row maps to active GEL-family form', '"egelType":"esperino_gel"' in n.stdout and '"egelA":1' in n.stdout and '"egelPeriod":"Α΄ τετράμηνο"' in n.stdout)
 check('exact 120 basic sections accepted by registry validator', '"max":120' in n.stdout and '"valid120":true' in n.stdout)
 check('121 basic sections rejected by registry validator', '"over121":false' in n.stdout and '"overTotal":121' in n.stdout)
 check('duplicate school_id rejected even with different real codes', '"dupId":["same"]' in n.stdout)

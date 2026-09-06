@@ -84,15 +84,19 @@ function schoolProfileWorkloadAssignmentUnits($profile, $model = null)
         if ($instance['resolution_status'] === 'direct' || $instance['resolution_status'] === 'alias') {
             $assignment = isset($instance['assignment_resolution']['assignment'])
                 ? $instance['assignment_resolution']['assignment'] : null;
-            if (!$assignment || !isset($instance['hours_total'])) {
+            $resolvedHours = isset($slot['hours_per_section']) ? $slot['hours_per_section'] : null;
+            if (!$assignment || $resolvedHours === null) {
                 continue;
             }
             $unit = $base;
             $unit['unit_id'] = $instance['instance_id'] . '|whole';
             $unit['assignment_subject'] = isset($instance['assignment_subject'])
                 ? $instance['assignment_subject'] : $instance['subject'];
-            $unit['hours_per_section'] = (int) $instance['hours_total'];
-            $unit['school_hours'] = (int) $instance['hours_total'] * $sections;
+            $unit['hours_per_section'] = (int) $resolvedHours;
+            $unit['school_hours'] = (int) $resolvedHours * $sections;
+            if (isset($slot['selected_period'])) {
+                $unit['selected_period'] = $slot['selected_period'];
+            }
             $unit['assignment'] = $assignment;
             $units[] = $unit;
             continue;
@@ -294,7 +298,7 @@ function schoolProfileWorkloadMatrix($profile, $model = null)
             if (!empty($match['note'])) {
                 $claim['assignment_note'] = $match['note'];
             }
-            foreach (array('track','profile_track','specialty','component_kind','choice_option') as $key) {
+            foreach (array('track','profile_track','specialty','component_kind','choice_option','selected_period') as $key) {
                 if (isset($unit[$key])) {
                     $claim[$key] = $unit[$key];
                 }
