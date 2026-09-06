@@ -924,7 +924,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     .edu-page-staffing-simulator .specialty-balance-value{font-size:1.05rem;font-weight:900;white-space:nowrap}
     .edu-page-staffing-simulator .specialty-balance-deficit{color:#9c2f2f}
     .edu-page-staffing-simulator .specialty-balance-surplus{color:var(--edu-success)}
-    .edu-page-staffing-simulator .specialty-balance-special{font-weight:800}
+    .edu-page-staffing-simulator .specialty-balance-special td:first-child{font-weight:800;color:var(--edu-primary-dark)}
     .edu-page-staffing-simulator .specialty-balance-note{font-size:12.5px;color:var(--edu-muted)}
     .edu-page-staffing-simulator .specialty-balance-details{margin-top:14px}
     .edu-page-staffing-simulator .specialty-balance-details summary{cursor:pointer;font-weight:800;color:var(--edu-primary-dark)}
@@ -1743,12 +1743,12 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                   <?php foreach ($specialtyBalanceReport['special_reporting_buckets'] as $bucketKey=>$bucketRow): ?>
                     <?php if ((int)$bucketRow['gap_hours'] < 1) continue; ?>
                     <tr data-specialty-balance-row="<?php echo staffingUiH($bucketKey); ?>" class="specialty-balance-special">
-                      <td><?php echo staffingUiH($bucketKey); ?></td>
-                      <td><?php echo staffingUiH($bucketRow['label']); ?></td>
+                      <td><strong><?php echo staffingUiH($bucketRow['label']); ?></strong></td>
+                      <td>Δεν αποδίδεται σε συγκεκριμένη ειδικότητα</td>
                       <td class="specialty-balance-value specialty-balance-deficit"><?php echo (int)$bucketRow['gap_hours']; ?></td>
                       <td class="specialty-balance-value specialty-balance-surplus">0</td>
                       <td class="specialty-balance-value">-<?php echo (int)$bucketRow['gap_hours']; ?></td>
-                      <td class="specialty-balance-note">Ξεχωριστή γραμμή του υποδείγματος· δεν αποδίδεται αυτόματα σε ειδικότητα.</td>
+                      <td class="specialty-balance-note">Ξεχωριστή γραμμή του υποδείγματος.</td>
                     </tr>
                   <?php endforeach; ?>
                 <?php endif; ?>
@@ -2019,7 +2019,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
         <?php endforeach; ?>
         <?php foreach ($specialtyBalanceReport['special_reporting_buckets'] as $bucketKey=>$bucketRow): ?>
           <?php if ((int)$bucketRow['gap_hours'] < 1) continue; ?>
-          <tr><td><?php echo staffingUiH($bucketKey); ?></td><td><?php echo staffingUiH($bucketRow['label']); ?></td><td class="num"><?php echo (int)$bucketRow['gap_hours']; ?></td><td class="num">0</td><td class="num">-<?php echo (int)$bucketRow['gap_hours']; ?></td><td>Ξεχωριστή γραμμή υποδείγματος.</td></tr>
+          <tr><td><strong><?php echo staffingUiH($bucketRow['label']); ?></strong></td><td>Δεν αποδίδεται σε συγκεκριμένη ειδικότητα</td><td class="num"><?php echo (int)$bucketRow['gap_hours']; ?></td><td class="num">0</td><td class="num">-<?php echo (int)$bucketRow['gap_hours']; ?></td><td>Ξεχωριστή γραμμή υποδείγματος.</td></tr>
         <?php endforeach; ?>
       <?php endif; ?>
     </tbody>
@@ -3610,11 +3610,12 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     Object.keys(report.special_reporting_buckets||{}).sort().forEach(function(key){
       const item=report.special_reporting_buckets[key]; if((item.gap_hours||0)<1) return;
       const tr=document.createElement('tr'); tr.className='specialty-balance-special'; tr.setAttribute('data-specialty-balance-row',key);
-      specialtyAppendCell(tr,key); specialtyAppendCell(tr,item.label||key);
+      const c1=specialtyAppendCell(tr,''); const st=document.createElement('strong'); st.textContent=item.label||key; c1.appendChild(st);
+      specialtyAppendCell(tr,'Δεν αποδίδεται σε συγκεκριμένη ειδικότητα');
       specialtyAppendCell(tr,String(item.gap_hours||0),'specialty-balance-value specialty-balance-deficit');
       specialtyAppendCell(tr,'0','specialty-balance-value specialty-balance-surplus');
       specialtyAppendCell(tr,'-'+String(item.gap_hours||0),'specialty-balance-value');
-      specialtyAppendCell(tr,'Ξεχωριστή γραμμή του υποδείγματος· δεν αποδίδεται αυτόματα σε ειδικότητα.','specialty-balance-note');
+      specialtyAppendCell(tr,'Ξεχωριστή γραμμή του υποδείγματος.','specialty-balance-note');
       body.appendChild(tr); rows++;
     });
     const empty=document.getElementById('specialtyBalanceEmpty'), wrap=document.getElementById('specialtyBalanceTableWrap');
