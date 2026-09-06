@@ -40,7 +40,7 @@ check('live validation data embedded', 'allocationPeopleData=' in out and 'alloc
 check('eligible slot filter wired', 'allocationPopulateSlotsForPerson' in PAGE.read_text(encoding='utf-8'))
 check('personnel changes stale allocation tab', 'markPersonnelDirty' in PAGE.read_text(encoding='utf-8'))
 check('sidebar marks manual allocation ready', '<span>Χειροκίνητη κατανομή μαθημάτων</span><strong>✓</strong>' in out)
-check('automatic placements still disabled', '<span>Αυτόματες τοποθετήσεις</span><strong>Όχι ακόμη</strong>' in out and 'Πρότεινε κατανομή' not in out)
+check('automatic placements still disabled', '<span>Αυτόματες τοποθετήσεις</span><strong>Όχι — μόνο πρόταση εσωτερικής εξισορρόπησης</strong>' in out and 'Πρότεινε κατανομή' not in out)
 check('personnel rows use compact required-hours label', '<label title="Υποχρεωτικό ωράριο">Υ.Ω.</label>' in out and 'Υ.Ω. = Υποχρεωτικό ωράριο.' in out)
 slot_selects=re.findall(r'<select name="allocation_slot_id\[\]" class="allocation-slot">([\s\S]*?)</select>',out)
 check('slot selectors omit lessons with no eligible teacher', bool(slot_selects) and all('Θρησκευτικά' not in block for block in slot_selects))

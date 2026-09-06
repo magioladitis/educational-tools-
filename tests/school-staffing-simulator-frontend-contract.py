@@ -29,7 +29,7 @@ check('page renders', 'Υπολογισμός διδακτικών αναγκώ�
 check('Gymnasium supported', 'Ημερήσιο Γυμνάσιο' in get)
 check('GEL supported', 'Ημερήσιο Γενικό Λύκειο' in get)
 check('personnel tab exists', 'data-staffing-tab="personnel"' in get and '>3. Εκπαιδευτικοί<' in get)
-check('automatic placement not exposed', 'Αυτόματες τοποθετήσεις' in get and 'Όχι ακόμη' in get)
+check('automatic placement not exposed', 'Αυτόματες τοποθετήσεις' in get and 'Όχι — μόνο πρόταση εσωτερικής εξισορρόπησης' in get)
 check('official vacancy disclaimer exists', 'δεν χαρακτηρίζει τις ώρες ως επίσημα «κενά»' in get)
 check('ergaleia links simulator', 'href="ypologismos-didaktikon-anagkon.php"' in ERG.read_text(encoding='utf-8'))
 check('tool card number 32 exists', '<span class="tool-number">32</span>' in ERG.read_text(encoding='utf-8'))
@@ -126,7 +126,7 @@ check('frontend does not use personnel auto allocation', 'personnelWorkloadRoste
 check('visible calculation buttons are not native submit controls', 'type="submit" name="staffing_action"' not in text and text.count('data-staffing-request-action=') == 3)
 check('only one centralized requestSubmit path exists', text.count('requestSubmit()') == 1)
 check('no fetch or reload request path exists', 'fetch(' not in text and 'location.reload' not in text and '.submit()' not in text)
-check('school profile edits invalidate downstream tabs', 'function markSchoolProfileDirty()' in text and "['results','personnel','allocation','vacancies']" in text and "schoolProfileStaleNotice.hidden=false" in text)
+check('school profile edits invalidate downstream tabs', 'function markSchoolProfileDirty()' in text and "['results','personnel','allocation','vacancies','specialties']" in text and "schoolProfileStaleNotice.hidden=false" in text)
 check('school CSV load also invalidates stale downstream state', "schoolCsvSetStatus('Φορτώθηκε το «'" in text and 'markSchoolProfileDirty();' in text)
 
 failed=[n for n,ok in checks if not ok]

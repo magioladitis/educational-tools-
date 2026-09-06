@@ -33,8 +33,8 @@ check('vacancy table includes assignment branches', '<th>Κλάδοι ανάθε
 check('fully allocated A1 math starts hidden', re.search(r'<tr data-vacancy-row="gym\.mathimatika@Α΄\|whole\|section\|1"[^>]* hidden>',out) is not None)
 check('unallocated A2 math remains visible with four hours', re.search(r'<tr data-vacancy-row="gym\.mathimatika@Α΄\|whole\|section\|2"[^>]*>[\s\S]*?<span class="vacancy-hours" data-vacancy-hours>4</span>',out) is not None)
 check('slots with no current eligible teacher still exist in vacancies', 'data-vacancy-row="gym.archaia_glossa@Α΄|whole|section|1"' in out)
-check('client vacancy view recomputes from allocations', 'function updateVacancyView(slotAssigned,personAssigned)' in SRC and 'updateVacancyView(slotAssigned,personAssigned);' in SRC)
-check('current staff check includes both specialties', 'allocationBestAssignment(person,slot)' in SRC and 'vacancyEligiblePeopleWithRemaining' in SRC)
+check('client vacancy view recomputes from allocations', 'function updateVacancyView(slotAssigned,personAssigned,personPriority)' in SRC and 'updateVacancyView(slotAssigned,personAssigned,personPriority);' in SRC)
+check('current staff check includes both specialties', 'allocationBestAssignment(person,slot)' in SRC and 'vacancyEligiblePeopleAvailability' in SRC)
 check('personnel edits stale both allocation and vacancy tabs', "const vacanciesTab=document.querySelector('[data-staffing-tab=\"vacancies\"]');" in SRC and "vacanciesTab.disabled=true" in SRC)
 check('primary assignment labels are compact', 'Α΄ ανάθεση ✓' in out and 'μέσω κύριας ειδικότητας ΠΕ03' not in out)
 over=dict(base)
@@ -43,6 +43,13 @@ over['allocation_slot_id']=['gym.mathimatika@Α΄|whole|section|1','gym.mathimat
 over['allocation_hours']=[4,4]
 over_out=render(over)
 check('invalid overallocated rows do not hide vacancy', re.search(r'<tr data-vacancy-row="gym\.mathimatika@Α΄\|whole\|section\|1"[^>]*>[\s\S]*?<span class="vacancy-hours" data-vacancy-hours>4</span>',over_out) is not None)
+nostaff={k:v for k,v in base.items() if not k.startswith('personnel_') and not k.startswith('allocation_')}
+nostaff['staffing_action']='profile'; nostaff['active_panel']='vacancies'
+nostaff_out=render(nostaff)
+check('vacancy tab is enabled even without personnel', '<button type="button" class="mode-tab is-active" data-staffing-tab="vacancies" role="tab" aria-selected="true">5. Κενά μαθημάτων</button>' in nostaff_out or '<button type="button" class="mode-tab" data-staffing-tab="vacancies" role="tab" aria-selected="false">5. Κενά μαθημάτων</button>' in nostaff_out)
+check('vacancy tab no-personnel render still contains uncovered slots', 'data-vacancy-row="gym.mathimatika@Α΄|whole|section|1"' in nostaff_out)
+check('B assignment exception-only availability is represented', 'Διαθέσιμο μόνο με κατ’ εξαίρεση υπέρβαση του ορίου Β΄ ανάθεσης' in SRC and "match.priority==='B' && bHours>=10" in SRC)
+
 secondary=dict(base)
 secondary.update({
 'personnel_person_id':['p2'],'personnel_display_name':['Πληροφορικός / Μαθηματικός'],'personnel_specialty_code':['ΠΕ86'],'personnel_secondary_specialty_code':['ΠΕ03'],

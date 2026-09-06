@@ -19,7 +19,7 @@
 αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
 <br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
 <div class="hero-meta">
-<span>31 διαθέσιμα εργαλεία</span>
+<span>32 διαθέσιμα εργαλεία</span>
 <span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
 <span>Αναπληρωτές</span>
 <span>Αποσπάσεις</span>
@@ -50,7 +50,7 @@ unset($homeDeadlineConfig);
 <button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
 <button aria-pressed="false" class="filter-btn" data-filter="ypiresiaka" type="button">Υπηρεσιακά</button>
 </div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 31 εργαλεία.</div>
+<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 32 εργαλεία.</div>
 </section>
 <section class="tools-grid" id="toolsGrid">
 <a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">

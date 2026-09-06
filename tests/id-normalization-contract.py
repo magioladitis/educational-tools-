@@ -10,6 +10,14 @@ def ck(name, cond, detail=''):
 pages=sorted(ROOT.glob('*.php'))
 rendered={}
 camel=re.compile(r'^[a-z][A-Za-z0-9]*$')
+staffing_schema_id=re.compile(r'^(?:school_(?:registry_id|type|name|code)|gym_(?:general_[abc]|lang_[abc]_(?:fr|de|it)|tech_split_[abc])|gel_(?:general_[abc]|lang_[ab]_(?:fr|de)|b_(?:hum|sci)|c_(?:hum|scihealth|econit|field_math|field_bio|cond_math|cond_history))|ethics_[abc]_(?:exempt|timely|equivalent))$')
+def canonical_field_id(page_name, field_id):
+    if camel.match(field_id):
+        return True
+    # The staffing simulator intentionally binds these IDs 1:1 to the portable
+    # school-profile schema / POST keys. They are a declared snake_case API,
+    # not legacy IDs waiting for camelCase migration.
+    return page_name=='ypologismos-didaktikon-anagkon.php' and bool(staffing_schema_id.match(field_id))
 for page in pages:
     p=subprocess.run(['php',str(page)],capture_output=True,text=True)
     ck(page.name+' PHP render',p.returncode==0,p.stderr.strip())
@@ -24,8 +32,8 @@ for page in pages:
     bad=[]
     for el in soup.find_all(['input','select','textarea']):
         i=el.get('id')
-        if i and not camel.match(i): bad.append(i)
-    ck(page.name+' server-rendered field ids camelCase',not bad,bad)
+        if i and not canonical_field_id(page.name,i): bad.append(i)
+    ck(page.name+' server-rendered field ids canonical',not bad,bad)
 
 # Canonical ASEP specialty field on selectable-call pages.
 for name in ['ypologismos-morion.php','ypologismos-morion-1gt-2024.php','ypologismos-morion-2ea-2025.php','ypologismos-morion-3ea-2025.php','ypologismos-morion-4ea-2025.php','ypologismos-morion-5ea-2022.php']:

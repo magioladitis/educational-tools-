@@ -1116,3 +1116,350 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
     $basePlan['semantics']['manual_allocation_only'] = true;
     return $basePlan;
 }
+
+/**
+ * Ειδικές γραμμές αναφοράς της ΔΔΕ που δεν πρέπει να μετατραπούν τεχνητά
+ * σε έναν κλάδο. Το πραγματικό υπόδειγμα της ΔΔΕ Κέρκυρας καταγράφει
+ * χωριστά τα Εργαστήρια Δεξιοτήτων και την Τεχνολογία Γυμνασίου.
+ */
+function personnelWorkloadReportingBucketForSlot($profile, $slot)
+{
+    $schoolType = isset($profile['school']['type']) ? (string) $profile['school']['type'] : '';
+    $subject = isset($slot['subject']) ? trim((string) $slot['subject']) : '';
+    $isGymnasium = strpos($schoolType, 'Γυμνάσιο') !== false;
+    if (!$isGymnasium) return null;
+    if ($subject === 'Εργαστήρια Δεξιοτήτων') {
+        return array('key'=>'GYM_SKILLS','label'=>'ΔΕΞΙΟΤΗΤΕΣ ΓΥΜΝΑΣΙΟΥ');
+    }
+    if ($subject === 'Τεχνολογία') {
+        return array('key'=>'GYM_TECHNOLOGY','label'=>'ΤΕΧΝΟΛΟΓΙΑ ΓΥΜΝΑΣΙΟΥ');
+    }
+    return null;
+}
+
+/**
+ * Κωδικοί της καλύτερης διαθέσιμης ανάθεσης ενός slot. Δεν κατεβαίνουμε
+ * σε Β΄/Γ΄ αν υπάρχει Α΄: η «έξυπνη» επιλογή λειτουργεί μόνο ανάμεσα σε
+ * ισότιμες καλύτερες αναθέσεις και δεν αλλάζει την κανονιστική ιεραρχία.
+ */
+function personnelWorkloadTopCandidateCodesForSlot($slot)
+{
+    $by = isset($slot['eligible_by_priority']) && is_array($slot['eligible_by_priority'])
+        ? $slot['eligible_by_priority'] : array();
+    $priority = isset($slot['top_priority']) ? $slot['top_priority'] : null;
+    if ($priority !== null && !empty($by[$priority])) {
+        return array('priority'=>$priority, 'codes'=>array_values(array_unique($by[$priority])));
+    }
+    foreach (array('A','B','C','SPECIAL') as $p) {
+        if (!empty($by[$p])) return array('priority'=>$p, 'codes'=>array_values(array_unique($by[$p])));
+    }
+    return array('priority'=>null, 'codes'=>array());
+}
+
+/**
+ * Προτεινόμενη εσωτερική εξισορρόπηση πριν από τη δήλωση κενών/πλεονασμάτων.
+ * Δεν αλλάζει τις χειροκίνητες κατανομές της Καρτέλας 4. Ξεκινά από αυτές
+ * και προσπαθεί να καλύψει επιπλέον ώρες με το υπάρχον προσωπικό.
+ *
+ * Heuristic: πρώτα τα πιο «στενά» slots (λιγότεροι διαθέσιμοι εκπαιδευτικοί),
+ * και μέσα σε κάθε slot Α΄ πριν Β΄ πριν Γ΄, κύρια πριν 2η ειδικότητα. Το
+ * κανονικό όριο Β΄ ανάθεσης 10 ωρών τηρείται ως όριο της αυτόματης πρότασης.
+ */
+function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAllocations = array(), $model = null, $basePlan = null)
+{
+    if ($model === null) $model = teachingWorkloadModel();
+    $matrix = schoolProfileWorkloadMatrix($profile, $model);
+    $slots = personnelWorkloadAllocationSlots($profile, $matrix);
+    if ($basePlan === null) $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model);
+
+    $peopleIndex = array();
+    foreach ($people as $person) {
+        $id = isset($person['person_id']) ? trim((string) $person['person_id']) : '';
+        if ($id === '') continue;
+        $normalized = personnelWorkloadNormalizePerson($person);
+        if ($normalized['status'] !== 'resolved') continue;
+        $peopleIndex[$id] = $person;
+    }
+
+    $personState = array();
+    foreach ($peopleIndex as $personId=>$person) {
+        $evaluation = isset($basePlan['people'][$personId]) ? $basePlan['people'][$personId] : null;
+        $remaining = $evaluation && isset($evaluation['remaining_hours']) ? max(0, (int) $evaluation['remaining_hours']) : 0;
+        $bHours = $evaluation && isset($evaluation['b_assignment_hours']) ? max(0, (int) $evaluation['b_assignment_hours']) : 0;
+        $personState[$personId] = array(
+            'remaining_hours'=>$remaining,
+            'b_assignment_hours'=>$bHours,
+            'b_remaining_hours'=>max(0, 10 - $bHours),
+            'primary_code'=>isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '',
+            'secondary_code'=>isset($person['secondary_specialty_code']) ? teacherSpecialtyCanonicalCode($person['secondary_specialty_code']) : '',
+        );
+    }
+
+    $slotState = array();
+    foreach ($slots as $slotId=>$slot) {
+        $remaining = isset($basePlan['slots'][$slotId]['remaining_hours'])
+            ? max(0, (int) $basePlan['slots'][$slotId]['remaining_hours'])
+            : (int) $slot['capacity_hours'];
+        $slotState[$slotId] = array('remaining_hours'=>$remaining);
+    }
+
+    // Precompute legal person-slot routes and a simple flexibility count.
+    $routesBySlot = array();
+    $flexibility = array();
+    foreach ($peopleIndex as $personId=>$person) $flexibility[$personId] = 0;
+    foreach ($slots as $slotId=>$slot) {
+        if ($slotState[$slotId]['remaining_hours'] < 1) continue;
+        $routesBySlot[$slotId] = array();
+        foreach ($peopleIndex as $personId=>$person) {
+            if ($personState[$personId]['remaining_hours'] < 1) continue;
+            $match = personnelWorkloadBestAssignmentForSlot($slot, $person);
+            if ($match === null) continue;
+            if ($match['priority'] === 'B' && $personState[$personId]['b_remaining_hours'] < 1) continue;
+            $routesBySlot[$slotId][$personId] = $match;
+            $flexibility[$personId]++;
+        }
+    }
+
+    $slotOrder = array_keys($routesBySlot);
+    usort($slotOrder, function ($a, $b) use ($routesBySlot, $slots) {
+        $ca = count($routesBySlot[$a]); $cb = count($routesBySlot[$b]);
+        if ($ca !== $cb) return $ca - $cb;
+        $ga = isset($slots[$a]['grade']) ? $slots[$a]['grade'] : '';
+        $gb = isset($slots[$b]['grade']) ? $slots[$b]['grade'] : '';
+        $g = strnatcmp($ga, $gb); if ($g !== 0) return $g;
+        $sa = isset($slots[$a]['subject']) ? $slots[$a]['subject'] : '';
+        $sb = isset($slots[$b]['subject']) ? $slots[$b]['subject'] : '';
+        $s = strnatcmp($sa, $sb); if ($s !== 0) return $s;
+        return strnatcmp($a, $b);
+    });
+
+    $proposal = array();
+    $covered = 0;
+    foreach ($slotOrder as $slotId) {
+        $slotRemaining = isset($slotState[$slotId]['remaining_hours']) ? (int) $slotState[$slotId]['remaining_hours'] : 0;
+        if ($slotRemaining < 1) continue;
+        $candidateIds = array_keys($routesBySlot[$slotId]);
+        usort($candidateIds, function ($a, $b) use ($routesBySlot, $slotId, $flexibility) {
+            $ma = $routesBySlot[$slotId][$a]; $mb = $routesBySlot[$slotId][$b];
+            $rank = personnelWorkloadPriorityRank($ma['priority']) - personnelWorkloadPriorityRank($mb['priority']);
+            if ($rank !== 0) return $rank;
+            $fa = isset($flexibility[$a]) ? (int) $flexibility[$a] : 999999;
+            $fb = isset($flexibility[$b]) ? (int) $flexibility[$b] : 999999;
+            if ($fa !== $fb) return $fa - $fb; // πιο «στενός» εκπαιδευτικός πρώτα
+            if ($ma['specialty_source'] !== $mb['specialty_source']) return $ma['specialty_source'] === 'primary' ? -1 : 1;
+            return strnatcmp($a, $b);
+        });
+        foreach ($candidateIds as $personId) {
+            if ($slotRemaining < 1) break;
+            if (!isset($personState[$personId]) || $personState[$personId]['remaining_hours'] < 1) continue;
+            $match = $routesBySlot[$slotId][$personId];
+            $available = (int) $personState[$personId]['remaining_hours'];
+            if ($match['priority'] === 'B') $available = min($available, (int) $personState[$personId]['b_remaining_hours']);
+            if ($available < 1) continue;
+            $hours = min($slotRemaining, $available);
+            if ($hours < 1) continue;
+            $proposal[] = array(
+                'person_id'=>$personId,
+                'slot_id'=>$slotId,
+                'slot_label'=>isset($slots[$slotId]['slot_label']) ? $slots[$slotId]['slot_label'] : '',
+                'subject'=>isset($slots[$slotId]['subject']) ? $slots[$slotId]['subject'] : '',
+                'hours'=>$hours,
+                'priority'=>$match['priority'],
+                'used_specialty_code'=>$match['used_specialty_code'],
+                'specialty_source'=>$match['specialty_source'],
+            );
+            $personState[$personId]['remaining_hours'] -= $hours;
+            if ($match['priority'] === 'B') {
+                $personState[$personId]['b_assignment_hours'] += $hours;
+                $personState[$personId]['b_remaining_hours'] = max(0, 10 - $personState[$personId]['b_assignment_hours']);
+            }
+            $slotRemaining -= $hours;
+            $covered += $hours;
+        }
+        $slotState[$slotId]['remaining_hours'] = max(0, $slotRemaining);
+    }
+
+    $remainingPersonnel = 0;
+    foreach ($personState as $state) $remainingPersonnel += (int) $state['remaining_hours'];
+    $remainingSlots = 0;
+    foreach ($slotState as $state) $remainingSlots += (int) $state['remaining_hours'];
+
+    return array(
+        'allocations'=>$proposal,
+        'people'=>$personState,
+        'slots'=>$slotState,
+        'summary'=>array(
+            'auto_covered_hours'=>$covered,
+            'remaining_personnel_hours'=>$remainingPersonnel,
+            'remaining_slot_hours'=>$remainingSlots,
+        ),
+        'semantics'=>array(
+            'proposal_only'=>true,
+            'does_not_modify_manual_allocations'=>true,
+            'constrained_slots_first_heuristic'=>true,
+            'b_assignment_limit_10_respected_without_exception'=>true,
+            'primary_and_secondary_specialty_used'=>true,
+        ),
+    );
+}
+
+/**
+ * Τελική προτεινόμενη εικόνα κενών / πλεονασμάτων ανά κλάδο για δήλωση ΔΔΕ.
+ * 1) κρατά τις χειροκίνητες κατανομές,
+ * 2) κάνει προτεινόμενη εσωτερική εξισορρόπηση του υπάρχοντος προσωπικού,
+ * 3) για τα υπόλοιπα κενά επιλέγει μόνο ανάμεσα στις καλύτερες ισότιμες
+ *    αναθέσεις και προτιμά τον κλάδο που μπορεί να καλύψει τις περισσότερες
+ *    από τις συνολικά ακάλυπτες ώρες.
+ */
+function personnelWorkloadSpecialtyBalanceReport($profile, $people, $slotAllocations = array(), $model = null)
+{
+    if ($model === null) $model = teachingWorkloadModel();
+    $matrix = schoolProfileWorkloadMatrix($profile, $model);
+    $slots = personnelWorkloadAllocationSlots($profile, $matrix);
+    $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model);
+    $auto = personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAllocations, $model, $basePlan);
+
+    $open = array();
+    $coverageByCode = array();
+    $exclusiveByCode = array();
+    $specialBuckets = array();
+    foreach ($slots as $slotId=>$slot) {
+        $hours = isset($auto['slots'][$slotId]['remaining_hours']) ? max(0, (int) $auto['slots'][$slotId]['remaining_hours']) : 0;
+        if ($hours < 1) continue;
+        $bucket = personnelWorkloadReportingBucketForSlot($profile, $slot);
+        if ($bucket !== null) {
+            if (!isset($specialBuckets[$bucket['key']])) $specialBuckets[$bucket['key']] = array('key'=>$bucket['key'],'label'=>$bucket['label'],'gap_hours'=>0,'slots'=>array());
+            $specialBuckets[$bucket['key']]['gap_hours'] += $hours;
+            $specialBuckets[$bucket['key']]['slots'][] = array('slot_id'=>$slotId,'slot_label'=>$slot['slot_label'],'subject'=>$slot['subject'],'hours'=>$hours);
+            continue;
+        }
+        $top = personnelWorkloadTopCandidateCodesForSlot($slot);
+        $codes = $top['codes'];
+        usort($codes, 'strnatcmp');
+        $row = array(
+            'slot_id'=>$slotId,
+            'slot_label'=>isset($slot['slot_label']) ? $slot['slot_label'] : '',
+            'subject'=>isset($slot['subject']) ? $slot['subject'] : '',
+            'hours'=>$hours,
+            'priority'=>$top['priority'],
+            'candidate_codes'=>$codes,
+        );
+        $open[$slotId] = $row;
+        foreach ($codes as $code) {
+            if (!isset($coverageByCode[$code])) $coverageByCode[$code] = 0;
+            $coverageByCode[$code] += $hours;
+            if (count($codes) === 1) {
+                if (!isset($exclusiveByCode[$code])) $exclusiveByCode[$code] = 0;
+                $exclusiveByCode[$code] += $hours;
+            }
+        }
+    }
+
+    $recommendations = array();
+    $gapByCode = array();
+    // Μοναδικές καλύτερες αναθέσεις πρώτα.
+    $openRows = array_values($open);
+    usort($openRows, function ($a, $b) {
+        $ca = count($a['candidate_codes']); $cb = count($b['candidate_codes']);
+        if ($ca !== $cb) return $ca - $cb;
+        if ($a['hours'] !== $b['hours']) return $b['hours'] - $a['hours'];
+        $s = strnatcmp($a['subject'], $b['subject']); if ($s !== 0) return $s;
+        return strnatcmp($a['slot_id'], $b['slot_id']);
+    });
+    foreach ($openRows as $row) {
+        $codes = $row['candidate_codes'];
+        $selected = '';
+        if (!empty($codes)) {
+            usort($codes, function ($a, $b) use ($coverageByCode, $exclusiveByCode, $gapByCode) {
+                $ca = isset($coverageByCode[$a]) ? (int) $coverageByCode[$a] : 0;
+                $cb = isset($coverageByCode[$b]) ? (int) $coverageByCode[$b] : 0;
+                if ($ca !== $cb) return $cb - $ca;
+                $ga = isset($gapByCode[$a]) ? (int) $gapByCode[$a] : 0;
+                $gb = isset($gapByCode[$b]) ? (int) $gapByCode[$b] : 0;
+                if ($ga !== $gb) return $gb - $ga; // συγκέντρωση σε ήδη αναγκαίο κλάδο
+                $ea = isset($exclusiveByCode[$a]) ? (int) $exclusiveByCode[$a] : 0;
+                $eb = isset($exclusiveByCode[$b]) ? (int) $exclusiveByCode[$b] : 0;
+                if ($ea !== $eb) return $eb - $ea;
+                return strnatcmp($a, $b);
+            });
+            $selected = $codes[0];
+            if (!isset($gapByCode[$selected])) $gapByCode[$selected] = 0;
+            $gapByCode[$selected] += (int) $row['hours'];
+        }
+        $recommendations[] = array(
+            'slot_id'=>$row['slot_id'],
+            'slot_label'=>$row['slot_label'],
+            'subject'=>$row['subject'],
+            'hours'=>(int) $row['hours'],
+            'priority'=>$row['priority'],
+            'selected_code'=>$selected,
+            'candidate_codes'=>$row['candidate_codes'],
+            'selected_code_total_reachable_hours'=>$selected !== '' && isset($coverageByCode[$selected]) ? (int) $coverageByCode[$selected] : 0,
+            'selection_kind'=>count($row['candidate_codes']) <= 1 ? 'unique_top_assignment' : 'smart_shared_top_assignment',
+        );
+    }
+
+    // Πλεόνασμα: το υπόλοιπο ωραρίου κάθε προσώπου ανήκει στον βασικό κλάδο του.
+    $surplusByCode = array();
+    $surplusPeopleByCode = array();
+    foreach ($auto['people'] as $personId=>$state) {
+        $hours = isset($state['remaining_hours']) ? max(0, (int) $state['remaining_hours']) : 0;
+        $code = isset($state['primary_code']) ? teacherSpecialtyCanonicalCode($state['primary_code']) : '';
+        if ($hours < 1 || $code === '') continue;
+        if (!isset($surplusByCode[$code])) $surplusByCode[$code] = 0;
+        if (!isset($surplusPeopleByCode[$code])) $surplusPeopleByCode[$code] = 0;
+        $surplusByCode[$code] += $hours;
+        $surplusPeopleByCode[$code]++;
+    }
+
+    $codes = array_values(array_unique(array_merge(array_keys($gapByCode), array_keys($surplusByCode))));
+    usort($codes, 'strnatcmp');
+    $bySpecialty = array();
+    $gapTotal = 0; $surplusTotal = 0;
+    foreach ($codes as $code) {
+        $gap = isset($gapByCode[$code]) ? (int) $gapByCode[$code] : 0;
+        $surplus = isset($surplusByCode[$code]) ? (int) $surplusByCode[$code] : 0;
+        $gapTotal += $gap; $surplusTotal += $surplus;
+        $bySpecialty[$code] = array(
+            'code'=>$code,
+            'label'=>teacherSpecialtyLabel($code),
+            'gap_hours'=>$gap,
+            'surplus_hours'=>$surplus,
+            'signed_balance_hours'=>$surplus - $gap,
+            'has_both_gap_and_surplus'=>$gap > 0 && $surplus > 0,
+            'surplus_people_count'=>isset($surplusPeopleByCode[$code]) ? (int) $surplusPeopleByCode[$code] : 0,
+        );
+    }
+
+    $bucketGapTotal = 0;
+    foreach ($specialBuckets as $bucket) $bucketGapTotal += (int) $bucket['gap_hours'];
+
+    return array(
+        'valid'=>$basePlan['valid'],
+        'base_plan'=>$basePlan,
+        'automatic_balance'=>$auto,
+        'vacancy_recommendations'=>$recommendations,
+        'by_specialty'=>$bySpecialty,
+        'special_reporting_buckets'=>$specialBuckets,
+        'summary'=>array(
+            'manual_unassigned_hours'=>isset($basePlan['summary']['unassigned_slot_hours']) ? (int) $basePlan['summary']['unassigned_slot_hours'] : 0,
+            'auto_internal_covered_hours'=>(int) $auto['summary']['auto_covered_hours'],
+            'final_uncovered_hours'=>(int) $auto['summary']['remaining_slot_hours'],
+            'specialty_gap_hours_total'=>$gapTotal,
+            'special_reporting_bucket_gap_hours_total'=>$bucketGapTotal,
+            'surplus_hours_total'=>$surplusTotal,
+            'specialty_gap_count'=>count(array_filter($gapByCode, function ($x) { return $x > 0; })),
+            'specialty_surplus_count'=>count(array_filter($surplusByCode, function ($x) { return $x > 0; })),
+        ),
+        'semantics'=>array(
+            'official_vacancy_calculation'=>false,
+            'smart_choice_only_among_equal_best_assignment_codes'=>true,
+            'smart_choice_prefers_code_with_widest_top_assignment_gap_coverage'=>true,
+            'existing_staff_auto_balance_is_proposal_only'=>true,
+            'second_specialty_used_for_internal_balance'=>true,
+            'surplus_reported_under_primary_specialty'=>true,
+            'gymnasium_skills_and_technology_reported_separately'=>true,
+            'b_assignment_exception_not_assumed_by_automatic_balance'=>true,
+        ),
+    );
+}

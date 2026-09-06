@@ -163,3 +163,26 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 ## 2026-09-05 — Tab «Κατανομή μαθημάτων»
 
 Προστέθηκε χειροκίνητη κατανομή πραγματικών μαθημάτων/τμημάτων στους καταχωρισμένους εκπαιδευτικούς, με slot-level έλεγχο Α1/Α2/ομάδων, έλεγχο Α΄/Β΄/Γ΄/ειδικής ανάθεσης, ατομικού ωραρίου και διπλοκατανομής. Δεν υπάρχει ακόμη αυτόματη πρόταση τοποθέτησης. Βλ. `docs/audits/MANUAL-COURSE-ALLOCATION-TAB-2026-09-05.md`.
+
+## Ενσωματωμένος κατάλογος ΔΔΕ Κέρκυρας + contract cleanup — 2026-09-06
+- Το `school_registry_v1` διαθέτει πλέον ενσωματωμένο κατάλογο **38 σχολικών μονάδων της ΔΔΕ Κέρκυρας** με πραγματικό κωδικό Υπουργείου, ονομασία, κανονικοποιημένο τύπο και δημόσια ταχυδρομική διεύθυνση.
+- Ο κατάλογος φορτώνεται client-side από το ήδη υπάρχον `school-profile-csv-import.js`, χωρίς νέο HTTP request, και μπορεί να συγχωνευθεί με υπάρχον browser registry χωρίς να χαθούν ήδη συμπληρωμένα στοιχεία τμημάτων.
+- Προστέθηκε αναζήτηση με όνομα/κωδικό/τύπο/διεύθυνση και λήψη του καταλόγου ως `school_registry_v1-dde-kerkyras-2026.csv`.
+- Τα σχολεία που δεν υποστηρίζει ακόμη ο υπολογιστής παραμένουν ορατά αλλά ανενεργά. Προστέθηκαν placeholders για Γυμνάσιο με Λυκειακές Τάξεις, Εσπερινό ΕΠΑΛ και Εργαστηριακό Κέντρο.
+- Διορθώθηκε η κανονικοποίηση ειδικών τύπων ώστε Μουσικό, ΕΝ.Ε.Ε.ΓΥ.-Λ., Ε.Ε.Ε.ΕΚ., Π.ΕΠΑ.Λ. κ.ά. να μην αναγνωρίζονται κατά λάθος ως απλό Γυμνάσιο/ΓΕΛ. Το Γυμνάσιο Παξών (`2403010`) καταγράφεται ως Γυμνάσιο με Λυκειακές Τάξεις βάσει του επίσημου μητρώου ΠΣΔ.
+- Το `id-normalization-contract.py` είναι πλέον schema-aware: τα ρητά δηλωμένα snake_case IDs του portable school-profile API θεωρούνται canonical και δεν παράγουν ψευδή failure.
+- Το `service-tools-r12-contract.py` και τα άλλα contracts που έλεγχαν το πλήθος εργαλείων δεν έχουν πλέον hard-coded `31`: ελέγχουν ότι οι εμφανιζόμενοι μετρητές συμφωνούν με τον πραγματικό αριθμό `.tool-card`. Η `ergaleia.php` διορθώθηκε σε **32 εργαλεία**.
+- Νέο `tests/staffing-corfu-school-directory-contract.py`: 25/25 PASS. Πλήρες Python contract suite: 66/66 PASS, JS regressions: 10/10 PASS, PHP lint: 78/78, JS syntax: 47/47.
+
+## 2026-09-06 — preventive yellow audit fixes
+
+- `school_registry_v1`: `school_id` and `school_code` are now validated independently for uniqueness, so the same internal ID cannot be reused with a different ministry code (and vice versa for ministry codes).
+- Safety cap: at most 200 basic sections total (`Α + Β + Γ`) per school. The cap is enforced in the form (live/native validation), CSV registry import/session restore, and backend before the workload/profile model is built.
+- Oversized direct POST requests do not unlock result tabs and do not build the workload matrix.
+- Added `tests/staffing-school-safety-limits-contract.py` and expanded the school-registry contract for duplicate-ID/code and 200/201 boundary checks.
+
+## 2026-09-06 — πλήρης ενσωματωμένος κατάλογος Κέρκυρας 2026-2027
+- Το κουμπί «Κατάλογος ΔΔΕ Κέρκυρας 2026-27» φορτώνει πλέον τον εμπλουτισμένο `school_registry_v1` 38 σχολικών μονάδων και όχι το παλιό identity-only directory.
+- Για τα υποστηριζόμενα Ημερήσια Γυμνάσια/ΓΕΛ προφορτώνονται τα διαθέσιμα βασικά τμήματα, οι χωρισμοί Πληροφορικής–Τεχνολογίας και οι Ομάδες Προσανατολισμού από το dataset 2026-2027. Τα μη τεκμηριωμένα ειδικότερα πεδία παραμένουν κενά και εμφανίζονται ως εκκρεμότητες.
+- Το πλήρες dataset (62 στήλες) είναι ενσωματωμένο στο client-side JS, άρα η φόρτωση παραμένει χωρίς server request. Το κουμπί λήψης εξάγει το ίδιο πλήρες CSV ως `school_registry_v1-dde-kerkyras-2026-2027-full.csv`.
+- Παλιό αποθηκευμένο identity-only registry της ίδιας ενσωματωμένης πηγής ανανεώνεται αυτόματα στο νέο dataset, ενώ πραγματικά εισαγμένο/συμπληρωμένο CSV του χρήστη διατηρεί τις τιμές του.

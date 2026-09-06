@@ -17,6 +17,18 @@ function staffingUiInt($key, $default = 0) {
     if ($value === '' || $value === null) return (int) $default;
     return max(0, (int) $value);
 }
+if (!defined('STAFFING_UI_MAX_BASIC_SECTIONS')) define('STAFFING_UI_MAX_BASIC_SECTIONS', 200);
+function staffingUiBasicSectionPostCounts($schoolType) {
+    $prefix = $schoolType === 'gel' ? 'gel_general_' : 'gym_general_';
+    return array(
+        'a' => staffingUiInt($prefix . 'a'),
+        'b' => staffingUiInt($prefix . 'b'),
+        'c' => staffingUiInt($prefix . 'c'),
+    );
+}
+function staffingUiBasicSectionPostTotal($schoolType) {
+    return array_sum(staffingUiBasicSectionPostCounts($schoolType));
+}
 function staffingUiNullableInt($key) {
     if (!isset($_POST[$key]) || $_POST[$key] === '') return null;
     return max(0, (int) $_POST[$key]);
@@ -484,16 +496,24 @@ $matrix = null;
 $teachingModel = null;
 $displayMatrix = null;
 $collapsedSkills = array('active'=>false,'hours'=>0,'unit_count'=>0,'units'=>array(),'label'=>'Οποιαδήποτε ειδικότητα','subject'=>'Εργαστήρια Δεξιοτήτων');
+$schoolProfileInputErrors = array();
+$postedBasicSectionTotal = $submitted ? staffingUiBasicSectionPostTotal($schoolType) : 0;
+if ($submitted && $postedBasicSectionTotal > STAFFING_UI_MAX_BASIC_SECTIONS) {
+    $schoolProfileInputErrors[] = 'Το σύνολο των βασικών τμημάτων Α΄ + Β΄ + Γ΄ είναι ' . $postedBasicSectionTotal
+        . ' και υπερβαίνει το τεχνικό όριο ασφαλείας των ' . STAFFING_UI_MAX_BASIC_SECTIONS . ' τμημάτων.';
+}
 
-if ($submitted) {
+if ($submitted && empty($schoolProfileInputErrors)) {
     $schoolName = trim((string) staffingUiPost('school_name', ''));
     $schoolRegistryId = trim((string) staffingUiPost('school_registry_id', ''));
+    $schoolCode = trim((string) staffingUiPost('school_code', ''));
     if ($schoolType === 'gymnasio') {
         $profile = schoolProfileBuildDayGymnasium2026(array(
             'profile_id' => 'ui-gymnasio-' . date('YmdHis'),
             'school' => array(
                 'type' => 'Ημερήσιο Γυμνάσιο',
                 'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
                 'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Γυμνασίου',
             ),
             'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
@@ -524,6 +544,7 @@ if ($submitted) {
             'school' => array(
                 'type' => 'Ημερήσιο Γενικό Λύκειο',
                 'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
                 'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ ΓΕΛ',
             ),
             'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
@@ -567,10 +588,12 @@ if ($submitted) {
 $generalSectionTotal = $profile ? schoolProfileTotalGeneralSections($profile) : 0;
 $directorSectionsBandAuto = personnelWorkloadDirectorSectionsBandFromCount($generalSectionTotal);
 
-$activePanel = staffingUiPost('active_panel', $submitted ? 'results' : 'school');
-if (!in_array($activePanel, array('school','results','personnel','allocation','vacancies'), true)) $activePanel = $submitted ? 'results' : 'school';
-if ($staffingAction === 'personnel') $activePanel = 'personnel';
-if ($staffingAction === 'allocation') $activePanel = 'allocation';
+$calculationAvailable = $submitted && $profile && $matrix && $displayMatrix;
+$activePanel = staffingUiPost('active_panel', $calculationAvailable ? 'results' : 'school');
+if (!in_array($activePanel, array('school','results','personnel','allocation','vacancies','specialties'), true)) $activePanel = $calculationAvailable ? 'results' : 'school';
+if (!$calculationAvailable) $activePanel = 'school';
+if ($calculationAvailable && $staffingAction === 'personnel') $activePanel = 'personnel';
+if ($calculationAvailable && $staffingAction === 'allocation') $activePanel = 'allocation';
 
 $personnelRows = staffingUiPersonnelRowsFromPost();
 $duplicateDirectorIndexes = array();
@@ -668,6 +691,8 @@ if ($profile && $matrix && !empty($allocationPeople) && !empty($allocationRows))
     if (isset($allocationPlan['allocation_rows'])) $allocationRowResults = $allocationPlan['allocation_rows'];
 }
 $allocationEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only' && $personnelSummary['resolved_count'] > 0 && empty($duplicateDirectorIndexes);
+$vacanciesEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only';
+$specialtyBalanceEnabled = $vacanciesEnabled;
 $allocationPeopleClient = array();
 foreach ($allocationPeople as $person) {
     $normalized = personnelWorkloadNormalizePerson($person);
@@ -703,6 +728,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
 }
 $allocationSlotsClient = array();
 foreach ($allocationSlots as $slotId=>$slot) {
+    $reportingBucket = $profile ? personnelWorkloadReportingBucketForSlot($profile, $slot) : null;
     $allocationSlotsClient[$slotId] = array(
         'slot_id'=>$slotId,
         'label'=>staffingUiAllocationSlotOptionLabel($slot),
@@ -713,6 +739,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
         'eligible_by_priority'=>$slot['eligible_by_priority'],
         'top_priority'=>isset($slot['top_priority']) ? $slot['top_priority'] : null,
         'has_eligible_person'=>isset($allocationSelectableSlots[$slotId]),
+        'reporting_bucket'=>$reportingBucket,
     );
 }
 $vacancySlotState = array();
@@ -727,6 +754,29 @@ foreach ($allocationSlots as $slotId=>$slot) {
         'has_eligible_person'=>isset($allocationSelectableSlots[$slotId]),
     );
 }
+
+$specialtyBalanceReport = null;
+if ($specialtyBalanceEnabled) {
+    $specialtyBalanceReport = personnelWorkloadSpecialtyBalanceReport($profile, $allocationPeople, $allocationRows, $teachingModel);
+}
+$specialtyLabelsClient = array();
+foreach ($allocationSlots as $slot) {
+    if (empty($slot['eligible_by_priority'])) continue;
+    foreach ($slot['eligible_by_priority'] as $codes) {
+        if (!is_array($codes)) continue;
+        foreach ($codes as $code) {
+            $canonical = teacherSpecialtyCanonicalCode($code);
+            if ($canonical !== '' && !isset($specialtyLabelsClient[$canonical])) $specialtyLabelsClient[$canonical] = teacherSpecialtyLabel($canonical);
+        }
+    }
+}
+foreach ($allocationPeopleClient as $personData) {
+    foreach (array('specialty_code','secondary_specialty_code') as $key) {
+        $canonical = isset($personData[$key]) ? teacherSpecialtyCanonicalCode($personData[$key]) : '';
+        if ($canonical !== '' && !isset($specialtyLabelsClient[$canonical])) $specialtyLabelsClient[$canonical] = teacherSpecialtyLabel($canonical);
+    }
+}
+uksort($specialtyLabelsClient, 'strnatcmp');
 ?>
 <!doctype html>
 <html lang="el">
@@ -814,6 +864,8 @@ foreach ($allocationSlots as $slotId=>$slot) {
     .edu-page-staffing-simulator .school-registry-table .school-load-btn{white-space:nowrap}
     .edu-page-staffing-simulator .school-registry-table .school-type-soon{color:#8a6400;font-weight:700}
     .edu-page-staffing-simulator .school-registry-table .school-type-unknown{color:#9c2f2f;font-weight:700}
+    .edu-page-staffing-simulator .school-registry-table .school-address{display:block;margin-top:3px;color:var(--edu-muted);font-size:.82em;line-height:1.25}
+    .edu-page-staffing-simulator .school-registry-search{max-width:520px;margin:10px 0}
     .edu-page-staffing-simulator .branch-summary{display:grid;gap:8px;margin:12px 0}
     .edu-page-staffing-simulator .branch-summary-row{display:grid;grid-template-columns:minmax(140px,.8fr) repeat(4,minmax(110px,.65fr));gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--edu-border);border-radius:10px;background:var(--edu-surface-soft)}
     .edu-page-staffing-simulator .branch-summary-row .branch-code{font-weight:800;color:var(--edu-primary-dark)}
@@ -855,6 +907,16 @@ foreach ($allocationSlots as $slotId=>$slot) {
     .edu-page-staffing-simulator .vacancy-status.has-staff{color:#8a6400}
     .edu-page-staffing-simulator .vacancy-status.no-staff{color:#9c2f2f}
     .edu-page-staffing-simulator .vacancy-empty{padding:22px;border:1px dashed var(--edu-border);border-radius:12px;text-align:center;color:var(--edu-muted);background:var(--edu-surface-soft)}
+    .edu-page-staffing-simulator .specialty-balance-toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:12px 0}
+    .edu-page-staffing-simulator .specialty-balance-table td{vertical-align:top}
+    .edu-page-staffing-simulator .specialty-balance-value{font-size:1.05rem;font-weight:900;white-space:nowrap}
+    .edu-page-staffing-simulator .specialty-balance-deficit{color:#9c2f2f}
+    .edu-page-staffing-simulator .specialty-balance-surplus{color:var(--edu-success)}
+    .edu-page-staffing-simulator .specialty-balance-special{font-weight:800}
+    .edu-page-staffing-simulator .specialty-balance-note{font-size:12.5px;color:var(--edu-muted)}
+    .edu-page-staffing-simulator .specialty-balance-details{margin-top:14px}
+    .edu-page-staffing-simulator .specialty-balance-details summary{cursor:pointer;font-weight:800;color:var(--edu-primary-dark)}
+    .edu-page-staffing-simulator .specialty-smart-table,.edu-page-staffing-simulator .specialty-auto-table{margin-top:9px}
     .staffing-print-report{display:none}
     @media print{
       @page{size:A4 landscape;margin:10mm}
@@ -909,10 +971,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
   <div class="staffing-stage-toolbar">
     <div class="mode-tabs" aria-label="Στάδια εργαλείου" role="tablist">
       <button type="button" class="mode-tab<?php echo $activePanel === 'school' ? ' is-active' : ''; ?>" data-staffing-tab="school" role="tab" aria-selected="<?php echo $activePanel === 'school' ? 'true' : 'false'; ?>">1. Σχολική μονάδα</button>
-      <button type="button" class="mode-tab<?php echo $activePanel === 'results' ? ' is-active' : ''; ?>" data-staffing-tab="results" role="tab" aria-selected="<?php echo $activePanel === 'results' ? 'true' : 'false'; ?>"<?php echo !$submitted ? ' disabled' : ''; ?>>2. Αποτελέσματα ανά κλάδο</button>
-      <button type="button" class="mode-tab<?php echo $activePanel === 'personnel' ? ' is-active' : ''; ?>" data-staffing-tab="personnel" role="tab" aria-selected="<?php echo $activePanel === 'personnel' ? 'true' : 'false'; ?>"<?php echo !$submitted ? ' disabled' : ''; ?>>3. Εκπαιδευτικοί</button>
+      <button type="button" class="mode-tab<?php echo $activePanel === 'results' ? ' is-active' : ''; ?>" data-staffing-tab="results" role="tab" aria-selected="<?php echo $activePanel === 'results' ? 'true' : 'false'; ?>"<?php echo !$calculationAvailable ? ' disabled' : ''; ?>>2. Αποτελέσματα ανά κλάδο</button>
+      <button type="button" class="mode-tab<?php echo $activePanel === 'personnel' ? ' is-active' : ''; ?>" data-staffing-tab="personnel" role="tab" aria-selected="<?php echo $activePanel === 'personnel' ? 'true' : 'false'; ?>"<?php echo !$calculationAvailable ? ' disabled' : ''; ?>>3. Εκπαιδευτικοί</button>
       <button type="button" class="mode-tab<?php echo $activePanel === 'allocation' ? ' is-active' : ''; ?>" data-staffing-tab="allocation" role="tab" aria-selected="<?php echo $activePanel === 'allocation' ? 'true' : 'false'; ?>"<?php echo !$allocationEnabled ? ' disabled' : ''; ?>>4. Κατανομή μαθημάτων</button>
-      <button type="button" class="mode-tab<?php echo $activePanel === 'vacancies' ? ' is-active' : ''; ?>" data-staffing-tab="vacancies" role="tab" aria-selected="<?php echo $activePanel === 'vacancies' ? 'true' : 'false'; ?>"<?php echo !$allocationEnabled ? ' disabled' : ''; ?>>5. Κενά μαθημάτων</button>
+      <button type="button" class="mode-tab<?php echo $activePanel === 'vacancies' ? ' is-active' : ''; ?>" data-staffing-tab="vacancies" role="tab" aria-selected="<?php echo $activePanel === 'vacancies' ? 'true' : 'false'; ?>"<?php echo !$vacanciesEnabled ? ' disabled' : ''; ?>>5. Κενά μαθημάτων</button>
+      <button type="button" class="mode-tab<?php echo $activePanel === 'specialties' ? ' is-active' : ''; ?>" data-staffing-tab="specialties" role="tab" aria-selected="<?php echo $activePanel === 'specialties' ? 'true' : 'false'; ?>"<?php echo !$specialtyBalanceEnabled ? ' disabled' : ''; ?>>6. Κενά / πλεονάσματα ειδικοτήτων</button>
     </div>
     <?php if ($submitted && $matrix && $displayMatrix): ?>
       <button type="button" class="edu-btn-secondary staffing-print-btn" id="staffingPrintButton">Εκτύπωση</button>
@@ -925,6 +988,9 @@ foreach ($allocationSlots as $slotId=>$slot) {
         <h2>1. Στοιχεία σχολικής μονάδας</h2>
         <p class="cap">Η πρώτη έκδοση υποστηρίζει τυπικό Ημερήσιο Γυμνάσιο και Ημερήσιο ΓΕΛ. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
         <div class="status-warn" id="schoolProfileStaleNotice" hidden><strong>Τα στοιχεία της σχολικής μονάδας άλλαξαν.</strong> Τα προηγούμενα αποτελέσματα, το προσωπικό, η κατανομή και τα κενά έχουν κλειδωθεί μέχρι να πατήσεις ξανά «Υπολόγισε διδακτικές ανάγκες».</div>
+        <?php if (!empty($schoolProfileInputErrors)): ?>
+          <div class="status-warn"><strong>Ο υπολογισμός δεν εκτελέστηκε.</strong><ul><?php foreach ($schoolProfileInputErrors as $inputError): ?><li><?php echo staffingUiH($inputError); ?></li><?php endforeach; ?></ul></div>
+        <?php endif; ?>
 
         <form method="post" id="staffingProfileForm">
           <input type="hidden" name="staffing_action" value="">
@@ -936,14 +1002,17 @@ foreach ($allocationSlots as $slotId=>$slot) {
                 <option value="gymnasio"<?php echo $schoolType === 'gymnasio' ? ' selected' : ''; ?>>Ημερήσιο Γυμνάσιο</option>
                 <option value="gel"<?php echo $schoolType === 'gel' ? ' selected' : ''; ?>>Ημερήσιο Γενικό Λύκειο (ΓΕΛ)</option>
                 <optgroup label="Προσεχώς — προσωρινά ανενεργά">
+                  <option value="gymnasio_lt" disabled>Γυμνάσιο με Λυκειακές Τάξεις</option>
                   <option value="esperino_gymnasio" disabled>Εσπερινό Γυμνάσιο</option>
                   <option value="esperino_gel" disabled>Εσπερινό ΓΕΛ</option>
                   <option value="epal" disabled>ΕΠΑΛ</option>
+                  <option value="esperino_epal" disabled>Εσπερινό ΕΠΑΛ</option>
                   <option value="pepal" disabled>Πρότυπο ΕΠΑΛ</option>
                   <option value="eneegyl" disabled>ΕΝ.Ε.Ε.ΓΥ.-Λ.</option>
                   <option value="eeeek" disabled>Ε.Ε.Ε.ΕΚ.</option>
                   <option value="mousiko" disabled>Μουσικό Σχολείο</option>
                   <option value="kallitexniko" disabled>Καλλιτεχνικό Σχολείο</option>
+                  <option value="sek" disabled>Εργαστηριακό Κέντρο (Ε.Κ.)</option>
                 </optgroup>
               </select>
             </div>
@@ -951,14 +1020,20 @@ foreach ($allocationSlots as $slotId=>$slot) {
               <label for="school_name">Ονομασία σχολείου <small>προαιρετικό</small></label>
               <input id="school_name" name="school_name" type="text" value="<?php echo staffingUiH(staffingUiPost('school_name')); ?>" placeholder="π.χ. 1ο Γυμνάσιο Κέρκυρας">
             </div>
+            <div class="field">
+              <label for="school_code">Κωδικός Υπουργείου / myschool <small>προαιρετικό</small></label>
+              <input id="school_code" name="school_code" type="text" value="<?php echo staffingUiH(staffingUiPost('school_code')); ?>" placeholder="π.χ. 2401020" autocomplete="off">
+              <small class="help">Σταθερός κωδικός σχολικής μονάδας. Όταν υπάρχει, είναι προτιμότερος από την ονομασία για αντιστοίχιση μεταξύ CSV / myschool / μελλοντικού ελέγχου ΔΔΕ.</small>
+            </div>
           </div>
 
           <div class="school-registry-toolbar">
             <button class="edu-btn-secondary" type="button" id="openSchoolCsv">Εισαγωγή / μητρώο σχολείων CSV</button>
             <button class="edu-btn-secondary" type="button" id="downloadSchoolCsvTemplate">Λήψη προτύπου CSV</button>
+            <button class="edu-btn-secondary" type="button" id="loadCorfuSchoolDirectory">Κατάλογος ΔΔΕ Κέρκυρας 2026-27</button>
             <input type="file" id="schoolCsvFile" accept=".csv,text/csv,text/plain" hidden>
           </div>
-          <div class="info-note school-registry-note"><strong>Πολλαπλές σχολικές μονάδες στο ίδιο CSV.</strong> Το portable schema <code>school_registry_v1</code> κρατά μία γραμμή ανά σχολείο. Στην τρέχουσα έκδοση μπορείς να φορτώνεις μία μονάδα κάθε φορά στην Καρτέλα 1· το μητρώο του CSV παραμένει διαθέσιμο στον browser ώστε να αλλάζεις σχολείο χωρίς νέο αρχείο. Οι τύποι που εμφανίζονται ως «προσεχώς» αναγνωρίζονται από το μητρώο αλλά δεν φορτώνονται ακόμη στον υπολογισμό.</div>
+          <div class="info-note school-registry-note"><strong>Πολλαπλές σχολικές μονάδες στο ίδιο CSV.</strong> Το portable schema <code>school_registry_v1</code> κρατά μία γραμμή ανά σχολείο. Στην τρέχουσα έκδοση μπορείς να φορτώνεις μία μονάδα κάθε φορά στην Καρτέλα 1· το μητρώο του CSV παραμένει διαθέσιμο στον browser ώστε να αλλάζεις σχολείο χωρίς νέο αρχείο. Οι τύποι που εμφανίζονται ως «προσεχώς» αναγνωρίζονται από το μητρώο αλλά δεν φορτώνονται ακόμη στον υπολογισμό. Ο ενσωματωμένος κατάλογος ΔΔΕ Κέρκυρας 2026-2027 περιέχει πραγματικούς κωδικούς και ονομασίες, βασικά τμήματα και, όπου υπάρχουν διαθέσιμα στοιχεία, χωρισμούς Πληροφορικής–Τεχνολογίας και ομάδες προσανατολισμού. Όσα ειδικότερα πεδία δεν έχουν ακόμη τεκμηριωθεί παραμένουν κενά για συμπλήρωση.</div>
           <div class="personnel-csv-panel school-csv-panel" id="schoolCsvPanel" hidden>
             <div class="personnel-csv-head">
               <div>
@@ -967,11 +1042,13 @@ foreach ($allocationSlots as $slotId=>$slot) {
               </div>
               <div class="school-csv-head-actions">
                 <button type="button" class="edu-btn-secondary" id="chooseSchoolCsvFile">Επιλογή CSV</button>
+                <button type="button" class="edu-btn-secondary" id="downloadCorfuSchoolDirectory">Λήψη πλήρους καταλόγου Κέρκυρας CSV</button>
                 <button type="button" class="edu-btn-secondary" id="clearSchoolCsvRegistry">Καθαρισμός μητρώου</button>
                 <button type="button" class="edu-btn-secondary" id="closeSchoolCsv">Κλείσιμο</button>
               </div>
             </div>
-            <div class="info-note"><strong>Δεν γίνεται μεταφόρτωση στον διακομιστή.</strong> Υποστηρίζονται semicolon (;), κόμμα ή tab. Ελάχιστες στήλες: «Ονομασία σχολείου» και «Είδος σχολείου». Τα «Α τμήματα / Β τμήματα / Γ τμήματα» και τα ειδικότερα πεδία μπορούν να συμπληρώνονται στην ίδια γραμμή.</div>
+            <div class="info-note"><strong>Δεν γίνεται μεταφόρτωση στον διακομιστή.</strong> Υποστηρίζονται semicolon (;), κόμμα ή tab. Ελάχιστες στήλες: «Ονομασία σχολείου» και «Είδος σχολείου». Προαιρετικά μπορούν να υπάρχουν «Κωδικός Υπουργείου» και «Διεύθυνση σχολείου». Τα «Α τμήματα / Β τμήματα / Γ τμήματα» και τα ειδικότερα πεδία μπορούν να συμπληρώνονται στην ίδια γραμμή. Το άθροισμα των βασικών τμημάτων ανά σχολείο δεν μπορεί να υπερβαίνει τα 200.</div>
+            <div class="field school-registry-search"><label for="schoolRegistrySearch">Αναζήτηση στο μητρώο</label><input type="search" id="schoolRegistrySearch" placeholder="π.χ. 2401020, 2ο Γυμνάσιο, Λευκίμμη"></div>
             <div class="personnel-csv-preview" id="schoolCsvPreview"><div class="empty-personnel">Δεν έχει επιλεγεί ακόμη CSV.</div></div>
             <div class="personnel-csv-status" id="schoolCsvStatus"></div>
           </div>
@@ -980,11 +1057,13 @@ foreach ($allocationSlots as $slotId=>$slot) {
           <div id="gymProfileFields"<?php echo $schoolType === 'gymnasio' ? '' : ' hidden'; ?>>
             <section class="staffing-section">
               <h3>Κανονικά τμήματα ανά τάξη</h3>
+              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>200 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 5.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
               <div class="mini-grid">
                 <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
-                  <div class="field"><label for="gym_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" step="1" type="number" id="gym_general_<?php echo $s; ?>" name="gym_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gym_general_'.$s, '0')); ?>"></div>
+                  <div class="field"><label for="gym_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="200" step="1" type="number" data-basic-section="gym" id="gym_general_<?php echo $s; ?>" name="gym_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gym_general_'.$s, '0')); ?>"></div>
                 <?php endforeach; ?>
               </div>
+              <small class="profile-validation-error" id="gymBasicSectionsError" data-basic-sections-error="gym" hidden></small>
             </section>
             <section class="staffing-section">
               <h3>Ομάδες 2ης ξένης γλώσσας</h3>
@@ -1018,11 +1097,13 @@ foreach ($allocationSlots as $slotId=>$slot) {
           <div id="gelProfileFields"<?php echo $schoolType === 'gel' ? '' : ' hidden'; ?>>
             <section class="staffing-section">
               <h3>Κανονικά τμήματα ανά τάξη</h3>
+              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>200 βασικά τμήματα συνολικά</strong> (Α΄ + Β΄ + Γ΄), μέγεθος που αντιστοιχεί περίπου σε 5.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
               <div class="mini-grid">
                 <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade): ?>
-                  <div class="field"><label for="gel_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" step="1" type="number" id="gel_general_<?php echo $s; ?>" name="gel_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gel_general_'.$s, '0')); ?>"></div>
+                  <div class="field"><label for="gel_general_<?php echo $s; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="200" step="1" type="number" data-basic-section="gel" id="gel_general_<?php echo $s; ?>" name="gel_general_<?php echo $s; ?>" value="<?php echo staffingUiH(staffingUiPost('gel_general_'.$s, '0')); ?>"></div>
                 <?php endforeach; ?>
               </div>
+              <small class="profile-validation-error" id="gelBasicSectionsError" data-basic-sections-error="gel" hidden></small>
             </section>
             <section class="staffing-section">
               <h3>Ομάδες 2ης ξένης γλώσσας</h3>
@@ -1582,6 +1663,83 @@ foreach ($allocationSlots as $slotId=>$slot) {
           <div class="vacancy-empty" id="vacancyEmpty" hidden>Δεν υπάρχουν ακάλυπτες ώρες μαθημάτων στην τρέχουσα κατανομή.</div>
           <p class="help"><strong>Σημείωση:</strong> οι κλάδοι ανάθεσης προέρχονται από την ίδια κανονιστική λογική της Καρτέλας 2. Η ένδειξη «τρέχον προσωπικό» εξετάζει κύρια και 2η ειδικότητα και το διαθέσιμο υπόλοιπο ωραρίου των εκπαιδευτικών της μονάδας.</p>
         <?php calculatorCardEnd(); ?>
+
+        <?php calculatorCardStart(array('class'=>'card staffing-panel specialty-balance-card','attrs'=>array('data-staffing-panel'=>'specialties') + ($activePanel !== 'specialties' ? array('hidden'=>true) : array()))); ?>
+          <h2>6. Κενά / πλεονάσματα ειδικοτήτων</h2>
+          <p class="cap">Μετατρέπει την εικόνα μαθημάτων και προσωπικού σε προτεινόμενη δήλωση ανά κλάδο. Πριν δημιουργήσει έλλειμμα, το εργαλείο ελέγχει αν οι ακάλυπτες ώρες μπορούν να απορροφηθούν από το υπάρχον προσωπικό μέσω Α΄/Β΄/Γ΄ ανάθεσης ή 2ης ειδικότητας.</p>
+          <div class="info-note"><strong>«Έξυπνη» επιλογή κλάδου:</strong> όταν ένα ακάλυπτο μάθημα έχει περισσότερους από έναν ισότιμους κλάδους στην καλύτερη ανάθεση, προτείνεται ο κλάδος που μπορεί να καλύψει τις περισσότερες από τις συνολικά ακάλυπτες ώρες. Δεν επιλέγεται χαμηλότερη ανάθεση μόνο και μόνο για να βελτιωθεί η συγκέντρωση των κενών.</div>
+          <?php if ($schoolType === 'gymnasio'): ?><div class="info-note"><strong>Υπόδειγμα ΔΔΕ Κέρκυρας:</strong> τα Εργαστήρια Δεξιοτήτων και η Τεχνολογία Γυμνασίου διατηρούνται ως ξεχωριστές γραμμές και δεν αποδίδονται τεχνητά σε έναν κλάδο.</div><?php endif; ?>
+
+          <div class="staffing-summary-grid" id="specialtyBalanceSummary">
+            <div class="summary-chip"><strong data-specialty-manual-uncovered><?php echo $specialtyBalanceReport ? (int)$specialtyBalanceReport['summary']['manual_unassigned_hours'] : 0; ?></strong><span>ώρες χωρίς χειροκίνητη κατανομή</span></div>
+            <div class="summary-chip"><strong data-specialty-auto-covered><?php echo $specialtyBalanceReport ? (int)$specialtyBalanceReport['summary']['auto_internal_covered_hours'] : 0; ?></strong><span>ώρες που μπορεί να καλύψει εσωτερικά το υπάρχον προσωπικό</span></div>
+            <div class="summary-chip"><strong data-specialty-final-uncovered><?php echo $specialtyBalanceReport ? (int)$specialtyBalanceReport['summary']['final_uncovered_hours'] : 0; ?></strong><span>τελικές ακάλυπτες ώρες προς δήλωση</span></div>
+            <div class="summary-chip"><strong data-specialty-surplus-total><?php echo $specialtyBalanceReport ? (int)$specialtyBalanceReport['summary']['surplus_hours_total'] : 0; ?></strong><span>ώρες πλεονάσματος προσωπικού</span></div>
+          </div>
+
+          <div class="specialty-balance-toolbar">
+            <p class="help" style="margin:0"><strong>Σύμβαση δήλωσης:</strong> έλλειμμα με πρόσημο −, πλεόνασμα χωρίς πρόσημο.</p>
+            <button type="button" class="edu-btn-secondary" id="specialtyBalanceCsv">Λήψη CSV για ΔΔΕ</button>
+          </div>
+
+          <div class="matrix-wrap" id="specialtyBalanceTableWrap">
+            <table class="staffing-table specialty-balance-table" id="specialtyBalanceTable">
+              <thead><tr><th>Κλάδος / γραμμή δήλωσης</th><th>Περιγραφή</th><th>Έλλειμμα</th><th>Πλεόνασμα</th><th>Δήλωση</th><th>Παρατήρηση</th></tr></thead>
+              <tbody id="specialtyBalanceBody">
+                <?php if ($specialtyBalanceReport): ?>
+                  <?php foreach ($specialtyBalanceReport['by_specialty'] as $balanceCode=>$balanceRow): ?>
+                    <?php if ((int)$balanceRow['gap_hours'] < 1 && (int)$balanceRow['surplus_hours'] < 1) continue; $signed=(int)$balanceRow['signed_balance_hours']; ?>
+                    <tr data-specialty-balance-row="<?php echo staffingUiH($balanceCode); ?>">
+                      <td><strong><?php echo staffingUiH($balanceCode); ?></strong></td>
+                      <td><?php echo staffingUiH($balanceRow['label']); ?></td>
+                      <td class="specialty-balance-value specialty-balance-deficit"><?php echo (int)$balanceRow['gap_hours']; ?></td>
+                      <td class="specialty-balance-value specialty-balance-surplus"><?php echo (int)$balanceRow['surplus_hours']; ?></td>
+                      <td class="specialty-balance-value"><?php echo (string)$signed; ?></td>
+                      <td class="specialty-balance-note"><?php echo !empty($balanceRow['has_both_gap_and_surplus']) ? 'Ταυτόχρονο έλλειμμα και πλεόνασμα στον ίδιο κλάδο — χρειάζεται έλεγχος πριν από οριστική δήλωση.' : ''; ?></td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php foreach ($specialtyBalanceReport['special_reporting_buckets'] as $bucketKey=>$bucketRow): ?>
+                    <?php if ((int)$bucketRow['gap_hours'] < 1) continue; ?>
+                    <tr data-specialty-balance-row="<?php echo staffingUiH($bucketKey); ?>" class="specialty-balance-special">
+                      <td><?php echo staffingUiH($bucketKey); ?></td>
+                      <td><?php echo staffingUiH($bucketRow['label']); ?></td>
+                      <td class="specialty-balance-value specialty-balance-deficit"><?php echo (int)$bucketRow['gap_hours']; ?></td>
+                      <td class="specialty-balance-value specialty-balance-surplus">0</td>
+                      <td class="specialty-balance-value">-<?php echo (int)$bucketRow['gap_hours']; ?></td>
+                      <td class="specialty-balance-note">Ξεχωριστή γραμμή του υποδείγματος· δεν αποδίδεται αυτόματα σε ειδικότητα.</td>
+                    </tr>
+                  <?php endforeach; ?>
+                <?php endif; ?>
+              </tbody>
+            </table>
+          </div>
+          <div class="vacancy-empty" id="specialtyBalanceEmpty"<?php echo $specialtyBalanceReport && (!empty($specialtyBalanceReport['by_specialty']) || !empty($specialtyBalanceReport['special_reporting_buckets'])) ? ' hidden' : ''; ?>>Δεν προκύπτει έλλειμμα ή πλεόνασμα προς δήλωση.</div>
+
+          <details class="specialty-balance-details" id="specialtySmartDetails">
+            <summary>Πώς έγινε η «έξυπνη» επιλογή στα κοινά κενά</summary>
+            <div class="matrix-wrap">
+              <table class="staffing-table specialty-smart-table"><thead><tr><th>Τμήμα / ομάδα</th><th>Μάθημα</th><th>Ώρες</th><th>Προτεινόμενος κλάδος</th><th>Ισότιμες εναλλακτικές</th></tr></thead><tbody id="specialtySmartBody">
+              <?php if ($specialtyBalanceReport): foreach ($specialtyBalanceReport['vacancy_recommendations'] as $smartRow): if (count($smartRow['candidate_codes']) < 2) continue; ?>
+                <tr><td><?php echo staffingUiH($smartRow['slot_label']); ?></td><td><?php echo staffingUiH($smartRow['subject']); ?></td><td><?php echo (int)$smartRow['hours']; ?></td><td><strong><?php echo staffingUiH($smartRow['selected_code']); ?></strong></td><td><?php echo staffingUiH(implode(', ', $smartRow['candidate_codes'])); ?></td></tr>
+              <?php endforeach; endif; ?>
+              </tbody></table>
+            </div>
+          </details>
+
+          <details class="specialty-balance-details" id="specialtyAutoDetails">
+            <summary>Προτεινόμενη εσωτερική κάλυψη πριν δηλωθούν κενά</summary>
+            <p class="help">Η πρόταση δεν αλλάζει την Καρτέλα 4. Χρησιμοποιείται μόνο για να μην δηλωθεί ως κενό κάτι που μπορεί κανονικά να καλυφθεί από το υπάρχον προσωπικό. Η αυτόματη πρόταση δεν υπερβαίνει τις 10 ώρες Β΄ ανάθεσης.</p>
+            <div class="matrix-wrap">
+              <table class="staffing-table specialty-auto-table"><thead><tr><th>Εκπαιδευτικός</th><th>Τμήμα / ομάδα</th><th>Μάθημα</th><th>Ώρες</th><th>Ανάθεση</th></tr></thead><tbody id="specialtyAutoBody">
+              <?php if ($specialtyBalanceReport): foreach ($specialtyBalanceReport['automatic_balance']['allocations'] as $autoRow): $autoPerson=isset($allocationPeopleClient[$autoRow['person_id']])?$allocationPeopleClient[$autoRow['person_id']]:null; ?>
+                <tr><td><?php echo staffingUiH($autoPerson ? $autoPerson['label'] : $autoRow['person_id']); ?></td><td><?php echo staffingUiH($autoRow['slot_label']); ?></td><td><?php echo staffingUiH($autoRow['subject']); ?></td><td><?php echo (int)$autoRow['hours']; ?></td><td><?php echo staffingUiH(($autoRow['priority']==='A'?'Α΄':($autoRow['priority']==='B'?'Β΄':($autoRow['priority']==='C'?'Γ΄':'Ειδική'))) . ' ανάθεση' . ($autoRow['specialty_source']==='secondary'?' · μέσω 2ης ειδικότητας '.$autoRow['used_specialty_code']:'')); ?></td></tr>
+              <?php endforeach; endif; ?>
+              </tbody></table>
+            </div>
+          </details>
+
+          <p class="help"><strong>Σημαντικό:</strong> η Καρτέλα 6 είναι προτεινόμενη υπηρεσιακή εικόνα για έλεγχο και αποστολή προς ΔΔΕ, όχι αυτόματη επίσημη πράξη. Το CSV χρησιμοποιεί portable schema <code>staffing_balance_v1</code> ώστε αργότερα να μπορούν να συγκεντρώνονται πολλαπλά σχολεία σε επίπεδο Διεύθυνσης Εκπαίδευσης.</p>
+        <?php calculatorCardEnd(); ?>
       <?php endif; ?>
     <?php calculatorMainEnd(); ?>
 
@@ -1596,11 +1754,13 @@ foreach ($allocationSlots as $slotId=>$slot) {
       <div class="result-row"><span>Πραγματικό προσωπικό</span><strong>✓</strong></div>
       <div class="result-row"><span>Χειροκίνητη κατανομή μαθημάτων</span><strong>✓</strong></div>
       <div class="result-row"><span>Κενά μαθημάτων μετά την κατανομή</span><strong>✓</strong></div>
-      <div class="result-row"><span>Αυτόματες τοποθετήσεις</span><strong>Όχι ακόμη</strong></div>
-      <div class="info-note">Το εργαλείο δεν χαρακτηρίζει τις ώρες ως επίσημα «κενά». Η κατανομή μαθημάτων είναι χειροκίνητη και ελέγχεται απέναντι στις αναθέσεις, στο ατομικό ωράριο και στη χωρητικότητα κάθε τμήματος / ομάδας.</div>
+      <div class="result-row"><span>Προτεινόμενα κενά / πλεονάσματα ανά ειδικότητα</span><strong>✓</strong></div>
+      <div class="result-row"><span>Αυτόματες τοποθετήσεις</span><strong>Όχι — μόνο πρόταση εσωτερικής εξισορρόπησης</strong></div>
+      <div class="info-note">Το εργαλείο δεν χαρακτηρίζει τις ώρες ως επίσημα «κενά». Η κατανομή μαθημάτων παραμένει χειροκίνητη. Η Καρτέλα 6 κάνει ξεχωριστή, διαφανή πρόταση εσωτερικής εξισορρόπησης μόνο για να παραχθεί η υπηρεσιακή εικόνα κενών / πλεονασμάτων.</div>
       <?php if ($submitted && $matrix): ?>
         <h3>Τρέχων υπολογισμός</h3>
         <div class="result-row"><span>Δομή</span><strong><?php echo $schoolType === 'gel' ? 'Ημερήσιο ΓΕΛ' : 'Ημερήσιο Γυμνάσιο'; ?></strong></div>
+        <?php if (!empty($schoolCode)): ?><div class="result-row"><span>Κωδικός Υπουργείου / myschool</span><strong><?php echo staffingUiH($schoolCode); ?></strong></div><?php endif; ?>
         <div class="result-row"><span>Μονάδες αντιστοιχισμένης ανάθεσης</span><strong><?php echo (int)$matrix['summary']['assignment_unit_count']; ?></strong></div>
         <div class="result-row"><span>Κλάδοι με επιλεξιμότητα</span><strong><?php echo (int)$displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims']; ?></strong></div>
         <div class="result-row"><span>Κατάσταση</span><strong><?php echo staffingUiH(staffingUiReadinessLabel($matrix['readiness'])); ?></strong></div>
@@ -1631,7 +1791,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
   <div class="print-header">
     <div>
       <h1>Υπολογισμός διδακτικών αναγκών σχολικής μονάδας</h1>
-      <p class="print-subtitle"><strong><?php echo staffingUiH($schoolName !== '' ? $schoolName : ($schoolType === 'gel' ? 'Ημερήσιο Γενικό Λύκειο' : 'Ημερήσιο Γυμνάσιο')); ?></strong> · <?php echo $schoolType === 'gel' ? 'Ημερήσιο ΓΕΛ' : 'Ημερήσιο Γυμνάσιο'; ?> · σχολικό έτος 2026–2027</p>
+      <p class="print-subtitle"><strong><?php echo staffingUiH($schoolName !== '' ? $schoolName : ($schoolType === 'gel' ? 'Ημερήσιο Γενικό Λύκειο' : 'Ημερήσιο Γυμνάσιο')); ?></strong> · <?php echo $schoolType === 'gel' ? 'Ημερήσιο ΓΕΛ' : 'Ημερήσιο Γυμνάσιο'; ?><?php if (!empty($schoolCode)): ?> · κωδ. <?php echo staffingUiH($schoolCode); ?><?php endif; ?> · σχολικό έτος 2026–2027</p>
     </div>
     <div class="print-meta">Εργαλειοθήκη Εκπαιδευτικού<br><span data-print-generated-at>—</span></div>
   </div>
@@ -1772,6 +1932,58 @@ foreach ($allocationSlots as $slotId=>$slot) {
     <?php endif; ?>
   <?php endif; ?>
 
+  <h2>Κενά μαθημάτων</h2>
+  <p class="print-note">Ακάλυπτες ώρες μετά την τρέχουσα κατανομή. Η εικόνα αυτή δεν αποτελεί από μόνη της επίσημη πράξη προσδιορισμού λειτουργικών κενών.</p>
+  <table class="print-vacancies">
+    <thead><tr><th>Τμήμα / ομάδα</th><th>Μάθημα</th><th class="num">Ακάλυπτες ώρες</th><th>Κλάδοι ανάθεσης</th><th>Κατάσταση διαθέσιμου προσωπικού</th></tr></thead>
+    <tbody>
+      <?php foreach ($allocationSlots as $vacancySlotId=>$vacancySlot): ?>
+        <?php
+          $printVacancyState = isset($vacancySlotState[$vacancySlotId]) ? $vacancySlotState[$vacancySlotId] : array('remaining_hours'=>(int)$vacancySlot['capacity_hours']);
+          $printVacancyRemaining = isset($printVacancyState['remaining_hours']) ? (int)$printVacancyState['remaining_hours'] : 0;
+          $printVacancyEligibility = isset($vacancySlot['eligible_by_priority']) ? $vacancySlot['eligible_by_priority'] : array();
+          $printAssignmentParts = array();
+          foreach (array('A'=>'Α΄','B'=>'Β΄','C'=>'Γ΄','SPECIAL'=>'Ειδική') as $printVp=>$printVpLabel) {
+              if (!empty($printVacancyEligibility[$printVp])) $printAssignmentParts[] = $printVpLabel . ': ' . staffingUiCompactSpecialtyCodes($printVacancyEligibility[$printVp]);
+          }
+        ?>
+        <tr data-print-vacancy-row="<?php echo staffingUiH($vacancySlotId); ?>"<?php echo $printVacancyRemaining < 1 ? ' hidden' : ''; ?>>
+          <td><?php echo staffingUiH(isset($vacancySlot['slot_label']) ? $vacancySlot['slot_label'] : ''); ?></td>
+          <td><?php echo staffingUiH(isset($vacancySlot['subject']) ? $vacancySlot['subject'] : ''); ?></td>
+          <td class="num" data-print-vacancy-hours><?php echo $printVacancyRemaining; ?></td>
+          <td><?php echo staffingUiH(implode(' · ', $printAssignmentParts)); ?></td>
+          <td data-print-vacancy-status>—</td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+  <p class="print-note" id="printVacancyEmpty" hidden>Δεν υπάρχουν ακάλυπτες ώρες μαθημάτων στην τρέχουσα κατανομή.</p>
+
+  <h2>Κενά / πλεονάσματα ειδικοτήτων</h2>
+  <p class="print-note">Προτεινόμενη δήλωση μετά από εσωτερική εξισορρόπηση του υπάρχοντος προσωπικού. Έλλειμμα με πρόσημο −, πλεόνασμα χωρίς πρόσημο.</p>
+  <div class="print-summary">
+    <div class="print-summary-item"><strong data-print-specialty-manual-uncovered><?php echo $specialtyBalanceReport ? (int)$specialtyBalanceReport['summary']['manual_unassigned_hours'] : 0; ?></strong><span>ώρες χωρίς χειροκίνητη κατανομή</span></div>
+    <div class="print-summary-item"><strong data-print-specialty-auto-covered><?php echo $specialtyBalanceReport ? (int)$specialtyBalanceReport['summary']['auto_internal_covered_hours'] : 0; ?></strong><span>ώρες εσωτερικής κάλυψης</span></div>
+    <div class="print-summary-item"><strong data-print-specialty-final-uncovered><?php echo $specialtyBalanceReport ? (int)$specialtyBalanceReport['summary']['final_uncovered_hours'] : 0; ?></strong><span>τελικές ακάλυπτες ώρες</span></div>
+    <div class="print-summary-item"><strong data-print-specialty-surplus-total><?php echo $specialtyBalanceReport ? (int)$specialtyBalanceReport['summary']['surplus_hours_total'] : 0; ?></strong><span>ώρες πλεονάσματος</span></div>
+  </div>
+  <table class="print-specialty-balance">
+    <thead><tr><th>Κλάδος / γραμμή</th><th>Περιγραφή</th><th class="num">Έλλειμμα</th><th class="num">Πλεόνασμα</th><th class="num">Δήλωση</th><th>Παρατήρηση</th></tr></thead>
+    <tbody id="printSpecialtyBalanceBody">
+      <?php if ($specialtyBalanceReport): ?>
+        <?php foreach ($specialtyBalanceReport['by_specialty'] as $balanceCode=>$balanceRow): ?>
+          <?php if ((int)$balanceRow['gap_hours'] < 1 && (int)$balanceRow['surplus_hours'] < 1) continue; $signed=(int)$balanceRow['signed_balance_hours']; ?>
+          <tr><td><?php echo staffingUiH($balanceCode); ?></td><td><?php echo staffingUiH($balanceRow['label']); ?></td><td class="num"><?php echo (int)$balanceRow['gap_hours']; ?></td><td class="num"><?php echo (int)$balanceRow['surplus_hours']; ?></td><td class="num"><?php echo (string)$signed; ?></td><td><?php echo !empty($balanceRow['has_both_gap_and_surplus']) ? 'Ταυτόχρονο έλλειμμα και πλεόνασμα — απαιτεί έλεγχο.' : ''; ?></td></tr>
+        <?php endforeach; ?>
+        <?php foreach ($specialtyBalanceReport['special_reporting_buckets'] as $bucketKey=>$bucketRow): ?>
+          <?php if ((int)$bucketRow['gap_hours'] < 1) continue; ?>
+          <tr><td><?php echo staffingUiH($bucketKey); ?></td><td><?php echo staffingUiH($bucketRow['label']); ?></td><td class="num"><?php echo (int)$bucketRow['gap_hours']; ?></td><td class="num">0</td><td class="num">-<?php echo (int)$bucketRow['gap_hours']; ?></td><td>Ξεχωριστή γραμμή υποδείγματος.</td></tr>
+        <?php endforeach; ?>
+      <?php endif; ?>
+    </tbody>
+  </table>
+  <p class="print-note" id="printSpecialtyBalanceEmpty" hidden>Δεν προκύπτει έλλειμμα ή πλεόνασμα προς δήλωση.</p>
+
   <div class="print-footer">Το παρόν αποτελεί αποτέλεσμα εργαλείου προσομοίωσης/ελέγχου. Δεν συνιστά από μόνο του επίσημη πράξη προσδιορισμού λειτουργικών κενών ή τοποθέτησης εκπαιδευτικών. Οι αναθέσεις και το ωρολόγιο πρόγραμμα ακολουθούν τις κανονιστικές πηγές που χρησιμοποιεί η Εργαλειοθήκη Εκπαιδευτικού.</div>
 </section>
 <?php endif; ?>
@@ -1867,6 +2079,22 @@ foreach ($allocationSlots as $slotId=>$slot) {
   document.querySelectorAll('[id^="gym_general_"],[id^="gel_general_"]').forEach(function(input){ input.addEventListener('input',syncLanguageGroupMaximums); });
   syncLanguageGroupMaximums();
 
+  function syncBasicSectionLimit(){
+    ['gym','gel'].forEach(function(kind){
+      const inputs=Array.from(document.querySelectorAll('[data-basic-section="'+kind+'"]'));
+      const total=inputs.reduce(function(sum,input){return sum+(parseInt(input.value||'0',10)||0);},0);
+      const error=document.querySelector('[data-basic-sections-error="'+kind+'"]');
+      const message=total>200?'Το σύνολο των βασικών τμημάτων Α΄ + Β΄ + Γ΄ είναι '+total+' και δεν μπορεί να υπερβαίνει τα 200.':'';
+      inputs.forEach(function(input){
+        input.setCustomValidity(message);
+        if(message) input.setAttribute('aria-invalid','true'); else input.removeAttribute('aria-invalid');
+      });
+      if(error){error.hidden=!message;error.textContent=message;}
+    });
+  }
+  document.querySelectorAll('[data-basic-section]').forEach(function(input){input.addEventListener('input',syncBasicSectionLimit);});
+  syncBasicSectionLimit();
+
   const schoolProfileForm=document.getElementById('staffingProfileForm');
   const openSchoolCsv=document.getElementById('openSchoolCsv');
   const schoolCsvFile=document.getElementById('schoolCsvFile');
@@ -1879,8 +2107,12 @@ foreach ($allocationSlots as $slotId=>$slot) {
   const schoolCsvStatus=document.getElementById('schoolCsvStatus');
   const schoolCsvActive=document.getElementById('schoolCsvActive');
   const downloadSchoolCsvTemplate=document.getElementById('downloadSchoolCsvTemplate');
+  const loadCorfuSchoolDirectory=document.getElementById('loadCorfuSchoolDirectory');
+  const downloadCorfuSchoolDirectory=document.getElementById('downloadCorfuSchoolDirectory');
+  const schoolRegistrySearch=document.getElementById('schoolRegistrySearch');
   let schoolCsvRegistry=[];
   const schoolCsvStorageKey='education_school_registry_v1';
+  const maxBasicSections=200;
 
   function schoolCsvSetStatus(message,kind){
     if(!schoolCsvStatus) return;
@@ -1899,6 +2131,12 @@ foreach ($allocationSlots as $slotId=>$slot) {
       if(!raw) return false;
       const parsed=JSON.parse(raw);
       if(!Array.isArray(parsed)) return false;
+      const problems=schoolRegistryValidationProblems(parsed);
+      if(schoolRegistryHasProblems(problems)){
+        sessionStorage.removeItem(schoolCsvStorageKey);
+        schoolCsvRegistry=[];
+        return false;
+      }
       schoolCsvRegistry=parsed;
       return schoolCsvRegistry.length>0;
     }catch(e){return false;}
@@ -1909,32 +2147,78 @@ foreach ($allocationSlots as $slotId=>$slot) {
   function schoolCsvTotalSections(record){
     return ['general_a','general_b','general_c'].reduce(function(total,key){return total+(parseInt(record[key]||0,10)||0);},0);
   }
+  function schoolRegistryValidationProblems(records){
+    const seenIds=new Map(), seenCodes=new Map(), duplicateIds=new Set(), duplicateCodes=new Set(), oversized=[];
+    (records||[]).forEach(function(record,index){
+      const id=String(record&&record.school_id||'').trim();
+      const code=String(record&&record.school_code||'').trim();
+      if(id){ if(seenIds.has(id)) duplicateIds.add(id); else seenIds.set(id,index); }
+      if(code){ if(seenCodes.has(code)) duplicateCodes.add(code); else seenCodes.set(code,index); }
+      const total=schoolCsvTotalSections(record||{});
+      if(total>maxBasicSections) oversized.push({index:index,name:String(record&&record.school_name||id||code||('Σχολείο '+(index+1))),total:total});
+    });
+    return {duplicateIds:Array.from(duplicateIds),duplicateCodes:Array.from(duplicateCodes),oversized:oversized};
+  }
+  function schoolRegistryProblemsMessage(problems){
+    const messages=[];
+    if(problems.duplicateIds.length) messages.push('διπλό αναγνωριστικό σχολείου: '+problems.duplicateIds.join(', '));
+    if(problems.duplicateCodes.length) messages.push('διπλό κωδικό Υπουργείου / myschool: '+problems.duplicateCodes.join(', '));
+    if(problems.oversized.length) messages.push('υπέρβαση του ορίου των '+maxBasicSections+' βασικών τμημάτων: '+problems.oversized.map(function(item){return item.name+' ('+item.total+')';}).join(', '));
+    return messages.join(' · ');
+  }
+  function schoolRegistryHasProblems(problems){
+    return !!(problems.duplicateIds.length || problems.duplicateCodes.length || problems.oversized.length);
+  }
+  function normalizeSchoolRegistrySearch(value){
+    return String(value==null?'':value).toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  }
   function renderSchoolCsvRegistry(){
     if(!schoolCsvPreview) return;
     schoolCsvPreview.innerHTML='';
     if(!schoolCsvRegistry.length){
       const empty=document.createElement('div');
       empty.className='empty-personnel';
-      empty.textContent='Το CSV δεν περιέχει σχολικές μονάδες.';
+      empty.textContent='Το μητρώο δεν περιέχει σχολικές μονάδες.';
       schoolCsvPreview.appendChild(empty);
       return;
     }
+    const query=normalizeSchoolRegistrySearch(schoolRegistrySearch?schoolRegistrySearch.value:'').trim();
     const table=document.createElement('table');
     table.className='school-registry-table';
     const thead=document.createElement('thead');
-    thead.innerHTML='<tr><th>Σχολική μονάδα</th><th>Είδος</th><th>Α΄</th><th>Β΄</th><th>Γ΄</th><th>Σύνολο τμημάτων</th><th>Κατάσταση</th><th></th></tr>';
+    thead.innerHTML='<tr><th>Σχολική μονάδα</th><th>Κωδικός</th><th>Είδος</th><th>Α΄</th><th>Β΄</th><th>Γ΄</th><th>Σύνολο τμημάτων</th><th>Κατάσταση</th><th></th></tr>';
     table.appendChild(thead);
     const tbody=document.createElement('tbody');
+    let visibleCount=0;
     schoolCsvRegistry.forEach(function(record,index){
+      const hay=normalizeSchoolRegistrySearch([record.school_name,record.school_code,record.school_type_label,record.school_type,record.school_address].join(' '));
+      if(query!=='' && !hay.includes(query)) return;
+      visibleCount++;
       const tr=document.createElement('tr');
       const knownSoon=schoolCsvKnownPlaceholder(record.school_type);
-      const status=record.supported?'Έτοιμο για φόρτωση':(knownSoon?'Προσεχώς':'Μη αναγνωρισμένο είδος');
+      let status='';
+      if(record.supported){
+        if(record.directory_only) status='Ταυτότητα μόνο · συμπλήρωσε τμήματα';
+        else if(record.pending_fields) status='Δομικά στοιχεία 2026-27 · θέλει συμπλήρωση';
+        else status='Έτοιμο για φόρτωση';
+      }else status=knownSoon?'Προσεχώς':'Μη αναγνωρισμένο είδος';
       const statusClass=record.supported?'':(knownSoon?'school-type-soon':'school-type-unknown');
-      const cells=[record.school_name||record.school_id||('Σχολείο '+(index+1)),record.school_type_label||record.school_type,record.general_a,record.general_b,record.general_c,schoolCsvTotalSections(record)];
-      cells.forEach(function(value){const td=document.createElement('td');td.textContent=String(value==null?'':value);tr.appendChild(td);});
+      const schoolTd=document.createElement('td');
+      schoolTd.textContent=String(record.school_name||record.school_id||('Σχολείο '+(index+1)));
+      if(record.school_address){
+        const address=document.createElement('small');
+        address.className='school-address';
+        address.textContent=record.school_address;
+        schoolTd.appendChild(address);
+      }
+      tr.appendChild(schoolTd);
+      [record.school_code||'—',record.school_type_label||record.school_type,record.general_a,record.general_b,record.general_c,schoolCsvTotalSections(record)].forEach(function(value){const td=document.createElement('td');td.textContent=String(value==null?'':value);tr.appendChild(td);});
       const statusTd=document.createElement('td');
       statusTd.className=statusClass;
       statusTd.textContent=status;
+      if(record.completeness_status || record.pending_fields){
+        statusTd.title=[record.completeness_status,record.pending_fields?('Εκκρεμούν: '+record.pending_fields):''].filter(Boolean).join(' · ');
+      }
       tr.appendChild(statusTd);
       const actionTd=document.createElement('td');
       const button=document.createElement('button');
@@ -1947,11 +2231,24 @@ foreach ($allocationSlots as $slotId=>$slot) {
       tr.appendChild(actionTd);
       tbody.appendChild(tr);
     });
+    if(visibleCount===0){
+      const tr=document.createElement('tr');
+      const td=document.createElement('td');
+      td.colSpan=9;
+      td.className='empty-personnel';
+      td.textContent='Δεν βρέθηκε σχολική μονάδα με αυτό το κριτήριο.';
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    }
     table.appendChild(tbody);
     schoolCsvPreview.appendChild(table);
   }
   function loadSchoolRegistryRecord(record){
     if(!record || !record.supported || !schoolProfileForm || !window.EducationSchoolCsv) return;
+    if(schoolCsvTotalSections(record)>maxBasicSections){
+      schoolCsvSetStatus('Δεν φορτώθηκε το «'+(record.school_name||record.school_id)+'»: το σύνολο Α΄ + Β΄ + Γ΄ υπερβαίνει τα '+maxBasicSections+' βασικά τμήματα.','error');
+      return;
+    }
     const values=window.EducationSchoolCsv.schoolToFormValues(record);
     Object.keys(values).forEach(function(name){
       const field=schoolProfileForm.elements.namedItem(name);
@@ -1960,6 +2257,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
     sync();
     syncSplitMaximums();
     syncLanguageGroupMaximums();
+    syncBasicSectionLimit();
     const techPanel=document.getElementById('technologyInformaticsPanel');
     if(techPanel){
       techPanel.open=record.school_type==='gymnasio' && ['tech_split_a','tech_split_b','tech_split_c'].some(function(key){return (parseInt(record[key]||0,10)||0)>0;});
@@ -1970,9 +2268,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
     }
     if(schoolCsvActive){
       schoolCsvActive.hidden=false;
-      schoolCsvActive.innerHTML='<strong>Τρέχουσα εγγραφή CSV:</strong> '+escapeHtml(record.school_name||record.school_id)+' · '+escapeHtml(record.school_type_label||record.school_type)+'. Τα στοιχεία φορτώθηκαν στη φόρμα χωρίς server request. Πάτησε «Υπολόγισε διδακτικές ανάγκες» όταν θέλεις νέο υπολογισμό.';
+      const profileYear=record.school_year?' · '+escapeHtml(record.school_year):'';
+      const pending=record.pending_fields?' <br><strong>Προς συμπλήρωση:</strong> '+escapeHtml(record.pending_fields)+'.':'';
+      schoolCsvActive.innerHTML='<strong>Τρέχουσα εγγραφή μητρώου:</strong> '+escapeHtml(record.school_name||record.school_id)+(record.school_code?' · κωδ. '+escapeHtml(record.school_code):'')+' · '+escapeHtml(record.school_type_label||record.school_type)+profileYear+(record.school_address?' · '+escapeHtml(record.school_address):'')+'. Τα διαθέσιμα στοιχεία τμημάτων/ομάδων φορτώθηκαν στη φόρμα χωρίς server request.'+pending+' Πάτησε «Υπολόγισε διδακτικές ανάγκες» όταν θέλεις νέο υπολογισμό.';
     }
-    schoolCsvSetStatus('Φορτώθηκε το «'+(record.school_name||record.school_id)+'». Μπορείς να επιλέξεις άλλο σχολείο από το ίδιο μητρώο οποιαδήποτε στιγμή.','success');
+    schoolCsvSetStatus('Φορτώθηκε το «'+(record.school_name||record.school_id)+'» με τα διαθέσιμα δομικά στοιχεία του 2026-2027.'+(record.pending_fields?' Συμπλήρωσε τα πεδία που παραμένουν εκκρεμή.':'') ,'success');
     markSchoolProfileDirty();
   }
   function escapeHtml(value){
@@ -2005,7 +2305,15 @@ foreach ($allocationSlots as $slotId=>$slot) {
           schoolCsvSetStatus('Δεν βρέθηκαν οι απαιτούμενες στήλες «Ονομασία σχολείου» και «Είδος σχολείου». Χρησιμοποίησε το πρότυπο school_registry_v1 ή αντίστοιχες ονομασίες στηλών.','error');
           return;
         }
-        schoolCsvRegistry=parsed.rows.map(function(row,index){return window.EducationSchoolCsv.rowToSchool(row,mapping,index);});
+        const identityOnly=!mapping.general_a && !mapping.general_b && !mapping.general_c;
+        schoolCsvRegistry=parsed.rows.map(function(row,index){const record=window.EducationSchoolCsv.rowToSchool(row,mapping,index);record.directory_only=identityOnly;return record;});
+        const registryProblems=schoolRegistryValidationProblems(schoolCsvRegistry);
+        if(schoolRegistryHasProblems(registryProblems)){
+          schoolCsvRegistry=[];
+          renderSchoolCsvRegistry();
+          schoolCsvSetStatus('Το CSV απορρίφθηκε: '+schoolRegistryProblemsMessage(registryProblems)+'. Κάθε σχολική μονάδα πρέπει να έχει μοναδικό αναγνωριστικό και μοναδικό πραγματικό κωδικό, ενώ το σύνολο Α΄ + Β΄ + Γ΄ δεν μπορεί να υπερβαίνει τα '+maxBasicSections+' βασικά τμήματα.','error');
+          return;
+        }
         persistSchoolCsvRegistry();
         renderSchoolCsvRegistry();
         const supported=schoolCsvRegistry.filter(function(r){return r.supported;}).length;
@@ -2021,6 +2329,65 @@ foreach ($allocationSlots as $slotId=>$slot) {
     reader.onerror=function(){schoolCsvSetStatus('Δεν ήταν δυνατή η ανάγνωση του αρχείου CSV.','error');};
     reader.readAsArrayBuffer(file);
   }
+  function schoolRegistryIdentity(record){
+    return String((record&&record.school_code)||(record&&record.school_id)||'').trim();
+  }
+  function loadBuiltinSchoolDirectory(directoryId){
+    if(!schoolCsvImporterSupportsRegistry() || typeof window.EducationSchoolCsv.getBuiltinDirectory!=='function'){
+      schoolCsvSetStatus('Δεν είναι διαθέσιμος ο ενσωματωμένος κατάλογος σχολικών μονάδων. Κάνε ανανέωση της σελίδας και δοκίμασε ξανά.','error');
+      return;
+    }
+    const directory=window.EducationSchoolCsv.getBuiltinDirectory(directoryId);
+    if(!directory || !Array.isArray(directory.schools)){
+      schoolCsvSetStatus('Δεν βρέθηκε ο ζητούμενος ενσωματωμένος κατάλογος.','error');
+      return;
+    }
+    const existingByIdentity=new Map();
+    schoolCsvRegistry.forEach(function(record){
+      const id=schoolRegistryIdentity(record);
+      if(id) existingByIdentity.set(id,record);
+    });
+    const used=new Set();
+    const merged=directory.schools.map(function(record){
+      const id=schoolRegistryIdentity(record);
+      const existing=id?existingByIdentity.get(id):null;
+      if(!existing) return record;
+      used.add(id);
+      /* A previous built-in/identity-only registry must refresh to the richer 2026-2027 dataset.
+         A genuinely imported populated CSV keeps the user's values and only inherits missing directory metadata. */
+      if(existing.directory_id===directoryId || existing.directory_only===true || schoolCsvTotalSections(existing)===0){
+        const refreshed=Object.assign({},existing,record);
+        refreshed.school_id=existing.school_id||record.school_id;
+        refreshed.directory_id=directoryId;
+        return refreshed;
+      }
+      const combined=Object.assign({},record,existing);
+      combined.school_id=existing.school_id||record.school_id;
+      combined.school_code=existing.school_code||record.school_code;
+      combined.school_name=existing.school_name||record.school_name;
+      combined.school_address=existing.school_address||record.school_address;
+      combined.school_type=record.school_type;
+      combined.school_type_label=record.school_type_label;
+      combined.supported=record.supported;
+      combined.directory_only=false;
+      combined.directory_id=directoryId;
+      combined.registry_dataset_version=directory.dataset_version||record.registry_dataset_version||'';
+      return combined;
+    });
+    schoolCsvRegistry.forEach(function(record){
+      const id=schoolRegistryIdentity(record);
+      if(!id || !used.has(id) && !directory.schools.some(function(item){return schoolRegistryIdentity(item)===id;})) merged.push(record);
+    });
+    schoolCsvRegistry=merged;
+    persistSchoolCsvRegistry();
+    if(schoolRegistrySearch) schoolRegistrySearch.value='';
+    renderSchoolCsvRegistry();
+    if(schoolCsvPanel) schoolCsvPanel.hidden=false;
+    const supported=schoolCsvRegistry.filter(function(r){return r.supported;}).length;
+    const withSections=directory.schools.filter(function(r){return schoolCsvTotalSections(r)>0;}).length;
+    if(schoolCsvMeta) schoolCsvMeta.textContent=directory.label+' · '+directory.schools.length+' σχολικές μονάδες · πλήρες μητρώο 2026-2027 · πραγματικοί κωδικοί · ανάκτηση '+directory.retrieved_on;
+    schoolCsvSetStatus('Φορτώθηκε ο εμπλουτισμένος κατάλογος '+directory.label+' με '+directory.schools.length+' σχολικές μονάδες. Σε '+withSections+' μονάδες υπάρχουν ήδη διαθέσιμα στοιχεία βασικών τμημάτων και, όπου προβλέπονται, χωρισμών ή ομάδων προσανατολισμού. '+supported+' εγγραφές είναι τύπων που υποστηρίζονται σήμερα· τα μη διαθέσιμα πεδία παραμένουν κενά για συμπλήρωση και οι υπόλοιποι τύποι παραμένουν προσωρινά ανενεργοί.','success');
+  }
   function openSchoolCsvPicker(){
     if(!schoolCsvFile) return;
     schoolCsvFile.value='';
@@ -2030,6 +2397,8 @@ foreach ($allocationSlots as $slotId=>$slot) {
     openSchoolCsv.addEventListener('click',function(){schoolCsvPanel.hidden=false;if(!schoolCsvRegistry.length) openSchoolCsvPicker();});
   }
   if(chooseSchoolCsvFile) chooseSchoolCsvFile.addEventListener('click',openSchoolCsvPicker);
+  if(loadCorfuSchoolDirectory) loadCorfuSchoolDirectory.addEventListener('click',function(){loadBuiltinSchoolDirectory('dde_corfu_2026');});
+  if(schoolRegistrySearch) schoolRegistrySearch.addEventListener('input',renderSchoolCsvRegistry);
   if(schoolCsvFile){
     schoolCsvFile.addEventListener('change',function(){if(schoolCsvFile.files && schoolCsvFile.files[0]) parseSchoolCsvFile(schoolCsvFile.files[0]);});
   }
@@ -2063,12 +2432,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
     return /[;"\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text;
   }
   function downloadSchoolRegistryTemplate(){
-    const headers=['Έκδοση μητρώου','Αναγνωριστικό σχολείου','Ονομασία σχολείου','Είδος σχολείου','Α τμήματα','Β τμήματα','Γ τμήματα','Α Γαλλικά ομάδες','Α Γερμανικά ομάδες','Α Ιταλικά ομάδες','Β Γαλλικά ομάδες','Β Γερμανικά ομάδες','Β Ιταλικά ομάδες','Γ Γαλλικά ομάδες','Γ Γερμανικά ομάδες','Γ Ιταλικά ομάδες','Α τμήματα άνω 21','Β τμήματα άνω 21','Γ τμήματα άνω 21','Β ομάδες Ανθρωπιστικών','Β ομάδες Θετικών','Γ ομάδες Ανθρωπιστικών','Γ ομάδες Θετικών Υγείας','Γ ομάδες Οικονομίας Πληροφορικής','Γ Μαθηματικά 2ου πεδίου','Γ Βιολογία 3ου πεδίου','Γ Μαθηματικά Γενικής Παιδείας','Γ Ιστορία Γενικής Παιδείας','Α απαλλασσόμενοι','Α Ηθική εντός 5ης','Α τμήματα Ηθικής','Β απαλλασσόμενοι','Β Ηθική εντός 5ης','Β τμήματα Ηθικής','Γ απαλλασσόμενοι','Γ Ηθική εντός 5ης','Γ τμήματα Ηθικής'];
+    const headers=['Έκδοση μητρώου','Αναγνωριστικό σχολείου','Κωδικός Υπουργείου','Ονομασία σχολείου','Είδος σχολείου','Διεύθυνση σχολείου','Α τμήματα','Β τμήματα','Γ τμήματα','Α Γαλλικά ομάδες','Α Γερμανικά ομάδες','Α Ιταλικά ομάδες','Β Γαλλικά ομάδες','Β Γερμανικά ομάδες','Β Ιταλικά ομάδες','Γ Γαλλικά ομάδες','Γ Γερμανικά ομάδες','Γ Ιταλικά ομάδες','Α τμήματα άνω 21','Β τμήματα άνω 21','Γ τμήματα άνω 21','Β ομάδες Ανθρωπιστικών','Β ομάδες Θετικών','Γ ομάδες Ανθρωπιστικών','Γ ομάδες Θετικών Υγείας','Γ ομάδες Οικονομίας Πληροφορικής','Γ Μαθηματικά 2ου πεδίου','Γ Βιολογία 3ου πεδίου','Γ Μαθηματικά Γενικής Παιδείας','Γ Ιστορία Γενικής Παιδείας','Α απαλλασσόμενοι','Α Ηθική εντός 5ης','Α τμήματα Ηθικής','Β απαλλασσόμενοι','Β Ηθική εντός 5ης','Β τμήματα Ηθικής','Γ απαλλασσόμενοι','Γ Ηθική εντός 5ης','Γ τμήματα Ηθικής'];
     const blank=new Array(headers.length).fill('');
-    const gym=blank.slice();
-    gym[0]='school_registry_v1'; gym[1]='school-001'; gym[2]='Παράδειγμα Γυμνασίου'; gym[3]='Ημερήσιο Γυμνάσιο'; gym[4]='2'; gym[5]='2'; gym[6]='2'; gym[7]='1'; gym[8]='1'; gym[10]='1'; gym[11]='1'; gym[13]='1'; gym[14]='1';
-    const gelRow=blank.slice();
-    gelRow[0]='school_registry_v1'; gelRow[1]='school-002'; gelRow[2]='Παράδειγμα ΓΕΛ'; gelRow[3]='Ημερήσιο ΓΕΛ'; gelRow[4]='3'; gelRow[5]='2'; gelRow[6]='3'; gelRow[7]='1'; gelRow[8]='1'; gelRow[10]='1'; gelRow[11]='1'; gelRow[19]='1'; gelRow[20]='1'; gelRow[21]='1'; gelRow[22]='2'; gelRow[23]='1'; gelRow[24]='1'; gelRow[25]='1';
+    function exampleRow(values){ const row=blank.slice(); Object.keys(values).forEach(function(key){ const i=headers.indexOf(key); if(i>=0) row[i]=values[key]; }); return row; }
+    const gym=exampleRow({'Έκδοση μητρώου':'school_registry_v1','Αναγνωριστικό σχολείου':'school-001','Κωδικός Υπουργείου':'','Ονομασία σχολείου':'Παράδειγμα Γυμνασίου','Είδος σχολείου':'Ημερήσιο Γυμνάσιο','Α τμήματα':'2','Β τμήματα':'2','Γ τμήματα':'2','Α Γαλλικά ομάδες':'1','Α Γερμανικά ομάδες':'1','Β Γαλλικά ομάδες':'1','Β Γερμανικά ομάδες':'1','Γ Γαλλικά ομάδες':'1','Γ Γερμανικά ομάδες':'1'});
+    const gelRow=exampleRow({'Έκδοση μητρώου':'school_registry_v1','Αναγνωριστικό σχολείου':'school-002','Κωδικός Υπουργείου':'','Ονομασία σχολείου':'Παράδειγμα ΓΕΛ','Είδος σχολείου':'Ημερήσιο ΓΕΛ','Α τμήματα':'3','Β τμήματα':'2','Γ τμήματα':'3','Α Γαλλικά ομάδες':'1','Α Γερμανικά ομάδες':'1','Β Γαλλικά ομάδες':'1','Β Γερμανικά ομάδες':'1','Β ομάδες Ανθρωπιστικών':'1','Β ομάδες Θετικών':'1','Γ ομάδες Ανθρωπιστικών':'1','Γ ομάδες Θετικών Υγείας':'2','Γ ομάδες Οικονομίας Πληροφορικής':'1','Γ Μαθηματικά 2ου πεδίου':'1','Γ Βιολογία 3ου πεδίου':'1'});
     const csv='\uFEFF'+[headers,gym,gelRow].map(function(row){return row.map(schoolCsvEscape).join(';');}).join('\r\n');
     const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
     const url=URL.createObjectURL(blob);
@@ -2077,9 +2445,29 @@ foreach ($allocationSlots as $slotId=>$slot) {
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){URL.revokeObjectURL(url);},0);
   }
+  function downloadBuiltinSchoolDirectory(directoryId){
+    if(!window.EducationSchoolCsv || typeof window.EducationSchoolCsv.getBuiltinDirectory!=='function') return;
+    const directory=window.EducationSchoolCsv.getBuiltinDirectory(directoryId);
+    if(!directory) return;
+    let csv='';
+    if(directory.raw_csv){
+      csv='\uFEFF'+String(directory.raw_csv).replace(/^\uFEFF/,'');
+    }else{
+      const headers=['Έκδοση μητρώου','Αναγνωριστικό σχολείου','Κωδικός Υπουργείου','Ονομασία σχολείου','Είδος σχολείου','Διεύθυνση σχολείου'];
+      const rows=directory.schools.map(function(record){return ['school_registry_v1',record.school_id||record.school_code,record.school_code,record.school_name,record.school_type_label||record.school_type,record.school_address||''];});
+      csv='\uFEFF'+[headers].concat(rows).map(function(row){return row.map(schoolCsvEscape).join(';');}).join('\r\n');
+    }
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download=directory.filename||'school_registry_v1-dde-kerkyras.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},0);
+  }
+  if(downloadCorfuSchoolDirectory){downloadCorfuSchoolDirectory.addEventListener('click',function(){downloadBuiltinSchoolDirectory('dde_corfu_2026');});}
   if(downloadSchoolCsvTemplate){downloadSchoolCsvTemplate.addEventListener('click',downloadSchoolRegistryTemplate);}
 
-  if(reset){ reset.addEventListener('click',function(){ setTimeout(function(){ type.value='gymnasio'; sync(); syncSplitMaximums(); syncLanguageGroupMaximums(); if(schoolCsvActive) schoolCsvActive.hidden=true; },0); }); }
+  if(reset){ reset.addEventListener('click',function(){ setTimeout(function(){ type.value='gymnasio'; sync(); syncSplitMaximums(); syncLanguageGroupMaximums(); syncBasicSectionLimit(); if(schoolCsvActive) schoolCsvActive.hidden=true; },0); }); }
   const filter=document.getElementById('staffingResultFilter');
   if(filter){
     const rows=Array.from(document.querySelectorAll('.staffing-code-row'));
@@ -2094,7 +2482,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
 
   const tabs=Array.from(document.querySelectorAll('[data-staffing-tab]'));
   const panels=Array.from(document.querySelectorAll('[data-staffing-panel]'));
-  const schoolProfileHasCalculatedResults=<?php echo $submitted ? 'true' : 'false'; ?>;
+  const schoolProfileHasCalculatedResults=<?php echo $calculationAvailable ? 'true' : 'false'; ?>;
   const schoolProfileStaleNotice=document.getElementById('schoolProfileStaleNotice');
   function activatePanel(name){
     tabs.forEach(function(tab){
@@ -2109,7 +2497,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
   });
   function markSchoolProfileDirty(){
     if(!schoolProfileHasCalculatedResults) return;
-    ['results','personnel','allocation','vacancies'].forEach(function(name){
+    ['results','personnel','allocation','vacancies','specialties'].forEach(function(name){
       const tab=document.querySelector('[data-staffing-tab="'+name+'"]');
       if(!tab) return;
       tab.disabled=true;
@@ -2131,9 +2519,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
   const personnelList=document.getElementById('personnelList');
   const allocationTab=document.querySelector('[data-staffing-tab="allocation"]');
   const vacanciesTab=document.querySelector('[data-staffing-tab="vacancies"]');
+  const specialtiesTab=document.querySelector('[data-staffing-tab="specialties"]');
   function markPersonnelDirty(){
     if(allocationTab){ allocationTab.disabled=true; allocationTab.title='Υπολόγισε ξανά τα ωράρια προσωπικού πριν από νέα κατανομή.'; }
     if(vacanciesTab){ vacanciesTab.disabled=true; vacanciesTab.title='Υπολόγισε ξανά τα ωράρια προσωπικού πριν από τον έλεγχο κενών.'; }
+    if(specialtiesTab){ specialtiesTab.disabled=true; specialtiesTab.title='Υπολόγισε ξανά τα ωράρια προσωπικού πριν από τη δήλωση κενών / πλεονασμάτων ειδικοτήτων.'; }
   }
   const personnelTemplate=document.getElementById('personnelRowTemplate');
   const addPersonnel=document.getElementById('addPersonnelRow');
@@ -2625,6 +3015,8 @@ foreach ($allocationSlots as $slotId=>$slot) {
 
   const allocationPeopleData=<?php echo json_encode($allocationPeopleClient, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
   const allocationSlotsData=<?php echo json_encode($allocationSlotsClient, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+  const specialtyLabelsData=<?php echo json_encode($specialtyLabelsClient, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+  const specialtyReportSchemaVersion='staffing_balance_v1';
   const allocationList=document.getElementById('allocationList');
   const allocationTemplate=document.getElementById('allocationRowTemplate');
   const addAllocation=document.getElementById('addAllocationRow');
@@ -2720,16 +3112,20 @@ foreach ($allocationSlots as $slotId=>$slot) {
   }
   function allocationRows(){ return allocationList ? Array.from(allocationList.querySelectorAll('[data-allocation-row]')) : []; }
   const vacancyRows=Array.from(document.querySelectorAll('[data-vacancy-row]'));
+  const printVacancyRowsById={};
+  Array.from(document.querySelectorAll('[data-print-vacancy-row]')).forEach(function(row){ printVacancyRowsById[row.getAttribute('data-print-vacancy-row')||'']=row; });
   const vacancyFilter=document.getElementById('vacancyFilter');
-  function vacancyEligiblePeopleWithRemaining(slot,personAssigned){
-    let count=0;
+  function vacancyEligiblePeopleAvailability(slot,personAssigned,personPriority){
+    let normal=0, exceptionB=0;
     Object.keys(allocationPeopleData||{}).forEach(function(pid){
       const person=allocationPeopleData[pid], match=allocationBestAssignment(person,slot);
       if(!match) return;
       const remaining=Math.max(0,(person.available_here_hours||0)-(personAssigned[pid]||0));
-      if(remaining>0) count++;
+      if(remaining<1) return;
+      const bHours=personPriority&&personPriority[pid] ? (personPriority[pid].B||0) : 0;
+      if(match.priority==='B' && bHours>=10) exceptionB++; else normal++;
     });
-    return count;
+    return {normal:normal,exceptionB:exceptionB,total:normal+exceptionB};
   }
   function allocationCollectState(){
     const personAssigned={}, personPriority={}, personSource={}, slotAssigned={}, slotAttempted={}, rowState=[];
@@ -2800,6 +3196,243 @@ foreach ($allocationSlots as $slotId=>$slot) {
     const state=allocationCollectState();
     return {personAssigned:state.personAssigned,slotAssigned:state.slotAssigned};
   }
+  function specialtyTopCandidates(slot){
+    if(!slot||!slot.eligible_by_priority) return {priority:'',codes:[]};
+    const top=slot.top_priority||'';
+    if(top&&Array.isArray(slot.eligible_by_priority[top])&&slot.eligible_by_priority[top].length){
+      return {priority:top,codes:Array.from(new Set(slot.eligible_by_priority[top])).sort(function(a,b){return String(a).localeCompare(String(b),'el',{numeric:true});})};
+    }
+    const order=['A','B','C','SPECIAL'];
+    for(let i=0;i<order.length;i++){
+      const p=order[i], codes=slot.eligible_by_priority[p]||[];
+      if(codes.length) return {priority:p,codes:Array.from(new Set(codes)).sort(function(a,b){return String(a).localeCompare(String(b),'el',{numeric:true});})};
+    }
+    return {priority:'',codes:[]};
+  }
+  function specialtyBuildReport(state){
+    const personState={}, slotState={}, routesBySlot={}, flexibility={};
+    Object.keys(allocationPeopleData||{}).forEach(function(pid){
+      const person=allocationPeopleData[pid];
+      const assigned=state.personAssigned[pid]||0, bHours=(state.personPriority[pid]&&state.personPriority[pid].B)||0;
+      personState[pid]={
+        remaining_hours:Math.max(0,(person.available_here_hours||0)-assigned),
+        b_assignment_hours:bHours,
+        b_remaining_hours:Math.max(0,10-bHours),
+        primary_code:person.specialty_code||'',
+        secondary_code:person.secondary_specialty_code||''
+      };
+      flexibility[pid]=0;
+    });
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const slot=allocationSlotsData[sid];
+      slotState[sid]={remaining_hours:Math.max(0,(slot.capacity_hours||0)-(state.slotAssigned[sid]||0))};
+    });
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const slot=allocationSlotsData[sid];
+      if(!slotState[sid]||slotState[sid].remaining_hours<1) return;
+      routesBySlot[sid]={};
+      Object.keys(allocationPeopleData||{}).forEach(function(pid){
+        if(!personState[pid]||personState[pid].remaining_hours<1) return;
+        const match=allocationBestAssignment(allocationPeopleData[pid],slot);
+        if(!match) return;
+        if(match.priority==='B'&&personState[pid].b_remaining_hours<1) return;
+        routesBySlot[sid][pid]=match;
+        flexibility[pid]=(flexibility[pid]||0)+1;
+      });
+    });
+    const slotOrder=Object.keys(routesBySlot).sort(function(a,b){
+      const ca=Object.keys(routesBySlot[a]).length, cb=Object.keys(routesBySlot[b]).length;
+      if(ca!==cb) return ca-cb;
+      const sa=allocationSlotsData[a], sb=allocationSlotsData[b];
+      const g=String(sa.grade||'').localeCompare(String(sb.grade||''),'el',{numeric:true}); if(g) return g;
+      const su=String(sa.subject||'').localeCompare(String(sb.subject||''),'el',{numeric:true}); if(su) return su;
+      return String(a).localeCompare(String(b),'el',{numeric:true});
+    });
+    const autoAllocations=[];
+    let autoCovered=0;
+    slotOrder.forEach(function(sid){
+      let remaining=slotState[sid].remaining_hours||0;
+      if(remaining<1) return;
+      const pids=Object.keys(routesBySlot[sid]).sort(function(a,b){
+        const ma=routesBySlot[sid][a], mb=routesBySlot[sid][b];
+        const rank=allocationPriorityRank(ma.priority)-allocationPriorityRank(mb.priority); if(rank) return rank;
+        const fa=flexibility[a]||999999, fb=flexibility[b]||999999; if(fa!==fb) return fa-fb;
+        if(ma.specialty_source!==mb.specialty_source) return ma.specialty_source==='primary'?-1:1;
+        return String(a).localeCompare(String(b),'el',{numeric:true});
+      });
+      pids.forEach(function(pid){
+        if(remaining<1||!personState[pid]||personState[pid].remaining_hours<1) return;
+        const match=routesBySlot[sid][pid];
+        let available=personState[pid].remaining_hours;
+        if(match.priority==='B') available=Math.min(available,personState[pid].b_remaining_hours);
+        if(available<1) return;
+        const hours=Math.min(remaining,available);
+        if(hours<1) return;
+        const slot=allocationSlotsData[sid];
+        autoAllocations.push({person_id:pid,slot_id:sid,slot_label:slot.slot_label||slot.label||sid,subject:slot.subject||'',hours:hours,priority:match.priority,used_specialty_code:match.used_specialty_code,specialty_source:match.specialty_source});
+        personState[pid].remaining_hours-=hours;
+        if(match.priority==='B'){
+          personState[pid].b_assignment_hours+=hours;
+          personState[pid].b_remaining_hours=Math.max(0,10-personState[pid].b_assignment_hours);
+        }
+        remaining-=hours;
+        autoCovered+=hours;
+      });
+      slotState[sid].remaining_hours=Math.max(0,remaining);
+    });
+
+    const openRows=[], specialBuckets={}, coverageByCode={}, exclusiveByCode={};
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const slot=allocationSlotsData[sid], hours=slotState[sid]?slotState[sid].remaining_hours:0;
+      if(hours<1) return;
+      const bucket=slot.reporting_bucket||null;
+      if(bucket&&bucket.key){
+        if(!specialBuckets[bucket.key]) specialBuckets[bucket.key]={key:bucket.key,label:bucket.label||bucket.key,gap_hours:0,slots:[]};
+        specialBuckets[bucket.key].gap_hours+=hours;
+        specialBuckets[bucket.key].slots.push({slot_id:sid,slot_label:slot.slot_label||'',subject:slot.subject||'',hours:hours});
+        return;
+      }
+      const top=specialtyTopCandidates(slot), codes=top.codes.slice();
+      openRows.push({slot_id:sid,slot_label:slot.slot_label||slot.label||sid,subject:slot.subject||'',hours:hours,priority:top.priority,candidate_codes:codes});
+      codes.forEach(function(code){
+        coverageByCode[code]=(coverageByCode[code]||0)+hours;
+        if(codes.length===1) exclusiveByCode[code]=(exclusiveByCode[code]||0)+hours;
+      });
+    });
+    openRows.sort(function(a,b){
+      if(a.candidate_codes.length!==b.candidate_codes.length) return a.candidate_codes.length-b.candidate_codes.length;
+      if(a.hours!==b.hours) return b.hours-a.hours;
+      const s=String(a.subject).localeCompare(String(b.subject),'el',{numeric:true}); if(s) return s;
+      return String(a.slot_id).localeCompare(String(b.slot_id),'el',{numeric:true});
+    });
+    const gapByCode={}, recommendations=[];
+    openRows.forEach(function(row){
+      const codes=row.candidate_codes.slice().sort(function(a,b){
+        const ca=coverageByCode[a]||0, cb=coverageByCode[b]||0; if(ca!==cb) return cb-ca;
+        const ga=gapByCode[a]||0, gb=gapByCode[b]||0; if(ga!==gb) return gb-ga;
+        const ea=exclusiveByCode[a]||0, eb=exclusiveByCode[b]||0; if(ea!==eb) return eb-ea;
+        return String(a).localeCompare(String(b),'el',{numeric:true});
+      });
+      const selected=codes.length?codes[0]:'';
+      if(selected) gapByCode[selected]=(gapByCode[selected]||0)+row.hours;
+      recommendations.push({slot_id:row.slot_id,slot_label:row.slot_label,subject:row.subject,hours:row.hours,priority:row.priority,selected_code:selected,candidate_codes:row.candidate_codes.slice(),selected_code_total_reachable_hours:selected?(coverageByCode[selected]||0):0,selection_kind:row.candidate_codes.length<=1?'unique_top_assignment':'smart_shared_top_assignment'});
+    });
+    const surplusByCode={}, surplusPeopleByCode={};
+    Object.keys(personState).forEach(function(pid){
+      const ps=personState[pid], hours=Math.max(0,ps.remaining_hours||0), code=ps.primary_code||'';
+      if(hours<1||!code) return;
+      surplusByCode[code]=(surplusByCode[code]||0)+hours;
+      surplusPeopleByCode[code]=(surplusPeopleByCode[code]||0)+1;
+    });
+    const bySpecialty={};
+    Array.from(new Set(Object.keys(gapByCode).concat(Object.keys(surplusByCode)))).sort(function(a,b){return String(a).localeCompare(String(b),'el',{numeric:true});}).forEach(function(code){
+      const gap=gapByCode[code]||0, surplus=surplusByCode[code]||0;
+      bySpecialty[code]={code:code,label:specialtyLabelsData[code]||'',gap_hours:gap,surplus_hours:surplus,signed_balance_hours:surplus-gap,has_both_gap_and_surplus:gap>0&&surplus>0,surplus_people_count:surplusPeopleByCode[code]||0};
+    });
+    let finalUncovered=0, bucketGap=0, surplusTotal=0;
+    Object.keys(slotState).forEach(function(sid){finalUncovered+=slotState[sid].remaining_hours||0;});
+    Object.keys(specialBuckets).forEach(function(k){bucketGap+=specialBuckets[k].gap_hours||0;});
+    Object.keys(surplusByCode).forEach(function(k){surplusTotal+=surplusByCode[k]||0;});
+    return {
+      automatic_balance:{allocations:autoAllocations,people:personState,slots:slotState,summary:{auto_covered_hours:autoCovered,remaining_slot_hours:finalUncovered}},
+      vacancy_recommendations:recommendations,
+      by_specialty:bySpecialty,
+      special_reporting_buckets:specialBuckets,
+      summary:{manual_unassigned_hours:state.unassigned||0,auto_internal_covered_hours:autoCovered,final_uncovered_hours:finalUncovered,specialty_gap_hours_total:Object.keys(gapByCode).reduce(function(t,k){return t+(gapByCode[k]||0);},0),special_reporting_bucket_gap_hours_total:bucketGap,surplus_hours_total:surplusTotal}
+    };
+  }
+  let latestSpecialtyBalance=null;
+  function specialtySignedText(value){ return String(value); }
+  function specialtyAppendCell(row,text,className){ const td=document.createElement('td'); td.textContent=text; if(className) td.className=className; row.appendChild(td); return td; }
+  function renderSpecialtyBalance(state){
+    const body=document.getElementById('specialtyBalanceBody');
+    if(!body) return;
+    const report=specialtyBuildReport(state); latestSpecialtyBalance=report;
+    const manual=document.querySelector('[data-specialty-manual-uncovered]'), auto=document.querySelector('[data-specialty-auto-covered]'), final=document.querySelector('[data-specialty-final-uncovered]'), surplus=document.querySelector('[data-specialty-surplus-total]');
+    if(manual) manual.textContent=String(report.summary.manual_unassigned_hours||0);
+    if(auto) auto.textContent=String(report.summary.auto_internal_covered_hours||0);
+    if(final) final.textContent=String(report.summary.final_uncovered_hours||0);
+    if(surplus) surplus.textContent=String(report.summary.surplus_hours_total||0);
+    body.innerHTML='';
+    let rows=0;
+    Object.keys(report.by_specialty||{}).sort(function(a,b){return String(a).localeCompare(String(b),'el',{numeric:true});}).forEach(function(code){
+      const item=report.by_specialty[code]; if((item.gap_hours||0)<1&&(item.surplus_hours||0)<1) return;
+      const tr=document.createElement('tr'); tr.setAttribute('data-specialty-balance-row',code);
+      const c1=specialtyAppendCell(tr,code); const st=document.createElement('strong'); st.textContent=code; c1.textContent=''; c1.appendChild(st);
+      specialtyAppendCell(tr,item.label||'');
+      specialtyAppendCell(tr,String(item.gap_hours||0),'specialty-balance-value specialty-balance-deficit');
+      specialtyAppendCell(tr,String(item.surplus_hours||0),'specialty-balance-value specialty-balance-surplus');
+      specialtyAppendCell(tr,specialtySignedText(item.signed_balance_hours||0),'specialty-balance-value');
+      specialtyAppendCell(tr,item.has_both_gap_and_surplus?'Ταυτόχρονο έλλειμμα και πλεόνασμα στον ίδιο κλάδο — χρειάζεται έλεγχος πριν από οριστική δήλωση.':'','specialty-balance-note');
+      body.appendChild(tr); rows++;
+    });
+    Object.keys(report.special_reporting_buckets||{}).sort().forEach(function(key){
+      const item=report.special_reporting_buckets[key]; if((item.gap_hours||0)<1) return;
+      const tr=document.createElement('tr'); tr.className='specialty-balance-special'; tr.setAttribute('data-specialty-balance-row',key);
+      specialtyAppendCell(tr,key); specialtyAppendCell(tr,item.label||key);
+      specialtyAppendCell(tr,String(item.gap_hours||0),'specialty-balance-value specialty-balance-deficit');
+      specialtyAppendCell(tr,'0','specialty-balance-value specialty-balance-surplus');
+      specialtyAppendCell(tr,'-'+String(item.gap_hours||0),'specialty-balance-value');
+      specialtyAppendCell(tr,'Ξεχωριστή γραμμή του υποδείγματος· δεν αποδίδεται αυτόματα σε ειδικότητα.','specialty-balance-note');
+      body.appendChild(tr); rows++;
+    });
+    const empty=document.getElementById('specialtyBalanceEmpty'), wrap=document.getElementById('specialtyBalanceTableWrap');
+    if(empty) empty.hidden=rows!==0; if(wrap) wrap.hidden=rows===0;
+
+    const smartBody=document.getElementById('specialtySmartBody');
+    if(smartBody){
+      smartBody.innerHTML=''; let smartCount=0;
+      (report.vacancy_recommendations||[]).forEach(function(item){
+        if(!item.candidate_codes||item.candidate_codes.length<2) return;
+        const tr=document.createElement('tr'); specialtyAppendCell(tr,item.slot_label||''); specialtyAppendCell(tr,item.subject||''); specialtyAppendCell(tr,String(item.hours||0));
+        const td=specialtyAppendCell(tr,''); const strong=document.createElement('strong'); strong.textContent=item.selected_code||'—'; td.appendChild(strong);
+        specialtyAppendCell(tr,item.candidate_codes.join(', ')); smartBody.appendChild(tr); smartCount++;
+      });
+      if(!smartCount){ const tr=document.createElement('tr'); const td=document.createElement('td'); td.colSpan=5; td.textContent='Δεν υπάρχουν κοινά κενά με περισσότερους από έναν ισότιμους κλάδους στην καλύτερη ανάθεση.'; tr.appendChild(td); smartBody.appendChild(tr); }
+    }
+    const autoBody=document.getElementById('specialtyAutoBody');
+    if(autoBody){
+      autoBody.innerHTML=''; let autoCount=0;
+      (report.automatic_balance.allocations||[]).forEach(function(item){
+        const tr=document.createElement('tr'), person=allocationPeopleData[item.person_id]||null;
+        specialtyAppendCell(tr,person?(person.label||item.person_id):item.person_id); specialtyAppendCell(tr,item.slot_label||''); specialtyAppendCell(tr,item.subject||''); specialtyAppendCell(tr,String(item.hours||0));
+        specialtyAppendCell(tr,allocationPriorityLabel(item.priority)+' ανάθεση'+(item.specialty_source==='secondary'?' · μέσω 2ης ειδικότητας '+item.used_specialty_code:''));
+        autoBody.appendChild(tr); autoCount++;
+      });
+      if(!autoCount){ const tr=document.createElement('tr'); const td=document.createElement('td'); td.colSpan=5; td.textContent='Δεν εντοπίστηκαν πρόσθετες ώρες που να μπορούν να καλυφθούν αυτόματα από υπάρχον προσωπικό πέρα από την τρέχουσα κατανομή.'; tr.appendChild(td); autoBody.appendChild(tr); }
+    }
+    const printBody=document.getElementById('printSpecialtyBalanceBody');
+    if(printBody){
+      printBody.innerHTML='';
+      Array.from(body.querySelectorAll('tr')).forEach(function(src){
+        const cells=Array.from(src.children).map(function(td){return td.textContent||'';});
+        const tr=document.createElement('tr'); cells.forEach(function(text,i){specialtyAppendCell(tr,text,(i>=2&&i<=4)?'num':'');}); printBody.appendChild(tr);
+      });
+    }
+    const pm=document.querySelector('[data-print-specialty-manual-uncovered]'), pa=document.querySelector('[data-print-specialty-auto-covered]'), pf=document.querySelector('[data-print-specialty-final-uncovered]'), ps=document.querySelector('[data-print-specialty-surplus-total]');
+    if(pm) pm.textContent=String(report.summary.manual_unassigned_hours||0); if(pa) pa.textContent=String(report.summary.auto_internal_covered_hours||0); if(pf) pf.textContent=String(report.summary.final_uncovered_hours||0); if(ps) ps.textContent=String(report.summary.surplus_hours_total||0);
+    const pe=document.getElementById('printSpecialtyBalanceEmpty'); if(pe) pe.hidden=rows!==0;
+  }
+  function specialtyCsvCell(value){ return '"'+String(value===null||value===undefined?'':value).replace(/"/g,'""')+'"'; }
+  function downloadSpecialtyBalanceCsv(){
+    const state=allocationCollectState(), report=specialtyBuildReport(state); latestSpecialtyBalance=report;
+    const nameEl=document.querySelector('[name="school_name"]'), codeEl=document.querySelector('[name="school_code"]');
+    const schoolName=nameEl?(nameEl.value||'').trim():'', schoolCode=codeEl?(codeEl.value||'').trim():'';
+    const rows=[['schema_version','school_code','school_name','report_key','label','kind','deficit_hours','surplus_hours','balance_hours','note']];
+    Object.keys(report.by_specialty||{}).sort(function(a,b){return String(a).localeCompare(String(b),'el',{numeric:true});}).forEach(function(code){
+      const item=report.by_specialty[code]; if((item.gap_hours||0)<1&&(item.surplus_hours||0)<1) return;
+      rows.push([specialtyReportSchemaVersion,schoolCode,schoolName,code,item.label||'','specialty',item.gap_hours||0,item.surplus_hours||0,item.signed_balance_hours||0,item.has_both_gap_and_surplus?'Ταυτόχρονο έλλειμμα και πλεόνασμα — απαιτεί έλεγχο.':'']);
+    });
+    Object.keys(report.special_reporting_buckets||{}).sort().forEach(function(key){
+      const item=report.special_reporting_buckets[key]; if((item.gap_hours||0)<1) return;
+      rows.push([specialtyReportSchemaVersion,schoolCode,schoolName,key,item.label||key,'subject_bucket',item.gap_hours||0,0,-(item.gap_hours||0),'Ξεχωριστή γραμμή υποδείγματος· δεν αποδίδεται αυτόματα σε ειδικότητα.']);
+    });
+    const text='\ufeff'+rows.map(function(row){return row.map(specialtyCsvCell).join(';');}).join('\r\n');
+    const blob=new Blob([text],{type:'text/csv;charset=utf-8'}), url=URL.createObjectURL(blob), a=document.createElement('a');
+    const stem=(schoolCode||schoolName||'school').replace(/[^0-9A-Za-zΑ-Ωα-ω._-]+/g,'-').replace(/^-+|-+$/g,'')||'school';
+    a.href=url; a.download='staffing_balance_v1-'+stem+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},0);
+  }
+  const specialtyBalanceCsv=document.getElementById('specialtyBalanceCsv'); if(specialtyBalanceCsv) specialtyBalanceCsv.addEventListener('click',downloadSpecialtyBalanceCsv);
   function updateAllocationSlotOptionAvailability(slotAssigned){
     allocationRows().forEach(function(row){
       const select=row.querySelector('.allocation-slot');
@@ -2818,7 +3451,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
       });
     });
   }
-  function updateVacancyView(slotAssigned,personAssigned){
+  function updateVacancyView(slotAssigned,personAssigned,personPriority){
     if(!vacancyRows.length) return;
     let total=0, slots=0, noStaff=0, hasStaff=0;
     const q=vacancyFilter?(vacancyFilter.value||'').toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,''):'';
@@ -2826,14 +3459,22 @@ foreach ($allocationSlots as $slotId=>$slot) {
       const sid=row.getAttribute('data-vacancy-row')||'', slot=allocationSlotsData[sid]||null;
       if(!slot){ row.hidden=true; return; }
       const remaining=Math.max(0,(slot.capacity_hours||0)-(slotAssigned[sid]||0));
-      const availableCount=remaining>0?vacancyEligiblePeopleWithRemaining(slot,personAssigned):0;
+      const availability=remaining>0?vacancyEligiblePeopleAvailability(slot,personAssigned,personPriority):{normal:0,exceptionB:0,total:0};
+      const availableCount=availability.total;
       const hoursEl=row.querySelector('[data-vacancy-hours]'); if(hoursEl) hoursEl.textContent=String(remaining);
       const status=row.querySelector('[data-vacancy-status]');
       if(status){
         status.classList.remove('has-staff','no-staff');
         if(remaining<1) status.textContent='—';
-        else if(availableCount>0){ status.textContent='Υπάρχει επιλέξιμο προσωπικό με υπόλοιπο ('+availableCount+')'; status.classList.add('has-staff'); }
+        else if(availability.normal>0){ status.textContent='Υπάρχει επιλέξιμο προσωπικό με υπόλοιπο ('+availability.normal+(availability.exceptionB?' + '+availability.exceptionB+' μόνο κατ’ εξαίρεση Β΄':'')+')'; status.classList.add('has-staff'); }
+        else if(availability.exceptionB>0){ status.textContent='Διαθέσιμο μόνο με κατ’ εξαίρεση υπέρβαση του ορίου Β΄ ανάθεσης ('+availability.exceptionB+')'; status.classList.add('has-staff'); }
         else { status.textContent='Δεν υπάρχει επιλέξιμο προσωπικό με διαθέσιμο υπόλοιπο'; status.classList.add('no-staff'); }
+      }
+      const printRow=printVacancyRowsById[sid]||null;
+      if(printRow){
+        const printHours=printRow.querySelector('[data-print-vacancy-hours]'); if(printHours) printHours.textContent=String(remaining);
+        const printStatus=printRow.querySelector('[data-print-vacancy-status]'); if(printStatus && status) printStatus.textContent=status.textContent;
+        printRow.hidden=remaining<1;
       }
       const hay=(row.getAttribute('data-search')||'').toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
       row.hidden=remaining<1||(q!==''&&!hay.includes(q));
@@ -2847,11 +3488,16 @@ foreach ($allocationSlots as $slotId=>$slot) {
     const tableWrap=document.getElementById('vacancyTableWrap'), empty=document.getElementById('vacancyEmpty');
     if(tableWrap) tableWrap.hidden=slots===0;
     if(empty) empty.hidden=slots!==0;
+    const printEmpty=document.getElementById('printVacancyEmpty'); if(printEmpty) printEmpty.hidden=slots!==0;
   }
-  if(vacancyFilter) vacancyFilter.addEventListener('input',function(){ const totals=currentAllocationTotals(); updateVacancyView(totals.slotAssigned,totals.personAssigned); });
+  if(vacancyFilter) vacancyFilter.addEventListener('input',function(){ const state=allocationCollectState(); updateVacancyView(state.slotAssigned,state.personAssigned,state.personPriority); });
   function updateAllocationSummary(){
-    if(!allocationList) return;
     const state=allocationCollectState();
+    if(!allocationList){
+      updateVacancyView(state.slotAssigned,state.personAssigned,state.personPriority);
+      renderSpecialtyBalance(state);
+      return;
+    }
     const rowState=state.rowState, personAssigned=state.personAssigned, personPriority=state.personPriority, personSource=state.personSource, slotAssigned=state.slotAssigned;
     let errorRows=0;
     rowState.forEach(function(st){
@@ -2875,7 +3521,8 @@ foreach ($allocationSlots as $slotId=>$slot) {
     if(overEl) overEl.textContent=String(state.overSlots);
     if(errorsEl) errorsEl.textContent=String(errorRows);
     updateAllocationSlotOptionAvailability(slotAssigned);
-    updateVacancyView(slotAssigned,personAssigned);
+    updateVacancyView(slotAssigned,personAssigned,personPriority);
+    renderSpecialtyBalance(state);
     Object.keys(allocationPeopleData||{}).forEach(function(pid){
       const summary=document.querySelector('[data-allocation-person-summary="'+CSS.escape(pid)+'"]'); if(!summary) return;
       const p=allocationPeopleData[pid], assigned=personAssigned[pid]||0, remain=Math.max(0,p.available_here_hours-assigned), aHours=personPriority[pid].A||0, bHours=personPriority[pid].B||0;
