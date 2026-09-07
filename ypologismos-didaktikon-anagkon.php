@@ -1556,15 +1556,21 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                       <input type="number" min="0" max="35" step="1" name="personnel_assigned_external_hours[]" class="personnel-external" value="<?php echo $externalHours; ?>"<?php echo $isMySchoolSource ? ' readonly' : ''; ?>>
                     </div>
                     <div class="metric"><strong data-available-hours><?php echo $availableHours === null ? '—' : $availableHours; ?></strong><span>διαθέσιμο εδώ</span></div>
-                    <button type="button" class="personnel-remove" title="Αφαίρεση εκπαιδευτικού">Αφαίρεση</button>
+                    <button type="button" class="personnel-remove personnel-remove-compact" title="Αφαίρεση εκπαιδευτικού" aria-label="Αφαίρεση εκπαιδευτικού">×</button>
                   </div>
                   <details<?php echo $isMySchoolSource || $person['role'] !== 'teacher' || !$resolved || $selectedSecondaryCode !== '' ? ' open' : ''; ?>>
                     <summary>2η ειδικότητα, ρόλος και στοιχεία διοίκησης<?php if ($selectedSecondaryCode !== ''): ?> · 2η <?php echo staffingUiH($selectedSecondaryCode); ?><?php endif; ?><?php if ($isMySchoolSource): ?> · myschool<?php elseif ($person['role'] !== 'teacher' && $resolved && !empty($eval['obligation']['service_label'])): ?> · <?php echo staffingUiH($eval['obligation']['service_label']); ?><?php endif; ?></summary>
                     <div class="personnel-row-details">
-                      <div class="mini-grid">
+                      <div class="mini-grid two personnel-secondary-role-grid">
                         <div class="field">
                           <label>2η ειδικότητα <small>προαιρετική</small></label>
                           <select name="personnel_secondary_specialty_code[]" class="personnel-secondary-specialty"><?php staffingUiRenderPersonnelSpecialtyOptions($personnelSpecialtyOptions, $selectedSecondaryCode); ?></select>
+                        </div>
+                        <div class="field">
+                          <label>Ρόλος</label>
+                          <select name="personnel_role[]" class="personnel-role">
+                            <?php foreach (array('teacher','director','vice_or_sector') as $role): ?><option value="<?php echo $role; ?>"<?php echo $person['role'] === $role ? ' selected' : ''; ?>><?php echo staffingUiH(staffingUiPersonnelRoleLabel($role)); ?></option><?php endforeach; ?>
+                          </select>
                         </div>
                       </div>
                       <div class="mini-grid personnel-service-fields"<?php echo $person['role'] === 'teacher' || $isMySchoolSource ? ' hidden' : ''; ?>>
@@ -1572,13 +1578,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                         <div class="field"><label>Μήνες</label><input type="number" min="0" max="11" step="1" name="personnel_service_months[]" class="personnel-months" value="<?php echo staffingUiH($person['service']['months']); ?>"></div>
                         <div class="field"><label>Ημέρες</label><input type="number" min="0" max="29" step="1" name="personnel_service_days[]" class="personnel-days" value="<?php echo staffingUiH($person['service']['days']); ?>"></div>
                       </div>
-                      <div class="mini-grid">
-                        <div class="field">
-                          <label>Ρόλος</label>
-                          <select name="personnel_role[]" class="personnel-role">
-                            <?php foreach (array('teacher','director','vice_or_sector') as $role): ?><option value="<?php echo $role; ?>"<?php echo $person['role'] === $role ? ' selected' : ''; ?>><?php echo staffingUiH(staffingUiPersonnelRoleLabel($role)); ?></option><?php endforeach; ?>
-                          </select>
-                        </div>
+                      <div class="mini-grid personnel-director-row">
                         <div class="field personnel-director-band"<?php echo $person['role'] === 'director' && !$isMySchoolSource ? '' : ' hidden'; ?>>
                           <label>Τμήματα σχολικής μονάδας <small>αυτόματα</small></label>
                           <div class="summary-chip personnel-director-section-info"><strong data-director-section-count><?php echo (int)$generalSectionTotal; ?></strong><span data-director-section-band><?php echo $directorSectionsBandAuto ? 'κλίμακα ' . staffingUiH($directorSectionsBandAuto) : 'χρειάζονται τα κανονικά τμήματα'; ?></span></div>
@@ -1610,21 +1610,21 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                 <div class="field"><label title="Υποχρεωτικό ωράριο">Υ.Ω.</label><input type="number" min="1" max="35" step="1" name="personnel_required_teaching_hours[]" class="personnel-required" data-required-hours data-manual-value="" value="" required></div>
                 <div class="field"><label>Ώρες αλλού</label><input type="number" min="0" max="35" step="1" name="personnel_assigned_external_hours[]" class="personnel-external" value="0"></div>
                 <div class="metric"><strong data-available-hours>—</strong><span>διαθέσιμο εδώ</span></div>
-                <button type="button" class="personnel-remove" title="Αφαίρεση εκπαιδευτικού">Αφαίρεση</button>
+                <button type="button" class="personnel-remove personnel-remove-compact" title="Αφαίρεση εκπαιδευτικού" aria-label="Αφαίρεση εκπαιδευτικού">×</button>
               </div>
               <details>
                 <summary>2η ειδικότητα, ρόλος και στοιχεία διοίκησης</summary>
                 <div class="personnel-row-details">
-                  <div class="mini-grid">
+                  <div class="mini-grid two personnel-secondary-role-grid">
                     <div class="field"><label>2η ειδικότητα <small>προαιρετική</small></label><select name="personnel_secondary_specialty_code[]" class="personnel-secondary-specialty"><?php staffingUiRenderPersonnelSpecialtyOptions($personnelSpecialtyOptions, ''); ?></select></div>
+                    <div class="field"><label>Ρόλος</label><select name="personnel_role[]" class="personnel-role"><option value="teacher">Εκπαιδευτικός</option><option value="director">Διευθυντής/ντρια</option><option value="vice_or_sector">Υποδιευθυντής/ντρια</option></select></div>
                   </div>
                   <div class="mini-grid personnel-service-fields" hidden>
                     <div class="field"><label>Έτη υπηρεσίας</label><input type="number" min="0" max="50" step="1" name="personnel_service_years[]" class="personnel-years" value="0"></div>
                     <div class="field"><label>Μήνες</label><input type="number" min="0" max="11" step="1" name="personnel_service_months[]" class="personnel-months" value="0"></div>
                     <div class="field"><label>Ημέρες</label><input type="number" min="0" max="29" step="1" name="personnel_service_days[]" class="personnel-days" value="0"></div>
                   </div>
-                  <div class="mini-grid">
-                    <div class="field"><label>Ρόλος</label><select name="personnel_role[]" class="personnel-role"><option value="teacher">Εκπαιδευτικός</option><option value="director">Διευθυντής/ντρια</option><option value="vice_or_sector">Υποδιευθυντής/ντρια</option></select></div>
+                  <div class="mini-grid personnel-director-row">
                     <div class="field personnel-director-band" hidden><label>Τμήματα σχολικής μονάδας <small>αυτόματα</small></label><div class="summary-chip personnel-director-section-info"><strong data-director-section-count>—</strong><span data-director-section-band>από τα κανονικά τμήματα</span></div></div>
                   </div>
                   <p class="help" data-personnel-rule></p>
@@ -3090,7 +3090,27 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       if(!remove || !personnelList.contains(remove)) return;
       const row=remove.closest('[data-personnel-row]');
       if(!row) return;
-      row.remove(); refreshDirectorRoleConstraints(); markPersonnelDirty(); ensurePersonnelEmptyState();
+      const idInput=row.querySelector('input[name="personnel_person_id[]"]');
+      const personId=idInput?idInput.value:'';
+      const nameInput=row.querySelector('.personnel-name');
+      const specialtyInput=row.querySelector('.personnel-specialty');
+      const personLabel=((specialtyInput&&specialtyInput.value?specialtyInput.value+' · ':'')+(nameInput&&nameInput.value?nameInput.value:'τον/την εκπαιδευτικό')).trim();
+      let linkedAllocationRows=[];
+      if(personId){
+        linkedAllocationRows=Array.from(document.querySelectorAll('[data-allocation-row]')).filter(function(allocationRow){
+          const personSelect=allocationRow.querySelector('.allocation-person');
+          return personSelect&&personSelect.value===personId;
+        });
+      }
+      let message='Να αφαιρεθεί '+personLabel+' από το προσωπικό της σχολικής μονάδας;';
+      if(linkedAllocationRows.length){
+        message+='\n\nΥπάρχουν '+linkedAllocationRows.length+' γραμμές κατανομής που έχουν ανατεθεί σε αυτόν/ήν. Θα αφαιρεθούν και αυτές.';
+      }
+      if(!window.confirm(message)) return;
+      linkedAllocationRows.forEach(function(allocationRow){allocationRow.remove();});
+      row.remove();
+      refreshDirectorRoleConstraints(); markPersonnelDirty(); ensurePersonnelEmptyState();
+      if(typeof updateAllocationSummary==='function') updateAllocationSummary();
     });
   }
   function clearPersonnelRows(){

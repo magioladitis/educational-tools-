@@ -44,7 +44,7 @@
 .edu-page-staffing-simulator .personnel-toolbar .field{min-width:240px;flex:1}
 .edu-page-staffing-simulator .personnel-list{display:grid;gap:10px;margin-top:12px}
 .edu-page-staffing-simulator .personnel-row{border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface);overflow:hidden}
-.edu-page-staffing-simulator .personnel-row-main{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(200px,1.4fr) repeat(3,minmax(92px,.55fr)) auto;gap:10px;align-items:end;padding:12px}
+.edu-page-staffing-simulator .personnel-row-main{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(200px,1.4fr) repeat(3,minmax(92px,.55fr)) 42px;gap:10px;align-items:end;padding:12px}
 .edu-page-staffing-simulator .personnel-row-main .metric{padding:8px 10px;border-radius:9px;background:var(--edu-surface-soft);min-height:42px}
 .edu-page-staffing-simulator .personnel-row-main .metric strong{display:block;font-size:1.05rem;color:var(--edu-primary-dark);font-variant-numeric:tabular-nums}
 .edu-page-staffing-simulator .personnel-row-main .metric span{font-size:11.5px;color:var(--edu-muted)}
@@ -55,6 +55,10 @@
 .edu-page-staffing-simulator .personnel-row details>summary::-webkit-details-marker{display:none}
 .edu-page-staffing-simulator .personnel-row-details{padding:0 12px 12px}
 .edu-page-staffing-simulator .personnel-remove{border:1px solid var(--edu-border);background:var(--edu-surface-soft);border-radius:9px;padding:9px 10px;cursor:pointer;color:var(--edu-muted)}
+.edu-page-staffing-simulator .personnel-row-main .personnel-remove-compact{width:42px;height:42px;padding:0;display:flex;align-items:center;justify-content:center;font-size:1.35rem;line-height:1;color:#9c2f2f;border-color:rgba(156,47,47,.28);background:rgba(156,47,47,.05)}
+.edu-page-staffing-simulator .personnel-row-main .personnel-remove-compact:hover{background:rgba(156,47,47,.1);border-color:rgba(156,47,47,.45)}
+.edu-page-staffing-simulator .personnel-secondary-role-grid{align-items:end}
+.edu-page-staffing-simulator .personnel-director-row{grid-template-columns:minmax(220px,1fr)}
 .edu-page-staffing-simulator .personnel-status-error{color:#9c2f2f;font-size:12px;margin:7px 12px 10px}
 .edu-page-staffing-simulator .personnel-toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .edu-page-staffing-simulator .personnel-csv-panel{margin:12px 0;padding:14px;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft)}
