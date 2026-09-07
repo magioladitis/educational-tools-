@@ -2259,6 +2259,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   tabs.forEach(function(tab){
     tab.addEventListener('click',function(){ if(!tab.disabled) activatePanel(tab.getAttribute('data-staffing-tab')); });
   });
+  const maxBasicSections=<?php echo (int) STAFFING_UI_MAX_BASIC_SECTIONS; ?>;
   function sync(){
     const isGel=type.value==='gel';
     const isEveningGel=type.value==='esperino_gel';
@@ -2324,7 +2325,6 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   document.querySelectorAll('[id^="gym_general_"],[id^="gel_general_"]').forEach(function(input){ input.addEventListener('input',syncLanguageGroupMaximums); });
   syncLanguageGroupMaximums();
 
-  const maxBasicSections=<?php echo (int) STAFFING_UI_MAX_BASIC_SECTIONS; ?>;
   function basicSectionSafeInteger(input){
     const raw=String(input.value==null?'':input.value).trim();
     if(raw==='') return 0;
