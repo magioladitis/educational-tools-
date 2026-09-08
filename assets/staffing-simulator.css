@@ -222,3 +222,19 @@
 
 /* Accessibility polish: make disabled workflow stages visually explicit without changing layout. */
 .edu-page-staffing-simulator .mode-tab:disabled{opacity:.55;cursor:not-allowed;background:var(--edu-surface-soft);color:var(--edu-muted)}
+
+/* Optional myschool stat5_1 comparison in Tab 5. */
+.edu-page-staffing-simulator .stat51-compare-panel{margin:14px 0;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft);overflow:hidden}
+.edu-page-staffing-simulator .stat51-compare-panel>summary{cursor:pointer;padding:12px 14px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;list-style-position:inside}
+.edu-page-staffing-simulator .stat51-compare-panel>summary span{font-size:12.5px;color:var(--edu-muted);font-weight:500}
+.edu-page-staffing-simulator .stat51-compare-body{padding:0 14px 14px}
+.edu-page-staffing-simulator .stat51-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.edu-page-staffing-simulator .stat51-status{margin-top:8px}
+.edu-page-staffing-simulator .stat51-status.is-warning{color:#8a6400}
+.edu-page-staffing-simulator .stat51-summary{margin-top:12px}
+.edu-page-staffing-simulator .stat51-table-wrap{margin-top:12px}
+.edu-page-staffing-simulator .stat51-table .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.edu-page-staffing-simulator .stat51-table tr.is-agreement .stat51-check{font-weight:800;color:var(--edu-success)}
+.edu-page-staffing-simulator .stat51-table tr.is-difference .stat51-check,.edu-page-staffing-simulator .stat51-table tr.is-only .stat51-check{font-weight:800;color:#8a6400}
+.edu-page-staffing-simulator .stat51-table tr.is-difference .stat51-diff,.edu-page-staffing-simulator .stat51-table tr.is-only .stat51-diff{font-weight:800}
+.edu-page-staffing-simulator .stat51-empty{margin-top:12px}

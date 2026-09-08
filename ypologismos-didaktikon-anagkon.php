@@ -1046,6 +1046,8 @@ foreach ($allocationSlots as $slotId=>$slot) {
         'top_priority'=>isset($slot['top_priority']) ? $slot['top_priority'] : null,
         'has_eligible_person'=>isset($allocationSelectableSlots[$slotId]),
         'reporting_bucket'=>$reportingBucket,
+        'choice_option'=>isset($slot['choice_option']) ? $slot['choice_option'] : '',
+        'track'=>isset($slot['track']) ? $slot['track'] : (isset($slot['profile_track']) ? $slot['profile_track'] : ''),
     );
 }
 $vacancySlotState = array();
@@ -1861,6 +1863,34 @@ uksort($specialtyLabelsClient, 'strnatcmp');
             </div>
           </div>
 
+          <details class="stat51-compare-panel" id="stat51ComparePanel">
+            <summary><strong>Προαιρετικός έλεγχος με stat5_1 myschool</strong> <span>σύγκριση των ακάλυπτων ωρών</span></summary>
+            <div class="stat51-compare-body">
+              <p class="help">Φόρτωσε το αυθεντικό <code>stat5_1</code> σε ZIP ή CSV. Η ανάγνωση γίνεται μόνο στον browser σου και το αρχείο <strong>δεν αλλάζει</strong> την κατανομή ή τα κενά του εργαλείου. Η αντιστοίχιση του σχολείου γίνεται από τον κωδικό myschool της Καρτέλας 1.</p>
+              <div class="stat51-actions">
+                <button type="button" class="edu-btn-secondary" id="pickStat51File">Επιλογή stat5_1 ZIP / CSV</button>
+                <button type="button" class="edu-btn-secondary" id="clearStat51File" hidden>Καθαρισμός σύγκρισης</button>
+                <input id="stat51FileInput" type="file" accept=".zip,.csv,text/csv,application/zip" hidden>
+              </div>
+              <div class="personnel-csv-status stat51-status" id="stat51Status" role="status" aria-live="polite">Δεν έχει φορτωθεί stat5_1.</div>
+              <div class="staffing-summary-grid stat51-summary" id="stat51Summary" hidden>
+                <div class="summary-chip"><strong data-stat51-ours>0</strong><span>δικές μας ακάλυπτες ώρες</span></div>
+                <div class="summary-chip"><strong data-stat51-myschool>0</strong><span>ώρες κενού stat5_1</span></div>
+                <div class="summary-chip"><strong data-stat51-difference>0</strong><span>διαφορά (δικό μας − stat5_1)</span></div>
+                <div class="summary-chip"><strong data-stat51-agreements>0</strong><span>γραμμές με ακριβή συμφωνία</span></div>
+              </div>
+              <div class="matrix-wrap stat51-table-wrap" id="stat51TableWrap" hidden>
+                <table class="staffing-table stat51-table" id="stat51ComparisonTable">
+                  <caption class="edu-tools-sr-only">Σύγκριση ακάλυπτων ωρών του εργαλείου με το myschool stat5_1</caption>
+                  <thead><tr><th scope="col">Τάξη</th><th scope="col">Μάθημα</th><th scope="col">Δικό μας</th><th scope="col">stat5_1</th><th scope="col">Διαφορά</th><th scope="col">Έλεγχος</th></tr></thead>
+                  <tbody id="stat51ComparisonBody"></tbody>
+                </table>
+              </div>
+              <div class="vacancy-empty stat51-empty" id="stat51Empty" hidden>Δεν υπάρχουν γραμμές για σύγκριση στο τρέχον σχολείο.</div>
+              <p class="help" id="stat51Footnote" hidden><strong>Πώς διαβάζεται:</strong> το stat5_1 είναι στιγμιότυπο του myschool τη στιγμή της εξαγωγής. Διαφορά δεν σημαίνει αυτομάτως λάθος· μπορεί να οφείλεται σε μεταγενέστερη κατανομή, διαφορετικά καταχωρισμένα τμήματα/ομάδες ή διαφορετική ονομασία μαθήματος.</p>
+            </div>
+          </details>
+
           <div class="matrix-wrap" id="vacancyTableWrap">
             <table class="staffing-table vacancy-table" id="vacancyTable">
               <caption class="edu-tools-sr-only">Ακάλυπτες ώρες ανά τάξη, μάθημα και διαθέσιμο κλάδο</caption>
@@ -2195,6 +2225,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
 <script src="<?php echo staffingUiH(edu_asset_url('includes/school-profile-csv-import.js')); ?>"></script>
 <script src="<?php echo staffingUiH(edu_asset_url('includes/personnel-csv-import.js')); ?>"></script>
 <script src="<?php echo staffingUiH(edu_asset_url('includes/myschool-staff-import.js')); ?>"></script>
+<script src="<?php echo staffingUiH(edu_asset_url('includes/myschool-stat51-import.js')); ?>"></script>
 <script>
 (function(){
   const type=document.getElementById('school_type');
@@ -3677,6 +3708,145 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   const printVacancyRowsById={};
   Array.from(document.querySelectorAll('[data-print-vacancy-row]')).forEach(function(row){ printVacancyRowsById[row.getAttribute('data-print-vacancy-row')||'']=row; });
   const vacancyFilter=document.getElementById('vacancyFilter');
+  const stat51Panel=document.getElementById('stat51ComparePanel');
+  const stat51FileInput=document.getElementById('stat51FileInput');
+  const pickStat51File=document.getElementById('pickStat51File');
+  const clearStat51File=document.getElementById('clearStat51File');
+  const stat51Status=document.getElementById('stat51Status');
+  const stat51Summary=document.getElementById('stat51Summary');
+  const stat51TableWrap=document.getElementById('stat51TableWrap');
+  const stat51ComparisonBody=document.getElementById('stat51ComparisonBody');
+  const stat51Empty=document.getElementById('stat51Empty');
+  const stat51Footnote=document.getElementById('stat51Footnote');
+  let stat51Registry=(window.EducationMySchoolStat51&&window.EducationMySchoolStat51.loadSession)?window.EducationMySchoolStat51.loadSession():null;
+  function stat51CurrentSchoolCode(){
+    const field=document.querySelector('[name="school_code"]'), raw=field?field.value:'';
+    return window.EducationMySchoolStat51?window.EducationMySchoolStat51.normalizeSchoolCode(raw):String(raw||'').trim();
+  }
+  function stat51SetStatus(text,kind){
+    if(!stat51Status) return;
+    stat51Status.textContent=text;
+    stat51Status.classList.remove('is-error','is-success','is-warning');
+    if(kind) stat51Status.classList.add('is-'+kind);
+  }
+  function stat51DisplayGrade(value){
+    const g=String(value||'').replace(/[΄’']/g,'').trim().toUpperCase();
+    return ['Α','Β','Γ','Δ'].indexOf(g)>=0?g+'΄':(value||'—');
+  }
+  function stat51LocalGroups(slotAssigned){
+    const api=window.EducationMySchoolStat51, groups={};
+    if(!api) return groups;
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const slot=allocationSlotsData[sid]||{}, remaining=Math.max(0,(slot.capacity_hours||0)-(slotAssigned&&slotAssigned[sid]||0));
+      if(remaining<1) return;
+      const subject=String(slot.choice_option||slot.subject||'').trim();
+      if(!subject) return;
+      const structure=api.localStructure(slot.school||''), strict=api.strictKey(structure,slot.grade||'',subject), loose=api.looseKey(slot.grade||'',subject);
+      if(!groups[strict]) groups[strict]={key:strict,loose_key:loose,structure:structure,structure_label:slot.structure_label||'',grade:slot.grade||'',subject:subject,ours_hours:0,slot_count:0};
+      groups[strict].ours_hours+=remaining; groups[strict].slot_count++;
+    });
+    return groups;
+  }
+  function stat51PairGroups(localGroups,statGroups){
+    const pairs=[], usedLocal={}, usedStat={};
+    Object.keys(localGroups).forEach(function(key){
+      if(statGroups[key]){pairs.push({local:localGroups[key],stat:statGroups[key],match_kind:'strict'});usedLocal[key]=true;usedStat[key]=true;}
+    });
+    const localLoose={}, statLoose={};
+    Object.keys(localGroups).forEach(function(key){if(!usedLocal[key]){const lk=localGroups[key].loose_key;(localLoose[lk]||(localLoose[lk]=[])).push(key);}});
+    Object.keys(statGroups).forEach(function(key){if(!usedStat[key]){const lk=statGroups[key].loose_key;(statLoose[lk]||(statLoose[lk]=[])).push(key);}});
+    Object.keys(localLoose).forEach(function(lk){
+      if(localLoose[lk].length===1&&statLoose[lk]&&statLoose[lk].length===1){
+        const lkey=localLoose[lk][0],skey=statLoose[lk][0];pairs.push({local:localGroups[lkey],stat:statGroups[skey],match_kind:'loose'});usedLocal[lkey]=true;usedStat[skey]=true;
+      }
+    });
+    Object.keys(localGroups).forEach(function(key){if(!usedLocal[key])pairs.push({local:localGroups[key],stat:null,match_kind:'local_only'});});
+    Object.keys(statGroups).forEach(function(key){if(!usedStat[key])pairs.push({local:null,stat:statGroups[key],match_kind:'stat_only'});});
+    return pairs;
+  }
+  function stat51AppendCell(row,text,className){
+    const td=document.createElement('td');td.textContent=String(text==null?'':text);if(className)td.className=className;row.appendChild(td);return td;
+  }
+  function stat51RenderComparison(slotAssigned){
+    if(!stat51ComparisonBody||!window.EducationMySchoolStat51) return;
+    const api=window.EducationMySchoolStat51, code=stat51CurrentSchoolCode();
+    stat51ComparisonBody.innerHTML='';
+    if(!stat51Registry){
+      if(stat51Summary) stat51Summary.hidden=true;if(stat51TableWrap) stat51TableWrap.hidden=true;if(stat51Empty) stat51Empty.hidden=true;if(stat51Footnote)stat51Footnote.hidden=true;
+      if(clearStat51File) clearStat51File.hidden=true;
+      stat51SetStatus('Δεν έχει φορτωθεί stat5_1.','');
+      return;
+    }
+    if(clearStat51File) clearStat51File.hidden=false;
+    if(!code){
+      if(stat51Summary) stat51Summary.hidden=true;if(stat51TableWrap) stat51TableWrap.hidden=true;if(stat51Empty) stat51Empty.hidden=true;if(stat51Footnote)stat51Footnote.hidden=true;
+      stat51SetStatus('Το stat5_1 έχει φορτωθεί, αλλά χρειάζεται κωδικός myschool στην Καρτέλα 1 για να επιλεγεί η σωστή σχολική μονάδα.','warning');
+      return;
+    }
+    const schoolRows=api.forSchool(stat51Registry,code);
+    if(!schoolRows.length){
+      if(stat51Summary) stat51Summary.hidden=true;if(stat51TableWrap) stat51TableWrap.hidden=true;if(stat51Footnote)stat51Footnote.hidden=false;
+      if(stat51Empty){stat51Empty.hidden=false;stat51Empty.textContent='Δεν βρέθηκε σχολική μονάδα με κωδικό '+code+' στο φορτωμένο stat5_1.';}
+      stat51SetStatus('Δεν υπάρχει εγγραφή stat5_1 για τον κωδικό '+code+'.','warning');
+      return;
+    }
+    const localGroups=stat51LocalGroups(slotAssigned||{}), statGroups=api.aggregateRows(schoolRows), pairs=stat51PairGroups(localGroups,statGroups);
+    const looseCount={};pairs.forEach(function(pair){const item=pair.local||pair.stat;if(item){const k=item.loose_key||'';looseCount[k]=(looseCount[k]||0)+1;}});
+    pairs.sort(function(a,b){
+      const ag=api.normalizeGrade((a.local||a.stat).grade),bg=api.normalizeGrade((b.local||b.stat).grade),order={Α:1,Β:2,Γ:3,Δ:4};
+      if((order[ag]||9)!==(order[bg]||9))return (order[ag]||9)-(order[bg]||9);
+      return String((a.local||a.stat).subject||'').localeCompare(String((b.local||b.stat).subject||''),'el',{numeric:true});
+    });
+    let oursTotal=0,statTotal=0,agreements=0,differences=0;
+    pairs.forEach(function(pair){
+      const local=pair.local,stat=pair.stat,ours=local?local.ours_hours:0,mys=stat?stat.myschool_gap_hours:0,diff=ours-mys;
+      oursTotal+=ours;statTotal+=mys;
+      let label='',cls='';
+      if(local&&stat&&Math.abs(diff)<0.001){label='Συμφωνία';cls='is-agreement';agreements++;}
+      else if(local&&stat){label='Διαφορά';cls='is-difference';differences++;}
+      else if(local){label='Μόνο στο εργαλείο';cls='is-only';differences++;}
+      else {label='Μόνο στο stat5_1';cls='is-only';differences++;}
+      const item=local||stat,tr=document.createElement('tr');tr.className=cls;
+      stat51AppendCell(tr,stat51DisplayGrade(item.grade));
+      let subject=String(item.subject||'');
+      if(looseCount[item.loose_key||'']>1){const structureLabel=local&&local.structure_label?local.structure_label:(stat&&stat.structure?stat.structure:'');if(structureLabel)subject+=' · '+structureLabel;}
+      stat51AppendCell(tr,subject);
+      stat51AppendCell(tr,ours,'num');stat51AppendCell(tr,mys,'num');stat51AppendCell(tr,(diff>0?'+':'')+String(diff),'num stat51-diff');
+      const statusCell=stat51AppendCell(tr,label,'stat51-check');
+      if(stat){
+        const details=[];if(stat.assignment_a&&stat.assignment_a.length)details.push('Α΄: '+stat.assignment_a.join(' | '));if(stat.assignment_b&&stat.assignment_b.length)details.push('Β΄: '+stat.assignment_b.join(' | '));
+        if(details.length)statusCell.title=details.join(' · ');
+      }
+      stat51ComparisonBody.appendChild(tr);
+    });
+    const oursEl=document.querySelector('[data-stat51-ours]'),mysEl=document.querySelector('[data-stat51-myschool]'),diffEl=document.querySelector('[data-stat51-difference]'),agreeEl=document.querySelector('[data-stat51-agreements]');
+    if(oursEl)oursEl.textContent=String(oursTotal);if(mysEl)mysEl.textContent=String(statTotal);if(diffEl)diffEl.textContent=(oursTotal-statTotal>0?'+':'')+String(oursTotal-statTotal);if(agreeEl)agreeEl.textContent=String(agreements);
+    if(stat51Summary)stat51Summary.hidden=false;if(stat51TableWrap)stat51TableWrap.hidden=pairs.length===0;if(stat51Empty)stat51Empty.hidden=pairs.length!==0;if(stat51Footnote)stat51Footnote.hidden=false;
+    const schoolName=schoolRows[0].school_name||code, source=stat51Registry.source_inner_file||stat51Registry.source_file||'stat5_1';
+    const mismatch=stat51Registry.formula_mismatch_count||0;
+    stat51SetStatus(source+' · '+schoolName+' ('+code+') · '+schoolRows.length+' γραμμές κενών · '+statTotal+' ώρες στο stat5_1 · '+differences+' αποκλίσεις.'+(mismatch?' Προσοχή: '+mismatch+' γραμμές του αρχείου δεν συμφωνούν με τον τύπο συνολικές ώρες − κάλυψη.':''),differences?'warning':'success');
+  }
+  function stat51RefreshFromCurrentAllocation(){const state=allocationCollectState();stat51RenderComparison(state.slotAssigned);}
+  if(pickStat51File&&stat51FileInput)pickStat51File.addEventListener('click',function(){stat51FileInput.click();});
+  if(stat51FileInput)stat51FileInput.addEventListener('change',function(){
+    const file=stat51FileInput.files&&stat51FileInput.files[0];if(!file)return;
+    if(!window.EducationMySchoolStat51){stat51SetStatus('Δεν φορτώθηκε ο importer myschool stat5_1.','error');return;}
+    stat51SetStatus('Ανάγνωση '+file.name+'…','');
+    const reader=new FileReader();reader.onload=async function(){
+      try{
+        const registry=await window.EducationMySchoolStat51.parseArrayBuffer(reader.result,file.name);stat51Registry=registry;
+        const saved=window.EducationMySchoolStat51.saveSession(registry);
+        if(stat51Panel)stat51Panel.open=true;
+        stat51RefreshFromCurrentAllocation();
+        if(!saved)stat51SetStatus(stat51Status.textContent+' Η σύγκριση λειτουργεί, αλλά το αρχείο είναι πολύ μεγάλο για προσωρινή αποθήκευση στη συνεδρία του browser.','warning');
+      }catch(error){stat51SetStatus('Αποτυχία ανάγνωσης stat5_1: '+(error&&error.message?error.message:'άγνωστο σφάλμα')+'.','error');}
+      stat51FileInput.value='';
+    };reader.onerror=function(){stat51SetStatus('Δεν ήταν δυνατή η ανάγνωση του αρχείου stat5_1.','error');};reader.readAsArrayBuffer(file);
+  });
+  if(clearStat51File)clearStat51File.addEventListener('click',function(){
+    stat51Registry=null;if(window.EducationMySchoolStat51)window.EducationMySchoolStat51.clearSession();stat51RenderComparison({});
+  });
+  const stat51SchoolCodeField=document.querySelector('[name="school_code"]');if(stat51SchoolCodeField)stat51SchoolCodeField.addEventListener('input',function(){stat51RefreshFromCurrentAllocation();});
   function vacancyEligiblePeopleAvailability(slot,personAssigned,personPriority){
     let normal=0, exceptionB=0;
     Object.keys(allocationPeopleData||{}).forEach(function(pid){
@@ -4093,7 +4263,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     });
   }
   function updateVacancyView(slotAssigned,personAssigned,personPriority){
-    if(!vacancyRows.length) return;
+    if(!vacancyRows.length){ stat51RenderComparison(slotAssigned||{}); return; }
     let total=0, slots=0, noStaff=0, hasStaff=0;
     const q=vacancyFilter?(vacancyFilter.value||'').toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,''):'';
     vacancyRows.forEach(function(row){
@@ -4130,6 +4300,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     if(tableWrap) tableWrap.hidden=slots===0;
     if(empty) empty.hidden=slots!==0;
     const printEmpty=document.getElementById('printVacancyEmpty'); if(printEmpty) printEmpty.hidden=slots!==0;
+    stat51RenderComparison(slotAssigned||{});
   }
   if(vacancyFilter) vacancyFilter.addEventListener('input',function(){ const state=allocationCollectState(); updateVacancyView(state.slotAssigned,state.personAssigned,state.personPriority); });
   function updateAllocationSummary(){

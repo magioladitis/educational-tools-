@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import subprocess
+import subprocess,re
 ROOT=Path(__file__).resolve().parents[1]
 CONFIG=ROOT/'includes/config.php'
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
@@ -11,7 +11,9 @@ config=CONFIG.read_text(encoding='utf-8')
 page=PAGE.read_text(encoding='utf-8')
 js=CSVJS.read_text(encoding='utf-8')
 check('asset helper uses filemtime cache key', 'filemtime($localPath)' in config and "$version .= '-'" in config)
-check('release version still retained', "EDU_TOOLS_VERSION', '3.20.69'" in config)
+version_match=re.search(r"define\('EDU_TOOLS_VERSION',\s*'([^']+)'\)",config)
+release_version=version_match.group(1) if version_match else ''
+check('release version is declared', bool(release_version))
 check('CSV importer declares manual-hours capability', 'supportsManualRequiredTeachingHours:true' in js)
 check('CSV importer declares secondary-specialty capability', 'supportsSecondarySpecialty:true' in js)
 check('CSV importer carries schema version', "schemaVersion:'2026-09-05-staff-registry-v1'" in js and "registrySchemaVersion:'staff_registry_v1'" in js)
@@ -21,7 +23,7 @@ r=subprocess.run(['php'],input=php_code,text=True,capture_output=True,cwd=ROOT)
 check('asset helper executes', r.returncode==0)
 url=r.stdout.strip()
 expected=str(int(CSVJS.stat().st_mtime))
-check('CSV importer URL includes file mtime', url.startswith('includes/personnel-csv-import.js?v=3.20.69-') and url.endswith(expected))
+check('CSV importer URL includes release and file mtime', bool(release_version) and url.startswith('includes/personnel-csv-import.js?v='+release_version+'-') and url.endswith(expected))
 node_code=r"""
 const csv=require('./includes/personnel-csv-import.js');
 const text='Κλάδος;Ονοματεπώνυμο;Υποχρεωτικό ωράριο;Ρόλος;Έτη υπηρεσίας;Μήνες;Ημέρες;Ώρες αλλού\r\nΠΕ03;Μαρία Παπαδοπούλου;20;Εκπαιδευτικός;;;;0\r\nΠΕ02;Γιώργος Διευθυντής;;Διευθυντής;20;0;0;0\r\nΠΕ01;Μαρία Παπαδοπούλου;21;Εκπαιδευτικός;;;;0\r\nΠΕ03;Μαρία Παπαδοπούλου;23;Εκπαιδευτικός;;;;0\r\nΠΕ03;Μαρία Παπαδοπούλου;23;Εκπαιδευτικός;;;;0\r\n';
