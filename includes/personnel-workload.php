@@ -939,7 +939,7 @@ function personnelWorkloadPriorityForSlotCode($slot, $specialtyCode)
 
 function personnelWorkloadPriorityRank($priority)
 {
-    $order = array('A'=>1, 'B'=>2, 'C'=>3, 'SPECIAL'=>4);
+    $order = array('A'=>1, 'SPECIAL'=>1, 'B'=>2, 'C'=>3);
     return isset($order[$priority]) ? $order[$priority] : 99;
 }
 
@@ -1238,144 +1238,84 @@ function personnelWorkloadTopCandidateCodesForSlot($slot)
  * Δεν αλλάζει τις χειροκίνητες κατανομές της Καρτέλας 4. Ξεκινά από αυτές
  * και προσπαθεί να καλύψει επιπλέον ώρες με το υπάρχον προσωπικό.
  *
- * Heuristic: πρώτα τα πιο «στενά» slots (λιγότεροι διαθέσιμοι εκπαιδευτικοί),
- * και μέσα σε κάθε slot Α΄ πριν Β΄ πριν Γ΄, κύρια πριν 2η ειδικότητα. Το
- * κανονικό όριο Β΄ ανάθεσης 10 ωρών τηρείται ως όριο της αυτόματης πρότασης.
+ * Η πρόταση χρησιμοποιεί τον ίδιο κοινό atomic/max-coverage optimizer με την
+ * Καρτέλα 4. Μετά τη μέγιστη κάλυψη προτιμώνται Α΄/ειδική, έπειτα Β΄ και Γ΄,
+ * και σε ισοβαθμία κύρια πριν από 2η ειδικότητα. Το όριο Β΄ ανάθεσης 10 ωρών
+ * τηρείται ως hard limit της αυτόματης πρότασης.
  */
 function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAllocations = array(), $model = null, $basePlan = null)
 {
     if ($model === null) $model = teachingWorkloadModel();
+    if ($basePlan === null) $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model);
+    if (!function_exists('teachingAllocationEngineProposal')) require_once __DIR__ . '/teaching-allocation-engine.php';
+
     $matrix = schoolProfileWorkloadMatrix($profile, $model);
     $slots = personnelWorkloadAllocationSlots($profile, $matrix);
-    if ($basePlan === null) $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model);
+    $engine = teachingAllocationEngineProposal($profile, $people, $slotAllocations, $model);
 
-    $peopleIndex = array();
+    // Fallback state for invalid locked rows. In the normal path the exact same
+    // optimizer state used by Tab 4 is returned below, so Tabs 4 and 6 cannot
+    // diverge in their internal balancing logic.
+    $peopleState = array();
     foreach ($people as $person) {
-        $id = isset($person['person_id']) ? trim((string) $person['person_id']) : '';
-        if ($id === '') continue;
+        $personId = isset($person['person_id']) ? trim((string)$person['person_id']) : '';
+        if ($personId === '') continue;
         $normalized = personnelWorkloadNormalizePerson($person);
         if ($normalized['status'] !== 'resolved') continue;
-        $peopleIndex[$id] = $person;
-    }
-
-    $personState = array();
-    foreach ($peopleIndex as $personId=>$person) {
         $evaluation = isset($basePlan['people'][$personId]) ? $basePlan['people'][$personId] : null;
-        $remaining = $evaluation && isset($evaluation['remaining_hours']) ? max(0, (int) $evaluation['remaining_hours']) : 0;
-        $bHours = $evaluation && isset($evaluation['b_assignment_hours']) ? max(0, (int) $evaluation['b_assignment_hours']) : 0;
-        $personState[$personId] = array(
+        $remaining = $evaluation && isset($evaluation['remaining_hours']) ? max(0,(int)$evaluation['remaining_hours']) : 0;
+        $bHours = $evaluation && isset($evaluation['b_assignment_hours']) ? max(0,(int)$evaluation['b_assignment_hours']) : 0;
+        $peopleState[$personId] = array(
             'remaining_hours'=>$remaining,
             'b_assignment_hours'=>$bHours,
-            'b_remaining_hours'=>max(0, 10 - $bHours),
+            'b_remaining_hours'=>max(0,10-$bHours),
             'primary_code'=>isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '',
             'secondary_code'=>isset($person['secondary_specialty_code']) ? teacherSpecialtyCanonicalCode($person['secondary_specialty_code']) : '',
         );
     }
-
     $slotState = array();
     foreach ($slots as $slotId=>$slot) {
-        $remaining = isset($basePlan['slots'][$slotId]['remaining_hours'])
-            ? max(0, (int) $basePlan['slots'][$slotId]['remaining_hours'])
-            : (int) $slot['capacity_hours'];
-        $slotState[$slotId] = array('remaining_hours'=>$remaining);
+        $remaining = isset($basePlan['slots'][$slotId]['remaining_hours']) ? max(0,(int)$basePlan['slots'][$slotId]['remaining_hours']) : (int)$slot['capacity_hours'];
+        $assigned = isset($basePlan['slots'][$slotId]['assigned_hours']) ? max(0,(int)$basePlan['slots'][$slotId]['assigned_hours']) : 0;
+        $slotState[$slotId] = array('remaining_hours'=>$remaining,'atomic_blocked'=>$assigned>0 && $remaining>0);
     }
 
-    // Precompute legal person-slot routes and a simple flexibility count.
-    $routesBySlot = array();
-    $flexibility = array();
-    foreach ($peopleIndex as $personId=>$person) $flexibility[$personId] = 0;
-    foreach ($slots as $slotId=>$slot) {
-        if ($slotState[$slotId]['remaining_hours'] < 1) continue;
-        $routesBySlot[$slotId] = array();
-        foreach ($peopleIndex as $personId=>$person) {
-            if ($personState[$personId]['remaining_hours'] < 1) continue;
-            $match = personnelWorkloadBestAssignmentForSlot($slot, $person);
-            if ($match === null) continue;
-            if ($match['priority'] === 'B' && $personState[$personId]['b_remaining_hours'] < 1) continue;
-            $routesBySlot[$slotId][$personId] = $match;
-            $flexibility[$personId]++;
-        }
+    $proposal = array(); $optimizerSummary = array();
+    if (isset($engine['status']) && $engine['status'] === 'ok') {
+        $proposal = isset($engine['proposed_allocations']) ? $engine['proposed_allocations'] : array();
+        if (!empty($engine['optimizer_state']['people'])) $peopleState = $engine['optimizer_state']['people'];
+        if (!empty($engine['optimizer_state']['slots'])) $slotState = $engine['optimizer_state']['slots'];
+        if (!empty($engine['optimizer_state']['summary'])) $optimizerSummary = $engine['optimizer_state']['summary'];
     }
 
-    $slotOrder = array_keys($routesBySlot);
-    usort($slotOrder, function ($a, $b) use ($routesBySlot, $slots) {
-        $ca = count($routesBySlot[$a]); $cb = count($routesBySlot[$b]);
-        if ($ca !== $cb) return $ca - $cb;
-        $ga = isset($slots[$a]['grade']) ? $slots[$a]['grade'] : '';
-        $gb = isset($slots[$b]['grade']) ? $slots[$b]['grade'] : '';
-        $g = strnatcmp($ga, $gb); if ($g !== 0) return $g;
-        $sa = isset($slots[$a]['subject']) ? $slots[$a]['subject'] : '';
-        $sb = isset($slots[$b]['subject']) ? $slots[$b]['subject'] : '';
-        $s = strnatcmp($sa, $sb); if ($s !== 0) return $s;
-        return strnatcmp($a, $b);
-    });
-
-    $proposal = array();
     $covered = 0;
-    foreach ($slotOrder as $slotId) {
-        $slotRemaining = isset($slotState[$slotId]['remaining_hours']) ? (int) $slotState[$slotId]['remaining_hours'] : 0;
-        if ($slotRemaining < 1) continue;
-        $candidateIds = array_keys($routesBySlot[$slotId]);
-        usort($candidateIds, function ($a, $b) use ($routesBySlot, $slotId, $flexibility) {
-            $ma = $routesBySlot[$slotId][$a]; $mb = $routesBySlot[$slotId][$b];
-            $rank = personnelWorkloadPriorityRank($ma['priority']) - personnelWorkloadPriorityRank($mb['priority']);
-            if ($rank !== 0) return $rank;
-            $fa = isset($flexibility[$a]) ? (int) $flexibility[$a] : 999999;
-            $fb = isset($flexibility[$b]) ? (int) $flexibility[$b] : 999999;
-            if ($fa !== $fb) return $fa - $fb; // πιο «στενός» εκπαιδευτικός πρώτα
-            if ($ma['specialty_source'] !== $mb['specialty_source']) return $ma['specialty_source'] === 'primary' ? -1 : 1;
-            return strnatcmp($a, $b);
-        });
-        foreach ($candidateIds as $personId) {
-            if ($slotRemaining < 1) break;
-            if (!isset($personState[$personId]) || $personState[$personId]['remaining_hours'] < 1) continue;
-            $match = $routesBySlot[$slotId][$personId];
-            $available = (int) $personState[$personId]['remaining_hours'];
-            if ($match['priority'] === 'B') $available = min($available, (int) $personState[$personId]['b_remaining_hours']);
-            // Κάθε μάθημα/τμήμα είναι αδιαίρετη μονάδα: δεν μοιράζουμε
-            // π.χ. 4 ώρες Μαθηματικών ως 3+1 σε δύο εκπαιδευτικούς.
-            if ($available < $slotRemaining) continue;
-            $hours = $slotRemaining;
-            $proposal[] = array(
-                'person_id'=>$personId,
-                'slot_id'=>$slotId,
-                'slot_label'=>isset($slots[$slotId]['slot_label']) ? $slots[$slotId]['slot_label'] : '',
-                'subject'=>isset($slots[$slotId]['subject']) ? $slots[$slotId]['subject'] : '',
-                'hours'=>$hours,
-                'priority'=>$match['priority'],
-                'used_specialty_code'=>$match['used_specialty_code'],
-                'specialty_source'=>$match['specialty_source'],
-            );
-            $personState[$personId]['remaining_hours'] -= $hours;
-            if ($match['priority'] === 'B') {
-                $personState[$personId]['b_assignment_hours'] += $hours;
-                $personState[$personId]['b_remaining_hours'] = max(0, 10 - $personState[$personId]['b_assignment_hours']);
-            }
-            $slotRemaining = 0;
-            $covered += $hours;
-            break;
-        }
-        $slotState[$slotId]['remaining_hours'] = max(0, $slotRemaining);
-    }
-
+    foreach ($proposal as $row) $covered += isset($row['hours']) ? max(0,(int)$row['hours']) : 0;
     $remainingPersonnel = 0;
-    foreach ($personState as $state) $remainingPersonnel += (int) $state['remaining_hours'];
+    foreach ($peopleState as $state) $remainingPersonnel += isset($state['remaining_hours']) ? max(0,(int)$state['remaining_hours']) : 0;
     $remainingSlots = 0;
-    foreach ($slotState as $state) $remainingSlots += (int) $state['remaining_hours'];
+    foreach ($slotState as $state) {
+        if (!empty($state['atomic_blocked'])) continue;
+        $remainingSlots += isset($state['remaining_hours']) ? max(0,(int)$state['remaining_hours']) : 0;
+    }
 
     return array(
         'allocations'=>$proposal,
-        'people'=>$personState,
+        'people'=>$peopleState,
         'slots'=>$slotState,
         'summary'=>array(
             'auto_covered_hours'=>$covered,
             'remaining_personnel_hours'=>$remainingPersonnel,
             'remaining_slot_hours'=>$remainingSlots,
+            'maximum_coverage_certified'=>isset($optimizerSummary['maximum_coverage_certified']) ? (bool)$optimizerSummary['maximum_coverage_certified'] : false,
+            'optimizer_component_count'=>isset($optimizerSummary['optimizer_component_count']) ? (int)$optimizerSummary['optimizer_component_count'] : 0,
+            'optimizer_search_nodes'=>isset($optimizerSummary['optimizer_search_nodes']) ? (int)$optimizerSummary['optimizer_search_nodes'] : 0,
         ),
         'semantics'=>array(
             'proposal_only'=>true,
             'does_not_modify_manual_allocations'=>true,
-            'constrained_slots_first_heuristic'=>true,
+            'shared_optimizer_with_tab4'=>true,
+            'maximum_coverage_first'=>true,
+            'a_and_special_before_b_before_c'=>true,
             'b_assignment_limit_10_respected_without_exception'=>true,
             'primary_and_secondary_specialty_used'=>true,
             'course_section_assignment_is_atomic'=>true,
@@ -1530,12 +1470,14 @@ function personnelWorkloadSpecialtyBalanceReport($profile, $people, $slotAllocat
             'surplus_hours_total'=>$surplusTotal,
             'specialty_gap_count'=>count(array_filter($gapByCode, function ($x) { return $x > 0; })),
             'specialty_surplus_count'=>count(array_filter($surplusByCode, function ($x) { return $x > 0; })),
+            'maximum_coverage_certified'=>isset($auto['summary']['maximum_coverage_certified']) ? (bool)$auto['summary']['maximum_coverage_certified'] : false,
         ),
         'semantics'=>array(
             'official_vacancy_calculation'=>false,
             'smart_choice_only_among_equal_best_assignment_codes'=>true,
             'smart_choice_prefers_code_with_widest_top_assignment_gap_coverage'=>true,
             'existing_staff_auto_balance_is_proposal_only'=>true,
+            'shared_optimizer_with_tab4'=>true,
             'second_specialty_used_for_internal_balance'=>true,
             'surplus_reported_under_primary_specialty'=>true,
             'gymnasium_skills_and_technology_reported_separately'=>true,

@@ -1697,7 +1697,8 @@ uksort($specialtyLabelsClient, 'strnatcmp');
             ?>
             <?php if ($allocationAutoProposal): ?>
               <?php if (isset($allocationAutoProposal['status']) && $allocationAutoProposal['status'] === 'ok'): ?>
-                <div class="info-note allocation-auto-result is-success"><strong>Η αυτόματη πρόταση δημιουργήθηκε.</strong> Προστέθηκαν <?php echo (int)$allocationAutoProposal['summary']['auto_covered_hours']; ?> ώρες πάνω στις ήδη ορισμένες <?php echo (int)$allocationAutoProposal['summary']['locked_hours']; ?> ώρες. Απομένουν <?php echo (int)$allocationAutoProposal['summary']['final_uncovered_hours']; ?> ακάλυπτες ώρες.<?php if (!empty($allocationAutoProposal['summary']['split_slot_count'])): ?> Σε <?php echo (int)$allocationAutoProposal['summary']['split_slot_count']; ?> μάθημα/μαθήματα χρειάστηκε επιμερισμός ωρών σε περισσότερους εκπαιδευτικούς για να επιτευχθεί η μέγιστη κάλυψη — έλεγξέ τα πριν οριστικοποιήσεις.<?php endif; ?></div>
+                <div class="info-note allocation-auto-result is-success"><strong>Η αυτόματη πρόταση δημιουργήθηκε.</strong> Προστέθηκαν <?php echo (int)$allocationAutoProposal['summary']['auto_covered_hours']; ?> ώρες πάνω στις ήδη ορισμένες <?php echo (int)$allocationAutoProposal['summary']['locked_hours']; ?> ώρες. Απομένουν <?php echo (int)$allocationAutoProposal['summary']['final_uncovered_hours']; ?> ακάλυπτες ώρες.</div>
+                <?php if (empty($allocationAutoProposal['optimizer_state']['summary']['maximum_coverage_certified'])): ?><div class="info-note allocation-auto-result is-warning"><strong>Χρειάζεται τελικός έλεγχος.</strong> Το component ήταν πολύ σύνθετο για πλήρη πιστοποίηση της μέγιστης κάλυψης εντός του ορίου ασφαλείας· εμφανίζεται η καλύτερη έγκυρη atomic πρόταση που βρέθηκε.</div><?php endif; ?>
               <?php else: ?>
                 <div class="info-note allocation-auto-result is-warning"><strong>Δεν δημιουργήθηκε αυτόματη πρόταση.</strong> <?php echo staffingUiH(isset($allocationAutoProposal['message']) ? $allocationAutoProposal['message'] : 'Χρειάζεται πρώτα διόρθωση της τρέχουσας κατανομής.'); ?></div>
               <?php endif; ?>
@@ -1896,6 +1897,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           <p class="cap">Μετατρέπει την εικόνα μαθημάτων και προσωπικού σε προτεινόμενη δήλωση ανά κλάδο. Πριν δημιουργήσει έλλειμμα, το εργαλείο ελέγχει αν οι ακάλυπτες ώρες μπορούν να απορροφηθούν από το υπάρχον προσωπικό μέσω Α΄/Β΄/Γ΄ ανάθεσης ή 2ης ειδικότητας.</p>
           <div class="info-note"><strong>«Έξυπνη» επιλογή κλάδου:</strong> όταν ένα ακάλυπτο μάθημα έχει περισσότερους από έναν ισότιμους κλάδους στην καλύτερη ανάθεση, προτείνεται ο κλάδος που μπορεί να καλύψει τις περισσότερες από τις συνολικά ακάλυπτες ώρες. Δεν επιλέγεται χαμηλότερη ανάθεση μόνο και μόνο για να βελτιωθεί η συγκέντρωση των κενών.</div>
           <?php if ($schoolType === 'gymnasio'): ?><div class="info-note"><strong>Υπόδειγμα ΔΔΕ Κέρκυρας:</strong> τα Εργαστήρια Δεξιοτήτων και η Τεχνολογία Γυμνασίου διατηρούνται ως ξεχωριστές γραμμές και δεν αποδίδονται τεχνητά σε έναν κλάδο.</div><?php endif; ?>
+          <?php if ($specialtyBalanceReport && empty($specialtyBalanceReport['summary']['maximum_coverage_certified'])): ?><div class="info-note is-warning"><strong>Χρειάζεται τελικός έλεγχος.</strong> Η εσωτερική εξισορρόπηση είναι έγκυρη και atomic, αλλά η μέγιστη κάλυψη δεν πιστοποιήθηκε πλήρως εντός του ορίου ασφαλείας του optimizer.</div><?php endif; ?>
 
           <div class="staffing-summary-grid" id="specialtyBalanceSummary">
             <div class="summary-chip"><strong data-specialty-manual-uncovered><?php echo $specialtyBalanceReport ? (int)$specialtyBalanceReport['summary']['manual_unassigned_hours'] : 0; ?></strong><span>ώρες χωρίς χειροκίνητη κατανομή</span></div>
@@ -2273,6 +2275,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       tab.setAttribute('aria-selected',active?'true':'false');
     });
     panels.forEach(function(panel){ panel.hidden=panel.getAttribute('data-staffing-panel')!==name; });
+    if(name==='specialties' && typeof allocationCollectState==='function' && typeof renderSpecialtyBalance==='function') renderSpecialtyBalance(allocationCollectState());
   }
   tabs.forEach(function(tab){
     tab.addEventListener('click',function(){ if(!tab.disabled) activatePanel(tab.getAttribute('data-staffing-tab')); });
@@ -2935,10 +2938,15 @@ uksort($specialtyLabelsClient, 'strnatcmp');
 
   function schoolGeneralSectionCount(){
     const typeEl=document.getElementById('school_type');
-    const prefix=typeEl && typeEl.value==='gel' ? 'gel_general_' : 'gym_general_';
-    return ['a','b','c'].reduce(function(total,suffix){
-      const input=document.querySelector('[name="'+prefix+suffix+'"]');
-      return total+Math.max(0,parseInt(input&&input.value?input.value:'0',10)||0);
+    const schoolType=typeEl ? typeEl.value : 'gymnasio';
+    let prefixes=['gym_general_'];
+    if(schoolType==='gel' || schoolType==='esperino_gel') prefixes=['gel_general_'];
+    else if(schoolType==='gymnasio_lt') prefixes=['gym_general_','gel_general_'];
+    return prefixes.reduce(function(total,prefix){
+      return total+['a','b','c'].reduce(function(subtotal,suffix){
+        const input=document.querySelector('[name="'+prefix+suffix+'"]');
+        return subtotal+Math.max(0,parseInt(input&&input.value?input.value:'0',10)||0);
+      },0);
     },0);
   }
   function directorSectionsBandFromCount(count){
@@ -3550,7 +3558,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     return '';
   }
   function allocationPriorityRank(priority){
-    const rank={A:1,B:2,C:3,SPECIAL:4};
+    const rank={A:1,SPECIAL:1,B:2,C:3};
     return rank[priority]||99;
   }
   function allocationPriorityLabel(priority){
@@ -3727,8 +3735,134 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     }
     return {priority:'',codes:[]};
   }
+  function allocationObjectiveCompare(a,b){
+    for(const key of ['covered','top','b','primary']){
+      const av=a[key]||0,bv=b[key]||0;
+      if(av!==bv) return av>bv?1:-1;
+    }
+    return 0;
+  }
+  function allocationObjectiveForRows(rows){
+    const o={covered:0,top:0,b:0,primary:0};
+    (rows||[]).forEach(function(row){
+      const h=Math.max(0,parseInt(row.hours||0,10)||0), p=row.priority||'';
+      o.covered+=h;
+      if(p==='A'||p==='SPECIAL') o.top+=h; else if(p==='B') o.b+=h;
+      if(row.specialty_source==='primary') o.primary+=h;
+    });
+    return o;
+  }
+  function allocationOptimizeRemaining(personStateInput,slotStateInput){
+    const originalPeople=JSON.parse(JSON.stringify(personStateInput||{}));
+    const originalSlots=JSON.parse(JSON.stringify(slotStateInput||{}));
+    const peopleIds=Object.keys(originalPeople).filter(function(pid){return (originalPeople[pid].remaining_hours||0)>0;}).sort(function(a,b){return String(a).localeCompare(String(b),'el',{numeric:true});});
+    const routesBySlot={};
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const state=originalSlots[sid]||{}, need=Math.max(0,state.remaining_hours||0);
+      if(need<1||state.atomic_blocked) return;
+      const routes={};
+      peopleIds.forEach(function(pid){
+        const match=allocationBestAssignment(allocationPeopleData[pid],allocationSlotsData[sid]);
+        if(!match) return;
+        const ps=originalPeople[pid];
+        if((ps.remaining_hours||0)<need) return;
+        if(match.priority==='B'&&(ps.b_remaining_hours||0)<need) return;
+        routes[pid]=match;
+      });
+      if(Object.keys(routes).length) routesBySlot[sid]=routes;
+    });
+
+    // Fast atomic seed. It is only the initial lower bound; the exact search
+    // below is what fixes combinations such as 6 versus 3+2+2.
+    const seedPeople=JSON.parse(JSON.stringify(originalPeople)), seedSlots=JSON.parse(JSON.stringify(originalSlots)), seed=[];
+    Object.keys(routesBySlot).sort(function(a,b){
+      const ca=Object.keys(routesBySlot[a]).length,cb=Object.keys(routesBySlot[b]).length;if(ca!==cb)return ca-cb;
+      const ha=seedSlots[a].remaining_hours||0,hb=seedSlots[b].remaining_hours||0;if(ha!==hb)return hb-ha;
+      return String(a).localeCompare(String(b),'el',{numeric:true});
+    }).forEach(function(sid){
+      const need=seedSlots[sid].remaining_hours||0;
+      const candidates=Object.keys(routesBySlot[sid]).filter(function(pid){
+        const m=routesBySlot[sid][pid],ps=seedPeople[pid];
+        return ps&&(ps.remaining_hours||0)>=need&&(m.priority!=='B'||(ps.b_remaining_hours||0)>=need);
+      }).sort(function(a,b){
+        const ma=routesBySlot[sid][a],mb=routesBySlot[sid][b];
+        const r=allocationPriorityRank(ma.priority)-allocationPriorityRank(mb.priority);if(r)return r;
+        if(ma.specialty_source!==mb.specialty_source)return ma.specialty_source==='primary'?-1:1;
+        const la=(seedPeople[a].remaining_hours||0)-need,lb=(seedPeople[b].remaining_hours||0)-need;if(la!==lb)return la-lb;
+        return String(a).localeCompare(String(b),'el',{numeric:true});
+      });
+      if(!candidates.length)return;
+      const pid=candidates[0],m=routesBySlot[sid][pid],slot=allocationSlotsData[sid];
+      seed.push({person_id:pid,slot_id:sid,slot_label:slot.slot_label||slot.label||sid,subject:slot.subject||'',hours:need,priority:m.priority,used_specialty_code:m.used_specialty_code,specialty_source:m.specialty_source,source:'automatic_live_seed'});
+      seedPeople[pid].remaining_hours-=need;
+      if(m.priority==='B'){seedPeople[pid].b_assignment_hours=(seedPeople[pid].b_assignment_hours||0)+need;seedPeople[pid].b_remaining_hours=Math.max(0,10-seedPeople[pid].b_assignment_hours);}
+      seedSlots[sid].remaining_hours=0;
+    });
+
+    const groupMap=new Map();
+    Object.keys(routesBySlot).forEach(function(sid){
+      const need=originalSlots[sid].remaining_hours||0,routes=routesBySlot[sid];
+      const sig=Object.keys(routes).sort().map(function(pid){const m=routes[pid];return pid+'='+m.priority+'/'+m.specialty_source+'/'+m.used_specialty_code;}).join(';');
+      const key=need+'|'+sig;
+      if(!groupMap.has(key))groupMap.set(key,{need:need,routes:routes,slot_ids:[]});
+      groupMap.get(key).slot_ids.push(sid);
+    });
+    const groups=Array.from(groupMap.values()).sort(function(a,b){const ca=Object.keys(a.routes).length,cb=Object.keys(b.routes).length;if(ca!==cb)return ca-cb;if(a.need!==b.need)return b.need-a.need;return String(a.slot_ids[0]).localeCompare(String(b.slot_ids[0]),'el',{numeric:true});});
+    const personToGroups={};
+    groups.forEach(function(g,gi){Object.keys(g.routes).forEach(function(pid){if(!personToGroups[pid])personToGroups[pid]=[];personToGroups[pid].push(gi);});});
+    const visited=new Set(),components=[];
+    groups.forEach(function(g,start){
+      if(visited.has(start))return;
+      const queue=[start],gis=[],pids=new Set();visited.add(start);
+      while(queue.length){const gi=queue.shift();gis.push(gi);Object.keys(groups[gi].routes).forEach(function(pid){pids.add(pid);(personToGroups[pid]||[]).forEach(function(ngi){if(!visited.has(ngi)){visited.add(ngi);queue.push(ngi);}});});}
+      components.push({group_indexes:gis,person_ids:Array.from(pids)});
+    });
+    const seedBySlot={};seed.forEach(function(row){seedBySlot[row.slot_id]=row;});
+    let finalRows=[],allCertified=true,totalNodes=0;
+
+    components.forEach(function(component){
+      const cg=component.group_indexes.map(function(i){return groups[i];}), cpids=component.person_ids.slice().sort();
+      if(cpids.length===1){
+        const pid=cpids[0],cap=originalPeople[pid].remaining_hours||0,bcap=originalPeople[pid].b_remaining_hours||0,items=[];
+        cg.forEach(function(g){const m=g.routes[pid];if(!m)return;g.slot_ids.forEach(function(sid){items.push({sid:sid,need:g.need,m:m});});});
+        let dp=new Map();dp.set('0:0',{objective:{covered:0,top:0,b:0,primary:0},rows:[],used:0,bused:0});
+        items.forEach(function(item){const next=new Map(dp);dp.forEach(function(st){totalNodes++;const nu=st.used+item.need,nb=st.bused+(item.m.priority==='B'?item.need:0);if(nu>cap||nb>bcap)return;const o={...st.objective};o.covered+=item.need;if(item.m.priority==='A'||item.m.priority==='SPECIAL')o.top+=item.need;else if(item.m.priority==='B')o.b+=item.need;if(item.m.specialty_source==='primary')o.primary+=item.need;const slot=allocationSlotsData[item.sid],rows=st.rows.concat([{person_id:pid,slot_id:item.sid,slot_label:slot.slot_label||slot.label||item.sid,subject:slot.subject||'',hours:item.need,priority:item.m.priority,used_specialty_code:item.m.used_specialty_code,specialty_source:item.m.specialty_source,source:'automatic_live_optimizer_dp'}]);const key=nu+':'+nb,prev=next.get(key);if(!prev||allocationObjectiveCompare(o,prev.objective)>0)next.set(key,{objective:o,rows:rows,used:nu,bused:nb});});dp=next;});
+        let best={objective:{covered:0,top:0,b:0,primary:0},rows:[]};dp.forEach(function(st){if(allocationObjectiveCompare(st.objective,best.objective)>0)best=st;});finalRows=finalRows.concat(best.rows);return;
+      }
+      const counts=cg.map(function(g){return g.slot_ids.length;}),originalCounts=counts.slice();
+      const rem={},brem={};cpids.forEach(function(pid){rem[pid]=originalPeople[pid].remaining_hours||0;brem[pid]=originalPeople[pid].b_remaining_hours||0;});
+      const equiv={};cpids.forEach(function(pid){equiv[pid]=cg.map(function(g){const m=g.routes[pid];return m?(m.priority+'/'+m.specialty_source+'/'+m.used_specialty_code):'-';}).join(';');});
+      let bestRows=[];cg.forEach(function(g){g.slot_ids.forEach(function(sid){if(seedBySlot[sid])bestRows.push(seedBySlot[sid]);});});
+      let bestObj=allocationObjectiveForRows(bestRows),currentRows=[],cur={covered:0,top:0,b:0,primary:0},nodes=0,aborted=false;
+      const memo=new Map(),nodeLimit=30000;
+      function search(){
+        if(aborted)return;if(++nodes>nodeLimit){aborted=true;return;}
+        let remainingHours=0,done=true;cg.forEach(function(g,gi){if(counts[gi]>0){done=false;remainingHours+=counts[gi]*g.need;}});
+        if(done){if(allocationObjectiveCompare(cur,bestObj)>0){bestObj={...cur};bestRows=currentRows.map(function(r){return {...r};});}return;}
+        const personHours=cpids.reduce(function(t,pid){return t+(rem[pid]||0);},0),upper=cur.covered+Math.min(remainingHours,personHours);
+        if(upper<bestObj.covered)return;if(upper===bestObj.covered&&cur.top+Math.min(remainingHours,personHours)<bestObj.top)return;
+        const equivStates={};cpids.forEach(function(pid){const sig=equiv[pid]||pid;if(!equivStates[sig])equivStates[sig]=[];equivStates[sig].push(rem[pid]+':'+brem[pid]);});
+        const key=counts.join(',')+'|'+Object.keys(equivStates).sort().map(function(sig){return sig+'='+equivStates[sig].sort().join(',');}).join('|');
+        const seen=memo.get(key);if(seen&&(seen.top>cur.top||(seen.top===cur.top&&seen.primary>=cur.primary)))return;memo.set(key,{top:cur.top,primary:cur.primary});
+        let chosen=-1,cands=[],few=1e9;
+        cg.forEach(function(g,gi){if(counts[gi]<1)return;const local=Object.keys(g.routes).filter(function(pid){const m=g.routes[pid];return rem[pid]>=g.need&&(m.priority!=='B'||brem[pid]>=g.need);}).map(function(pid){return {pid:pid,m:g.routes[pid],left:rem[pid]-g.need};});if(chosen<0||local.length<few||(local.length===few&&g.need>cg[chosen].need)){chosen=gi;cands=local;few=local.length;}});
+        if(chosen<0)return;
+        if(!cands.length){const old=counts[chosen];counts[chosen]=0;search();counts[chosen]=old;return;}
+        cands.sort(function(a,b){const r=allocationPriorityRank(a.m.priority)-allocationPriorityRank(b.m.priority);if(r)return r;if(a.m.specialty_source!==b.m.specialty_source)return a.m.specialty_source==='primary'?-1:1;if(a.left!==b.left)return a.left-b.left;return String(a.pid).localeCompare(String(b.pid),'el',{numeric:true});});
+        const g=cg[chosen],idx=originalCounts[chosen]-counts[chosen],sid=g.slot_ids[idx],slot=allocationSlotsData[sid];counts[chosen]--;
+        const sym=new Set();
+        cands.forEach(function(c){const pid=c.pid,m=c.m,sk=equiv[pid]+'|'+rem[pid]+'|'+brem[pid];if(sym.has(sk))return;sym.add(sk);rem[pid]-=g.need;if(m.priority==='B')brem[pid]-=g.need;currentRows.push({person_id:pid,slot_id:sid,slot_label:slot.slot_label||slot.label||sid,subject:slot.subject||'',hours:g.need,priority:m.priority,used_specialty_code:m.used_specialty_code,specialty_source:m.specialty_source,source:'automatic_live_optimizer'});cur.covered+=g.need;if(m.priority==='A'||m.priority==='SPECIAL')cur.top+=g.need;else if(m.priority==='B')cur.b+=g.need;if(m.specialty_source==='primary')cur.primary+=g.need;search();if(m.specialty_source==='primary')cur.primary-=g.need;if(m.priority==='A'||m.priority==='SPECIAL')cur.top-=g.need;else if(m.priority==='B')cur.b-=g.need;cur.covered-=g.need;currentRows.pop();if(m.priority==='B')brem[pid]+=g.need;rem[pid]+=g.need;});
+        search();counts[chosen]++;
+      }
+      search();totalNodes+=nodes;if(aborted)allCertified=false;finalRows=finalRows.concat(bestRows);
+    });
+
+    const finalPeople=JSON.parse(JSON.stringify(originalPeople)),finalSlots=JSON.parse(JSON.stringify(originalSlots));
+    finalRows.forEach(function(row){const ps=finalPeople[row.person_id],ss=finalSlots[row.slot_id],h=row.hours||0;if(!ps||!ss)return;ps.remaining_hours=Math.max(0,(ps.remaining_hours||0)-h);if(row.priority==='B'){ps.b_assignment_hours=(ps.b_assignment_hours||0)+h;ps.b_remaining_hours=Math.max(0,10-ps.b_assignment_hours);}ss.remaining_hours=0;});
+    return {allocations:finalRows,people:finalPeople,slots:finalSlots,summary:{auto_covered_hours:finalRows.reduce(function(t,r){return t+(r.hours||0);},0),maximum_coverage_certified:allCertified,optimizer_search_nodes:totalNodes}};
+  }
   function specialtyBuildReport(state){
-    const personState={}, slotState={}, routesBySlot={}, flexibility={};
+    const personState={}, slotState={};
     Object.keys(allocationPeopleData||{}).forEach(function(pid){
       const person=allocationPeopleData[pid];
       const assigned=state.personAssigned[pid]||0, bHours=(state.personPriority[pid]&&state.personPriority[pid].B)||0;
@@ -3739,65 +3873,16 @@ uksort($specialtyLabelsClient, 'strnatcmp');
         primary_code:person.specialty_code||'',
         secondary_code:person.secondary_specialty_code||''
       };
-      flexibility[pid]=0;
     });
     Object.keys(allocationSlotsData||{}).forEach(function(sid){
-      const slot=allocationSlotsData[sid];
-      slotState[sid]={remaining_hours:Math.max(0,(slot.capacity_hours||0)-(state.slotAssigned[sid]||0))};
+      const slot=allocationSlotsData[sid],assigned=state.slotAssigned[sid]||0,remaining=Math.max(0,(slot.capacity_hours||0)-assigned);
+      slotState[sid]={remaining_hours:remaining,atomic_blocked:assigned>0&&remaining>0};
     });
-    Object.keys(allocationSlotsData||{}).forEach(function(sid){
-      const slot=allocationSlotsData[sid];
-      if(!slotState[sid]||slotState[sid].remaining_hours<1) return;
-      routesBySlot[sid]={};
-      Object.keys(allocationPeopleData||{}).forEach(function(pid){
-        if(!personState[pid]||personState[pid].remaining_hours<1) return;
-        const match=allocationBestAssignment(allocationPeopleData[pid],slot);
-        if(!match) return;
-        if(match.priority==='B'&&personState[pid].b_remaining_hours<1) return;
-        routesBySlot[sid][pid]=match;
-        flexibility[pid]=(flexibility[pid]||0)+1;
-      });
-    });
-    const slotOrder=Object.keys(routesBySlot).sort(function(a,b){
-      const ca=Object.keys(routesBySlot[a]).length, cb=Object.keys(routesBySlot[b]).length;
-      if(ca!==cb) return ca-cb;
-      const sa=allocationSlotsData[a], sb=allocationSlotsData[b];
-      const g=String(sa.grade||'').localeCompare(String(sb.grade||''),'el',{numeric:true}); if(g) return g;
-      const su=String(sa.subject||'').localeCompare(String(sb.subject||''),'el',{numeric:true}); if(su) return su;
-      return String(a).localeCompare(String(b),'el',{numeric:true});
-    });
-    const autoAllocations=[];
-    let autoCovered=0;
-    slotOrder.forEach(function(sid){
-      let remaining=slotState[sid].remaining_hours||0;
-      if(remaining<1) return;
-      const pids=Object.keys(routesBySlot[sid]).sort(function(a,b){
-        const ma=routesBySlot[sid][a], mb=routesBySlot[sid][b];
-        const rank=allocationPriorityRank(ma.priority)-allocationPriorityRank(mb.priority); if(rank) return rank;
-        const fa=flexibility[a]||999999, fb=flexibility[b]||999999; if(fa!==fb) return fa-fb;
-        if(ma.specialty_source!==mb.specialty_source) return ma.specialty_source==='primary'?-1:1;
-        return String(a).localeCompare(String(b),'el',{numeric:true});
-      });
-      pids.forEach(function(pid){
-        if(remaining<1||!personState[pid]||personState[pid].remaining_hours<1) return;
-        const match=routesBySlot[sid][pid];
-        let available=personState[pid].remaining_hours;
-        if(match.priority==='B') available=Math.min(available,personState[pid].b_remaining_hours);
-        if(available<1) return;
-        const hours=Math.min(remaining,available);
-        if(hours<1) return;
-        const slot=allocationSlotsData[sid];
-        autoAllocations.push({person_id:pid,slot_id:sid,slot_label:slot.slot_label||slot.label||sid,subject:slot.subject||'',hours:hours,priority:match.priority,used_specialty_code:match.used_specialty_code,specialty_source:match.specialty_source});
-        personState[pid].remaining_hours-=hours;
-        if(match.priority==='B'){
-          personState[pid].b_assignment_hours+=hours;
-          personState[pid].b_remaining_hours=Math.max(0,10-personState[pid].b_assignment_hours);
-        }
-        remaining-=hours;
-        autoCovered+=hours;
-      });
-      slotState[sid].remaining_hours=Math.max(0,remaining);
-    });
+    const optimized=allocationOptimizeRemaining(personState,slotState);
+    const autoAllocations=optimized.allocations;
+    const autoCovered=optimized.summary.auto_covered_hours||0;
+    Object.keys(personState).forEach(function(pid){personState[pid]=optimized.people[pid]||personState[pid];});
+    Object.keys(slotState).forEach(function(sid){slotState[sid]=optimized.slots[sid]||slotState[sid];});
 
     const openRows=[], specialBuckets={}, coverageByCode={}, exclusiveByCode={};
     Object.keys(allocationSlotsData||{}).forEach(function(sid){
@@ -3852,7 +3937,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     Object.keys(specialBuckets).forEach(function(k){bucketGap+=specialBuckets[k].gap_hours||0;});
     Object.keys(surplusByCode).forEach(function(k){surplusTotal+=surplusByCode[k]||0;});
     return {
-      automatic_balance:{allocations:autoAllocations,people:personState,slots:slotState,summary:{auto_covered_hours:autoCovered,remaining_slot_hours:finalUncovered}},
+      automatic_balance:{allocations:autoAllocations,people:personState,slots:slotState,summary:{auto_covered_hours:autoCovered,remaining_slot_hours:finalUncovered,maximum_coverage_certified:optimized.summary.maximum_coverage_certified===true,optimizer_search_nodes:optimized.summary.optimizer_search_nodes||0}},
       vacancy_recommendations:recommendations,
       by_specialty:bySpecialty,
       special_reporting_buckets:specialBuckets,
@@ -3865,6 +3950,8 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   function renderSpecialtyBalance(state){
     const body=document.getElementById('specialtyBalanceBody');
     if(!body) return;
+    const specialtyPanel=document.querySelector('[data-staffing-panel="specialties"]');
+    if(specialtyPanel&&specialtyPanel.hidden) return;
     const report=specialtyBuildReport(state); latestSpecialtyBalance=report;
     const manual=document.querySelector('[data-specialty-manual-uncovered]'), auto=document.querySelector('[data-specialty-auto-covered]'), final=document.querySelector('[data-specialty-final-uncovered]'), surplus=document.querySelector('[data-specialty-surplus-total]');
     if(manual) manual.textContent=String(report.summary.manual_unassigned_hours||0);
