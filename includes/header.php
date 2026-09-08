@@ -14,7 +14,22 @@ require_once __DIR__ . '/components/source-card.php';
           <path d="M9.5 20v-6h5v6"></path>
         </svg>
       </span>
-      <span class="edu-tools-global-header__back-label">Επιστροφή στην Εργαλειοθήκη Εκπαιδευτικού</span>
+      <span class="edu-tools-global-header__back-label">Εργαλειοθήκη Εκπαιδευτικού</span>
     </a>
+
+    <nav class="edu-tools-global-nav" aria-label="Γρήγορη πλοήγηση">
+      <a class="edu-tools-global-nav__link" href="ergaleia.php#tools-directory">Όλα τα εργαλεία</a>
+      <a class="edu-tools-global-nav__link" href="prothesmies.php">Προθεσμίες</a>
+      <details class="edu-tools-global-menu">
+        <summary>Κατηγορίες</summary>
+        <div class="edu-tools-global-menu__panel">
+          <a href="ergaleia.php?group=asep-anaplirotes#tools-directory">ΑΣΕΠ &amp; Αναπληρωτές</a>
+          <a href="ergaleia.php?group=eidiki-agogi#tools-directory">Ειδική Αγωγή</a>
+          <a href="ergaleia.php?group=metakiniseis#tools-directory">Αποσπάσεις, Μεταθέσεις &amp; Τοποθετήσεις</a>
+          <a href="ergaleia.php?group=ypiresiaka#tools-directory">Σχολική Μονάδα &amp; Υπηρεσιακά</a>
+          <a href="ergaleia.php?group=eidikes-domes#tools-directory">Ειδικές Δομές &amp; Διαδικασίες</a>
+        </div>
+      </details>
+    </nav>
   </div>
 </header>

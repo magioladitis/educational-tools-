@@ -190,3 +190,32 @@
   .edu-page-staffing-simulator .specialty-balance-table th:nth-child(6),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(6){width:30%}
 }
 @media(max-width:760px){.edu-page-staffing-simulator .mini-grid,.edu-page-staffing-simulator .mini-grid.two,.edu-page-staffing-simulator .staffing-summary-grid,.edu-page-staffing-simulator .personnel-row-main,.edu-page-staffing-simulator .branch-summary-row,.edu-page-staffing-simulator .personnel-csv-mappings{grid-template-columns:1fr}.edu-page-staffing-simulator .allocation-row-main,.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr}.edu-page-staffing-simulator .staffing-table th:first-child,.edu-page-staffing-simulator .staffing-table td:first-child{position:static}.edu-page-staffing-simulator #staffingMatrixTable th:first-child,.edu-page-staffing-simulator #staffingMatrixTable td:first-child{width:180px;max-width:180px}.edu-page-staffing-simulator #staffingMatrixTable th:nth-child(n+2),.edu-page-staffing-simulator #staffingMatrixTable td:nth-child(n+2){width:52px;min-width:52px}}
+
+/* Compact end-user help + full-width workflow layout. */
+.edu-page-staffing-simulator .staffing-single-column{grid-template-columns:minmax(0,1fr)!important}
+.edu-page-staffing-simulator .staffing-stage-actions{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;margin-left:auto}
+.edu-page-staffing-simulator .staffing-help-popover{position:relative}
+.edu-page-staffing-simulator .staffing-help-popover>summary{list-style:none;cursor:pointer;white-space:nowrap;padding:9px 12px;border:1px solid var(--edu-border);border-radius:10px;background:#e8edf4;color:#263445;font-weight:800;line-height:1.2;user-select:none}
+.edu-page-staffing-simulator .staffing-help-popover>summary::-webkit-details-marker{display:none}
+.edu-page-staffing-simulator .staffing-help-popover>summary:hover{background:#dbe2eb}
+.edu-page-staffing-simulator .staffing-help-popover[open]>summary{border-color:var(--edu-primary);color:var(--edu-primary-dark);background:var(--edu-primary-soft)}
+.edu-page-staffing-simulator .staffing-help-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:30;width:min(430px,calc(100vw - 32px));padding:16px 17px;border:1px solid var(--edu-border);border-radius:14px;background:var(--edu-surface);box-shadow:0 12px 32px rgba(28,39,55,.16);color:var(--edu-text);max-height:70vh;overflow:auto}
+.edu-page-staffing-simulator .staffing-help-panel h3{margin:0 0 9px;color:var(--edu-primary-dark);font-size:16px}
+.edu-page-staffing-simulator .staffing-help-panel ol{margin:0;padding-left:20px}
+.edu-page-staffing-simulator .staffing-help-panel li{margin:0 0 7px;line-height:1.4;font-size:13.5px}
+.edu-page-staffing-simulator .staffing-help-panel p{margin:10px 0 0;padding-top:10px;border-top:1px solid var(--edu-result-row-separator);font-size:13px;line-height:1.4;color:var(--edu-muted)}
+.edu-page-staffing-simulator .vacancy-table th:first-child,.edu-page-staffing-simulator .vacancy-table td:first-child{width:92px;min-width:92px;white-space:nowrap}
+@media(max-width:700px){
+  .edu-page-staffing-simulator .staffing-stage-actions{width:100%;margin-left:0}
+  .edu-page-staffing-simulator .staffing-help-popover{margin-left:auto}
+}
+
+/* Persistent school / calculation context shown across all staffing tabs. */
+.edu-page-staffing-simulator .staffing-context-bar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:-2px 0 14px;padding:9px 11px;border:1px solid var(--edu-border);border-radius:12px;background:var(--edu-surface-soft);font-size:12.5px;line-height:1.25}
+.edu-page-staffing-simulator .staffing-context-label{font-size:11.5px;font-weight:800;color:var(--edu-muted);text-transform:uppercase;letter-spacing:.025em}
+.edu-page-staffing-simulator .staffing-context-school{font-size:13.5px;color:var(--edu-primary-dark);margin-right:2px}
+.edu-page-staffing-simulator .staffing-context-chip{display:inline-flex;align-items:center;gap:4px;min-height:26px;padding:4px 8px;border:1px solid var(--edu-border);border-radius:999px;background:var(--edu-surface);color:var(--edu-muted);white-space:nowrap}
+.edu-page-staffing-simulator .staffing-context-chip strong{color:var(--edu-text);font-variant-numeric:tabular-nums}
+.edu-page-staffing-simulator .staffing-context-state{font-weight:800;color:var(--edu-primary-dark);background:var(--edu-primary-soft);border-color:rgba(49,86,150,.22)}
+.edu-page-staffing-simulator .staffing-context-detail.has-warning{color:#8a6400;border-color:rgba(138,100,0,.3)}
+@media(max-width:720px){.edu-page-staffing-simulator .staffing-context-bar{align-items:flex-start}.edu-page-staffing-simulator .staffing-context-label{width:100%}.edu-page-staffing-simulator .staffing-context-school{width:100%;margin-bottom:2px}.edu-page-staffing-simulator .staffing-context-detail{display:none}}

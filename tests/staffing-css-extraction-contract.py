@@ -20,7 +20,7 @@ check('staffing stylesheet remains page scoped', '.edu-page-staffing-simulator '
 check('compact tab 2 layout retained', '#staffingMatrixTable{width:auto;min-width:0}' in css)
 check('compact tab 6 layout retained', '.specialty-balance-table{min-width:0;table-layout:fixed}' in css)
 check('print rules moved with page stylesheet', '@media print' in css and '@page{size:A4 landscape' in css)
-check('shared result rows use calculator helper', text.count('calculatorResultRow(array(') >= 17)
+check('persistent staffing context bar exists', 'id=\"staffingContextBar\"' in text and 'staffing-context-bar' in css)
 check('raw sidebar result-row markup removed', '<div class="result-row"><span>' not in text)
 check('basic section fields use one local renderer', 'function staffingUiRenderBasicSectionFields' in text and text.count('staffingUiRenderBasicSectionFields(\'')==2)
 

@@ -1,465 +1,256 @@
-<?php require_once __DIR__ . '/includes/config.php'; ?>
-<!DOCTYPE html>
+<?php
+require_once __DIR__ . '/includes/config.php';
+$catalog = require __DIR__ . '/includes/tools-catalog.php';
+require_once __DIR__ . '/includes/components/tool-card.php';
 
+$groups = isset($catalog['groups']) && is_array($catalog['groups']) ? $catalog['groups'] : array();
+$tools = isset($catalog['tools']) && is_array($catalog['tools']) ? $catalog['tools'] : array();
+$toolsByGroup = array();
+$groupCounts = array();
+
+foreach ($groups as $groupSlug => $groupConfig) {
+    $toolsByGroup[$groupSlug] = array();
+    $groupCounts[$groupSlug] = 0;
+}
+
+foreach ($tools as $tool) {
+    $groupSlug = isset($tool['group']) ? (string) $tool['group'] : '';
+    if ($groupSlug !== '' && isset($toolsByGroup[$groupSlug])) {
+        $toolsByGroup[$groupSlug][] = $tool;
+        $groupCounts[$groupSlug]++;
+    }
+}
+
+$categoryToneClasses = array(
+    'green' => 'category-card--green',
+    'orange' => 'category-card--orange',
+    'purple' => 'category-card--purple',
+    'teal' => 'category-card--teal'
+);
+
+$initialGroup = 'all';
+if (isset($_GET['group'])) {
+    $requestedGroup = (string) $_GET['group'];
+    if (isset($groups[$requestedGroup])) {
+        $initialGroup = $requestedGroup;
+    }
+}
+
+$flags = ENT_QUOTES;
+if (defined('ENT_SUBSTITUTE')) {
+    $flags = $flags | ENT_SUBSTITUTE;
+}
+$h = function ($value) use ($flags) {
+    return htmlspecialchars((string) $value, $flags, 'UTF-8');
+};
+?>
+<!DOCTYPE html>
 <html lang="el">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="Εργαλειοθήκη Εκπαιδευτικού: δωρεάν εργαλεία για ΑΣΕΠ, αναπληρωτές, αποσπάσεις και Δημόσια Ωνάσεια Σχολεία." name="description"/>
-<title>Εργαλειοθήκη Εκπαιδευτικού</title>
-<link href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>" rel="stylesheet"/>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="Εργαλειοθήκη Εκπαιδευτικού: δωρεάν εργαλεία για ΑΣΕΠ, αναπληρωτές, ειδική αγωγή, αποσπάσεις, μεταθέσεις, σχολική μονάδα, ΣΔΕ και ΣΑΕΚ." name="description">
+  <title>Εργαλειοθήκη Εκπαιδευτικού</title>
+  <link href="<?php echo $h(edu_asset_url('assets/common.css')); ?>" rel="stylesheet">
 </head>
 <body class="edu-ui edu-tools-directory">
-<?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
+<?php require_once __DIR__ . '/includes/header.php'; ?>
+
 <main class="page-shell">
-<section class="hero">
-<span class="hero-kicker">ΔΩΡΕΑΝ ΕΡΓΑΛΕΙΑ ΓΙΑ ΕΚΠΑΙΔΕΥΤΙΚΟΥΣ</span>
-<h1>Εργαλειοθήκη Εκπαιδευτικού</h1>
-<p> Συγκεντρωμένα εργαλεία υπολογισμού και ελέγχου για προκηρύξεις ΑΣΕΠ,
-αναπληρωτές, αποσπάσεις και ειδικές διαδικασίες, όπως τα Δημόσια Ωνάσεια Σχολεία.
-<br/>Σχεδιασμός &amp; υλοποίηση: Μ. Μαγιολαδίτης (ΠΕ03, ΠΕ86)     </p>
-<div class="hero-meta">
-<span>32 διαθέσιμα εργαλεία</span>
-<span>ΑΣΕΠ 1ΓΕ/2026 &amp; 2ΓΕ/2026</span>
-<span>Αναπληρωτές</span>
-<span>Αποσπάσεις</span>
-<span>Ειδική Αγωγή</span>
-<span>Ωνάσεια</span>
-<span>Ψηφιακό Φροντιστήριο</span><span>Εξωτερικό</span>
-<span>ΣΔΕ</span>
-</div>
-</section>
-<?php
-$homeDeadlineConfig = require __DIR__ . '/includes/home-deadlines.php';
-renderDeadlineCard($homeDeadlineConfig);
-unset($homeDeadlineConfig);
-?>
-<section aria-label="Αναζήτηση και φίλτρα εργαλείων" class="toolbar">
-<div class="search-wrap">
-<input aria-label="Αναζήτηση εργαλείου" autocomplete="off" id="toolSearch" placeholder="Αναζήτηση εργαλείου π.χ. μόρια, παράβολο, Ωνάσεια..." type="search"/>
-</div>
-<div aria-label="Κατηγορίες εργαλείων" class="filters" role="group">
-<button aria-pressed="true" class="filter-btn active" data-filter="all" type="button">Όλα</button>
-<button aria-pressed="false" class="filter-btn" data-filter="asep" type="button">ΑΣΕΠ</button>
-<button aria-pressed="false" class="filter-btn" data-filter="eidiki-agogi" type="button">Ειδική Αγωγή</button>
-<button aria-pressed="false" class="filter-btn" data-filter="anaplirotes" type="button">Αναπληρωτές</button>
-<button aria-pressed="false" class="filter-btn" data-filter="apospaseis" type="button">Αποσπάσεις</button>
-<button aria-pressed="false" class="filter-btn" data-filter="metatheseis" type="button">Μεταθέσεις</button>
-<button aria-pressed="false" class="filter-btn" data-filter="sde" type="button">ΣΔΕ</button>
-<button aria-pressed="false" class="filter-btn" data-filter="saek" type="button">ΣΑΕΚ</button>
-<button aria-pressed="false" class="filter-btn" data-filter="onaseia" type="button">Ωνάσεια</button>
-<button aria-pressed="false" class="filter-btn" data-filter="ypiresiaka" type="button">Υπηρεσιακά</button>
-</div>
-<div aria-live="polite" class="results-line" id="resultsLine" role="status">Εμφανίζονται 32 εργαλεία.</div>
-</section>
-<section class="tools-grid" id="toolsGrid">
-<a class="tool-card" data-category="asep" data-search="δικαίωμα συμμετοχής προκήρυξη ΑΣΕΠ προϋποθέσεις υποψήφιος" href="dikaioma-symmetoxis.php">
-<div class="card-top">
-<span class="tool-number">1</span>
-<span class="category-tag">ΑΣΕΠ</span>
-</div>
-<h2>Έχω δικαίωμα συμμετοχής;</h2>
-<p>
-          Απάντησε σε απλές ερωτήσεις για έναν ενδεικτικό έλεγχο των γενικών
-          προϋποθέσεων συμμετοχής στις προκηρύξεις εκπαιδευτικών.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep" data-search="παράβολα παράβολο κόστος ειδικότητα 1ΓΕ 2ΓΕ ΑΣΕΠ" href="posa-paravola.php">
-<div class="card-top">
-<span class="tool-number">2</span>
-<span class="category-tag">ΑΣΕΠ</span>
-</div>
-<h2>Πόσα παράβολα χρειάζομαι;</h2>
-<p>
-          Επίλεξε την ειδικότητα ή τις ειδικότητές σου και δες πόσα παράβολα
-          χρειάζεσαι, το συνολικό κόστος και σε ποια προκήρυξη αντιστοιχείς.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep" data-search="δικαιολογητικά τίτλοι σπουδών μεταπτυχιακό διδακτορικό integrated master αλλοδαπή ΔΟΑΤΑΠ" href="dikaiologitika-titlon-spoudon.php">
-<div class="card-top">
-<span class="tool-number">3</span>
-<span class="category-tag">ΑΣΕΠ</span>
-</div>
-<h2>Τι δικαιολογητικά χρειάζομαι;</h2>
-<p>
-          Οδηγός για δικαιολογητικά μεταπτυχιακών, διδακτορικών, integrated master
-          και τίτλων σπουδών της αλλοδαπής.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep anaplirotes" data-search="υπολογισμός μορίων ΑΣΕΠ αναπληρωτές 1ΓΕ 2ΓΕ ακαδημαϊκά ξένες γλώσσες προϋπηρεσία κοινωνικά κριτήρια" href="ypologismos-morion.php">
-<div class="card-top">
-<span class="tool-number">4</span>
-<span class="category-tag green">ΑΣΕΠ / Αναπληρωτές</span>
-</div>
-<h2>Υπολογισμός μορίων 1ΓΕ/2026 &amp; 2ΓΕ/2026</h2>
-<p>
-          Υπολόγισε τα μόρια για τις προκηρύξεις 1ΓΕ/2026 και 2ΓΕ/2026 με βάση
-          ακαδημαϊκά προσόντα, ξένες γλώσσες, προϋπηρεσία και κοινωνικά κριτήρια.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep anaplirotes" data-search="1ΓΤ 2024 1GT ΤΕ01 ΤΕ02 ΤΕ16 τεχνική εκπαίδευση μουσικής μη ανώτατων ιδρυμάτων υπολογισμός μόρια ΑΣΕΠ προϋπηρεσία κοινωνικά ακαδημαϊκά" href="ypologismos-morion-1gt-2024.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">5</span>
-<span class="category-tag green">ΑΣΕΠ / Τ.Ε.</span>
-</div>
-<h2>Υπολογισμός μορίων 1ΓΤ/2024</h2>
-<p>
-          Υπολόγισε τα μόρια για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16 με βάση
-          ακαδημαϊκά προσόντα, προϋπηρεσία και κοινωνικά κριτήρια της 1ΓΤ/2024.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep" data-search="παιδαγωγική διδακτική επάρκεια ΠΔΕ πρόταξη ΑΣΕΠ" href="paidagogiki-eparkeia.php">
-<div class="card-top">
-<span class="tool-number">6</span>
-<span class="category-tag">ΑΣΕΠ</span>
-</div>
-<h2>Έχω Παιδαγωγική και Διδακτική Επάρκεια;</h2>
-<p>
-          Έλεγξε ενδεικτικά αν διαθέτεις Π.Δ.Ε. και ποιο αποδεικτικό μπορεί να
-          χρειάζεται για την πρόταξη στους αξιολογικούς πίνακες.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="anaplirotes onaseia" data-search="Ωνάσεια ΔΗΜΩΣ Δημόσια Ωνάσεια Σχολεία μόρια αναπληρωτή Πρότυπα Πειραματικά ακαδημαϊκά προσόντα" href="ypologismos-morion-onaseia.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">7</span>
-<span class="category-tag purple">Ωνάσεια</span>
-</div>
-<h2>Μόρια Αναπληρωτή στα Ωνάσεια</h2>
-<p>
-          Υπολόγισε τα μόριά σου για τα Δημόσια Ωνάσεια Σχολεία με βάση τα
-          ακαδημαϊκά προσόντα ΑΣΕΠ και την προϋπηρεσία σε Πρότυπα/Πειραματικά.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="apospaseis onaseia" data-search="ΔΗΜΩΣ Ωνάσεια Δημόσια Ωνάσεια Σχολεία απόσπαση μόνιμων εκπαιδευτικών 53 μόρια επιστημονική παιδαγωγική συγγραφικό καινοτόμο έργο" href="ypologismos-morion-apospasis-dimos.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">8</span>
-<span class="category-tag purple">Ωνάσεια / Αποσπάσεις</span>
-</div>
-<h2>Μόρια Απόσπασης στα ΔΗΜ.Ω.Σ.</h2>
-<p>
-          Υπολόγισε τα μόρια για απόσπαση μόνιμων εκπαιδευτικών στα Δημόσια
-          Ωνάσεια Σχολεία. Μέγιστο σύνολο 53 μόρια στις κατηγορίες Α, Β και Γ.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="apospaseis" data-search="υπολογισμός μόρια απόσπασης εκπαιδευτικών συνυπηρέτηση εντοπιότητα οικογενειακοί λόγοι υπηρεσία" href="ypologismos-morion-apospasis.php">
-<div class="card-top">
-<span class="tool-number">9</span>
-<span class="category-tag orange">Αποσπάσεις</span>
-</div>
-<h2>Μόρια Απόσπασης</h2>
-<p>
-          Υπολόγισε ενδεικτικά τα μόρια απόσπασης εκπαιδευτικών με βάση τα
-          αντίστοιχα κριτήρια της διαδικασίας.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="1ΕΑ 2025 ΕΒΠ ΔΕ01 ειδικό βοηθητικό προσωπικό ειδική αγωγή μόρια ΑΣΕΠ βαθμός ΙΕΚ ΕΠΑΛ προϋπηρεσία κοινωνικά κριτήρια" href="ypologismos-morion-1ea-2025.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">10</span>
-<span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
-</div>
-<h2>Υπολογισμός μορίων 1ΕΑ/2025</h2>
-<p>
-          Υπολόγισε τα μόρια για τον κλάδο ΔΕ01 Ειδικού Βοηθητικού Προσωπικού,
-          με διαφορετικό συντελεστή βαθμού για τίτλους δευτεροβάθμιας και ΙΕΚ/Τάξης Μαθητείας.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="2ΕΑ 2025 ΕΕΠ ΠΕ21 ΠΕ22 ΠΕ23 ΠΕ25 ΠΕ28 ΠΕ29 ΠΕ30 ΠΕ31 ειδικό εκπαιδευτικό προσωπικό ειδική αγωγή μόρια ΑΣΕΠ πρόταξη σχολική ψυχολογία παιδαγωγική επάρκεια Braille ΕΝΓ" href="ypologismos-morion-2ea-2025.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">11</span>
-<span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
-</div>
-<h2>Υπολογισμός μορίων 2ΕΑ/2025</h2>
-<p>
-          Υπολόγισε τα μόρια των κλάδων ΕΕΠ και δες ειδικές ενδείξεις πρόταξης
-          για Παιδαγωγική Επάρκεια, ΠΕ23 Σχολικής Ψυχολογίας, Braille και ΕΝΓ.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="3ΕΑ 2025 ειδική αγωγή ΕΑΕ κύριος κύριο πίνακας Β επικουρικός πίνακας μόρια ΑΣΕΠ αναπληρωτές ειδική εκπαίδευση" href="ypologismos-morion-3ea-2025.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">12</span>
-<span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
-</div>
-<h2>Υπολογισμός μορίων 3ΕΑ/2025</h2>
-<p>
-          Υπολόγισε τα μόριά σου στην Ειδική Αγωγή και έλεγξε ενδεικτικά αν
-          εντάσσεσαι στον Κύριο (Πίνακα Β΄) ή στον Επικουρικό Πίνακα.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="4ΕΑ 2025 ειδική αγωγή ΕΑΕ ΤΕ01 ΤΕ02 ΤΕ16 κύριος κύριο πίνακας Β επικουρικός πίνακας μόρια ΑΣΕΠ αναπληρωτές τεχνική εκπαίδευση" href="ypologismos-morion-4ea-2025.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">13</span>
-<span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
-</div>
-<h2>Υπολογισμός μορίων 4ΕΑ/2025</h2>
-<p>
-          Υπολόγισε τα μόρια για τους κλάδους ΤΕ01, ΤΕ02 και ΤΕ16 στην Ειδική Αγωγή
-          και έλεγξε ενδεικτικά ένταξη στον Κύριο ή στον Επικουρικό Πίνακα.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep anaplirotes eidiki-agogi" data-search="5ΕΑ 2022 ειδική αγωγή ΕΑΕ ΔΕ01 ΔΕ02 ΔΕ01.05 ΔΕ01.13 ΔΕ01.14 ΔΕ01.15 ΔΕ01.17 ΔΕ02.01 ΔΕ02.02 ιστορική προκήρυξη μόρια ΑΣΕΠ 123 αιτήσεις" href="ypologismos-morion-5ea-2022.php">
-<div class="card-top">
-<span class="tool-number">14</span>
-<span class="category-tag green">ΑΣΕΠ / Ειδική Αγωγή</span>
-</div>
-<h2>Υπολογισμός μορίων 5ΕΑ/2022</h2>
-<p>
-          Η «μικρή» ιστορική προκήρυξη ΔΕ Ειδικής Αγωγής: 7 ειδικότητες ΔΕ01/ΔΕ02,
-          μόλις 123 αιτήσεις, με έλεγχο Κύριου/Επικουρικού Πίνακα και ειδικούς κανόνες ΔΕ.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep" data-search="ένσταση ενστάσεις ΑΣΕΠ 1ΓΕ 2ΓΕ 2026 προσωρινοί πίνακες προσωρινών πινάκων e-παράβολο eparavolo παράβολο 50 ευρώ 20ψήφιο 20 ψηφία κωδικός επανυποβολή ανάκληση προθεσμία countdown δικαιολογητικά" href="odigos-enstasis.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">15</span>
-<span class="category-tag">ΑΣΕΠ</span>
-</div>
-<h2>Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</h2>
-<p>
-          Προετοίμασε την ένστασή σου με έλεγχο 20ψήφιου e-Παραβόλου, προθεσμία,
-          επανυποβολή, δικαιολογητικά και σύνδεση με τον υπολογισμό μορίων.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="asep anaplirotes" data-search="δικαιολογητικά τέκνα αναπηρία κοινωνικά κριτήρια ΑΣΕΠ 1ΓΕ 2ΓΕ μοριοδοτούμενα τέκνα αναπηρία ιδίου συζύγου τέκνου" href="dikaiologitika-tekna-anapiria.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">16</span>
-<span class="category-tag green">ΑΣΕΠ / Αναπληρωτές</span>
-</div>
-<h2>Δικαιολογητικά τέκνων &amp; αναπηρίας</h2>
-<p>
-          Ενδεικτικός οδηγός για τα κοινωνικά κριτήρια: μοριοδοτούμενα τέκνα,
-          αναπηρία ιδίου, τέκνου ή συζύγου και τα σχετικά δικαιολογητικά.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="apospaseis" data-search="ψηφιακό φροντιστήριο απόσπαση αποσπάσεις μόρια μοριοδότηση μόνιμοι εκπαιδευτικοί βιντεοσκοπημένο μάθημα συνέντευξη πανελλαδικές ΤΠΕ" href="ypologismos-morion-apospasis-psifiako-frontistirio.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">17</span>
-<span class="category-tag orange">Αποσπάσεις</span>
-</div>
-<h2>Μόρια Απόσπασης στο Ψηφιακό Φροντιστήριο</h2>
-<p>
-          Υπολόγισε τη μοριοδότηση έως 100 μονάδες για απόσπαση στο Ψηφιακό Φροντιστήριο:
-          γενική παρουσία, επιστημονική κατάρτιση–εμπειρία και βιντεοσκοπημένο μάθημα.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="apospaseis sde" data-search="ΣΔΕ Σχολεία Δεύτερης Ευκαιρίας απόσπαση αποσπάσεις μόρια μοριοδότηση μόνιμοι εκπαιδευτικοί γραμματισμοί ειδικότητες εκπαίδευση ενηλίκων" href="ypologismos-morion-apospasis-sde.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">18</span>
-<span class="category-tag orange">ΣΔΕ / Αποσπάσεις</span>
-</div>
-<h2>Μόρια Απόσπασης στα ΣΔΕ</h2>
-<p>
-          Έλεγξε αν η ειδικότητά σου είναι αποδεκτή και υπολόγισε τη μοριοδότηση έως 40 μόρια
-          για απόσπαση στα Σχολεία Δεύτερης Ευκαιρίας.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="apospaseis" data-search="εξωτερικό απόσπαση αποσπάσεις εκπαιδευτικών μόρια μοριοδότηση γλωσσομάθεια βασικός πίνακας εναλλακτικός πίνακας ΔΙΠΟΔΕ ελληνόγλωσση εκπαίδευση" href="ypologismos-morion-apospasis-exoteriko.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top">
-<span class="tool-number">19</span>
-<span class="category-tag orange">Αποσπάσεις</span>
-</div>
-<h2>Μόρια Απόσπασης στο Εξωτερικό</h2>
-<p>
-          Υπολόγισε τα μόρια τίτλων και γλωσσομάθειας και κάνε βασικό έλεγχο
-          δικαιώματος για Βασικό ή Εναλλακτικό Πίνακα απόσπασης στο εξωτερικό.
-        </p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="apospaseis" data-search="ευρωπαϊκά σχολεία Ευρωπαϊκά Σχολεία απόσπαση αποσπάσεις μόρια μοριοδότηση συνέντευξη γλωσσομάθεια ΤΠΕ διδασκαλία" href="ypologismos-morion-apospasis-evropaika-scholeia.php"><span class="new-badge">ΝΕΟ</span><div class="card-top"><span class="tool-number">20</span><span class="category-tag orange">Αποσπάσεις</span></div><h2>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</h2><p>Υπολόγισε τα μόρια τυπικών προσόντων και εμπειρίας πριν από τη συνέντευξη και το τελικό σύνολο μετά την προφορική διαδικασία.</p><span class="button-like">Άνοιγμα εργαλείου →</span></a>
-<a class="tool-card" data-category="asep" data-search="μετατροπή κλίμακας βαθμός πτυχίου 10βάθμια 20βάθμια 1ΓΕ 2026 1ΓΤ 2024 λεκτική ΚΑΛΩΣ ΛΙΑΝ ΚΑΛΩΣ ΑΡΙΣΤΑ ακέραιο μέρος αριθμητής παρονομαστής κλάσμα δεκαδικός" href="metatropi-klimakas.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">21</span><span class="category-tag">ΑΣΕΠ</span></div>
-<h2>Μετατροπή κλίμακας βαθμού</h2>
-<p>Μετέτρεψε βαθμό από 10βάθμια σε 20βάθμια κλίμακα ή από λεκτική μορφή και πάρε έτοιμα τα πεδία Ακέραιο μέρος – Αριθμητής – Παρονομαστής.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="sde" data-search="ΣΔΕ Σχολεία Δεύτερης Ευκαιρίας Διευθυντές Υποδιευθυντές διευθυντής υποδιευθυντής θέσεις ευθύνης μόρια μοριοδότηση διοικητική εμπειρία διδακτική εμπειρία εκπαίδευση ενηλίκων συνέντευξη" href="ypologismos-morion-diefthynton-ypodiefthynton-sde.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">22</span><span class="category-tag orange">ΣΔΕ / Θέσεις Ευθύνης</span></div>
-<h2>Μόρια Διευθυντών &amp; Υποδιευθυντών ΣΔΕ</h2>
-<p>Υπολόγισε τα μόρια για θέσεις Διευθυντή ή Υποδιευθυντή ΣΔΕ, με τυπικά προσόντα, διδακτική και διοικητική εμπειρία, επιμόρφωση και συνέντευξη όπου προβλέπεται.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="sde" data-search="ΣΔΕ Μητρώο ωρομίσθιο εκπαιδευτικό προσωπικό εκπαιδευτές Σύμβουλοι Ψυχολόγοι Σύμβουλοι Σταδιοδρομίας μόρια μοριοδότηση ανεργία κοινωνικά κριτήρια ΕΟΠΠΕΠ" href="ypologismos-morion-mitroo-sde.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">23</span><span class="category-tag orange">ΣΔΕ / Μητρώο</span></div>
-<h2>Μόρια Μητρώου ΣΔΕ</h2>
-<p>Ενιαίος υπολογιστής για Εκπαιδευτικό Προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας, με δυναμικά κριτήρια και κοινωνικές προσαυξήσεις.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="saek" data-search="ΣΑΕΚ Σιβιτανίδειος Σιβιτανιδείου ωρομίσθιοι εκπαιδευτές 2026 2027 μόρια μοριοδότηση εκπαίδευση ενηλίκων διδακτική εμπειρία κοινωνικά κριτήρια" href="ypologismos-morion-sivitanidios-saek.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">24</span><span class="category-tag green">ΣΑΕΚ / Ωρομίσθιοι</span></div>
-<h2>Μόρια Εκπαιδευτή ΣΑΕΚ Σιβιτανιδείου</h2>
-<p>Υπολόγισε τη βασική βαθμολογία και τις κοινωνικές προσαυξήσεις για την πρόσκληση ωρομίσθιων εκπαιδευτών 2026–2027.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="ypiresiaka" data-search="υποχρεωτικό διδακτικό ωράριο υποστηρικτικό έργο ΕΕΠ ειδικό εκπαιδευτικό προσωπικό ΕΒΠ ειδικό βοηθητικό προσωπικό ώρες εβδομάδα πρωτοβάθμια νηπιαγωγείο δημοτικό δευτεροβάθμια καθηγητές διευθυντές υποδιευθυντές οργανικότητα έτη μήνες ημέρες υπηρεσίας" href="ypologismos-didaktikou-orariou.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">25</span><span class="category-tag">Υπηρεσιακά</span></div>
-<h2>Υπολογισμός υποχρεωτικού ωραρίου</h2>
-<p>Υπολόγισε το διδακτικό ωράριο εκπαιδευτικών σε Νηπιαγωγείο, Δημοτικό ή Δευτεροβάθμια και το ωράριο υποστηρικτικού έργου ΕΕΠ/ΕΒΠ.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="ypiresiaka" data-search="μισθολογικό κλιμάκιο ΜΚ μισθολογική εξέλιξη εκπαιδευτικών ΠΕ ΤΕ ΔΕ ΥΕ προϋπηρεσία μεταπτυχιακό διδακτορικό integrated master 4354 5246" href="ypologismos-misthologikou-klimakiou.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">26</span><span class="category-tag">Υπηρεσιακά</span></div>
-<h2>Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.)</h2>
-<p>Βρες ενδεικτικά το Μ.Κ. από την κατηγορία, τον αναγνωρισμένο μισθολογικό χρόνο και τυχόν αναγνωρισμένη προώθηση λόγω τίτλου σπουδών.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="metatheseis ypiresiaka" data-search="μετάθεση μεταθέσεις μόρια μετάθεσης μονάδες συνθηκών διαβίωσης ΜΣΔ δυσπρόσιτα απομακρυσμένα καταστήματα κράτησης ψηφιακό φροντιστήριο συνυπηρέτηση εντοπιότητα πρώτη προτίμηση" href="ypologismos-morion-metathesis.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">27</span><span class="category-tag orange">Μεταθέσεις</span></div>
-<h2>Μόρια Μετάθεσης</h2>
-<p>Υπολόγισε τα βασικά μόρια μετάθεσης Δ.Ε. και αναλυτικά τις Μ.Σ.Δ., με δυσπρόσιτα/απομακρυσμένα, καταστήματα κράτησης, Ψηφιακό Φροντιστήριο και ειδικές υπηρετήσεις.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="metatheseis ypiresiaka" data-search="νεοδιόριστοι νεοδιοριστοι τοποθέτηση προσωρινή τοποθέτηση μόρια οικογενειακοί λόγοι συνυπηρέτηση εντοπιότητα ΠΔ 144 154" href="ypologismos-morion-topothetisis-neodioriston.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">28</span><span class="category-tag orange">Τοποθετήσεις</span></div>
-<h2>Μόρια τοποθέτησης νεοδιόριστων</h2>
-<p>Υπολόγισε τα μόρια προσωρινής τοποθέτησης από οικογενειακούς λόγους, συνυπηρέτηση και εντοπιότητα, μαζί με τη σειρά κριτηρίων ισοβαθμίας.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="ypiresiaka eidiki-agogi" data-search="αναθέσεις μαθημάτων Α Β Γ ανάθεση ειδικότητα κλάδος Γυμνάσιο ΓΕΛ Εσπερινό ΕΑΕ ΕΝΕΕΓΥΛ ΕΝ.Ε.Ε.ΓΥ.-Λ." href="anatheseis-mathimaton.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">29</span><span class="category-tag green">Υπηρεσιακά / Αναθέσεις</span></div>
-<h2>Αναθέσεις Μαθημάτων ανά Ειδικότητα</h2>
-<p>Δες ποια μαθήματα έχει ο κλάδος σου σε Α΄, Β΄ και Γ΄ ανάθεση, με φίλτρα ανά τύπο σχολείου και τις αντίστοιχες επίσημες πηγές.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="saek" data-search="ΣΑΕΚ υποδιευθυντές υποδιευθυντής δικαίωμα συμμετοχής υποψηφιότητα προϋποθέσεις κωλύματα 2026" href="dikaioma-ypodiefthynti-saek.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">30</span><span class="category-tag green">ΣΑΕΚ</span></div>
-<h2>Δικαίωμα υποψηφιότητας Υποδιευθυντή Σ.Α.Ε.Κ.</h2>
-<p>Έλεγξε τις βασικές προϋποθέσεις και τα κωλύματα της πρόσκλησης Κ5/113585/01-09-2026 για τις κενές θέσεις Υποδιευθυντών δημόσιων Σ.Α.Ε.Κ.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="ypiresiaka orologio" data-search="ωρολόγιο πρόγραμμα ώρες μαθημάτων εβδομαδιαίο πρόγραμμα Γυμνάσιο ΓΕΛ Εσπερινό τάξη ώρες" href="orologio-programma-mathimaton.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">31</span><span class="category-tag green">Υπηρεσιακά / Ωρολόγιο</span></div>
-<h2>Ώρες μαθημάτων στο ωρολόγιο πρόγραμμα</h2>
-<p>Δες τις εβδομαδιαίες ώρες κάθε μαθήματος ανά τύπο σχολείου και τάξη, με χωριστή εμφάνιση των Ομάδων Προσανατολισμού.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-<a class="tool-card" data-category="ypiresiaka orologio topothetiseis" data-search="διδακτικές ανάγκες σχολικής μονάδας στελέχωση ώρες κλάδος ειδικότητα αναθέσεις ωρολόγιο Γυμνάσιο ΓΕΛ προσανατολισμός ηθική" href="ypologismos-didaktikon-anagkon.php">
-<span class="new-badge">ΝΕΟ</span>
-<div class="card-top"><span class="tool-number">32</span><span class="category-tag green">Υπηρεσιακά / Στελέχωση</span></div>
-<h2>Υπολογισμός διδακτικών αναγκών σχολικής μονάδας</h2>
-<p>Δημιούργησε school profile για Ημερήσιο Γυμνάσιο ή ΓΕΛ και δες τις πραγματικές ώρες curriculum ανά κλάδο και προτεραιότητα ανάθεσης.</p>
-<span class="button-like">Άνοιγμα εργαλείου →</span>
-</a>
-</section>
-<div aria-hidden="true" class="no-results" id="noResults">
-      Δεν βρέθηκε εργαλείο που να ταιριάζει στην αναζήτησή σου.
+  <section class="hero">
+    <span class="hero-kicker">ΔΩΡΕΑΝ ΕΡΓΑΛΕΙΑ ΓΙΑ ΕΚΠΑΙΔΕΥΤΙΚΟΥΣ</span>
+    <h1>Εργαλειοθήκη Εκπαιδευτικού</h1>
+    <p>Υπολογιστές, έλεγχοι και οδηγοί οργανωμένοι πλέον σε θεματικές ενότητες, ώστε να βρίσκεις γρηγορότερα το εργαλείο που χρειάζεσαι.</p>
+    <div class="hero-meta" aria-label="Σύνοψη Εργαλειοθήκης">
+      <span><?php echo count($tools); ?> διαθέσιμα εργαλεία</span>
+      <span><?php echo count($groups); ?> βασικές κατηγορίες</span>
+      <span>Ξεχωριστή σελίδα προθεσμιών</span>
     </div>
-<section class="info-grid">
-<div class="notice">
-<strong>Σημαντική σημείωση:</strong>
-        Τα εργαλεία παρέχουν ενδεικτική πληροφόρηση και δεν αντικαθιστούν τις
-        επίσημες προκηρύξεις, εγκυκλίους και οδηγίες των αρμόδιων φορέων.
-        Πριν από την οριστική υποβολή αίτησης, ελέγχετε πάντοτε τα επίσημα έγγραφα
-        και τα στοιχεία που εμφανίζονται στο ΑΣΕΠ ή/και στο ΟΠΣΥΔ.
+    <div class="hero-actions">
+      <a class="hero-action hero-action--primary" href="#tool-categories">Δες κατηγορίες</a>
+      <a class="hero-action" href="#tools-directory">Όλα τα εργαλεία</a>
+      <a class="hero-action" href="prothesmies.php">Προθεσμίες →</a>
+    </div>
+  </section>
+
+  <section class="directory-section" id="tool-categories" aria-labelledby="toolCategoriesTitle">
+    <div class="directory-section__heading">
+      <div>
+        <span class="section-kicker">ΞΕΚΙΝΑ ΑΠΟ ΕΔΩ</span>
+        <h2 id="toolCategoriesTitle">Κατηγορίες εργαλείων</h2>
       </div>
-<div class="side-box">
-<strong>Ειδικά για 1ΓΕ/2026 &amp; 2ΓΕ/2026</strong>
-        Τα εργαλεία ΑΣΕΠ παραμένουν συγκεντρωμένα και στην ειδική σελίδα
-        <a href="asep-tools.php">Χρήσιμα εργαλεία 1ΓΕ/2026 &amp; 2ΓΕ/2026</a>.
+      <p>Διάλεξε οικογένεια εργαλείων ή χρησιμοποίησε την αναζήτηση πιο κάτω.</p>
+    </div>
+
+    <div class="category-grid">
+      <?php foreach ($groups as $groupSlug => $groupConfig) {
+          $title = isset($groupConfig['title']) ? $groupConfig['title'] : $groupSlug;
+          $description = isset($groupConfig['description']) ? $groupConfig['description'] : '';
+          $short = isset($groupConfig['short']) ? $groupConfig['short'] : '';
+          $tone = isset($groupConfig['tone']) ? $groupConfig['tone'] : 'blue';
+          $count = isset($groupCounts[$groupSlug]) ? (int) $groupCounts[$groupSlug] : 0;
+          ?>
+      <a
+        class="category-card<?php echo isset($categoryToneClasses[$tone]) ? ' ' . $h($categoryToneClasses[$tone]) : ''; ?>"
+        data-directory-filter="<?php echo $h($groupSlug); ?>"
+        href="ergaleia.php?group=<?php echo rawurlencode($groupSlug); ?>#tools-directory"
+      >
+        <span class="category-card__icon" aria-hidden="true"><?php echo $h($short); ?></span>
+        <span class="category-card__body">
+          <strong><?php echo $h($title); ?></strong>
+          <span><?php echo $h($description); ?></span>
+        </span>
+        <span class="category-card__count"><?php echo $count; ?> εργαλεία</span>
+      </a>
+      <?php } ?>
+    </div>
+  </section>
+
+  <section aria-label="Αναζήτηση και φίλτρα εργαλείων" class="toolbar" id="tools-directory" data-initial-filter="<?php echo $h($initialGroup); ?>">
+    <div class="toolbar-heading">
+      <div>
+        <span class="section-kicker">ΚΑΤΑΛΟΓΟΣ</span>
+        <h2>Βρες το εργαλείο που χρειάζεσαι</h2>
       </div>
-</section>
+      <a class="deadline-shortcut" href="prothesmies.php">📅 Προθεσμίες</a>
+    </div>
+    <div class="search-wrap">
+      <input aria-label="Αναζήτηση εργαλείου" autocomplete="off" id="toolSearch" placeholder="Αναζήτηση π.χ. μόρια, παράβολο, ωράριο, απόσπαση..." type="search">
+    </div>
+    <div aria-label="Βασικές κατηγορίες εργαλείων" class="filters" role="group">
+      <button aria-pressed="<?php echo $initialGroup === 'all' ? 'true' : 'false'; ?>" class="filter-btn<?php echo $initialGroup === 'all' ? ' active' : ''; ?>" data-filter="all" type="button">Όλα</button>
+      <?php foreach ($groups as $groupSlug => $groupConfig) { ?>
+        <button aria-pressed="<?php echo $initialGroup === $groupSlug ? 'true' : 'false'; ?>" class="filter-btn<?php echo $initialGroup === $groupSlug ? ' active' : ''; ?>" data-filter="<?php echo $h($groupSlug); ?>" type="button"><?php echo $h(isset($groupConfig['title']) ? $groupConfig['title'] : $groupSlug); ?></button>
+      <?php } ?>
+    </div>
+    <div aria-live="polite" class="results-line" id="resultsLine" role="status"></div>
+  </section>
+
+  <div class="tool-groups" id="toolGroups">
+    <?php foreach ($groups as $groupSlug => $groupConfig) {
+        $title = isset($groupConfig['title']) ? $groupConfig['title'] : $groupSlug;
+        $description = isset($groupConfig['description']) ? $groupConfig['description'] : '';
+        $groupTools = isset($toolsByGroup[$groupSlug]) ? $toolsByGroup[$groupSlug] : array();
+        ?>
+    <section class="tool-group" data-tool-group="<?php echo $h($groupSlug); ?>" id="group-<?php echo $h($groupSlug); ?>" aria-labelledby="groupTitle-<?php echo $h($groupSlug); ?>">
+      <div class="tool-group__heading">
+        <div>
+          <h2 id="groupTitle-<?php echo $h($groupSlug); ?>"><?php echo $h($title); ?></h2>
+          <p><?php echo $h($description); ?></p>
+        </div>
+        <span class="tool-group__count"><?php echo count($groupTools); ?></span>
+      </div>
+      <div class="tools-grid">
+        <?php foreach ($groupTools as $tool) {
+            renderDirectoryToolCard($tool);
+        } ?>
+      </div>
+    </section>
+    <?php } ?>
+  </div>
+
+  <div aria-hidden="true" class="no-results" id="noResults">
+    Δεν βρέθηκε εργαλείο που να ταιριάζει στην αναζήτησή σου.
+  </div>
+
+  <section class="info-grid">
+    <div class="notice">
+      <strong>Σημαντική σημείωση:</strong>
+      Τα εργαλεία παρέχουν ενδεικτική πληροφόρηση και δεν αντικαθιστούν τις επίσημες προκηρύξεις, εγκυκλίους και οδηγίες των αρμόδιων φορέων. Πριν από την οριστική υποβολή αίτησης, ελέγχετε πάντοτε τα επίσημα έγγραφα και τα στοιχεία που εμφανίζονται στο ΑΣΕΠ ή/και στο ΟΠΣΥΔ.
+    </div>
+    <div class="side-box">
+      <strong>Προθεσμίες σε ξεχωριστή σελίδα</strong>
+      Οι ενεργές και προσεχείς ημερομηνίες δεν εμφανίζονται πλέον ανάμεσα στα εργαλεία.
+      <a href="prothesmies.php">Άνοιγμα προθεσμιών →</a>
+    </div>
+  </section>
 </main>
+
 <script>
-    (function () {
-      const searchInput = document.getElementById('toolSearch');
-      const cards = Array.from(document.querySelectorAll('.tool-card'));
-      const filterButtons = Array.from(document.querySelectorAll('.filter-btn'));
-      const resultsLine = document.getElementById('resultsLine');
-      const noResults = document.getElementById('noResults');
+(function () {
+  var toolbar = document.getElementById('tools-directory');
+  var searchInput = document.getElementById('toolSearch');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.tool-card'));
+  var groupSections = Array.prototype.slice.call(document.querySelectorAll('.tool-group'));
+  var filterButtons = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
+  var categoryLinks = Array.prototype.slice.call(document.querySelectorAll('[data-directory-filter]'));
+  var resultsLine = document.getElementById('resultsLine');
+  var noResults = document.getElementById('noResults');
+  var activeFilter = toolbar && toolbar.getAttribute('data-initial-filter') ? toolbar.getAttribute('data-initial-filter') : 'all';
 
-      let activeFilter = 'all';
+  function normalizeGreek(text) {
+    return (text || '')
+      .toLocaleLowerCase('el-GR')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/ς/g, 'σ');
+  }
 
-      function normalizeGreek(text) {
-        return (text || '')
-          .toLocaleLowerCase('el-GR')
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/ς/g, 'σ');
+  function updateButtons() {
+    filterButtons.forEach(function (button) {
+      var isActive = button.getAttribute('data-filter') === activeFilter;
+      button.classList.toggle('active', isActive);
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  }
+
+  function updateCards() {
+    var query = normalizeGreek(searchInput.value.trim());
+    var visible = 0;
+
+    cards.forEach(function (card) {
+      var group = card.getAttribute('data-group') || '';
+      var haystack = normalizeGreek((card.getAttribute('data-search') || '') + ' ' + card.textContent);
+      var matchesFilter = activeFilter === 'all' || group === activeFilter;
+      var matchesSearch = !query || haystack.indexOf(query) !== -1;
+      var show = matchesFilter && matchesSearch;
+
+      card.classList.toggle('hidden-card', !show);
+      if (show) {
+        visible++;
       }
+    });
 
-      function updateCards() {
-        const query = normalizeGreek(searchInput.value.trim());
-        let visible = 0;
+    groupSections.forEach(function (section) {
+      var hasVisibleCard = !!section.querySelector('.tool-card:not(.hidden-card)');
+      section.classList.toggle('hidden-group', !hasVisibleCard);
+    });
 
-        cards.forEach(card => {
-          const categories = (card.dataset.category || '').split(/\s+/);
-          const haystack = normalizeGreek(
-            (card.dataset.search || '') + ' ' + card.textContent
-          );
+    resultsLine.textContent = visible === 1
+      ? 'Εμφανίζεται 1 εργαλείο.'
+      : 'Εμφανίζονται ' + visible + ' εργαλεία.';
 
-          const matchesFilter = activeFilter === 'all' || categories.includes(activeFilter);
-          const matchesSearch = !query || haystack.includes(query);
-          const show = matchesFilter && matchesSearch;
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+    noResults.setAttribute('aria-hidden', visible === 0 ? 'false' : 'true');
+    updateButtons();
+  }
 
-          card.classList.toggle('hidden-card', !show);
-          if (show) visible++;
-        });
+  function setFilter(filter, shouldScroll) {
+    activeFilter = filter || 'all';
+    updateCards();
+    if (shouldScroll && toolbar) {
+      toolbar.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+  }
 
-        resultsLine.textContent = visible === 1
-          ? 'Εμφανίζεται 1 εργαλείο.'
-          : 'Εμφανίζονται ' + visible + ' εργαλεία.';
+  filterButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      setFilter(button.getAttribute('data-filter') || 'all', false);
+    });
+  });
 
-        noResults.style.display = visible === 0 ? 'block' : 'none';
-        noResults.setAttribute('aria-hidden', visible === 0 ? 'false' : 'true');
-      }
+  categoryLinks.forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      setFilter(link.getAttribute('data-directory-filter') || 'all', true);
+    });
+  });
 
-      filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          activeFilter = button.dataset.filter || 'all';
-
-          filterButtons.forEach(btn => {
-            const isActive = btn === button;
-            btn.classList.toggle('active', isActive);
-            btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-          });
-
-          updateCards();
-        });
-      });
-
-      searchInput.addEventListener('input', updateCards);
-      updateCards();
-    })();
-  </script>
+  searchInput.addEventListener('input', updateCards);
+  updateCards();
+})();
+</script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-  <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo $h(edu_asset_url('assets/common.js')); ?>"></script>
 </body>
 </html>

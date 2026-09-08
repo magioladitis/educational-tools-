@@ -461,7 +461,10 @@ function staffingUiAllocationWarningLabels($rowResult) {
 }
 function staffingUiSchoolStateKeys() {
     return array(
-        'school_type','school_name',
+        // School identity must travel with every POST made from the later tabs.
+        // Without these fields the personnel/allocation forms would keep the
+        // structural profile but lose the real myschool identity on reload.
+        'school_type','school_registry_id','school_code','school_name',
         'gym_general_a','gym_general_b','gym_general_c',
         'gym_lang_a_fr','gym_lang_a_de','gym_lang_a_it','gym_lang_b_fr','gym_lang_b_de','gym_lang_b_it','gym_lang_c_fr','gym_lang_c_de','gym_lang_c_it',
         'gym_tech_split_a','gym_tech_split_b','gym_tech_split_c',
@@ -657,6 +660,10 @@ $submitted = $requestMethod === 'POST'
     && in_array($staffingAction, array('profile','personnel','allocation','allocation_auto'), true);
 $schoolType = staffingUiPost('school_type', 'gymnasio');
 if (!in_array($schoolType, array('gymnasio','gel','esperino_gymnasio','esperino_gel','gymnasio_lt'), true)) $schoolType = 'gymnasio';
+// Keep identity available independently of which tab submitted the page.
+$schoolName = trim((string) staffingUiPost('school_name', ''));
+$schoolRegistryId = trim((string) staffingUiPost('school_registry_id', ''));
+$schoolCode = trim((string) staffingUiPost('school_code', ''));
 $profile = null;
 $readiness = null;
 $matrix = null;
@@ -672,9 +679,6 @@ if ($submitted && $postedBasicSectionTotal > STAFFING_UI_MAX_BASIC_SECTIONS) {
 }
 
 if ($submitted && empty($schoolProfileInputErrors)) {
-    $schoolName = trim((string) staffingUiPost('school_name', ''));
-    $schoolRegistryId = trim((string) staffingUiPost('school_registry_id', ''));
-    $schoolCode = trim((string) staffingUiPost('school_code', ''));
     if ($schoolType === 'gymnasio_lt') {
         try {
             if (!function_exists('schoolProfileBuildGymnasiumWithLyceumClasses2026')
@@ -1110,12 +1114,52 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       <button type="button" class="mode-tab<?php echo $activePanel === 'vacancies' ? ' is-active' : ''; ?>" data-staffing-tab="vacancies" role="tab" aria-selected="<?php echo $activePanel === 'vacancies' ? 'true' : 'false'; ?>"<?php echo !$vacanciesEnabled ? ' disabled' : ''; ?>>5. Κενά μαθημάτων</button>
       <button type="button" class="mode-tab<?php echo $activePanel === 'specialties' ? ' is-active' : ''; ?>" data-staffing-tab="specialties" role="tab" aria-selected="<?php echo $activePanel === 'specialties' ? 'true' : 'false'; ?>"<?php echo !$specialtyBalanceEnabled ? ' disabled' : ''; ?>>6. Κενά / πλεονάσματα ειδικοτήτων</button>
     </div>
-    <?php if ($submitted && $matrix && $displayMatrix): ?>
-      <button type="button" class="edu-btn-secondary staffing-print-btn" id="staffingPrintButton">Εκτύπωση</button>
+    <div class="staffing-stage-actions">
+      <details class="staffing-help-popover">
+        <summary>ⓘ Βοήθεια</summary>
+        <div class="staffing-help-panel">
+          <h3>Πώς χρησιμοποιείται το εργαλείο</h3>
+          <ol>
+            <li><strong>Σχολική μονάδα:</strong> καταχώρισε τα πραγματικά τμήματα και τις ομάδες διδασκαλίας.</li>
+            <li><strong>Αποτελέσματα ανά κλάδο:</strong> έλεγξε τις ώρες που προκύπτουν από ωρολόγιο και αναθέσεις.</li>
+            <li><strong>Εκπαιδευτικοί:</strong> πρόσθεσε το πραγματικό προσωπικό και το διαθέσιμο ωράριό του.</li>
+            <li><strong>Κατανομή μαθημάτων:</strong> χρησιμοποίησε την αυτόματη πρόταση ή κάνε χειροκίνητες αλλαγές.</li>
+            <li><strong>Κενά μαθημάτων:</strong> δες ποιες διδακτικές ώρες παραμένουν ακάλυπτες.</li>
+            <li><strong>Κενά / πλεονάσματα ειδικοτήτων:</strong> δες την προτεινόμενη τελική εικόνα ανά κλάδο.</li>
+          </ol>
+          <p><strong>Σημαντικό:</strong> Η αυτόματη λειτουργία δημιουργεί <strong>πρόταση</strong>, όχι διοικητική πράξη τοποθέτησης. Η εικόνα κενών είναι εργαλείο ελέγχου και όχι από μόνη της επίσημος προσδιορισμός λειτουργικών κενών.</p>
+        </div>
+      </details>
+      <?php if ($submitted && $matrix && $displayMatrix): ?>
+        <button type="button" class="edu-btn-secondary staffing-print-btn" id="staffingPrintButton">Εκτύπωση</button>
+      <?php endif; ?>
+    </div>
+  </div>
+
+  <?php
+    $staffingContextSchool = $schoolName !== '' ? $schoolName : ($submitted ? staffingUiSchoolTypeLabel($schoolType, true) : 'Δεν έχει φορτωθεί σχολική μονάδα');
+    $staffingContextState = ($submitted && $matrix) ? staffingUiReadinessLabel($matrix['readiness']) : 'Αναμονή υπολογισμού';
+    $staffingContextAssignmentUnits = ($submitted && $matrix) ? (int)$matrix['summary']['assignment_unit_count'] : 0;
+    $staffingContextEligibleBranches = ($submitted && $displayMatrix) ? (int)(isset($displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims']) ? $displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims'] : 0) : 0;
+  ?>
+  <div class="staffing-context-bar" id="staffingContextBar" aria-label="Τρέχουσα σχολική μονάδα και κατάσταση υπολογισμού">
+    <span class="staffing-context-label">Τρέχον σχολείο</span>
+    <strong class="staffing-context-school" id="staffingContextSchool"><?php echo staffingUiH($staffingContextSchool); ?></strong>
+    <span class="staffing-context-chip" id="staffingContextType"><?php echo staffingUiH(staffingUiSchoolTypeLabel($schoolType)); ?></span>
+    <span class="staffing-context-chip" id="staffingContextCode"<?php echo empty($schoolCode) ? ' hidden' : ''; ?>>κωδ. <strong><?php echo staffingUiH($schoolCode); ?></strong></span>
+    <span class="staffing-context-chip" id="staffingContextSections"<?php echo $generalSectionTotal > 0 ? '' : ' hidden'; ?>><strong><?php echo (int)$generalSectionTotal; ?></strong> τμήματα</span>
+    <span class="staffing-context-chip staffing-context-state" id="staffingContextState"><?php echo staffingUiH($staffingContextState); ?></span>
+    <?php if ($submitted && $matrix): ?>
+      <span class="staffing-context-chip staffing-context-detail"><strong><?php echo $staffingContextAssignmentUnits; ?></strong> αντιστοιχίσεις</span>
+      <span class="staffing-context-chip staffing-context-detail"><strong><?php echo $staffingContextEligibleBranches; ?></strong> κλάδοι</span>
+    <?php endif; ?>
+    <?php if ($allocationPlan): ?>
+      <span class="staffing-context-chip staffing-context-detail"><strong><?php echo (int)$allocationPlan['summary']['assigned_slot_hours_total']; ?></strong> ώρες κατανεμημένες</span>
+      <span class="staffing-context-chip staffing-context-detail<?php echo (int)$allocationPlan['summary']['unassigned_slot_hours'] > 0 ? ' has-warning' : ''; ?>"><strong><?php echo (int)$allocationPlan['summary']['unassigned_slot_hours']; ?></strong> ακάλυπτες</span>
     <?php endif; ?>
   </div>
 
-  <?php calculatorColumnsStart(); ?>
+  <?php calculatorColumnsStart(array('class'=>'layout staffing-single-column')); ?>
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('class'=>'card staffing-panel','attrs'=>array('data-staffing-panel'=>'school') + ($activePanel !== 'school' ? array('hidden'=>true) : array()))); ?>
         <h2>1. Στοιχεία σχολικής μονάδας</h2>
@@ -1812,13 +1856,13 @@ uksort($specialtyLabelsClient, 'strnatcmp');
           <div class="vacancy-toolbar">
             <div class="field vacancy-filter">
               <label for="vacancyFilter">Φίλτρο τάξης / μαθήματος / κλάδου</label>
-              <input id="vacancyFilter" type="search" placeholder="π.χ. Β1, Μαθηματικά ή ΠΕ03">
+              <input id="vacancyFilter" type="search" placeholder="π.χ. Β΄, Μαθηματικά ή ΠΕ03">
             </div>
           </div>
 
           <div class="matrix-wrap" id="vacancyTableWrap">
             <table class="staffing-table vacancy-table" id="vacancyTable">
-              <thead><tr><th>Τμήμα / ομάδα</th><th>Μάθημα</th><th>Ακάλυπτες ώρες</th><th>Κλάδοι ανάθεσης</th><th>Τρέχον προσωπικό</th></tr></thead>
+              <thead><tr><th>Τάξη</th><th>Μάθημα</th><th>Ακάλυπτες ώρες</th><th>Κλάδοι ανάθεσης</th><th>Τρέχον προσωπικό</th></tr></thead>
               <tbody>
               <?php foreach ($allocationSlots as $vacancySlotId=>$vacancySlot): ?>
                 <?php
@@ -1829,7 +1873,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                   foreach (array('A','B','C','SPECIAL') as $vp) if (!empty($vacancyEligibility[$vp])) $vacancySearchParts = array_merge($vacancySearchParts, $vacancyEligibility[$vp]);
                 ?>
                 <tr data-vacancy-row="<?php echo staffingUiH($vacancySlotId); ?>" data-search="<?php echo staffingUiH(implode(' ', $vacancySearchParts)); ?>"<?php echo $vacancyRemaining < 1 ? ' hidden' : ''; ?>>
-                  <td><strong><?php echo staffingUiH(isset($vacancySlot['slot_label']) ? $vacancySlot['slot_label'] : ''); ?></strong></td>
+                  <td><strong title="<?php echo staffingUiH(isset($vacancySlot['slot_label']) ? $vacancySlot['slot_label'] : ''); ?>"><?php echo staffingUiH(isset($vacancySlot['grade']) && $vacancySlot['grade'] !== '' ? $vacancySlot['grade'] . ' τάξη' : '—'); ?></strong></td>
                   <td><?php echo staffingUiH(isset($vacancySlot['subject']) ? $vacancySlot['subject'] : ''); ?></td>
                   <td><span class="vacancy-hours" data-vacancy-hours><?php echo $vacancyRemaining; ?></span></td>
                   <td><div class="vacancy-assignments">
@@ -1926,33 +1970,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       <?php endif; ?>
     <?php calculatorMainEnd(); ?>
 
-    <?php calculatorResultsStart(array('class'=>'card results')); ?>
-      <h2>Τι κάνει αυτή η έκδοση</h2>
-      <p class="cap">Είναι εργαλείο προσομοίωσης και ελέγχου της εσωτερικής λογικής που έχουμε ήδη χτίσει.</p>
-      <?php calculatorResultRow(array('label'=>'Ωρολόγιο πρόγραμμα','value'=>'✓')); ?>
-      <?php calculatorResultRow(array('label'=>'Α΄/Β΄/Γ΄ αναθέσεις','value'=>'✓')); ?>
-      <?php calculatorResultRow(array('label'=>'2η ξένη γλώσσα','value'=>'✓')); ?>
-      <?php calculatorResultRow(array('label'=>'Ομάδες Προσανατολισμού ΓΕΛ','value'=>'✓')); ?>
-      <?php calculatorResultRow(array('label'=>'Ηθική','value'=>'✓')); ?>
-      <?php calculatorResultRow(array('label'=>'Πραγματικό προσωπικό','value'=>'✓')); ?>
-      <?php calculatorResultRow(array('label'=>'Αυτόματη πρόταση + χειροκίνητη κατανομή μαθημάτων','value'=>'✓')); ?>
-      <?php calculatorResultRow(array('label'=>'Κενά μαθημάτων μετά την κατανομή','value'=>'✓')); ?>
-      <?php calculatorResultRow(array('label'=>'Προτεινόμενα κενά / πλεονάσματα ανά ειδικότητα','value'=>'✓')); ?>
-      <?php calculatorResultRow(array('label'=>'Στόχος αυτόματης πρότασης','value'=>'Μέγιστη δυνατή κάλυψη → Α΄/ειδική → Β΄ → Γ΄')); ?>
-      <div class="info-note">Η αυτόματη λειτουργία δημιουργεί <strong>πρόταση</strong>, όχι διοικητική πράξη τοποθέτησης. Οι ήδη καταχωρισμένες γραμμές θεωρούνται επιλογές του χρήστη και δεν αλλάζουν· ο engine συμπληρώνει το υπόλοιπο και ο Διευθυντής μπορεί μετά να τροποποιήσει οποιαδήποτε ανάθεση. Οι καρτέλες 5–6 επανυπολογίζουν την εικόνα κενών / πλεονασμάτων από την τελική κατανομή.</div>
-      <?php if ($submitted && $matrix): ?>
-        <h3>Τρέχων υπολογισμός</h3>
-        <?php calculatorResultRow(array('label'=>'Δομή','value'=>staffingUiSchoolTypeLabel($schoolType))); ?>
-        <?php if (!empty($schoolCode)) calculatorResultRow(array('label'=>'Κωδικός Υπουργείου / myschool','value'=>$schoolCode)); ?>
-        <?php calculatorResultRow(array('label'=>'Μονάδες αντιστοιχισμένης ανάθεσης','value'=>(int)$matrix['summary']['assignment_unit_count'])); ?>
-        <?php calculatorResultRow(array('label'=>'Κλάδοι με επιλεξιμότητα','value'=>(int)(isset($displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims']) ? $displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims'] : 0))); ?>
-        <?php calculatorResultRow(array('label'=>'Κατάσταση','value'=>staffingUiReadinessLabel($matrix['readiness']))); ?>
-        <?php if ($allocationPlan): ?>
-          <?php calculatorResultRow(array('label'=>'Κατανεμημένες ώρες','value'=>(int)$allocationPlan['summary']['assigned_slot_hours_total'])); ?>
-          <?php calculatorResultRow(array('label'=>'Ώρες χωρίς κατανομή','value'=>(int)$allocationPlan['summary']['unassigned_slot_hours'])); ?>
-        <?php endif; ?>
-      <?php endif; ?>
-    <?php calculatorResultsEnd(); ?>
+
   <?php calculatorColumnsEnd(); ?>
 </main>
 
@@ -2403,6 +2421,45 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   syncBasicSectionLimit();
 
   const schoolProfileForm=document.getElementById('staffingProfileForm');
+  const staffingContextSchool=document.getElementById('staffingContextSchool');
+  const staffingContextType=document.getElementById('staffingContextType');
+  const staffingContextCode=document.getElementById('staffingContextCode');
+  const staffingContextSections=document.getElementById('staffingContextSections');
+  const staffingContextState=document.getElementById('staffingContextState');
+  function staffingContextTypeLabel(value){
+    const labels={
+      gymnasio:'Ημερήσιο Γυμνάσιο',
+      esperino_gymnasio:'Εσπερινό Γυμνάσιο',
+      gel:'Ημερήσιο ΓΕΛ',
+      esperino_gel:'Εσπερινό ΓΕΛ',
+      gymnasio_lt:'Γυμνάσιο με Λυκειακές Τάξεις'
+    };
+    return labels[value]||value||'—';
+  }
+  function refreshStaffingContextFromForm(stateText){
+    if(!schoolProfileForm) return;
+    const nameField=schoolProfileForm.elements.namedItem('school_name');
+    const codeField=schoolProfileForm.elements.namedItem('school_code');
+    const typeField=schoolProfileForm.elements.namedItem('school_type');
+    const name=String(nameField&&nameField.value||'').trim();
+    const code=String(codeField&&codeField.value||'').trim();
+    const typeValue=String(typeField&&typeField.value||'').trim();
+    const sectionTotal=Array.from(schoolProfileForm.querySelectorAll('[data-basic-section]')).reduce(function(sum,input){
+      if(input.disabled) return sum;
+      return sum+(parseInt(input.value||'0',10)||0);
+    },0);
+    if(staffingContextSchool) staffingContextSchool.textContent=name||staffingContextTypeLabel(typeValue)||'Δεν έχει φορτωθεί σχολική μονάδα';
+    if(staffingContextType) staffingContextType.textContent=staffingContextTypeLabel(typeValue);
+    if(staffingContextCode){
+      staffingContextCode.hidden=code==='';
+      staffingContextCode.innerHTML=code===''?'':'κωδ. <strong>'+escapeHtml(code)+'</strong>';
+    }
+    if(staffingContextSections){
+      staffingContextSections.hidden=sectionTotal<=0;
+      staffingContextSections.innerHTML=sectionTotal>0?'<strong>'+sectionTotal+'</strong> τμήματα':'';
+    }
+    if(staffingContextState && stateText) staffingContextState.textContent=stateText;
+  }
   const openSchoolCsv=document.getElementById('openSchoolCsv');
   const schoolCsvFile=document.getElementById('schoolCsvFile');
   const chooseSchoolCsvFile=document.getElementById('chooseSchoolCsvFile');
@@ -2585,6 +2642,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       schoolCsvActive.innerHTML='<strong>Τρέχουσα εγγραφή μητρώου:</strong> '+escapeHtml(record.school_name||record.school_id)+(record.school_code?' · κωδ. '+escapeHtml(record.school_code):'')+' · '+escapeHtml(record.school_type_label||record.school_type)+profileYear+(record.school_address?' · '+escapeHtml(record.school_address):'')+'. Τα διαθέσιμα στοιχεία τμημάτων/ομάδων φορτώθηκαν στη φόρμα χωρίς server request.'+pending+' Πάτησε «Υπολόγισε διδακτικές ανάγκες» όταν θέλεις νέο υπολογισμό.';
     }
     schoolCsvSetStatus('Φορτώθηκε το «'+(record.school_name||record.school_id)+'» με τα διαθέσιμα δομικά στοιχεία του 2026-2027.'+(record.pending_fields?' Συμπλήρωσε τα πεδία που παραμένουν εκκρεμή.':'') ,'success');
+    refreshStaffingContextFromForm('Χρειάζεται υπολογισμός');
     markSchoolProfileDirty();
   }
   function escapeHtml(value){
@@ -2796,6 +2854,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   const schoolProfileHasCalculatedResults=<?php echo $calculationAvailable ? 'true' : 'false'; ?>;
   const schoolProfileStaleNotice=document.getElementById('schoolProfileStaleNotice');
   function markSchoolProfileDirty(){
+    refreshStaffingContextFromForm(schoolProfileHasCalculatedResults?'Αλλαγμένα στοιχεία · υπολόγισε ξανά':'Χρειάζεται υπολογισμός');
     if(!schoolProfileHasCalculatedResults) return;
     ['results','personnel','allocation','vacancies','specialties'].forEach(function(name){
       const tab=document.querySelector('[data-staffing-tab="'+name+'"]');

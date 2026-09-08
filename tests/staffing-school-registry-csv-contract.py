@@ -32,7 +32,7 @@ check('school registry survives explicit recalculation in same browser tab', 'se
 check('school registry can be cleared explicitly', 'id="clearSchoolCsvRegistry"' in html and 'sessionStorage.removeItem(schoolCsvStorageKey)' in page)
 check('duplicate school ids and real codes are rejected independently', 'διπλό αναγνωριστικό σχολείου' in page and 'διπλό κωδικό Υπουργείου / myschool' in page)
 check('120 basic-section safety limit is advertised in schema and UI', 'maxBasicSections:MAX_BASIC_SECTIONS' in js and 'έως <strong>120 βασικά τμήματα συνολικά</strong>' in page and "STAFFING_UI_MAX_BASIC_SECTIONS', 120" in page and 'staffingUiRenderBasicSectionFields' in page)
-check('school CSV does not add request path', 'fetch(' not in page and 'location.reload' not in page and '.submit()' not in page and page.count('requestSubmit()')==1)
+check('school CSV does not add request path', 'fetch(' not in page and 'location.reload' not in page and '.submit()' not in page and 'requestSubmit()' not in page)
 
 node=r'''
 const csv=require('./includes/school-profile-csv-import.js');
