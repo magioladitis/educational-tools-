@@ -1556,9 +1556,9 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                       <input type="number" min="0" max="35" step="1" name="personnel_assigned_external_hours[]" class="personnel-external" value="<?php echo $externalHours; ?>"<?php echo $isMySchoolSource ? ' readonly' : ''; ?>>
                     </div>
                     <div class="metric"><strong data-available-hours><?php echo $availableHours === null ? '—' : $availableHours; ?></strong><span>διαθέσιμο εδώ</span></div>
-                    <button type="button" class="personnel-remove personnel-remove-compact" title="Αφαίρεση εκπαιδευτικού" aria-label="Αφαίρεση εκπαιδευτικού">×</button>
+                    <button type="button" class="personnel-remove personnel-remove-compact" title="Αφαίρεση εκπαιδευτικού" aria-label="Αφαίρεση εκπαιδευτικού"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg></button>
                   </div>
-                  <details<?php echo $isMySchoolSource || $person['role'] !== 'teacher' || !$resolved || $selectedSecondaryCode !== '' ? ' open' : ''; ?>>
+                  <details<?php echo !$isMySchoolSource && ($person['role'] !== 'teacher' || !$resolved || $selectedSecondaryCode !== '') ? ' open' : ''; ?>>
                     <summary>2η ειδικότητα, ρόλος και στοιχεία διοίκησης<?php if ($selectedSecondaryCode !== ''): ?> · 2η <?php echo staffingUiH($selectedSecondaryCode); ?><?php endif; ?><?php if ($isMySchoolSource): ?> · myschool<?php elseif ($person['role'] !== 'teacher' && $resolved && !empty($eval['obligation']['service_label'])): ?> · <?php echo staffingUiH($eval['obligation']['service_label']); ?><?php endif; ?></summary>
                     <div class="personnel-row-details">
                       <div class="mini-grid two personnel-secondary-role-grid">
@@ -1610,7 +1610,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                 <div class="field"><label title="Υποχρεωτικό ωράριο">Υ.Ω.</label><input type="number" min="1" max="35" step="1" name="personnel_required_teaching_hours[]" class="personnel-required" data-required-hours data-manual-value="" value="" required></div>
                 <div class="field"><label>Ώρες αλλού</label><input type="number" min="0" max="35" step="1" name="personnel_assigned_external_hours[]" class="personnel-external" value="0"></div>
                 <div class="metric"><strong data-available-hours>—</strong><span>διαθέσιμο εδώ</span></div>
-                <button type="button" class="personnel-remove personnel-remove-compact" title="Αφαίρεση εκπαιδευτικού" aria-label="Αφαίρεση εκπαιδευτικού">×</button>
+                <button type="button" class="personnel-remove personnel-remove-compact" title="Αφαίρεση εκπαιδευτικού" aria-label="Αφαίρεση εκπαιδευτικού"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg></button>
               </div>
               <details>
                 <summary>2η ειδικότητα, ρόλος και στοιχεία διοίκησης</summary>
@@ -1771,7 +1771,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                         <div class="field"><label>Εκπαιδευτικός</label><select name="allocation_person_id[]" class="allocation-person"><?php staffingUiRenderAllocationPersonOptions($allocationPeople, isset($allocation['person_id']) ? $allocation['person_id'] : ''); ?></select></div>
                         <div class="field"><label>Ώρες <small>αυτόματα</small></label><input type="number" min="1" max="35" step="1" name="allocation_hours[]" class="allocation-hours" value="<?php echo staffingUiH(isset($allocation['hours']) ? $allocation['hours'] : 0); ?>" readonly></div>
                         <div class="allocation-status<?php echo $rowStatusClass; ?>" data-allocation-status><?php echo staffingUiH($rowStatusText); ?></div>
-                        <button type="button" class="personnel-remove allocation-remove">Αφαίρεση</button>
+                        <button type="button" class="personnel-remove personnel-remove-compact allocation-remove" title="Αφαίρεση κατανομής" aria-label="Αφαίρεση κατανομής"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg></button>
                       </div>
                     </div>
                   <?php endforeach; ?>
@@ -1789,7 +1789,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                     <div class="field"><label>Εκπαιδευτικός</label><select name="allocation_person_id[]" class="allocation-person"><?php staffingUiRenderAllocationPersonOptions($allocationPeople, ''); ?></select></div>
                     <div class="field"><label>Ώρες <small>αυτόματα</small></label><input type="number" min="1" max="35" step="1" name="allocation_hours[]" class="allocation-hours" value="0" readonly></div>
                     <div class="allocation-status" data-allocation-status>Συμπλήρωσε μάθημα και εκπαιδευτικό.</div>
-                    <button type="button" class="personnel-remove allocation-remove">Αφαίρεση</button>
+                    <button type="button" class="personnel-remove personnel-remove-compact allocation-remove" title="Αφαίρεση κατανομής" aria-label="Αφαίρεση κατανομής"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg></button>
                   </div>
                 </div>
               </template>
@@ -2494,7 +2494,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     const table=document.createElement('table');
     table.className='school-registry-table';
     const thead=document.createElement('thead');
-    thead.innerHTML='<tr><th>Σχολική μονάδα</th><th>Κωδικός</th><th>Είδος</th><th>Α΄</th><th>Β΄</th><th>Γ΄</th><th>Σύνολο τμημάτων</th><th>Κατάσταση</th><th></th></tr>';
+    thead.innerHTML='<tr><th>Σχολική μονάδα</th><th>Κωδικός</th><th>Είδος</th><th>Α΄</th><th>Β΄</th><th>Γ΄</th><th title="Σύνολο τμημάτων" aria-label="Σύνολο τμημάτων">Σ</th><th>Κατάσταση</th><th></th></tr>';
     table.appendChild(thead);
     const tbody=document.createElement('tbody');
     let visibleCount=0;
