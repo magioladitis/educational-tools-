@@ -607,6 +607,64 @@ function weeklyTimetableRows()
  * Browser-safe timetable payload.
  * Internal assignment crosswalk metadata stays server-side for audits/future linking.
  */
+/**
+ * Memory-safe timetable loader for the school staffing simulator.
+ *
+ * The full weeklyTimetableRows() remains the canonical/audit API. For the
+ * supported general-education school types, production requests load a tiny
+ * generated snapshot instead of materialising the complete 1,700+ row catalog.
+ * Unknown types deliberately fall back to the canonical dataset.
+ */
+function weeklyTimetableRowsForSchools($schools)
+{
+    if (!is_array($schools)) {
+        $schools = array($schools);
+    }
+    $requested = array();
+    foreach ($schools as $school) {
+        $school = trim((string) $school);
+        if ($school !== '') {
+            $requested[$school] = true;
+        }
+    }
+    if (!$requested) {
+        return array();
+    }
+
+    $snapshotSchools = array(
+        'gymnasio' => true,
+        'gel' => true,
+        'esperino_gymnasio' => true,
+        'esperino_gel' => true,
+    );
+    $rows = array();
+    $fallback = array();
+    foreach (array_keys($requested) as $school) {
+        if (isset($snapshotSchools[$school])) {
+            $path = __DIR__ . '/scoped-workload/weekly-' . $school . '.php';
+            if (is_file($path)) {
+                $part = require $path;
+                if (is_array($part)) {
+                    foreach ($part as $row) {
+                        $rows[] = $row;
+                    }
+                    continue;
+                }
+            }
+        }
+        $fallback[$school] = true;
+    }
+
+    if ($fallback) {
+        foreach (weeklyTimetableRows() as $row) {
+            if (!empty($row['school']) && isset($fallback[$row['school']])) {
+                $rows[] = $row;
+            }
+        }
+    }
+    return $rows;
+}
+
 function weeklyTimetablePublicRows()
 {
     $rows = weeklyTimetableRows();
@@ -935,7 +993,7 @@ function weeklyTimetableVocationalRows()
 function weeklyTimetableRowsFor($school, $grade)
 {
     $result = array();
-    foreach (weeklyTimetableRows() as $row) {
+    foreach (weeklyTimetableRowsForSchools(array($school)) as $row) {
         if ($row['school'] !== $school) continue;
         if (!isset($row['hours'][$grade])) continue;
         $copy = $row;

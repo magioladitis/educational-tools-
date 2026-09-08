@@ -530,6 +530,45 @@ function teachingWorkloadModel()
     return $result;
 }
 
+/**
+ * Build the workload model only for the requested school structures.
+ * This is the production path for ypologismos-didaktikon-anagkon.php.
+ */
+function teachingWorkloadModelForSchools($schools)
+{
+    if (!is_array($schools)) {
+        $schools = array($schools);
+    }
+    $normalized = array();
+    foreach ($schools as $school) {
+        $school = trim((string) $school);
+        if ($school !== '') {
+            $normalized[$school] = true;
+        }
+    }
+    $schoolList = array_keys($normalized);
+    if (!$schoolList) {
+        return array();
+    }
+
+    $assignments = teachingAssignmentsDataForSchools($schoolList);
+    $result = array();
+    foreach (weeklyTimetableRowsForSchools($schoolList) as $row) {
+        foreach ($row['hours'] as $grade => $hours) {
+            $result[] = teachingWorkloadBuildInstance($row, $grade, $assignments);
+        }
+    }
+    return $result;
+}
+
+function teachingWorkloadModelForProfile($profile)
+{
+    if (!is_array($profile) || empty($profile['structures']) || !is_array($profile['structures'])) {
+        return array();
+    }
+    return teachingWorkloadModelForSchools(array_keys($profile['structures']));
+}
+
 function teachingWorkloadModelSummary($model = null)
 {
     if ($model === null) {

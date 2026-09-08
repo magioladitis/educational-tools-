@@ -371,6 +371,18 @@ function staffingUiRenderAllocationPersonOptions($people, $selected) {
         echo '<option value="' . staffingUiH($id) . '"' . ($selected === $id ? ' selected' : '') . '>' . staffingUiH(staffingUiAllocationPersonLabel($person)) . '</option>';
     }
 }
+function staffingUiRenderAllocationPersonSelectedOption($people, $selected) {
+    echo '<option value="">— επίλεξε πρώτα μάθημα / τμήμα —</option>';
+    $selected = (string)$selected;
+    if ($selected === '') return;
+    foreach ($people as $person) {
+        $id = isset($person['person_id']) ? (string)$person['person_id'] : '';
+        if ($id !== $selected) continue;
+        echo '<option value="' . staffingUiH($id) . '" selected>' . staffingUiH(staffingUiAllocationPersonLabel($person)) . '</option>';
+        return;
+    }
+    echo '<option value="' . staffingUiH($selected) . '" selected>Μη έγκυρος εκπαιδευτικός</option>';
+}
 function staffingUiSortAllocationSlots($slots) {
     uasort($slots, function ($a, $b) {
         $structureOrder = array('gymnasio'=>1,'esperino_gymnasio'=>1,'gel'=>2,'esperino_gel'=>2);
@@ -417,6 +429,17 @@ function staffingUiRenderAllocationSlotOptions($slots, $selected, $allSlots = nu
         echo '<option value="' . staffingUiH($slotId) . '" data-capacity="' . (int)$slot['capacity_hours'] . '"' . ($selected === $slotId ? ' selected' : '') . '>' . staffingUiH(staffingUiAllocationSlotOptionLabel($slot)) . '</option>';
     }
     if ($openGroup) echo '</optgroup>';
+}
+function staffingUiRenderAllocationSlotSelectedOption($slots, $selected) {
+    echo '<option value="">— επιλογή τμήματος / ομάδας και μαθήματος —</option>';
+    $selected = (string)$selected;
+    if ($selected === '') return;
+    if (isset($slots[$selected])) {
+        $slot = $slots[$selected];
+        echo '<option value="' . staffingUiH($selected) . '" data-capacity="' . (int)$slot['capacity_hours'] . '" selected>' . staffingUiH(staffingUiAllocationSlotOptionLabel($slot)) . '</option>';
+        return;
+    }
+    echo '<option value="' . staffingUiH($selected) . '" selected disabled>Μη έγκυρο μάθημα / τμήμα</option>';
 }
 function staffingUiAllocationErrorLabel($error) {
     $map = array(
@@ -871,9 +894,10 @@ if ($submitted && empty($schoolProfileInputErrors)) {
         ));
     }
     $readiness = schoolProfileGeneralEducationReadiness($profile);
-    // Build the deterministic workload model once per explicit calculation and
-    // reuse it for both the matrix and the personnel-specialty catalogue.
-    $teachingModel = teachingWorkloadModel();
+    // Build only the regulatory workload needed by this school profile.
+    // A Gymnasium request must not materialise EPAL/PEPAL/ENEEGYL/etc. data.
+    // Composite Gymnasium + Lyceum Classes naturally requests both structures.
+    $teachingModel = teachingWorkloadModelForProfile($profile);
     $matrix = schoolProfileWorkloadMatrix($profile, $teachingModel);
     $presentation = staffingUiCollapseSkillsWorkshops($matrix);
     $displayMatrix = staffingUiSortCodesNatural($presentation['matrix']);
@@ -1064,7 +1088,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
 }
 
 $specialtyBalanceReport = null;
-if ($specialtyBalanceEnabled) {
+// Η Καρτέλα 6 ανανεώνεται πλήρως client-side όταν ανοίγει. Σε shared hosting
+// δεν εκτελούμε τον βαρύ optimizer σε κάθε POST της Καρτέλας 3/4, γιατί σε
+// μεγάλα σχολεία αυτό διπλασίαζε άσκοπα CPU και μνήμη και μπορούσε να δώσει 500.
+$specialtyBalanceServerNeeded = $specialtyBalanceEnabled && $activePanel === 'specialties';
+if ($specialtyBalanceServerNeeded) {
     $specialtyBalanceReport = personnelWorkloadSpecialtyBalanceReport($profile, $allocationPeople, $allocationRows, $teachingModel);
 }
 $specialtyLabelsClient = array();
@@ -1814,8 +1842,8 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                     ?>
                     <div class="allocation-row" data-allocation-row>
                       <div class="allocation-row-main">
-                        <div class="field"><label>Τμήμα / ομάδα · μάθημα</label><select name="allocation_slot_id[]" class="allocation-slot" aria-label="Μάθημα και τμήμα προς κατανομή"><?php staffingUiRenderAllocationSlotOptions($allocationSelectableSlots, isset($allocation['slot_id']) ? $allocation['slot_id'] : '', $allocationSlots); ?></select></div>
-                        <div class="field"><label>Εκπαιδευτικός</label><select name="allocation_person_id[]" class="allocation-person" aria-label="Εκπαιδευτικός για την κατανομή"><?php staffingUiRenderAllocationPersonOptions($allocationPeople, isset($allocation['person_id']) ? $allocation['person_id'] : ''); ?></select></div>
+                        <div class="field"><label>Τμήμα / ομάδα · μάθημα</label><select name="allocation_slot_id[]" class="allocation-slot" data-lazy-options="slot" aria-label="Μάθημα και τμήμα προς κατανομή"><?php staffingUiRenderAllocationSlotSelectedOption($allocationSlots, isset($allocation['slot_id']) ? $allocation['slot_id'] : ''); ?></select></div>
+                        <div class="field"><label>Εκπαιδευτικός</label><select name="allocation_person_id[]" class="allocation-person" data-lazy-options="person" aria-label="Εκπαιδευτικός για την κατανομή"<?php echo empty($allocation['slot_id']) ? ' disabled' : ''; ?>><?php staffingUiRenderAllocationPersonSelectedOption($allocationPeople, isset($allocation['person_id']) ? $allocation['person_id'] : ''); ?></select></div>
                         <div class="field"><label>Ώρες <small>αυτόματα</small></label><input type="number" min="1" max="35" step="1" name="allocation_hours[]" class="allocation-hours" aria-label="Ώρες κατανομής" value="<?php echo staffingUiH(isset($allocation['hours']) ? $allocation['hours'] : 0); ?>" readonly></div>
                         <div class="allocation-status<?php echo $rowStatusClass; ?>" data-allocation-status><?php echo staffingUiH($rowStatusText); ?></div>
                         <button type="button" class="personnel-remove personnel-remove-compact allocation-remove" title="Αφαίρεση κατανομής" aria-label="Αφαίρεση κατανομής"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg></button>
@@ -1832,8 +1860,8 @@ uksort($specialtyLabelsClient, 'strnatcmp');
               <template id="allocationRowTemplate">
                 <div class="allocation-row" data-allocation-row>
                   <div class="allocation-row-main">
-                    <div class="field"><label>Τμήμα / ομάδα · μάθημα</label><select name="allocation_slot_id[]" class="allocation-slot" aria-label="Μάθημα και τμήμα προς κατανομή"><?php staffingUiRenderAllocationSlotOptions($allocationSelectableSlots, '', $allocationSlots); ?></select></div>
-                    <div class="field"><label>Εκπαιδευτικός</label><select name="allocation_person_id[]" class="allocation-person" aria-label="Εκπαιδευτικός για την κατανομή"><?php staffingUiRenderAllocationPersonOptions($allocationPeople, ''); ?></select></div>
+                    <div class="field"><label>Τμήμα / ομάδα · μάθημα</label><select name="allocation_slot_id[]" class="allocation-slot" data-lazy-options="slot" aria-label="Μάθημα και τμήμα προς κατανομή"><option value="">— επιλογή τμήματος / ομάδας και μαθήματος —</option></select></div>
+                    <div class="field"><label>Εκπαιδευτικός</label><select name="allocation_person_id[]" class="allocation-person" data-lazy-options="person" aria-label="Εκπαιδευτικός για την κατανομή" disabled><option value="">— επίλεξε πρώτα μάθημα / τμήμα —</option></select></div>
                     <div class="field"><label>Ώρες <small>αυτόματα</small></label><input type="number" min="1" max="35" step="1" name="allocation_hours[]" class="allocation-hours" aria-label="Ώρες κατανομής" value="0" readonly></div>
                     <div class="allocation-status" data-allocation-status>Συμπλήρωσε μάθημα και εκπαιδευτικό.</div>
                     <button type="button" class="personnel-remove personnel-remove-compact allocation-remove" title="Αφαίρεση κατανομής" aria-label="Αφαίρεση κατανομής"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" style="display:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg></button>
@@ -1978,10 +2006,11 @@ uksort($specialtyLabelsClient, 'strnatcmp');
 
           <details class="specialty-balance-details" id="specialtySmartDetails">
             <summary>Πώς έγινε η «έξυπνη» επιλογή στα κοινά κενά</summary>
+            <p class="help">Οι κανονιστικοί πίνακες αναθέσεων διατηρούνται αυτούσιοι. Για νέα πρόταση κενού ο <strong>ΠΕ04.03</strong> αντιμετωπίζεται ως legacy κλάδος και, όταν υπάρχει σημερινός εναλλακτικός κλάδος στην καλύτερη διαθέσιμη ανάθεση, δεν προτείνεται. Έτσι στη Γεωλογία-Γεωγραφία προηγείται ο <strong>ΠΕ04.05</strong>.</p>
             <div class="matrix-wrap">
-              <table class="staffing-table specialty-smart-table"><caption class="edu-tools-sr-only">Αιτιολόγηση επιλογής κλάδου για κοινά κενά</caption><thead><tr><th scope="col">Τμήμα / ομάδα</th><th scope="col">Μάθημα</th><th scope="col">Ώρες</th><th scope="col">Προτεινόμενος κλάδος</th><th scope="col">Ισότιμες εναλλακτικές</th></tr></thead><tbody id="specialtySmartBody">
-              <?php if ($specialtyBalanceReport): foreach ($specialtyBalanceReport['vacancy_recommendations'] as $smartRow): if (count($smartRow['candidate_codes']) < 2) continue; ?>
-                <tr><td><?php echo staffingUiH($smartRow['slot_label']); ?></td><td><?php echo staffingUiH($smartRow['subject']); ?></td><td><?php echo (int)$smartRow['hours']; ?></td><td><strong><?php echo staffingUiH($smartRow['selected_code']); ?></strong></td><td><?php echo staffingUiH(implode(', ', $smartRow['candidate_codes'])); ?></td></tr>
+              <table class="staffing-table specialty-smart-table"><caption class="edu-tools-sr-only">Αιτιολόγηση επιλογής κλάδου για κοινά κενά</caption><thead><tr><th scope="col">Τμήμα / ομάδα</th><th scope="col">Μάθημα</th><th scope="col">Ώρες</th><th scope="col">Προτεινόμενος κλάδος</th><th scope="col">Νόμιμες ισότιμες εναλλακτικές</th></tr></thead><tbody id="specialtySmartBody">
+              <?php if ($specialtyBalanceReport): foreach ($specialtyBalanceReport['vacancy_recommendations'] as $smartRow): $legalSmartCodes=isset($smartRow['legal_candidate_codes'])?$smartRow['legal_candidate_codes']:$smartRow['candidate_codes']; if (count($legalSmartCodes) < 2) continue; ?>
+                <tr><td><?php echo staffingUiH($smartRow['slot_label']); ?></td><td><?php echo staffingUiH($smartRow['subject']); ?></td><td><?php echo (int)$smartRow['hours']; ?></td><td><strong><?php echo staffingUiH($smartRow['selected_code']); ?></strong></td><td><?php echo staffingUiH(implode(', ', $legalSmartCodes)); ?></td></tr>
               <?php endforeach; endif; ?>
               </tbody></table>
             </div>
@@ -3677,6 +3706,39 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     if(preserveSelected&&oldSelected&&allocationPeopleData[oldSelected]&&!allocationBestAssignment(allocationPeopleData[oldSelected],slot)){
       const invalid=document.createElement('option'); invalid.value=oldSelected; invalid.textContent=(allocationPeopleData[oldSelected].label||oldSelected)+' · ΜΗ ΕΠΙΤΡΕΠΤΟ'; invalid.selected=true; personEl.insertBefore(invalid,personEl.children[1]||null);
     }
+    personEl.dataset.optionsLoaded='1';
+  }
+  function allocationPopulateAllSlots(row,preserveSelected){
+    const slotEl=row.querySelector('.allocation-slot');
+    if(!slotEl) return;
+    const oldSelected=slotEl.value||'';
+    slotEl.innerHTML='';
+    const placeholder=document.createElement('option'); placeholder.value=''; placeholder.textContent='— επιλογή τμήματος / ομάδας και μαθήματος —'; slotEl.appendChild(placeholder);
+    let currentGroup='', group=null;
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const slot=allocationSlotsData[sid];
+      if(!slot||!slot.has_eligible_person) return;
+      const groupLabel=((slot.structure_label||'')?slot.structure_label+' · ':'')+(slot.grade||'Άλλο')+' τάξη';
+      if(groupLabel!==currentGroup){ group=document.createElement('optgroup'); group.label=groupLabel; slotEl.appendChild(group); currentGroup=groupLabel; }
+      const option=document.createElement('option'); option.value=slot.slot_id; option.textContent=slot.label; option.setAttribute('data-capacity',String(slot.capacity_hours)); if(oldSelected===slot.slot_id) option.selected=true; group.appendChild(option);
+    });
+    if(preserveSelected&&oldSelected&&!allocationSlotsData[oldSelected]){
+      const invalid=document.createElement('option'); invalid.value=oldSelected; invalid.textContent='Μη έγκυρο μάθημα / τμήμα'; invalid.selected=true; invalid.disabled=true; slotEl.insertBefore(invalid,slotEl.children[1]||null);
+    }
+    slotEl.dataset.optionsLoaded='1';
+  }
+  function allocationEnsureSlotOptions(row){
+    const slotEl=row&&row.querySelector('.allocation-slot');
+    if(!slotEl||slotEl.dataset.optionsLoaded==='1') return;
+    allocationPopulateAllSlots(row,true);
+    const state=allocationCollectState();
+    updateAllocationSlotOptionAvailability(state.slotAssigned||{});
+  }
+  function allocationEnsurePersonOptions(row){
+    const personEl=row&&row.querySelector('.allocation-person');
+    if(!personEl||personEl.dataset.optionsLoaded==='1') return;
+    allocationPopulatePeopleForSlot(row,true);
+    personEl.dataset.optionsLoaded='1';
   }
   // Διατηρείται ως μικρό compatibility helper, αλλά η κύρια προβολή είναι slot-first.
   function allocationPopulateSlotsForPerson(row,preserveSelected){
@@ -3928,17 +3990,24 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     return {personAssigned:state.personAssigned,slotAssigned:state.slotAssigned};
   }
   function specialtyTopCandidates(slot){
-    if(!slot||!slot.eligible_by_priority) return {priority:'',codes:[]};
-    const top=slot.top_priority||'';
-    if(top&&Array.isArray(slot.eligible_by_priority[top])&&slot.eligible_by_priority[top].length){
-      return {priority:top,codes:Array.from(new Set(slot.eligible_by_priority[top])).sort(function(a,b){return String(a).localeCompare(String(b),'el',{numeric:true});})};
-    }
-    const order=['A','B','C','SPECIAL'];
+    if(!slot||!slot.eligible_by_priority) return {priority:'',codes:[],legal_codes:[],excluded_legacy_codes:[]};
+    const legacyVacancyCodes={'ΠΕ04.03':true};
+    const order=[], top=slot.top_priority||'';
+    if(top) order.push(top);
+    ['A','SPECIAL','B','C'].forEach(function(p){if(order.indexOf(p)<0) order.push(p);});
+    let firstPriority='', firstLegal=[], excluded=[];
     for(let i=0;i<order.length;i++){
-      const p=order[i], codes=slot.eligible_by_priority[p]||[];
-      if(codes.length) return {priority:p,codes:Array.from(new Set(codes)).sort(function(a,b){return String(a).localeCompare(String(b),'el',{numeric:true});})};
+      const p=order[i], raw=slot.eligible_by_priority[p]||[];
+      if(!raw.length) continue;
+      const legal=Array.from(new Set(raw)).sort(function(a,b){return String(a).localeCompare(String(b),'el',{numeric:true});});
+      if(!firstPriority){firstPriority=p;firstLegal=legal.slice();}
+      const current=legal.filter(function(code){
+        if(legacyVacancyCodes[code]){excluded.push(code);return false;}
+        return true;
+      });
+      if(current.length) return {priority:p,codes:current,legal_priority:firstPriority,legal_codes:firstLegal.slice(),excluded_legacy_codes:Array.from(new Set(excluded)),used_lower_priority_because_legacy_only:firstPriority!==p};
     }
-    return {priority:'',codes:[]};
+    return {priority:firstPriority,codes:firstLegal.slice(),legal_priority:firstPriority,legal_codes:firstLegal.slice(),excluded_legacy_codes:Array.from(new Set(excluded)),legacy_only_fallback:firstLegal.length>0};
   }
   function allocationObjectiveCompare(a,b){
     for(const key of ['covered','top','b','primary']){
@@ -4101,7 +4170,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
         return;
       }
       const top=specialtyTopCandidates(slot), codes=top.codes.slice();
-      openRows.push({slot_id:sid,slot_label:slot.slot_label||slot.label||sid,subject:slot.subject||'',hours:hours,priority:top.priority,candidate_codes:codes});
+      openRows.push({slot_id:sid,slot_label:slot.slot_label||slot.label||sid,subject:slot.subject||'',hours:hours,priority:top.priority,candidate_codes:codes,legal_candidate_codes:(top.legal_codes||codes).slice(),excluded_legacy_candidate_codes:(top.excluded_legacy_codes||[]).slice()});
       codes.forEach(function(code){
         coverageByCode[code]=(coverageByCode[code]||0)+hours;
         if(codes.length===1) exclusiveByCode[code]=(exclusiveByCode[code]||0)+hours;
@@ -4123,7 +4192,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
       });
       const selected=codes.length?codes[0]:'';
       if(selected) gapByCode[selected]=(gapByCode[selected]||0)+row.hours;
-      recommendations.push({slot_id:row.slot_id,slot_label:row.slot_label,subject:row.subject,hours:row.hours,priority:row.priority,selected_code:selected,candidate_codes:row.candidate_codes.slice(),selected_code_total_reachable_hours:selected?(coverageByCode[selected]||0):0,selection_kind:row.candidate_codes.length<=1?'unique_top_assignment':'smart_shared_top_assignment'});
+      recommendations.push({slot_id:row.slot_id,slot_label:row.slot_label,subject:row.subject,hours:row.hours,priority:row.priority,selected_code:selected,candidate_codes:row.candidate_codes.slice(),legal_candidate_codes:(row.legal_candidate_codes||row.candidate_codes).slice(),excluded_legacy_candidate_codes:(row.excluded_legacy_candidate_codes||[]).slice(),selected_code_total_reachable_hours:selected?(coverageByCode[selected]||0):0,selection_kind:(row.excluded_legacy_candidate_codes&&row.excluded_legacy_candidate_codes.length)?'current_school_specialty_preference':(row.candidate_codes.length<=1?'unique_top_assignment':'smart_shared_top_assignment')});
     });
     const surplusByCode={}, surplusPeopleByCode={};
     Object.keys(personState).forEach(function(pid){
@@ -4194,10 +4263,11 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     if(smartBody){
       smartBody.innerHTML=''; let smartCount=0;
       (report.vacancy_recommendations||[]).forEach(function(item){
-        if(!item.candidate_codes||item.candidate_codes.length<2) return;
+        const legalCodes=(item.legal_candidate_codes&&item.legal_candidate_codes.length)?item.legal_candidate_codes:item.candidate_codes;
+        if(!legalCodes||legalCodes.length<2) return;
         const tr=document.createElement('tr'); specialtyAppendCell(tr,item.slot_label||''); specialtyAppendCell(tr,item.subject||''); specialtyAppendCell(tr,String(item.hours||0));
         const td=specialtyAppendCell(tr,''); const strong=document.createElement('strong'); strong.textContent=item.selected_code||'—'; td.appendChild(strong);
-        specialtyAppendCell(tr,item.candidate_codes.join(', ')); smartBody.appendChild(tr); smartCount++;
+        specialtyAppendCell(tr,legalCodes.join(', ')); smartBody.appendChild(tr); smartCount++;
       });
       if(!smartCount){ const tr=document.createElement('tr'); const td=document.createElement('td'); td.colSpan=5; td.textContent='Δεν υπάρχουν κοινά κενά με περισσότερους από έναν ισότιμους κλάδους στην καλύτερη ανάθεση.'; tr.appendChild(td); smartBody.appendChild(tr); }
     }
@@ -4378,16 +4448,27 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   }
   function bindAllocationRow(row){
     if(!row||row.dataset.initialized==='1') return; row.dataset.initialized='1';
-    const slot=row.querySelector('.allocation-slot'), hours=row.querySelector('.allocation-hours');
-    allocationPopulatePeopleForSlot(row,true);
+    const slot=row.querySelector('.allocation-slot'), person=row.querySelector('.allocation-person'), hours=row.querySelector('.allocation-hours');
     if(slot){ const initial=allocationSlotsData[slot.value]||null; if(initial&&hours) hours.max=String(initial.capacity_hours); }
+    if(person) person.disabled=!(slot&&slot.value);
   }
   if(allocationList&&allocationList.dataset.eventsBound!=='1'){
     allocationList.dataset.eventsBound='1';
+    allocationList.addEventListener('focusin',function(event){
+      const row=event.target.closest('[data-allocation-row]'); if(!row) return;
+      if(event.target.matches('.allocation-slot')) allocationEnsureSlotOptions(row);
+      else if(event.target.matches('.allocation-person')) allocationEnsurePersonOptions(row);
+    });
+    allocationList.addEventListener('pointerdown',function(event){
+      const row=event.target.closest('[data-allocation-row]'); if(!row) return;
+      if(event.target.matches('.allocation-slot')) allocationEnsureSlotOptions(row);
+      else if(event.target.matches('.allocation-person')) allocationEnsurePersonOptions(row);
+    });
     allocationList.addEventListener('change',function(event){
       const row=event.target.closest('[data-allocation-row]'); if(!row) return;
       if(event.target.matches('.allocation-slot')){
         const slot=event.target, hours=row.querySelector('.allocation-hours'), data=allocationSlotsData[slot.value]||null;
+        const person=row.querySelector('.allocation-person'); if(person) person.dataset.optionsLoaded='0';
         allocationPopulatePeopleForSlot(row,false);
         if(data&&hours){ hours.max=String(data.capacity_hours); hours.value=String(data.capacity_hours); }
         else if(hours) hours.value='0';

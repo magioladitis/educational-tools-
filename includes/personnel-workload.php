@@ -1234,6 +1234,82 @@ function personnelWorkloadTopCandidateCodesForSlot($slot)
 }
 
 /**
+ * Κλάδοι που παραμένουν στους κανονιστικούς πίνακες αναθέσεων για ιστορική
+ * συμβατότητα/έλεγχο υφιστάμενου προσωπικού, αλλά δεν πρέπει να προτείνονται
+ * ως νέος κλάδος κενού όταν υπάρχει σημερινός εναλλακτικός κλάδος.
+ *
+ * Ο ΠΕ04.03 (Φυσιογνώστες) διατηρείται συνεπώς στην επιλεξιμότητα των
+ * αναθέσεων, όμως η Καρτέλα 6 δεν τον επιλέγει για νέα πρόταση κενού.
+ */
+function personnelWorkloadLegacyVacancySpecialtyCodes()
+{
+    return array('ΠΕ04.03'=>true);
+}
+
+/**
+ * Πρακτικοί υποψήφιοι κλάδοι για ΝΕΟ κενό. Ξεκινά από την καλύτερη νόμιμη
+ * ανάθεση, αφαιρεί legacy κλάδους και, μόνο αν μια βαθμίδα περιέχει αποκλειστικά
+ * legacy κλάδους, προχωρά στην επόμενη νόμιμη βαθμίδα. Οι πλήρεις νόμιμοι
+ * κωδικοί επιστρέφονται χωριστά για διαφάνεια στο UI/audit.
+ */
+function personnelWorkloadVacancyCandidateCodesForSlot($slot)
+{
+    $by = isset($slot['eligible_by_priority']) && is_array($slot['eligible_by_priority'])
+        ? $slot['eligible_by_priority'] : array();
+    $legacy = personnelWorkloadLegacyVacancySpecialtyCodes();
+    $order = array();
+    $topPriority = isset($slot['top_priority']) ? $slot['top_priority'] : null;
+    if ($topPriority !== null) $order[] = $topPriority;
+    foreach (array('A','SPECIAL','B','C') as $p) {
+        if (!in_array($p, $order, true)) $order[] = $p;
+    }
+
+    $excluded = array();
+    $firstLegalPriority = null;
+    $firstLegalCodes = array();
+    foreach ($order as $priority) {
+        if (empty($by[$priority])) continue;
+        $legalCodes = array_values(array_unique($by[$priority]));
+        if ($firstLegalPriority === null) {
+            $firstLegalPriority = $priority;
+            $firstLegalCodes = $legalCodes;
+        }
+        $currentCodes = array();
+        foreach ($legalCodes as $code) {
+            $canonical = teacherSpecialtyCanonicalCode($code);
+            if ($canonical !== '' && isset($legacy[$canonical])) {
+                $excluded[] = $canonical;
+                continue;
+            }
+            if ($canonical !== '') $currentCodes[] = $canonical;
+        }
+        $currentCodes = array_values(array_unique($currentCodes));
+        if (!empty($currentCodes)) {
+            return array(
+                'priority'=>$priority,
+                'codes'=>$currentCodes,
+                'legal_priority'=>$firstLegalPriority,
+                'legal_codes'=>$firstLegalCodes,
+                'excluded_legacy_codes'=>array_values(array_unique($excluded)),
+                'used_lower_priority_because_legacy_only'=>($firstLegalPriority !== null && $priority !== $firstLegalPriority),
+            );
+        }
+    }
+
+    // Αμυντικό fallback: αν κάποτε υπάρχει μάθημα που έχει ΜΟΝΟ legacy κλάδο
+    // σε όλες τις αναθέσεις, δεν εξαφανίζουμε το κενό από την αναφορά.
+    return array(
+        'priority'=>$firstLegalPriority,
+        'codes'=>$firstLegalCodes,
+        'legal_priority'=>$firstLegalPriority,
+        'legal_codes'=>$firstLegalCodes,
+        'excluded_legacy_codes'=>array_values(array_unique($excluded)),
+        'used_lower_priority_because_legacy_only'=>false,
+        'legacy_only_fallback'=>!empty($firstLegalCodes),
+    );
+}
+
+/**
  * Προτεινόμενη εσωτερική εξισορρόπηση πριν από τη δήλωση κενών/πλεονασμάτων.
  * Δεν αλλάζει τις χειροκίνητες κατανομές της Καρτέλας 4. Ξεκινά από αυτές
  * και προσπαθεί να καλύψει επιπλέον ώρες με το υπάρχον προσωπικό.
@@ -1353,16 +1429,22 @@ function personnelWorkloadSpecialtyBalanceReport($profile, $people, $slotAllocat
             $specialBuckets[$bucket['key']]['slots'][] = array('slot_id'=>$slotId,'slot_label'=>$slot['slot_label'],'subject'=>$slot['subject'],'hours'=>$hours);
             continue;
         }
-        $top = personnelWorkloadTopCandidateCodesForSlot($slot);
-        $codes = $top['codes'];
+        $top = personnelWorkloadVacancyCandidateCodesForSlot($slot);
+        $codes = isset($top['codes']) ? $top['codes'] : array();
         usort($codes, 'strnatcmp');
+        $legalCodes = isset($top['legal_codes']) ? $top['legal_codes'] : $codes;
+        usort($legalCodes, 'strnatcmp');
         $row = array(
             'slot_id'=>$slotId,
             'slot_label'=>isset($slot['slot_label']) ? $slot['slot_label'] : '',
             'subject'=>isset($slot['subject']) ? $slot['subject'] : '',
             'hours'=>$hours,
-            'priority'=>$top['priority'],
+            'priority'=>isset($top['priority']) ? $top['priority'] : null,
             'candidate_codes'=>$codes,
+            'legal_candidate_codes'=>$legalCodes,
+            'excluded_legacy_candidate_codes'=>isset($top['excluded_legacy_codes']) ? $top['excluded_legacy_codes'] : array(),
+            'used_lower_priority_because_legacy_only'=>!empty($top['used_lower_priority_because_legacy_only']),
+            'legacy_only_fallback'=>!empty($top['legacy_only_fallback']),
         );
         $open[$slotId] = $row;
         foreach ($codes as $code) {
@@ -1414,8 +1496,10 @@ function personnelWorkloadSpecialtyBalanceReport($profile, $people, $slotAllocat
             'priority'=>$row['priority'],
             'selected_code'=>$selected,
             'candidate_codes'=>$row['candidate_codes'],
+            'legal_candidate_codes'=>isset($row['legal_candidate_codes']) ? $row['legal_candidate_codes'] : $row['candidate_codes'],
+            'excluded_legacy_candidate_codes'=>isset($row['excluded_legacy_candidate_codes']) ? $row['excluded_legacy_candidate_codes'] : array(),
             'selected_code_total_reachable_hours'=>$selected !== '' && isset($coverageByCode[$selected]) ? (int) $coverageByCode[$selected] : 0,
-            'selection_kind'=>count($row['candidate_codes']) <= 1 ? 'unique_top_assignment' : 'smart_shared_top_assignment',
+            'selection_kind'=>!empty($row['excluded_legacy_candidate_codes']) ? 'current_school_specialty_preference' : (count($row['candidate_codes']) <= 1 ? 'unique_top_assignment' : 'smart_shared_top_assignment'),
         );
     }
 
@@ -1476,6 +1560,8 @@ function personnelWorkloadSpecialtyBalanceReport($profile, $people, $slotAllocat
             'official_vacancy_calculation'=>false,
             'smart_choice_only_among_equal_best_assignment_codes'=>true,
             'smart_choice_prefers_code_with_widest_top_assignment_gap_coverage'=>true,
+            'legacy_vacancy_specialties_not_proposed_when_current_alternative_exists'=>true,
+            'pe0403_kept_for_legal_assignment_compatibility_but_not_new_vacancy_preference'=>true,
             'existing_staff_auto_balance_is_proposal_only'=>true,
             'shared_optimizer_with_tab4'=>true,
             'second_specialty_used_for_internal_balance'=>true,

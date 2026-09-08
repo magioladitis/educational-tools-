@@ -1,0 +1,342 @@
+<?php
+/** AUTO-GENERATED DEV SNAPSHOT. Canonical data lives in the main regulatory datasets. */
+return array (
+  0 => 
+  array (
+    'course_id' => 'gym.glosiki',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Νεοελληνική Γλώσσα και Γραμματεία',
+    'subject' => 'Γλωσσική Διδασκαλία',
+    'hours' => 
+    array (
+      'Α΄' => 3,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  1 => 
+  array (
+    'course_id' => 'gym.logotexnia',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Νεοελληνική Γλώσσα και Γραμματεία',
+    'subject' => 'Νεοελληνική Λογοτεχνία',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  2 => 
+  array (
+    'course_id' => 'gym.archaia_glossa',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Αρχαία Ελληνική Γλώσσα και Γραμματεία',
+    'subject' => 'Αρχαία Ελληνική Γλώσσα',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  3 => 
+  array (
+    'course_id' => 'gym.archaia_metafrasi',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Αρχαία Ελληνική Γλώσσα και Γραμματεία',
+    'subject' => 'Αρχαία Ελληνικά Κείμενα από Μετάφραση',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  4 => 
+  array (
+    'course_id' => 'gym.mathimatika',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Μαθηματικά',
+    'hours' => 
+    array (
+      'Α΄' => 4,
+      'Β΄' => 4,
+      'Γ΄' => 4,
+    ),
+  ),
+  5 => 
+  array (
+    'course_id' => 'gym.fysiki',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Φυσική',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  6 => 
+  array (
+    'course_id' => 'gym.ximeia',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Χημεία',
+    'hours' => 
+    array (
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+  7 => 
+  array (
+    'course_id' => 'gym.viologia',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Βιολογία',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+  8 => 
+  array (
+    'course_id' => 'gym.geologia_geografia',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Γεωλογία - Γεωγραφία',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 2,
+    ),
+  ),
+  9 => 
+  array (
+    'course_id' => 'gym.istoria',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Ιστορία',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  10 => 
+  array (
+    'course_id' => 'gym.thriskeftika',
+    'slot_id' => 'gym.religion_ethics',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Θρησκευτικά',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+    'mode' => 'alternative',
+  ),
+  11 => 
+  array (
+    'course_id' => 'gym.ithiki',
+    'slot_id' => 'gym.religion_ethics',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Ηθική',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+    'mode' => 'alternative',
+    'condition' => 'Για μαθητές/ήτριες που απαλλάσσονται από το μάθημα των Θρησκευτικών.',
+  ),
+  12 => 
+  array (
+    'course_id' => 'gym.agglika',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Αγγλικά',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  13 => 
+  array (
+    'course_id' => 'gym.deyteri_xeni',
+    'profile_choice_id' => 'second_foreign_language',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => '2η Ξένη Γλώσσα (Γαλλικά / Γερμανικά / Ιταλικά)',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+    'note' => 'Η Ιταλική διδάσκεται στα Γυμνάσια όπου εκπαιδευτικοί ΠΕ34 είναι τοποθετημένοι οριστικά ή προσωρινά από το σχολικό έτος 2016-2017.',
+    'assignment_link_status' => 'choice_dependent',
+    'assignment_choice_options' => 
+    array (
+      0 => 
+      array (
+        'label' => 'Γαλλικά',
+        'subject' => '2η Ξένη Γλώσσα (Γαλλικά / Γερμανικά / Ιταλικά)',
+        'codes' => 
+        array (
+          0 => 'ΠΕ05',
+        ),
+      ),
+      1 => 
+      array (
+        'label' => 'Γερμανικά',
+        'subject' => '2η Ξένη Γλώσσα (Γαλλικά / Γερμανικά / Ιταλικά)',
+        'codes' => 
+        array (
+          0 => 'ΠΕ07',
+        ),
+      ),
+      2 => 
+      array (
+        'label' => 'Ιταλικά',
+        'subject' => '2η Ξένη Γλώσσα (Γαλλικά / Γερμανικά / Ιταλικά)',
+        'codes' => 
+        array (
+          0 => 'ΠΕ34',
+        ),
+        'condition' => 'Μόνο στα Γυμνάσια όπου εκπαιδευτικοί ΠΕ34 είναι τοποθετημένοι οριστικά ή προσωρινά από το σχολικό έτος 2016-2017.',
+      ),
+    ),
+  ),
+  14 => 
+  array (
+    'course_id' => 'gym.kpa',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Κοινωνική και Πολιτική Αγωγή',
+    'hours' => 
+    array (
+      'Γ΄' => 3,
+    ),
+  ),
+  15 => 
+  array (
+    'course_id' => 'gym.oikonomika',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Οικονομικά',
+    'hours' => 
+    array (
+      'Γ΄' => 1,
+    ),
+  ),
+  16 => 
+  array (
+    'course_id' => 'gym.oikiaki_oikonomia',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Οικιακή Οικονομία',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+    ),
+  ),
+  17 => 
+  array (
+    'course_id' => 'gym.fysiki_agogi',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Φυσική Αγωγή',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  18 => 
+  array (
+    'course_id' => 'gym.texnologia',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Τεχνολογία και Πληροφορική',
+    'subject' => 'Τεχνολογία',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+  19 => 
+  array (
+    'course_id' => 'gym.pliroforiki',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Τεχνολογία και Πληροφορική',
+    'subject' => 'Πληροφορική',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+  20 => 
+  array (
+    'course_id' => 'gym.mousiki',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Πολιτισμός και Δραστηριότητες',
+    'subject' => 'Μουσική',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+  21 => 
+  array (
+    'course_id' => 'gym.kallitexnika',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Πολιτισμός και Δραστηριότητες',
+    'subject' => 'Καλλιτεχνικά',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+  22 => 
+  array (
+    'course_id' => 'gym.ergastiria_dexiotiton',
+    'school' => 'gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Εργαστήρια Δεξιοτήτων',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+);

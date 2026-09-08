@@ -33,19 +33,26 @@ $frAlloc=array(
 $withSurplus=personnelWorkloadSpecialtyBalanceReport($p,$pe05,$frAlloc);
 $secondary=array(array('person_id'=>'s1','display_name'=>'IT Math','specialty_code'=>'ΠΕ86','secondary_specialty_code'=>'ΠΕ03','required_teaching_hours'=>12,'role'=>'teacher','assigned_external_hours'=>0));
 $secondaryReport=personnelWorkloadSpecialtyBalanceReport($p,$secondary,array());
-echo json_encode(array('empty'=>$empty,'surplus'=>$withSurplus,'secondary'=>$secondaryReport),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+$legacyPe0403=array(array('person_id'=>'l1','display_name'=>'Legacy PE04.03','specialty_code'=>'ΠΕ04.03','required_teaching_hours'=>23,'role'=>'teacher','assigned_external_hours'=>0));
+$legacyReport=personnelWorkloadSpecialtyBalanceReport($p,$legacyPe0403,array());
+echo json_encode(array('empty'=>$empty,'surplus'=>$withSurplus,'secondary'=>$secondaryReport,'legacy'=>$legacyReport),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 '''
 x=php_json(php)
 empty=x['empty']
 check('special report semantics are proposal not official act', empty['semantics']['official_vacancy_calculation'] is False and empty['semantics']['existing_staff_auto_balance_is_proposal_only'] is True)
 check('smart selection limited to equal best assignments', empty['semantics']['smart_choice_only_among_equal_best_assignment_codes'] is True)
+check('legacy PE04.03 is not proposed as new vacancy when current alternative exists', empty['semantics']['pe0403_kept_for_legal_assignment_compatibility_but_not_new_vacancy_preference'] is True)
 check('skills reported in dedicated gymnasium bucket', empty['special_reporting_buckets']['GYM_SKILLS']['gap_hours']==3)
 check('technology reported in dedicated gymnasium bucket', empty['special_reporting_buckets']['GYM_TECHNOLOGY']['gap_hours']==3)
 check('special buckets sum to six hours', empty['summary']['special_reporting_bucket_gap_hours_total']==6)
 history=[r for r in empty['vacancy_recommendations'] if r['subject']=='Ιστορία']
 check('shared history top assignment uses smart code PE02', len(history)==3 and all(r['selected_code']=='ΠΕ02' for r in history) and all(r['selection_kind']=='smart_shared_top_assignment' for r in history))
-bio_geo=[r for r in empty['vacancy_recommendations'] if r['subject'] in ('Βιολογία','Γεωλογία - Γεωγραφία') and len(r['candidate_codes'])>1]
-check('smart code can consolidate biology and geography gaps', bio_geo and all(r['selected_code']=='ΠΕ04.03' for r in bio_geo))
+bio=[r for r in empty['vacancy_recommendations'] if r['subject']=='Βιολογία']
+geo=[r for r in empty['vacancy_recommendations'] if r['subject']=='Γεωλογία - Γεωγραφία']
+check('biology vacancy prefers current PE04.04 over legacy PE04.03', bio and all(r['selected_code']=='ΠΕ04.04' for r in bio))
+check('geology geography vacancy prefers PE04.05 over legacy PE04.03', geo and all(r['selected_code']=='ΠΕ04.05' for r in geo))
+check('PE04.03 remains visible in legal candidates for audit', bio and geo and all('ΠΕ04.03' in r.get('legal_candidate_codes',[]) for r in bio+geo))
+check('no new vacancy recommendation selects PE04.03', not any(r['selected_code']=='ΠΕ04.03' for r in empty['vacancy_recommendations']))
 check('gap rows use negative signed balance', empty['by_specialty']['ΠΕ02']['gap_hours']>0 and empty['by_specialty']['ΠΕ02']['signed_balance_hours']==-empty['by_specialty']['ΠΕ02']['gap_hours'])
 
 sur=x['surplus']
@@ -59,6 +66,10 @@ sec=x['secondary']
 sec_alloc=[a for a in sec['automatic_balance']['allocations'] if a['subject']=='Μαθηματικά']
 check('secondary specialty participates in internal auto balance', sec_alloc and all(a['used_specialty_code']=='ΠΕ03' and a['specialty_source']=='secondary' for a in sec_alloc))
 check('secondary specialty does not change surplus branch identity', sec['automatic_balance']['people']['s1']['primary_code']=='ΠΕ86')
+
+legacy=x['legacy']
+legacy_alloc=[a for a in legacy['automatic_balance']['allocations'] if a.get('used_specialty_code')=='ΠΕ04.03']
+check('existing PE04.03 personnel remains legally usable in internal allocation', legacy_alloc and any(a['subject']=='Γεωλογία - Γεωγραφία' and a['priority']=='A' for a in legacy_alloc))
 
 failed=[n for n,ok in checks if not ok]
 for n,ok in checks: print(('PASS' if ok else 'FAIL')+': '+n)

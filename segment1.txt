@@ -1,0 +1,486 @@
+                else $row['ordered_shared_top_priority_hours'] += $hours;
+            }
+        }
+    }
+    unset($row);
+    foreach (array_keys($display['codes']) as $code) {
+        if (empty($display['codes'][$code]['claims'])) unset($display['codes'][$code]);
+    }
+    uasort($display['codes'], function ($a, $b) {
+        if ($a['ordered_exclusive_top_priority_hours'] !== $b['ordered_exclusive_top_priority_hours']) {
+            return $b['ordered_exclusive_top_priority_hours'] - $a['ordered_exclusive_top_priority_hours'];
+        }
+        if ($a['top_priority_hours'] !== $b['top_priority_hours']) {
+            return $b['top_priority_hours'] - $a['top_priority_hours'];
+        }
+        return strnatcmp($a['code'], $b['code']);
+    });
+
+    $skillHours = (int)$result['collapsed']['hours'];
+    $skillUnits = (int)$result['collapsed']['unit_count'];
+    // The overall curriculum/assignment total remains untouched. Only branch-level
+    // presentation metrics exclude the collapsed workshop slots.
+    $display['summary']['presentation_collapsed_skills_hours'] = $skillHours;
+    $display['summary']['presentation_collapsed_skills_units'] = $skillUnits;
+    $display['summary']['presentation_staffing_leaf_codes_with_claims'] = count($display['codes']);
+    $display['summary']['ordered_top_unit_hours'] = max(0, (int)$display['summary']['ordered_top_unit_hours'] - $skillHours);
+    $display['summary']['shared_top_unit_hours'] = max(0, (int)$display['summary']['shared_top_unit_hours'] - $skillHours);
+    $display['summary']['ordered_shared_top_unit_hours'] = max(0, (int)$display['summary']['ordered_shared_top_unit_hours'] - $skillHours);
+
+    $result['matrix'] = $display;
+    return $result;
+}
+
+$requestMethod = isset($_SERVER['REQUEST_METHOD']) ? strtoupper((string) $_SERVER['REQUEST_METHOD']) : 'GET';
+$staffingAction = '';
+if ($requestMethod === 'POST') {
+    $staffingAction = staffingUiPost('staffing_action', '');
+    if ($staffingAction === '') $staffingAction = staffingUiPost('staffing_action_fallback', '');
+}
+$submitted = $requestMethod === 'POST'
+    && in_array($staffingAction, array('profile','personnel','allocation','allocation_auto'), true);
+$schoolType = staffingUiPost('school_type', 'gymnasio');
+if (!in_array($schoolType, array('gymnasio','gel','esperino_gymnasio','esperino_gel','gymnasio_lt'), true)) $schoolType = 'gymnasio';
+// Keep identity available independently of which tab submitted the page.
+$schoolName = trim((string) staffingUiPost('school_name', ''));
+$schoolRegistryId = trim((string) staffingUiPost('school_registry_id', ''));
+$schoolCode = trim((string) staffingUiPost('school_code', ''));
+$profile = null;
+$readiness = null;
+$matrix = null;
+$teachingModel = null;
+$displayMatrix = null;
+$collapsedSkills = array('active'=>false,'hours'=>0,'unit_count'=>0,'units'=>array(),'label'=>'Οποιαδήποτε ειδικότητα','subject'=>'Εργαστήρια Δεξιοτήτων');
+$staffingNotices = array('dependencies'=>array(),'regulatory'=>array());
+$schoolProfileInputErrors = array();
+$postedBasicSectionTotal = $submitted ? staffingUiBasicSectionPostTotal($schoolType) : 0;
+if ($submitted && $postedBasicSectionTotal > STAFFING_UI_MAX_BASIC_SECTIONS) {
+    $schoolProfileInputErrors[] = 'Το σύνολο των βασικών τμημάτων της σχολικής μονάδας είναι ' . $postedBasicSectionTotal
+        . ' και υπερβαίνει το τεχνικό όριο ασφαλείας των ' . STAFFING_UI_MAX_BASIC_SECTIONS . ' τμημάτων.';
+}
+
+if ($submitted && empty($schoolProfileInputErrors)) {
+    if ($schoolType === 'gymnasio_lt') {
+        try {
+            if (!function_exists('schoolProfileBuildGymnasiumWithLyceumClasses2026')
+                || !function_exists('personnelWorkloadStructureShortLabel')) {
+                throw new RuntimeException('missing_composite_profile_runtime');
+            }
+            $profile = schoolProfileBuildGymnasiumWithLyceumClasses2026(array(
+            'profile_id' => 'ui-gymnasio-lt-' . date('YmdHis'),
+            'school' => array(
+                'type' => 'Γυμνάσιο με Λυκειακές Τάξεις',
+                'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
+                'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Γυμνασίου με Λυκειακές Τάξεις',
+            ),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
+            'gymnasium_general_sections' => array(
+                'Α΄' => staffingUiInt('gym_general_a'),
+                'Β΄' => staffingUiInt('gym_general_b'),
+                'Γ΄' => staffingUiInt('gym_general_c'),
+            ),
+            'gymnasium_second_foreign_language_groups' => array(
+                'Α΄' => array('Γαλλικά'=>staffingUiInt('gym_lang_a_fr'),'Γερμανικά'=>staffingUiInt('gym_lang_a_de'),'Ιταλικά'=>staffingUiInt('gym_lang_a_it')),
+                'Β΄' => array('Γαλλικά'=>staffingUiInt('gym_lang_b_fr'),'Γερμανικά'=>staffingUiInt('gym_lang_b_de'),'Ιταλικά'=>staffingUiInt('gym_lang_b_it')),
+                'Γ΄' => array('Γαλλικά'=>staffingUiInt('gym_lang_c_fr'),'Γερμανικά'=>staffingUiInt('gym_lang_c_de'),'Ιταλικά'=>staffingUiInt('gym_lang_c_it')),
+            ),
+            'gymnasium_technology_informatics_split_sections' => array(
+                'Α΄' => staffingUiInt('gym_tech_split_a'),
+                'Β΄' => staffingUiInt('gym_tech_split_b'),
+                'Γ΄' => staffingUiInt('gym_tech_split_c'),
+            ),
+            'gymnasium_ethics_by_grade' => array(
+                'Α΄' => staffingUiEthicsGrade('a'),
+                'Β΄' => staffingUiEthicsGrade('b'),
+                'Γ΄' => staffingUiEthicsGrade('c'),
+            ),
+            'lyceum_general_sections' => array(
+                'Α΄' => staffingUiInt('gel_general_a'),
+                'Β΄' => staffingUiInt('gel_general_b'),
+                'Γ΄' => staffingUiInt('gel_general_c'),
+            ),
+            'lyceum_second_foreign_language_groups' => array(
+                'Α΄' => array('Γαλλικά'=>staffingUiInt('gel_lang_a_fr'),'Γερμανικά'=>staffingUiInt('gel_lang_a_de')),
+                'Β΄' => array('Γαλλικά'=>staffingUiInt('gel_lang_b_fr'),'Γερμανικά'=>staffingUiInt('gel_lang_b_de')),
+            ),
+            'lyceum_orientation_sections' => array(
+                'Β΄' => array('humanities'=>staffingUiInt('gel_b_hum'),'science'=>staffingUiInt('gel_b_sci')),
+                'Γ΄' => array('humanities'=>staffingUiInt('gel_c_hum'),'science_health'=>staffingUiInt('gel_c_scihealth'),'economics_it'=>staffingUiInt('gel_c_econit')),
+            ),
+            'lyceum_grade_c_science_health_field_groups' => array(
+                'Μαθηματικά' => staffingUiInt('gel_c_field_math'),
+                'Βιολογία' => staffingUiInt('gel_c_field_bio'),
+            ),
+            'lyceum_grade_c_conditional_groups' => array(
+                'Μαθηματικά' => staffingUiInt('gel_c_cond_math'),
+                'Ιστορία' => staffingUiInt('gel_c_cond_history'),
+            ),
+            'lyceum_ethics_by_grade' => array(
+                'Α΄' => staffingUiEthicsGradeWithPrefix('lt_ethics_', 'a'),
+                'Β΄' => staffingUiEthicsGradeWithPrefix('lt_ethics_', 'b'),
+                'Γ΄' => staffingUiEthicsGradeWithPrefix('lt_ethics_', 'c'),
+            ),
+        ));
+        } catch (Exception $e) {
+            error_log('Staffing composite profile runtime error: ' . $e->getMessage());
+            $profile = null;
+            $schoolProfileInputErrors[] = 'Δεν ήταν δυνατό να φορτωθεί το προφίλ «Γυμνάσιο με Λυκειακές Τάξεις». Βεβαιώσου ότι έχουν ενημερωθεί μαζί το κύριο αρχείο και τα includes της ίδιας έκδοσης.';
+        }
+    } elseif ($schoolType === 'esperino_gymnasio') {
+        $profile = schoolProfileBuildEveningGymnasium2026(array(
+            'profile_id' => 'ui-esperino-gymnasio-' . date('YmdHis'),
+            'school' => array(
+                'type' => 'Εσπερινό Γυμνάσιο',
+                'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
+                'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Εσπερινού Γυμνασίου',
+            ),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
+            'general_sections' => array(
+                'Α΄' => staffingUiInt('gym_general_a'),
+                'Β΄' => staffingUiInt('gym_general_b'),
+                'Γ΄' => staffingUiInt('gym_general_c'),
+            ),
+            'ethics_by_grade' => array(
+                'Α΄' => staffingUiEthicsGrade('a'),
+                'Β΄' => staffingUiEthicsGrade('b'),
+                'Γ΄' => staffingUiEthicsGrade('c'),
+            ),
+        ));
+    } elseif ($schoolType === 'gymnasio') {
+        $profile = schoolProfileBuildDayGymnasium2026(array(
+            'profile_id' => 'ui-gymnasio-' . date('YmdHis'),
+            'school' => array(
+                'type' => 'Ημερήσιο Γυμνάσιο',
+                'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
+                'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Γυμνασίου',
+            ),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
+            'general_sections' => array(
+                'Α΄' => staffingUiInt('gym_general_a'),
+                'Β΄' => staffingUiInt('gym_general_b'),
+                'Γ΄' => staffingUiInt('gym_general_c'),
+            ),
+            'second_foreign_language_groups' => array(
+                'Α΄' => array('Γαλλικά'=>staffingUiInt('gym_lang_a_fr'),'Γερμανικά'=>staffingUiInt('gym_lang_a_de'),'Ιταλικά'=>staffingUiInt('gym_lang_a_it')),
+                'Β΄' => array('Γαλλικά'=>staffingUiInt('gym_lang_b_fr'),'Γερμανικά'=>staffingUiInt('gym_lang_b_de'),'Ιταλικά'=>staffingUiInt('gym_lang_b_it')),
+                'Γ΄' => array('Γαλλικά'=>staffingUiInt('gym_lang_c_fr'),'Γερμανικά'=>staffingUiInt('gym_lang_c_de'),'Ιταλικά'=>staffingUiInt('gym_lang_c_it')),
+            ),
+            'technology_informatics_split_sections' => array(
+                'Α΄' => staffingUiInt('gym_tech_split_a'),
+                'Β΄' => staffingUiInt('gym_tech_split_b'),
+                'Γ΄' => staffingUiInt('gym_tech_split_c'),
+            ),
+            'ethics_by_grade' => array(
+                'Α΄' => staffingUiEthicsGrade('a'),
+                'Β΄' => staffingUiEthicsGrade('b'),
+                'Γ΄' => staffingUiEthicsGrade('c'),
+            ),
+        ));
+    } elseif ($schoolType === 'esperino_gel') {
+        $profile = schoolProfileBuildEveningGel2026(array(
+            'profile_id' => 'ui-esperino-gel-' . date('YmdHis'),
+            'school' => array(
+                'type' => 'Εσπερινό Γενικό Λύκειο',
+                'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
+                'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Εσπερινού ΓΕΛ',
+            ),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
+            'general_sections' => array(
+                'Α΄' => staffingUiInt('gel_general_a'),
+                'Β΄' => staffingUiInt('gel_general_b'),
+                'Γ΄' => staffingUiInt('gel_general_c'),
+            ),
+            'orientation_sections' => array(
+                'Β΄' => array('humanities'=>staffingUiInt('gel_b_hum'),'science'=>staffingUiInt('gel_b_sci')),
+                'Γ΄' => array('humanities'=>staffingUiInt('gel_c_hum'),'science_health'=>staffingUiInt('gel_c_scihealth'),'economics_it'=>staffingUiInt('gel_c_econit')),
+            ),
+            'grade_c_science_health_field_groups' => array(
+                'Μαθηματικά' => staffingUiInt('gel_c_field_math'),
+                'Βιολογία' => staffingUiInt('gel_c_field_bio'),
+            ),
+            'grade_c_conditional_groups' => array(
+                'Μαθηματικά' => staffingUiInt('gel_c_cond_math'),
+                'Ιστορία' => staffingUiInt('gel_c_cond_history'),
+            ),
+            'grade_b_period' => staffingUiPost('egel_b_period', 'Α΄ τετράμηνο'),
+            'ethics_by_grade' => array(
+                'Α΄' => staffingUiEthicsGrade('a'),
+                'Β΄' => staffingUiEthicsGrade('b'),
+                'Γ΄' => staffingUiEthicsGrade('c'),
+            ),
+        ));
+    } else {
+        $profile = schoolProfileBuildDayGel2026(array(
+            'profile_id' => 'ui-gel-' . date('YmdHis'),
+            'school' => array(
+                'type' => 'Ημερήσιο Γενικό Λύκειο',
+                'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
+                'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ ΓΕΛ',
+            ),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
+            'general_sections' => array(
+                'Α΄' => staffingUiInt('gel_general_a'),
+                'Β΄' => staffingUiInt('gel_general_b'),
+                'Γ΄' => staffingUiInt('gel_general_c'),
+            ),
+            'orientation_sections' => array(
+                'Β΄' => array('humanities'=>staffingUiInt('gel_b_hum'),'science'=>staffingUiInt('gel_b_sci')),
+                'Γ΄' => array('humanities'=>staffingUiInt('gel_c_hum'),'science_health'=>staffingUiInt('gel_c_scihealth'),'economics_it'=>staffingUiInt('gel_c_econit')),
+            ),
+            'second_foreign_language_groups' => array(
+                'Α΄' => array('Γαλλικά'=>staffingUiInt('gel_lang_a_fr'),'Γερμανικά'=>staffingUiInt('gel_lang_a_de')),
+                'Β΄' => array('Γαλλικά'=>staffingUiInt('gel_lang_b_fr'),'Γερμανικά'=>staffingUiInt('gel_lang_b_de')),
+            ),
+            'grade_c_science_health_field_groups' => array(
+                'Μαθηματικά' => staffingUiInt('gel_c_field_math'),
+                'Βιολογία' => staffingUiInt('gel_c_field_bio'),
+            ),
+            'grade_c_conditional_groups' => array(
+                'Μαθηματικά' => staffingUiInt('gel_c_cond_math'),
+                'Ιστορία' => staffingUiInt('gel_c_cond_history'),
+            ),
+            'ethics_by_grade' => array(
+                'Α΄' => staffingUiEthicsGrade('a'),
+                'Β΄' => staffingUiEthicsGrade('b'),
+                'Γ΄' => staffingUiEthicsGrade('c'),
+            ),
+        ));
+    }
+    $readiness = schoolProfileGeneralEducationReadiness($profile);
+    // Build the deterministic workload model once per explicit calculation and
+    // reuse it for both the matrix and the personnel-specialty catalogue.
+    $teachingModel = teachingWorkloadModel();
+    $matrix = schoolProfileWorkloadMatrix($profile, $teachingModel);
+    $presentation = staffingUiCollapseSkillsWorkshops($matrix);
+    $displayMatrix = staffingUiSortCodesNatural($presentation['matrix']);
+    $collapsedSkills = $presentation['collapsed'];
+    $staffingNotices = staffingUiMatrixNotices($profile, $teachingModel);
+}
+$generalSectionTotal = $profile ? schoolProfileTotalGeneralSections($profile) : 0;
+$directorSectionsBandAuto = personnelWorkloadDirectorSectionsBandFromCount($generalSectionTotal);
+
+$calculationAvailable = $submitted && $profile && $matrix && $displayMatrix;
+$activePanel = staffingUiPost('active_panel', $calculationAvailable ? 'results' : 'school');
+if (!in_array($activePanel, array('school','results','personnel','allocation','vacancies','specialties'), true)) $activePanel = $calculationAvailable ? 'results' : 'school';
+if (!$calculationAvailable) $activePanel = 'school';
+if ($calculationAvailable && $staffingAction === 'personnel') $activePanel = 'personnel';
+if ($calculationAvailable && in_array($staffingAction, array('allocation','allocation_auto'), true)) $activePanel = 'allocation';
+
+$personnelRows = staffingUiPersonnelRowsFromPost();
+$duplicateDirectorIndexes = array();
+$seenDirector = false;
+foreach ($personnelRows as $personnelIndex=>$person) {
+    if (isset($person['role']) && $person['role'] === 'director') {
+        if ($seenDirector) {
+            $duplicateDirectorIndexes[$personnelIndex] = true;
+        } else {
+            $seenDirector = true;
+        }
+    }
+}
+$personnelEvaluations = array();
+$personnelSummary = array(
+    'people_count'=>0,
+    'resolved_count'=>0,
+    'unresolved_count'=>0,
+    'required_hours'=>0,
+    'external_hours'=>0,
+    'available_here_hours'=>0,
+    'by_code'=>array(),
+);
+if (!empty($personnelRows)) {
+    foreach ($personnelRows as $personnelIndex=>$person) {
+        $personForEvaluation = $person;
+        if (isset($personForEvaluation['role']) && $personForEvaluation['role'] === 'director') {
+            $personForEvaluation['school_general_section_count'] = $generalSectionTotal;
+        }
+        if (isset($duplicateDirectorIndexes[$personnelIndex])) {
+            $normalized = array(
+                'status'=>'invalid',
+                'valid'=>false,
+                'reason'=>'multiple_directors_not_allowed',
+                'specialty_code'=>isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '',
+            );
+        } else {
+            $normalized = personnelWorkloadNormalizePerson($personForEvaluation);
+        }
+        $personnelEvaluations[$person['person_id']] = $normalized;
+        $personnelSummary['people_count']++;
+        $code = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
+        if ($code !== '' && !isset($personnelSummary['by_code'][$code])) {
+            $personnelSummary['by_code'][$code] = array(
+                'code'=>$code,
+                'label'=>teacherSpecialtyLabel($code),
+                'people_count'=>0,
+                'resolved_count'=>0,
+                'required_hours'=>0,
+                'external_hours'=>0,
+                'available_here_hours'=>0,
+            );
+        }
+        if ($code !== '') $personnelSummary['by_code'][$code]['people_count']++;
+        if ($normalized['status'] !== 'resolved') {
+            $personnelSummary['unresolved_count']++;
+            continue;
+        }
+        $personnelSummary['resolved_count']++;
+        $required = (int)$normalized['required_teaching_hours'];
+        $external = (int)$normalized['assigned_external_hours'];
+        $available = (int)$normalized['remaining_before_profile_hours'];
+        $personnelSummary['required_hours'] += $required;
+        $personnelSummary['external_hours'] += $external;
+        $personnelSummary['available_here_hours'] += $available;
+        if ($code !== '') {
+            $personnelSummary['by_code'][$code]['resolved_count']++;
+            $personnelSummary['by_code'][$code]['required_hours'] += $required;
+            $personnelSummary['by_code'][$code]['external_hours'] += $external;
+            $personnelSummary['by_code'][$code]['available_here_hours'] += $available;
+        }
+    }
+}
+uksort($personnelSummary['by_code'], 'strnatcmp');
+// Do not build the full teaching-workload model on the initial GET merely to
+// populate a template inside a disabled tab. The options become necessary only
+// after an explicit staffing calculation has unlocked the personnel stage.
+$personnelSpecialtyOptions = $submitted
+    ? staffingUiPersonnelSpecialtyOptions($displayMatrix, $teachingModel)
+    : array('relevant'=>array(), 'other'=>array());
+
+$allocationRows = staffingUiAllocationRowsFromPost();
+$allocationSlots = ($profile && $matrix) ? staffingUiSortAllocationSlots(personnelWorkloadAllocationSlots($profile, $matrix)) : array();
+$allocationPeople = array();
+foreach ($personnelRows as $personnelIndex=>$person) {
+    if (isset($duplicateDirectorIndexes[$personnelIndex])) continue;
+    $p = $person;
+    if (isset($p['role']) && $p['role'] === 'director') $p['school_general_section_count'] = $generalSectionTotal;
+    $allocationPeople[] = $p;
+}
+$allocationPlan = null;
+$allocationRowResults = array();
+if ($profile && $matrix && !empty($allocationPeople) && !empty($allocationRows)) {
+    $allocationPlan = personnelWorkloadRosterSlotPlan($profile, $allocationPeople, $allocationRows);
+    if (isset($allocationPlan['allocation_rows'])) $allocationRowResults = $allocationPlan['allocation_rows'];
+}
+$allocationEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only' && $personnelSummary['resolved_count'] > 0 && empty($duplicateDirectorIndexes);
+$allocationAutoProposal = null;
+if ($allocationEnabled && $staffingAction === 'allocation_auto') {
+    $allocationAutoProposal = teachingAllocationEngineProposal($profile, $allocationPeople, $allocationRows, $teachingModel);
+    if (isset($allocationAutoProposal['status']) && $allocationAutoProposal['status'] === 'ok') {
+        $allocationRows = isset($allocationAutoProposal['combined_allocations']) ? $allocationAutoProposal['combined_allocations'] : $allocationRows;
+        $allocationPlan = isset($allocationAutoProposal['combined_plan']) ? $allocationAutoProposal['combined_plan'] : $allocationPlan;
+        $allocationRowResults = $allocationPlan && isset($allocationPlan['allocation_rows']) ? $allocationPlan['allocation_rows'] : array();
+    }
+}
+$vacanciesEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only';
+$specialtyBalanceEnabled = $vacanciesEnabled;
+$allocationPeopleClient = array();
+foreach ($allocationPeople as $person) {
+    $normalized = personnelWorkloadNormalizePerson($person);
+    if ($normalized['status'] !== 'resolved') continue;
+    $allocationPeopleClient[$person['person_id']] = array(
+        'person_id'=>$person['person_id'],
+        'display_name'=>$person['display_name'],
+        'label'=>staffingUiAllocationPersonLabel($person),
+        'specialty_code'=>$person['specialty_code'],
+        'secondary_specialty_code'=>isset($person['secondary_specialty_code']) ? $person['secondary_specialty_code'] : '',
+        'required_hours'=>(int)$normalized['required_teaching_hours'],
+        'external_hours'=>(int)$normalized['assigned_external_hours'],
+        'available_here_hours'=>(int)$normalized['remaining_before_profile_hours'],
+    );
+}
+$allocationSelectableSlots = array();
+$allocationNoEligibleSlotCount = 0;
+$allocationNoEligibleHours = 0;
+foreach ($allocationSlots as $slotId=>$slot) {
+    $hasEligiblePerson = false;
+    foreach ($allocationPeopleClient as $personData) {
+        if (personnelWorkloadBestAssignmentForSlot($slot, $personData) !== null) {
+            $hasEligiblePerson = true;
+            break;
+        }
+    }
+    if ($hasEligiblePerson) {
+        $allocationSelectableSlots[$slotId] = $slot;
+    } else {
+        $allocationNoEligibleSlotCount++;
+        $allocationNoEligibleHours += isset($slot['capacity_hours']) ? (int)$slot['capacity_hours'] : 0;
+    }
+}
+$allocationSlotsClient = array();
+foreach ($allocationSlots as $slotId=>$slot) {
+    $reportingBucket = $profile ? personnelWorkloadReportingBucketForSlot($profile, $slot) : null;
+    $allocationSlotsClient[$slotId] = array(
+        'slot_id'=>$slotId,
+        'label'=>staffingUiAllocationSlotOptionLabel($slot),
+        'slot_label'=>$slot['slot_label'],
+        'school'=>isset($slot['school']) ? $slot['school'] : '',
+        'structure_label'=>isset($slot['structure_label']) ? $slot['structure_label'] : '',
+        'grade'=>$slot['grade'],
+        'subject'=>$slot['subject'],
+        'capacity_hours'=>(int)$slot['capacity_hours'],
+        'eligible_by_priority'=>$slot['eligible_by_priority'],
+        'top_priority'=>isset($slot['top_priority']) ? $slot['top_priority'] : null,
+        'has_eligible_person'=>isset($allocationSelectableSlots[$slotId]),
+        'reporting_bucket'=>$reportingBucket,
+        'choice_option'=>isset($slot['choice_option']) ? $slot['choice_option'] : '',
+        'track'=>isset($slot['track']) ? $slot['track'] : (isset($slot['profile_track']) ? $slot['profile_track'] : ''),
+    );
+}
+$vacancySlotState = array();
+foreach ($allocationSlots as $slotId=>$slot) {
+    $capacity = isset($slot['capacity_hours']) ? (int)$slot['capacity_hours'] : 0;
+    $remaining = $capacity;
+    if ($allocationPlan && isset($allocationPlan['slots'][$slotId])) {
+        $remaining = isset($allocationPlan['slots'][$slotId]['remaining_hours']) ? (int)$allocationPlan['slots'][$slotId]['remaining_hours'] : $capacity;
+    }
+    $vacancySlotState[$slotId] = array(
+        'remaining_hours'=>max(0, $remaining),
+        'has_eligible_person'=>isset($allocationSelectableSlots[$slotId]),
+    );
+}
+
+$specialtyBalanceReport = null;
+if ($specialtyBalanceEnabled) {
+    $specialtyBalanceReport = personnelWorkloadSpecialtyBalanceReport($profile, $allocationPeople, $allocationRows, $teachingModel);
+}
+$specialtyLabelsClient = array();
+foreach ($allocationSlots as $slot) {
+    if (empty($slot['eligible_by_priority'])) continue;
+    foreach ($slot['eligible_by_priority'] as $codes) {
+        if (!is_array($codes)) continue;
+        foreach ($codes as $code) {
+            $canonical = teacherSpecialtyCanonicalCode($code);
+            if ($canonical !== '' && !isset($specialtyLabelsClient[$canonical])) $specialtyLabelsClient[$canonical] = teacherSpecialtyLabel($canonical);
+        }
+    }
+}
+foreach ($allocationPeopleClient as $personData) {
+    foreach (array('specialty_code','secondary_specialty_code') as $key) {
+        $canonical = isset($personData[$key]) ? teacherSpecialtyCanonicalCode($personData[$key]) : '';
+        if ($canonical !== '' && !isset($specialtyLabelsClient[$canonical])) $specialtyLabelsClient[$canonical] = teacherSpecialtyLabel($canonical);
+    }
+}
+uksort($specialtyLabelsClient, 'strnatcmp');
+?>
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Υπολογισμός διδακτικών αναγκών σχολικής μονάδας</title>
+  <link rel="stylesheet" href="<?php echo staffingUiH(edu_asset_url('assets/common.css')); ?>">
+  <link rel="stylesheet" href="<?php echo staffingUiH(edu_asset_url('assets/staffing-simulator.css')); ?>">
+</head>
+<body class="edu-ui edu-calc-standard edu-page-staffing-simulator">
+<?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+
+<main id="schoolStaffingSimulator" class="app">
+  <?php calculatorHero(array(
+    'title_html' => 'Υπολογισμός διδακτικών αναγκών σχολικής μονάδας',
+    'intro' => 'Καταχώρισε τα πραγματικά στοιχεία της σχολικής μονάδας και δες πώς μετατρέπεται το ωρολόγιο πρόγραμμα σε ώρες ανά κλάδο, διαθέσιμο προσωπικό και προτεινόμενη κατανομή.',

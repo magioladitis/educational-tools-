@@ -331,7 +331,7 @@ function teachingAllocationEngineObjectiveForRows($rows)
  * ώστε ένα σχολείο με πολλά όμοια τμήματα να μην παράγει περιττές μεταθέσεις
  * της ίδιας ακριβώς κατάστασης.
  */
-function teachingAllocationEngineOptimizeComponent($groups, $peopleIndex, $initialPeopleState, $seedRows = array(), $nodeLimit = 400000)
+function teachingAllocationEngineOptimizeComponent($groups, $peopleIndex, $initialPeopleState, $seedRows = array(), $nodeLimit = 400000, $deadline = null)
 {
     $personIds = array_keys($peopleIndex);
     usort($personIds, 'strnatcmp');
@@ -350,10 +350,13 @@ function teachingAllocationEngineOptimizeComponent($groups, $peopleIndex, $initi
         }
         $dp = array('0:0'=>array('objective'=>array('covered'=>0,'top'=>0,'b'=>0,'primary'=>0),'rows'=>array(),'used'=>0,'bused'=>0));
         $nodes = 0;
+        $aborted = false;
         foreach ($items as $item) {
+            if ($deadline !== null && microtime(true) > $deadline) { $aborted = true; break; }
             $next = $dp;
             foreach ($dp as $state) {
                 $nodes++;
+                if ($nodes > $nodeLimit) { $aborted = true; break 2; }
                 $need=$item['need']; $match=$item['match'];
                 $newUsed=$state['used']+$need;
                 $newB=$state['bused']+($match['priority']==='B'?$need:0);
@@ -371,7 +374,7 @@ function teachingAllocationEngineOptimizeComponent($groups, $peopleIndex, $initi
         }
         $best=array('objective'=>array('covered'=>0,'top'=>0,'b'=>0,'primary'=>0),'rows'=>array());
         foreach ($dp as $state) if (teachingAllocationEngineCompareObjective($state['objective'],$best['objective'])>0) $best=$state;
-        return array('allocations'=>$best['rows'],'objective'=>$best['objective'],'nodes'=>$nodes,'certified'=>true);
+        return array('allocations'=>$best['rows'],'objective'=>$best['objective'],'nodes'=>$nodes,'certified'=>!$aborted);
     }
 
     $remainingCounts = array();
@@ -409,10 +412,11 @@ function teachingAllocationEngineOptimizeComponent($groups, $peopleIndex, $initi
     $nodes = 0; $aborted = false;
 
     $search = null;
-    $search = function() use (&$search, &$groups, &$remainingCounts, &$groupOriginalCounts, &$personIds, &$rem, &$brem, &$equiv, &$bestRows, &$bestObjective, &$currentRows, &$currentObjective, &$memo, &$nodes, &$aborted, $nodeLimit) {
+    $search = function() use (&$search, &$groups, &$remainingCounts, &$groupOriginalCounts, &$personIds, &$rem, &$brem, &$equiv, &$bestRows, &$bestObjective, &$currentRows, &$currentObjective, &$memo, &$nodes, &$aborted, $nodeLimit, $deadline) {
         if ($aborted) return;
         $nodes++;
         if ($nodes > $nodeLimit) { $aborted = true; return; }
+        if ($deadline !== null && (($nodes & 255) === 0) && microtime(true) > $deadline) { $aborted = true; return; }
 
         $remainingSlotHours = 0; $allDone = true;
         foreach ($groups as $gi=>$group) {
@@ -632,16 +636,40 @@ function teachingAllocationEngineSolveRemaining($slots, $people, $personState, $
     $seedBySlot = array();
     foreach ($heuristic['allocations'] as $row) $seedBySlot[$row['slot_id']] = $row;
     $finalAllocations = array(); $allCertified = true; $totalNodes = 0;
+    // Safety budget for shared hosting (users.sch.gr: typically 128M / 30s).
+    // Exact search is valuable for small/medium connected components, but a
+    // large memoized branch-and-bound can consume far more memory than the
+    // final answer warrants. When the budget is exhausted we keep the valid
+    // heuristic seed and explicitly mark the optimum as uncertified.
+    $optimizerDeadline = microtime(true) + 1.25;
+    $globalNodeBudget = 30000;
+    $safetyFallbackComponents = 0;
     foreach ($components as $component) {
-        $componentGroups=array(); $slotSet=array(); $componentPeople=array();
+        $componentGroups=array(); $slotSet=array(); $componentPeople=array(); $componentRouteCount=0;
         foreach ($component['group_indexes'] as $gi) {
             $componentGroups[]=$groups[$gi];
+            $componentRouteCount += isset($groups[$gi]['routes']) ? count($groups[$gi]['routes']) : 0;
             foreach ($groups[$gi]['slot_ids'] as $sid) $slotSet[$sid]=true;
         }
         foreach ($component['person_ids'] as $pid) if (isset($peopleIndex[$pid])) $componentPeople[$pid]=$peopleIndex[$pid];
         $seedRows=array();
         foreach ($slotSet as $sid=>$dummy) if (isset($seedBySlot[$sid])) $seedRows[]=$seedBySlot[$sid];
-        $optimized=teachingAllocationEngineOptimizeComponent($componentGroups,$componentPeople,$personState,$seedRows,150000);
+
+        $personCount=count($componentPeople);
+        $groupCount=count($componentGroups);
+        $tooComplex = $personCount > 28 || $componentRouteCount > 1400 || ($personCount > 1 && $groupCount > 100);
+        $outOfBudget = $globalNodeBudget < 1 || microtime(true) > $optimizerDeadline;
+        if ($tooComplex || $outOfBudget) {
+            $optimized=array('allocations'=>$seedRows,'objective'=>teachingAllocationEngineObjectiveForRows($seedRows),'nodes'=>0,'certified'=>false);
+            $safetyFallbackComponents++;
+        } else {
+            $componentNodeLimit=min(12000,$globalNodeBudget);
+            // One-teacher components use bounded DP and are safe even with many
+            // interchangeable slots; multi-teacher components use B&B.
+            $optimized=teachingAllocationEngineOptimizeComponent($componentGroups,$componentPeople,$personState,$seedRows,$componentNodeLimit,$optimizerDeadline);
+            $globalNodeBudget=max(0,$globalNodeBudget-(int)$optimized['nodes']);
+            if (empty($optimized['certified'])) $safetyFallbackComponents++;
+        }
         foreach ($optimized['allocations'] as $row) $finalAllocations[]=$row;
         $totalNodes += (int)$optimized['nodes'];
         if (empty($optimized['certified'])) $allCertified=false;
@@ -685,6 +713,7 @@ function teachingAllocationEngineSolveRemaining($slots, $people, $personState, $
             'optimizer_search_nodes'=>$totalNodes,
             'maximum_coverage_certified'=>$allCertified,
             'heuristic_seed_hours'=>isset($heuristic['summary']['covered_hours'])?(int)$heuristic['summary']['covered_hours']:0,
+            'optimizer_safety_fallback_components'=>$safetyFallbackComponents,
         ),
         'people'=>$finalPeople,
         'slots'=>$finalSlots,

@@ -1,0 +1,229 @@
+<?php
+/** AUTO-GENERATED DEV SNAPSHOT. Canonical data lives in the main regulatory datasets. */
+return array (
+  0 => 
+  array (
+    'course_id' => 'egym.glosiki',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Νεοελληνική Γλώσσα και Γραμματεία',
+    'subject' => 'Γλωσσική Διδασκαλία',
+    'hours' => 
+    array (
+      'Α΄' => 3,
+      'Β΄' => 3,
+      'Γ΄' => 2,
+    ),
+  ),
+  1 => 
+  array (
+    'course_id' => 'egym.logotexnia',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Νεοελληνική Γλώσσα και Γραμματεία',
+    'subject' => 'Νεοελληνική Λογοτεχνία',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  2 => 
+  array (
+    'course_id' => 'egym.archaia_glossa',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Αρχαία Ελληνική Γλώσσα και Γραμματεία',
+    'subject' => 'Αρχαία Ελληνική Γλώσσα',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 1,
+    ),
+  ),
+  3 => 
+  array (
+    'course_id' => 'egym.archaia_metafrasi',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'section' => 'Αρχαία Ελληνική Γλώσσα και Γραμματεία',
+    'subject' => 'Αρχαία Ελληνικά Κείμενα από Μετάφραση',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  4 => 
+  array (
+    'course_id' => 'egym.mathimatika',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Μαθηματικά',
+    'hours' => 
+    array (
+      'Α΄' => 4,
+      'Β΄' => 4,
+      'Γ΄' => 4,
+    ),
+  ),
+  5 => 
+  array (
+    'course_id' => 'egym.fysiki',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Φυσική',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 2,
+    ),
+  ),
+  6 => 
+  array (
+    'course_id' => 'egym.ximeia',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Χημεία',
+    'hours' => 
+    array (
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+  7 => 
+  array (
+    'course_id' => 'egym.viologia',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Βιολογία',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+  8 => 
+  array (
+    'course_id' => 'egym.geologia_geografia',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Γεωλογία - Γεωγραφία',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 1,
+    ),
+  ),
+  9 => 
+  array (
+    'course_id' => 'egym.istoria',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Ιστορία',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  10 => 
+  array (
+    'course_id' => 'egym.kpa',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Κοινωνική και Πολιτική Αγωγή',
+    'hours' => 
+    array (
+      'Β΄' => 1,
+      'Γ΄' => 2,
+    ),
+  ),
+  11 => 
+  array (
+    'course_id' => 'egym.oikonomika',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Οικονομικά',
+    'hours' => 
+    array (
+      'Γ΄' => 1,
+    ),
+  ),
+  12 => 
+  array (
+    'course_id' => 'egym.thriskeftika',
+    'slot_id' => 'egym.religion_ethics',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Θρησκευτικά',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+    'mode' => 'alternative',
+  ),
+  13 => 
+  array (
+    'course_id' => 'egym.ithiki',
+    'slot_id' => 'egym.religion_ethics',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Ηθική',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+    'mode' => 'alternative',
+    'condition' => 'Για μαθητές/ήτριες που απαλλάσσονται από το μάθημα των Θρησκευτικών.',
+  ),
+  14 => 
+  array (
+    'course_id' => 'egym.agglika',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Αγγλικά',
+    'hours' => 
+    array (
+      'Α΄' => 2,
+      'Β΄' => 2,
+      'Γ΄' => 2,
+    ),
+  ),
+  15 => 
+  array (
+    'course_id' => 'egym.pliroforiki',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Πληροφορική',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+  16 => 
+  array (
+    'course_id' => 'egym.ergastiria_dexiotiton',
+    'school' => 'esperino_gymnasio',
+    'group' => 'Κοινό πρόγραμμα',
+    'subject' => 'Εργαστήρια Δεξιοτήτων',
+    'hours' => 
+    array (
+      'Α΄' => 1,
+      'Β΄' => 1,
+      'Γ΄' => 1,
+    ),
+  ),
+);

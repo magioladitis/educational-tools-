@@ -39,6 +39,9 @@ check('school-profile edits stale specialty tab too', "['results','personnel','a
 check('print report contains specialty balance', '<h2>Κενά / πλεονάσματα ειδικοτήτων</h2>' in out and 'id="printSpecialtyBalanceBody"' in out)
 # PE02 should be chosen for shared History in this no-personnel example.
 check('server initial report smart-selects PE02 for shared History', re.search(r'<tr><td>Α1</td><td>Ιστορία</td><td>2</td><td><strong>ΠΕ02</strong></td><td>ΠΕ02, ΠΕ33</td></tr>',out) is not None)
+check('new geology geography vacancy prefers PE04.05 over PE04.03', re.search(r'<td>Γεωλογία - Γεωγραφία</td><td>[^<]*</td><td><strong>ΠΕ04\.05</strong></td><td>ΠΕ04\.03, ΠΕ04\.05</td>',out) is not None)
+check('UI explains legacy PE04.03 handling', 'ΠΕ04.03</strong> αντιμετωπίζεται ως legacy κλάδος' in out and 'προηγείται ο <strong>ΠΕ04.05</strong>' in out)
+check('live report also excludes legacy PE04.03 from new vacancy candidates', "const legacyVacancyCodes={'ΠΕ04.03':true}" in SRC and 'excluded_legacy_candidate_codes' in SRC)
 
 failed=[n for n,ok in checks if not ok]
 for n,ok in checks: print(('PASS' if ok else 'FAIL')+': '+n)

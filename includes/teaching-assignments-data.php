@@ -464,6 +464,63 @@ function teachingAssignmentsData()
     return $rows;
 }
 
+/**
+ * Memory-safe assignment loader for selected school types.
+ *
+ * teachingAssignmentsData() remains the canonical regulatory dataset. The
+ * staffing simulator uses school-scoped snapshots so a Gymnasium request does
+ * not load EPAL/PEPAL/ENEEGYL/etc. assignment tables into memory.
+ */
+function teachingAssignmentsDataForSchools($schools)
+{
+    if (!is_array($schools)) {
+        $schools = array($schools);
+    }
+    $requested = array();
+    foreach ($schools as $school) {
+        $school = trim((string) $school);
+        if ($school !== '') {
+            $requested[$school] = true;
+        }
+    }
+    if (!$requested) {
+        return array();
+    }
+
+    $snapshotSchools = array(
+        'gymnasio' => true,
+        'gel' => true,
+        'esperino_gymnasio' => true,
+        'esperino_gel' => true,
+    );
+    $rows = array();
+    $fallback = array();
+    foreach (array_keys($requested) as $school) {
+        if (isset($snapshotSchools[$school])) {
+            $path = __DIR__ . '/scoped-workload/assignments-' . $school . '.php';
+            if (is_file($path)) {
+                $part = require $path;
+                if (is_array($part)) {
+                    foreach ($part as $row) {
+                        $rows[] = $row;
+                    }
+                    continue;
+                }
+            }
+        }
+        $fallback[$school] = true;
+    }
+
+    if ($fallback) {
+        foreach (teachingAssignmentsData() as $row) {
+            if (!empty($row['school']) && isset($fallback[$row['school']])) {
+                $rows[] = $row;
+            }
+        }
+    }
+    return $rows;
+}
+
 function teachingAssignmentKnownSpecialties()
 {
     $codes = array();
