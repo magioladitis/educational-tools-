@@ -33,7 +33,7 @@ check('allocation grid uses shrinkable columns', 'grid-template-columns:minmax(0
 
 # A POST without an explicit action must not execute the expensive profile/workload branch.
 rogue=render({'school_type':'gymnasio','gym_general_a':2,'gym_general_b':2,'gym_general_c':2})
-check('rogue POST does not unlock results', 'data-staffing-tab="results" role="tab" aria-selected="false" disabled' in rogue)
+check('rogue POST does not unlock results', re.search(r'<button[^>]*data-staffing-tab="results"[^>]*aria-selected="false"[^>]*disabled',rogue) is not None)
 check('rogue POST does not build staffing matrix', 'id="staffingMatrixTable"' not in rogue)
 
 valid={

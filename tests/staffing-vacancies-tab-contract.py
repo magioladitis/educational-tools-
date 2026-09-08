@@ -24,12 +24,12 @@ base={
 out=render(base)
 check('fifth tab exists', '>5. Κενά μαθημάτων</button>' in out)
 check('vacancy card rendered', '<h2>5. Κενά μαθημάτων</h2>' in out)
-check('vacancy tab is enabled with resolved personnel', '<button type="button" class="mode-tab" data-staffing-tab="vacancies" role="tab" aria-selected="false">5. Κενά μαθημάτων</button>' in out)
+check('vacancy tab is enabled with resolved personnel', re.search(r'<button[^>]*data-staffing-tab="vacancies"[^>]*aria-selected="false"(?![^>]*disabled)[^>]*>5\. Κενά μαθημάτων</button>',out) is not None)
 check('vacancies described as uncovered after allocation not official act', 'ώρες μαθημάτων που απομένουν ακάλυπτες μετά την τρέχουσα κατανομή' in out and 'επίσημα λειτουργικά κενά' in out)
 check('live link to tab four explained', 'Ζωντανή εικόνα της Καρτέλας 4.' in out)
 check('vacancy summary metrics exist', all(x in out for x in ['data-vacancy-total','data-vacancy-slots','data-vacancy-no-staff','data-vacancy-has-staff']))
 check('vacancy filter exists', 'id="vacancyFilter"' in out and 'π.χ. Β΄, Μαθηματικά ή ΠΕ03' in out)
-check('vacancy table uses compact grade column', '<thead><tr><th>Τάξη</th>' in out and '>Α΄ τάξη</strong></td>' in out)
+check('vacancy table uses compact grade column', '<th scope="col">Τάξη</th>' in out and '>Α΄ τάξη</strong></td>' in out)
 check('vacancy table includes assignment branches', '<th>Κλάδοι ανάθεσης</th>' in out and '<strong>Α΄:</strong> ΠΕ03' in out)
 check('fully allocated A1 math starts hidden', re.search(r'<tr data-vacancy-row="gym\.mathimatika@Α΄\|whole\|section\|1"[^>]* hidden>',out) is not None)
 check('unallocated A2 math remains visible with four hours', re.search(r'<tr data-vacancy-row="gym\.mathimatika@Α΄\|whole\|section\|2"[^>]*>[\s\S]*?<span class="vacancy-hours" data-vacancy-hours>4</span>',out) is not None)
@@ -47,7 +47,7 @@ check('invalid overallocated rows do not hide vacancy', re.search(r'<tr data-vac
 nostaff={k:v for k,v in base.items() if not k.startswith('personnel_') and not k.startswith('allocation_')}
 nostaff['staffing_action']='profile'; nostaff['active_panel']='vacancies'
 nostaff_out=render(nostaff)
-check('vacancy tab is enabled even without personnel', '<button type="button" class="mode-tab is-active" data-staffing-tab="vacancies" role="tab" aria-selected="true">5. Κενά μαθημάτων</button>' in nostaff_out or '<button type="button" class="mode-tab" data-staffing-tab="vacancies" role="tab" aria-selected="false">5. Κενά μαθημάτων</button>' in nostaff_out)
+check('vacancy tab is enabled even without personnel', re.search(r'<button[^>]*data-staffing-tab="vacancies"(?![^>]*disabled)[^>]*>5\. Κενά μαθημάτων</button>',nostaff_out) is not None)
 check('vacancy tab no-personnel render still contains uncovered slots', 'data-vacancy-row="gym.mathimatika@Α΄|whole|section|1"' in nostaff_out)
 check('B assignment exception-only availability is represented', 'Διαθέσιμο μόνο με κατ’ εξαίρεση υπέρβαση του ορίου Β΄ ανάθεσης' in SRC and "match.priority==='B' && bHours>=10" in SRC)
 

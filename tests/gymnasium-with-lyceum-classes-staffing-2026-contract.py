@@ -93,10 +93,10 @@ rr=subprocess.run(['php','-d','memory_limit=512M'],cwd=ROOT,text=True,input=rend
 if rr.returncode:
     print(rr.stderr); raise SystemExit(rr.returncode)
 out=rr.stdout
-check('composite is selectable not placeholder', '<option value="gymnasio_lt" selected>Γυμνάσιο με Λυκειακές Τάξεις</option>' in out and '<option value="gymnasio_lt" disabled>' not in out)
+check('composite is selectable not placeholder', '<option value="gymnasio_lt" selected>Γυμνάσιο με Λ.Τ.</option>' in out and '<option value="gymnasio_lt" disabled>' not in out)
 check('both Gymnasium and Lyceum profile blocks visible server-side', re.search(r'id="gymProfileFields"(?![^>]*\shidden)',out) is not None and re.search(r'id="gelProfileFields"(?![^>]*\shidden)',out) is not None)
 check('separate composite Ethics panels render', 'id="ethicsPanelGym"' in out and 'id="ethicsPanelLt"' in out and 'name="lt_ethics_a_exempt"' in out)
-check('result sidebar names composite structure', '<span>Δομή</span><strong>Γυμνάσιο με Λ.Τ.</strong>' in out)
+check('context bar names composite structure', 'id="staffingContextType">Γυμνάσιο με Λ.Τ.</span>' in out)
 check('render reports combined 248 assigned hours', '<strong>248</strong><span>ώρες με αντιστοιχισμένη ανάθεση</span>' in out)
 
 # Safety limit is global across all six basic grades.

@@ -219,3 +219,6 @@
 .edu-page-staffing-simulator .staffing-context-state{font-weight:800;color:var(--edu-primary-dark);background:var(--edu-primary-soft);border-color:rgba(49,86,150,.22)}
 .edu-page-staffing-simulator .staffing-context-detail.has-warning{color:#8a6400;border-color:rgba(138,100,0,.3)}
 @media(max-width:720px){.edu-page-staffing-simulator .staffing-context-bar{align-items:flex-start}.edu-page-staffing-simulator .staffing-context-label{width:100%}.edu-page-staffing-simulator .staffing-context-school{width:100%;margin-bottom:2px}.edu-page-staffing-simulator .staffing-context-detail{display:none}}
+
+/* Accessibility polish: make disabled workflow stages visually explicit without changing layout. */
+.edu-page-staffing-simulator .mode-tab:disabled{opacity:.55;cursor:not-allowed;background:var(--edu-surface-soft);color:var(--edu-muted)}

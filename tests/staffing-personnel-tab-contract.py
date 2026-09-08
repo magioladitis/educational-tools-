@@ -36,7 +36,7 @@ base={
 'personnel_hours_branch':['','','']
 }
 out=render(base)
-check('personnel tab active', 'data-staffing-tab="personnel"' in out and 'aria-selected="true">3. Εκπαιδευτικοί' in out)
+check('personnel tab active', re.search(r'<button[^>]*data-staffing-tab="personnel"[^>]*aria-selected="true"[^>]*>3\. Εκπαιδευτικοί</button>',out) is not None)
 check('personnel card rendered', '<h2>3. Εκπαιδευτικοί</h2>' in out)
 check('allocation tab enabled after resolved personnel', 'data-staffing-tab="allocation"' in out and '>4. Κατανομή μαθημάτων</button>' in out and 'Κατανομή μαθημάτων — επόμενο στάδιο' not in out)
 check('three people summary', re.search(r'<strong>3</strong><span>εκπαιδευτικοί στο προσωρινό προσωπικό</span>',out) is not None)
@@ -138,7 +138,7 @@ single_director_message='Μπορεί να δηλωθεί μόνο ένας/μί
 check('backend rejects second Director explicitly', single_director_message in dup)
 check('second Director remains in rendered form for correction', 'Δεύτερος Διευθυντής' in dup and dup.count('value="director" selected')>=2)
 check('duplicate Director contributes unresolved roster entry', re.search(r'<strong>1</strong><span>εγγραφές που χρειάζονται συμπλήρωση</span>',dup) is not None)
-check('allocation stays locked while duplicate Director exists', 'data-staffing-tab="allocation" role="tab" aria-selected="false" disabled' in dup)
+check('allocation stays locked while duplicate Director exists', re.search(r'<button[^>]*data-staffing-tab="allocation"[^>]*aria-selected="false"[^>]*disabled',dup) is not None)
 
 text=PAGE.read_text(encoding='utf-8')
 check('frontend disables Director choice in other rows once one exists', 'directorOption.disabled=hasDirector && !isDirector' in text)

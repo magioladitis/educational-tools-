@@ -179,8 +179,8 @@
   }
   var TYPE_LABELS={
     gymnasio:'Ημερήσιο Γυμνάσιο',
-    gel:'Ημερήσιο Γενικό Λύκειο (ΓΕΛ)',
-    gymnasio_lt:'Γυμνάσιο με Λυκειακές Τάξεις',
+    gel:'Ημερήσιο Γενικό Λύκειο',
+    gymnasio_lt:'Γυμνάσιο με Λ.Τ.',
     esperino_gymnasio:'Εσπερινό Γυμνάσιο',
     esperino_gel:'Εσπερινό ΓΕΛ',
     epal:'ΕΠΑΛ',
@@ -190,7 +190,7 @@
     eeeek:'Ε.Ε.Ε.ΕΚ.',
     mousiko:'Μουσικό Σχολείο',
     kallitexniko:'Καλλιτεχνικό Σχολείο',
-    sek:'Εργαστηριακό Κέντρο (Ε.Κ.)'
+    sek:'Εργαστηριακό Κέντρο'
   };
   function isSupportedType(type){ return type==='gymnasio' || type==='gel' || type==='esperino_gymnasio' || type==='esperino_gel' || type==='gymnasio_lt'; }
   function typeLabel(type){ return TYPE_LABELS[type] || String(type || 'Άγνωστος τύπος'); }

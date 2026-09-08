@@ -22,7 +22,7 @@ check('richer built-in dataset refreshes old identity-only registry', 'existing.
 check('directory status explains populated structural data', 'διαθέσιμα στοιχεία βασικών τμημάτων' in page and 'πλήρες μητρώο 2026-2027' in page and 'myschool stat3_10' in page)
 check('remaining inactive placeholders exist', all(x in page for x in [
     '<option value="esperino_epal" disabled>Εσπερινό ΕΠΑΛ</option>',
-    '<option value="sek" disabled>Εργαστηριακό Κέντρο (Ε.Κ.)</option>',
+    '<option value="sek" disabled>Εργαστηριακό Κέντρο</option>',
 ]) and '<option value="gymnasio_lt" disabled>' not in page)
 check('school address supported in schema', "school_address:['διευθυνση σχολειου'" in js and "school_address:String(get(row,mapping,'school_address')" in js)
 check('specific types normalized before generic gymnasium', "if(t.indexOf('μουσικ')>=0) return 'mousiko';" in js and "return 'gymnasio';" in js)
