@@ -6,6 +6,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.) εκπαιδευτικού</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
+  <style>
+    .payroll-print-sheet { display:none; }
+    @media print {
+      @page { size:A4; margin:12mm; }
+      body > * { display:none !important; }
+      body > #payrollPrintSheet { display:block !important; }
+      #payrollPrintSheet {
+        color:#111; background:#fff; font:12px/1.38 Arial, Helvetica, sans-serif;
+        width:100%; margin:0; padding:0;
+      }
+      #payrollPrintSheet h1 { margin:0 0 3px; text-align:center; font-size:18px; letter-spacing:.2px; }
+      #payrollPrintSheet .print-subtitle { text-align:center; margin:0 0 14px; color:#444; }
+      #payrollPrintSheet .print-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+      #payrollPrintSheet .print-box { border:1px solid #777; padding:8px; break-inside:avoid; }
+      #payrollPrintSheet .print-box h2 { margin:0 0 6px; font-size:12px; text-transform:uppercase; }
+      #payrollPrintSheet table { width:100%; border-collapse:collapse; margin:0 0 12px; break-inside:avoid; }
+      #payrollPrintSheet th, #payrollPrintSheet td { border:1px solid #999; padding:5px 6px; vertical-align:top; }
+      #payrollPrintSheet th { background:#eee !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; text-align:left; }
+      #payrollPrintSheet td.amount { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+      #payrollPrintSheet tr.total-row td { font-weight:700; border-top:2px solid #555; }
+      #payrollPrintSheet .print-net { border:2px solid #333; padding:9px 12px; margin-top:10px; display:flex; justify-content:space-between; font-size:16px; font-weight:700; }
+      #payrollPrintSheet .print-note { margin-top:12px; color:#444; font-size:10.5px; }
+      #payrollPrintSheet .print-meta { margin-top:8px; text-align:right; color:#666; font-size:10px; }
+    }
+  </style>
 </head>
 <body class="edu-ui edu-calc-standard">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -115,9 +140,43 @@
               <label for="remoteAreaAllowance">Επίδομα απομακρυσμένων - παραμεθορίων περιοχών <strong>(+100 € μικτά / μήνα)</strong><small>Επίλεξέ το μόνο αν υπηρετείς σε περιοχή/μονάδα που θεμελιώνει δικαίωμα καταβολής του επιδόματος.</small></label>
             </div>
           </div>
+          <div class="edu-field--full">
+            <div class="checkrow">
+              <input id="maternityPensionReduction" type="checkbox">
+              <label for="maternityPensionReduction">Μειωμένη εισφορά κύριας σύνταξης λόγω μητρότητας <strong>(50%)</strong><small>Επίλεξέ το μόνο όταν η μείωση εφαρμόζεται ή έχει αναγνωριστεί στη μισθοδοσία σου. Μειώνει μόνο το σκέλος κύριας σύνταξης από 6,67% σε 3,335%.</small></label>
+            </div>
+          </div>
+          <details class="info-note edu-field--full" id="maternityEligibilityPanel">
+            <summary><strong>Ποια μισθωτή μητέρα δικαιούται τη μείωση;</strong></summary>
+            <p>Σύμφωνα με τον e-ΕΦΚΑ, οι <strong>μητέρες μισθωτές ασφαλισμένες</strong>, εφόσον πληρούν τις λοιπές προϋποθέσεις, δικαιούνται μείωση κατά <strong>50% της εργατικής εισφοράς του κλάδου κύριας σύνταξης</strong> για το σχετικό δωδεκάμηνο.</p>
+            <p>Αν έχει ληφθεί <strong>επιδότηση λόγω λοχείας</strong>, η μείωση εφαρμόζεται από τη λήξη της επιδότησης για το επόμενο δωδεκάμηνο. Αν δεν έχει ληφθεί επιδότηση λοχείας, το κρίσιμο δωδεκάμηνο αρχίζει από την <strong>1η του επόμενου μήνα του τοκετού</strong>. Ως χρόνος απασχόλησης μπορεί να λογίζεται και άδεια <strong>με αποδοχές</strong>, σύμφωνα με τις διευκρινίσεις του e-ΕΦΚΑ.</p>
+            <small>Το εργαλείο δεν αποφασίζει αν θεμελιώνεται το δικαίωμα. Αν η μισθοδοσία παρακράτησε ολόκληρη την εισφορά, ο e-ΕΦΚΑ προβλέπει διαδικασία επιστροφής αχρεωστήτως καταβληθεισών εισφορών, όταν πληρούνται οι προϋποθέσεις.</small>
+          </details>
+          <details class="info-note edu-field--full" id="otherDeductionsPanel">
+            <summary><strong>Λοιπές κρατήσεις</strong> <small>προαιρετικά — ποσά ανά μήνα</small></summary>
+            <div class="field-grid payroll-extra-deductions-grid">
+              <div class="field">
+                <label for="adedYDeduction">ΑΔΕΔΥ</label>
+                <input id="adedYDeduction" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+              </div>
+              <div class="field">
+                <label for="federationDeduction">ΟΛΜΕ / ΔΟΕ</label>
+                <input id="federationDeduction" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+              </div>
+              <div class="field">
+                <label for="associationDeduction">Σύλλογος</label>
+                <input id="associationDeduction" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+              </div>
+              <div class="field">
+                <label for="otherPayrollDeduction">Άλλο ποσό</label>
+                <input id="otherPayrollDeduction" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+              </div>
+            </div>
+            <small>Οι λοιπές κρατήσεις αφαιρούνται από το τελικό πληρωτέο και δεν μειώνουν το φορολογητέο εισόδημα της εκτίμησης.</small>
+          </details>
         </div>
         <div class="info-note">
-          Η εκτίμηση καθαρών γίνεται πάνω στον <strong>βασικό μισθό του Μ.Κ.</strong>, στην <strong>οικογενειακή παροχή</strong> που αντιστοιχεί στον δηλωμένο αριθμό τέκνων, στο τυχόν <strong>επίδομα θέσης ευθύνης</strong> και, αν επιλεγεί, στο <strong>επίδομα απομακρυσμένων - παραμεθορίων περιοχών</strong>, με 12μηνη φορολογική αναγωγή. Δεν προστίθενται προσωπική διαφορά ή άλλες αποδοχές. Αν ο αριθμός τέκνων που λαμβάνεται υπόψη για φορολογία διαφέρει από εκείνον της οικογενειακής παροχής, η εκτίμηση χρειάζεται διοικητικό έλεγχο.
+          Η εκτίμηση καθαρών γίνεται πάνω στον <strong>βασικό μισθό του Μ.Κ.</strong>, στην <strong>οικογενειακή παροχή</strong> που αντιστοιχεί στον δηλωμένο αριθμό τέκνων, στο τυχόν <strong>επίδομα θέσης ευθύνης</strong> και, αν επιλεγεί, στο <strong>επίδομα απομακρυσμένων - παραμεθορίων περιοχών</strong>, με 12μηνη φορολογική αναγωγή. Δεν προστίθενται προσωπική διαφορά ή άλλες αποδοχές. Η προαιρετική <strong>μειωμένη εισφορά κύριας σύνταξης λόγω μητρότητας</strong> μειώνει μόνο το αντίστοιχο ασφαλιστικό σκέλος. Οι προαιρετικές <strong>λοιπές κρατήσεις</strong> αφαιρούνται μόνο από το τελικό πληρωτέο και δεν μεταβάλλουν τον υπολογισμό φόρου. Αν ο αριθμός τέκνων που λαμβάνεται υπόψη για φορολογία διαφέρει από εκείνον της οικογενειακής παροχής, η εκτίμηση χρειάζεται διοικητικό έλεγχο.
         </div>
 
         <div class="info-note">
@@ -134,13 +193,14 @@
         </div>
 
         <?php calculatorActions(array(
+          array('id' => 'printBtn', 'class' => 'edu-btn-primary', 'label' => 'Εκτύπωση'),
           array('id' => 'resetBtn', 'class' => 'secondary', 'label' => 'Καθαρισμός')
         )); ?>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorResultMessage(array(
         'variant' => 'disclaimer',
-        'html' => '<strong>Η εκτίμηση καθαρών είναι ενδεικτική.</strong> Υπολογίζεται από τον βασικό μισθό του Μ.Κ., την οικογενειακή παροχή με βάση τον δηλωμένο αριθμό τέκνων, το τυχόν επίδομα θέσης ευθύνης, το προαιρετικό επίδομα απομακρυσμένων - παραμεθορίων περιοχών και το επιλεγμένο τυπικό προφίλ κρατήσεων. Δεν περιλαμβάνει προσωπική διαφορά, ειδικές ατομικές κρατήσεις, αναδρομικά ή άλλες πηγές εισοδήματος. Η πραγματική μισθοδοσία και φορολογική εκκαθάριση μπορεί να διαφέρουν.'
+        'html' => '<strong>Η εκτίμηση καθαρών είναι ενδεικτική.</strong> Υπολογίζεται από τον βασικό μισθό του Μ.Κ., την οικογενειακή παροχή με βάση τον δηλωμένο αριθμό τέκνων, το τυχόν επίδομα θέσης ευθύνης, το προαιρετικό επίδομα απομακρυσμένων - παραμεθορίων περιοχών και το επιλεγμένο τυπικό προφίλ κρατήσεων. Αν δηλωθεί δικαίωμα μειωμένης εισφοράς μητρότητας, μειώνεται μόνο το σκέλος κύριας σύνταξης. Δεν περιλαμβάνει προσωπική διαφορά ή αναδρομικά. Ειδικές μικρές κρατήσεις μπορούν να δηλωθούν προαιρετικά στην ενότητα «Λοιπές κρατήσεις». Η πραγματική μισθοδοσία και φορολογική εκκαθάριση μπορεί να διαφέρουν.'
       )); ?>
     <?php calculatorMainEnd(); ?>
 
@@ -166,8 +226,11 @@
       <?php calculatorResultRow(array('label' => 'Σύνολο μικτών για εκτίμηση', 'value' => '1.232,00 €', 'value_id' => 'grossForNetResult')); ?>
       <?php calculatorResultRow(array('label' => 'Προφίλ κρατήσεων', 'value' => 'Μόνιμος δημόσιος υπάλληλος', 'value_id' => 'payrollProfileResult')); ?>
       <?php calculatorResultRow(array('label' => 'Τακτικές κρατήσεις', 'value' => '0,00 €', 'value_id' => 'standardDeductionsResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Μείωση εισφοράς μητρότητας', 'value' => '0,00 €', 'value_id' => 'maternityPensionReductionResult')); ?>
       <?php calculatorResultRow(array('label' => 'Σύνθεση κρατήσεων', 'value' => 'Σύνταξη · Υγεία · Επικουρική · Εφάπαξ · ΜΤΠΥ · Ανεργία', 'value_id' => 'deductionBreakdownResult')); ?>
       <?php calculatorResultRow(array('label' => 'Δικαίωμα εγγραφής ΜΤΠΥ', 'value' => '0,00 €', 'value_id' => 'registrationDeductionResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Λοιπές κρατήσεις', 'value' => '0,00 €', 'value_id' => 'otherDeductionsResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Ανάλυση λοιπών κρατήσεων', 'value' => '—', 'value_id' => 'otherDeductionsBreakdownResult')); ?>
       <?php calculatorResultRow(array('label' => 'Ετήσιο φορολογητέο (12μηνη αναγωγή)', 'value' => '0,00 €', 'value_id' => 'taxableAnnualResult')); ?>
       <?php calculatorResultRow(array('label' => 'Φόρος κλίμακας πριν τη μείωση', 'value' => '0,00 €', 'value_id' => 'taxBeforeCreditResult')); ?>
       <?php calculatorResultRow(array('label' => 'Μείωση φόρου άρθρου 16 ΚΦΕ', 'value' => '0,00 €', 'value_id' => 'taxCreditResult')); ?>
@@ -179,6 +242,14 @@
   <?php calculatorColumnsEnd(); ?>
 <?php calculatorContainerEnd(); ?>
 
+<section id="payrollPrintSheet" class="payroll-print-sheet" aria-hidden="true">
+  <h1>ΕΝΔΕΙΚΤΙΚΟ ΜΙΣΘΟΛΟΓΙΚΟ ΣΗΜΕΙΩΜΑ</h1>
+  <p class="print-subtitle">Υπολογισμός Μισθολογικού Κλιμακίου και εκτιμώμενων καθαρών αποδοχών</p>
+  <div id="payrollPrintContent"></div>
+  <p class="print-note"><strong>Σημείωση:</strong> Το παρόν είναι υπολογιστικό βοήθημα και δεν αποτελεί επίσημο ενημερωτικό σημείωμα αποδοχών, πράξη μισθοδοσίας ή φορολογική εκκαθάριση.</p>
+  <div class="print-meta" id="payrollPrintGeneratedAt"></div>
+</section>
+
 <?php sourceCardStart(); ?>
   <p>Ο ν. 4354/2015 προβλέπει 19 Μ.Κ. για ΠΕ/ΤΕ και 13 για ΔΕ/ΥΕ. Για τη συνήθη μισθολογική εξέλιξη απαιτούνται δύο έτη ανά Μ.Κ. για ΠΕ/ΤΕ και τρία έτη για ΔΕ/ΥΕ. Αναγνωρισμένος συναφής μεταπτυχιακός τίτλος προωθεί κατά 2 Μ.Κ. και διδακτορικό κατά 6 Μ.Κ. στην κατηγορία όπου ανήκει ο υπάλληλος. Από 01-01-2026, ο ν. 5246/2025 προσθέτει ειδική προώθηση +2 Μ.Κ. για Integrated Master που εμπίπτει στις διατάξεις των άρθρων 46 ν. 4485/2017 και 78 ν. 4957/2022.</p>
   <p>Με το άρθρο 26 παρ. 2 του ν. 4354/2015 η μισθολογική εξέλιξη ανεστάλη έως 31-12-2017. Από 01-01-2018 ενεργοποιήθηκε εκ νέου, χωρίς να λαμβάνεται υπόψη για την εξέλιξη το χρονικό διάστημα 01-01-2016 έως 31-12-2017.</p>
@@ -188,6 +259,8 @@
   <p><strong>Επίδομα απομακρυσμένων - παραμεθορίων περιοχών:</strong> το άρθρο 19 του ν. 4354/2015 διατηρεί το επίδομα στο ίδιο ύψος και με τις ίδιες προϋποθέσεις· για τους δικαιούχους το ποσό είναι <strong>100 € μικτά τον μήνα</strong>. Η επιλογή στο εργαλείο είναι προαιρετική και δεν ελέγχει αν η συγκεκριμένη περιοχή/υπηρεσία θεμελιώνει δικαίωμα. Στην ενδεικτική εκτίμηση το ποσό προστίθεται στις μικτές αποδοχές και εφαρμόζεται το επιλεγμένο τυπικό προφίλ κρατήσεων· για το ΜΤΠΥ η ισχύουσα κωδικοποίηση προβλέπει τακτική κράτηση 4,5% στο συγκεκριμένο επίδομα για ασφαλισμένους από 01-01-1993 και μετά.</p>
   <p><strong>Φορολογία 2026:</strong> ο ν. 5246/2025 τροποποίησε από το φορολογικό έτος 2026 την κλίμακα μισθωτών, με ειδικούς συντελεστές ανά αριθμό εξαρτώμενων τέκνων και για ηλικίες έως 25 και 26–30 ετών. Εφαρμόζεται επίσης η μείωση φόρου του άρθρου 16 ΚΦΕ.</p>
   <p><strong>Τυπικά προφίλ κρατήσεων:</strong> για μόνιμο δημόσιο υπάλληλο χρησιμοποιείται συνολικό ποσοστό 22,22% επί του βασικού μισθού (κύρια σύνταξη, υγειονομική περίθαλψη, επικουρική, εφάπαξ, ΜΤΠΥ και εισφορά ανεργίας). Για νεοδιόριστο προστίθεται ενδεικτικά το δικαίωμα εγγραφής ΜΤΠΥ — ένας μηνιαίος μισθός σε 12 ισόποσες δόσεις. Για αναπληρωτή/ΙΔΟΧ χρησιμοποιείται το ποσοστό ασφαλισμένου 13,37% του ΚΠΚ 101. Οι πραγματικές κρατήσεις μπορεί να διαφοροποιούνται από ειδικό καθεστώς ή βάση εισφορών.</p>
+  <p><strong>Μειωμένη εισφορά μητρότητας:</strong> ο e-ΕΦΚΑ προβλέπει για τις δικαιούχες <strong>μητέρες μισθωτές ασφαλισμένες</strong> μείωση κατά <strong>50%</strong> της εργατικής εισφοράς του κλάδου κύριας σύνταξης για το σχετικό δωδεκάμηνο. Αν έχει ληφθεί επιδότηση λόγω λοχείας, το δωδεκάμηνο ακολουθεί τη λήξη της επιδότησης· αν δεν έχει ληφθεί, αρχίζει από την 1η του επόμενου μήνα του τοκετού. Ως χρόνος απασχόλησης μπορεί να θεωρείται και άδεια με αποδοχές. Στην παρούσα εκτίμηση η μείωση αποτυπώνεται από <strong>6,67% σε 3,335%</strong>. Η επιλογή είναι χειροκίνητη και το εργαλείο δεν κρίνει αν πληρούνται οι προϋποθέσεις.</p>
+  <p><strong>Λοιπές κρατήσεις:</strong> ποσά όπως ΑΔΕΔΥ, ΟΛΜΕ/ΔΟΕ, οικείος σύλλογος ή άλλη ειδική κράτηση δεν θεωρούνται καθολικά ίδια για κάθε υπάλληλο. Για αυτό εισάγονται προαιρετικά ως πραγματικά μηνιαία ποσά και αφαιρούνται από το πληρωτέο <strong>μετά</strong> τον υπολογισμό των τυπικών ασφαλιστικών κρατήσεων και της φορολογίας.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-demosion-upallelon/nomos-4354-2015.html', 'Ν. 4354/2015 — Μισθολογικά κλιμάκια & άρθρο 26 ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-oikonomia/n-5045-2023.html', 'Ν. 5045/2023 — Αναπροσαρμογή οικογενειακής παροχής ↗'); ?>
@@ -201,6 +274,7 @@
     <?php sourceCardLink('https://minfin.gov.gr/forologiki-politiki/forologikos-odigos/forologia-eisodimatos/', 'ΥΠΕΘΟΟ — Φορολογία εισοδήματος 2026 ↗'); ?>
     <?php sourceCardLink('https://www.aade.gr/egkyklioi-kai-apofaseis/o-3068-18-11-2025', 'ΑΑΔΕ Ο.3068/2025 — Ν. 5246/2025 ↗'); ?>
     <?php sourceCardLink('https://ypergasias.gov.gr/koinoniki-asfalisi/asfalismenoi-eisfores-kai-paroches/asfalistikes-eisfores/', 'Υπουργείο Εργασίας — Ασφαλιστικές εισφορές ↗'); ?>
+    <?php sourceCardLink('https://www.e-efka.gov.gr/el/sychnes-eroteseis/asphalisi-eisphores/asphalismenoi/misthotoi-0/meiomenes-eisphores-gia-meteres-misthotes', 'e-ΕΦΚΑ — Μειωμένες εισφορές για μητέρες μισθωτές ↗'); ?>
     <?php sourceCardLink('https://www.mtpy.gr/pliroforisi1/documents/%CE%95%CE%A0%CE%99%CE%9A%CE%91%CE%99%CE%A1%CE%9F%CE%A0%CE%9F%CE%99%CE%97%CE%9C%CE%95%CE%9D%CE%9F%CE%A3%20%CE%9F%CE%94%CE%97%CE%93%CE%9F%CE%A3%20%CE%9A%CE%A1%CE%91%CE%A4%CE%97%CE%A3%CE%95%CE%A9%CE%9D%20%CE%9F%CE%9A%CE%A4%202019.pdf', 'ΜΤΠΥ — Οδηγός κρατήσεων & δικαίωμα εγγραφής ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
   <?php sourceCardDisclaimerStart(); ?>Ο υπολογιστής δεν αποφαίνεται αν ένας τίτλος θεμελιώνει δικαίωμα προώθησης. Για τη συνάφεια τίτλου, την αναγνώριση προϋπηρεσίας, ειδικές περιπτώσεις όπως ΤΕ16 και την ημερομηνία οικονομικών αποτελεσμάτων υπερισχύει η ισχύουσα απόφαση του αρμόδιου υπηρεσιακού οργάνου.<?php sourceCardDisclaimerEnd(); ?>
@@ -217,6 +291,119 @@
   function integer(id, max) {
     const n = Math.max(0, Math.floor(Number(byId(id).value) || 0));
     return Number.isFinite(max) ? Math.min(max, n) : n;
+  }
+
+  function money(id) {
+    const n = Number(byId(id).value);
+    return Number.isFinite(n) ? Math.max(0, n) : 0;
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function selectedText(id) {
+    const el = byId(id);
+    if (!el || !el.options || el.selectedIndex < 0) return '';
+    return String(el.options[el.selectedIndex].textContent || '').trim();
+  }
+
+  function printAmountRow(label, amount, options) {
+    options = options || {};
+    const prefix = options.negative ? '−' : '';
+    const note = options.note ? '<small>' + escapeHtml(options.note) + '</small>' : '';
+    return '<tr><td>' + escapeHtml(label) + (note ? '<br>' + note : '') + '</td><td class="amount">' + prefix + formatEuroCents(amount) + '</td></tr>';
+  }
+
+  function renderPrintSheet(result, net, payroll) {
+    const content = byId('payrollPrintContent');
+    if (!content) return;
+    const totalDeductions = window.EducationSalaryNet.roundMoney(
+      net.standardDeductions + net.registrationDeduction + net.otherDeductions + net.monthlyTax
+    );
+    const grossRows = [
+      printAmountRow('Βασικός μισθός — Μ.Κ. ' + result.finalMK, result.basicGrossSalary),
+      printAmountRow('Οικογενειακή παροχή', payroll.familyAllowance),
+      printAmountRow('Επίδομα θέσης ευθύνης', payroll.positionAllowance, { note: payroll.positionLabel }),
+      printAmountRow('Επίδομα απομακρυσμένων - παραμεθορίων περιοχών', payroll.remoteAllowance)
+    ].join('');
+
+    let deductionRows = '';
+    (net.deductionComponents || []).forEach(function (component) {
+      deductionRows += printAmountRow(component.label, component.amount, {
+        note: formatPercent(component.rate)
+      });
+    });
+    if (net.maternityPensionReductionAmount > 0) {
+      deductionRows += printAmountRow('Μείωση εισφοράς κύριας σύνταξης λόγω μητρότητας', net.maternityPensionReductionAmount, {
+        negative: true, note: '50% του σκέλους κύριας σύνταξης · −3,335 π.μ.'
+      });
+    }
+    if (net.registrationDeduction > 0) {
+      deductionRows += printAmountRow('Δικαίωμα εγγραφής ΜΤΠΥ — μηνιαία δόση', net.registrationDeduction, { note: '1/12 των μικτών αποδοχών της εκτίμησης' });
+    }
+    payroll.otherDeductionParts.forEach(function (item) {
+      if (item[1] > 0) deductionRows += printAmountRow(item[0], item[1]);
+    });
+    deductionRows += printAmountRow('Φόρος εισοδήματος — μηνιαία παρακράτηση', net.monthlyTax);
+
+    const totalService = integer('serviceYears', 50) * 12 + integer('serviceMonths', 11);
+    const qualificationText = selectedText('qualification');
+    content.innerHTML =
+      '<div class="print-grid">' +
+        '<div class="print-box"><h2>Μισθολογική κατάταξη</h2>' +
+          '<div><strong>Κατηγορία:</strong> ' + escapeHtml(result.category) + '</div>' +
+          '<div><strong>Τελικό Μ.Κ.:</strong> Μ.Κ. ' + escapeHtml(result.finalMK) + '</div>' +
+          '<div><strong>Αναγνωρισμένη υπηρεσία:</strong> ' + escapeHtml(formatServiceMonths(totalService)) + '</div>' +
+          '<div><strong>Αφαιρούμενος χρόνος 2016–2017:</strong> ' + escapeHtml(formatServiceMonths(result.suspendedServiceMonths)) + '</div>' +
+          '<div><strong>Μετρήσιμος χρόνος:</strong> ' + escapeHtml(formatServiceMonths(result.countableServiceMonths)) + '</div>' +
+          '<div><strong>Τίτλος / προώθηση:</strong> ' + escapeHtml(qualificationText) + '</div>' +
+        '</div>' +
+        '<div class="print-box"><h2>Παράμετροι μισθοδοσίας</h2>' +
+          '<div><strong>Προφίλ:</strong> ' + escapeHtml(net.profileLabel) + '</div>' +
+          '<div><strong>Ηλικιακή κατηγορία:</strong> ' + escapeHtml(net.ageGroupLabel) + '</div>' +
+          '<div><strong>Εξαρτώμενα τέκνα:</strong> ' + escapeHtml(net.children) + '</div>' +
+          '<div><strong>Μείωση μητρότητας:</strong> ' + (net.maternityPensionReduction ? 'Ναι' : 'Όχι') + '</div>' +
+          '<div><strong>Ισχύς βασικού μισθού:</strong> ' + escapeHtml(result.basicSalaryEffectiveDate) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<table><thead><tr><th>ΑΠΟΔΟΧΕΣ</th><th class="amount">Ποσό</th></tr></thead><tbody>' +
+        grossRows +
+        '<tr class="total-row"><td>ΣΥΝΟΛΟ ΜΙΚΤΩΝ ΑΠΟΔΟΧΩΝ</td><td class="amount">' + formatEuroCents(payroll.grossForNet) + '</td></tr>' +
+      '</tbody></table>' +
+      '<table><thead><tr><th>ΚΡΑΤΗΣΕΙΣ</th><th class="amount">Ποσό</th></tr></thead><tbody>' +
+        deductionRows +
+        '<tr class="total-row"><td>ΣΥΝΟΛΟ ΚΡΑΤΗΣΕΩΝ</td><td class="amount">' + formatEuroCents(totalDeductions) + '</td></tr>' +
+      '</tbody></table>' +
+      '<div class="print-grid">' +
+        '<div class="print-box"><h2>Φορολογική ανάλυση</h2>' +
+          '<div><strong>Μηνιαίο φορολογητέο:</strong> ' + formatEuroCents(net.taxableMonthly) + '</div>' +
+          '<div><strong>Ετήσιο φορολογητέο (12μηνο):</strong> ' + formatEuroCents(net.taxableAnnual) + '</div>' +
+          '<div><strong>Φόρος κλίμακας πριν τη μείωση:</strong> ' + formatEuroCents(net.taxBeforeCredit) + '</div>' +
+          '<div><strong>Μείωση φόρου άρθρου 16 ΚΦΕ:</strong> −' + formatEuroCents(net.taxCredit) + '</div>' +
+          '<div><strong>Ετήσιος φόρος:</strong> ' + formatEuroCents(net.annualTax) + '</div>' +
+        '</div>' +
+        '<div class="print-box"><h2>Σύνοψη</h2>' +
+          '<div><strong>Τακτικές κρατήσεις μετά τυχόν μείωση:</strong> ' + formatEuroCents(net.standardDeductions) + '</div>' +
+          '<div><strong>Λοιπές κρατήσεις:</strong> ' + formatEuroCents(net.otherDeductions) + '</div>' +
+          '<div><strong>Μηνιαία παρακράτηση φόρου:</strong> ' + formatEuroCents(net.monthlyTax) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="print-net"><span>ΕΚΤΙΜΩΜΕΝΟ ΠΛΗΡΩΤΕΟ</span><span>' + formatEuroCents(net.estimatedNet) + '</span></div>' ;
+
+    const stamp = byId('payrollPrintGeneratedAt');
+    if (stamp) {
+      try {
+        stamp.textContent = 'Παραγωγή: ' + new Intl.DateTimeFormat('el-GR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date());
+      } catch (e) {
+        stamp.textContent = 'Παραγωγή: ' + new Date().toLocaleString();
+      }
+    }
   }
 
   function clampBoundedIntegerInput(el, max) {
@@ -252,11 +439,20 @@
       ? window.EducationSalaryNet.REMOTE_AREA_ALLOWANCE_MONTHLY
       : 0;
     const grossForNet = result.basicGrossSalary + familyAllowance + positionAllowance + remoteAllowance;
+    const otherDeductionParts = [
+      ['ΑΔΕΔΥ', money('adedYDeduction')],
+      ['ΟΛΜΕ / ΔΟΕ', money('federationDeduction')],
+      ['Σύλλογος', money('associationDeduction')],
+      ['Άλλο ποσό', money('otherPayrollDeduction')]
+    ];
+    const otherDeductions = otherDeductionParts.reduce((sum, item) => sum + item[1], 0);
     const net = window.EducationSalaryNet.calculate({
       grossMonthly: grossForNet,
       profile: byId('payrollProfile').value,
       ageGroup: byId('ageGroup').value,
-      children: children
+      children: children,
+      otherDeductions: otherDeductions,
+      maternityPensionReduction: byId('maternityPensionReduction').checked
     });
     byId('familyAllowanceResult').textContent = formatEuroCents(familyAllowance);
     byId('positionAllowanceResult').textContent = formatEuroCents(positionAllowance);
@@ -264,16 +460,35 @@
     byId('grossForNetResult').textContent = formatEuroCents(grossForNet);
     byId('payrollProfileResult').textContent = net.profileLabel;
     byId('standardDeductionsResult').textContent = formatEuroCents(net.standardDeductions) + ' (' + formatPercent(net.standardDeductionRate) + ')';
+    byId('maternityPensionReductionResult').textContent = net.maternityPensionReductionAmount > 0
+      ? '−' + formatEuroCents(net.maternityPensionReductionAmount) + ' (−3,335 π.μ.)'
+      : '0,00 €';
     byId('deductionBreakdownResult').textContent = net.deductionBreakdown;
     byId('registrationDeductionResult').textContent = net.registrationDeduction > 0
       ? formatEuroCents(net.registrationDeduction) + ' (1/12 μισθού)'
       : '0,00 €';
+    byId('otherDeductionsResult').textContent = formatEuroCents(net.otherDeductions);
+    const activeOtherDeductions = otherDeductionParts.filter(item => item[1] > 0);
+    byId('otherDeductionsBreakdownResult').textContent = activeOtherDeductions.length
+      ? activeOtherDeductions.map(item => item[0] + ' ' + formatEuroCents(item[1])).join(' · ')
+      : '—';
     byId('taxableAnnualResult').textContent = formatEuroCents(net.taxableAnnual);
     byId('taxBeforeCreditResult').textContent = formatEuroCents(net.taxBeforeCredit);
     byId('taxCreditResult').textContent = net.taxCredit > 0 ? '−' + formatEuroCents(net.taxCredit) : '0,00 €';
     byId('annualTaxResult').textContent = formatEuroCents(net.annualTax);
     byId('monthlyTaxResult').textContent = formatEuroCents(net.monthlyTax);
     byId('estimatedNetResult').textContent = formatEuroCents(net.estimatedNet);
+
+    renderPrintSheet(result, net, {
+      familyAllowance: familyAllowance,
+      positionAllowance: positionAllowance,
+      positionLabel: window.EducationSalaryNet.positionAllowanceLabel(positionKey),
+      remoteAllowance: remoteAllowance,
+      grossForNet: grossForNet,
+      otherDeductionParts: otherDeductionParts.map(function (item) {
+        return [item[0], window.EducationSalaryNet.roundMoney(item[1])];
+      })
+    });
 
     byId('suspendedServiceResult').textContent = formatServiceMonths(result.suspendedServiceMonths);
     byId('countableServiceResult').textContent = formatServiceMonths(result.countableServiceMonths);
@@ -351,6 +566,11 @@
     byId('dependentChildren').value = '0';
     byId('positionAllowance').value = 'none';
     byId('remoteAreaAllowance').checked = false;
+    byId('maternityPensionReduction').checked = false;
+    byId('adedYDeduction').value = '0';
+    byId('federationDeduction').value = '0';
+    byId('associationDeduction').value = '0';
+    byId('otherPayrollDeduction').value = '0';
     calculate();
   }
 
@@ -369,6 +589,10 @@
       if (el.id === 'suspendedYears' || el.id === 'suspendedMonths') clampSuspendedInputs();
       calculate();
     });
+  });
+  byId('printBtn').addEventListener('click', function () {
+    calculate();
+    window.print();
   });
   byId('resetBtn').addEventListener('click', reset);
   calculate();

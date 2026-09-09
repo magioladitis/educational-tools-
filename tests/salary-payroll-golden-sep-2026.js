@@ -38,11 +38,13 @@ function check(name, actual, expected) {
  * No personal identifiers from the source statement are stored in this test.
  */
 const gross = 1586;
+const payrollSpecificDeductions = 0.25 + 1.00 + 0.65;
 const result = S.calculate({
   grossMonthly: gross,
   profile: 'permanent',
   ageGroup: 'over30',
-  children: 0
+  children: 0,
+  otherDeductions: payrollSpecificDeductions
 });
 
 check('golden profile', result.profile, 'permanent');
@@ -50,12 +52,9 @@ close('golden gross salary', result.grossMonthly, 1586, 0.0001);
 close('golden statutory deductions', result.standardDeductions, 352.41, 0.01);
 close('golden monthly taxable before tax', result.taxableMonthly, 1233.59, 0.01);
 close('golden monthly income tax', result.monthlyTax, 94.97, 0.01);
-close('golden net before payroll-specific small deductions', result.estimatedNet, 1138.62, 0.01);
-
-// Reconcile the engine with the actual payroll statement.
-const payrollSpecificDeductions = 0.25 + 1.00 + 0.65;
-close('golden payroll-specific deductions', payrollSpecificDeductions, 1.90, 0.0001);
-close('golden actual paid amount reconciliation', result.estimatedNet - payrollSpecificDeductions, 1136.72, 0.01);
+close('golden net before payroll-specific small deductions', result.netBeforeOtherDeductions, 1138.62, 0.01);
+close('golden payroll-specific deductions', result.otherDeductions, 1.90, 0.0001);
+close('golden actual paid amount reconciliation', result.estimatedNet, 1136.72, 0.01);
 
 // Component checks visible on the real statement.
 close('golden unemployment 2%', gross * 0.02, 31.72, 0.001);

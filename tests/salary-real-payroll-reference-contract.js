@@ -28,7 +28,7 @@ close('current 2.05% health', gross * 0.0205, 29.8685, 0.001);
 close('historical statement health was 2.55%', 31.33 + 5.83, gross * 0.0255, 0.02);
 check('permanent profile remains current statutory 22.22%', S.PROFILES.permanent.deductibleRate, 0.2222);
 const current = S.calculate({ grossMonthly: gross, profile: 'permanent', ageGroup: 'over30', children: 0 });
-close('current statutory deductions at 1457', current.standardDeductions, gross * 0.2222, 0.001);
+close('current statutory deductions at 1457', current.standardDeductions, 323.75, 0.001);
 if (!(current.monthlyTax > 0 && current.estimatedNet > 0 && current.estimatedNet < gross)) {
   throw new Error('current payroll reference sanity failed');
 }

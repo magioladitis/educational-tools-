@@ -20,7 +20,7 @@ function close(name, actual, expected, tolerance = 0.01) {
 check('remote-area allowance monthly amount', S.REMOTE_AREA_ALLOWANCE_MONTHLY, 100);
 check('permanent standard rate', S.PROFILES.permanent.deductibleRate, 0.2222);
 check('new appointee standard rate', S.PROFILES.newly_appointed.deductibleRate, 0.2222);
-check('permanent breakdown includes components', S.PROFILES.permanent.deductionBreakdown, 'Σύνταξη 6,67% · Υγεία 2,05% · Επικουρική 3% · Εφάπαξ 4% · ΜΤΠΥ 4,5% · Ανεργία 2%');
+check('permanent breakdown includes components', S.PROFILES.permanent.deductionBreakdown, 'ΕΦΚΑ 9,67% · Υγεία 1,65% + 0,40% · Εφάπαξ 4% · ΜΤΠΥ 4,5% · Ανεργία 2%');
 close('new appointee MTPY registration monthly rate', S.PROFILES.newly_appointed.extraCashRate, 1 / 12, 1e-12);
 check('substitute KPK 101 rate', S.PROFILES.substitute.deductibleRate, 0.1337);
 
@@ -42,19 +42,19 @@ check('credit taper at 20k no children', S.taxCredit(20000, 0, 99999), 617);
 check('five-child credit does not taper', S.taxCredit(40000, 5, 99999), 1780);
 
 const peMk2 = S.calculate({ grossMonthly: 1291, profile: 'permanent', ageGroup: 'over30', children: 0 });
-close('PE MK2 standard deductions', peMk2.standardDeductions, 286.8602, 0.0001);
-close('PE MK2 estimated net sanity check', peMk2.estimatedNet, 959.6457, 0.01);
+close('PE MK2 standard deductions', peMk2.standardDeductions, 286.86, 0.0001);
+close('PE MK2 estimated net sanity check', peMk2.estimatedNet, 959.65, 0.001);
 const newHire = S.calculate({ grossMonthly: 1291, profile: 'newly_appointed', ageGroup: 'over30', children: 0 });
-close('new hire tax basis same as permanent', newHire.taxableAnnual, peMk2.taxableAnnual, 0.0001);
-close('new hire registration installment', newHire.registrationDeduction, 1291 / 12, 0.0001);
-close('new hire net lower by registration installment', peMk2.estimatedNet - newHire.estimatedNet, 1291 / 12, 0.0001);
+close('new hire tax basis same as permanent', newHire.taxableAnnual, peMk2.taxableAnnual, 0.001);
+close('new hire registration installment', newHire.registrationDeduction, 107.58, 0.001);
+close('new hire net lower by registration installment', peMk2.estimatedNet - newHire.estimatedNet, 107.58, 0.001);
 const substitute = S.calculate({ grossMonthly: 1291, profile: 'substitute', ageGroup: 'over30', children: 0 });
-close('substitute deductions use 13.37%', substitute.standardDeductions, 1291 * 0.1337, 0.0001);
+close('substitute deductions use 13.37%', substitute.standardDeductions, S.roundMoney(1291 * 0.1337), 0.0001);
 check('invalid profile falls back to permanent', S.calculate({ grossMonthly: 1000, profile: 'x' }).profile, 'permanent');
 check('children capped at 20', S.calculate({ grossMonthly: 1000, children: 999 }).children, 20);
 const baseOnly = S.calculate({ grossMonthly: 1232, profile: 'permanent', ageGroup: 'over30', children: 0 });
 const withRemote = S.calculate({ grossMonthly: 1232 + S.REMOTE_AREA_ALLOWANCE_MONTHLY, profile: 'permanent', ageGroup: 'over30', children: 0 });
-close('remote allowance enters deduction base', withRemote.standardDeductions - baseOnly.standardDeductions, 100 * 0.2222, 0.0001);
+close('remote allowance enters deduction base after line rounding', withRemote.standardDeductions - baseOnly.standardDeductions, 22.22, 0.02);
 if (!(withRemote.estimatedNet > baseOnly.estimatedNet && withRemote.estimatedNet - baseOnly.estimatedNet < 100)) throw new Error('remote allowance net impact sanity failed');
 checks++;
 

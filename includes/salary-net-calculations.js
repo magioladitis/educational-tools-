@@ -6,28 +6,48 @@
 (function (global) {
   "use strict";
 
+  const PERMANENT_DEDUCTION_COMPONENTS = Object.freeze([
+    Object.freeze({ key: "efkaPensionSupplementary", label: "ΕΦΚΑ — κύρια σύνταξη + επικουρική", rate: 0.0967 }),
+    Object.freeze({ key: "healthInKind", label: "ΕΦΚΑ υγεία — παροχές σε είδος", rate: 0.0165 }),
+    Object.freeze({ key: "healthCash", label: "ΕΦΚΑ υγεία — παροχές σε χρήμα", rate: 0.0040 }),
+    Object.freeze({ key: "lumpSum", label: "Τ.Π.Δ.Υ. / εφάπαξ", rate: 0.0400 }),
+    Object.freeze({ key: "mtpy", label: "Μ.Τ.Π.Υ.", rate: 0.0450 }),
+    Object.freeze({ key: "unemployment", label: "Εισφορά για την καταπολέμηση της ανεργίας", rate: 0.0200 })
+  ]);
+
+  const SUBSTITUTE_DEDUCTION_COMPONENTS = Object.freeze([
+    Object.freeze({ key: "efkaKpk101", label: "ΕΦΚΑ — ΚΠΚ 101", rate: 0.1337 })
+  ]);
+
   const PROFILES = Object.freeze({
     permanent: Object.freeze({
       label: "Μόνιμος δημόσιος υπάλληλος",
       deductibleRate: 0.2222,
-      deductionBreakdown: "Σύνταξη 6,67% · Υγεία 2,05% · Επικουρική 3% · Εφάπαξ 4% · ΜΤΠΥ 4,5% · Ανεργία 2%",
+      deductionBreakdown: "ΕΦΚΑ 9,67% · Υγεία 1,65% + 0,40% · Εφάπαξ 4% · ΜΤΠΥ 4,5% · Ανεργία 2%",
+      deductionComponents: PERMANENT_DEDUCTION_COMPONENTS,
       extraCashRate: 0
     }),
     newly_appointed: Object.freeze({
       label: "Νεοδιόριστος — 1ο έτος ΜΤΠΥ",
       deductibleRate: 0.2222,
-      deductionBreakdown: "Σύνταξη 6,67% · Υγεία 2,05% · Επικουρική 3% · Εφάπαξ 4% · ΜΤΠΥ 4,5% · Ανεργία 2%",
+      deductionBreakdown: "ΕΦΚΑ 9,67% · Υγεία 1,65% + 0,40% · Εφάπαξ 4% · ΜΤΠΥ 4,5% · Ανεργία 2%",
+      deductionComponents: PERMANENT_DEDUCTION_COMPONENTS,
       extraCashRate: 1 / 12
     }),
     substitute: Object.freeze({
       label: "Αναπληρωτής / ΙΔΟΧ — ΚΠΚ 101",
       deductibleRate: 0.1337,
       deductionBreakdown: "ΚΠΚ 101 · συνολική εισφορά ασφαλισμένου 13,37%",
+      deductionComponents: SUBSTITUTE_DEDUCTION_COMPONENTS,
       extraCashRate: 0
     })
   });
 
   const REMOTE_AREA_ALLOWANCE_MONTHLY = 100;
+  // e-EFKA: eligible salaried mothers pay 50% of the employee main-pension contribution.
+  // The ordinary employee main-pension rate represented in our payroll profiles is 6.67%,
+  // therefore the reduction is 3.335 percentage points of pensionable gross pay.
+  const MATERNITY_MAIN_PENSION_REDUCTION_RATE = 0.03335;
 
   const POSITION_ALLOWANCES = Object.freeze({
     none: Object.freeze({ label: "Χωρίς θέση ευθύνης", amount: 0 }),
@@ -86,6 +106,29 @@
 
   function nonNegativeInteger(value) {
     return Math.max(0, Math.floor(nonNegativeNumber(value)));
+  }
+
+  // Payroll systems round each individual withholding line to euro cents before
+  // they sum the lines. Keep the same convention so that the calculator can
+  // reconcile with real payroll statements down to the cent.
+  function roundMoney(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return 0;
+    return Math.round((n + (n >= 0 ? 1 : -1) * 1e-9) * 100) / 100;
+  }
+
+  function roundedDeductionComponents(gross, profile) {
+    const source = profile && Array.isArray(profile.deductionComponents)
+      ? profile.deductionComponents
+      : [];
+    return source.map(function (component) {
+      return {
+        key: component.key,
+        label: component.label,
+        rate: component.rate,
+        amount: roundMoney(gross * component.rate)
+      };
+    });
   }
 
   function taxRateForBracket(index, ageGroup, children) {
@@ -165,29 +208,60 @@
     const profile = PROFILES[profileKey];
     const ageGroup = AGE_GROUPS[options.ageGroup] ? options.ageGroup : "over30";
     const children = Math.min(20, nonNegativeInteger(options.children));
-
-    const standardDeductions = gross * profile.deductibleRate;
-    const registrationDeduction = gross * profile.extraCashRate;
-    const taxableMonthly = Math.max(0, gross - standardDeductions);
-    const taxableAnnual = taxableMonthly * 12;
-    const taxBeforeCredit = grossAnnualTax(taxableAnnual, ageGroup, children);
-    const credit = taxCredit(taxableAnnual, children, taxBeforeCredit);
+    const otherDeductions = nonNegativeNumber(options.otherDeductions);
+    const maternityPensionReduction = options.maternityPensionReduction === true;
+    const maternityReductionRate = maternityPensionReduction
+      ? Math.min(profile.deductibleRate, MATERNITY_MAIN_PENSION_REDUCTION_RATE)
+      : 0;
+    const effectiveDeductionRate = Math.max(0, profile.deductibleRate - maternityReductionRate);
+    const deductionComponents = roundedDeductionComponents(gross, profile);
+    const baseStandardDeductions = roundMoney(deductionComponents.reduce(function (sum, component) {
+      return sum + component.amount;
+    }, 0));
+    // In real payroll statements the maternity benefit appears as a separate
+    // negative withholding line. Round that line independently, then subtract it.
+    const maternityReduction = maternityPensionReduction
+      ? roundMoney(gross * maternityReductionRate)
+      : 0;
+    const standardDeductions = roundMoney(Math.max(0, baseStandardDeductions - maternityReduction));
+    const registrationDeduction = roundMoney(gross * profile.extraCashRate);
+    // Payroll lines are rounded independently for the paid amount, while the
+    // withholding-tax basis is calculated from the statutory rates before the
+    // cent-level line rounding. This reproduces the observed payroll statements.
+    const taxableMonthlyExact = Math.max(0, gross - (gross * effectiveDeductionRate));
+    const taxableMonthly = roundMoney(taxableMonthlyExact);
+    const taxableAnnualExact = taxableMonthlyExact * 12;
+    const taxableAnnual = roundMoney(taxableAnnualExact);
+    const taxBeforeCredit = grossAnnualTax(taxableAnnualExact, ageGroup, children);
+    const credit = taxCredit(taxableAnnualExact, children, taxBeforeCredit);
     const annualTax = Math.max(0, taxBeforeCredit - credit);
-    const monthlyTax = annualTax / 12;
-    const estimatedNet = Math.max(0, gross - standardDeductions - registrationDeduction - monthlyTax);
+    const monthlyTax = roundMoney(annualTax / 12);
+    const roundedOtherDeductions = roundMoney(otherDeductions);
+    const netBeforeOtherDeductions = roundMoney(Math.max(0, gross - standardDeductions - registrationDeduction - monthlyTax));
+    const estimatedNet = roundMoney(Math.max(0, netBeforeOtherDeductions - roundedOtherDeductions));
 
     return {
       grossMonthly: gross,
       profile: profileKey,
       profileLabel: profile.label,
-      deductionBreakdown: profile.deductionBreakdown,
+      deductionBreakdown: maternityPensionReduction
+        ? profile.deductionBreakdown + " · Μειωμένη κύρια σύνταξη μητρότητας 50%"
+        : profile.deductionBreakdown,
       ageGroup: ageGroup,
       ageGroupLabel: AGE_GROUPS[ageGroup],
       children: children,
-      standardDeductionRate: profile.deductibleRate,
+      standardDeductionRate: effectiveDeductionRate,
+      baseStandardDeductionRate: profile.deductibleRate,
+      baseStandardDeductions: baseStandardDeductions,
+      deductionComponents: deductionComponents,
+      maternityPensionReduction: maternityPensionReduction,
+      maternityPensionReductionRate: maternityReductionRate,
+      maternityPensionReductionAmount: maternityReduction,
       standardDeductions: standardDeductions,
       registrationDeductionRate: profile.extraCashRate,
       registrationDeduction: registrationDeduction,
+      otherDeductions: roundedOtherDeductions,
+      netBeforeOtherDeductions: netBeforeOtherDeductions,
       taxableMonthly: taxableMonthly,
       taxableAnnual: taxableAnnual,
       taxBeforeCredit: taxBeforeCredit,
@@ -201,7 +275,12 @@
 
   global.EducationSalaryNet = Object.freeze({
     PROFILES: PROFILES,
+    PERMANENT_DEDUCTION_COMPONENTS: PERMANENT_DEDUCTION_COMPONENTS,
+    SUBSTITUTE_DEDUCTION_COMPONENTS: SUBSTITUTE_DEDUCTION_COMPONENTS,
+    roundMoney: roundMoney,
+    roundedDeductionComponents: roundedDeductionComponents,
     REMOTE_AREA_ALLOWANCE_MONTHLY: REMOTE_AREA_ALLOWANCE_MONTHLY,
+    MATERNITY_MAIN_PENSION_REDUCTION_RATE: MATERNITY_MAIN_PENSION_REDUCTION_RATE,
     POSITION_ALLOWANCES: POSITION_ALLOWANCES,
     positionAllowanceMonthly: positionAllowanceMonthly,
     positionAllowanceLabel: positionAllowanceLabel,

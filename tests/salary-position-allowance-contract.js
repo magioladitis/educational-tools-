@@ -37,6 +37,6 @@ check('unknown is safe', S.positionAllowanceMonthly('unknown'), 0);
 const gross = 1586 + S.familyAllowanceMonthly(2) + S.REMOTE_AREA_ALLOWANCE_MONTHLY + S.positionAllowanceMonthly('vice_director');
 check('gross with vice-director allowance', gross, 2001);
 const result = S.calculate({ grossMonthly: gross, profile: 'permanent', ageGroup: 'over30', children: 2 });
-close('standard deductions include position allowance', result.standardDeductions, gross * 0.2222, 0.001);
-close('MTPY share on gross at 4.5%', gross * 0.045, 90.045, 0.001);
+close('standard deductions include position allowance with payroll-line rounding', result.standardDeductions, 444.63, 0.001);
+close('MTPY share on gross at 4.5%', result.deductionComponents.find(x => x.key === 'mtpy').amount, 90.05, 0.001);
 console.log(`Salary position allowance: PASS ${checks}/${checks}`);
