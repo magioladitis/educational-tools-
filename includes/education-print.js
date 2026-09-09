@@ -72,8 +72,17 @@
       var parentLabel = control.closest ? control.closest('label') : null;
       if (parentLabel) label = text(parentLabel.textContent);
     }
+    // Dynamic/shared components often render <label> and <select/input> as
+    // siblings inside the same .field instead of linking them with for/id.
+    if (!label && control.closest) {
+      var field = control.closest('.field, .form-field, .input-group');
+      if (field) {
+        var nearbyLabel = field.querySelector('label');
+        if (nearbyLabel) label = text(nearbyLabel.textContent);
+      }
+    }
     if (!label && control.getAttribute) label = text(control.getAttribute('aria-label'));
-    if (!label) label = text(control.name || control.id || 'Πεδίο');
+    if (!label) label = text(control.name || control.id || '');
     return label.replace(/\s*\([^)]*προαιρετικ[^)]*\)\s*/i, ' ').trim();
   }
 
@@ -101,15 +110,63 @@
     return raw;
   }
 
+  function selectedOptionText(select) {
+    if (!select || !select.options || select.selectedIndex < 0) return '';
+    return text(select.options[select.selectedIndex].textContent);
+  }
+
+  function collectLanguageFields(root, rows, seen) {
+    var components = root.querySelectorAll('[data-component="asep-language-selector"]');
+    Array.prototype.forEach.call(components, function (component) {
+      if (!visible(component)) return;
+      var languageRows = component.querySelectorAll('[data-language-row]');
+      Array.prototype.forEach.call(languageRows, function (languageRow, index) {
+        var language = languageRow.querySelector('[data-language-name]');
+        var level = languageRow.querySelector('[data-language-level]');
+        if (!language || !language.value || !visible(language)) return;
+
+        var languageText = selectedOptionText(language);
+        if (language.value === 'other') {
+          var other = languageRow.querySelector('[data-language-other]');
+          var otherText = other ? text(other.value) : '';
+          if (otherText) languageText = otherText;
+        }
+        if (!languageText) return;
+
+        var languageLabelNode = language.closest('.field') ? language.closest('.field').querySelector('label') : null;
+        var rowLabel = languageLabelNode ? text(languageLabelNode.textContent) : '';
+        if (!rowLabel) {
+          rowLabel = languageRows.length > 1 ? ((index + 1) + 'η ξένη γλώσσα') : 'Ξένη γλώσσα';
+        }
+
+        var levelText = level && level.value ? selectedOptionText(level) : '';
+        var combined = languageText;
+        if (levelText && levelText !== 'Καμία / χωρίς μόρια') combined += ' · ' + levelText;
+        else if (levelText) combined += ' · ' + levelText;
+
+        var key = rowLabel + '\u0000' + combined;
+        if (seen[key]) return;
+        seen[key] = true;
+        rows.push({ label: rowLabel, value: combined });
+      });
+    });
+  }
+
   function collectFields() {
     var root = document.querySelector('main, .page-shell, .app-box, .container') || document.body;
     var controls = root.querySelectorAll('input, select, textarea');
     var rows = [];
     var seen = {};
+
+    // Treat a foreign-language choice as one semantic datum instead of two
+    // unrelated select boxes (language + proficiency level).
+    collectLanguageFields(root, rows, seen);
+
     Array.prototype.forEach.call(controls, function (control) {
       var type = String(control.type || '').toLowerCase();
       if (['hidden', 'button', 'submit', 'reset', 'file'].indexOf(type) !== -1) return;
       if (control.disabled || !visible(control)) return;
+      if (control.closest && control.closest('[data-component="asep-language-selector"]')) return;
       var value = valueFor(control);
       if (!value) return;
       var label = labelFor(control);
