@@ -29,6 +29,16 @@
 
   const REMOTE_AREA_ALLOWANCE_MONTHLY = 100;
 
+  function familyAllowanceMonthly(children) {
+    const c = Math.min(20, nonNegativeInteger(children));
+    if (c <= 0) return 0;
+    if (c === 1) return 70;
+    if (c === 2) return 120;
+    if (c === 3) return 170;
+    if (c === 4) return 220;
+    return 220 + (c - 4) * 70;
+  }
+
   const AGE_GROUPS = Object.freeze({
     over30: "Άνω των 30 ετών",
     age26to30: "26–30 ετών",
@@ -167,6 +177,7 @@
   global.EducationSalaryNet = Object.freeze({
     PROFILES: PROFILES,
     REMOTE_AREA_ALLOWANCE_MONTHLY: REMOTE_AREA_ALLOWANCE_MONTHLY,
+    familyAllowanceMonthly: familyAllowanceMonthly,
     AGE_GROUPS: AGE_GROUPS,
     TAX_BRACKETS: TAX_BRACKETS,
     taxRateForBracket: taxRateForBracket,
