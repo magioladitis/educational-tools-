@@ -90,6 +90,24 @@
     upTo25: "Έως 25 ετών"
   });
 
+  const DISABILITY_TAX_TREATMENTS = Object.freeze({
+    none: Object.freeze({
+      label: "Χωρίς ειδική φορολογική ρύθμιση αναπηρίας",
+      annualReduction: 0,
+      salaryTaxExempt: false
+    }),
+    disability67_79: Object.freeze({
+      label: "Αναπηρία 67%–79,99% — μείωση φόρου έως 200 € / έτος",
+      annualReduction: 200,
+      salaryTaxExempt: false
+    }),
+    disability80plus: Object.freeze({
+      label: "Αναπηρία ≥80% — απαλλαγή φόρου μισθωτής εργασίας",
+      annualReduction: 0,
+      salaryTaxExempt: true
+    })
+  });
+
   const TAX_BRACKETS = Object.freeze([
     Object.freeze({ from: 0, to: 10000 }),
     Object.freeze({ from: 10000, to: 20000 }),
@@ -208,6 +226,10 @@
     const profile = PROFILES[profileKey];
     const ageGroup = AGE_GROUPS[options.ageGroup] ? options.ageGroup : "over30";
     const children = Math.min(20, nonNegativeInteger(options.children));
+    const disabilityTaxTreatmentKey = DISABILITY_TAX_TREATMENTS[options.disabilityTaxTreatment]
+      ? options.disabilityTaxTreatment
+      : "none";
+    const disabilityTaxTreatment = DISABILITY_TAX_TREATMENTS[disabilityTaxTreatmentKey];
     const otherDeductions = nonNegativeNumber(options.otherDeductions);
     const maternityPensionReduction = options.maternityPensionReduction === true;
     const maternityReductionRate = maternityPensionReduction
@@ -234,7 +256,15 @@
     const taxableAnnual = roundMoney(taxableAnnualExact);
     const taxBeforeCredit = grossAnnualTax(taxableAnnualExact, ageGroup, children);
     const credit = taxCredit(taxableAnnualExact, children, taxBeforeCredit);
-    const annualTax = Math.max(0, taxBeforeCredit - credit);
+    const taxAfterArticle16 = Math.max(0, taxBeforeCredit - credit);
+    // Disability tax treatment affects income tax only. It does not change
+    // social-insurance deductions. For disability >=80%, salary income is
+    // exempt from income tax. For the 67%-79.99% option, apply the additional
+    // Article 17 reduction up to EUR 200 per year.
+    const disabilityTaxRelief = disabilityTaxTreatment.salaryTaxExempt
+      ? taxAfterArticle16
+      : Math.min(taxAfterArticle16, disabilityTaxTreatment.annualReduction);
+    const annualTax = Math.max(0, taxAfterArticle16 - disabilityTaxRelief);
     const monthlyTax = roundMoney(annualTax / 12);
     const roundedOtherDeductions = roundMoney(otherDeductions);
     const netBeforeOtherDeductions = roundMoney(Math.max(0, gross - standardDeductions - registrationDeduction - monthlyTax));
@@ -250,6 +280,10 @@
       ageGroup: ageGroup,
       ageGroupLabel: AGE_GROUPS[ageGroup],
       children: children,
+      disabilityTaxTreatment: disabilityTaxTreatmentKey,
+      disabilityTaxTreatmentLabel: disabilityTaxTreatment.label,
+      disabilityTaxRelief: disabilityTaxRelief,
+      salaryTaxExemptDueToDisability: disabilityTaxTreatment.salaryTaxExempt,
       standardDeductionRate: effectiveDeductionRate,
       baseStandardDeductionRate: profile.deductibleRate,
       baseStandardDeductions: baseStandardDeductions,
@@ -286,6 +320,7 @@
     positionAllowanceLabel: positionAllowanceLabel,
     familyAllowanceMonthly: familyAllowanceMonthly,
     AGE_GROUPS: AGE_GROUPS,
+    DISABILITY_TAX_TREATMENTS: DISABILITY_TAX_TREATMENTS,
     TAX_BRACKETS: TAX_BRACKETS,
     taxRateForBracket: taxRateForBracket,
     grossAnnualTax: grossAnnualTax,

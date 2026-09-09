@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.) εκπαιδευτικού</title>
+  <title>Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.) / Μισθοδοσίας</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <style>
     .payroll-print-sheet { display:none; }
@@ -38,7 +38,7 @@
 
 <?php calculatorContainerStart(array('class' => 'app')); ?>
   <?php calculatorHero(array(
-    'title' => 'Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.)',
+    'title' => 'Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.) / Μισθοδοσίας',
     'intro_html' => 'Βρες ενδεικτικά το Μισθολογικό Κλιμάκιο, τον αντίστοιχο <strong>βασικό μικτό μισθό</strong> και μια <strong>εκτίμηση καθαρών αποδοχών</strong> με τη φορολογία 2026, με βάση την κατηγορία, τον <strong>ήδη αναγνωρισμένο μισθολογικό χρόνο</strong> και τον ανώτερο τίτλο που έχει ήδη αναγνωριστεί για μισθολογική προώθηση.',
     'badges' => array('ΠΕ / ΤΕ', 'ΔΕ / ΥΕ', 'Αποδοχές από 01/04/2026', 'Φορολογία 2026')
   )); ?>
@@ -107,6 +107,15 @@
             </select>
           </div>
           <div class="field">
+            <label for="disabilityTaxTreatment">Φορολογική ρύθμιση λόγω αναπηρίας</label>
+            <select id="disabilityTaxTreatment">
+              <option value="none">Χωρίς ειδική ρύθμιση</option>
+              <option value="disability67_79">Αναπηρία 67%–79,99% — μείωση φόρου έως 200 €/έτος</option>
+              <option value="disability80plus">Αναπηρία ≥80% — απαλλαγή φόρου μισθωτής εργασίας</option>
+            </select>
+            <small>Αφορά τη φορολογία εισοδήματος και όχι τις ασφαλιστικές κρατήσεις. Επίλεξέ το μόνο όταν υπάρχει η απαιτούμενη πιστοποίηση/τεκμηρίωση.</small>
+          </div>
+          <div class="field">
             <label for="dependentChildren">Εξαρτώμενα τέκνα</label>
             <input id="dependentChildren" type="number" min="0" max="20" step="1" value="0" inputmode="numeric">
           </div>
@@ -152,6 +161,12 @@
             <p>Αν έχει ληφθεί <strong>επιδότηση λόγω λοχείας</strong>, η μείωση εφαρμόζεται από τη λήξη της επιδότησης για το επόμενο δωδεκάμηνο. Αν δεν έχει ληφθεί επιδότηση λοχείας, το κρίσιμο δωδεκάμηνο αρχίζει από την <strong>1η του επόμενου μήνα του τοκετού</strong>. Ως χρόνος απασχόλησης μπορεί να λογίζεται και άδεια <strong>με αποδοχές</strong>, σύμφωνα με τις διευκρινίσεις του e-ΕΦΚΑ.</p>
             <small>Το εργαλείο δεν αποφασίζει αν θεμελιώνεται το δικαίωμα. Αν η μισθοδοσία παρακράτησε ολόκληρη την εισφορά, ο e-ΕΦΚΑ προβλέπει διαδικασία επιστροφής αχρεωστήτως καταβληθεισών εισφορών, όταν πληρούνται οι προϋποθέσεις.</small>
           </details>
+          <details class="info-note edu-field--full" id="disabilityTaxInfoPanel">
+            <summary><strong>Τι αλλάζει φορολογικά λόγω αναπηρίας;</strong></summary>
+            <p>Για πιστοποιημένη αναπηρία <strong>67%–79,99%</strong>, το εργαλείο εφαρμόζει πρόσθετη <strong>μείωση φόρου έως 200 € τον χρόνο</strong>, μέχρι το ύψος του φόρου που απομένει μετά τη μείωση του άρθρου 16 ΚΦΕ.</p>
+            <p>Για ποσοστό αναπηρίας <strong>τουλάχιστον 80%</strong>, οι μισθοί απαλλάσσονται από τον φόρο εισοδήματος. Στην εκτίμηση η <strong>μηνιαία παρακράτηση φόρου γίνεται 0 €</strong>.</p>
+            <small>Η ειδική φορολογική μεταχείριση δεν μηδενίζει τις ασφαλιστικές ή λοιπές κρατήσεις. Το εργαλείο δεν ελέγχει το είδος ή την ισχύ της πιστοποίησης αναπηρίας ούτε αν αυτή έχει καταχωριστεί στη μισθοδοσία.</small>
+          </details>
           <details class="info-note edu-field--full" id="otherDeductionsPanel">
             <summary><strong>Λοιπές κρατήσεις</strong> <small>προαιρετικά — ποσά ανά μήνα</small></summary>
             <div class="field-grid payroll-extra-deductions-grid">
@@ -176,7 +191,7 @@
           </details>
         </div>
         <div class="info-note">
-          Η εκτίμηση καθαρών γίνεται πάνω στον <strong>βασικό μισθό του Μ.Κ.</strong>, στην <strong>οικογενειακή παροχή</strong> που αντιστοιχεί στον δηλωμένο αριθμό τέκνων, στο τυχόν <strong>επίδομα θέσης ευθύνης</strong> και, αν επιλεγεί, στο <strong>επίδομα απομακρυσμένων - παραμεθορίων περιοχών</strong>, με 12μηνη φορολογική αναγωγή. Δεν προστίθενται προσωπική διαφορά ή άλλες αποδοχές. Η προαιρετική <strong>μειωμένη εισφορά κύριας σύνταξης λόγω μητρότητας</strong> μειώνει μόνο το αντίστοιχο ασφαλιστικό σκέλος. Οι προαιρετικές <strong>λοιπές κρατήσεις</strong> αφαιρούνται μόνο από το τελικό πληρωτέο και δεν μεταβάλλουν τον υπολογισμό φόρου. Αν ο αριθμός τέκνων που λαμβάνεται υπόψη για φορολογία διαφέρει από εκείνον της οικογενειακής παροχής, η εκτίμηση χρειάζεται διοικητικό έλεγχο.
+          Η εκτίμηση καθαρών γίνεται πάνω στον <strong>βασικό μισθό του Μ.Κ.</strong>, στην <strong>οικογενειακή παροχή</strong> που αντιστοιχεί στον δηλωμένο αριθμό τέκνων, στο τυχόν <strong>επίδομα θέσης ευθύνης</strong> και, αν επιλεγεί, στο <strong>επίδομα απομακρυσμένων - παραμεθορίων περιοχών</strong>, με 12μηνη φορολογική αναγωγή. Δεν προστίθενται προσωπική διαφορά ή άλλες αποδοχές. Η προαιρετική <strong>μειωμένη εισφορά κύριας σύνταξης λόγω μητρότητας</strong> μειώνει μόνο το αντίστοιχο ασφαλιστικό σκέλος. Η <strong>φορολογική ρύθμιση λόγω αναπηρίας</strong> επηρεάζει μόνο τον φόρο εισοδήματος και όχι τις ασφαλιστικές κρατήσεις. Οι προαιρετικές <strong>λοιπές κρατήσεις</strong> αφαιρούνται μόνο από το τελικό πληρωτέο και δεν μεταβάλλουν τον υπολογισμό φόρου. Αν ο αριθμός τέκνων που λαμβάνεται υπόψη για φορολογία διαφέρει από εκείνον της οικογενειακής παροχής, η εκτίμηση χρειάζεται διοικητικό έλεγχο.
         </div>
 
         <div class="info-note">
@@ -200,7 +215,7 @@
 
       <?php calculatorResultMessage(array(
         'variant' => 'disclaimer',
-        'html' => '<strong>Η εκτίμηση καθαρών είναι ενδεικτική.</strong> Υπολογίζεται από τον βασικό μισθό του Μ.Κ., την οικογενειακή παροχή με βάση τον δηλωμένο αριθμό τέκνων, το τυχόν επίδομα θέσης ευθύνης, το προαιρετικό επίδομα απομακρυσμένων - παραμεθορίων περιοχών και το επιλεγμένο τυπικό προφίλ κρατήσεων. Αν δηλωθεί δικαίωμα μειωμένης εισφοράς μητρότητας, μειώνεται μόνο το σκέλος κύριας σύνταξης. Δεν περιλαμβάνει προσωπική διαφορά ή αναδρομικά. Ειδικές μικρές κρατήσεις μπορούν να δηλωθούν προαιρετικά στην ενότητα «Λοιπές κρατήσεις». Η πραγματική μισθοδοσία και φορολογική εκκαθάριση μπορεί να διαφέρουν.'
+        'html' => '<strong>Η εκτίμηση καθαρών είναι ενδεικτική.</strong> Υπολογίζεται από τον βασικό μισθό του Μ.Κ., την οικογενειακή παροχή με βάση τον δηλωμένο αριθμό τέκνων, το τυχόν επίδομα θέσης ευθύνης, το προαιρετικό επίδομα απομακρυσμένων - παραμεθορίων περιοχών και το επιλεγμένο τυπικό προφίλ κρατήσεων. Αν δηλωθεί δικαίωμα μειωμένης εισφοράς μητρότητας, μειώνεται μόνο το σκέλος κύριας σύνταξης. Αν επιλεγεί ειδική φορολογική ρύθμιση λόγω αναπηρίας, μεταβάλλεται μόνο ο φόρος εισοδήματος και όχι οι ασφαλιστικές κρατήσεις. Δεν περιλαμβάνει προσωπική διαφορά ή αναδρομικά. Ειδικές μικρές κρατήσεις μπορούν να δηλωθούν προαιρετικά στην ενότητα «Λοιπές κρατήσεις». Η πραγματική μισθοδοσία και φορολογική εκκαθάριση μπορεί να διαφέρουν.'
       )); ?>
     <?php calculatorMainEnd(); ?>
 
@@ -234,6 +249,7 @@
       <?php calculatorResultRow(array('label' => 'Ετήσιο φορολογητέο (12μηνη αναγωγή)', 'value' => '0,00 €', 'value_id' => 'taxableAnnualResult')); ?>
       <?php calculatorResultRow(array('label' => 'Φόρος κλίμακας πριν τη μείωση', 'value' => '0,00 €', 'value_id' => 'taxBeforeCreditResult')); ?>
       <?php calculatorResultRow(array('label' => 'Μείωση φόρου άρθρου 16 ΚΦΕ', 'value' => '0,00 €', 'value_id' => 'taxCreditResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Μείωση / απαλλαγή φόρου λόγω αναπηρίας', 'value' => '0,00 €', 'value_id' => 'disabilityTaxReliefResult')); ?>
       <?php calculatorResultRow(array('label' => 'Ετήσιος φόρος', 'value' => '0,00 €', 'value_id' => 'annualTaxResult')); ?>
       <?php calculatorResultRow(array('label' => 'Μηνιαία παρακράτηση φόρου', 'value' => '0,00 €', 'value_id' => 'monthlyTaxResult')); ?>
       <?php calculatorSubtotalRow(array('label' => 'Εκτιμώμενο καθαρό', 'value' => '0,00 €', 'value_id' => 'estimatedNetResult')); ?>
@@ -244,7 +260,7 @@
 
 <section id="payrollPrintSheet" class="payroll-print-sheet" aria-hidden="true">
   <h1>ΕΝΔΕΙΚΤΙΚΟ ΜΙΣΘΟΛΟΓΙΚΟ ΣΗΜΕΙΩΜΑ</h1>
-  <p class="print-subtitle">Υπολογισμός Μισθολογικού Κλιμακίου και εκτιμώμενων καθαρών αποδοχών</p>
+  <p class="print-subtitle">Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.) / Μισθοδοσίας</p>
   <div id="payrollPrintContent"></div>
   <p class="print-note"><strong>Σημείωση:</strong> Το παρόν είναι υπολογιστικό βοήθημα και δεν αποτελεί επίσημο ενημερωτικό σημείωμα αποδοχών, πράξη μισθοδοσίας ή φορολογική εκκαθάριση.</p>
   <div class="print-meta" id="payrollPrintGeneratedAt"></div>
@@ -258,6 +274,7 @@
   <p><strong>Επίδομα θέσης ευθύνης:</strong> το άρθρο 16 του ν. 4354/2015, όπως ισχύει για τα στελέχη εκπαίδευσης μετά τον ν. 4823/2021, προβλέπει μηνιαίο επίδομα ανά θέση. Με το άρθρο 22 του ν. 5045/2023 τα ποσά αυξήθηκαν κατά <strong>30%</strong> από 01-01-2024 και στρογγυλοποιούνται στην πλησιέστερη μονάδα ευρώ. Ενδεικτικά: Διευθυντής ΓΕΛ/ΕΠΑΛ <strong>429 € ή 501 €</strong>, Διευθυντής Γυμνασίου <strong>358 € ή 429 €</strong>, Υποδιευθυντής <strong>195 €</strong>. Σε συρροή αξιώσεων από δύο βαθμίδες καταβάλλεται μόνο το ποσό της ανώτερης βαθμίδας. Το εργαλείο προσθέτει μία μόνο επιλεγμένη θέση στις μικτές αποδοχές.</p>
   <p><strong>Επίδομα απομακρυσμένων - παραμεθορίων περιοχών:</strong> το άρθρο 19 του ν. 4354/2015 διατηρεί το επίδομα στο ίδιο ύψος και με τις ίδιες προϋποθέσεις· για τους δικαιούχους το ποσό είναι <strong>100 € μικτά τον μήνα</strong>. Η επιλογή στο εργαλείο είναι προαιρετική και δεν ελέγχει αν η συγκεκριμένη περιοχή/υπηρεσία θεμελιώνει δικαίωμα. Στην ενδεικτική εκτίμηση το ποσό προστίθεται στις μικτές αποδοχές και εφαρμόζεται το επιλεγμένο τυπικό προφίλ κρατήσεων· για το ΜΤΠΥ η ισχύουσα κωδικοποίηση προβλέπει τακτική κράτηση 4,5% στο συγκεκριμένο επίδομα για ασφαλισμένους από 01-01-1993 και μετά.</p>
   <p><strong>Φορολογία 2026:</strong> ο ν. 5246/2025 τροποποίησε από το φορολογικό έτος 2026 την κλίμακα μισθωτών, με ειδικούς συντελεστές ανά αριθμό εξαρτώμενων τέκνων και για ηλικίες έως 25 και 26–30 ετών. Εφαρμόζεται επίσης η μείωση φόρου του άρθρου 16 ΚΦΕ.</p>
+  <p><strong>Αναπηρία και φόρος εισοδήματος:</strong> για πιστοποιημένη αναπηρία <strong>67% και άνω</strong> προβλέπεται πρόσθετη μείωση φόρου <strong>200 €</strong> σύμφωνα με το άρθρο 17 ΚΦΕ. Για μισθούς, συντάξεις και πάγια αντιμισθία που χορηγούνται σε πρόσωπα με αναπηρία <strong>τουλάχιστον 80%</strong>, το άρθρο 14 παρ. 2 περ. ε΄ ΚΦΕ προβλέπει απαλλαγή από τον φόρο. Στον υπολογιστή το 67%–79,99% εφαρμόζεται ως μείωση έως 200 € στον ετήσιο φόρο, ενώ το ≥80% μηδενίζει τον φόρο μισθωτής εργασίας. Οι ασφαλιστικές κρατήσεις δεν αλλάζουν από αυτή την επιλογή.</p>
   <p><strong>Τυπικά προφίλ κρατήσεων:</strong> για μόνιμο δημόσιο υπάλληλο χρησιμοποιείται συνολικό ποσοστό 22,22% επί του βασικού μισθού (κύρια σύνταξη, υγειονομική περίθαλψη, επικουρική, εφάπαξ, ΜΤΠΥ και εισφορά ανεργίας). Για νεοδιόριστο προστίθεται ενδεικτικά το δικαίωμα εγγραφής ΜΤΠΥ — ένας μηνιαίος μισθός σε 12 ισόποσες δόσεις. Για αναπληρωτή/ΙΔΟΧ χρησιμοποιείται το ποσοστό ασφαλισμένου 13,37% του ΚΠΚ 101. Οι πραγματικές κρατήσεις μπορεί να διαφοροποιούνται από ειδικό καθεστώς ή βάση εισφορών.</p>
   <p><strong>Μειωμένη εισφορά μητρότητας:</strong> ο e-ΕΦΚΑ προβλέπει για τις δικαιούχες <strong>μητέρες μισθωτές ασφαλισμένες</strong> μείωση κατά <strong>50%</strong> της εργατικής εισφοράς του κλάδου κύριας σύνταξης για το σχετικό δωδεκάμηνο. Αν έχει ληφθεί επιδότηση λόγω λοχείας, το δωδεκάμηνο ακολουθεί τη λήξη της επιδότησης· αν δεν έχει ληφθεί, αρχίζει από την 1η του επόμενου μήνα του τοκετού. Ως χρόνος απασχόλησης μπορεί να θεωρείται και άδεια με αποδοχές. Στην παρούσα εκτίμηση η μείωση αποτυπώνεται από <strong>6,67% σε 3,335%</strong>. Η επιλογή είναι χειροκίνητη και το εργαλείο δεν κρίνει αν πληρούνται οι προϋποθέσεις.</p>
   <p><strong>Λοιπές κρατήσεις:</strong> ποσά όπως ΑΔΕΔΥ, ΟΛΜΕ/ΔΟΕ, οικείος σύλλογος ή άλλη ειδική κράτηση δεν θεωρούνται καθολικά ίδια για κάθε υπάλληλο. Για αυτό εισάγονται προαιρετικά ως πραγματικά μηνιαία ποσά και αφαιρούνται από το πληρωτέο <strong>μετά</strong> τον υπολογισμό των τυπικών ασφαλιστικών κρατήσεων και της φορολογίας.</p>
@@ -273,6 +290,7 @@
     <?php sourceCardLink('https://www.gsis.gr/polites-epiheiriseis/pliromes-kai-eispraxeis/e-DAYK/e-dayk-announcements/epidomata-neon-asfalismenon-yper-mtpy', 'ΓΓΠΣ — Κράτηση ΜΤΠΥ στα επιδόματα νέων ασφαλισμένων ↗'); ?>
     <?php sourceCardLink('https://minfin.gov.gr/forologiki-politiki/forologikos-odigos/forologia-eisodimatos/', 'ΥΠΕΘΟΟ — Φορολογία εισοδήματος 2026 ↗'); ?>
     <?php sourceCardLink('https://www.aade.gr/egkyklioi-kai-apofaseis/o-3068-18-11-2025', 'ΑΑΔΕ Ο.3068/2025 — Ν. 5246/2025 ↗'); ?>
+    <?php sourceCardLink('https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/hristikos-odigos-gia-ta-basika-forologika-dikaiomata-ton-amea/foros-eisodimatos-fysikon', 'ΑΑΔΕ — Φορολογικά δικαιώματα ΑμεΑ: απαλλαγή ≥80% & μείωση 200 € ≥67% ↗'); ?>
     <?php sourceCardLink('https://ypergasias.gov.gr/koinoniki-asfalisi/asfalismenoi-eisfores-kai-paroches/asfalistikes-eisfores/', 'Υπουργείο Εργασίας — Ασφαλιστικές εισφορές ↗'); ?>
     <?php sourceCardLink('https://www.e-efka.gov.gr/el/sychnes-eroteseis/asphalisi-eisphores/asphalismenoi/misthotoi-0/meiomenes-eisphores-gia-meteres-misthotes', 'e-ΕΦΚΑ — Μειωμένες εισφορές για μητέρες μισθωτές ↗'); ?>
     <?php sourceCardLink('https://www.mtpy.gr/pliroforisi1/documents/%CE%95%CE%A0%CE%99%CE%9A%CE%91%CE%99%CE%A1%CE%9F%CE%A0%CE%9F%CE%99%CE%97%CE%9C%CE%95%CE%9D%CE%9F%CE%A3%20%CE%9F%CE%94%CE%97%CE%93%CE%9F%CE%A3%20%CE%9A%CE%A1%CE%91%CE%A4%CE%97%CE%A3%CE%95%CE%A9%CE%9D%20%CE%9F%CE%9A%CE%A4%202019.pdf', 'ΜΤΠΥ — Οδηγός κρατήσεων & δικαίωμα εγγραφής ↗'); ?>
@@ -368,6 +386,7 @@
           '<div><strong>Προφίλ:</strong> ' + escapeHtml(net.profileLabel) + '</div>' +
           '<div><strong>Ηλικιακή κατηγορία:</strong> ' + escapeHtml(net.ageGroupLabel) + '</div>' +
           '<div><strong>Εξαρτώμενα τέκνα:</strong> ' + escapeHtml(net.children) + '</div>' +
+          '<div><strong>Αναπηρία — φορολογία:</strong> ' + escapeHtml(net.disabilityTaxTreatmentLabel) + '</div>' +
           '<div><strong>Μείωση μητρότητας:</strong> ' + (net.maternityPensionReduction ? 'Ναι' : 'Όχι') + '</div>' +
           '<div><strong>Ισχύς βασικού μισθού:</strong> ' + escapeHtml(result.basicSalaryEffectiveDate) + '</div>' +
         '</div>' +
@@ -386,6 +405,7 @@
           '<div><strong>Ετήσιο φορολογητέο (12μηνο):</strong> ' + formatEuroCents(net.taxableAnnual) + '</div>' +
           '<div><strong>Φόρος κλίμακας πριν τη μείωση:</strong> ' + formatEuroCents(net.taxBeforeCredit) + '</div>' +
           '<div><strong>Μείωση φόρου άρθρου 16 ΚΦΕ:</strong> −' + formatEuroCents(net.taxCredit) + '</div>' +
+          '<div><strong>Μείωση / απαλλαγή λόγω αναπηρίας:</strong> −' + formatEuroCents(net.disabilityTaxRelief) + '</div>' +
           '<div><strong>Ετήσιος φόρος:</strong> ' + formatEuroCents(net.annualTax) + '</div>' +
         '</div>' +
         '<div class="print-box"><h2>Σύνοψη</h2>' +
@@ -451,6 +471,7 @@
       profile: byId('payrollProfile').value,
       ageGroup: byId('ageGroup').value,
       children: children,
+      disabilityTaxTreatment: byId('disabilityTaxTreatment').value,
       otherDeductions: otherDeductions,
       maternityPensionReduction: byId('maternityPensionReduction').checked
     });
@@ -475,6 +496,9 @@
     byId('taxableAnnualResult').textContent = formatEuroCents(net.taxableAnnual);
     byId('taxBeforeCreditResult').textContent = formatEuroCents(net.taxBeforeCredit);
     byId('taxCreditResult').textContent = net.taxCredit > 0 ? '−' + formatEuroCents(net.taxCredit) : '0,00 €';
+    byId('disabilityTaxReliefResult').textContent = net.disabilityTaxRelief > 0
+      ? '−' + formatEuroCents(net.disabilityTaxRelief) + (net.salaryTaxExemptDueToDisability ? ' (πλήρης απαλλαγή)' : '')
+      : '0,00 €';
     byId('annualTaxResult').textContent = formatEuroCents(net.annualTax);
     byId('monthlyTaxResult').textContent = formatEuroCents(net.monthlyTax);
     byId('estimatedNetResult').textContent = formatEuroCents(net.estimatedNet);
@@ -563,6 +587,7 @@
     byId('qualification').value = 'none';
     byId('payrollProfile').value = 'permanent';
     byId('ageGroup').value = 'over30';
+    byId('disabilityTaxTreatment').value = 'none';
     byId('dependentChildren').value = '0';
     byId('positionAllowance').value = 'none';
     byId('remoteAreaAllowance').checked = false;
