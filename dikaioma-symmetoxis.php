@@ -194,7 +194,7 @@
 
   <div class="button-row">
     <button type="button" onclick="checkEligibility()">Έλεγχος δικαιώματος συμμετοχής</button>
-    <button type="button" class="reset-button" onclick="resetForm()">Μηδενισμός</button>
+    <button type="button" class="reset-button" onclick="resetForm()">Καθαρισμός</button>
   </div>
 
   <div id="result" class="result" role="status" aria-live="polite"></div>

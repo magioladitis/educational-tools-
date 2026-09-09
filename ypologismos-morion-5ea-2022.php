@@ -189,7 +189,7 @@
   <?php calculatorResultMessage(array('id' => 'priorityBox', 'variant' => 'status', 'text' => 'Χωρίς δηλωμένη ειδική πρόταξη / προτεραιότητα')); ?>
   <?php calculatorActions(array(
       array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'),
-      array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός')
+      array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Καθαρισμός')
   )); ?>
 <?php calculatorResultsEnd(); ?>
 <?php calculatorColumnsEnd(); ?>

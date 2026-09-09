@@ -161,8 +161,7 @@ renderAsepSocialCriteria(array(
       <?php calculatorResultMessage(array('id' => 'pedagogicalPriorityBox', 'variant' => 'status', 'text' => 'Χωρίς δηλωμένη πρόταξη Π.Δ.Ε.')); ?>
       <?php calculatorResultMessage(array('id' => 'sidebarStatus', 'variant' => 'status', 'text' => 'Συμπλήρωσε κλάδο και βαθμό τίτλου· στη συνέχεια τα μόρια ενημερώνονται αυτόματα.')); ?>
 
-      <button type="button" class="calculate-primary" onclick="calculatePoints()">Έλεγχος & υπολογισμός</button>
-      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyResultBtn', 'onclick' => 'copyResult()', 'disabled' => true), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'onclick' => 'resetCalculator()'), 'html' => 'Μηδενισμός'))); ?>
+      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyResultBtn', 'onclick' => 'copyResult()', 'disabled' => true), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'onclick' => 'resetCalculator()'), 'html' => 'Καθαρισμός'))); ?>
 
       <?php calculatorResultMessage(array('variant' => 'disclaimer', 'text' => 'Η τελική σειρά κατάταξης εξαρτάται από τους κανόνες της αντίστοιχης προκήρυξης και τον επίσημο έλεγχο των δικαιολογητικών.')); ?>
     <?php calculatorResultsEnd(); ?>

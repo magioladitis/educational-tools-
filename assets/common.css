@@ -164,6 +164,16 @@ body.edu-ui ::selection {
   min-width: 0;
 }
 
+.edu-tools-global-nav__icon {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.edu-tools-global-nav__icon svg {
+  display: block;
+}
+
 .edu-tools-global-nav__link,
 .edu-tools-global-menu > summary {
   display: inline-flex;
@@ -178,6 +188,7 @@ body.edu-ui ::selection {
   font-size: 13px;
   font-weight: 800;
   line-height: 1.25;
+  gap: 6px;
 }
 
 .edu-tools-global-nav__link:hover,
@@ -624,12 +635,52 @@ a:focus-visible {
 @media (max-width: 700px) {
   .edu-tools-global-header__inner {
     margin: 0;
-    padding: 9px 10px;
+    padding: 8px 9px;
+    gap: 6px;
   }
 
+  .edu-tools-global-header__back,
+  .edu-tools-global-nav__link,
+  .edu-tools-global-menu > summary {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 10px;
+  }
 
-  .edu-tools-global-header__back {
-    padding: 7px 9px;
+  .edu-tools-global-header__brand-icon {
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .edu-tools-global-header__brand-icon svg,
+  .edu-tools-global-nav__icon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .edu-tools-global-header__back-label,
+  .edu-tools-global-nav__label {
+    display: none;
+  }
+
+  .edu-tools-global-nav {
+    gap: 5px;
+    flex: 0 0 auto;
+  }
+
+  .edu-tools-global-menu > summary::after {
+    display: none;
+  }
+
+  .edu-tools-global-menu__panel {
+    top: calc(100% + 8px);
+    width: min(330px, calc(100vw - 18px));
   }
 
   .edu-field-grid { grid-template-columns: 1fr; }
@@ -642,12 +693,22 @@ a:focus-visible {
   }
 }
 
-@media (max-width: 420px) {
-  .edu-tools-global-header__back-label { display: none; }
+@media (max-width: 360px) {
+  .edu-tools-global-header__inner {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
   .edu-tools-global-nav { gap: 3px; }
-  .edu-tools-global-nav__link { padding: 7px 8px; font-size: 12px; }
-  .edu-tools-global-nav__link:first-child { display: none; }
-  .edu-tools-global-menu > summary { padding: 7px 8px; font-size: 12px; }
+
+  .edu-tools-global-header__back,
+  .edu-tools-global-nav__link,
+  .edu-tools-global-menu > summary {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    min-height: 38px;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1132,7 +1193,6 @@ body.edu-ui .training-proof-legal { display:block; color:var(--edu-muted); font-
 body.edu-ui .training-proof-legal strong { color:#9f2d24; }
 
 /* Result / breakdown helpers used by the main 1ΓΕ/2ΓΕ calculator. */
-body.edu-ui.edu-calc-standard .calculate-primary { width:100%; margin-top:14px; }
 body.edu-ui.edu-calc-standard .result {
   display:none; margin:0 0 16px; padding:18px; border-radius:16px; background:#eef4ff;
   border:1px solid #d5e4ff; color:#174ea6; line-height:1.6; box-shadow:0 4px 16px rgba(28,39,55,.04); overflow-x:auto;
@@ -3044,4 +3104,170 @@ body.edu-page-transfer .transfer-remote-row { margin-top: 10px; }
   body.edu-page-transfer .transfer-type-field { grid-column: auto; }
   body.edu-page-transfer .transfer-service-actions { align-items: stretch; }
   body.edu-page-transfer .remove-row { width: 100%; }
+}
+
+/* --------------------------------------------------------------------------
+   Shared calculator print report
+   Dedicated reports (salary / staffing) keep their own print implementation.
+   -------------------------------------------------------------------------- */
+@media screen {
+  .edu-generic-print-sheet { display: none; }
+}
+
+@media print {
+  body.edu-ui.edu-generic-printing > *:not(#eduGenericPrintSheet) {
+    display: none !important;
+  }
+  body.edu-ui.edu-generic-printing #eduGenericPrintSheet {
+    display: block !important;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    color: #111;
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.4;
+  }
+  #eduGenericPrintSheet .edu-print-report-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    border-bottom: 2px solid #222;
+  }
+  #eduGenericPrintSheet .edu-print-report-brand {
+    margin-bottom: 3px;
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #555;
+  }
+  #eduGenericPrintSheet h1 {
+    margin: 0;
+    font-size: 18pt;
+    line-height: 1.2;
+    color: #111 !important;
+  }
+  #eduGenericPrintSheet .edu-print-report-meta {
+    flex: 0 0 auto;
+    padding-top: 3px;
+    color: #555;
+    font-size: 9pt;
+    text-align: right;
+  }
+  #eduGenericPrintSheet .edu-print-report-section {
+    margin: 0 0 14px;
+    break-inside: auto;
+  }
+  #eduGenericPrintSheet .edu-print-report-section > h2 {
+    margin: 0 0 7px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #aaa;
+    font-size: 12.5pt;
+    color: #111 !important;
+  }
+  #eduGenericPrintSheet .edu-print-report-table,
+  #eduGenericPrintSheet table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+  }
+  #eduGenericPrintSheet .edu-print-report-table th,
+  #eduGenericPrintSheet .edu-print-report-table td,
+  #eduGenericPrintSheet table th,
+  #eduGenericPrintSheet table td {
+    padding: 5px 7px;
+    border: 1px solid #bbb;
+    vertical-align: top;
+  }
+  #eduGenericPrintSheet .edu-print-report-fields th {
+    width: 58%;
+    text-align: left;
+    font-weight: 600;
+    background: #f3f3f3 !important;
+  }
+  #eduGenericPrintSheet .edu-print-report-result-block {
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 0 10px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    color: #111 !important;
+  }
+  #eduGenericPrintSheet .result-row,
+  #eduGenericPrintSheet .subtot {
+    break-inside: avoid;
+  }
+  #eduGenericPrintSheet .result-message,
+  #eduGenericPrintSheet .info,
+  #eduGenericPrintSheet .warning,
+  #eduGenericPrintSheet .success,
+  #eduGenericPrintSheet .danger,
+  #eduGenericPrintSheet .note,
+  #eduGenericPrintSheet .help,
+  #eduGenericPrintSheet .cap,
+  #eduGenericPrintSheet .subtitle {
+    color: #222 !important;
+    background: #fff !important;
+    border-color: #bbb !important;
+    box-shadow: none !important;
+  }
+  #eduGenericPrintSheet .edu-source-card {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 8px 0 0;
+    border: 0;
+    border-top: 1px solid #aaa;
+    border-radius: 0;
+    box-shadow: none;
+    color: #222;
+  }
+  #eduGenericPrintSheet .edu-source-card h2 { font-size: 11.5pt; }
+  #eduGenericPrintSheet .edu-source-card .source-links { display: block; }
+  #eduGenericPrintSheet .edu-source-card .source-links a {
+    display: inline;
+    margin-right: 10px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #222;
+    text-decoration: none;
+  }
+  #eduGenericPrintSheet .edu-print-report-note {
+    margin: 14px 0 0;
+    padding-top: 8px;
+    border-top: 1px solid #aaa;
+    color: #555;
+    font-size: 8.5pt;
+  }
+}
+
+/* Screen layout for action rows that receive the shared print button. */
+@media screen {
+  body.edu-ui .actions.edu-actions-with-print,
+  body.edu-ui .button-row.edu-actions-with-print,
+  body.edu-ui .action-row.edu-actions-with-print {
+    grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)) !important;
+  }
+  body.edu-ui .edu-print-actions {
+    display: grid;
+    grid-template-columns: minmax(125px, 220px);
+    justify-content: end;
+    margin-top: 12px;
+  }
+}
+@media (max-width: 650px) {
+  body.edu-ui .actions.edu-actions-with-print,
+  body.edu-ui .button-row.edu-actions-with-print,
+  body.edu-ui .action-row.edu-actions-with-print,
+  body.edu-ui .edu-print-actions {
+    grid-template-columns: 1fr !important;
+  }
 }

@@ -144,7 +144,7 @@
   <?php calculatorResultMessage(array('id'=>'breakdownBox','variant'=>'disclaimer','text'=>'Η αναλυτική κατανομή θα εμφανιστεί εδώ.')); ?>
   <?php calculatorActions(array(
     array('attrs'=>array('type'=>'button','class'=>'secondary','id'=>'copyBtn'),'html'=>'Αντιγραφή'),
-    array('attrs'=>array('type'=>'button','id'=>'resetBtn','class'=>'secondary'),'html'=>'Μηδενισμός')
+    array('attrs'=>array('type'=>'button','id'=>'resetBtn','class'=>'secondary'),'html'=>'Καθαρισμός')
   )); ?>
 <?php calculatorResultsEnd(); ?>
 <?php calculatorColumnsEnd(); ?>

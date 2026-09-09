@@ -277,7 +277,7 @@ foreach ($abroadSpecialties as $internalCode) {
 
       <div id="eligibilityStatus" role="status" aria-live="polite"></div>
 
-      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
+      <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Καθαρισμός'))); ?>
 
       <div class="note">
         *Τα 185/165 είναι το θεωρητικό άθροισμα των επιμέρους μοριοδοτούμενων κριτηρίων του ΦΕΚ και όχι ξεχωριστό συνολικό πλαφόν που αναγράφεται στην απόφαση.

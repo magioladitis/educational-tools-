@@ -133,7 +133,6 @@
         </div>
 
         <?php calculatorActions(array(
-          array('id' => 'calculateBtn', 'class' => 'primary', 'label' => 'Υπολογισμός ωραρίου'),
           array('id' => 'resetBtn', 'class' => 'secondary', 'label' => 'Καθαρισμός')
         )); ?>
       <?php calculatorCardEnd(); ?>
@@ -298,7 +297,6 @@
       calculate();
     });
   });
-  byId('calculateBtn').addEventListener('click', calculate);
   byId('resetBtn').addEventListener('click', reset);
   calculate();
 })();

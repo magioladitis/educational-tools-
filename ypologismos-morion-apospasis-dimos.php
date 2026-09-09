@@ -205,7 +205,7 @@
         <?php calculatorResultRow(array('label_html' => 'Β. Επιστημονικό έργο', 'value_html' => '0,00 / 13', 'value_id' => 'resB')); ?>
         <?php calculatorResultRow(array('label_html' => 'Γ. Καινοτόμο έργο', 'value_html' => '0,00 / 11', 'value_id' => 'resC')); ?>
 
-        <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?>
+        <?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Καθαρισμός'))); ?>
 
         <?php calculatorResultMessage(array('variant' => 'disclaimer', 'text' => 'Το εργαλείο είναι βοηθητικό. Η τελική αποτίμηση γίνεται από τα αρμόδια όργανα και προϋποθέτει τα σωστά δικαιολογητικά στα αντίστοιχα πεδία.')); ?>
       <?php calculatorResultsEnd(); ?>

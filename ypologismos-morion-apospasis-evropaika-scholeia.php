@@ -83,7 +83,7 @@
   'cap_html' => 'Συμπλήρωσε όλα τα πεδία της συνέντευξης για τελικό /90.',
   'cap_class' => 'edu-small-muted'
 )); ?>
-<div id="eligibilityStatus" role="status" aria-live="polite"></div><?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Μηδενισμός'))); ?><?php calculatorResultsEnd(); ?>
+<div id="eligibilityStatus" role="status" aria-live="polite"></div><?php calculatorActions(array(array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'copyBtn'), 'html' => 'Αντιγραφή'), array('attrs' => array('type' => 'button', 'class' => 'secondary', 'id' => 'resetBtn'), 'html' => 'Καθαρισμός'))); ?><?php calculatorResultsEnd(); ?>
 <?php calculatorColumnsEnd(); ?>
 <?php sourceCardStart(); ?><p><strong>Πηγή:</strong> Πρόσκληση 33598/Η2/18-03-2026 για απόσπαση εκπαιδευτικών στα Ευρωπαϊκά Σχολεία και η αναφερόμενη Υ.Α. 26754/Η2/10-03-2022 (Β΄1165, διόρθωση Β΄1300).</p><?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενημερωτικό.<?php sourceCardDisclaimerEnd(); ?><?php sourceCardEnd(); ?>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

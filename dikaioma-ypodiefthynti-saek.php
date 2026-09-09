@@ -34,7 +34,7 @@
 
 <div class="question"><label for="retirement">Αποχωρείς υποχρεωτικά από την υπηρεσία λόγω συνταξιοδότησης έως και τις 10/09/2027;</label><select id="retirement"><option value="">-- Επιλογή --</option><option value="no">Όχι</option><option value="yes">Ναι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
 
-<div class="button-row"><button type="button" onclick="checkEligibility()">Έλεγχος δικαιώματος υποψηφιότητας</button><button type="button" class="reset-button" onclick="resetForm()">Μηδενισμός</button></div>
+<div class="button-row"><button type="button" onclick="checkEligibility()">Έλεγχος δικαιώματος υποψηφιότητας</button><button type="button" class="reset-button" onclick="resetForm()">Καθαρισμός</button></div>
 <div id="result" class="result" role="status" aria-live="polite"></div>
 <p class="small-note">Η πρόσκληση αναφέρει επίσης ότι ο υποψήφιος πρέπει να διαθέτει γνώση και εμπειρία σε διδακτικές μεθόδους επαγγελματικής εκπαίδευσης και κατάρτισης και στην επιμόρφωση εκπαιδευτών, καθώς και ικανότητα παρακολούθησης/εποπτείας της εκπαιδευτικής διαδικασίας και συντονισμού της αξιολόγησης. Τα στοιχεία αυτά δεν μετατρέπονται εδώ σε αυτόματο αριθμητικό κριτήριο, επειδή η πρόσκληση δεν ορίζει σχετική μοριοδότηση.</p>
 </div>

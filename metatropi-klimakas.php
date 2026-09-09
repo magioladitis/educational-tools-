@@ -88,7 +88,7 @@
     </div>
 
     <div class="action-row">
-      <button type="button" id="resetBtn" class="reset-btn">↺ Μηδενισμός</button>
+      <button type="button" id="resetBtn" class="reset-btn">↺ Καθαρισμός</button>
       <button type="button" onclick="window.print()" class="reset-btn">🖨 Εκτύπωση</button>
     </div>
   </div>
