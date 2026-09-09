@@ -14,8 +14,8 @@
 <?php calculatorContainerStart(array('class' => 'app')); ?>
   <?php calculatorHero(array(
     'title' => 'Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.)',
-    'intro_html' => 'Βρες ενδεικτικά το Μισθολογικό Κλιμάκιο και τον αντίστοιχο <strong>βασικό μικτό μισθό</strong>, με βάση την κατηγορία, τον <strong>ήδη αναγνωρισμένο μισθολογικό χρόνο</strong> και τον ανώτερο τίτλο που έχει ήδη αναγνωριστεί για μισθολογική προώθηση.',
-    'badges' => array('ΠΕ / ΤΕ', 'ΔΕ / ΥΕ', 'Αποδοχές από 01/04/2026')
+    'intro_html' => 'Βρες ενδεικτικά το Μισθολογικό Κλιμάκιο, τον αντίστοιχο <strong>βασικό μικτό μισθό</strong> και μια <strong>εκτίμηση καθαρών αποδοχών</strong> με τη φορολογία 2026, με βάση την κατηγορία, τον <strong>ήδη αναγνωρισμένο μισθολογικό χρόνο</strong> και τον ανώτερο τίτλο που έχει ήδη αναγνωριστεί για μισθολογική προώθηση.',
+    'badges' => array('ΠΕ / ΤΕ', 'ΔΕ / ΥΕ', 'Αποδοχές από 01/04/2026', 'Φορολογία 2026')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
@@ -63,6 +63,39 @@
           </div>
         </div>
 
+        <h3>Προαιρετική εκτίμηση καθαρών αποδοχών</h3>
+        <div class="field-grid">
+          <div class="field">
+            <label for="payrollProfile">Προφίλ κρατήσεων</label>
+            <select id="payrollProfile">
+              <option value="permanent">Μόνιμος δημόσιος υπάλληλος</option>
+              <option value="newly_appointed">Νεοδιόριστος — 1ο έτος ΜΤΠΥ</option>
+              <option value="substitute">Αναπληρωτής / ΙΔΟΧ — ΚΠΚ 101</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ageGroup">Ηλικιακή κατηγορία για τη φορολογία 2026</label>
+            <select id="ageGroup">
+              <option value="over30">Άνω των 30 ετών</option>
+              <option value="age26to30">26–30 ετών</option>
+              <option value="upTo25">Έως 25 ετών</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="dependentChildren">Εξαρτώμενα τέκνα</label>
+            <input id="dependentChildren" type="number" min="0" max="20" step="1" value="0" inputmode="numeric">
+          </div>
+          <div class="edu-field--full">
+            <div class="checkrow">
+              <input id="remoteAreaAllowance" type="checkbox">
+              <label for="remoteAreaAllowance">Επίδομα απομακρυσμένων - παραμεθορίων περιοχών <strong>(+100 € μικτά / μήνα)</strong><small>Επίλεξέ το μόνο αν υπηρετείς σε περιοχή/μονάδα που θεμελιώνει δικαίωμα καταβολής του επιδόματος.</small></label>
+            </div>
+          </div>
+        </div>
+        <div class="info-note">
+          Η εκτίμηση καθαρών γίνεται πάνω στον <strong>βασικό μισθό του Μ.Κ.</strong> και, αν επιλεγεί, στο <strong>επίδομα απομακρυσμένων - παραμεθορίων περιοχών</strong>, με 12μηνη φορολογική αναγωγή. Δεν προστίθενται οικογενειακή παροχή, επίδομα θέσης, προσωπική διαφορά ή άλλες αποδοχές.
+        </div>
+
         <div class="info-note">
           <strong>Αναστολή μισθολογικής εξέλιξης 2016–2017:</strong> ο δηλωμένος χρόνος της συγκεκριμένης διετίας (έως 24 μήνες) <strong>δεν λαμβάνεται υπόψη για μισθολογική εξέλιξη</strong> και αφαιρείται αυτόματα από τον υπολογισμό του Μ.Κ. Αν δεν έχεις υπηρεσία μέσα στη διετία, άφησε Έτη και Μήνες στο 0.
         </div>
@@ -77,14 +110,13 @@
         </div>
 
         <?php calculatorActions(array(
-          array('id' => 'calculateBtn', 'class' => 'primary', 'label' => 'Υπολογισμός Μ.Κ.'),
           array('id' => 'resetBtn', 'class' => 'secondary', 'label' => 'Καθαρισμός')
         )); ?>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorResultMessage(array(
         'variant' => 'disclaimer',
-        'html' => '<strong>Δεν υπολογίζονται συνολικές ή καθαρές αποδοχές.</strong> Το ποσό που εμφανίζεται είναι ο <strong>βασικός μισθός (μικτά)</strong> του αντίστοιχου Μ.Κ. από 01-04-2026 και δεν περιλαμβάνει επιδόματα, προσωπική διαφορά, οικογενειακή παροχή, κρατήσεις ή άλλες προσαυξήσεις/μειώσεις. Η πραγματική μισθολογική κατάταξη προκύπτει από την υπηρεσιακή πράξη.'
+        'html' => '<strong>Η εκτίμηση καθαρών είναι ενδεικτική.</strong> Υπολογίζεται από τον βασικό μισθό του Μ.Κ., το προαιρετικό επίδομα απομακρυσμένων - παραμεθορίων περιοχών και το επιλεγμένο τυπικό προφίλ κρατήσεων. Δεν περιλαμβάνει άλλα επιδόματα, προσωπική διαφορά, ειδικές ατομικές κρατήσεις, αναδρομικά ή άλλες πηγές εισοδήματος. Η πραγματική μισθοδοσία και φορολογική εκκαθάριση μπορεί να διαφέρουν.'
       )); ?>
     <?php calculatorMainEnd(); ?>
 
@@ -102,6 +134,20 @@
       <?php calculatorResultRow(array('label' => 'Μ.Κ. από υπηρεσία', 'value' => 'Μ.Κ. 1', 'value_id' => 'baseMkResult')); ?>
       <?php calculatorResultRow(array('label' => 'Προώθηση τίτλου', 'value' => '0 Μ.Κ.', 'value_id' => 'promotionResult')); ?>
       <?php calculatorResultRow(array('label' => 'Χρόνος προς επόμενο Μ.Κ.', 'value' => '24 μήνες', 'value_id' => 'nextMkResult')); ?>
+
+      <h3>Ενδεικτικές καθαρές αποδοχές</h3>
+      <?php calculatorResultRow(array('label' => 'Επίδομα απομακρυσμένων - παραμεθορίων', 'value' => '0,00 €', 'value_id' => 'remoteAllowanceResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Σύνολο μικτών για εκτίμηση', 'value' => '1.232,00 €', 'value_id' => 'grossForNetResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Προφίλ κρατήσεων', 'value' => 'Μόνιμος δημόσιος υπάλληλος', 'value_id' => 'payrollProfileResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Τακτικές κρατήσεις', 'value' => '0,00 €', 'value_id' => 'standardDeductionsResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Σύνθεση κρατήσεων', 'value' => 'Σύνταξη · Υγεία · Επικουρική · Εφάπαξ · ΜΤΠΥ · Ανεργία', 'value_id' => 'deductionBreakdownResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Δικαίωμα εγγραφής ΜΤΠΥ', 'value' => '0,00 €', 'value_id' => 'registrationDeductionResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Ετήσιο φορολογητέο (12μηνη αναγωγή)', 'value' => '0,00 €', 'value_id' => 'taxableAnnualResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Φόρος κλίμακας πριν τη μείωση', 'value' => '0,00 €', 'value_id' => 'taxBeforeCreditResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Μείωση φόρου άρθρου 16', 'value' => '0,00 €', 'value_id' => 'taxCreditResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Ετήσιος φόρος', 'value' => '0,00 €', 'value_id' => 'annualTaxResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Μηνιαία παρακράτηση φόρου', 'value' => '0,00 €', 'value_id' => 'monthlyTaxResult')); ?>
+      <?php calculatorSubtotalRow(array('label' => 'Εκτιμώμενο καθαρό', 'value' => '0,00 €', 'value_id' => 'estimatedNetResult')); ?>
       <?php calculatorResultMessage(array('variant' => 'status', 'id' => 'statusResult', 'html' => 'Συμπλήρωσε τα αναγνωρισμένα στοιχεία για να δεις το Μ.Κ.')); ?>
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
@@ -111,17 +157,27 @@
   <p>Ο ν. 4354/2015 προβλέπει 19 Μ.Κ. για ΠΕ/ΤΕ και 13 για ΔΕ/ΥΕ. Για τη συνήθη μισθολογική εξέλιξη απαιτούνται δύο έτη ανά Μ.Κ. για ΠΕ/ΤΕ και τρία έτη για ΔΕ/ΥΕ. Αναγνωρισμένος συναφής μεταπτυχιακός τίτλος προωθεί κατά 2 Μ.Κ. και διδακτορικό κατά 6 Μ.Κ. στην κατηγορία όπου ανήκει ο υπάλληλος. Από 01-01-2026, ο ν. 5246/2025 προσθέτει ειδική προώθηση +2 Μ.Κ. για Integrated Master που εμπίπτει στις διατάξεις των άρθρων 46 ν. 4485/2017 και 78 ν. 4957/2022.</p>
   <p>Με το άρθρο 26 παρ. 2 του ν. 4354/2015 η μισθολογική εξέλιξη ανεστάλη έως 31-12-2017. Από 01-01-2018 ενεργοποιήθηκε εκ νέου, χωρίς να λαμβάνεται υπόψη για την εξέλιξη το χρονικό διάστημα 01-01-2016 έως 31-12-2017.</p>
   <p><strong>Βασικοί μισθοί 2026:</strong> η εγκύκλιος ΥΠΕΘΟΟ <strong>54692 ΕΞ 2026/03-04-2026</strong> (ΑΔΑ: <strong>ΨΕ7ΨΗ-ΚΧΧ</strong>) αναπροσαρμόζει από 01-04-2026 τους βασικούς μισθούς και στο Παράρτημα, Πίνακες 1–4, αποτυπώνει τα ποσά ανά Μ.Κ. για ΠΕ, ΤΕ, ΔΕ και ΥΕ.</p>
+  <p><strong>Επίδομα απομακρυσμένων - παραμεθορίων περιοχών:</strong> το άρθρο 19 του ν. 4354/2015 διατηρεί το επίδομα στο ίδιο ύψος και με τις ίδιες προϋποθέσεις· για τους δικαιούχους το ποσό είναι <strong>100 € μικτά τον μήνα</strong>. Η επιλογή στο εργαλείο είναι προαιρετική και δεν ελέγχει αν η συγκεκριμένη περιοχή/υπηρεσία θεμελιώνει δικαίωμα. Στην ενδεικτική εκτίμηση το ποσό προστίθεται στις μικτές αποδοχές και εφαρμόζεται το επιλεγμένο τυπικό προφίλ κρατήσεων· για το ΜΤΠΥ η ισχύουσα κωδικοποίηση προβλέπει τακτική κράτηση 4,5% στο συγκεκριμένο επίδομα για ασφαλισμένους από 01-01-1993 και μετά.</p>
+  <p><strong>Φορολογία 2026:</strong> ο ν. 5246/2025 τροποποίησε από το φορολογικό έτος 2026 την κλίμακα μισθωτών, με ειδικούς συντελεστές ανά αριθμό εξαρτώμενων τέκνων και για ηλικίες έως 25 και 26–30 ετών. Εφαρμόζεται επίσης η μείωση φόρου του άρθρου 16 ΚΦΕ.</p>
+  <p><strong>Τυπικά προφίλ κρατήσεων:</strong> για μόνιμο δημόσιο υπάλληλο χρησιμοποιείται συνολικό ποσοστό 22,22% επί του βασικού μισθού (κύρια σύνταξη, υγειονομική περίθαλψη, επικουρική, εφάπαξ, ΜΤΠΥ και εισφορά ανεργίας). Για νεοδιόριστο προστίθεται ενδεικτικά το δικαίωμα εγγραφής ΜΤΠΥ — ένας μηνιαίος μισθός σε 12 ισόποσες δόσεις. Για αναπληρωτή/ΙΔΟΧ χρησιμοποιείται το ποσοστό ασφαλισμένου 13,37% του ΚΠΚ 101. Οι πραγματικές κρατήσεις μπορεί να διαφοροποιούνται από ειδικό καθεστώς ή βάση εισφορών.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-demosion-upallelon/nomos-4354-2015.html', 'Ν. 4354/2015 — Μισθολογικά κλιμάκια & άρθρο 26 ↗'); ?>
     <?php sourceCardLink('https://www.taxheaven.gr/circulars/23568/ar-prwt-2-31029-dep-6-5-2016', 'Εγκύκλιος ΓΛΚ 2/31029/ΔΕΠ/06-05-2016 ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/index.php/n-5246-2025.html', 'Ν. 5246/2025 — Integrated Master ↗'); ?>
     <?php sourceCardLink('https://www.taxheaven.gr/circulars/52538/54692-ex-03-04-2026', 'ΥΠΕΘΟΟ 54692 ΕΞ 2026 — Βασικοί μισθοί από 01/04/2026 ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/site/18335-26-02-16-epidoma-apomakrysmenon-paramethorion-perioxon', 'ΥΠΑΙΘ — Επίδομα απομακρυσμένων / παραμεθορίων 100 € ↗'); ?>
+    <?php sourceCardLink('https://www.gsis.gr/polites-epiheiriseis/pliromes-kai-eispraxeis/e-DAYK/e-dayk-announcements/epidomata-neon-asfalismenon-yper-mtpy', 'ΓΓΠΣ — Κράτηση ΜΤΠΥ στα επιδόματα νέων ασφαλισμένων ↗'); ?>
+    <?php sourceCardLink('https://minfin.gov.gr/forologiki-politiki/forologikos-odigos/forologia-eisodimatos/', 'ΥΠΕΘΟΟ — Φορολογία εισοδήματος 2026 ↗'); ?>
+    <?php sourceCardLink('https://www.aade.gr/egkyklioi-kai-apofaseis/o-3068-18-11-2025', 'ΑΑΔΕ Ο.3068/2025 — Ν. 5246/2025 ↗'); ?>
+    <?php sourceCardLink('https://ypergasias.gov.gr/koinoniki-asfalisi/asfalismenoi-eisfores-kai-paroches/asfalistikes-eisfores/', 'Υπουργείο Εργασίας — Ασφαλιστικές εισφορές ↗'); ?>
+    <?php sourceCardLink('https://www.mtpy.gr/pliroforisi1/documents/%CE%95%CE%A0%CE%99%CE%9A%CE%91%CE%99%CE%A1%CE%9F%CE%A0%CE%9F%CE%99%CE%97%CE%9C%CE%95%CE%9D%CE%9F%CE%A3%20%CE%9F%CE%94%CE%97%CE%93%CE%9F%CE%A3%20%CE%9A%CE%A1%CE%91%CE%A4%CE%97%CE%A3%CE%95%CE%A9%CE%9D%20%CE%9F%CE%9A%CE%A4%202019.pdf', 'ΜΤΠΥ — Οδηγός κρατήσεων & δικαίωμα εγγραφής ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
   <?php sourceCardDisclaimerStart(); ?>Ο υπολογιστής δεν αποφαίνεται αν ένας τίτλος θεμελιώνει δικαίωμα προώθησης. Για τη συνάφεια τίτλου, την αναγνώριση προϋπηρεσίας, ειδικές περιπτώσεις όπως ΤΕ16 και την ημερομηνία οικονομικών αποτελεσμάτων υπερισχύει η ισχύουσα απόφαση του αρμόδιου υπηρεσιακού οργάνου.<?php sourceCardDisclaimerEnd(); ?>
 <?php sourceCardEnd(); ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/salary-scale-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/salary-net-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
 (function () {
@@ -156,6 +212,32 @@
     const categoryLabels = { PE: 'ΠΕ', TE: 'ΤΕ', DE: 'ΔΕ', YE: 'ΥΕ' };
     byId('categoryResult').textContent = categoryLabels[result.categoryCode] || categoryLabels[byId('category').value] || result.category || 'ΠΕ';
     byId('basicSalaryResult').textContent = formatEuro(result.basicGrossSalary);
+
+    const remoteAllowance = byId('remoteAreaAllowance').checked
+      ? window.EducationSalaryNet.REMOTE_AREA_ALLOWANCE_MONTHLY
+      : 0;
+    const grossForNet = result.basicGrossSalary + remoteAllowance;
+    const net = window.EducationSalaryNet.calculate({
+      grossMonthly: grossForNet,
+      profile: byId('payrollProfile').value,
+      ageGroup: byId('ageGroup').value,
+      children: integer('dependentChildren', 20)
+    });
+    byId('remoteAllowanceResult').textContent = formatEuroCents(remoteAllowance);
+    byId('grossForNetResult').textContent = formatEuroCents(grossForNet);
+    byId('payrollProfileResult').textContent = net.profileLabel;
+    byId('standardDeductionsResult').textContent = formatEuroCents(net.standardDeductions) + ' (' + formatPercent(net.standardDeductionRate) + ')';
+    byId('deductionBreakdownResult').textContent = net.deductionBreakdown;
+    byId('registrationDeductionResult').textContent = net.registrationDeduction > 0
+      ? formatEuroCents(net.registrationDeduction) + ' (1/12 μισθού)'
+      : '0,00 €';
+    byId('taxableAnnualResult').textContent = formatEuroCents(net.taxableAnnual);
+    byId('taxBeforeCreditResult').textContent = formatEuroCents(net.taxBeforeCredit);
+    byId('taxCreditResult').textContent = net.taxCredit > 0 ? '−' + formatEuroCents(net.taxCredit) : '0,00 €';
+    byId('annualTaxResult').textContent = formatEuroCents(net.annualTax);
+    byId('monthlyTaxResult').textContent = formatEuroCents(net.monthlyTax);
+    byId('estimatedNetResult').textContent = formatEuroCents(net.estimatedNet);
+
     byId('suspendedServiceResult').textContent = formatServiceMonths(result.suspendedServiceMonths);
     byId('countableServiceResult').textContent = formatServiceMonths(result.countableServiceMonths);
     byId('baseMkResult').textContent = 'Μ.Κ. ' + result.baseMK;
@@ -189,6 +271,20 @@
     }
   }
 
+  function formatEuroCents(value) {
+    const amount = Math.max(0, Number(value) || 0);
+    try {
+      return new Intl.NumberFormat('el-GR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount) + ' €';
+    } catch (e) {
+      return amount.toFixed(2).replace('.', ',') + ' €';
+    }
+  }
+
+  function formatPercent(value) {
+    const percentage = Math.max(0, Number(value) || 0) * 100;
+    return percentage.toFixed(2).replace('.', ',') + '%';
+  }
+
   function formatServiceMonths(totalMonths) {
     const total = Math.max(0, Math.floor(Number(totalMonths) || 0));
     const years = Math.floor(total / 12);
@@ -213,6 +309,10 @@
     byId('suspendedYears').value = '0';
     byId('suspendedMonths').value = '0';
     byId('qualification').value = 'none';
+    byId('payrollProfile').value = 'permanent';
+    byId('ageGroup').value = 'over30';
+    byId('dependentChildren').value = '0';
+    byId('remoteAreaAllowance').checked = false;
     calculate();
   }
 
@@ -220,17 +320,18 @@
     el.addEventListener('input', () => {
       if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 50);
       if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
+      if (el.id === 'dependentChildren') clampBoundedIntegerInput(el, 20);
       if (el.id === 'suspendedYears' || el.id === 'suspendedMonths') clampSuspendedInputs();
       calculate();
     });
     el.addEventListener('change', () => {
       if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 50);
       if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
+      if (el.id === 'dependentChildren') clampBoundedIntegerInput(el, 20);
       if (el.id === 'suspendedYears' || el.id === 'suspendedMonths') clampSuspendedInputs();
       calculate();
     });
   });
-  byId('calculateBtn').addEventListener('click', calculate);
   byId('resetBtn').addEventListener('click', reset);
   calculate();
 })();
