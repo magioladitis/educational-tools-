@@ -1,0 +1,30 @@
+const fs = require('fs');
+const vm = require('vm');
+const path = require('path');
+const root = path.resolve(__dirname, '..');
+const code = fs.readFileSync(path.join(root, 'includes', 'salary-scale-calculations.js'), 'utf8');
+const context = { window: {} };
+vm.createContext(context);
+vm.runInContext(code, context);
+const S = context.window.EducationSalaryScale;
+let checks = 0;
+function check(name, actual, expected) {
+  if (actual !== expected) throw new Error(`${name}: expected ${expected}, got ${actual}`);
+  checks++;
+}
+check('effective date', S.BASIC_SALARY_EFFECTIVE_DATE, '01/04/2026');
+check('PE MK1', S.basicGrossSalary('PE', 1), 1232);
+check('PE MK19', S.basicGrossSalary('PE', 19), 2294);
+check('TE MK1', S.basicGrossSalary('TE', 1), 1177);
+check('TE MK19', S.basicGrossSalary('TE', 19), 2167);
+check('DE MK1', S.basicGrossSalary('DE', 1), 998);
+check('DE MK13', S.basicGrossSalary('DE', 13), 1718);
+check('YE MK1', S.basicGrossSalary('YE', 1), 920);
+check('YE MK13', S.basicGrossSalary('YE', 13), 1436);
+check('calculate PE MK1 salary', S.calculate({category:'PE', years:0, months:0}).basicGrossSalary, 1232);
+check('calculate PE MK2 salary', S.calculate({category:'PE', years:2, months:0}).basicGrossSalary, 1291);
+check('calculate TE promoted salary', S.calculate({category:'TE', years:0, months:0, qualification:'master'}).basicGrossSalary, 1287);
+check('calculate DE MK2 salary', S.calculate({category:'DE', years:3, months:0}).basicGrossSalary, 1058);
+check('calculate YE MK2 salary', S.calculate({category:'YE', years:3, months:0}).basicGrossSalary, 963);
+check('salary follows capped promotion', S.calculate({category:'PE', years:36, months:0, qualification:'phd'}).basicGrossSalary, 2294);
+console.log(`Salary 2026 basic pay contract: PASS ${checks}/${checks}`);

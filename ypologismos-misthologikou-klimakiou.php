@@ -14,8 +14,8 @@
 <?php calculatorContainerStart(array('class' => 'app')); ?>
   <?php calculatorHero(array(
     'title' => 'Υπολογισμός Μισθολογικού Κλιμακίου (Μ.Κ.)',
-    'intro_html' => 'Βρες ενδεικτικά το Μισθολογικό Κλιμάκιο με βάση την κατηγορία, τον <strong>ήδη αναγνωρισμένο μισθολογικό χρόνο</strong> και τον ανώτερο τίτλο που έχει ήδη αναγνωριστεί για μισθολογική προώθηση.',
-    'badges' => array('ΠΕ / ΤΕ', 'ΔΕ / ΥΕ', 'Ν. 4354/2015')
+    'intro_html' => 'Βρες ενδεικτικά το Μισθολογικό Κλιμάκιο και τον αντίστοιχο <strong>βασικό μικτό μισθό</strong>, με βάση την κατηγορία, τον <strong>ήδη αναγνωρισμένο μισθολογικό χρόνο</strong> και τον ανώτερο τίτλο που έχει ήδη αναγνωριστεί για μισθολογική προώθηση.',
+    'badges' => array('ΠΕ / ΤΕ', 'ΔΕ / ΥΕ', 'Αποδοχές από 01/04/2026')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
@@ -84,7 +84,7 @@
 
       <?php calculatorResultMessage(array(
         'variant' => 'disclaimer',
-        'html' => '<strong>Δεν υπολογίζεται μισθός.</strong> Το εργαλείο προσδιορίζει μόνο το ενδεικτικό Μ.Κ. Η πραγματική μισθολογική κατάταξη προκύπτει από την υπηρεσιακή πράξη και μπορεί να επηρεάζεται από ειδικές διατάξεις ή μεταβατικούς χρόνους.'
+        'html' => '<strong>Δεν υπολογίζονται συνολικές ή καθαρές αποδοχές.</strong> Το ποσό που εμφανίζεται είναι ο <strong>βασικός μισθός (μικτά)</strong> του αντίστοιχου Μ.Κ. από 01-04-2026 και δεν περιλαμβάνει επιδόματα, προσωπική διαφορά, οικογενειακή παροχή, κρατήσεις ή άλλες προσαυξήσεις/μειώσεις. Η πραγματική μισθολογική κατάταξη προκύπτει από την υπηρεσιακή πράξη.'
       )); ?>
     <?php calculatorMainEnd(); ?>
 
@@ -96,6 +96,7 @@
         'cap' => 'Με βάση τα αναγνωρισμένα στοιχεία'
       )); ?>
       <?php calculatorResultRow(array('label' => 'Κατηγορία', 'value' => 'ΠΕ', 'value_id' => 'categoryResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Βασικός μισθός (μικτά) από 01/04/2026', 'value' => '1.232 €', 'value_id' => 'basicSalaryResult')); ?>
       <?php calculatorResultRow(array('label' => 'Αφαιρούμενος χρόνος 2016–2017', 'value' => '0 μήνες', 'value_id' => 'suspendedServiceResult')); ?>
       <?php calculatorResultRow(array('label' => 'Μετρήσιμος χρόνος για Μ.Κ.', 'value' => '0 μήνες', 'value_id' => 'countableServiceResult')); ?>
       <?php calculatorResultRow(array('label' => 'Μ.Κ. από υπηρεσία', 'value' => 'Μ.Κ. 1', 'value_id' => 'baseMkResult')); ?>
@@ -109,10 +110,12 @@
 <?php sourceCardStart(); ?>
   <p>Ο ν. 4354/2015 προβλέπει 19 Μ.Κ. για ΠΕ/ΤΕ και 13 για ΔΕ/ΥΕ. Για τη συνήθη μισθολογική εξέλιξη απαιτούνται δύο έτη ανά Μ.Κ. για ΠΕ/ΤΕ και τρία έτη για ΔΕ/ΥΕ. Αναγνωρισμένος συναφής μεταπτυχιακός τίτλος προωθεί κατά 2 Μ.Κ. και διδακτορικό κατά 6 Μ.Κ. στην κατηγορία όπου ανήκει ο υπάλληλος. Από 01-01-2026, ο ν. 5246/2025 προσθέτει ειδική προώθηση +2 Μ.Κ. για Integrated Master που εμπίπτει στις διατάξεις των άρθρων 46 ν. 4485/2017 και 78 ν. 4957/2022.</p>
   <p>Με το άρθρο 26 παρ. 2 του ν. 4354/2015 η μισθολογική εξέλιξη ανεστάλη έως 31-12-2017. Από 01-01-2018 ενεργοποιήθηκε εκ νέου, χωρίς να λαμβάνεται υπόψη για την εξέλιξη το χρονικό διάστημα 01-01-2016 έως 31-12-2017.</p>
+  <p><strong>Βασικοί μισθοί 2026:</strong> η εγκύκλιος ΥΠΕΘΟΟ <strong>54692 ΕΞ 2026/03-04-2026</strong> (ΑΔΑ: <strong>ΨΕ7ΨΗ-ΚΧΧ</strong>) αναπροσαρμόζει από 01-04-2026 τους βασικούς μισθούς και στο Παράρτημα, Πίνακες 1–4, αποτυπώνει τα ποσά ανά Μ.Κ. για ΠΕ, ΤΕ, ΔΕ και ΥΕ.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-demosion-upallelon/nomos-4354-2015.html', 'Ν. 4354/2015 — Μισθολογικά κλιμάκια & άρθρο 26 ↗'); ?>
     <?php sourceCardLink('https://www.taxheaven.gr/circulars/23568/ar-prwt-2-31029-dep-6-5-2016', 'Εγκύκλιος ΓΛΚ 2/31029/ΔΕΠ/06-05-2016 ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/index.php/n-5246-2025.html', 'Ν. 5246/2025 — Integrated Master ↗'); ?>
+    <?php sourceCardLink('https://www.taxheaven.gr/circulars/52538/54692-ex-03-04-2026', 'ΥΠΕΘΟΟ 54692 ΕΞ 2026 — Βασικοί μισθοί από 01/04/2026 ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
   <?php sourceCardDisclaimerStart(); ?>Ο υπολογιστής δεν αποφαίνεται αν ένας τίτλος θεμελιώνει δικαίωμα προώθησης. Για τη συνάφεια τίτλου, την αναγνώριση προϋπηρεσίας, ειδικές περιπτώσεις όπως ΤΕ16 και την ημερομηνία οικονομικών αποτελεσμάτων υπερισχύει η ισχύουσα απόφαση του αρμόδιου υπηρεσιακού οργάνου.<?php sourceCardDisclaimerEnd(); ?>
 <?php sourceCardEnd(); ?>
@@ -152,6 +155,7 @@
     byId('finalMkResult').textContent = 'Μ.Κ. ' + result.finalMK;
     const categoryLabels = { PE: 'ΠΕ', TE: 'ΤΕ', DE: 'ΔΕ', YE: 'ΥΕ' };
     byId('categoryResult').textContent = categoryLabels[result.categoryCode] || categoryLabels[byId('category').value] || result.category || 'ΠΕ';
+    byId('basicSalaryResult').textContent = formatEuro(result.basicGrossSalary);
     byId('suspendedServiceResult').textContent = formatServiceMonths(result.suspendedServiceMonths);
     byId('countableServiceResult').textContent = formatServiceMonths(result.countableServiceMonths);
     byId('baseMkResult').textContent = 'Μ.Κ. ' + result.baseMK;
@@ -173,6 +177,15 @@
         ? 'Ο χρόνος 2016–2017 αφαιρέθηκε. Ο υπολογισμός γίνεται με τον υπόλοιπο μισθολογικά μετρήσιμο χρόνο.'
         : 'Υπολογισμός με βάση τον αναγνωρισμένο μισθολογικό χρόνο.';
       status.className = 'result-message edu-message result-message--status edu-message--status';
+    }
+  }
+
+  function formatEuro(value) {
+    const amount = Math.max(0, Math.round(Number(value) || 0));
+    try {
+      return new Intl.NumberFormat('el-GR', { maximumFractionDigits: 0 }).format(amount) + ' €';
+    } catch (e) {
+      return String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
     }
   }
 
