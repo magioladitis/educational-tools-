@@ -29,6 +29,31 @@
 
   const REMOTE_AREA_ALLOWANCE_MONTHLY = 100;
 
+  const POSITION_ALLOWANCES = Object.freeze({
+    none: Object.freeze({ label: "Χωρίς θέση ευθύνης", amount: 0 }),
+    regional_director: Object.freeze({ label: "Περιφερειακός Διευθυντής Εκπαίδευσης", amount: 1170 }),
+    regional_quality_supervisor: Object.freeze({ label: "Περιφερειακός Επόπτης Ποιότητας της Εκπαίδευσης", amount: 780 }),
+    education_director: Object.freeze({ label: "Διευθυντής Πρωτοβάθμιας / Δευτεροβάθμιας Εκπαίδευσης", amount: 715 }),
+    quality_supervisor: Object.freeze({ label: "Επόπτης Ποιότητας της Εκπαίδευσης", amount: 650 }),
+    education_counselor: Object.freeze({ label: "Σύμβουλος Εκπαίδευσης", amount: 455 }),
+    kedasy_head: Object.freeze({ label: "Προϊστάμενος ΚΕ.Δ.Α.Σ.Υ. / Γραφείου Μειονοτικής Εκπαίδευσης", amount: 455 }),
+    lyceum_director: Object.freeze({ label: "Διευθυντής ΓΕΛ / ΕΠΑΛ / ειδικών δομών λυκειακού επιπέδου", amount: 429 }),
+    lyceum_director_large: Object.freeze({ label: "Διευθυντής ΓΕΛ / ΕΠΑΛ / αντίστοιχης δομής με ≥120 μαθητές (Σ.Μ.Ε.Α.Ε. ≥30)", amount: 501 }),
+    education_matters_head: Object.freeze({ label: "Προϊστάμενος Τμήματος Εκπαιδευτικών Θεμάτων", amount: 390 }),
+    gymnasium_director: Object.freeze({ label: "Διευθυντής Γυμνασίου / Ε.Κ. / αντίστοιχης δομής", amount: 358 }),
+    gymnasium_director_large: Object.freeze({ label: "Διευθυντής Γυμνασίου / αντίστοιχης δομής με ≥120 μαθητές (Σ.Μ.Ε.Α.Ε. ≥30)", amount: 429 }),
+    vice_director: Object.freeze({ label: "Υποδιευθυντής σχολικής μονάδας / Ε.Κ. / Σ.Δ.Ε. / Σ.Α.Ε.Κ. ή Υπεύθυνος Τομέα Ε.Κ.", amount: 195 }),
+    small_school_head: Object.freeze({ label: "Προϊστάμενος 1θέσιου–3θέσιου Δημοτικού / Νηπιαγωγείου", amount: 215 })
+  });
+
+  function positionAllowanceMonthly(position) {
+    return POSITION_ALLOWANCES[position] ? POSITION_ALLOWANCES[position].amount : 0;
+  }
+
+  function positionAllowanceLabel(position) {
+    return POSITION_ALLOWANCES[position] ? POSITION_ALLOWANCES[position].label : POSITION_ALLOWANCES.none.label;
+  }
+
   function familyAllowanceMonthly(children) {
     const c = Math.min(20, nonNegativeInteger(children));
     if (c <= 0) return 0;
@@ -177,6 +202,9 @@
   global.EducationSalaryNet = Object.freeze({
     PROFILES: PROFILES,
     REMOTE_AREA_ALLOWANCE_MONTHLY: REMOTE_AREA_ALLOWANCE_MONTHLY,
+    POSITION_ALLOWANCES: POSITION_ALLOWANCES,
+    positionAllowanceMonthly: positionAllowanceMonthly,
+    positionAllowanceLabel: positionAllowanceLabel,
     familyAllowanceMonthly: familyAllowanceMonthly,
     AGE_GROUPS: AGE_GROUPS,
     TAX_BRACKETS: TAX_BRACKETS,

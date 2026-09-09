@@ -16,7 +16,7 @@ check('freeze fields nested together', '<div class="field-grid">' in page and pa
 check('central cache version present', "define('EDU_TOOLS_VERSION'" in config and "3.20.76" in config)
 check('2026 basic salary result row', 'basicSalaryResult' in page and 'Βασικός μισθός (μικτά) από 01/04/2026' in page)
 check('2026 salary circular source', '54692 ΕΞ 2026/03-04-2026' in page and 'ΨΕ7ΨΗ-ΚΧΧ' in page)
-check('salary disclaimer distinguishes basic from total pay', 'βασικό μισθό του Μ.Κ.' in page and 'οικογενειακή παροχή' in page and 'Δεν προστίθενται επίδομα θέσης' in page)
+check('salary disclaimer distinguishes basic from total pay', 'βασικό μισθό του Μ.Κ.' in page and 'οικογενειακή παροχή' in page and 'επίδομα θέσης ευθύνης' in page and 'Δεν προστίθενται προσωπική διαφορά' in page)
 failed=[n for n,v in checks if not v]
 for n,v in checks: print(('PASS' if v else 'FAIL')+': '+n)
 print(f'SALARY-SCALE R18 UI: {len(checks)-len(failed)}/{len(checks)} PASS')

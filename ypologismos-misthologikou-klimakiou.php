@@ -85,6 +85,30 @@
             <label for="dependentChildren">Εξαρτώμενα τέκνα</label>
             <input id="dependentChildren" type="number" min="0" max="20" step="1" value="0" inputmode="numeric">
           </div>
+          <div class="field edu-field--full">
+            <label for="positionAllowance">Θέση ευθύνης — άρθρο 16 ν. 4354/2015</label>
+            <select id="positionAllowance">
+              <option value="none">Χωρίς θέση ευθύνης</option>
+              <optgroup label="Στελέχη εκπαίδευσης">
+                <option value="regional_director">Περιφερειακός Διευθυντής Εκπαίδευσης — 1.170 €</option>
+                <option value="regional_quality_supervisor">Περιφερειακός Επόπτης Ποιότητας — 780 €</option>
+                <option value="education_director">Διευθυντής Π/θμιας ή Δ/θμιας Εκπαίδευσης — 715 €</option>
+                <option value="quality_supervisor">Επόπτης Ποιότητας της Εκπαίδευσης — 650 €</option>
+                <option value="education_counselor">Σύμβουλος Εκπαίδευσης — 455 €</option>
+                <option value="kedasy_head">Προϊστάμενος ΚΕ.Δ.Α.Σ.Υ. / Γραφείου Μειονοτικής Εκπαίδευσης — 455 €</option>
+                <option value="education_matters_head">Προϊστάμενος Τμήματος Εκπαιδευτικών Θεμάτων — 390 €</option>
+              </optgroup>
+              <optgroup label="Σχολικές μονάδες / δομές">
+                <option value="lyceum_director">Διευθυντής ΓΕΛ / ΕΠΑΛ / αντίστοιχης δομής — 429 €</option>
+                <option value="lyceum_director_large">Διευθυντής ΓΕΛ / ΕΠΑΛ / αντίστοιχης δομής ≥120 μαθητές (Σ.Μ.Ε.Α.Ε. ≥30) — 501 €</option>
+                <option value="gymnasium_director">Διευθυντής Γυμνασίου / Ε.Κ. / αντίστοιχης δομής — 358 €</option>
+                <option value="gymnasium_director_large">Διευθυντής Γυμνασίου / αντίστοιχης δομής ≥120 μαθητές (Σ.Μ.Ε.Α.Ε. ≥30) — 429 €</option>
+                <option value="vice_director">Υποδιευθυντής / Υπεύθυνος Τομέα Ε.Κ. / αντίστοιχη θέση — 195 €</option>
+                <option value="small_school_head">Προϊστάμενος 1θέσιου–3θέσιου Δημοτικού / Νηπιαγωγείου — 215 €</option>
+              </optgroup>
+            </select>
+            <small>Τα ποσά είναι τα ισχύοντα μετά την αύξηση 30% από 01-01-2024. Σε συρροή θέσεων επιλέγεται μόνο η ανώτερη θέση.</small>
+          </div>
           <div class="edu-field--full">
             <div class="checkrow">
               <input id="remoteAreaAllowance" type="checkbox">
@@ -93,7 +117,7 @@
           </div>
         </div>
         <div class="info-note">
-          Η εκτίμηση καθαρών γίνεται πάνω στον <strong>βασικό μισθό του Μ.Κ.</strong>, στην <strong>οικογενειακή παροχή</strong> που αντιστοιχεί στον δηλωμένο αριθμό τέκνων και, αν επιλεγεί, στο <strong>επίδομα απομακρυσμένων - παραμεθορίων περιοχών</strong>, με 12μηνη φορολογική αναγωγή. Δεν προστίθενται επίδομα θέσης, προσωπική διαφορά ή άλλες αποδοχές. Αν ο αριθμός τέκνων που λαμβάνεται υπόψη για φορολογία διαφέρει από εκείνον της οικογενειακής παροχής, η εκτίμηση χρειάζεται διοικητικό έλεγχο.
+          Η εκτίμηση καθαρών γίνεται πάνω στον <strong>βασικό μισθό του Μ.Κ.</strong>, στην <strong>οικογενειακή παροχή</strong> που αντιστοιχεί στον δηλωμένο αριθμό τέκνων, στο τυχόν <strong>επίδομα θέσης ευθύνης</strong> και, αν επιλεγεί, στο <strong>επίδομα απομακρυσμένων - παραμεθορίων περιοχών</strong>, με 12μηνη φορολογική αναγωγή. Δεν προστίθενται προσωπική διαφορά ή άλλες αποδοχές. Αν ο αριθμός τέκνων που λαμβάνεται υπόψη για φορολογία διαφέρει από εκείνον της οικογενειακής παροχής, η εκτίμηση χρειάζεται διοικητικό έλεγχο.
         </div>
 
         <div class="info-note">
@@ -116,7 +140,7 @@
 
       <?php calculatorResultMessage(array(
         'variant' => 'disclaimer',
-        'html' => '<strong>Η εκτίμηση καθαρών είναι ενδεικτική.</strong> Υπολογίζεται από τον βασικό μισθό του Μ.Κ., την οικογενειακή παροχή με βάση τον δηλωμένο αριθμό τέκνων, το προαιρετικό επίδομα απομακρυσμένων - παραμεθορίων περιοχών και το επιλεγμένο τυπικό προφίλ κρατήσεων. Δεν περιλαμβάνει επίδομα θέσης, προσωπική διαφορά, ειδικές ατομικές κρατήσεις, αναδρομικά ή άλλες πηγές εισοδήματος. Η πραγματική μισθοδοσία και φορολογική εκκαθάριση μπορεί να διαφέρουν.'
+        'html' => '<strong>Η εκτίμηση καθαρών είναι ενδεικτική.</strong> Υπολογίζεται από τον βασικό μισθό του Μ.Κ., την οικογενειακή παροχή με βάση τον δηλωμένο αριθμό τέκνων, το τυχόν επίδομα θέσης ευθύνης, το προαιρετικό επίδομα απομακρυσμένων - παραμεθορίων περιοχών και το επιλεγμένο τυπικό προφίλ κρατήσεων. Δεν περιλαμβάνει προσωπική διαφορά, ειδικές ατομικές κρατήσεις, αναδρομικά ή άλλες πηγές εισοδήματος. Η πραγματική μισθοδοσία και φορολογική εκκαθάριση μπορεί να διαφέρουν.'
       )); ?>
     <?php calculatorMainEnd(); ?>
 
@@ -137,6 +161,7 @@
 
       <h3>Ενδεικτικές καθαρές αποδοχές</h3>
       <?php calculatorResultRow(array('label' => 'Οικογενειακή παροχή', 'value' => '0,00 €', 'value_id' => 'familyAllowanceResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Επίδομα θέσης ευθύνης', 'value' => '0,00 €', 'value_id' => 'positionAllowanceResult')); ?>
       <?php calculatorResultRow(array('label' => 'Επίδομα απομακρυσμένων - παραμεθορίων', 'value' => '0,00 €', 'value_id' => 'remoteAllowanceResult')); ?>
       <?php calculatorResultRow(array('label' => 'Σύνολο μικτών για εκτίμηση', 'value' => '1.232,00 €', 'value_id' => 'grossForNetResult')); ?>
       <?php calculatorResultRow(array('label' => 'Προφίλ κρατήσεων', 'value' => 'Μόνιμος δημόσιος υπάλληλος', 'value_id' => 'payrollProfileResult')); ?>
@@ -145,7 +170,7 @@
       <?php calculatorResultRow(array('label' => 'Δικαίωμα εγγραφής ΜΤΠΥ', 'value' => '0,00 €', 'value_id' => 'registrationDeductionResult')); ?>
       <?php calculatorResultRow(array('label' => 'Ετήσιο φορολογητέο (12μηνη αναγωγή)', 'value' => '0,00 €', 'value_id' => 'taxableAnnualResult')); ?>
       <?php calculatorResultRow(array('label' => 'Φόρος κλίμακας πριν τη μείωση', 'value' => '0,00 €', 'value_id' => 'taxBeforeCreditResult')); ?>
-      <?php calculatorResultRow(array('label' => 'Μείωση φόρου άρθρου 16', 'value' => '0,00 €', 'value_id' => 'taxCreditResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Μείωση φόρου άρθρου 16 ΚΦΕ', 'value' => '0,00 €', 'value_id' => 'taxCreditResult')); ?>
       <?php calculatorResultRow(array('label' => 'Ετήσιος φόρος', 'value' => '0,00 €', 'value_id' => 'annualTaxResult')); ?>
       <?php calculatorResultRow(array('label' => 'Μηνιαία παρακράτηση φόρου', 'value' => '0,00 €', 'value_id' => 'monthlyTaxResult')); ?>
       <?php calculatorSubtotalRow(array('label' => 'Εκτιμώμενο καθαρό', 'value' => '0,00 €', 'value_id' => 'estimatedNetResult')); ?>
@@ -159,12 +184,15 @@
   <p>Με το άρθρο 26 παρ. 2 του ν. 4354/2015 η μισθολογική εξέλιξη ανεστάλη έως 31-12-2017. Από 01-01-2018 ενεργοποιήθηκε εκ νέου, χωρίς να λαμβάνεται υπόψη για την εξέλιξη το χρονικό διάστημα 01-01-2016 έως 31-12-2017.</p>
   <p><strong>Βασικοί μισθοί 2026:</strong> η εγκύκλιος ΥΠΕΘΟΟ <strong>54692 ΕΞ 2026/03-04-2026</strong> (ΑΔΑ: <strong>ΨΕ7ΨΗ-ΚΧΧ</strong>) αναπροσαρμόζει από 01-04-2026 τους βασικούς μισθούς και στο Παράρτημα, Πίνακες 1–4, αποτυπώνει τα ποσά ανά Μ.Κ. για ΠΕ, ΤΕ, ΔΕ και ΥΕ.</p>
   <p><strong>Οικογενειακή παροχή:</strong> το άρθρο 15 του ν. 4354/2015, όπως ισχύει μετά τον ν. 5045/2023, προβλέπει μηνιαία παροχή <strong>70 € για 1 τέκνο, 120 € για 2, 170 € για 3, 220 € για 4 και +70 € για κάθε επιπλέον τέκνο</strong>. Στην εκτίμηση το ποσό προστίθεται στις μικτές αποδοχές πριν από τον υπολογισμό κρατήσεων και φόρου.</p>
+  <p><strong>Επίδομα θέσης ευθύνης:</strong> το άρθρο 16 του ν. 4354/2015, όπως ισχύει για τα στελέχη εκπαίδευσης μετά τον ν. 4823/2021, προβλέπει μηνιαίο επίδομα ανά θέση. Με το άρθρο 22 του ν. 5045/2023 τα ποσά αυξήθηκαν κατά <strong>30%</strong> από 01-01-2024 και στρογγυλοποιούνται στην πλησιέστερη μονάδα ευρώ. Ενδεικτικά: Διευθυντής ΓΕΛ/ΕΠΑΛ <strong>429 € ή 501 €</strong>, Διευθυντής Γυμνασίου <strong>358 € ή 429 €</strong>, Υποδιευθυντής <strong>195 €</strong>. Σε συρροή αξιώσεων από δύο βαθμίδες καταβάλλεται μόνο το ποσό της ανώτερης βαθμίδας. Το εργαλείο προσθέτει μία μόνο επιλεγμένη θέση στις μικτές αποδοχές.</p>
   <p><strong>Επίδομα απομακρυσμένων - παραμεθορίων περιοχών:</strong> το άρθρο 19 του ν. 4354/2015 διατηρεί το επίδομα στο ίδιο ύψος και με τις ίδιες προϋποθέσεις· για τους δικαιούχους το ποσό είναι <strong>100 € μικτά τον μήνα</strong>. Η επιλογή στο εργαλείο είναι προαιρετική και δεν ελέγχει αν η συγκεκριμένη περιοχή/υπηρεσία θεμελιώνει δικαίωμα. Στην ενδεικτική εκτίμηση το ποσό προστίθεται στις μικτές αποδοχές και εφαρμόζεται το επιλεγμένο τυπικό προφίλ κρατήσεων· για το ΜΤΠΥ η ισχύουσα κωδικοποίηση προβλέπει τακτική κράτηση 4,5% στο συγκεκριμένο επίδομα για ασφαλισμένους από 01-01-1993 και μετά.</p>
   <p><strong>Φορολογία 2026:</strong> ο ν. 5246/2025 τροποποίησε από το φορολογικό έτος 2026 την κλίμακα μισθωτών, με ειδικούς συντελεστές ανά αριθμό εξαρτώμενων τέκνων και για ηλικίες έως 25 και 26–30 ετών. Εφαρμόζεται επίσης η μείωση φόρου του άρθρου 16 ΚΦΕ.</p>
   <p><strong>Τυπικά προφίλ κρατήσεων:</strong> για μόνιμο δημόσιο υπάλληλο χρησιμοποιείται συνολικό ποσοστό 22,22% επί του βασικού μισθού (κύρια σύνταξη, υγειονομική περίθαλψη, επικουρική, εφάπαξ, ΜΤΠΥ και εισφορά ανεργίας). Για νεοδιόριστο προστίθεται ενδεικτικά το δικαίωμα εγγραφής ΜΤΠΥ — ένας μηνιαίος μισθός σε 12 ισόποσες δόσεις. Για αναπληρωτή/ΙΔΟΧ χρησιμοποιείται το ποσοστό ασφαλισμένου 13,37% του ΚΠΚ 101. Οι πραγματικές κρατήσεις μπορεί να διαφοροποιούνται από ειδικό καθεστώς ή βάση εισφορών.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-demosion-upallelon/nomos-4354-2015.html', 'Ν. 4354/2015 — Μισθολογικά κλιμάκια & άρθρο 26 ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-oikonomia/n-5045-2023.html', 'Ν. 5045/2023 — Αναπροσαρμογή οικογενειακής παροχής ↗'); ?>
+    <?php sourceCardLink('https://www.taxheaven.gr/circulars/50271/2-97758-dep-19-10-2023', 'ΥΠΕΘΟΟ 2/97758/ΔΕΠ/19-10-2023 — Επίδομα θέσης ευθύνης από 01/01/2024 ↗'); ?>
+    <?php sourceCardLink('https://www.gsis.gr/sites/default/files/2024-05/27-5-2024_Odigies_Simplirosis_e-DAYK.pdf', 'ΓΓΠΣ/e-ΔΑΥΚ — Πίνακας επιδομάτων θέσης εκπαιδευτικών ↗'); ?>
     <?php sourceCardLink('https://www.taxheaven.gr/circulars/23568/ar-prwt-2-31029-dep-6-5-2016', 'Εγκύκλιος ΓΛΚ 2/31029/ΔΕΠ/06-05-2016 ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/index.php/n-5246-2025.html', 'Ν. 5246/2025 — Integrated Master ↗'); ?>
     <?php sourceCardLink('https://www.taxheaven.gr/circulars/52538/54692-ex-03-04-2026', 'ΥΠΕΘΟΟ 54692 ΕΞ 2026 — Βασικοί μισθοί από 01/04/2026 ↗'); ?>
@@ -218,10 +246,12 @@
 
     const children = integer('dependentChildren', 20);
     const familyAllowance = window.EducationSalaryNet.familyAllowanceMonthly(children);
+    const positionKey = byId('positionAllowance').value;
+    const positionAllowance = window.EducationSalaryNet.positionAllowanceMonthly(positionKey);
     const remoteAllowance = byId('remoteAreaAllowance').checked
       ? window.EducationSalaryNet.REMOTE_AREA_ALLOWANCE_MONTHLY
       : 0;
-    const grossForNet = result.basicGrossSalary + familyAllowance + remoteAllowance;
+    const grossForNet = result.basicGrossSalary + familyAllowance + positionAllowance + remoteAllowance;
     const net = window.EducationSalaryNet.calculate({
       grossMonthly: grossForNet,
       profile: byId('payrollProfile').value,
@@ -229,6 +259,7 @@
       children: children
     });
     byId('familyAllowanceResult').textContent = formatEuroCents(familyAllowance);
+    byId('positionAllowanceResult').textContent = formatEuroCents(positionAllowance);
     byId('remoteAllowanceResult').textContent = formatEuroCents(remoteAllowance);
     byId('grossForNetResult').textContent = formatEuroCents(grossForNet);
     byId('payrollProfileResult').textContent = net.profileLabel;
@@ -318,6 +349,7 @@
     byId('payrollProfile').value = 'permanent';
     byId('ageGroup').value = 'over30';
     byId('dependentChildren').value = '0';
+    byId('positionAllowance').value = 'none';
     byId('remoteAreaAllowance').checked = false;
     calculate();
   }
