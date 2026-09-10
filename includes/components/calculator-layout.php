@@ -488,8 +488,9 @@ if (!function_exists('calculatorActions')) {
         $buttons = is_array($buttons) ? $buttons : array();
         $config = is_array($config) ? $config : array();
         $class = isset($config['class']) ? $config['class'] : 'actions';
+        if (strpos(' ' . $class . ' ', ' edu-actions ') === false) $class .= ' edu-actions';
         $attrs = isset($config['attrs']) ? $config['attrs'] : array();
-        echo '<div class="' . calculatorLayoutEscape($class) . '"' . calculatorLayoutAttributes($attrs) . '>';
+        echo '<div class="' . calculatorLayoutEscape(trim($class)) . '"' . calculatorLayoutAttributes($attrs) . '>';
         foreach ($buttons as $button) {
             if (!is_array($button)) continue;
             $buttonAttrs = isset($button['attrs']) && is_array($button['attrs']) ? $button['attrs'] : array();

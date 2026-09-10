@@ -172,7 +172,7 @@
   <?php calculatorColumnsEnd(); ?>
 <?php calculatorContainerEnd(); ?>
 
-<?php sourceCardDisclosureStart(array('mobile_collapsed' => true, 'open' => true)); ?>
+<?php sourceCardStart(); ?>
   <p>Ο υπολογισμός βασίζεται στις ισχύουσες ρυθμίσεις για το εβδομαδιαίο υποχρεωτικό διδακτικό ωράριο των εκπαιδευτικών και για το εβδομαδιαίο υποχρεωτικό ωράριο υποστηρικτικού έργου ΕΕΠ/ΕΒΠ. Στην Πρωτοβάθμια λαμβάνονται υπόψη η οργανικότητα, η ιδιότητα και ο χρόνος υπηρεσίας· στη Δευτεροβάθμια ο κλάδος, ο χρόνος υπηρεσίας και η διοικητική θέση· στο ΕΕΠ ο χρόνος υπηρεσίας.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/egkuklios-upaith-141076-e3-4-11-2021.html', 'ΥΠΑΙΘ — Εγκύκλιος 141076/Ε3/04-11-2021 — ωράριο και υπερωριακή διδασκαλία ↗'); ?>
@@ -188,12 +188,11 @@
     <?php sourceCardLink('https://edu.klimaka.gr/ekpaideytikoi/wrario-anatheseis/3687-orario-ypeythynoi-ergastiriwn-kai-sxolikwn-biblithikwn', 'ΥΠΑΙΘΑ — 132906/Ε3/06-11-2024 — εργαστήρια και σχολικές βιβλιοθήκες ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
   <?php sourceCardDisclaimerStart(); ?>Το αποτέλεσμα είναι ενημερωτικό και δεν υποκαθιστά υπηρεσιακή πράξη καθορισμού ωραρίου.<?php sourceCardDisclaimerEnd(); ?>
-<?php sourceCardDisclosureEnd(); ?>
+<?php sourceCardEnd(); ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/teaching-hours-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/teaching-hours-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
-<script>window.EducationTeachingHoursUI.init();</script>
 </body>
 </html>

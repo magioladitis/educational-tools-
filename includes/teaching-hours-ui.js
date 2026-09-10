@@ -4,6 +4,7 @@
  * same engine can be reused by a future mobile client.
  */
 (function (global) {
+  let initialized = false;
   'use strict';
   const byId = id => document.getElementById(id);
   const level = byId('level');
@@ -106,6 +107,8 @@
 
 
   function init() {
+    if (initialized) return;
+    initialized = true;
     document.querySelectorAll('input, select').forEach(el => {
       el.addEventListener('input', () => {
         if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 50);
@@ -129,4 +132,10 @@
     calculate: calculate,
     reset: reset
   });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
 })(window);

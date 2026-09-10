@@ -66,9 +66,12 @@
         <p class="small-note">
           Για την αρχική προσωρινή τοποθέτηση των νεοδιόριστων, η συνολική υπηρεσία και οι Μονάδες Συνθηκών Διαβίωσης δεν προστίθενται στο παραπάνω σύνολο. Χρησιμοποιούνται στη σειρά επίλυσης ισοβαθμιών, εφόσον χρειαστεί.
         </p>
-        <div class="info-note">
-          <strong>Σειρά κριτηρίων σε ισοβαθμία:</strong> συνυπηρέτηση → εντοπιότητα → οικογενειακοί λόγοι → συνολική υπηρεσία → δυσμενείς συνθήκες λειτουργίας σχολείων → ημερομηνία και σειρά δημοσίευσης του διορισμού στο ΦΕΚ.
-        </div>
+        <?php calculatorDisclosure(array(
+          'summary' => 'Σειρά κριτηρίων σε ισοβαθμία',
+          'html' => 'συνυπηρέτηση → εντοπιότητα → οικογενειακοί λόγοι → συνολική υπηρεσία → δυσμενείς συνθήκες λειτουργίας σχολείων → ημερομηνία και σειρά δημοσίευσης του διορισμού στο ΦΕΚ.',
+          'open' => true,
+          'attrs' => array('data-mobile-collapsed' => 'true')
+        )); ?>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorCardStart(array('title' => 'Γ. Διετής παραμονή στην περιοχή διορισμού')); ?>
@@ -121,62 +124,4 @@
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/newly-appointed-placement-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
-<script>
-(function () {
-  'use strict';
-  var byId = function (id) { return document.getElementById(id); };
-  var calc = window.NewlyAppointedPlacementCalculations;
-
-  function formatPoints(value) {
-    return Number(value || 0).toLocaleString('el-GR', { maximumFractionDigits: 2 });
-  }
-
-  function getInput() {
-    return {
-      familyStatus: byId('familyStatus').value,
-      eligibleChildren: byId('eligibleChildren').value,
-      coService: byId('coService').checked,
-      locality: byId('locality').checked
-    };
-  }
-
-  function render() {
-    var result = calc.calculate(getInput());
-    byId('totalResult').textContent = formatPoints(result.total);
-    byId('familyStatusResult').textContent = formatPoints(result.familyStatusPoints);
-    byId('childrenResult').textContent = formatPoints(result.childPoints);
-    byId('familyResult').textContent = formatPoints(result.familyPoints);
-    byId('coServiceResult').textContent = formatPoints(result.coServicePoints);
-    byId('localityResult').textContent = formatPoints(result.localityPoints);
-    if (result.familyStatusRequiresChild && result.eligibleChildren === 0) {
-      byId('statusResult').textContent = 'Η επιλεγμένη οικογενειακή κατάσταση δίνει 4 μόρια μόνο όταν υπάρχει μοριοδοτούμενο τέκνο και πληρούνται οι προϋποθέσεις επιμέλειας.';
-    } else {
-      byId('statusResult').textContent = result.total > 0
-        ? 'Το σύνολο αφορά το συγκεκριμένο σχολείο/Δήμο. Έλεγξε ξανά συνυπηρέτηση και εντοπιότητα για κάθε διαφορετικό Δήμο.'
-        : 'Δεν έχουν επιλεγεί μοριοδοτούμενα κριτήρια για τον συγκεκριμένο Δήμο.';
-    }
-  }
-
-  function reset() {
-    byId('familyStatus').value = 'none';
-    byId('eligibleChildren').value = '0';
-    byId('coService').checked = false;
-    byId('locality').checked = false;
-    render();
-  }
-
-  byId('eligibleChildren').addEventListener('input', function () {
-    var n = Math.floor(Number(this.value || 0));
-    if (!Number.isFinite(n)) n = 0;
-    this.value = String(Math.max(0, Math.min(20, n)));
-    render();
-  });
-
-  ['familyStatus', 'coService', 'locality'].forEach(function (id) {
-    byId(id).addEventListener('change', render);
-  });
-
-  byId('resetBtn').addEventListener('click', reset);
-  render();
-}());
-</script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/newly-appointed-placement-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

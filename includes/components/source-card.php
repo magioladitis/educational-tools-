@@ -13,13 +13,19 @@ if (!function_exists('sourceCardEscape')) {
 }
 
 if (!function_exists('sourceCardStart')) {
+    /**
+     * Default source card entry point.
+     *
+     * All legacy callers now inherit the responsive disclosure pattern:
+     * open on desktop, collapsed on phones, fully expanded by the print layer.
+     * Page code does not need to opt in individually.
+     */
     function sourceCardStart($config = array())
     {
         $config = is_array($config) ? $config : array();
-        $id = isset($config['title_id']) && $config['title_id'] !== '' ? (string) $config['title_id'] : 'sourcesTitle';
-        $title = isset($config['title']) && $config['title'] !== '' ? (string) $config['title'] : 'Πηγές / Νομική βάση';
-        echo '<section class="edu-source-card" aria-labelledby="' . sourceCardEscape($id) . '">';
-        echo '<h2 id="' . sourceCardEscape($id) . '">' . sourceCardEscape($title) . '</h2>';
+        if (!isset($config['mobile_collapsed'])) $config['mobile_collapsed'] = true;
+        if (!isset($config['open'])) $config['open'] = true;
+        sourceCardDisclosureStart($config);
     }
 }
 
@@ -96,8 +102,9 @@ if (!function_exists('sourceCardDisclaimerEnd')) {
 }
 
 if (!function_exists('sourceCardEnd')) {
+    /** Close the default responsive source card opened by sourceCardStart(). */
     function sourceCardEnd()
     {
-        echo '</section>';
+        sourceCardDisclosureEnd();
     }
 }
