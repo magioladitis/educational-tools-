@@ -60,6 +60,37 @@
     statusBox.textContent = summary.status || 'Συμπλήρωσε τα στοιχεία σου για ζωντανό υπολογισμό.';
   }
 
+  function updateStudyPointsStatus(calc, input) {
+    var box = byId('studyPointsStatus');
+    if (!box) return;
+
+    input = input || {};
+    var studyType = input.studyType || 'none';
+    var points = calc && Number(calc.studiesPoints) ? Number(calc.studiesPoints) : 0;
+    var message = '';
+
+    if (studyType === 'eligible') {
+      var missing = [];
+      if (!input.studyDifferentArea) missing.push('η σχολή να βρίσκεται σε διαφορετική περιοχή από την οργανική');
+      if (!input.studyRequestedArea) missing.push('ο υπολογισμός να αφορά το ΠΥΣΠΕ/ΠΥΣΔΕ όπου βρίσκεται η σχολή');
+      if (!input.studyWithinDuration) missing.push('να βρίσκεσαι μέσα στον προβλεπόμενο χρόνο φοίτησης');
+
+      if (points === 2 && missing.length === 0) {
+        message = '<strong>Μόρια σπουδών: 2,00 / 2,00.</strong> Πληρούνται και οι τρεις δηλωμένες προϋποθέσεις.';
+      } else {
+        message = '<strong>Μόρια σπουδών: 0,00 / 2,00.</strong> Για να δοθούν τα 2 μόρια χρειάζεται ακόμη: ' + escapeHtml(missing.join(' · ')) + '.';
+      }
+    } else if (studyType === 'eap') {
+      message = '<strong>Μόρια σπουδών: 0,00 / 2,00.</strong> Οι σπουδές στο ΕΑΠ δεν μοριοδοτούνται με αυτό το κριτήριο.';
+    } else if (studyType === 'phd') {
+      message = '<strong>Μόρια σπουδών: 0,00 / 2,00.</strong> Το διδακτορικό δεν μοριοδοτείται με αυτό το κριτήριο.';
+    } else {
+      message = '<strong>Μόρια σπουδών: 0,00 / 2,00.</strong> Επίλεξε τύπο σπουδών και επιβεβαίωσε τις απαιτούμενες προϋποθέσεις.';
+    }
+
+    box.innerHTML = message;
+  }
+
   function showError(message) {
     updateSidebarSummary({ status: message, variant: 'warning' });
     var result = byId('result');
@@ -176,9 +207,11 @@
 
   function calculatePoints() {
     if (!global.EducationDetachment) return;
-    var calc = global.EducationDetachment.calculate(readInput());
+    var input = readInput();
+    var calc = global.EducationDetachment.calculate(input);
     if (calc.error) return showError(calc.error);
 
+    updateStudyPointsStatus(calc, input);
     updateSidebarSummary({
       total: calc.total,
       service: calc.service.total,
@@ -223,6 +256,7 @@
       result.innerHTML = '';
       result.className = 'result';
     }
+    updateStudyPointsStatus(null, { studyType: 'none' });
     updateSidebarSummary();
     global.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -244,6 +278,9 @@
     var resetBtn = byId('resetBtn');
     if (calculateBtn) calculateBtn.addEventListener('click', calculatePoints);
     if (resetBtn) resetBtn.addEventListener('click', resetCalculator);
+
+    // Initialize the visible study-score diagnostic immediately.
+    updateStudyPointsStatus(global.EducationDetachment.calculate(readInput()), readInput());
 
     document.addEventListener('input', function (event) {
       var target = event.target;

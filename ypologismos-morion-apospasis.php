@@ -372,6 +372,10 @@
       </div>
     </div>
 
+    <div id="studyPointsStatus" class="subtle-box" role="status" aria-live="polite">
+      <strong>Μόρια σπουδών: 0,00 / 2,00.</strong> Επίλεξε τύπο σπουδών και επιβεβαίωσε τις απαιτούμενες προϋποθέσεις.
+    </div>
+
     <?php calculatorDisclosureStart(array(
       'summary' => 'Προϋποθέσεις μοριοδότησης σπουδών',
       'open' => true,
