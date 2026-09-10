@@ -15,11 +15,12 @@ check(digital_name+' remains live', "addEventListener('input'" in digital_ui and
 
 sde_name='ypologismos-morion-apospasis-sde.php'
 sde=(ROOT/sde_name).read_text(encoding='utf-8')
+sde_ui=(ROOT/'includes/sde-detachment-ui.js').read_text(encoding='utf-8')
 action_calls=re.findall(r"calculatorActions\((.*?)\);", sde, flags=re.S)
 action_blob='\n'.join(action_calls)
 check(sde_name+' no redundant calculate action', "onclick' => 'calculate()" not in action_blob)
-check(sde_name+' reset action remains', "onclick' => 'resetForm()" in action_blob)
-check(sde_name+' remains live', len(re.findall(r'on(?:input|change)="[^"]*calculate\(\)', sde)) >= 1)
+check(sde_name+' reset action remains', "'id' => 'sdeDetachmentResetBtn'" in action_blob and "$('sdeDetachmentResetBtn').addEventListener('click', resetForm)" in sde_ui)
+check(sde_name+' remains live', "addEventListener('input', calculate)" in sde_ui and "addEventListener('change', calculate)" in sde_ui)
 
 on=(ROOT/'ypologismos-morion-onaseia.php').read_text(encoding='utf-8')
 on_ui=(ROOT/'includes/onaseia-ui.js').read_text(encoding='utf-8')

@@ -12,7 +12,7 @@ for variant in ['status','success','warning','disclaimer']:
     check('helper supports '+variant, "'"+variant+"'" in layout)
     check('CSS result-message variant '+variant, '.result-message--'+variant in css)
 check('neutral status message style exists', '.edu-message--status' in css)
-check('central cache version is 3.20.89', "EDU_TOOLS_VERSION', '3.20.89" in config)
+check('central cache version is 3.20.90', "EDU_TOOLS_VERSION', '3.20.90" in config)
 standard={
  'ypologismos-morion.php':['pedagogicalPriorityBox','sidebarStatus'],
  'ypologismos-morion-1ea-2025.php':['priorityBox'],
@@ -28,9 +28,10 @@ for fn, ids in standard.items():
     for id_ in ids:
         check(fn+' keeps '+id_, id_ in text)
 check('3EA generated priorities use success semantic', 'result-message--success edu-message--success' in (root/'ypologismos-morion-3ea-2025.php').read_text())
-check('SDE result messages use semantic status', 'result-message--status edu-message--status' in (root/'ypologismos-morion-apospasis-sde.php').read_text())
-check('SDE result messages use semantic warning', 'result-message--warning edu-message--warning' in (root/'ypologismos-morion-apospasis-sde.php').read_text())
-check('SDE result messages use semantic success', 'result-message--success edu-message--success' in (root/'ypologismos-morion-apospasis-sde.php').read_text())
+sde_ui=(root/'includes/sde-detachment-ui.js').read_text()
+check('SDE result messages use semantic status', 'result-message--status edu-message--status' in sde_ui)
+check('SDE result messages use semantic warning', 'result-message--warning edu-message--warning' in sde_ui)
+check('SDE result messages use semantic success', 'result-message--success edu-message--success' in sde_ui)
 digital_ui=(root/'includes/digital-tutoring-detachment-ui.js').read_text()
 check('Digital tutoring result messages use semantic status', 'result-message--status edu-message--status' in digital_ui)
 check('Digital tutoring result messages use semantic warning', 'result-message--warning edu-message--warning' in digital_ui)

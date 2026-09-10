@@ -48,7 +48,7 @@ renderDeadlineCard(array(
         <div class="field-grid">
           <div class="field">
             <label for="specialty">Κλάδος / ειδικότητα</label>
-            <select id="specialty" onchange="specialtyChanged()">
+            <select id="specialty">
               <option value="">— Επιλογή —</option>
 <?php
 $sdeSecondmentSpecialties = array(
@@ -64,31 +64,31 @@ foreach ($sdeSecondmentSpecialties as $code) {
           </div>
           <div class="field">
             <label for="eligibilitySchoolYears">Διδακτική υπηρεσία σε σχολεία Πρωτοβάθμιας ή Δευτεροβάθμιας Εκπαίδευσης <small>Για δικαίωμα αίτησης απαιτούνται τουλάχιστον 2 χρόνια. Το πεδίο αυτό χρησιμοποιείται μόνο για τον έλεγχο επιλεξιμότητας.</small></label>
-            <input type="number" id="eligibilitySchoolYears" min="0" max="50" step="0.01" value="" inputmode="decimal" placeholder="π.χ. 2" oninput="calculate()">
+            <input type="number" id="eligibilitySchoolYears" min="0" max="50" step="0.01" value="" inputmode="decimal" placeholder="π.χ. 2">
           </div>
           <div class="field">
             <label for="formalEducationYears">Συνολικά πλήρη σχολικά έτη διδακτικού έργου στην τυπική εκπαίδευση <small>Πρωτοβάθμια / Δευτεροβάθμια / Τριτοβάθμια. Με τη διόρθωση Β΄ 4199/2026: 1 μόριο από το 1ο πλήρες σχολικό έτος, έως 4.</small></label>
-            <input type="number" id="formalEducationYears" min="0" max="50" step="1" value="" inputmode="numeric" placeholder="π.χ. 6" oninput="calculate()">
+            <input type="number" id="formalEducationYears" min="0" max="50" step="1" value="" inputmode="numeric" placeholder="π.χ. 6">
           </div>
           <div class="field hidden" id="mathInfoDegreeWrap">
             <label for="mathInfoDegree">Πληροίς την προϋπόθεση «πτυχίο Μαθηματικών ή Πληροφορικής» που αναγράφεται για τη Β΄ ανάθεση στα Μαθηματικά;</label>
-            <select id="mathInfoDegree" onchange="calculate()"><option value="no">Όχι / δεν είμαι βέβαιος</option><option value="yes">Ναι</option></select>
+            <select id="mathInfoDegree"><option value="no">Όχι / δεν είμαι βέβαιος</option><option value="yes">Ναι</option></select>
           </div>
           <div class="field hidden" id="formerPE09Wrap">
             <label for="formerPE09">Το πτυχίο σου αντιστοιχεί σε πρώην ΠΕ09 ή ΠΕ15; <small>Δίνει προτεραιότητα στην Κοινωνική Εκπαίδευση για ΠΕ80.</small></label>
-            <select id="formerPE09" onchange="calculate()"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
+            <select id="formerPE09"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
           </div>
           <div class="field hidden" id="formerPE1208Wrap">
             <label for="formerPE1208">Το πτυχίο σου αντιστοιχεί σε πρώην ΠΕ12.08; <small>Δίνει προτεραιότητα στους σχετικούς γραμματισμούς για ΠΕ85.</small></label>
-            <select id="formerPE1208" onchange="calculate()"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
+            <select id="formerPE1208"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
           </div>
           <div class="field">
             <label for="teleEducation">Αποδέχεσαι παροχή εκπαιδευτικού έργου με σύγχρονη τηλεκπαίδευση; <small>Δεν δίνει μόρια, αλλά χρησιμοποιείται ως πρώτο κριτήριο σε περίπτωση ισοβαθμίας.</small></label>
-            <select id="teleEducation" onchange="calculate()"><option value="">— Επίλεξε —</option><option value="yes">Ναι</option><option value="no">Όχι</option></select>
+            <select id="teleEducation"><option value="">— Επίλεξε —</option><option value="yes">Ναι</option><option value="no">Όχι</option></select>
           </div>
           <div class="field full">
             <label for="blockingIssue">Υπάρχει κάποιο κώλυμα υποβολής αίτησης του άρθρου 4;</label>
-            <select id="blockingIssue" onchange="calculate()"><option value="">— Επίλεξε —</option><option value="no">Όχι</option><option value="yes">Ναι / πιθανόν</option></select>
+            <select id="blockingIssue"><option value="">— Επίλεξε —</option><option value="no">Όχι</option><option value="yes">Ναι / πιθανόν</option></select>
             <details><summary>Ενδεικτικά κωλύματα</summary><ul class="criteria-list"><li>δοκιμαστική υπηρεσία χωρίς πράξη μονιμοποίησης, διαθεσιμότητα ή αργία,</li><li>απαγόρευση υπηρεσιακών μεταβολών ή υποχρεωτική υπηρεσία,</li><li>υποχρεωτική υπηρεσία λόγω διορισμού σε δυσπρόσιτο,</li><li>θέση στελέχους ή θέση με θητεία,</li><li>ανάκληση/διακοπή απόσπασης σε δομή της Γ.Γ.Ε.Ε.Κ. &amp; Δ.Β.Μ. μέσα στην τελευταία τριετία, όπου εφαρμόζεται.</li></ul></details>
           </div>
         </div>
@@ -118,31 +118,31 @@ foreach ($sdeSecondmentSpecialties as $code) {
         <div class="field-grid">
           <div class="field">
             <label for="phd">Διδακτορικό <small>11 μόρια στην Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου, 10 σε άλλη κατεύθυνση.</small></label>
-            <select id="phd" onchange="calculate()"><option value="none">Κανένα</option><option value="adult">Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου — 11</option><option value="other">Άλλη κατεύθυνση — 10</option></select>
+            <select id="phd"><option value="none">Κανένα</option><option value="adult">Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου — 11</option><option value="other">Άλλη κατεύθυνση — 10</option></select>
           </div>
           <div class="field">
             <label for="master">Μεταπτυχιακό <small>8 μόρια στην Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου, 7 σε άλλη κατεύθυνση. Αν δηλωθεί και διδακτορικό, αυτός ο τίτλος δεν προσμετράται.</small></label>
-            <select id="master" onchange="calculate()"><option value="none">Κανένα</option><option value="adult">Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου — 8</option><option value="other">Άλλη κατεύθυνση — 7</option></select>
+            <select id="master"><option value="none">Κανένα</option><option value="adult">Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου — 8</option><option value="other">Άλλη κατεύθυνση — 7</option></select>
           </div>
           <div class="field">
             <label for="secondDegree">Δεύτερο πτυχίο Τριτοβάθμιας Εκπαίδευσης <small>+4 μόρια. Δήλωσέ το μόνο αν δεν αποτέλεσε προσόν διορισμού.</small></label>
-            <select id="secondDegree" onchange="calculate()"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
+            <select id="secondDegree"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
           </div>
           <div class="field">
             <label for="secondPhd">Δεύτερο διδακτορικό <small>2 μόρια στην Εκπαίδευση Ενηλίκων κ.λπ., 1 σε άλλη κατεύθυνση.</small></label>
-            <select id="secondPhd" onchange="calculate()"><option value="none">Κανένα</option><option value="adult">Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου — 2</option><option value="other">Άλλη κατεύθυνση — 1</option></select>
+            <select id="secondPhd"><option value="none">Κανένα</option><option value="adult">Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου — 2</option><option value="other">Άλλη κατεύθυνση — 1</option></select>
           </div>
           <div class="field">
             <label for="secondMaster">Δεύτερο μεταπτυχιακό <small>1 μόριο στην Εκπαίδευση Ενηλίκων κ.λπ.· σε άλλη κατεύθυνση εφαρμόζεται η μείωση κατά 1 μόριο, άρα 0. Χρησιμοποίησέ το μόνο για διακριτό δεύτερο μεταπτυχιακό τίτλο.</small></label>
-            <select id="secondMaster" onchange="calculate()"><option value="none">Κανένα</option><option value="adult">Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου — 1</option><option value="other">Άλλη κατεύθυνση — 0</option></select>
+            <select id="secondMaster"><option value="none">Κανένα</option><option value="adult">Εκπαίδευση Ενηλίκων / Συνεχιζόμενη / Διά Βίου — 1</option><option value="other">Άλλη κατεύθυνση — 0</option></select>
           </div>
           <div class="field">
             <label for="sdeTrainingHours">Ώρες ολοκληρωμένης επιμόρφωσης σε θέματα ΣΔΕ <small>0,25 μόρια ανά 100 ώρες, έως 2. Κάθε επιμέρους επιμόρφωση κάτω των 15 ωρών λαμβάνει 0 μόρια.</small></label>
-            <input type="number" id="sdeTrainingHours" min="0" step="1" value="0" oninput="calculate()">
+            <input type="number" id="sdeTrainingHours" min="0" step="1" value="0">
           </div>
           <div class="field">
             <label for="adultTrainingHours">Ώρες ολοκληρωμένης επιμόρφωσης στις αρχές Εκπαίδευσης Ενηλίκων <small>0,25 μόρια ανά 100 ώρες, έως 2. Κάθε επιμέρους επιμόρφωση κάτω των 15 ωρών λαμβάνει 0 μόρια.</small></label>
-            <input type="number" id="adultTrainingHours" min="0" step="1" value="0" oninput="calculate()">
+            <input type="number" id="adultTrainingHours" min="0" step="1" value="0">
           </div>
         </div>
         <div class="note"><strong>Επιμόρφωση:</strong> δήλωσε μόνο ολοκληρωμένες επιμορφώσεις από δημόσιους ή ιδιωτικούς φορείς εκπαίδευσης. Δεν μοριοδοτούνται επιμορφώσεις κάτω των 15 ωρών, ημερίδες/διημερίδες/συνέδρια ούτε επιμόρφωση που ήταν προαπαιτούμενη για πιστοποίηση εκπαιδευτών Μητρώου ΕΟΠΠΕΠ/ΕΚΕΠΙΣ.</div>
@@ -153,15 +153,15 @@ foreach ($sdeSecondmentSpecialties as $code) {
         <div class="field-grid">
           <div class="field">
             <label for="sdeYears">Πλήρη σχολικά έτη διδακτικής εμπειρίας σε ΣΔΕ <small>1 μόριο ανά σχολικό έτος, έως 5.</small></label>
-            <input type="number" id="sdeYears" min="0" max="50" step="1" value="0" oninput="calculate()">
+            <input type="number" id="sdeYears" min="0" max="50" step="1" value="0">
           </div>
           <div class="field">
             <label for="sdeHourlyHours">Ώρες ωρομίσθιας απασχόλησης σε ΣΔΕ <small>650 ώρες = 1 έτος = 1 μόριο. Μην καταχωρίζεις εδώ χρόνο που έχεις ήδη δηλώσει ως πλήρες έτος.</small></label>
-            <input type="number" id="sdeHourlyHours" min="0" step="1" value="0" oninput="calculate()">
+            <input type="number" id="sdeHourlyHours" min="0" step="1" value="0">
           </div>
           <div class="field">
             <label for="adultEducationHours">Ώρες διδακτικού έργου στην Εκπαίδευση Ενηλίκων εκτός ΣΔΕ <small>0,5 μόριο ανά 100 ώρες, έως 4.</small></label>
-            <input type="number" id="adultEducationHours" min="0" step="1" value="0" oninput="calculate()">
+            <input type="number" id="adultEducationHours" min="0" step="1" value="0">
           </div>
           <div class="field">
             <label>Τυπική εκπαίδευση <small>Με τη διόρθωση σφάλματος Β΄ 4199/2026: 1 μόριο ανά πλήρες σχολικό έτος, από το 1ο έτος, έως 4.</small></label>
@@ -181,7 +181,7 @@ foreach ($sdeSecondmentSpecialties as $code) {
         <div class="field-grid">
           <div class="field full">
             <label for="computer">Πιστοποιημένη γνώση Η/Υ / ΤΠΕ Α΄ επιπέδου ή πιστοποιητικό γνώσης Η/Υ σύμφωνα με ΑΣΕΠ <small>+2 μόρια. Για ΠΕ86 η γνώση τεκμαίρεται και τα μόρια αποδίδονται αυτόματα.</small></label>
-            <select id="computer" onchange="calculate()"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
+            <select id="computer"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
           </div>
         </div>
       <?php calculatorCardEnd(); ?>
@@ -203,7 +203,7 @@ foreach ($sdeSecondmentSpecialties as $code) {
         <?php calculatorResultRow(array('label_html' => 'Διδακτική εμπειρία', 'value_html' => '0 / 13', 'value_id' => 'experienceScore')); ?>
         <?php calculatorResultRow(array('label_html' => 'Άλλα προσόντα', 'value_html' => '0 / 5', 'value_id' => 'otherScore')); ?>
         <div id="eligibilityStatus" role="status" aria-live="polite"></div>
-        <?php calculatorActions(array(array('attrs' => array('class' => 'secondary', 'type' => 'button', 'onclick' => 'resetForm()'), 'html' => 'Καθαρισμός'))); ?>
+        <?php calculatorActions(array(array('attrs' => array('class' => 'secondary', 'type' => 'button', 'id' => 'sdeDetachmentResetBtn'), 'html' => 'Καθαρισμός'))); ?>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorCardStart(); ?>
@@ -225,158 +225,7 @@ foreach ($sdeSecondmentSpecialties as $code) {
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-language-selector.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/sde-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
-<script>
-  const $ = id => document.getElementById(id);
-  const yes = id => $(id).value === 'yes';
-  const value = id => $(id).value;
-  const numberValue = id => Math.max(0, Number($(id).value || 0));
-
-  function fmt(n) {
-    const rounded = Math.round((Number(n) || 0) * 100) / 100;
-    return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2).replace('.', ',');
-  }
-
-  function normalizeYearField(id, whole) {
-    const el = $(id);
-    if (!el || el.value === '') return;
-    let value = Number(el.value);
-    if (!Number.isFinite(value)) value = 0;
-    value = Math.max(0, value);
-    if (whole) value = Math.floor(value);
-    const max = el.getAttribute('max');
-    if (max !== null && max !== '') value = Math.min(value, Number(max));
-    el.value = String(value);
-  }
-
-  function specialtyChanged() {
-    const sp = value('specialty');
-    const needsMathCondition = sp === 'PE86' || sp.startsWith('PE04.');
-    $('mathInfoDegreeWrap').classList.toggle('hidden', !needsMathCondition);
-    $('formerPE09Wrap').classList.toggle('hidden', sp !== 'PE80');
-    $('formerPE1208Wrap').classList.toggle('hidden', sp !== 'PE85');
-    if(!needsMathCondition) $('mathInfoDegree').value = 'no';
-    if(sp !== 'PE80') $('formerPE09').value = 'no';
-    if(sp !== 'PE85') $('formerPE1208').value = 'no';
-    if (sp === 'PE86') {
-      $('computer').value = 'yes';
-      $('computer').disabled = true;
-    } else {
-      $('computer').disabled = false;
-    }
-    calculate();
-  }
-
-  function getData() {
-    return {
-      specialty: value('specialty'),
-      phd: value('phd'),
-      master: value('master'),
-      secondDegree: yes('secondDegree'),
-      secondPhd: value('secondPhd'),
-      secondMaster: value('secondMaster'),
-      sdeTrainingHours: numberValue('sdeTrainingHours'),
-      adultTrainingHours: numberValue('adultTrainingHours'),
-      sdeYears: numberValue('sdeYears'),
-      sdeHourlyHours: numberValue('sdeHourlyHours'),
-      adultEducationHours: numberValue('adultEducationHours'),
-      formalEducationYears: numberValue('formalEducationYears'),
-      eligibilitySchoolYears: numberValue('eligibilitySchoolYears'),
-      languages: AsepLanguageSelector.readEntries('sdeLanguages'),
-      computer: yes('computer'),
-      flags: {
-        mathOrInformaticsDegree: yes('mathInfoDegree'),
-        formerPE09or15: yes('formerPE09'),
-        formerPE1208: yes('formerPE1208')
-      }
-    };
-  }
-
-  function renderAssignments(assignments) {
-    if (!value('specialty')) return '<span class="subtitle">Επίλεξε ειδικότητα.</span>';
-    if (!assignments.length) return '<div class="danger">Η επιλεγμένη ειδικότητα δεν περιλαμβάνεται στους κλάδους του άρθρου 5 για τα γνωστικά αντικείμενα/τμήματα που αναφέρονται στην απόφαση.</div>';
-    return assignments.map(item => '<div class="assignment"><strong>' + item.literacy + '</strong><span class="badge">' + item.assignment + '</span>' + (item.note ? '<small>' + item.note + '</small>' : '') + '</div>').join('');
-  }
-
-  function detailRows(title, obj) {
-    let html = '<h3>' + title + '</h3>';
-    if (!obj.details || !obj.details.length) return html + '<div class="subtitle">—</div>';
-    obj.details.forEach(d => { html += '<div class="result-row"><span>' + d.label + '</span><strong>' + fmt(d.points) + '</strong></div>'; });
-    return html;
-  }
-
-  function calculate() {
-    normalizeYearField('eligibilitySchoolYears', false);
-    normalizeYearField('formalEducationYears', true);
-    normalizeYearField('sdeYears', true);
-    const result = SDECalculator.calculateAll(getData());
-    $('totalScore').textContent = fmt(result.total);
-    $('totalBar').style.width = Math.min(100, result.total / 40 * 100) + '%';
-    $('educationScore').textContent = fmt(result.education.total) + ' / 22';
-    $('experienceScore').textContent = fmt(result.experience.total) + ' / 13';
-    $('otherScore').textContent = fmt(result.other.total) + ' / 5';
-    $('formalExperiencePreview').textContent = fmt(result.experience.formalPoints) + ' μόρια';
-
-    const assignmentsHtml = renderAssignments(result.assignments);
-    $('assignmentResult').innerHTML = assignmentsHtml;
-    $('assignmentBox').innerHTML = assignmentsHtml;
-    $('assignmentBox').className = result.assignments.length ? 'success' : (value('specialty') ? 'danger' : 'info');
-
-    const messages = [];
-    const specialtySelected = Boolean(value('specialty'));
-    const blockingValue = value('blockingIssue');
-    const teleValue = value('teleEducation');
-
-    if (!specialtySelected) messages.push('<div class="result-message edu-message result-message--status edu-message--status"><strong>Επίλεξε ειδικότητα</strong> για να ελεγχθούν οι αποδεκτοί γραμματισμοί.</div>');
-    const eligibilityYearsAnswered = $('eligibilitySchoolYears').value !== '';
-    if (!eligibilityYearsAnswered) {
-      messages.push('<div class="result-message edu-message result-message--status edu-message--status"><strong>Δικαίωμα αίτησης:</strong> συμπλήρωσε τη διδακτική υπηρεσία σε σχολεία Πρωτοβάθμιας/Δευτεροβάθμιας.</div>');
-    } else if (!result.eligibleByTwoYears) {
-      messages.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Δεν συμπληρώνονται τα 2 απαιτούμενα έτη διδακτικής υπηρεσίας.</strong></div>');
-    }
-
-    if (blockingValue === '') {
-      messages.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Κωλύματα:</strong> δήλωσε αν υπάρχει πιθανό κώλυμα του άρθρου 4.</div>');
-    } else if (blockingValue === 'yes') {
-      messages.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Δήλωσες πιθανό κώλυμα του άρθρου 4.</strong> Απαιτείται έλεγχος πριν την αίτηση.</div>');
-    } else if (specialtySelected && eligibilityYearsAnswered && result.eligibleByTwoYears) {
-      messages.push('<div class="result-message edu-message result-message--success edu-message--success"><strong>Ο βασικός έλεγχος των 2 ετών/κωλύματος είναι θετικός.</strong> Έλεγξε πάντως όλες τις προϋποθέσεις της πρόσκλησης.</div>');
-    }
-
-    if ($('formalEducationYears').value !== '' && eligibilityYearsAnswered && Math.floor(numberValue('formalEducationYears')) < Math.floor(numberValue('eligibilitySchoolYears'))) {
-      messages.push('<div class="result-message edu-message result-message--warning edu-message--warning"><strong>Έλεγχος ετών:</strong> τα συνολικά πλήρη έτη τυπικής εκπαίδευσης που δήλωσες για μοριοδότηση είναι λιγότερα από τα έτη Πρωτοβάθμιας/Δευτεροβάθμιας που δήλωσες για επιλεξιμότητα. Έλεγξε τις καταχωρίσεις.</div>');
-    }
-
-    if (specialtySelected && !result.assignments.length) messages.push('<div class="result-message edu-message result-message--warning edu-message--warning">Δεν εντοπίζεται αποδεκτός γραμματισμός για την επιλεγμένη ειδικότητα στο άρθρο 5.</div>');
-
-    if (teleValue === '') {
-      messages.push('<div class="result-message edu-message result-message--status edu-message--status">Δήλωσε αν αποδέχεσαι σύγχρονη τηλεκπαίδευση· χρησιμοποιείται ως πρώτο κριτήριο ισοβαθμίας.</div>');
-    } else if (teleValue === 'no') {
-      messages.push('<div class="result-message edu-message result-message--warning edu-message--warning">Σε ισοβαθμία προηγείται υποψήφιος που έχει αποδεχτεί τη σύγχρονη τηλεκπαίδευση.</div>');
-    }
-    $('eligibilityStatus').innerHTML = messages.join('');
-
-    let breakdown = detailRows('Εκπαίδευση', result.education) + detailRows('Διδακτική εμπειρία', result.experience) + detailRows('Άλλα προσόντα', result.other);
-    [...result.education.warnings, ...result.other.warnings].forEach(w => { breakdown += '<div class="warning">' + w + '</div>'; });
-    $('breakdown').innerHTML = breakdown;
-  }
-
-  function resetForm() {
-    document.querySelectorAll('input[type="number"]').forEach(el => el.value = '0');
-    $('formalEducationYears').value = '';
-    $('eligibilitySchoolYears').value = '';
-    document.querySelectorAll('select').forEach(el => {
-      if (el.id === 'teleEducation' || el.id === 'blockingIssue') el.value = '';
-      else el.selectedIndex = 0;
-    });
-    AsepLanguageSelector.reset('sdeLanguages', { silent: true });
-    specialtyChanged(); calculate();
-  }
-
-  document.addEventListener('asep-language-change', calculate);
-
-  specialtyChanged();
-  calculate();
-</script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/sde-detachment-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
   <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>
