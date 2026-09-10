@@ -279,6 +279,7 @@
       var sourceSection = document.createElement('section');
       sourceSection.className = 'edu-print-report-section edu-print-report-sources';
       var sourceClone = cleanClone(source);
+      sourceClone.querySelectorAll('details').forEach(function (details) { details.setAttribute('open', ''); });
       sourceSection.appendChild(sourceClone);
       sheet.appendChild(sourceSection);
     }

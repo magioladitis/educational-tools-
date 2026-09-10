@@ -428,6 +428,31 @@ if (!function_exists('calculatorResultMessage')) {
     }
 }
 
+if (!function_exists('calculatorDisclosure')) {
+    function calculatorDisclosure($config = array()) {
+        $config = is_array($config) ? $config : array();
+        $class = 'edu-disclosure';
+        if (isset($config['variant']) && $config['variant'] !== '') {
+            $variant = preg_replace('/[^a-zA-Z0-9_-]/', '', (string)$config['variant']);
+            if ($variant !== '') $class .= ' edu-disclosure--' . $variant;
+        }
+        if (isset($config['class']) && $config['class'] !== '') $class .= ' ' . $config['class'];
+        $attrs = isset($config['attrs']) && is_array($config['attrs']) ? $config['attrs'] : array();
+        if (!empty($config['open'])) $attrs['open'] = true;
+        $id = isset($config['id']) ? $config['id'] : null;
+        calculatorLayoutOpenTag('details', $class, $id, $attrs);
+
+        $summary = calculatorLayoutTextOrHtml($config, 'summary', 'summary_html');
+        echo '<summary class="edu-disclosure__summary">';
+        echo '<span>' . $summary . '</span><span class="edu-disclosure__chevron" aria-hidden="true">›</span>';
+        echo '</summary>';
+
+        $body = calculatorLayoutTextOrHtml($config, 'text', 'html');
+        echo '<div class="edu-disclosure__body">' . $body . '</div>';
+        echo '</details>';
+    }
+}
+
 if (!function_exists('calculatorActions')) {
     function calculatorActions($buttons, $config = array()) {
         $buttons = is_array($buttons) ? $buttons : array();

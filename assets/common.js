@@ -61,6 +61,14 @@
     });
   }
 
+
+  function collapseResponsiveSourceCards() {
+    if (!window.matchMedia || !window.matchMedia('(max-width: 650px)').matches) return;
+    document.querySelectorAll('.edu-source-card[data-mobile-collapsed="true"] > .edu-source-card__details').forEach(function (details) {
+      details.removeAttribute('open');
+    });
+  }
+
   function formatDeadlineRemaining(ms) {
     var totalSeconds = Math.max(0, Math.floor(ms / 1000));
     var days = Math.floor(totalSeconds / 86400);
@@ -153,6 +161,7 @@
     enhanceButtons(document);
     enhanceResults(document);
     embedSourceCards();
+    collapseResponsiveSourceCards();
     installBackToTop();
     installDeadlineCountdowns(document);
 

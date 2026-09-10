@@ -23,6 +23,37 @@ if (!function_exists('sourceCardStart')) {
     }
 }
 
+
+if (!function_exists('sourceCardDisclosureStart')) {
+    function sourceCardDisclosureStart($config = array())
+    {
+        $config = is_array($config) ? $config : array();
+        $id = isset($config['title_id']) && $config['title_id'] !== '' ? (string) $config['title_id'] : 'sourcesTitle';
+        $title = isset($config['title']) && $config['title'] !== '' ? (string) $config['title'] : 'Πηγές / Νομική βάση';
+        $mobileCollapsed = !isset($config['mobile_collapsed']) || (bool) $config['mobile_collapsed'];
+        $open = !isset($config['open']) || (bool) $config['open'];
+
+        echo '<section class="edu-source-card edu-source-card--responsive" aria-labelledby="' . sourceCardEscape($id) . '"';
+        if ($mobileCollapsed) echo ' data-mobile-collapsed="true"';
+        echo '>';
+        echo '<details class="edu-disclosure edu-source-card__details"';
+        if ($open) echo ' open';
+        echo '>';
+        echo '<summary class="edu-disclosure__summary">';
+        echo '<span id="' . sourceCardEscape($id) . '">' . sourceCardEscape($title) . '</span>';
+        echo '<span class="edu-disclosure__chevron" aria-hidden="true">›</span>';
+        echo '</summary>';
+        echo '<div class="edu-disclosure__body edu-source-card__body">';
+    }
+}
+
+if (!function_exists('sourceCardDisclosureEnd')) {
+    function sourceCardDisclosureEnd()
+    {
+        echo '</div></details></section>';
+    }
+}
+
 if (!function_exists('sourceCardLinksStart')) {
     function sourceCardLinksStart()
     {
