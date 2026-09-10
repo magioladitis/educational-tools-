@@ -8,6 +8,7 @@ DATA = (ROOT / 'includes' / 'weekly-timetable-data.php').read_text(encoding='utf
 CROSS = (ROOT / 'includes' / 'teaching-timetable-crosswalk.php').read_text(encoding='utf-8')
 ASSIGN = (ROOT / 'includes' / 'teaching-assignments-epal.php').read_text(encoding='utf-8')
 PAGE = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
+UI = (ROOT / 'includes' / 'weekly-timetable-ui.js').read_text(encoding='utf-8')
 ASSIGN_PAGE = (ROOT / 'anatheseis-mathimaton.php').read_text(encoding='utf-8')
 
 checks = []
@@ -175,8 +176,8 @@ for cid in (
 
 # --- UI contract -----------------------------------------------------------
 check('page renders variant selector', 'id="variantField"' in PAGE and 'id="variant"' in PAGE)
-check('page filters rows by selected variant', 'row.variant && row.variant !== variant' in PAGE)
-check('page names selected variant in summary', 'currentVariantLabel(school, grade, track)' in PAGE)
+check('page filters rows by selected variant', 'row.variant && row.variant !== variant' in UI)
+check('page names selected variant in summary', 'currentVariantLabel(school, grade, track)' in UI)
 
 for name, ok in checks:
     print(('PASS: ' if ok else 'FAIL: ') + name)

@@ -46,13 +46,14 @@ check('EPAL guard', c['epal']['status']=='scope_not_confirmed' and c['epal']['el
 check('Music Gym applies gymnasium family rule', c['music']['status']=='consolidated_parallel')
 
 page=(ROOT/'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
+ui=(ROOT/'includes/weekly-timetable-ui.js').read_text(encoding='utf-8')
 check('timetable loads ethics helper', "includes/ethics-class-formation.php" in page)
 check('timetable exposes public policy only', 'ethicsClassFormationPublicPolicy()' in page)
 check('timetable source card links decision', '108070/Δ2/2026' in page and '5231/2026' in page)
 check('timetable note includes 10 threshold', '10 απαλλασσόμενοι/ες ανά τάξη' in page)
 check('timetable note includes fifth day', 'πέμπτη ημέρα' in page)
-check('timetable passes school to combiner', 'combineReligionEthics(rows, school)' in page)
-check('out-of-scope UI guard present', 'δεν εφαρμόζεται αυτόματα σε αυτή τη δομή' in page)
+check('timetable passes school to combiner', 'combineReligionEthics(rows, school)' in ui)
+check('out-of-scope UI guard present', 'δεν εφαρμόζεται αυτόματα σε αυτή τη δομή' in ui)
 
 failed=[n for n,ok in checks if not ok]
 for n,ok in checks: print(('PASS' if ok else 'FAIL')+': '+n)
