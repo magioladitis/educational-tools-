@@ -9,7 +9,6 @@
   'use strict';
 
   var PAGE_CONFIG = {
-    'posa-paravola.php': { results: ['#result'], actionAnchor: '#result' },
     'ypologismos-morion.php': {},
     'ypologismos-morion-1gt-2024.php': {},
     'ypologismos-morion-onaseia.php': {},

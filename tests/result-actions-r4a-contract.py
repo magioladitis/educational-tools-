@@ -5,18 +5,21 @@ checks=[]
 def check(name, ok, detail=''):
     checks.append((name,bool(ok),detail))
 
-for fname, func in [
-    ('ypologismos-morion-apospasis-psifiako-frontistirio.php','calculate()'),
-    ('ypologismos-morion-apospasis-sde.php','calculate()'),
-]:
-    text=(ROOT/fname).read_text(encoding='utf-8')
-    # There must be no calculator action button that manually invokes calculate().
-    action_calls=re.findall(r"calculatorActions\((.*?)\);", text, flags=re.S)
-    action_blob='\n'.join(action_calls)
-    check(fname+' no redundant calculate action', "onclick' => 'calculate()" not in action_blob)
-    check(fname+' reset action remains', "onclick' => 'resetForm()" in action_blob)
-    # Live calculation remains wired in source.
-    check(fname+' remains live', len(re.findall(r'on(?:input|change)="[^"]*calculate\(\)', text)) >= 1)
+# Digital tutoring is fully externally wired; SDE still uses its legacy inline wiring.
+digital_name='ypologismos-morion-apospasis-psifiako-frontistirio.php'
+digital=(ROOT/digital_name).read_text(encoding='utf-8')
+digital_ui=(ROOT/'includes/digital-tutoring-detachment-ui.js').read_text(encoding='utf-8')
+check(digital_name+' no redundant calculate action', "onclick' => 'calculate()" not in digital)
+check(digital_name+' reset action remains', "'id' => 'resetBtn'" in digital and "addEventListener('click', resetForm)" in digital_ui)
+check(digital_name+' remains live', "addEventListener('input'" in digital_ui and "addEventListener('change'" in digital_ui and 'calculate();' in digital_ui)
+
+sde_name='ypologismos-morion-apospasis-sde.php'
+sde=(ROOT/sde_name).read_text(encoding='utf-8')
+action_calls=re.findall(r"calculatorActions\((.*?)\);", sde, flags=re.S)
+action_blob='\n'.join(action_calls)
+check(sde_name+' no redundant calculate action', "onclick' => 'calculate()" not in action_blob)
+check(sde_name+' reset action remains', "onclick' => 'resetForm()" in action_blob)
+check(sde_name+' remains live', len(re.findall(r'on(?:input|change)="[^"]*calculate\(\)', sde)) >= 1)
 
 on=(ROOT/'ypologismos-morion-onaseia.php').read_text(encoding='utf-8')
 on_ui=(ROOT/'includes/onaseia-ui.js').read_text(encoding='utf-8')

@@ -45,6 +45,8 @@ expected = {
 }
 for filename, needles in expected.items():
     text = (ROOT / filename).read_text(encoding='utf-8')
+    if filename == 'ypologismos-morion-apospasis-dimos.php':
+        text += '\n' + (ROOT / 'includes' / 'dimos-detachment-ui.js').read_text(encoding='utf-8')
     for needle in needles:
         check(f'{filename} contains {needle}', needle in text)
 

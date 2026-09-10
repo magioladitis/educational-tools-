@@ -12,7 +12,7 @@ for variant in ['status','success','warning','disclaimer']:
     check('helper supports '+variant, "'"+variant+"'" in layout)
     check('CSS result-message variant '+variant, '.result-message--'+variant in css)
 check('neutral status message style exists', '.edu-message--status' in css)
-check('central cache version is 3.20.69', "EDU_TOOLS_VERSION', '3.20.69" in config)
+check('central cache version is 3.20.89', "EDU_TOOLS_VERSION', '3.20.89" in config)
 standard={
  'ypologismos-morion.php':['pedagogicalPriorityBox','sidebarStatus'],
  'ypologismos-morion-1ea-2025.php':['priorityBox'],
@@ -31,9 +31,10 @@ check('3EA generated priorities use success semantic', 'result-message--success 
 check('SDE result messages use semantic status', 'result-message--status edu-message--status' in (root/'ypologismos-morion-apospasis-sde.php').read_text())
 check('SDE result messages use semantic warning', 'result-message--warning edu-message--warning' in (root/'ypologismos-morion-apospasis-sde.php').read_text())
 check('SDE result messages use semantic success', 'result-message--success edu-message--success' in (root/'ypologismos-morion-apospasis-sde.php').read_text())
-check('Digital tutoring result messages use semantic status', 'result-message--status edu-message--status' in (root/'ypologismos-morion-apospasis-psifiako-frontistirio.php').read_text())
-check('Digital tutoring result messages use semantic warning', 'result-message--warning edu-message--warning' in (root/'ypologismos-morion-apospasis-psifiako-frontistirio.php').read_text())
-check('Digital tutoring result messages use semantic success', 'result-message--success edu-message--success' in (root/'ypologismos-morion-apospasis-psifiako-frontistirio.php').read_text())
+digital_ui=(root/'includes/digital-tutoring-detachment-ui.js').read_text()
+check('Digital tutoring result messages use semantic status', 'result-message--status edu-message--status' in digital_ui)
+check('Digital tutoring result messages use semantic warning', 'result-message--warning edu-message--warning' in digital_ui)
+check('Digital tutoring result messages use semantic success', 'result-message--success edu-message--success' in digital_ui)
 for fn in ['ypologismos-morion.php','ypologismos-morion-3ea-2025.php','ypologismos-morion-4ea-2025.php','ypologismos-morion-apospasis-dimos.php']:
     text=(root/fn).read_text()
     check(fn+' has disclaimer semantic', "'variant' => 'disclaimer'" in text)

@@ -6,6 +6,7 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = (ROOT / 'anatheseis-mathimaton.php').read_text(encoding='utf-8')
+PAGE_UI = (ROOT / 'includes' / 'teaching-assignments-ui.js').read_text(encoding='utf-8')
 NEEDS = (ROOT / 'ypologismos-didaktikon-anagkon.php').read_text(encoding='utf-8')
 DATA_TEXT = (ROOT / 'includes' / 'teaching-assignments-data.php').read_text(encoding='utf-8')
 
@@ -92,8 +93,8 @@ check('PES assignments badge visible', 'Πρότυπα Εκκλησιαστικ�
 check('PES assignments school group visible', 'Πρότυπα Εκκλησιαστικά Σχολεία' in PAGE)
 check('PES Gym checkbox visible', 'id="schoolEcclesiasticalGym"' in PAGE)
 check('PES Lyceum checkbox visible', 'id="schoolEcclesiasticalLykeio"' in PAGE)
-check('PES Gym data filter wired', "row.school === 'protypo_ekklisiastiko_gymnasio'" in PAGE)
-check('PES Lyceum data filter wired', "row.school === 'protypo_ekklisiastiko_lykeio'" in PAGE)
+check('PES Gym data filter wired', "row.school === 'protypo_ekklisiastiko_gymnasio'" in PAGE_UI)
+check('PES Lyceum data filter wired', "row.school === 'protypo_ekklisiastiko_lykeio'" in PAGE_UI)
 check('PES special legal source text visible', '71346/Θ2/2020' in PAGE and '4404/Θ2/2023' in PAGE and 'Δίπλωμα Βυζαντινής Μουσικής' in PAGE)
 
 # Didactic-needs calculator gets placeholders only: disabled options, no enabled option/case/profile.

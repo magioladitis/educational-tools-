@@ -4,7 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 GENERIC = [
-    'posa-paravola.php','ypologismos-morion.php','ypologismos-morion-1gt-2024.php',
+    'ypologismos-morion.php','ypologismos-morion-1gt-2024.php',
     'ypologismos-morion-onaseia.php','ypologismos-morion-apospasis-dimos.php',
     'ypologismos-morion-apospasis.php','ypologismos-morion-1ea-2025.php',
     'ypologismos-morion-2ea-2025.php','ypologismos-morion-3ea-2025.php',
@@ -31,6 +31,7 @@ ok('generic print sheet css exists', '.edu-generic-print-sheet' in css and 'edu-
 ok('generic helper preserves dedicated print pages by registration', 'ypologismos-misthologikou-klimakiou.php' not in helper and 'ypologismos-didaktikon-anagkon.php' not in helper and 'metatropi-klimakas.php' not in helper)
 for f in GENERIC:
     ok('registered: '+f, "'"+f+"'" in helper)
+ok('posa-paravola intentionally has no generic print button', "'posa-paravola.php'" not in helper)
 
 salary=(ROOT/'ypologismos-misthologikou-klimakiou.php').read_text(encoding='utf-8')
 salary_ui=(ROOT/'includes/salary-ui.js').read_text(encoding='utf-8')
@@ -41,8 +42,9 @@ ok('staffing dedicated print preserved', 'id="staffingPrintReport"' in staff and
 ok('grade converter print preserved', 'window.print()' in grade and 'Εκτύπωση' in grade)
 
 main=(ROOT/'ypologismos-morion.php').read_text(encoding='utf-8')
+main_ui=(ROOT/'includes/asep-points-ui.js').read_text(encoding='utf-8')
 ok('1GE/2GE redundant calculate button removed', 'class="calculate-primary" onclick="calculatePoints()"' not in main)
-ok('1GE/2GE live calculation preserved', "addEventListener('input', liveCalculatePoints)" in main and "addEventListener('change', liveCalculatePoints)" in main)
+ok('1GE/2GE live calculation preserved', "addEventListener('input', liveCalculatePoints)" in main_ui and "addEventListener('change', liveCalculatePoints)" in main_ui)
 
 php_files=list(ROOT.glob('*.php'))
 ok('reset wording normalized', all('Μηδενισμός' not in p.read_text(encoding='utf-8') for p in php_files))
