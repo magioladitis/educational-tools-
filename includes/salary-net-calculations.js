@@ -44,15 +44,45 @@
   });
 
   const INSURED_STATUSES = Object.freeze({
+    // "new" is retained as a backwards-compatible alias for callers/tests that
+    // predate the explicit e-EFKA / TEKA supplementary-fund choice.
     new: Object.freeze({
-      label: "Νέος ασφαλισμένος — πρώτη ασφάλιση από 01/01/1993",
-      shortLabel: "Νέος ασφαλισμένος (από 01/01/1993)"
+      label: "Νέος ασφαλισμένος — από 01/01/1993 · επικουρική e-ΕΦΚΑ",
+      shortLabel: "Νέος ασφαλισμένος (από 01/01/1993) · e-ΕΦΚΑ",
+      insuranceEra: "new",
+      supplementaryFund: "efka"
+    }),
+    new_efka: Object.freeze({
+      label: "Νέος ασφαλισμένος — από 01/01/1993 · επικουρική e-ΕΦΚΑ",
+      shortLabel: "Νέος ασφαλισμένος (από 01/01/1993) · e-ΕΦΚΑ",
+      insuranceEra: "new",
+      supplementaryFund: "efka"
+    }),
+    new_teka: Object.freeze({
+      label: "Νέος ασφαλισμένος — από 01/01/1993 · επικουρική ΤΕΚΑ",
+      shortLabel: "Νέος ασφαλισμένος (από 01/01/1993) · ΤΕΚΑ",
+      insuranceEra: "new",
+      supplementaryFund: "teka"
     }),
     old: Object.freeze({
       label: "Παλαιός ασφαλισμένος — πρώτη ασφάλιση έως 31/12/1992",
-      shortLabel: "Παλαιός ασφαλισμένος (έως 31/12/1992)"
+      shortLabel: "Παλαιός ασφαλισμένος (έως 31/12/1992)",
+      insuranceEra: "old",
+      supplementaryFund: "efka"
     })
   });
+
+  function resolveInsuredStatus(value) {
+    const key = INSURED_STATUSES[value] ? value : "new_efka";
+    const selected = INSURED_STATUSES[key];
+    return {
+      key: key,
+      insuranceEra: selected.insuranceEra || (key === "old" ? "old" : "new"),
+      supplementaryFund: selected.supplementaryFund || "efka",
+      label: selected.label,
+      shortLabel: selected.shortLabel
+    };
+  }
 
   const REMOTE_AREA_ALLOWANCE_MONTHLY = 100;
   // e-EFKA: eligible salaried mothers pay 50% of the employee main-pension contribution.
@@ -214,7 +244,7 @@
     };
   }
 
-  function buildDeductionComponents(earnings, profileKey, insuredStatus) {
+  function buildDeductionComponents(earnings, profileKey, insuredStatus, supplementaryFund) {
     const gross = earnings.gross;
     if (profileKey === "substitute") {
       return {
@@ -231,6 +261,8 @@
     }
 
     const oldInsured = insuredStatus === "old";
+    const supplementaryIsTeka = supplementaryFund === "teka";
+    const supplementaryLabel = supplementaryIsTeka ? "ΤΕΚΑ" : "e-ΕΦΚΑ";
     const basicAndPosition = earnings.basic + earnings.position;
     const familyAndRemote = earnings.family + earnings.remote;
     const pensionBase = oldInsured ? basicAndPosition : gross;
@@ -240,10 +272,14 @@
     const components = [
       component(
         "efkaPensionSupplementary",
-        "ΕΦΚΑ — κύρια σύνταξη + επικουρική",
+        supplementaryIsTeka
+          ? "Κύρια σύνταξη e-ΕΦΚΑ + επικουρική ΤΕΚΑ"
+          : "ΕΦΚΑ — κύρια σύνταξη + επικουρική",
         0.0967,
         pensionBase,
-        "9,67% επί της βάσης κύριας/επικουρικής σύνταξης"
+        supplementaryIsTeka
+          ? "6,67% κύρια σύνταξη e-ΕΦΚΑ + 3% επικουρική ΤΕΚΑ · ίδια ασφαλιστέα βάση"
+          : "6,67% κύρια σύνταξη + 3% επικουρική e-ΕΦΚΑ · ίδια ασφαλιστέα βάση"
       ),
       component("healthInKind", "ΕΦΚΑ υγεία — παροχές σε είδος", 0.0165, gross, "1,65% επί των πάσης φύσεως τακτικών αποδοχών"),
       component("healthCash", "ΕΦΚΑ υγεία — παροχές σε χρήμα", 0.0040, gross, "0,40% επί των πάσης φύσεως τακτικών αποδοχών"),
@@ -276,14 +312,17 @@
       "2% επί τακτικών αποδοχών / πρόσθετων αμοιβών που περιλαμβάνονται στην εκτίμηση"
     ));
 
+    const pensionSupplementaryText = supplementaryIsTeka
+      ? "Κύρια e-ΕΦΚΑ 6,67% + επικουρική ΤΕΚΑ 3%"
+      : "Κύρια e-ΕΦΚΑ 6,67% + επικουρική e-ΕΦΚΑ 3%";
     const deductionBreakdown = oldInsured
-      ? "ΕΦΚΑ κύρια+επικουρική 9,67%: βασικός+θέση · Υγεία 2,05%: μικτά · ΤΠΔΥ 4%: βασικός · ΜΤΠΥ 4,5%: βασικός+θέση και 1%: οικογενειακή/παραμεθόριο · Ανεργία 2%: μικτά"
-      : "ΕΦΚΑ κύρια+επικουρική 9,67% · Υγεία 2,05% · ΤΠΔΥ 4% · ΜΤΠΥ 4,5% · Ανεργία 2% επί των αντίστοιχων ασφαλιστέων αποδοχών";
+      ? pensionSupplementaryText + ": βασικός+θέση · Υγεία 2,05%: μικτά · ΤΠΔΥ 4%: βασικός · ΜΤΠΥ 4,5%: βασικός+θέση και 1%: οικογενειακή/παραμεθόριο · Ανεργία 2%: μικτά"
+      : pensionSupplementaryText + " · Υγεία 2,05% · ΤΠΔΥ 4% · ΜΤΠΥ 4,5% · Ανεργία 2% επί των αντίστοιχων ασφαλιστέων αποδοχών";
 
     const euro = function (value) { return roundMoney(value).toFixed(2).replace(".", ",") + " €"; };
     const basesLabel = oldInsured
-      ? "Κύρια/επικουρική: " + euro(pensionBase) + " · ΤΠΔΥ: " + euro(lumpSumBase) + " · ΜΤΠΥ 4,5%: " + euro(mtpyPrimaryBase) + " · ΜΤΠΥ 1%: " + euro(mtpyReducedBase) + " · Υγεία/ανεργία: " + euro(gross)
-      : "Κύρια/επικουρική/ΤΠΔΥ/ΜΤΠΥ: " + euro(pensionBase) + " · Υγεία/ανεργία: " + euro(gross);
+      ? "Κύρια/επικουρική (" + supplementaryLabel + "): " + euro(pensionBase) + " · ΤΠΔΥ: " + euro(lumpSumBase) + " · ΜΤΠΥ 4,5%: " + euro(mtpyPrimaryBase) + " · ΜΤΠΥ 1%: " + euro(mtpyReducedBase) + " · Υγεία/ανεργία: " + euro(gross)
+      : "Κύρια/επικουρική (" + supplementaryLabel + ")/ΤΠΔΥ/ΜΤΠΥ: " + euro(pensionBase) + " · Υγεία/ανεργία: " + euro(gross);
 
     return {
       components: components,
@@ -293,6 +332,8 @@
       mtpyReducedBase: mtpyReducedBase,
       healthBase: gross,
       unemploymentBase: gross,
+      supplementaryFund: supplementaryFund === "teka" ? "teka" : "efka",
+      supplementaryFundLabel: supplementaryLabel,
       deductionBreakdown: deductionBreakdown,
       basesLabel: basesLabel
     };
@@ -390,13 +431,16 @@
       ? options.disabilityTaxTreatment
       : "none";
     const disabilityTaxTreatment = DISABILITY_TAX_TREATMENTS[disabilityTaxTreatmentKey];
-    const insuredStatus = INSURED_STATUSES[options.insuredStatus] ? options.insuredStatus : "new";
+    const insuredSelection = resolveInsuredStatus(options.insuredStatus);
+    const insuredStatus = insuredSelection.insuranceEra;
+    const supplementaryFund = insuredSelection.supplementaryFund;
     const insuredStatusApplies = profileKey !== "substitute";
     const effectiveInsuredStatus = insuredStatusApplies ? insuredStatus : "new";
+    const effectiveSupplementaryFund = insuredStatusApplies ? supplementaryFund : "efka";
     const otherDeductions = nonNegativeNumber(options.otherDeductions);
     const maternityPensionReduction = options.maternityPensionReduction === true;
 
-    const deductionModel = buildDeductionComponents(earnings, profileKey, effectiveInsuredStatus);
+    const deductionModel = buildDeductionComponents(earnings, profileKey, effectiveInsuredStatus, effectiveSupplementaryFund);
     const deductionComponents = deductionModel.components;
     const baseStandardDeductionsExact = deductionComponents.reduce(function (sum, entry) {
       return sum + entry.amountExact;
@@ -443,8 +487,11 @@
       profile: profileKey,
       profileLabel: profile.label,
       insuredStatus: insuredStatus,
+      insuredStatusSelection: insuredSelection.key,
+      supplementaryFund: effectiveSupplementaryFund,
+      supplementaryFundLabel: effectiveSupplementaryFund === "teka" ? "ΤΕΚΑ" : "e-ΕΦΚΑ",
       insuredStatusApplies: insuredStatusApplies,
-      insuredStatusLabel: insuredStatusApplies ? INSURED_STATUSES[insuredStatus].label : "Δεν εφαρμόζεται στο ΚΠΚ 101",
+      insuredStatusLabel: insuredStatusApplies ? insuredSelection.label : "Δεν εφαρμόζεται στο ΚΠΚ 101",
       deductionBreakdown: deductionModel.deductionBreakdown + (maternityPensionReduction ? " · Μειωμένη κύρια σύνταξη μητρότητας 50%" : ""),
       insuranceBasesLabel: deductionModel.basesLabel,
       pensionContributionBase: deductionModel.pensionBase,
@@ -487,6 +534,7 @@
   global.EducationSalaryNet = Object.freeze({
     PROFILES: PROFILES,
     INSURED_STATUSES: INSURED_STATUSES,
+    resolveInsuredStatus: resolveInsuredStatus,
     PERMANENT_DEDUCTION_COMPONENTS: PERMANENT_DEDUCTION_COMPONENTS,
     SUBSTITUTE_DEDUCTION_COMPONENTS: SUBSTITUTE_DEDUCTION_COMPONENTS,
     roundMoney: roundMoney,
