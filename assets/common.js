@@ -64,6 +64,13 @@
 
   function collapseResponsiveSourceCards() {
     if (!window.matchMedia || !window.matchMedia('(max-width: 650px)').matches) return;
+
+    /* Generic mobile-first disclosures may stay open on desktop but collapse on phones. */
+    document.querySelectorAll('.edu-disclosure[data-mobile-collapsed="true"]').forEach(function (details) {
+      details.removeAttribute('open');
+    });
+
+    /* Backwards-compatible source-card hook used by the first pilot pages. */
     document.querySelectorAll('.edu-source-card[data-mobile-collapsed="true"] > .edu-source-card__details').forEach(function (details) {
       details.removeAttribute('open');
     });
