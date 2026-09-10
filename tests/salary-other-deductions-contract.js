@@ -4,6 +4,8 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const code = fs.readFileSync(path.join(root, 'includes', 'salary-net-calculations.js'), 'utf8');
 const page = fs.readFileSync(path.join(root, 'ypologismos-misthologikou-klimakiou.php'), 'utf8');
+const ui = fs.readFileSync(path.join(root, 'includes', 'salary-ui.js'), 'utf8');
+const app = page + '\n' + ui;
 const context = { window: {} };
 vm.createContext(context);
 vm.runInContext(code, context);
@@ -15,7 +17,7 @@ function close(name, actual, expected, tolerance = 0.01) {
   checks++;
 }
 
-check('collapsible panel', page.includes('id="otherDeductionsPanel"') && page.includes('<summary><strong>Λοιπές κρατήσεις</strong>'));
+check('collapsible panel', page.includes("'id' => 'otherDeductionsPanel'") && page.includes("'summary_html' => 'Λοιπές κρατήσεις <small>· προαιρετικά</small>'"));
 check('ADEDY input', page.includes('id="adedYDeduction"'));
 check('federation input', page.includes('id="federationDeduction"') && page.includes('ΟΛΜΕ / ΔΟΕ'));
 check('association input', page.includes('id="associationDeduction"'));
@@ -23,7 +25,7 @@ check('other amount input', page.includes('id="otherPayrollDeduction"'));
 check('all start at zero', (page.match(/type="number" min="0" step="0\.01" value="0"/g) || []).length >= 4);
 check('result total row', page.includes('otherDeductionsResult'));
 check('result breakdown row', page.includes('otherDeductionsBreakdownResult'));
-check('engine receives total', page.includes('otherDeductions: otherDeductions'));
+check('engine receives total', app.includes('otherDeductions: otherDeductions'));
 check('tax unaffected note', page.includes('δεν μειώνουν το φορολογητέο εισόδημα'));
 
 const base = S.calculate({ grossMonthly: 1586, profile: 'permanent', ageGroup: 'over30', children: 0 });

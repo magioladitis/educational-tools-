@@ -6,6 +6,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / 'ypologismos-morion-metathesis.php'
 MODULE = ROOT / 'includes' / 'transfer-calculations.js'
 TOOLS = ROOT / 'ergaleia.php'
+CATALOG = ROOT / 'includes' / 'tools-catalog.php'
+UI = ROOT / 'includes' / 'transfer-ui.js'
 CONFIG = ROOT / 'includes' / 'config.php'
 checks = 0
 
@@ -18,26 +20,31 @@ def check(name, cond):
 page = PAGE.read_text(encoding='utf-8')
 module = MODULE.read_text(encoding='utf-8')
 tools = TOOLS.read_text(encoding='utf-8')
+catalog = CATALOG.read_text(encoding='utf-8')
+ui = UI.read_text(encoding='utf-8')
 config = CONFIG.read_text(encoding='utf-8')
 
 check('page exists', PAGE.exists())
 check('module exists', MODULE.exists())
+check('UI controller exists', UI.exists())
 check('no inline style', '<style' not in page.lower())
 check('standard calculator', 'edu-calc-standard' in page and 'edu-page-transfer' in page)
 check('shared layout', 'calculatorHero(' in page and 'calculatorColumnsStart(' in page and 'calculatorScoreHeader(' in page)
 check('source card', 'sourceCardStart(' in page)
 check('module loaded', 'includes/transfer-calculations.js' in page)
+check('UI controller loaded', 'includes/transfer-ui.js' in page)
+check('no inline transfer controller', '<script>\n(function () {' not in page)
 check('six result criteria', all(x in page for x in ['servicePointsResult','msdPointsResult','coServiceResult','familyResult','localityResult','firstPreferenceResult']))
 check('dynamic MSD rows', 'id="msdRows"' in page and 'id="addMsdRow"' in page)
-check('prison UI', 'κατάστημα κράτησης (+5/έτος)' in page)
-check('digital UI', 'Ψηφιακό Φροντιστήριο (+6/έτος)' in page)
-check('listed +2 UI', 'ΥΠΑΙΘΑ / ΠΔΕ / ΔΔΕ / ΙΕΠ κ.ά. (+2/έτος)' in page)
-check('remote double UI', 'διπλασιασμός απομακρυσμένης' in page and 'Ι΄–ΙΓ΄' in page)
-check('parallel days UI', 'Ημέρες / εβδομάδα' in page and 'έως 5/5' in page)
+check('prison UI', 'κατάστημα κράτησης (+5/έτος)' in ui)
+check('digital UI', 'Ψηφιακό Φροντιστήριο (+6/έτος)' in ui)
+check('listed +2 UI', 'ΥΠΑΙΘΑ / ΠΔΕ / ΔΔΕ / ΙΕΠ κ.ά. (+2/έτος)' in ui)
+check('remote double UI', 'διπλασιασμός απομακρυσμένης' in ui and 'Ι΄–ΙΓ΄' in ui)
+check('parallel days UI', 'Ημέρες / εβδομάδα' in ui and 'έως 5/5' in ui)
 check('service years capped at 50', 'id="serviceYears" type="number" min="0" max="50"' in page)
-check('MSD years capped at 50', 'class="msd-years" type="number" min="0" max="50"' in page)
-check('year input clamp capped at 50', "clampInput(target, 50);" in page and "clampInput(target, 40);" not in page and "clampInput(target, 60);" not in page)
-check('abroad and study leave fixed 5/5 UI', 'fixedFullWeek' in page and "weekdaysInput.disabled = true" in page and 'σταθερά 5/5' in page)
+check('MSD years capped at 50', 'class="msd-years" type="number" min="0" max="50"' in ui)
+check('year input clamp capped at 50', "clampInput(target, 50);" in ui and "clampInput(target, 40);" not in ui and "clampInput(target, 60);" not in ui)
+check('abroad and study leave fixed 5/5 UI', 'fixedFullWeek' in ui and "weekdaysInput.disabled = true" in ui and 'σταθερά 5/5' in ui)
 check('abroad and study leave fixed 5/5 engine', 'isFixedFullWeekType' in module and "isFixedFullWeekType(period.type) ? 5" in module)
 check('15 day rule UI', '15+ → 1 μήνας' in page)
 check('first version disclaimer', '<strong>Πρώτη έκδοση:</strong>' in page and 'ειδικές κατηγορίες' in page)
@@ -49,11 +56,9 @@ check('module digital bonus', "type === 'digital_tutoring'" in module and 'retur
 check('module listed bonus2', "type === 'listed_service_bonus2'" in module and 'return 2' in module)
 check('module remote categories', 'REMOTE_DOUBLE_CATEGORIES' in module and all(k in module for k in ['I: true','IA: true','IB: true','IG: true']))
 check('module local first preference guard', "input.mode === 'local' ? 0" in module)
-check('toolbox filter', 'data-filter="metatheseis"' in tools)
-check('toolbox card', 'href="ypologismos-morion-metathesis.php"' in tools and 'class="tool-number">27<' in tools)
-toolbox_card_count=len(re.findall(r'class="tool-card"', tools))
-check('toolbox count matches cards', f'{toolbox_card_count} διαθέσιμα εργαλεία' in tools and f'Εμφανίζονται {toolbox_card_count} εργαλεία.' in tools)
-check('asset version 3.20.69', "EDU_TOOLS_VERSION', '3.20.69'" in config)
+check('catalog transfer group', "'href' => 'ypologismos-morion-metathesis.php'" in catalog and "'group' => 'metakiniseis'" in catalog)
+check('catalog transfer number', "'number' => 27" in catalog and "'title' => 'Μόρια Μετάθεσης'" in catalog)
+check('central asset version present', "define('EDU_TOOLS_VERSION'" in config)
 ids = re.findall(r'\bid="([^"]+)"', page)
 check('no duplicate literal ids', len(ids) == len(set(ids)))
 proc = subprocess.run(['php','-l',str(PAGE)], capture_output=True, text=True)

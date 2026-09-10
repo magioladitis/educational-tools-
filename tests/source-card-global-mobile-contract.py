@@ -30,7 +30,7 @@ for f in ROOT.glob('*.php'):
         explicit_pages.append(f)
 
 check('broad legacy adoption remains', len(legacy_pages) >= 25)
-check('pilot explicit responsive pages remain', len(explicit_pages) >= 2)
+check('pilot pages no longer carry explicit responsive source overrides', len(explicit_pages) == 0)
 
 # Render a representative cross-section: simple guide, calculator, complex tool.
 for name in ['dikaiologitika-tekna-anapiria.php', 'ypologismos-morion-apospasis.php', 'anatheseis-mathimaton.php']:

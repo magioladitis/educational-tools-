@@ -50,8 +50,9 @@ check(pos >= 0 and 'secondary' in frag, 'DIMOS: Καθαρισμός remains sec
 # Hybrid/manual-value actions must retain their distinct hierarchy.
 aposp = (ROOT / 'ypologismos-morion-apospasis.php').read_text(encoding='utf-8')
 onas = (ROOT / 'ypologismos-morion-onaseia.php').read_text(encoding='utf-8')
+onas_ui = (ROOT / 'includes/onaseia-ui.js').read_text(encoding='utf-8')
 check("'Έλεγχος & προβολή αποτελέσματος', 'class' => 'primary-btn'" in aposp, 'General detachment: hybrid action stays primary')
-check("'Έλεγχος & υπολογισμός'" in onas and "onclick' => 'calculatePoints()" in onas, 'Onaseia: hybrid calculate action retained')
+check("'Έλεγχος & υπολογισμός'" in onas and "'id' => 'calculateBtn'" in onas and 'getElementById("calculateBtn").addEventListener("click", calculatePoints)' in onas_ui, 'Onaseia: hybrid calculate action retained')
 
 print(f'\n{passes}/{passes + len(fails)} PASS')
 if fails:

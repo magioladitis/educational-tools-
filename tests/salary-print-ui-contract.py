@@ -1,9 +1,12 @@
 from pathlib import Path
-p = Path(__file__).resolve().parents[1] / 'ypologismos-misthologikou-klimakiou.php'
+root = Path(__file__).resolve().parents[1]
+p = root / 'ypologismos-misthologikou-klimakiou.php'
 s = p.read_text(encoding='utf-8')
+ui = (root / 'includes' / 'salary-ui.js').read_text(encoding='utf-8')
+app = s + '\n' + ui
 checks = []
 def need(label, needle):
-    if needle not in s:
+    if needle not in app:
         raise AssertionError(f'{label}: missing {needle!r}')
     checks.append(label)
 need('print button', "'id' => 'printBtn'")
@@ -16,7 +19,7 @@ need('print render function', 'function renderPrintSheet(result, net, payroll)')
 need('gross detail heading', 'ΑΠΟΔΟΧΕΣ')
 need('deductions detail heading', 'ΚΡΑΤΗΣΕΙΣ')
 need('net print label', 'ΕΚΤΙΜΩΜΕΝΟ ΠΛΗΡΩΤΕΟ')
-need('eligibility details panel', 'id="maternityEligibilityPanel"')
+need('eligibility details panel', "'id' => 'maternityEligibilityPanel'")
 need('eligible salaried mothers explanation', 'μητέρες μισθωτές ασφαλισμένες')
 need('lochia timing', 'επιδότηση λόγω λοχείας')
 need('next-month timing', '1η του επόμενου μήνα του τοκετού')

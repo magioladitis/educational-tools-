@@ -33,9 +33,10 @@ for f in GENERIC:
     ok('registered: '+f, "'"+f+"'" in helper)
 
 salary=(ROOT/'ypologismos-misthologikou-klimakiou.php').read_text(encoding='utf-8')
+salary_ui=(ROOT/'includes/salary-ui.js').read_text(encoding='utf-8')
 staff=(ROOT/'ypologismos-didaktikon-anagkon.php').read_text(encoding='utf-8')
 grade=(ROOT/'metatropi-klimakas.php').read_text(encoding='utf-8')
-ok('salary dedicated print preserved', 'id="payrollPrintSheet"' in salary and 'id' + "' => 'printBtn'" in salary and 'window.print()' in salary)
+ok('salary dedicated print preserved', 'id="payrollPrintSheet"' in salary and 'id' + "' => 'printBtn'" in salary and 'window.print()' in salary_ui)
 ok('staffing dedicated print preserved', 'id="staffingPrintReport"' in staff and 'id="staffingPrintButton"' in staff and 'window.print()' in staff)
 ok('grade converter print preserved', 'window.print()' in grade and 'Εκτύπωση' in grade)
 

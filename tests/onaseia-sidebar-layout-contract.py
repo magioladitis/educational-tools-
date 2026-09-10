@@ -13,6 +13,7 @@ def check(name, ok):
 
 source = PAGE.read_text(encoding='utf-8')
 css = CSS.read_text(encoding='utf-8')
+ui = (ROOT / 'includes' / 'onaseia-ui.js').read_text(encoding='utf-8')
 
 check('Onaseia uses shared columns', 'calculatorColumnsStart(' in source)
 check('Onaseia uses shared main', 'calculatorMainStart(' in source)
@@ -21,7 +22,7 @@ check('Onaseia uses canonical score header', source.count('calculatorScoreHeader
 check('Onaseia has academic summary row', "'value_id' => 'resAcademic'" in source)
 check('Onaseia has service summary row', "'value_id' => 'resService'" in source)
 check('Onaseia has status message', "'id' => 'sidebarStatus'" in source)
-check('Onaseia sidebar updates from computed total', 'updateSidebarSummary(' in source and 'academicPoints' in source and 'service.points' in source)
+check('Onaseia sidebar updates from computed total', 'updateSidebarSummary(' in ui and 'academicPoints' in ui and 'service.points' in ui)
 check('Onaseia layout CSS exists', 'body.edu-page-onaseia .layout{display:grid' in css)
 check('Onaseia sticky results CSS exists', 'body.edu-page-onaseia .results{position:sticky' in css)
 check('Onaseia responsive single-column CSS exists', '@media(max-width:900px){body.edu-page-onaseia .layout{grid-template-columns:1fr}' in css)

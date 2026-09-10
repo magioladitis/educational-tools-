@@ -136,11 +136,17 @@
       </label>
     </div>
 
-    <p class="note">
-      Οι κατά προτεραιότητα αιτήσεις εξετάζονται συγκρινόμενες μόνο μεταξύ τους. Για τις περιπτώσεις συνυπηρέτησης,
-      αν δεν δηλωθεί ως πρώτη προτίμηση το ΠΥΣΠΕ/ΠΥΣΔΕ όπου υπάρχει η συνυπηρέτηση, δεν ισχύει η κατά προτεραιότητα απόσπαση.
-      Στην κατά προτεραιότητα διαδικασία Αθήνα και Θεσσαλονίκη <strong>δεν</strong> αντιμετωπίζονται ενιαία.
-    </p>
+    <?php calculatorDisclosureStart(array(
+      'summary' => 'Πώς λειτουργεί η κατά προτεραιότητα απόσπαση;',
+      'open' => true,
+      'attrs' => array('data-mobile-collapsed' => 'true')
+    )); ?>
+      <p>
+        Οι κατά προτεραιότητα αιτήσεις εξετάζονται συγκρινόμενες μόνο μεταξύ τους. Για τις περιπτώσεις συνυπηρέτησης,
+        αν δεν δηλωθεί ως πρώτη προτίμηση το ΠΥΣΠΕ/ΠΥΣΔΕ όπου υπάρχει η συνυπηρέτηση, δεν ισχύει η κατά προτεραιότητα απόσπαση.
+        Στην κατά προτεραιότητα διαδικασία Αθήνα και Θεσσαλονίκη <strong>δεν</strong> αντιμετωπίζονται ενιαία.
+      </p>
+    <?php calculatorDisclosureEnd(); ?>
   <?php calculatorCardEnd(); ?>
 
   <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
@@ -175,17 +181,22 @@
       </div>
     </div>
 
-    <table class="mini-table">
-      <tr><th>Χρόνος υπηρεσίας</th><th>Μοριοδότηση</th></tr>
-      <tr><td>1 έως και 10 έτη</td><td>1 μονάδα ανά έτος</td></tr>
-      <tr><td>Πάνω από 10 έως και 20 έτη</td><td>1,5 μονάδα ανά έτος</td></tr>
-      <tr><td>Πάνω από 20 έτη</td><td>2 μονάδες ανά έτος</td></tr>
-    </table>
-
-    <p class="note">
-      Ο χρόνος συνολικής υπηρεσίας ταυτίζεται με τον χρόνο που υπολογίζεται στις μεταθέσεις.
-      Υπόλοιπο <strong>15 ημερών και άνω</strong> υπολογίζεται ως ένας πλήρης μήνας.
-    </p>
+    <?php calculatorDisclosureStart(array(
+      'summary' => 'Κλίμακα μοριοδότησης συνολικής υπηρεσίας',
+      'open' => true,
+      'attrs' => array('data-mobile-collapsed' => 'true')
+    )); ?>
+      <table class="mini-table">
+        <tr><th>Χρόνος υπηρεσίας</th><th>Μοριοδότηση</th></tr>
+        <tr><td>1 έως και 10 έτη</td><td>1 μονάδα ανά έτος</td></tr>
+        <tr><td>Πάνω από 10 έως και 20 έτη</td><td>1,5 μονάδα ανά έτος</td></tr>
+        <tr><td>Πάνω από 20 έτη</td><td>2 μονάδες ανά έτος</td></tr>
+      </table>
+      <p>
+        Ο χρόνος συνολικής υπηρεσίας ταυτίζεται με τον χρόνο που υπολογίζεται στις μεταθέσεις.
+        Υπόλοιπο <strong>15 ημερών και άνω</strong> υπολογίζεται ως ένας πλήρης μήνας.
+      </p>
+    <?php calculatorDisclosureEnd(); ?>
   <?php calculatorCardEnd(); ?>
 
   <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
@@ -249,12 +260,18 @@
       </div>
     </div>
 
-    <p class="note">
-      Τέκνα: 5 μόρια για το πρώτο, 6 για το δεύτερο, 8 για το τρίτο και 10 για κάθε επόμενο,
-      εφόσον είναι άγαμα ανήλικα ή σπουδάζουν. <strong>Ειδικά για το 2025-2026</strong>, τέκνο που φοιτά
-      στη Γ΄ Λυκείου δικαιούται μόρια ακόμη και αν έχει συμπληρώσει το 18ο έτος και δεν έχει ακόμη
-      εγγραφεί σε ανώτερη/ανώτατη δημόσια σχολή.
-    </p>
+    <?php calculatorDisclosureStart(array(
+      'summary' => 'Πώς μοριοδοτούνται τα τέκνα;',
+      'open' => true,
+      'attrs' => array('data-mobile-collapsed' => 'true')
+    )); ?>
+      <p>
+        Τέκνα: 5 μόρια για το πρώτο, 6 για το δεύτερο, 8 για το τρίτο και 10 για κάθε επόμενο,
+        εφόσον είναι άγαμα ανήλικα ή σπουδάζουν. <strong>Ειδικά για το 2025-2026</strong>, τέκνο που φοιτά
+        στη Γ΄ Λυκείου δικαιούται μόρια ακόμη και αν έχει συμπληρώσει το 18ο έτος και δεν έχει ακόμη
+        εγγραφεί σε ανώτερη/ανώτατη δημόσια σχολή.
+      </p>
+    <?php calculatorDisclosureEnd(); ?>
   <?php calculatorCardEnd(); ?>
 
   <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
@@ -313,12 +330,18 @@
       <label for="ivf">Θεραπεία εξωσωματικής γονιμοποίησης του/της εκπαιδευτικού ή του/της συζύγου — <strong>3 μόρια</strong></label>
     </div>
 
-    <p class="note">
-      Η μοριοδότηση σοβαρών λόγων υγείας δεν γίνεται προσθετικά <strong>εντός της ίδιας κατηγορίας</strong>
-      όταν ο λόγος συντρέχει σε περισσότερα του ενός συγγενικά πρόσωπα. Απαιτείται εν ισχύ γνωμάτευση
-      των αρμόδιων υγειονομικών επιτροπών ή ΚΕΠΑ. Για γονέα απαιτούνται επιπλέον τα προβλεπόμενα
-      δικαιολογητικά εντοπιότητας και μόνιμης κατοικίας.
-    </p>
+    <?php calculatorDisclosureStart(array(
+      'summary' => 'Προϋποθέσεις μοριοδότησης σοβαρών λόγων υγείας',
+      'open' => true,
+      'attrs' => array('data-mobile-collapsed' => 'true')
+    )); ?>
+      <p>
+        Η μοριοδότηση σοβαρών λόγων υγείας δεν γίνεται προσθετικά <strong>εντός της ίδιας κατηγορίας</strong>
+        όταν ο λόγος συντρέχει σε περισσότερα του ενός συγγενικά πρόσωπα. Απαιτείται εν ισχύ γνωμάτευση
+        των αρμόδιων υγειονομικών επιτροπών ή ΚΕΠΑ. Για γονέα απαιτούνται επιπλέον τα προβλεπόμενα
+        δικαιολογητικά εντοπιότητας και μόνιμης κατοικίας.
+      </p>
+    <?php calculatorDisclosureEnd(); ?>
   <?php calculatorCardEnd(); ?>
 
   <?php calculatorCardStart(array('tag' => 'div', 'class' => 'section')); ?>
@@ -349,15 +372,21 @@
       </div>
     </div>
 
-    <p class="note">
-      Εφόσον πληρούνται όλες οι προϋποθέσεις: <strong>2 μόρια</strong>. Τα ΠΥΣΠΕ/ΠΥΣΔΕ Αττικής και Θεσσαλονίκης
-      αντιμετωπίζονται ενιαία για το κριτήριο των σπουδών. Δεν δίνονται οι 2 μονάδες για ΕΑΠ ή διδακτορικό.
-    </p>
+    <?php calculatorDisclosureStart(array(
+      'summary' => 'Προϋποθέσεις μοριοδότησης σπουδών',
+      'open' => true,
+      'attrs' => array('data-mobile-collapsed' => 'true')
+    )); ?>
+      <p>
+        Εφόσον πληρούνται όλες οι προϋποθέσεις: <strong>2 μόρια</strong>. Τα ΠΥΣΠΕ/ΠΥΣΔΕ Αττικής και Θεσσαλονίκης
+        αντιμετωπίζονται ενιαία για το κριτήριο των σπουδών. Δεν δίνονται οι 2 μονάδες για ΕΑΠ ή διδακτορικό.
+      </p>
+    <?php calculatorDisclosureEnd(); ?>
   <?php calculatorCardEnd(); ?>
 
   <?php calculatorActions(array(
-    array('label' => 'Έλεγχος & προβολή αποτελέσματος', 'class' => 'primary-btn', 'attrs' => array('type' => 'button', 'onclick' => 'calculatePoints()')),
-    array('label' => 'Καθαρισμός', 'class' => 'secondary-btn', 'attrs' => array('type' => 'button', 'onclick' => 'resetCalculator()'))
+    array('id' => 'calculateBtn', 'label' => 'Έλεγχος & προβολή αποτελέσματος', 'class' => 'primary-btn', 'attrs' => array('type' => 'button')),
+    array('id' => 'resetBtn', 'label' => 'Καθαρισμός', 'class' => 'secondary-btn', 'attrs' => array('type' => 'button'))
   )); ?>
 
   <?php calculatorInlineResult(array('id' => 'result', 'class' => 'result', 'attrs' => array('role' => 'status', 'aria-live' => 'polite'))); ?>
@@ -402,445 +431,10 @@
   </p>
 <?php calculatorContainerEnd(); ?>
 
-<script>
-  let isLiveCalculation = false;
-  function valueOf(id) { return document.getElementById(id).value; }
-  function numberOf(id) {
-    const value = parseFloat(valueOf(id));
-    return Number.isFinite(value) ? value : 0;
-  }
-  function checked(id) { return document.getElementById(id).checked; }
-
-  function formatPoints(value) {
-    const truncated = Math.floor((value + Number.EPSILON) * 100) / 100;
-    if (Number.isInteger(truncated)) return truncated.toString();
-    return truncated.toFixed(2).replace(".", ",").replace(/0$/, "");
-  }
-
-  function formatPointsFixed(value) {
-    return new Intl.NumberFormat('el-GR', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(Number(value) || 0);
-  }
-
-  function updateSidebarSummary(summary = {}) {
-    const values = {
-      grandTotal: summary.total || 0,
-      resService: summary.service || 0,
-      resCoService: summary.coService || 0,
-      resLocality: summary.locality || 0,
-      resFamily: summary.family || 0,
-      resHealth: summary.health || 0,
-      resStudies: summary.studies || 0
-    };
-    Object.entries(values).forEach(([id, value]) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = formatPointsFixed(value);
-    });
-
-    const statusBox = document.getElementById('sidebarStatus');
-    if (!statusBox) return;
-    const variant = summary.variant || 'status';
-    statusBox.className = `result-message edu-message result-message--${variant} edu-message--${variant}`;
-    statusBox.textContent = summary.status || 'Συμπλήρωσε τα στοιχεία σου για ζωντανό υπολογισμό.';
-  }
-
-  function setSidebarError(message) {
-    updateSidebarSummary({ status: message, variant: 'warning' });
-  }
-
-  function escapeHtml(text) {
-    return text
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
-  function showError(message) {
-    setSidebarError(message);
-    const result = document.getElementById("result");
-    result.style.display = "block";
-    result.className = "result error";
-    result.innerHTML = message;
-    if (!isLiveCalculation) result.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  function showResult(html) {
-    const result = document.getElementById("result");
-    result.style.display = "block";
-    result.className = "result";
-    result.innerHTML = html;
-    if (!isLiveCalculation) result.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  function calculateServicePoints(years, months, days) {
-    years = Math.min(50, Math.max(0, Math.floor(Number(years) || 0)));
-    let totalMonths = (years * 12) + months;
-    if (days >= 15) totalMonths += 1;
-
-    const firstBandMonths = Math.min(totalMonths, 120);
-    const secondBandMonths = Math.min(Math.max(totalMonths - 120, 0), 120);
-    const thirdBandMonths = Math.max(totalMonths - 240, 0);
-
-    const firstBandPoints = firstBandMonths / 12;
-    const secondBandPoints = (secondBandMonths / 12) * 1.5;
-    const thirdBandPoints = (thirdBandMonths / 12) * 2;
-
-    return {
-      totalMonths,
-      countedYears: Math.floor(totalMonths / 12),
-      countedMonths: totalMonths % 12,
-      firstBandPoints,
-      secondBandPoints,
-      thirdBandPoints,
-      total: firstBandPoints + secondBandPoints + thirdBandPoints
-    };
-  }
-
-  function calculateChildrenPoints(children) {
-    let points = 0;
-    if (children >= 1) points += 5;
-    if (children >= 2) points += 6;
-    if (children >= 3) points += 8;
-    if (children >= 4) points += (children - 3) * 10;
-    return points;
-  }
-
-  function familyStatusPoints(status) {
-    return ({
-      none: 0,
-      married: 4,
-      divorced_custody: 4,
-      widowed_child: 12,
-      widowed_nochild: 4,
-      single_parent: 6
-    })[status] || 0;
-  }
-
-  function familyStatusLabel(status) {
-    return ({
-      none: "Καμία μοριοδοτούμενη οικογενειακή κατάσταση",
-      married: "Έγγαμος/η ή σύμφωνο συμβίωσης",
-      divorced_custody: "Διαζευγμένος/η ή σε διάσταση με νόμιμη επιμέλεια",
-      widowed_child: "Χηρεία με μοριοδοτούμενο παιδί",
-      widowed_nochild: "Χηρεία χωρίς μοριοδοτούμενο παιδί",
-      single_parent: "Άγαμος/η γονέας με μοριοδοτούμενο παιδί"
-    })[status] || "Οικογενειακή κατάσταση";
-  }
-
-  function calculateCoService(warnings, info) {
-    const type = valueOf("coServiceType");
-    if (type === "none") return 0;
-
-    if (type === "unemployed_all_year") {
-      warnings.push("Δεν αποδόθηκαν μόρια συνυπηρέτησης: ο/η σύζυγος ήταν άνεργος/η σε όλο το τελευταίο έτος.");
-      return 0;
-    }
-
-    if (type === "public_organic") {
-      info.push("Συνυπηρέτηση: οργανική υπηρεσία συζύγου στον δημόσιο τομέα στην περιοχή.");
-      return 10;
-    }
-
-    if (type === "teacher_term") {
-      info.push("Συνυπηρέτηση: σύζυγος εκπαιδευτικός με θητεία — λαμβάνεται η περιοχή όπου υπηρετεί.");
-      return 10;
-    }
-
-    if (type === "public_contract" || type === "private") {
-      if (!checked("coServiceOneYearSameArea")) {
-        warnings.push("Δεν αποδόθηκαν τα 10 μόρια συνυπηρέτησης: δεν επιβεβαιώθηκε ότι το απαιτούμενο διάστημα εργασίας/ανεργίας αφορά το ίδιο ΠΥΣΠΕ/ΠΥΣΔΕ.");
-        return 0;
-      }
-      if (!checked("coServiceWorkedDay")) {
-        warnings.push("Δεν αποδόθηκαν τα 10 μόρια συνυπηρέτησης: απαιτείται τουλάχιστον μία ημέρα εργασίας στην περιοχή μέσα στο τελευταίο έτος.");
-        return 0;
-      }
-      info.push("Συνυπηρέτηση: πληρούνται οι δηλωμένες προϋποθέσεις τελευταίου έτους και τουλάχιστον μίας ημέρας εργασίας.");
-      return 10;
-    }
-
-    return 0;
-  }
-
-  function evaluatePriorityAndObstacles(warnings) {
-    const appointmentStatus = valueOf("appointmentStatus");
-    const obstacleReasons = [];
-
-    const obstacleMap = [
-      ["obstacleMusicExclusive", "ΠΕ79.01/ΤΕ16 με αποκλειστικό διορισμό σε Μουσικό Σχολείο"],
-      ["obstacleLeader", "θητεία στελέχους εκπαίδευσης που λήγει μετά τις 31-08-2026"],
-      ["obstacleTermDetachment", "απόσπαση με θητεία που δεν λήγει έως 31-08-2026"],
-      ["obstacleActiveDetachment", "άλλη απόσπαση που δεν λήγει έως 31-08-2026"],
-      ["obstacleESK", "κώλυμα διετίας από διαδικασία ΕΣΚ"],
-      ["obstacleSuspension", "αργία ή αναστολή άσκησης καθηκόντων"],
-      ["obstacleEaeGeneral", "διορισμός στην ΕΑΕ χωρίς 5ετία με αίτημα προς Γενική Εκπαίδευση"]
-    ];
-
-    obstacleMap.forEach(([id, label]) => {
-      if (checked(id)) obstacleReasons.push(label);
-    });
-
-    const specialCategory = checked("prioritySpecialCategory");
-    const newSelfSpouse75 = checked("priorityNewSelfSpouse75");
-    const newChild67 = checked("priorityNewChild67");
-    if (!appointmentStatus) {
-      warnings.push("Δεν έχει δηλωθεί η περίοδος μόνιμου διορισμού. Ο έλεγχος του ειδικού κανόνα νεοδιορίστων δεν μπορεί να ολοκληρωθεί.");
-    }
-    const isNewAppointee = ["before_2024_09_01","sep_2024","after_2024_09_30"].includes(appointmentStatus);
-    const newAppointeeException = specialCategory || (isNewAppointee && (newSelfSpouse75 || newChild67));
-
-    if (appointmentStatus === "after_2024_09_30" && !newAppointeeException) {
-      obstacleReasons.push("νεοδιόριστος/η μετά τις 30-09-2024 χωρίς δηλωμένη κατ’ εξαίρεση περίπτωση της παρ. 5α");
-    }
-
-    if (appointmentStatus === "sep_2024") {
-      warnings.push("Για διορισμό από 01-09 έως 30-09-2024 η συγκεκριμένη διατύπωση της εγκυκλίου δεν επιτρέπει ασφαλή αυτόματο συμπέρασμα από το εργαλείο. Απαιτείται έλεγχος από τη Διεύθυνση Εκπαίδευσης.");
-    }
-
-    const priorityReasons = [];
-    if (specialCategory) priorityReasons.push("δηλώθηκε ειδική κατηγορία μετάθεσης");
-    if (isNewAppointee && newSelfSpouse75) priorityReasons.push("νεοδιόριστος/η με αναπηρία ιδίου/συζύγου 75%+");
-    if (isNewAppointee && newChild67) priorityReasons.push("νεοδιόριστος/η με τέκνο με αναπηρία 67%+");
-    if (checked("priorityElected")) priorityReasons.push("αιρετός/ή ΟΤΑ");
-
-    const coPriority = valueOf("priorityCoServiceCategory");
-    const coPriorityLabels = {
-      uniformed: "κατηγορία συζύγου/συμβιούντος ένστολου ή άλλης περίπτωσης γ",
-      judicial: "σύζυγος δικαστικού λειτουργού / κύριου προσωπικού ΝΣΚ",
-      university: "σύζυγος μέλους ΔΕΠ/ΕΔΙΠ/ΕΕΠ/ΕΤΕΠ"
-    };
-
-    let priorityBlockedByFirstChoice = false;
-    if (coPriority !== "none") {
-      if (checked("priorityFirstPreference")) {
-        priorityReasons.push(coPriorityLabels[coPriority]);
-      } else {
-        priorityBlockedByFirstChoice = true;
-        warnings.push("Η δηλωμένη κατά προτεραιότητα περίπτωση συνυπηρέτησης δεν ενεργοποιήθηκε, επειδή δεν επιβεβαιώθηκε ότι το σχετικό ΠΥΣΠΕ/ΠΥΣΔΕ είναι η 1η προτίμηση.");
-      }
-    }
-
-    return {
-      obstacleReasons,
-      priorityReasons,
-      priorityBlockedByFirstChoice
-    };
-  }
-
-  function calculatePoints() {
-    const warnings = [];
-    const info = [];
-
-    const years = numberOf("serviceYears");
-    const months = numberOf("serviceMonths");
-    const days = numberOf("serviceDays");
-
-    if (!Number.isInteger(years) || years < 0) return showError("Τα έτη συνολικής υπηρεσίας πρέπει να είναι μη αρνητικός ακέραιος αριθμός.");
-    if (!Number.isInteger(months) || months < 0 || months > 11) return showError("Οι μήνες συνολικής υπηρεσίας πρέπει να είναι από 0 έως 11.");
-    if (!Number.isInteger(days) || days < 0 || days > 30) return showError("Οι ημέρες πρέπει να είναι από 0 έως 30.");
-
-    const children = Math.min(20, numberOf("eligibleChildren"));
-    if (!Number.isInteger(children) || children < 0) return showError("Ο αριθμός τέκνων πρέπει να είναι ακέραιος από 0 έως 20.");
-
-    const requestedArea = valueOf("requestedArea").trim();
-    const eligibility = evaluatePriorityAndObstacles(warnings);
-
-    // 1. Συνολική υπηρεσία
-    const service = calculateServicePoints(years, months, days);
-    const serviceDetails = [];
-    if (service.firstBandPoints > 0) serviceDetails.push("Πρώτη κλίμακα (έως 10 έτη): " + formatPoints(service.firstBandPoints));
-    if (service.secondBandPoints > 0) serviceDetails.push("Δεύτερη κλίμακα (10–20 έτη): " + formatPoints(service.secondBandPoints));
-    if (service.thirdBandPoints > 0) serviceDetails.push("Τρίτη κλίμακα (πάνω από 20 έτη): " + formatPoints(service.thirdBandPoints));
-
-    const countedServiceText = service.countedYears + " έτη" + (service.countedMonths ? " και " + service.countedMonths + " μήνες" : "");
-    if (days > 0 && days < 15) warnings.push("Οι " + days + " ημέρες δεν προσμετρήθηκαν, επειδή είναι λιγότερες από 15.");
-    if (days >= 15) warnings.push("Οι " + days + " ημέρες υπολογίστηκαν ως ένας επιπλέον πλήρης μήνας.");
-
-    // 2. Συνυπηρέτηση / εντοπιότητα
-    const coServicePoints = calculateCoService(warnings, info);
-    const localityPoints = checked("locality") ? 4 : 0;
-
-    const normalizedArea = requestedArea.toLocaleLowerCase("el-GR");
-    if (coServicePoints > 0 && (normalizedArea.includes("αθην") || normalizedArea.includes("θεσσαλον"))) {
-      info.push("Στην απλή μοριοδότηση συνυπηρέτησης, Αθήνα/Θεσσαλονίκη εφαρμόζουν τον ειδικό ενιαίο κανόνα της εγκυκλίου.");
-    }
-
-    // 3. Οικογενειακοί λόγοι
-    const familyStatus = valueOf("familyStatus");
-    const familyBasePoints = familyStatusPoints(familyStatus);
-    const childrenPoints = calculateChildrenPoints(children);
-    const familyTotal = familyBasePoints + childrenPoints;
-
-    if ((familyStatus === "widowed_child" || familyStatus === "single_parent") && children === 0) {
-      warnings.push("Η επιλεγμένη οικογενειακή κατάσταση προϋποθέτει μοριοδοτούμενο παιδί, αλλά ο αριθμός τέκνων είναι 0.");
-    }
-
-    // 4. Υγεία
-    const healthPerson = valueOf("healthPerson");
-    let selfFamilyHealthPoints = parseInt(valueOf("healthSelfFamily"), 10) || 0;
-    if (selfFamilyHealthPoints > 0 && healthPerson === "none") {
-      warnings.push("Δεν αποδόθηκαν μόρια στην κατηγορία εκπαιδευτικού/συζύγου/τέκνου επειδή δεν επιλέχθηκε το πρόσωπο στο οποίο αφορά η αναπηρία.");
-      selfFamilyHealthPoints = 0;
-    }
-    if (selfFamilyHealthPoints > 0 && healthPerson === "child" && !checked("healthChildProtected")) {
-      warnings.push("Δεν αποδόθηκαν μόρια υγείας τέκνου επειδή δεν επιβεβαιώθηκε ότι είναι προστατευόμενο μέλος ή διαμένει με τον/την εκπαιδευτικό.");
-      selfFamilyHealthPoints = 0;
-    }
-
-    let parentHealthPoints = parseInt(valueOf("healthParents"), 10) || 0;
-    if (parentHealthPoints > 0 && !checked("parentLocationEligible")) {
-      warnings.push("Δεν αποδόθηκαν μόρια υγείας γονέα επειδή δεν επιβεβαιώθηκαν οι τοπικές προϋποθέσεις (δημότης από διετίας και διαμονή στην περιοχή). ");
-      parentHealthPoints = 0;
-    }
-
-    const siblingHealthPoints = checked("siblingHealth") ? 5 : 0;
-    const ivfPoints = checked("ivf") ? 3 : 0;
-    const healthTotal = selfFamilyHealthPoints + parentHealthPoints + siblingHealthPoints + ivfPoints;
-
-    // 5. Σπουδές
-    const studyType = valueOf("studyType");
-    let studiesPoints = 0;
-    if (studyType === "eligible") {
-      if (checked("studyDifferentArea") && checked("studyRequestedArea") && checked("studyWithinDuration")) {
-        studiesPoints = 2;
-      } else {
-        warnings.push("Δεν αποδόθηκαν τα 2 μόρια σπουδών επειδή δεν επιβεβαιώθηκαν όλες οι απαιτούμενες προϋποθέσεις.");
-      }
-    } else if (studyType === "eap") {
-      warnings.push("Οι σπουδές στο ΕΑΠ δεν μοριοδοτούνται με το κριτήριο των 2 μονάδων.");
-    } else if (studyType === "phd") {
-      warnings.push("Η απόκτηση διδακτορικού τίτλου δεν μοριοδοτείται με το κριτήριο των 2 μονάδων σπουδών.");
-    }
-
-    const total = service.total + coServicePoints + localityPoints + familyTotal + healthTotal + studiesPoints;
-
-    let sidebarStatus = requestedArea ? `Υπολογισμός για ${requestedArea}.` : 'Ενδεικτικός υπολογισμός μορίων απόσπασης.';
-    let sidebarVariant = 'status';
-    if (eligibility.obstacleReasons.length > 0) {
-      sidebarStatus = 'Πιθανό κώλυμα εξέτασης της αίτησης — έλεγξε το αναλυτικό αποτέλεσμα.';
-      sidebarVariant = 'warning';
-    } else if (eligibility.priorityReasons.length > 0) {
-      sidebarStatus = 'Πιθανή υπαγωγή σε απόσπαση κατά προτεραιότητα.';
-      sidebarVariant = 'success';
-    } else if (eligibility.priorityBlockedByFirstChoice) {
-      sidebarStatus = 'Η πιθανή κατά προτεραιότητα περίπτωση χρειάζεται έλεγχο της 1ης προτίμησης.';
-      sidebarVariant = 'warning';
-    }
-
-    updateSidebarSummary({
-      total,
-      service: service.total,
-      coService: coServicePoints,
-      locality: localityPoints,
-      family: familyTotal,
-      health: healthTotal,
-      studies: studiesPoints,
-      status: sidebarStatus,
-      variant: sidebarVariant
-    });
-
-    const familyAnalysis = [];
-    if (familyBasePoints > 0) familyAnalysis.push(familyStatusLabel(familyStatus) + ": " + formatPoints(familyBasePoints) + " μόρια");
-    if (childrenPoints > 0) familyAnalysis.push(children + " τέκνο/τέκνα: " + formatPoints(childrenPoints) + " μόρια");
-
-    const healthAnalysis = [];
-    if (selfFamilyHealthPoints > 0) healthAnalysis.push("Εκπαιδευτικός / τέκνο / σύζυγος: " + selfFamilyHealthPoints + " μόρια");
-    if (parentHealthPoints > 0) healthAnalysis.push("Γονέας εκπαιδευτικού: " + parentHealthPoints + " μόρια");
-    if (siblingHealthPoints > 0) healthAnalysis.push("Αδελφός/ή: 5 μόρια");
-    if (ivfPoints > 0) healthAnalysis.push("Εξωσωματική γονιμοποίηση: 3 μόρια");
-
-    let statusHtml = "";
-    if (eligibility.obstacleReasons.length > 0) {
-      statusHtml = `<div class="status-box stop">🔴 Πιθανό κώλυμα εξέτασης της αίτησης:<br>${eligibility.obstacleReasons.map(x => "• " + escapeHtml(x)).join("<br>")}<br><span class="edu-fw-normal">Τα μόρια εμφανίζονται μόνο πληροφοριακά· απαιτείται έλεγχος από την αρμόδια Διεύθυνση Εκπαίδευσης.</span></div>`;
-    } else if (eligibility.priorityReasons.length > 0) {
-      statusHtml = `<div class="status-box ok">🟢 Πιθανή υπαγωγή σε απόσπαση κατά προτεραιότητα:<br>${eligibility.priorityReasons.map(x => "• " + escapeHtml(x)).join("<br>")}<br><span class="edu-fw-normal">Η κατά προτεραιότητα διαδικασία δεν προσθέτει μόρια· αλλάζει τον τρόπο εξέτασης της αίτησης.</span></div>`;
-    } else if (eligibility.priorityBlockedByFirstChoice) {
-      statusHtml = `<div class="status-box warn">🟠 Δηλώθηκε πιθανή κατηγορία κατά προτεραιότητα λόγω συνυπηρέτησης, αλλά δεν επιβεβαιώθηκε η απαιτούμενη 1η προτίμηση.</div>`;
-    } else {
-      statusHtml = `<div class="status-box warn">ℹ️ Με βάση μόνο τις απαντήσεις που δόθηκαν, δεν εντοπίστηκε από το εργαλείο βασικό κώλυμα ή ενεργή κατηγορία κατά προτεραιότητα. Αυτό δεν αποτελεί επίσημη πιστοποίηση.</div>`;
-    }
-
-    const areaText = requestedArea ? " για <strong>" + escapeHtml(requestedArea) + "</strong>" : "";
-
-    let html = statusHtml + `
-      <div class="score-big">
-        <span class="number">${formatPoints(total)}</span>
-        <div class="caption">ενδεικτικά μόρια απόσπασης${areaText}</div>
-      </div>
-
-      <h2>Ανάλυση μοριοδότησης</h2>
-      <table class="breakdown">
-        <tr><th>Κριτήριο</th><th>Μόρια</th><th>Ανάλυση</th></tr>
-        <tr><td>Συνολική υπηρεσία</td><td class="points">${formatPoints(service.total)}</td><td>${countedServiceText}${serviceDetails.length ? "<br>" + serviceDetails.join("<br>") : ""}</td></tr>
-        <tr><td>Συνυπηρέτηση</td><td class="points">${formatPoints(coServicePoints)}</td><td>${coServicePoints ? "Πληρούνται οι δηλωμένες προϋποθέσεις για τη συγκεκριμένη περιοχή." : "—"}</td></tr>
-        <tr><td>Εντοπιότητα</td><td class="points">${formatPoints(localityPoints)}</td><td>${localityPoints ? "Δηλώθηκε ότι πληρούνται οι προϋποθέσεις εντοπιότητας." : "—"}</td></tr>
-        <tr><td>Οικογενειακοί λόγοι</td><td class="points">${formatPoints(familyTotal)}</td><td>${familyAnalysis.length ? familyAnalysis.join("<br>") : "—"}</td></tr>
-        <tr><td>Σοβαροί λόγοι υγείας</td><td class="points">${formatPoints(healthTotal)}</td><td>${healthAnalysis.length ? healthAnalysis.join("<br>") : "—"}</td></tr>
-        <tr><td>Σπουδές</td><td class="points">${formatPoints(studiesPoints)}</td><td>${studiesPoints ? "Πληρούνται οι δηλωμένες προϋποθέσεις: 2 μόρια" : "—"}</td></tr>
-        <tr class="total-row"><td>ΣΥΝΟΛΟ</td><td class="points">${formatPoints(total)}</td><td>Ενδεικτικός υπολογισμός</td></tr>
-      </table>
-    `;
-
-    if (info.length > 0) {
-      html += `<div class="subtle-box"><strong>Χρήσιμες επισημάνσεις:</strong><br>${info.map(x => "• " + escapeHtml(x)).join("<br>")}</div>`;
-    }
-
-    if (warnings.length > 0) {
-      html += `<div class="warning">Προσοχή:<br>${warnings.map(w => "• " + escapeHtml(w)).join("<br>")}</div>`;
-    }
-
-    showResult(html);
-  }
-
-  function liveCalculatePoints() {
-    isLiveCalculation = true;
-    try { calculatePoints(); } finally { isLiveCalculation = false; }
-  }
-
-  function resetCalculator() {
-    document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
-    document.querySelectorAll('input[type="number"]').forEach(el => el.value = 0);
-    document.getElementById("requestedArea").value = "";
-
-    const defaults = {
-      appointmentStatus: "",
-      priorityCoServiceCategory: "none",
-      coServiceType: "none",
-      familyStatus: "none",
-      healthPerson: "none",
-      healthSelfFamily: "0",
-      healthParents: "0",
-      studyType: "none"
-    };
-    Object.entries(defaults).forEach(([id, val]) => document.getElementById(id).value = val);
-
-    const result = document.getElementById("result");
-    result.style.display = "none";
-    result.innerHTML = "";
-    result.className = "result";
-    updateSidebarSummary();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  document.addEventListener("input", event => {
-    if (event.target && ["serviceYears","serviceMonths","serviceDays","eligibleChildren"].includes(event.target.id) && event.target.value !== "") {
-      let value = Math.max(0, Math.floor(Number(event.target.value) || 0));
-      const max = event.target.getAttribute("max");
-      if (max !== null && max !== "") value = Math.min(value, Number(max));
-      event.target.value = String(value);
-    }
-    if (event.target && event.target.matches("input, select")) liveCalculatePoints();
-  });
-  document.addEventListener("change", event => {
-    if (event.target && event.target.matches("input, select")) liveCalculatePoints();
-  });
-</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('includes/detachment-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+  <script src="<?php echo htmlspecialchars(edu_asset_url('includes/detachment-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
   <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

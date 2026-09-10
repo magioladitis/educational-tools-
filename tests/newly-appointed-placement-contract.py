@@ -5,7 +5,8 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / 'ypologismos-morion-topothetisis-neodioriston.php'
 MODULE = ROOT / 'includes' / 'newly-appointed-placement-calculations.js'
-TOOLS = ROOT / 'ergaleia.php'
+UI = ROOT / 'includes' / 'newly-appointed-placement-ui.js'
+TOOLS = ROOT / 'includes' / 'tools-catalog.php'
 checks = 0
 
 def check(name, cond):
@@ -16,10 +17,12 @@ def check(name, cond):
 
 page = PAGE.read_text(encoding='utf-8')
 module = MODULE.read_text(encoding='utf-8')
+ui = UI.read_text(encoding='utf-8')
 tools = TOOLS.read_text(encoding='utf-8')
 
 check('page exists', PAGE.exists())
 check('module exists', MODULE.exists())
+check('UI module exists', UI.exists())
 check('standard calculator', 'edu-calc-standard' in page and 'edu-page-newly-appointed-placement' in page)
 check('shared layout', 'calculatorHero(' in page and 'calculatorColumnsStart(' in page and 'calculatorScoreHeader(' in page)
 check('no inline style', '<style' not in page.lower())
@@ -37,12 +40,11 @@ check('legal correction', 'άρθρο 3 του π.δ. 154/1996' in page and 'ά�
 check('module four point criteria', 'input.coService ? 4 : 0' in module and 'input.locality ? 4 : 0' in module)
 check('module family dropdown mapping', "status === 'married'" in module and "status === 'widowed_parent'" in module and "status === 'single_parent'" in module and "status === 'divorced_custody'" in module)
 check('module child formula', '14 + ((n - 3) * 7)' in module)
-check('toolbox card', 'href="ypologismos-morion-topothetisis-neodioriston.php"' in tools)
-toolbox_card_count=len(re.findall(r'class="tool-card"', tools))
-check('toolbox count matches cards', f'{toolbox_card_count} διαθέσιμα εργαλεία' in tools and f'Εμφανίζονται {toolbox_card_count} εργαλεία.' in tools)
+check('toolbox catalog entry present', "'href' => 'ypologismos-morion-topothetisis-neodioriston.php'" in tools)
 check('no calculate button', 'calculateBtn' not in page)
-check('live calculation children', "byId('eligibleChildren').addEventListener('input'" in page and 'render();' in page)
-check('live calculation checks', "['familyStatus', 'coService', 'locality'].forEach" in page and "addEventListener('change', render)" in page)
+check('external UI module', "edu_asset_url('includes/newly-appointed-placement-ui.js')" in page and '<script>\n(function () {' not in page)
+check('live calculation children', "byId('eligibleChildren').addEventListener('input'" in ui and 'render();' in ui)
+check('live calculation checks', "['familyStatus', 'coService', 'locality'].forEach" in ui and "addEventListener('change', render)" in ui)
 ids = re.findall(r'\bid="([^"]+)"', page)
 check('no duplicate literal ids', len(ids) == len(set(ids)))
 proc = subprocess.run(['php', '-l', str(PAGE)], capture_output=True, text=True)

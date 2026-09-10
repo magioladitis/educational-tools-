@@ -3,17 +3,19 @@ from pathlib import Path
 import sys
 root=Path(__file__).resolve().parents[1]
 page=(root/'ypologismos-misthologikou-klimakiou.php').read_text()
+ui=(root/'includes/salary-ui.js').read_text()
+app=page+'\n'+ui
 config=(root/'includes/config.php').read_text()
 checks=[]
 def check(name, cond): checks.append((name,bool(cond)))
-check('Greek display fallback map', "PE: 'ΠΕ'" in page and "TE: 'ΤΕ'" in page and "DE: 'ΔΕ'" in page and "YE: 'ΥΕ'" in page)
-check('category sidebar uses mapped label', "categoryLabels[result.categoryCode]" in page)
+check('Greek display fallback map', "PE: 'ΠΕ'" in app and "TE: 'ΤΕ'" in app and "DE: 'ΔΕ'" in app and "YE: 'ΥΕ'" in app)
+check('category sidebar uses mapped label', "categoryLabels[result.categoryCode]" in app)
 check('removed Από τα παραπάνω labels', 'Από τα παραπάνω' not in page)
-check('2016-2017 group heading', 'Υπηρεσία στη διετία 01-01-2016 έως 31-12-2017' in page)
+check('2016-2017 group heading', 'Χρόνος 2016–2017:' in page)
 check('freeze years concise label', 'Έτη υπηρεσίας στη διετία' in page)
 check('freeze months concise label', 'Επιπλέον μήνες στη διετία' in page)
 check('freeze fields nested together', '<div class="field-grid">' in page and page.index('id="suspendedYears"') < page.index('id="suspendedMonths"'))
-check('central cache version present', "define('EDU_TOOLS_VERSION'" in config and "3.20.83" in config)
+check('central cache version present', "define('EDU_TOOLS_VERSION'" in config and "3.20.85" in config)
 check('2026 basic salary result row', 'basicSalaryResult' in page and 'Βασικός μισθός (μικτά) από 01/04/2026' in page)
 check('2026 salary circular source', '54692 ΕΞ 2026/03-04-2026' in page and 'ΨΕ7ΨΗ-ΚΧΧ' in page)
 check('salary disclaimer distinguishes basic from total pay', 'βασικό μισθό του Μ.Κ.' in page and 'οικογενειακή παροχή' in page and 'επίδομα θέσης ευθύνης' in page and 'Δεν προστίθενται προσωπική διαφορά' in page)

@@ -19,9 +19,10 @@ for fname, func in [
     check(fname+' remains live', len(re.findall(r'on(?:input|change)="[^"]*calculate\(\)', text)) >= 1)
 
 on=(ROOT/'ypologismos-morion-onaseia.php').read_text(encoding='utf-8')
+on_ui=(ROOT/'includes/onaseia-ui.js').read_text(encoding='utf-8')
 check('Onaseia explicit hybrid calculate label remains', "'Έλεγχος & υπολογισμός'" in on)
 check('Onaseia stale DIMOS label absent', 'Υπολόγισε τα μόρια ΔΗΜ.Ω.Σ.' not in on)
-check('Onaseia calculate action preserved', "onclick' => 'calculatePoints()" in on)
+check('Onaseia calculate action preserved', "'id' => 'calculateBtn'" in on and 'getElementById("calculateBtn").addEventListener("click", calculatePoints)' in on_ui)
 
 failed=[x for x in checks if not x[1]]
 for name,ok,detail in checks:

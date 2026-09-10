@@ -3,6 +3,8 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 php = (ROOT / 'ypologismos-morion-apospasis.php').read_text(encoding='utf-8')
+ui = (ROOT / 'includes' / 'detachment-ui.js').read_text(encoding='utf-8')
+engine = (ROOT / 'includes' / 'detachment-calculations.js').read_text(encoding='utf-8')
 css = (ROOT / 'assets/common.css').read_text(encoding='utf-8')
 
 checks = []
@@ -16,8 +18,10 @@ check('uses canonical score header', 'calculatorScoreHeader' in php and "'value_
 for id_ in ['resService','resCoService','resLocality','resFamily','resHealth','resStudies','sidebarStatus']:
     check(f'has sidebar id {id_}', php.count(f"'{id_}'") >= 1 or php.count(f'"{id_}"') >= 1)
 check('keeps detailed inline result', "calculatorInlineResult(array('id' => 'result'" in php)
-check('updates sidebar from calculated total', 'updateSidebarSummary({' in php and 'service: service.total' in php and 'family: familyTotal' in php)
-check('reset clears sidebar', 'updateSidebarSummary();' in php)
+check('loads pure calculation engine', "includes/detachment-calculations.js" in php and 'global.EducationDetachment' in engine)
+check('loads external UI controller', "includes/detachment-ui.js" in php and 'global.EducationDetachmentUI' in ui)
+check('updates sidebar from calculated total', 'updateSidebarSummary({' in ui and 'service: calc.service.total' in ui and 'family: calc.familyTotal' in ui)
+check('reset clears sidebar', 'updateSidebarSummary();' in ui)
 check('desktop two-column CSS', 'body.edu-page-detachment .layout {display:grid;' in css and 'grid-template-columns:minmax(0,1fr) 330px;' in css)
 check('sticky sidebar CSS', 'body.edu-page-detachment .results {position:sticky;' in css)
 check('mobile collapse CSS', '@media (max-width: 900px)' in css and 'body.edu-page-detachment .layout {grid-template-columns:1fr;}' in css)
