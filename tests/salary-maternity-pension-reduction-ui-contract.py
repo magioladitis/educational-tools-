@@ -18,6 +18,6 @@ check('reset clears maternity flag', "byId('maternityPensionReduction').checked 
 check('3.335 percentage-point explanation', '3,335' in page and '6,67%' in page)
 check('e-EFKA source linked', 'meiomenes-eisphores-gia-meteres-misthotes' in page)
 check('engine exports maternity reduction rate', 'MATERNITY_MAIN_PENSION_REDUCTION_RATE' in net)
-check('engine reduces standard deductions not gross', 'effectiveDeductionRate' in net and 'maternityReductionRate' in net)
-check('tax basis uses reduced actual deductions', 'gross - standardDeductions' in net)
+check('engine reduces standard deductions not gross', 'baseStandardDeductions - maternityReduction' in net and 'MATERNITY_MAIN_PENSION_REDUCTION_RATE' in net)
+check('tax basis uses reduced actual deductions', 'gross - standardDeductionsExact' in net)
 print(f'Salary maternity UI contract: PASS {checks}/{checks}')
