@@ -279,8 +279,9 @@
     if (calculateBtn) calculateBtn.addEventListener('click', calculatePoints);
     if (resetBtn) resetBtn.addEventListener('click', resetCalculator);
 
-    // Initialize the visible study-score diagnostic immediately.
-    updateStudyPointsStatus(global.EducationDetachment.calculate(readInput()), readInput());
+    // Initialize the visible study-score diagnostic from one consistent DOM snapshot.
+    var initialInput = readInput();
+    updateStudyPointsStatus(global.EducationDetachment.calculate(initialInput), initialInput);
 
     document.addEventListener('input', function (event) {
       var target = event.target;

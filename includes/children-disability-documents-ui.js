@@ -1,15 +1,17 @@
-function valueOf(id){return document.getElementById(id).value}
-function show(id){document.getElementById(id).classList.remove("hidden")}
-function hide(id){document.getElementById(id).classList.add("hidden")}
+function byId(id){return id ? document.getElementById(id) : null}
+function valueOf(id){const el=byId(id);return el ? el.value : ""}
+function show(id){const el=byId(id);if(el) el.classList.remove("hidden")}
+function hide(id){const el=byId(id);if(el) el.classList.add("hidden")}
+function hideResult(){const r=byId("result");if(r) r.style.display="none"}
 function updateVisibility(){
   const c=valueOf("criterion");
   hide("childrenQuestions"); hide("disabilityQuestions");
-  document.getElementById("result").style.display="none";
+  hideResult();
   if(c==="children"||c==="both") show("childrenQuestions");
   if(c==="disability"||c==="both") show("disabilityQuestions");
   updateDisabilityPersonUI();
 }
-const disabilityPercentInput=document.getElementById("disabilityPercent");
+const disabilityPercentInput=byId("disabilityPercent");
 if(disabilityPercentInput){
   disabilityPercentInput.addEventListener("input",function(){
     if(this.value==="") return;
@@ -25,7 +27,7 @@ function updateDisabilityPersonUI(){
   hide("candidateMentalQuestion");
   if(p==="spouse") show("spouseMarriageQuestion");
   if(p==="candidate") show("candidateMentalQuestion");
-  document.getElementById("result").style.display="none";
+  hideResult();
 }
 function selectedFamilySpecialCases(){
   return Array.from(document.querySelectorAll('input[name="familySpecialCase"]:checked')).map(i=>i.value)
@@ -35,7 +37,8 @@ function makeList(items){
   return "<ul>"+items.map(item=>"<li>"+item+"</li>").join("")+"</ul>"
 }
 function showResult(html){
-  const r=document.getElementById("result");
+  const r=byId("result");
+  if(!r) return;
   r.style.display="block"; r.innerHTML=html
 }
 function addChildrenDocuments(documents,warnings,info){
@@ -124,9 +127,9 @@ function showDocuments(){
 }
 
 // External bindings: keep markup free of inline event handlers.
-const criterionSelect=document.getElementById("criterion");
+const criterionSelect=byId("criterion");
 if(criterionSelect) criterionSelect.addEventListener("change",updateVisibility);
-const disabilityPersonSelect=document.getElementById("disabilityPerson");
+const disabilityPersonSelect=byId("disabilityPerson");
 if(disabilityPersonSelect) disabilityPersonSelect.addEventListener("change",updateDisabilityPersonUI);
-const showDocumentsBtn=document.getElementById("showDocumentsBtn");
+const showDocumentsBtn=byId("showDocumentsBtn");
 if(showDocumentsBtn) showDocumentsBtn.addEventListener("click",showDocuments);

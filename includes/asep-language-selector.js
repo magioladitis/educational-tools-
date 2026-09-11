@@ -333,9 +333,9 @@
     readEntries: selectedEntries
   });
 
-  // Components are above the script on all calculator pages, so initialize now.
-  initAll();
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
+    document.addEventListener('DOMContentLoaded', initAll, { once: true });
+  } else {
+    initAll();
   }
 })(typeof window !== 'undefined' ? window : globalThis);
