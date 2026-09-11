@@ -2079,6 +2079,28 @@
     a.href=url; a.download='staffing_balance_v1-'+stem+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},0);
   }
   const specialtyBalanceCsv=document.getElementById('specialtyBalanceCsv'); if(specialtyBalanceCsv) specialtyBalanceCsv.addEventListener('click',downloadSpecialtyBalanceCsv);
+  const allocationSummaryEls={
+    assigned:document.querySelector('[data-allocation-assigned]'),
+    coverage:document.querySelector('[data-allocation-coverage]'),
+    unassigned:document.querySelector('[data-allocation-unassigned]'),
+    over:document.querySelector('[data-allocation-over]'),
+    errors:document.querySelector('[data-allocation-errors]')
+  };
+  const vacancySummaryEls={
+    total:document.querySelector('[data-vacancy-total]'),
+    slots:document.querySelector('[data-vacancy-slots]'),
+    noStaff:document.querySelector('[data-vacancy-no-staff]'),
+    hasStaff:document.querySelector('[data-vacancy-has-staff]')
+  };
+  const allocationTotalCapacity=Object.keys(allocationSlotsData||{}).reduce(function(sum,sid){return sum+Math.max(0,(allocationSlotsData[sid]&&allocationSlotsData[sid].capacity_hours)||0);},0);
+  const allocationPersonSummaryCache={};
+  let allocationSummaryFrame=0;
+  function scheduleAllocationSummary(){
+    if(allocationSummaryFrame) return;
+    const run=function(){ allocationSummaryFrame=0; updateAllocationSummary(); };
+    if(typeof window.requestAnimationFrame==='function') allocationSummaryFrame=window.requestAnimationFrame(run);
+    else run();
+  }
   function updateAllocationSlotOptionAvailability(slotAssigned){
     allocationRows().forEach(function(row){
       const select=row.querySelector('.allocation-slot');
@@ -2126,11 +2148,10 @@
       row.hidden=remaining<1||(q!==''&&!hay.includes(q));
       if(remaining>0){ total+=remaining; slots++; if(availableCount>0) hasStaff++; else noStaff++; }
     });
-    const totalEl=document.querySelector('[data-vacancy-total]'), slotsEl=document.querySelector('[data-vacancy-slots]'), noStaffEl=document.querySelector('[data-vacancy-no-staff]'), hasStaffEl=document.querySelector('[data-vacancy-has-staff]');
-    if(totalEl) totalEl.textContent=String(total);
-    if(slotsEl) slotsEl.textContent=String(slots);
-    if(noStaffEl) noStaffEl.textContent=String(noStaff);
-    if(hasStaffEl) hasStaffEl.textContent=String(hasStaff);
+    if(vacancySummaryEls.total) vacancySummaryEls.total.textContent=String(total);
+    if(vacancySummaryEls.slots) vacancySummaryEls.slots.textContent=String(slots);
+    if(vacancySummaryEls.noStaff) vacancySummaryEls.noStaff.textContent=String(noStaff);
+    if(vacancySummaryEls.hasStaff) vacancySummaryEls.hasStaff.textContent=String(hasStaff);
     const tableWrap=document.getElementById('vacancyTableWrap'), empty=document.getElementById('vacancyEmpty');
     if(tableWrap) tableWrap.hidden=slots===0;
     if(empty) empty.hidden=slots!==0;
@@ -2162,16 +2183,14 @@
         else allocationSetStatus(st.row,base+' ✓','ok');
       } else allocationSetStatus(st.row,'Συμπλήρωσε μάθημα και εκπαιδευτικό.','');
     });
-    const assignedEl=document.querySelector('[data-allocation-assigned]'), coverageEl=document.querySelector('[data-allocation-coverage]'), unassignedEl=document.querySelector('[data-allocation-unassigned]'), overEl=document.querySelector('[data-allocation-over]'), errorsEl=document.querySelector('[data-allocation-errors]');
-    if(assignedEl) assignedEl.textContent=String(state.basicAssigned);
-    if(coverageEl){
-      let totalHours=0; Object.keys(allocationSlotsData||{}).forEach(function(sid){ totalHours+=Math.max(0,allocationSlotsData[sid].capacity_hours||0); });
-      const pct=totalHours>0?(100*state.basicAssigned/totalHours):0;
-      coverageEl.textContent=pct.toLocaleString('el-GR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+    if(allocationSummaryEls.assigned) allocationSummaryEls.assigned.textContent=String(state.basicAssigned);
+    if(allocationSummaryEls.coverage){
+      const pct=allocationTotalCapacity>0?(100*state.basicAssigned/allocationTotalCapacity):0;
+      allocationSummaryEls.coverage.textContent=pct.toLocaleString('el-GR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
     }
-    if(unassignedEl) unassignedEl.textContent=String(state.unassigned);
-    if(overEl) overEl.textContent=String(state.overSlots);
-    if(errorsEl) errorsEl.textContent=String(errorRows);
+    if(allocationSummaryEls.unassigned) allocationSummaryEls.unassigned.textContent=String(state.unassigned);
+    if(allocationSummaryEls.over) allocationSummaryEls.over.textContent=String(state.overSlots);
+    if(allocationSummaryEls.errors) allocationSummaryEls.errors.textContent=String(errorRows);
     const allocationLiveStatus=document.getElementById('allocationLiveStatus');
     if(allocationLiveStatus) allocationLiveStatus.textContent='Κατανομή: '+state.basicAssigned+' ώρες κατανεμημένες, '+state.unassigned+' ακάλυπτες, '+errorRows+' γραμμές με σφάλμα.';
     const hasAllocationSlots=Object.keys(allocationSlotsData||{}).some(function(sid){return Math.max(0,(allocationSlotsData[sid]&&allocationSlotsData[sid].capacity_hours)||0)>0;});
@@ -2189,7 +2208,9 @@
     updateVacancyView(slotAssigned,personAssigned,personPriority);
     renderSpecialtyBalance(state);
     Object.keys(allocationPeopleData||{}).forEach(function(pid){
-      const summary=document.querySelector('[data-allocation-person-summary="'+CSS.escape(pid)+'"]'); if(!summary) return;
+      let summary=allocationPersonSummaryCache[pid];
+      if(summary===undefined){ summary=document.querySelector('[data-allocation-person-summary="'+CSS.escape(pid)+'"]')||null; allocationPersonSummaryCache[pid]=summary; }
+      if(!summary) return;
       const p=allocationPeopleData[pid], assigned=personAssigned[pid]||0, remain=Math.max(0,p.available_here_hours-assigned), aHours=personPriority[pid].A||0, bHours=personPriority[pid].B||0;
       const a=summary.querySelector('[data-person-assigned]'), r=summary.querySelector('[data-person-remaining]'), av=summary.querySelector('[data-person-a]'), bv=summary.querySelector('[data-person-b]');
       if(a) a.textContent=String(assigned); if(r) r.textContent=String(remain); if(av) av.textContent=String(aHours); if(bv){ bv.textContent=String(bHours)+'/10'; bv.classList.toggle('b-limit-over',bHours>10); }
@@ -2241,7 +2262,7 @@
       }
       if(event.target.matches('.allocation-person')){ updateAllocationSummary(); return; }
     });
-    allocationList.addEventListener('input',function(event){ if(event.target.matches('.allocation-hours')) updateAllocationSummary(); });
+    allocationList.addEventListener('input',function(event){ if(event.target.matches('.allocation-hours')) scheduleAllocationSummary(); });
     allocationList.addEventListener('click',function(event){
       const remove=event.target.closest('.allocation-remove'); if(!remove||!allocationList.contains(remove)) return;
       const row=remove.closest('[data-allocation-row]'); if(!row) return;
