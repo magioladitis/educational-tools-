@@ -20,11 +20,11 @@ JS parser-only benchmark (`vm.Script`, 100 runs): median 0.016 ms and ~1 KB heap
 
 Structural performance guard in `staffing-js-refactor-performance-contract.py` locks: 62 listeners, 165 `querySelector*` calls, zero `setInterval`, seven `setTimeout`, one runtime-config parse, controller <165 KB raw / <37 KB gzip, and default HTML <60 KB.
 
-## 3.20.94 — stat4_8 EAE (.50) / allocation alignment fix
+## 3.20.95 — stat4_8 EAE (.50) / allocation alignment fix
 
 Benchmark profile: Gymnasium, 20 general-education personnel rows, same POST payload in both versions, 24 CLI runs (first 4 discarded as warm-up noise).
 
-| Metric | 3.20.93 | 3.20.94 |
+| Metric | 3.20.93 | 3.20.95 |
 |---|---:|---:|
 | Median PHP wall time | 0.05174 s | 0.05149 s |
 | Mean PHP wall time | 0.05312 s | 0.05224 s |

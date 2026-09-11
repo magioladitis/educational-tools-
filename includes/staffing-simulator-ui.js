@@ -1399,8 +1399,8 @@
     });
   }
 
-  const allocationPeopleData=Array.isArray(staffingRuntimeConfig.allocationPeople)?staffingRuntimeConfig.allocationPeople:[];
-  const allocationSlotsData=Array.isArray(staffingRuntimeConfig.allocationSlots)?staffingRuntimeConfig.allocationSlots:[];
+  const allocationPeopleData=staffingRuntimeConfig.allocationPeople&&typeof staffingRuntimeConfig.allocationPeople==='object'?staffingRuntimeConfig.allocationPeople:{};
+  const allocationSlotsData=staffingRuntimeConfig.allocationSlots&&typeof staffingRuntimeConfig.allocationSlots==='object'?staffingRuntimeConfig.allocationSlots:{};
   const specialtyLabelsData=staffingRuntimeConfig.specialtyLabels&&typeof staffingRuntimeConfig.specialtyLabels==='object'?staffingRuntimeConfig.specialtyLabels:{};
   const specialtyReportSchemaVersion='staffing_balance_v1';
   const allocationList=document.getElementById('allocationList');
