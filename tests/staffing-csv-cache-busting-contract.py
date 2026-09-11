@@ -4,11 +4,12 @@ import subprocess,re
 ROOT=Path(__file__).resolve().parents[1]
 CONFIG=ROOT/'includes/config.php'
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 CSVJS=ROOT/'includes/personnel-csv-import.js'
 checks=[]
 def check(name, cond): checks.append((name,bool(cond)))
 config=CONFIG.read_text(encoding='utf-8')
-page=PAGE.read_text(encoding='utf-8')
+page=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 js=CSVJS.read_text(encoding='utf-8')
 check('asset helper uses filemtime cache key', 'filemtime($localPath)' in config and "$version .= '-'" in config)
 version_match=re.search(r"define\('EDU_TOOLS_VERSION',\s*'([^']+)'\)",config)

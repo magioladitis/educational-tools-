@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess, textwrap, re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 ERG=ROOT/'ergaleia.php'
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
@@ -118,12 +119,12 @@ check('matrix semantics warning exists', 'οι ώρες Α΄/Β΄/Γ΄ δείχ�
 
 check('technical pending counters hidden from summary', 'ενεργές εκκρεμείς εξαρτήσεις' not in l and 'περιπτώσεις κανονιστικών εκκρεμοτήτων' not in l and 'Ακάλυπτες ώρες μετά τον έλεγχο κατανομής' not in l)
 check('specific unresolved dependency notice replaces counter', 'Εκκρεμούν στοιχεία για Ηθική στις τάξεις Α΄, Β΄, Γ΄' in partial and 'Τα Θρησκευτικά έχουν υπολογιστεί προσωρινά στα κανονικά τμήματα' in partial)
-check('regulatory issues are contextual rather than counters', "staffingNotices['regulatory']" in PAGE.read_text(encoding='utf-8') and 'Υπάρχει κανονιστική εκκρεμότητα που επηρεάζει τον υπολογισμό.' in PAGE.read_text(encoding='utf-8'))
-check('Greek terminology in matrix', '<th>Α΄</th><th>Β΄</th><th>Γ΄</th>' in l and 'Αποκλειστική κορυφαία' not in l and 'Χαμηλότερη ανάθεση</th>' not in l)
+check('regulatory issues are contextual rather than counters', "staffingNotices['regulatory']" in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')) and 'Υπάρχει κανονιστική εκκρεμότητα που επηρεάζει τον υπολογισμό.' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')))
+check('Greek terminology in matrix', '<th scope="col">Α΄</th><th scope="col">Β΄</th><th scope="col">Γ΄</th>' in l and 'Αποκλειστική κορυφαία' not in l and 'Χαμηλότερη ανάθεση</th>' not in l)
 check('Greek readiness label', 'Έτοιμο για πίνακα επιλεξιμότητας' in l)
 check('English UI terminology removed', all(term not in l for term in ['School profile','assignment units','Assignment units','eligibility','Fallback','unresolved dependencies','regulatory gaps','simulator / test harness','backend','roster']))
 
-text=PAGE.read_text(encoding='utf-8')
+text=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 check('frontend uses common profile builder', 'schoolProfileBuildDayGymnasium2026' in text and 'schoolProfileBuildDayGel2026' in text)
 check('frontend uses workload matrix', 'schoolProfileWorkloadMatrix' in text)
 check('frontend does not use personnel auto allocation', 'personnelWorkloadRosterPlan' not in text and 'personnelWorkloadEvaluatePerson' not in text)

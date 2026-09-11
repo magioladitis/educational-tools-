@@ -25,6 +25,7 @@ def inline_scripts(text):
     out=[]
     for m in re.finditer(r'<script\b([^>]*)>(.*?)</script>',text,re.S|re.I):
         if re.search(r'\bsrc\s*=',m.group(1),re.I): continue
+        if re.search(r'\btype\s*=\s*[\"\']application/json[\"\']',m.group(1),re.I): continue
         if m.group(2).strip(): out.append(m.group(2))
     return out
 
@@ -70,15 +71,15 @@ saek=(ROOT/'dikaioma-ypodiefthynti-saek.php').read_text(encoding='utf-8')
 check('id="checkEligibilityBtn"' in saek,'SAEK eligibility action has stable id')
 check('id="resetBtn"' in saek,'SAEK reset action has stable id')
 
-# After this pass there should be only one root PHP page with executable inline JS.
+# After the staffing extraction there should be no root PHP page with executable inline JS.
 remaining=[]
 for p in ROOT.glob('*.php'):
     text=p.read_text(encoding='utf-8',errors='ignore')
     if inline_scripts(text): remaining.append(p.name)
-check(remaining==['ypologismos-didaktikon-anagkon.php'],f'only teaching-needs page retains inline JS ({remaining})')
+check(remaining==[],f'no root PHP page retains executable inline JS ({remaining})')
 
 config=(ROOT/'includes/config.php').read_text(encoding='utf-8')
-check("define('EDU_TOOLS_VERSION', '3.20.92');" in config,'asset version bumped to 3.20.92')
+check("define('EDU_TOOLS_VERSION', '3.20.93');" in config,'asset version bumped to 3.20.93')
 
 print(f'RESULT {PASS} PASS / {FAIL} FAIL')
 sys.exit(1 if FAIL else 0)

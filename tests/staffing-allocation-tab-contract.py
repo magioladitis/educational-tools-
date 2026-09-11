@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess,json,re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
 def render(post):
@@ -36,19 +37,19 @@ check('two synchronized allocation views exist', 'data-allocation-view="slots"' 
 check('add allocation button exists', 'id="addAllocationRow"' in out)
 check('allocation template exists', 'id="allocationRowTemplate"' in out)
 check('allocation hours are automatic and readonly', 'class="allocation-hours"' in out and 'Ώρες <small>αυτόματα</small>' in out and re.search(r'class="allocation-hours"[^>]*readonly',out) is not None)
-check('server slot plan used', 'personnelWorkloadRosterSlotPlan' in PAGE.read_text(encoding='utf-8'))
-check('allocation engine is wired server-side', 'teaching-allocation-engine.php' in PAGE.read_text(encoding='utf-8') and 'teachingAllocationEngineProposal' in PAGE.read_text(encoding='utf-8'))
+check('server slot plan used', 'personnelWorkloadRosterSlotPlan' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')))
+check('allocation engine is wired server-side', 'teaching-allocation-engine.php' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')) and 'teachingAllocationEngineProposal' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')))
 check('coverage metric visible', 'data-allocation-coverage' in out)
-check('live validation data embedded', 'allocationPeopleData=' in out and 'allocationSlotsData=' in out)
-check('eligible slot filter wired', 'allocationPopulateSlotsForPerson' in PAGE.read_text(encoding='utf-8'))
-check('personnel changes stale allocation tab', 'markPersonnelDirty' in PAGE.read_text(encoding='utf-8'))
+check('live validation data embedded', 'id="staffingRuntimeConfig"' in out and '"allocationPeople":' in out and '"allocationSlots":' in out)
+check('eligible slot filter wired', 'allocationPopulateSlotsForPerson' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')))
+check('personnel changes stale allocation tab', 'markPersonnelDirty' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')))
 check('workflow exposes automatic plus manual allocation guidance', 'Αυτόματη πρόταση + χειροκίνητες αλλαγές' in out and '<strong>Κατανομή μαθημάτων:</strong> χρησιμοποίησε την αυτόματη πρόταση ή κάνε χειροκίνητες αλλαγές.' in out)
 check('automatic proposal controls and optimization note visible', 'id="autoAllocateRemaining"' in out and 'Αυτόματη πρόταση κάλυψης' in out and 'id="clearAllocationRows"' in out and 'επιδιώκει πρώτα τη μέγιστη δυνατή κάλυψη' in out and 'προτιμά Α΄/ειδική ανάθεση πριν από Β΄ και Β΄ πριν από Γ΄' in out)
 check('personnel rows use compact required-hours label', '<label title="Υποχρεωτικό ωράριο">Υ.Ω.</label>' in out and 'Υ.Ω. = Υποχρεωτικό ωράριο.' in out)
-check('Religion remains available in lazy client slot data through PE02 C assignment when Ethics is unresolved', 'Θρησκευτικά' in out and 'allocationSlotsData=' in out and 'allocationPopulateAllSlots' in PAGE.read_text(encoding='utf-8'))
-check('allocation selects use lazy option loading for large schools', 'data-lazy-options="slot"' in out and 'data-lazy-options="person"' in out and 'allocationEnsureSlotOptions' in PAGE.read_text(encoding='utf-8') and 'allocationEnsurePersonOptions' in PAGE.read_text(encoding='utf-8'))
+check('Religion remains available in lazy client slot data through PE02 C assignment when Ethics is unresolved', 'Θρησκευτικά' in out and '"allocationSlots":' in out and 'allocationPopulateAllSlots' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')))
+check('allocation selects use lazy option loading for large schools', 'data-lazy-options="slot"' in out and 'data-lazy-options="person"' in out and 'allocationEnsureSlotOptions' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')) and 'allocationEnsurePersonOptions' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')))
 check('hidden no-eligible slots are explained without removing their uncovered hours', 'χωρίς επιλέξιμο εκπαιδευτικό' in out and 'Οι ώρες τους εξακολουθούν να υπολογίζονται στις ακάλυπτες ώρες.' in out)
-check('fully covered slots become unavailable in other allocation rows', 'function updateAllocationSlotOptionAvailability(slotAssigned)' in PAGE.read_text(encoding='utf-8') and "dynamicallyDisabled=full&&current!==sid" in PAGE.read_text(encoding='utf-8') and '· καλύφθηκε' in PAGE.read_text(encoding='utf-8'))
+check('fully covered slots become unavailable in other allocation rows', 'function updateAllocationSlotOptionAvailability(slotAssigned)' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')) and "dynamicallyDisabled=full&&current!==sid" in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')) and '· καλύφθηκε' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')))
 check('allocation UI explains automatic slot deactivation', 'η επιλογή του γίνεται αυτόματα ανενεργή στις υπόλοιπες γραμμές κατανομής' in out)
 
 

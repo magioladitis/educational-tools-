@@ -2,7 +2,7 @@
 from pathlib import Path
 import json, subprocess, re
 ROOT=Path(__file__).resolve().parents[1]
-PAGE=(ROOT/'ypologismos-didaktikon-anagkon.php').read_text(encoding='utf-8')
+PAGE=(ROOT/'ypologismos-didaktikon-anagkon.php').read_text(encoding='utf-8')+'\n'+(ROOT/'includes'/'staffing-simulator-ui.js').read_text(encoding='utf-8')
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
 def php_json(code):

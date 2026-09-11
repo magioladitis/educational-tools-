@@ -3,6 +3,7 @@ from pathlib import Path
 import json, subprocess, re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 PROFILE=ROOT/'includes/school-profile-general-education.php'
 checks=[]
 def check(name, cond): checks.append((name,bool(cond)))
@@ -15,7 +16,7 @@ def render(payload, method='POST'):
         print(p.stderr); raise SystemExit(p.returncode)
     return p.stdout
 
-text=PAGE.read_text(encoding='utf-8')
+text=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 css=(ROOT/'assets/staffing-simulator.css').read_text(encoding='utf-8')
 check('no fetch to endpoint', 'fetch(' not in text)
 check('no direct form.submit path', re.search(r'\bform\.submit\s*\(', text) is None)

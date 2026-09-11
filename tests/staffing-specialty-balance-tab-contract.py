@@ -3,7 +3,8 @@ from pathlib import Path
 import subprocess,json,re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
-SRC=PAGE.read_text(encoding='utf-8')
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
+SRC=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 CSS=(ROOT/'assets/staffing-simulator.css').read_text(encoding='utf-8')
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))

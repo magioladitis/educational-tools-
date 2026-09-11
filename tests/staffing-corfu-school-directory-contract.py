@@ -4,13 +4,14 @@ import csv, json, subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 JS=ROOT/'includes/school-profile-csv-import.js'
 CSV_FILE=ROOT/'data/school_registry_v1-dde-kerkyras-2026-2027-full.csv'
 COMPAT_CSV=ROOT/'data/school_registry_v1-dde-kerkyras-2026.csv'
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
 
-page=PAGE.read_text(encoding='utf-8')
+page=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 js=JS.read_text(encoding='utf-8')
 check('Corfu directory button exists', 'id="loadCorfuSchoolDirectory"' in page)
 check('Corfu CSV download button exists', 'id="downloadCorfuSchoolDirectory"' in page)

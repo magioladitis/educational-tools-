@@ -77,7 +77,7 @@ check("copyBtn.addEventListener('click',()=>copySummary(copyBtn))" in sde_js, 'S
 check("resetBtn.addEventListener('click',resetForm)" in sde_js, 'SDE reset binding external')
 
 config=(ROOT/'includes/config.php').read_text(encoding='utf-8')
-check("define('EDU_TOOLS_VERSION', '3.20.92');" in config,'asset version bumped to 3.20.92')
+check("define('EDU_TOOLS_VERSION', '3.20.93');" in config,'asset version bumped to 3.20.93')
 
 print(f'RESULT {PASS} PASS / {FAIL} FAIL')
 sys.exit(1 if FAIL else 0)

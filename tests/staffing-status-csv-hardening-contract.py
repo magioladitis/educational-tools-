@@ -2,7 +2,7 @@
 from pathlib import Path
 import subprocess, json
 ROOT=Path(__file__).resolve().parents[1]
-page=(ROOT/'ypologismos-didaktikon-anagkon.php').read_text()
+page=(ROOT/'ypologismos-didaktikon-anagkon.php').read_text()+'\n'+(ROOT/'includes/staffing-simulator-ui.js').read_text()
 js=(ROOT/'includes/school-profile-csv-import.js').read_text()
 passed=failed=0
 

@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess,json,re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 WORKLOAD=ROOT/'includes/personnel-workload.php'
 MODULE=ROOT/'includes/myschool-staff-import.js'
 checks=[]
@@ -26,7 +27,7 @@ payload=json.dumps(post,ensure_ascii=False)
 php='<?php $_SERVER["REQUEST_METHOD"]="POST"; $_POST=json_decode('+json.dumps(payload,ensure_ascii=False)+', true); include "'+str(PAGE).replace('\\','/')+'";'
 r=subprocess.run(['php'],cwd=ROOT,text=True,input=php,capture_output=True)
 if r.returncode: print(r.stderr); raise SystemExit(r.returncode)
-out=r.stdout;text=PAGE.read_text(encoding='utf-8');work=WORKLOAD.read_text(encoding='utf-8')
+out=r.stdout;text=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'));work=WORKLOAD.read_text(encoding='utf-8')
 check('myschool button exists','id="openMySchoolStaff"' in out and 'myschool stat4_8' in out)
 check('ZIP and CSV file input','id="mySchoolStaffFile"' in out and 'accept=".zip,.csv,application/zip,text/csv,text/plain"' in out)
 check('direct raw export message','Δεν χρειάζεται προσαρμογή του export.' in out)

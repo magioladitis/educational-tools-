@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess,json,re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
 post={
@@ -15,7 +16,7 @@ php='<?php $_SERVER["REQUEST_METHOD"]="POST"; $_POST=json_decode('+json.dumps(pa
 r=subprocess.run(['php'],cwd=ROOT,text=True,input=php,capture_output=True)
 if r.returncode: print(r.stderr);raise SystemExit(r.returncode)
 out=r.stdout
-text=PAGE.read_text(encoding='utf-8')
+text=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 check('CSV import button', 'id="openPersonnelCsv"' in out and 'Εισαγωγή CSV' in out)
 check('CSV registry export button', 'id="exportPersonnelRegistryCsv"' in out and 'Εξαγωγή μητρώου CSV' in out)
 check('CSV template button', 'id="downloadPersonnelCsvTemplate"' in out and 'Λήψη προτύπου CSV' in out)

@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess, json, re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
 
@@ -10,7 +11,7 @@ def render(payload):
     php='<?php $_SERVER["REQUEST_METHOD"]="POST"; $_POST=json_decode('+json.dumps(json.dumps(payload,ensure_ascii=False))+', true); include '+json.dumps(str(PAGE))+';'
     return subprocess.run(['php'],input=php,text=True,capture_output=True,cwd=ROOT)
 
-page=PAGE.read_text(encoding='utf-8')
+page=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 check('backend declares 120 basic-section cap', "STAFFING_UI_MAX_BASIC_SECTIONS', 120" in page)
 check('frontend enforces A+B+C through remaining allowance', 'function syncBasicSectionLimit(changedInput)' in page and 'const allowed=Math.max(0,maxBasicSections-otherTotal);' in page)
 get_html=subprocess.run(['php',str(PAGE)],cwd=ROOT,text=True,capture_output=True).stdout

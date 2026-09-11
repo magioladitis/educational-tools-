@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess, json, re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 WORKLOAD=ROOT/'includes/personnel-workload.php'
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
@@ -32,7 +33,7 @@ r=subprocess.run(['php'],cwd=ROOT,text=True,input=php,capture_output=True)
 if r.returncode:
     print(r.stderr); raise SystemExit(r.returncode)
 out=r.stdout
-text=PAGE.read_text(encoding='utf-8')
+text=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 
 check('secondary specialty field rendered', 'name="personnel_secondary_specialty_code[]"' in out and 'class="personnel-secondary-specialty"' in out)
 check('secondary specialty preserved on POST', re.search(r'name="personnel_secondary_specialty_code\[\]"[^>]*>.*?<option value="ΠΕ86" selected',out,re.S) is not None)

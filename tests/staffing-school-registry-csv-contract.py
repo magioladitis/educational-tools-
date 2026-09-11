@@ -3,11 +3,12 @@ from pathlib import Path
 import subprocess, re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 JS=ROOT/'includes/school-profile-csv-import.js'
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
 
-page=PAGE.read_text(encoding='utf-8')
+page=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 js=JS.read_text(encoding='utf-8')
 render=subprocess.run(['php',str(PAGE)],cwd=ROOT,text=True,capture_output=True)
 check('page renders', render.returncode==0)

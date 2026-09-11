@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess, json, re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
 
@@ -14,7 +15,7 @@ def render(post, timeout=25):
         print(p.stderr); raise SystemExit(p.returncode)
     return p.stdout
 
-text=PAGE.read_text(encoding='utf-8')
+text=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 check('compact personnel JSON parser exists', "staffingUiPayloadArrays('personnel_payload_json')" in text)
 check('compact allocation JSON parser exists', "staffingUiPayloadArrays('allocation_payload_json')" in text)
 check('cross-tab personnel state is emitted as one JSON hidden input', 'name="personnel_payload_json" value="' in text and "json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)" in text)

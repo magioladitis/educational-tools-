@@ -3,8 +3,9 @@ from pathlib import Path
 import subprocess,re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
 CSS=ROOT/'assets'/'staffing-simulator.css'
-SRC=PAGE.read_text(encoding='utf-8')
+SRC=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 checks=[]
 def check(name, cond): checks.append((name,bool(cond)))
 p=subprocess.run(['php',str(PAGE)],cwd=ROOT,text=True,capture_output=True)

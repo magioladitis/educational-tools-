@@ -36,10 +36,11 @@ ok('posa-paravola intentionally has no generic print button', "'posa-paravola.ph
 salary=(ROOT/'ypologismos-misthologikou-klimakiou.php').read_text(encoding='utf-8')
 salary_ui=(ROOT/'includes/salary-ui.js').read_text(encoding='utf-8')
 staff=(ROOT/'ypologismos-didaktikon-anagkon.php').read_text(encoding='utf-8')
+staff_ui=(ROOT/'includes/staffing-simulator-ui.js').read_text(encoding='utf-8')
 grade=(ROOT/'metatropi-klimakas.php').read_text(encoding='utf-8')
 grade_ui=(ROOT/'includes/grade-scale-converter-ui.js').read_text(encoding='utf-8')
 ok('salary dedicated print preserved', 'id="payrollPrintSheet"' in salary and 'id' + "' => 'printBtn'" in salary and 'window.print()' in salary_ui)
-ok('staffing dedicated print preserved', 'id="staffingPrintReport"' in staff and 'id="staffingPrintButton"' in staff and 'window.print()' in staff)
+ok('staffing dedicated print preserved', 'id="staffingPrintReport"' in staff and 'id="staffingPrintButton"' in staff and 'window.print()' in staff_ui)
 ok('grade converter print preserved', 'id="printBtn"' in grade and 'Εκτύπωση' in grade and 'window.print()' in grade_ui)
 
 main=(ROOT/'ypologismos-morion.php').read_text(encoding='utf-8')

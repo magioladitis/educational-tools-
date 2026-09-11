@@ -3,6 +3,8 @@ from pathlib import Path
 import subprocess, json, re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
+UI=ROOT/'includes'/'staffing-simulator-ui.js'
+source=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
 
@@ -65,9 +67,9 @@ check('personnel add button exists', 'id="addPersonnelRow"' in out)
 check('personnel filter exists', 'id="personnelFilter"' in out)
 check('personnel template exists', 'id="personnelRowTemplate"' in out)
 check('shared teaching-hours JS included', 'includes/teaching-hours-calculations.js' in out)
-check('client uses shared secondary calculator', 'EducationTeachingHours.secondary' in out)
-check('frontend dynamically limits PE manual hours to 23', "code.indexOf('ΠΕ')===0 ? 23 : 35" in out and 'requiredInput.max=String(manualHoursMax)' in out)
-check('frontend PE over-limit message is explicit', 'Για κλάδο ΠΕ το υποχρεωτικό διδακτικό ωράριο δεν μπορεί να ξεπερνά τις 23 ώρες.' in out)
+check('client uses shared secondary calculator', 'EducationTeachingHours.secondary' in source)
+check('frontend dynamically limits PE manual hours to 23', "code.indexOf('ΠΕ')===0 ? 23 : 35" in source and 'requiredInput.max=String(manualHoursMax)' in source)
+check('frontend PE over-limit message is explicit', 'Για κλάδο ΠΕ το υποχρεωτικό διδακτικό ωράριο δεν μπορεί να ξεπερνά τις 23 ώρες.' in source)
 check('no automatic placement action', 'Πρότεινε κατανομή' not in out and 'Αυτόματη κατανομή' not in out)
 
 # Missing school section counts must keep a director unresolved; there is no manual band fallback in the UI.
@@ -140,7 +142,7 @@ check('second Director remains in rendered form for correction', 'Δεύτερο
 check('duplicate Director contributes unresolved roster entry', re.search(r'<strong>1</strong><span>εγγραφές που χρειάζονται συμπλήρωση</span>',dup) is not None)
 check('allocation stays locked while duplicate Director exists', re.search(r'<button[^>]*data-staffing-tab="allocation"[^>]*aria-selected="false"[^>]*disabled',dup) is not None)
 
-text=PAGE.read_text(encoding='utf-8')
+text=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 check('frontend disables Director choice in other rows once one exists', 'directorOption.disabled=hasDirector && !isDirector' in text)
 check('frontend marks imported duplicate Directors invalid without silent rewrite', "role.setCustomValidity(duplicateDirector?singleDirectorMessage:'')" in text and 'importedDirectorCount>1' in text)
 check('staffing matrix headings are simply A B C', '<th>Α΄</th><th>Β΄</th><th>Γ΄</th>' in text and '<th>Α΄ επιλεξιμότητα</th>' not in text)
