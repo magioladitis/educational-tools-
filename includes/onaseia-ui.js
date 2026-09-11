@@ -197,12 +197,21 @@ function serviceYearOptions(selectedYear = "") {
     wrap.appendChild(row);
   }
 
-  function calculateService(warnings) {
+  function readServiceEntries() {
+    return Array.from(document.querySelectorAll(".service-row")).map(function(row) {
+      return {
+        year: row.querySelector(".service-year").value,
+        months: greekNumber(row.querySelector(".service-months").value)
+      };
+    });
+  }
+
+  function calculateServiceEntries(entries, warnings) {
     const totalsByYear = {};
 
-    document.querySelectorAll(".service-row").forEach(row => {
-      const year = row.querySelector(".service-year").value;
-      const months = greekNumber(row.querySelector(".service-months").value);
+    entries.forEach(function(entry) {
+      const year = entry.year;
+      const months = entry.months;
 
       if (!year && months > 0) {
         throw new Error("Υπάρχει γραμμή προϋπηρεσίας με μήνες αλλά χωρίς επιλεγμένο σχολικό έτος.");
@@ -220,19 +229,17 @@ function serviceYearOptions(selectedYear = "") {
       }
 
       if (!year || months === 0) return;
-
       totalsByYear[year] = (totalsByYear[year] || 0) + months;
     });
 
     let totalPoints = 0;
     const details = [];
 
-    Object.keys(totalsByYear).sort().reverse().forEach(year => {
+    Object.keys(totalsByYear).sort().reverse().forEach(function(year) {
       const enteredMonths = totalsByYear[year];
       const months = Math.min(10, enteredMonths);
       const points = months * 1.5;
       totalPoints += points;
-
       details.push(`${year}: ${formatPoints(months)} μήνες → ${formatPoints(points)} μόρια`);
 
       if (enteredMonths > 10) {
@@ -241,6 +248,10 @@ function serviceYearOptions(selectedYear = "") {
     });
 
     return { points: totalPoints, details };
+  }
+
+  function calculateService(warnings) {
+    return calculateServiceEntries(readServiceEntries(), warnings);
   }
 
   function calculatePoints() {

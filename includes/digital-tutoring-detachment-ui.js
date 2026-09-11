@@ -111,9 +111,13 @@ const digitalTutoringPositions = [
     input.value = value;
   }
 
-  function toggleEae(){
+  function syncEaeUI(){
     const show = document.getElementById('eaePosition').value === 'yes';
     document.getElementById('eaeSpecializationWrap').classList.toggle('hidden', !show);
+  }
+
+  function toggleEae(){
+    syncEaeUI();
     renderAssignments();
     calculate();
   }
@@ -214,7 +218,7 @@ const digitalTutoringPositions = [
       if(el.id === 'requiredExperience' || el.id === 'videoFace' || el.id === 'videoDuration' || el.id === 'eaeSpecialization') el.value='';
       else el.selectedIndex=0;
     });
-    toggleEae();
+    syncEaeUI();
     specialtyChanged();
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -244,6 +248,6 @@ const digitalTutoringPositions = [
   });
   document.getElementById('resetBtn').addEventListener('click', resetForm);
 
-  toggleEae();
+  syncEaeUI();
   specialtyChanged();
 }());

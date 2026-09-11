@@ -110,13 +110,8 @@
     if (initialized) return;
     initialized = true;
     document.querySelectorAll('input, select').forEach(el => {
-      el.addEventListener('input', () => {
-        if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 50);
-        if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
-        if (el.id === 'serviceDays') clampBoundedIntegerInput(el, 29);
-        calculate();
-      });
-      el.addEventListener('change', () => {
+      const eventName = el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'radio' ? 'change' : 'input';
+      el.addEventListener(eventName, () => {
         if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 50);
         if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
         if (el.id === 'serviceDays') clampBoundedIntegerInput(el, 29);
