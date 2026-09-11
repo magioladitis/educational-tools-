@@ -85,8 +85,7 @@ foreach ($digitalTutoringSpecialties as $code) {
             </div>
           </div>
           <div id="assignmentBox" class="info">Επίλεξε ειδικότητα για να δεις τα διαθέσιμα μαθήματα/θέσεις του Παραρτήματος Ι.</div>
-          <details>
-            <summary>Προβολή όλων των θέσεων του Παραρτήματος Ι</summary>
+          <?php calculatorDisclosureStart(array('summary' => 'Προβολή όλων των θέσεων του Παραρτήματος Ι')); ?>
             <div class="mapping-wrap">
               <table class="mapping-table">
                 <thead><tr><th>Κατηγορία</th><th>Μάθημα</th><th>Κλάδος</th><th>Θέσεις</th></tr></thead>
@@ -127,7 +126,7 @@ foreach ($digitalTutoringSpecialties as $code) {
                 </tbody>
               </table>
             </div>
-          </details>
+          <?php calculatorDisclosureEnd(); ?>
           <div class="warning">Η πρόσκληση προβλέπει και επιπλέον κωλύματα/προϋποθέσεις απόσπασης. Το παρόν εργαλείο δεν αντικαθιστά τον πλήρη έλεγχο της πρόσκλησης και του ΠΥΜ.</div>
         <?php calculatorCardEnd(); ?>
 

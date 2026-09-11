@@ -2492,6 +2492,7 @@ body.edu-ui.edu-tools-directory .no-results{
 body.edu-ui.edu-tools-directory .info-grid{
   display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:26px
 }
+body.edu-ui.edu-tools-directory .info-grid.info-grid-single{grid-template-columns:1fr}
 body.edu-ui.edu-tools-directory .notice,
 body.edu-ui.edu-tools-directory .side-box{
   padding:18px;border-radius:14px;line-height:1.6;font-size:14.5px

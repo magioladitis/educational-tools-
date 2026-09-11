@@ -125,8 +125,11 @@ foreach ($abroadSpecialties as $internalCode) {
 
         <div id="stipendComparison" class="stipend-panel hidden" aria-live="polite"></div>
 
-        <details>
-          <summary>Τι θεωρείται κώλυμα στην τρέχουσα πρόσκληση;</summary>
+        <?php calculatorDisclosureStart(array(
+          'summary' => 'Τι θεωρείται κώλυμα στην τρέχουσα πρόσκληση;',
+          'open' => true,
+          'attrs' => array('data-mobile-collapsed' => 'true')
+        )); ?>
           <ul class="criteria-list">
             <li>Προηγούμενη διακοπή απόσπασης για πλημμελή άσκηση καθηκόντων, ανεπάρκεια ή αδικαιολόγητες/μακρές απουσίες.</li>
             <li>Ορισμένες ποινικές ή πειθαρχικές περιπτώσεις ή εκκρεμής Ε.Δ.Ε.</li>
@@ -136,7 +139,7 @@ foreach ($abroadSpecialties as $internalCode) {
             <li>Ειδικοί περιορισμοί για επιχορηγούμενα σχολεία της Βαυαρίας.</li>
           </ul>
           <div class="note">Ο παραπάνω κατάλογος είναι συνοπτικός. Για οριακή περίπτωση απαιτείται έλεγχος του πλήρους κειμένου της εκάστοτε πρόσκλησης.</div>
-        </details>
+        <?php calculatorDisclosureEnd(); ?>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorCardStart(); ?>

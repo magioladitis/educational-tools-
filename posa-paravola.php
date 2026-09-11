@@ -10,6 +10,7 @@
 
 <body class="edu-ui edu-guide-standard edu-guide-paravolo">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 
   <div class="app-box edu-modernized">
 <section class="hero edu-legacy-hero">
@@ -35,9 +36,11 @@
 
     <div id="duplicateWarning" class="duplicate-warning" role="alert"></div>
     <div id="result" class="result" role="status" aria-live="polite"></div>
-<details class="instructions-box">
-  <summary>Οδηγίες για την έκδοση και πληρωμή παραβόλου</summary>
-
+<?php calculatorDisclosureStart(array(
+  'summary' => 'Οδηγίες για την έκδοση και πληρωμή παραβόλου',
+  'open' => true,
+  'attrs' => array('data-mobile-collapsed' => 'true')
+)); ?>
 <div class="instructions-content">
     <p>
       Ο/Η υποψήφιος/α πρέπει να εκδώσει ηλεκτρονικό παράβολο αξίας
@@ -82,7 +85,7 @@
       </a>
     </p>
   </div>
-</details>
+<?php calculatorDisclosureEnd(); ?>
     </section>
   </div>
 

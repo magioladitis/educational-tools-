@@ -148,7 +148,7 @@ foreach ($sdeRegistrySpecialties as $code) {
   <?php calculatorCardEnd(); ?>
   <?php calculatorCardStart(); ?><h2>Αναλυτική μοριοδότηση</h2><div id="breakdown" class="subtitle">Επίλεξε κατηγορία και συμπλήρωσε τα στοιχεία.</div><?php calculatorCardEnd(); ?>
   <?php calculatorCardStart(); ?><h2>Δικαιολογητικά / έλεγχοι</h2><div id="checklist" class="subtitle">Θα προσαρμοστεί στις επιλογές σου.</div><?php calculatorCardEnd(); ?>
-  <?php calculatorCardStart(); ?><h2>Ισοβαθμία</h2><p class="subtitle">Προηγείται ο υποψήφιος με διδακτορικό, έπειτα ο κάτοχος μεταπτυχιακού και τέλος ο κάτοχος πτυχίου κατά βαθμό πτυχίου. Αν παραμένει ισοβαθμία, προβλέπεται δημόσια κλήρωση.</p><?php calculatorCardEnd(); ?>
+  <?php calculatorDisclosure(array('summary' => 'Ισοβαθμία', 'html' => 'Προηγείται ο υποψήφιος με διδακτορικό, έπειτα ο κάτοχος μεταπτυχιακού και τέλος ο κάτοχος πτυχίου κατά βαθμό πτυχίου. Αν παραμένει ισοβαθμία, προβλέπεται δημόσια κλήρωση.', 'class' => 'edu-result-disclosure', 'open' => true, 'attrs' => array('data-mobile-collapsed' => 'true'))); ?>
 <?php calculatorResultsEnd(); ?>
 <?php calculatorColumnsEnd(); ?>
 

@@ -324,12 +324,15 @@
         <div id="assignmentResults" aria-live="polite"></div>
       <?php calculatorCardEnd(); ?>
 
-      <?php calculatorCardStart(); ?>
-        <h2>Τι σημαίνουν οι αναθέσεις;</h2>
+      <?php calculatorDisclosureStart(array(
+        'summary' => 'Τι σημαίνουν οι αναθέσεις;',
+        'open' => true,
+        'attrs' => array('data-mobile-collapsed' => 'true')
+      )); ?>
         <p><strong>Α΄ ανάθεση:</strong> μαθήματα της βασικής ειδικότητας με τα οποία καλύπτεται κατά προτεραιότητα το υποχρεωτικό ωράριο.</p>
         <p><strong>Β΄ ανάθεση:</strong> χρησιμοποιείται για συμπλήρωση του υποχρεωτικού ωραρίου ή για κάλυψη εκπαιδευτικών αναγκών. Ισχύουν οι προβλεπόμενοι περιορισμοί ωρών και δεύτερης ειδικότητας.</p>
         <p><strong>Γ΄ ανάθεση:</strong> αφορά τη βασική ειδικότητα και μπορεί να χρησιμοποιηθεί <strong>μετά τις 30 Σεπτεμβρίου</strong>, με απόφαση ΠΥΣΔΕ, για κενά που παραμένουν ακάλυπτα.</p>
-      <?php calculatorCardEnd(); ?>
+      <?php calculatorDisclosureEnd(); ?>
     <?php calculatorMainEnd(); ?>
 
     <?php calculatorResultsStart(array('attrs' => array('aria-live' => 'polite'))); ?>

@@ -89,13 +89,12 @@ foreach ($sdeSecondmentSpecialties as $code) {
           <div class="field full">
             <label for="blockingIssue">Υπάρχει κάποιο κώλυμα υποβολής αίτησης του άρθρου 4;</label>
             <select id="blockingIssue"><option value="">— Επίλεξε —</option><option value="no">Όχι</option><option value="yes">Ναι / πιθανόν</option></select>
-            <details><summary>Ενδεικτικά κωλύματα</summary><ul class="criteria-list"><li>δοκιμαστική υπηρεσία χωρίς πράξη μονιμοποίησης, διαθεσιμότητα ή αργία,</li><li>απαγόρευση υπηρεσιακών μεταβολών ή υποχρεωτική υπηρεσία,</li><li>υποχρεωτική υπηρεσία λόγω διορισμού σε δυσπρόσιτο,</li><li>θέση στελέχους ή θέση με θητεία,</li><li>ανάκληση/διακοπή απόσπασης σε δομή της Γ.Γ.Ε.Ε.Κ. &amp; Δ.Β.Μ. μέσα στην τελευταία τριετία, όπου εφαρμόζεται.</li></ul></details>
+            <?php calculatorDisclosureStart(array('summary' => 'Ενδεικτικά κωλύματα', 'open' => true, 'attrs' => array('data-mobile-collapsed' => 'true'))); ?><ul class="criteria-list"><li>δοκιμαστική υπηρεσία χωρίς πράξη μονιμοποίησης, διαθεσιμότητα ή αργία,</li><li>απαγόρευση υπηρεσιακών μεταβολών ή υποχρεωτική υπηρεσία,</li><li>υποχρεωτική υπηρεσία λόγω διορισμού σε δυσπρόσιτο,</li><li>θέση στελέχους ή θέση με θητεία,</li><li>ανάκληση/διακοπή απόσπασης σε δομή της Γ.Γ.Ε.Ε.Κ. &amp; Δ.Β.Μ. μέσα στην τελευταία τριετία, όπου εφαρμόζεται.</li></ul><?php calculatorDisclosureEnd(); ?>
           </div>
         </div>
         <div id="assignmentBox" class="info">Επίλεξε ειδικότητα για να δεις τους αποδεκτούς γραμματισμούς.</div>
         <div class="note"><strong>Σειρά επιλογής:</strong> στις θέσεις των ΣΔΕ εφαρμόζεται η σειρά προτεραιότητας των γραμματισμών και της Α΄/Β΄ ανάθεσης, ανεξάρτητα από το συνολικό σκορ. Στα εκτός έδρας τμήματα λαμβάνεται υπόψη μόνο το σύνολο των μορίων. Σε ισοβαθμία προηγείται αρχικά όποιος έχει αποδεχτεί σύγχρονη τηλεκπαίδευση.</div>
-        <details>
-          <summary>Προβολή όλων των αποδεκτών ειδικοτήτων / αναθέσεων</summary>
+        <?php calculatorDisclosureStart(array('summary' => 'Προβολή όλων των αποδεκτών ειδικοτήτων / αναθέσεων')); ?>
           <div class="mapping-wrap">
             <table class="mapping-table">
               <thead><tr><th>Γνωστικό αντικείμενο</th><th>Α΄ ανάθεση</th><th>Β΄ ανάθεση</th></tr></thead>
@@ -111,7 +110,7 @@ foreach ($sdeSecondmentSpecialties as $code) {
               </tbody>
             </table>
           </div>
-        </details>
+        <?php calculatorDisclosureEnd(); ?>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '2. Εκπαίδευση', 'subtitle_html' => 'Τυπικά προσόντα έως 18 + επιμόρφωση έως 4.', 'cap_html' => 'έως 22')); ?>

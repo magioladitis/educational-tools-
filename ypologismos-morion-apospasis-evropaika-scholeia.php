@@ -30,7 +30,7 @@
 </div>
 <div id="positionRequirementWrap" class="field hidden edu-mt-13"><label for="positionLanguageRequirementMet" id="positionRequirementLabel">Γλωσσική προϋπόθεση θέσης</label><select id="positionLanguageRequirementMet"><option value="">— Επίλεξε —</option><option value="yes">Ναι, την καλύπτω</option><option value="no">Όχι</option></select></div>
 <div id="librarianWrap" class="field hidden edu-mt-13"><label for="librarianQualification">Διαθέτω το προβλεπόμενο προσόν Βιβλιοθηκονομίας;</label><select id="librarianQualification"><option value="">— Επίλεξε —</option><option value="yes">Ναι</option><option value="no">Όχι</option></select></div>
-<details><summary>Ειδικές γλωσσικές απαιτήσεις θέσεων 2026</summary><ul class="criteria"><li>ΠΕ70 Λουξεμβούργο II / Βρυξέλλες III, ΠΕ02 Βρυξέλλες III, ΠΕ03, Χημεία, Βιολογία και ΠΕ11 Βρυξέλλες III: Γ2 σε Αγγλικά, Γαλλικά ή Γερμανικά.</li><li>Ιστορία Βρυξέλλες I και ΠΕ08 MOL: Γ2 Αγγλικά.</li><li>Librarian Λουξεμβούργο II: προσόν Βιβλιοθηκονομίας και Γ2 Αγγλικά.</li></ul></details>
+<?php calculatorDisclosureStart(array('summary' => 'Ειδικές γλωσσικές απαιτήσεις θέσεων 2026', 'open' => true, 'attrs' => array('data-mobile-collapsed' => 'true'))); ?><ul class="criteria"><li>ΠΕ70 Λουξεμβούργο II / Βρυξέλλες III, ΠΕ02 Βρυξέλλες III, ΠΕ03, Χημεία, Βιολογία και ΠΕ11 Βρυξέλλες III: Γ2 σε Αγγλικά, Γαλλικά ή Γερμανικά.</li><li>Ιστορία Βρυξέλλες I και ΠΕ08 MOL: Γ2 Αγγλικά.</li><li>Librarian Λουξεμβούργο II: προσόν Βιβλιοθηκονομίας και Γ2 Αγγλικά.</li></ul><?php calculatorDisclosureEnd(); ?>
 <?php calculatorCardEnd(); ?>
 <?php calculatorCardStart(); ?>
 <h2>2. Α. Επιστημονική & παιδαγωγική κατάρτιση</h2>
@@ -70,7 +70,7 @@
   'value_html' => '<span id="preInterviewTotal">0</span> <small class="edu-stage-suffix">/ 50</small>',
   'value_class' => 'stage-number'
 )); ?>
-<?php calculatorResultRow(array('label_html' => 'Α. Κατάρτιση', 'value_html' => '0 / 32', 'value_id' => 'academicResult')); ?><?php calculatorResultRow(array('label_html' => 'Β. Υπηρεσία / εμπειρία', 'value_html' => '0 / 18', 'value_id' => 'serviceResult')); ?><?php calculatorResultRow(array('label_html' => 'Γ. Συνέντευξη', 'value_html' => '— / 40', 'value_id' => 'interviewResult')); ?><details class="breakdown-box"><summary>Αναλυτική κατανομή μορίων</summary><div id="academicBreakdown" class="breakdown-list"></div><div id="serviceBreakdown" class="breakdown-list"></div></details>
+<?php calculatorResultRow(array('label_html' => 'Α. Κατάρτιση', 'value_html' => '0 / 32', 'value_id' => 'academicResult')); ?><?php calculatorResultRow(array('label_html' => 'Β. Υπηρεσία / εμπειρία', 'value_html' => '0 / 18', 'value_id' => 'serviceResult')); ?><?php calculatorResultRow(array('label_html' => 'Γ. Συνέντευξη', 'value_html' => '— / 40', 'value_id' => 'interviewResult')); ?><?php calculatorDisclosureStart(array('summary' => 'Αναλυτική κατανομή μορίων', 'class' => 'breakdown-box edu-result-disclosure')); ?><div id="academicBreakdown" class="breakdown-list"></div><div id="serviceBreakdown" class="breakdown-list"></div><?php calculatorDisclosureEnd(); ?>
 <?php calculatorScoreHeader(array(
   'variant' => 'final',
   'class' => 'stage',
