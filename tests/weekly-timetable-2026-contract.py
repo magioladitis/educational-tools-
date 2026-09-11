@@ -11,6 +11,8 @@ EDATA = (ROOT / 'includes' / 'weekly-timetable-eneegyl-data.php').read_text(enco
 PAGE = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
 UI = (ROOT / 'includes' / 'weekly-timetable-ui.js').read_text(encoding='utf-8')
 TOOLS = (ROOT / 'ergaleia.php').read_text(encoding='utf-8')
+CATALOG = (ROOT / 'includes' / 'tools-catalog.php').read_text(encoding='utf-8')
+DIRECTORY_JS = (ROOT / 'assets' / 'tools-directory.js').read_text(encoding='utf-8')
 CSS = (ROOT / 'assets' / 'weekly-timetable.css').read_text(encoding='utf-8')
 
 checks = []
@@ -91,9 +93,26 @@ check('render resolves specialty explicitly', "var specialty = specialtyField.hi
 check('timetable CSS owns title alignment', '.timetable-course-title' in CSS and 'text-align:left' in CSS)
 check('timetable CSS overrides generic result row layout', 'body.edu-ui.edu-calc-standard.edu-page-weekly-timetable .result-row.timetable-course-row' in CSS and 'grid-template-columns:minmax(0,1fr) max-content' in CSS)
 check('page uses dedicated stylesheet', 'assets/weekly-timetable.css' in PAGE and (ROOT / 'assets' / 'weekly-timetable.css').exists())
-check('tool card added', 'href="orologio-programma-mathimaton.php"' in TOOLS and '<span class="tool-number">31</span>' in TOOLS)
-toolbox_card_count=len(re.findall(r'class="tool-card"', TOOLS))
-check('tool directory count matches cards', f'{toolbox_card_count} διαθέσιμα εργαλεία' in TOOLS and f'Εμφανίζονται {toolbox_card_count} εργαλεία.' in TOOLS)
+# The tools directory is catalog-driven. Verify the actual rendered directory instead
+# of requiring the pre-catalogue hard-coded card markup in ergaleia.php.
+tools_render = subprocess.run(
+    ['php', str(ROOT / 'ergaleia.php')],
+    cwd=str(ROOT), capture_output=True, text=True, check=True
+).stdout
+toolbox_card_count = len(re.findall(r'class="tool-card"', tools_render))
+check(
+    'tool card added',
+    "'number' => 31" in CATALOG
+    and "'href' => 'orologio-programma-mathimaton.php'" in CATALOG
+    and 'href="orologio-programma-mathimaton.php"' in tools_render
+    and '<span class="tool-number">31</span>' in tools_render
+)
+check(
+    'tool directory count matches cards',
+    toolbox_card_count > 0
+    and f'<span>{toolbox_card_count} διαθέσιμα εργαλεία</span>' in tools_render
+    and "'Εμφανίζονται ' + visible + ' εργαλεία.'" in DIRECTORY_JS
+)
 
 # Execute the PHP dataset and verify that the rows themselves add up to the
 # declared programme totals. Rows with the same slot_id are alternatives and

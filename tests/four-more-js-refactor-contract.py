@@ -83,7 +83,7 @@ check('scale preserves 1GT points rule', 'grade20 * 3' in scale_ui)
 check('scale preserves hundredths fraction', 'denominator:100' in scale_ui)
 
 config = (ROOT / 'includes/config.php').read_text(encoding='utf-8')
-check('release version 3.21.04', "define('EDU_TOOLS_VERSION', '3.21.04')" in config)
+check('release version 3.21.05', "define('EDU_TOOLS_VERSION', '3.21.05')" in config)
 
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:

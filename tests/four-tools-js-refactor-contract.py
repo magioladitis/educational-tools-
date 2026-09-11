@@ -52,7 +52,7 @@ check('posa-paravola excluded from generic print registry', "'posa-paravola.php'
 check('other refactored calculators remain printable', all("'"+x+"'" in printer for x in ['ypologismos-morion.php','ypologismos-morion-apospasis-dimos.php','ypologismos-morion-apospasis-psifiako-frontistirio.php','anatheseis-mathimaton.php']))
 
 config=(ROOT/'includes/config.php').read_text(encoding='utf-8')
-check('release version 3.21.04', "define('EDU_TOOLS_VERSION', '3.21.04')" in config)
+check('release version 3.21.05', "define('EDU_TOOLS_VERSION', '3.21.05')" in config)
 
 failed=[n for n,ok in checks if not ok]
 for n,ok in checks: print(('PASS' if ok else 'FAIL')+': '+n)
