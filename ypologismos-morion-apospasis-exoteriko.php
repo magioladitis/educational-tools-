@@ -35,10 +35,10 @@
             <select id="specialty">
               <option value="">— Επίλεξε ειδικότητα —</option>
 <?php
-$abroadSpecialties = array('PE01', 'PE02', 'PE03', 'PE04.01', 'PE04.02', 'PE04.03', 'PE04.04', 'PE04.05', 'PE05', 'PE06', 'PE07', 'PE08', 'PE11', 'PE60', 'PE70', 'PE78', 'PE79.01', 'PE80', 'PE82', 'PE83', 'PE85', 'PE86', 'PE88.04');
+$abroadSpecialties = array('ΠΕ01', 'ΠΕ02', 'ΠΕ03', 'ΠΕ04.01', 'ΠΕ04.02', 'ΠΕ04.03', 'ΠΕ04.04', 'ΠΕ04.05', 'ΠΕ05', 'ΠΕ06', 'ΠΕ07', 'ΠΕ08', 'ΠΕ11', 'ΠΕ60', 'ΠΕ70', 'ΠΕ78', 'ΠΕ79.01', 'ΠΕ80', 'ΠΕ82', 'ΠΕ83', 'ΠΕ85', 'ΠΕ86', 'ΠΕ88.04');
 foreach ($abroadSpecialties as $internalCode) {
     echo '              <option value="' . htmlspecialchars($internalCode, ENT_QUOTES, 'UTF-8') . '">'
-        . htmlspecialchars(teacherSpecialtyDisplayFromInternal($internalCode), ENT_QUOTES, 'UTF-8')
+        . htmlspecialchars(teacherSpecialtyDisplay($internalCode), ENT_QUOTES, 'UTF-8')
         . "</option>\n";
 }
 ?>            </select>

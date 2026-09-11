@@ -6,7 +6,7 @@
   'use strict';
 
   const REQUIREMENTS = Object.freeze({
-    PE21: Object.freeze({
+    'ΠΕ21': Object.freeze({
       label: 'ΠΕ21 — Θεραπευτών Λόγου',
       items: Object.freeze([
         Object.freeze({
@@ -15,12 +15,12 @@
         })
       ])
     }),
-    PE22: Object.freeze({
+    'ΠΕ22': Object.freeze({
       label: 'ΠΕ22 — Επαγγελματικών Συμβούλων',
       items: Object.freeze([]),
       note: 'Δεν προβλέπεται ειδική άδεια άσκησης επαγγέλματος ή εγγραφή σε επαγγελματικό σύλλογο στην ενότητα «Άδειες και Βεβαιώσεις». Ισχύουν τα απαιτούμενα προσόντα τίτλων σπουδών του Κεφαλαίου Β΄.'
     }),
-    PE23: Object.freeze({
+    'ΠΕ23': Object.freeze({
       label: 'ΠΕ23 — Ψυχολόγων',
       items: Object.freeze([
         Object.freeze({
@@ -29,7 +29,7 @@
         })
       ])
     }),
-    PE25: Object.freeze({
+    'ΠΕ25': Object.freeze({
       label: 'ΠΕ25 — Σχολικών Νοσηλευτών',
       routes: Object.freeze({
         nursing: Object.freeze({
@@ -48,35 +48,46 @@
         })
       })
     }),
-    PE28: Object.freeze({
+    'ΠΕ28': Object.freeze({
       label: 'ΠΕ28 — Φυσιοθεραπευτών',
       items: Object.freeze([
         Object.freeze({ id: 'practice', label: 'Άδεια άσκησης επαγγέλματος Φυσικοθεραπευτή ή αντίστοιχη Βεβαίωση νόμιμων προϋποθέσεων.' }),
         Object.freeze({ id: 'membership', label: 'Ταυτότητα μέλους Π.Σ.Φ. σε ισχύ ή προβλεπόμενη Βεβαίωση εγγραφής/ανανέωσης.' })
       ])
     }),
-    PE29: Object.freeze({
+    'ΠΕ29': Object.freeze({
       label: 'ΠΕ29 — Εργασιοθεραπευτών–Εργοθεραπευτών',
       items: Object.freeze([
         Object.freeze({ id: 'practice', label: 'Άδεια άσκησης επαγγέλματος Εργοθεραπευτή ή αντίστοιχη Βεβαίωση νόμιμων προϋποθέσεων.' }),
         Object.freeze({ id: 'membership', label: 'Ταυτότητα μέλους Π.Σ.Ε. σε ισχύ ή προβλεπόμενη Βεβαίωση εγγραφής/ανανέωσης.' })
       ])
     }),
-    PE30: Object.freeze({
+    'ΠΕ30': Object.freeze({
       label: 'ΠΕ30 — Κοινωνικών Λειτουργών',
       items: Object.freeze([
         Object.freeze({ id: 'practice', label: 'Άδεια άσκησης επαγγέλματος Κοινωνικού Λειτουργού / Κοινωνικής Εργασίας ή αντίστοιχη Βεβαίωση νόμιμων προϋποθέσεων.' }),
         Object.freeze({ id: 'membership', label: 'Ταυτότητα μέλους Σ.Κ.Λ.Ε. σε ισχύ ή Βεβαίωση εγγραφής–υποβολής ετήσιας δήλωσης στοιχείων σε ισχύ.' })
       ])
     }),
-    PE31: Object.freeze({
+    'ΠΕ31': Object.freeze({
       label: 'ΠΕ31 — Εξειδικευμένου',
       items: Object.freeze([]),
       note: 'Δεν προβλέπεται ειδική άδεια άσκησης επαγγέλματος ή εγγραφή σε επαγγελματικό σύλλογο στην ενότητα «Άδειες και Βεβαιώσεις». Ισχύουν τα ειδικά προσόντα εξειδίκευσης και εμπειρίας του Κεφαλαίου Β΄.'
     })
   });
 
+  function normalizeSpecialtyCode(value) {
+    if (global.EducationCore && typeof global.EducationCore.normalizeSpecialtyCode === 'function') {
+      return global.EducationCore.normalizeSpecialtyCode(value);
+    }
+    return String(value == null ? '' : value).trim().toUpperCase()
+      .replace(/^(?:PE|PΕ|ΠE|ΠΕ)/, 'ΠΕ')
+      .replace(/^(?:TE|TΕ|ΤE|ΤΕ)/, 'ΤΕ')
+      .replace(/^(?:DE|DΕ|ΔE|ΔΕ)/, 'ΔΕ');
+  }
+
   function getRequirements(branch, route) {
+    branch = normalizeSpecialtyCode(branch);
     const config = REQUIREMENTS[branch] || null;
     if (!config) return { branch, label: '', routeRequired: false, route: '', routeLabel: '', items: [], note: '' };
     if (config.routes) {
@@ -103,6 +114,7 @@
   }
 
   function evaluate(branch, route, checked) {
+    branch = normalizeSpecialtyCode(branch);
     const req = getRequirements(branch, route);
     if (!branch || !REQUIREMENTS[branch]) {
       return { status: 'unselected', complete: false, required: 0, checked: 0, missing: [], requirements: req };

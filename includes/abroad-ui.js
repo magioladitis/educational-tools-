@@ -10,75 +10,85 @@
   let initialized = false;
   const fmt = n => Number(n || 0).toLocaleString('el-GR', {maximumFractionDigits: 1});
 
+  function normalizeSpecialtyCode(value){
+    if(global.EducationCore && typeof global.EducationCore.normalizeSpecialtyCode === 'function'){
+      return global.EducationCore.normalizeSpecialtyCode(value);
+    }
+    return String(value == null ? '' : value).trim().toUpperCase()
+      .replace(/^(?:PE|PΕ|ΠE|ΠΕ)/, 'ΠΕ')
+      .replace(/^(?:TE|TΕ|ΤE|ΤΕ)/, 'ΤΕ')
+      .replace(/^(?:DE|DΕ|ΔE|ΔΕ)/, 'ΔΕ');
+  }
+
   // Παράρτημα ΙΙΙ — Πίνακας χωρών/ειδικοτήτων, πρόσκληση 11771/Η2/30-01-2026.
   const DESTINATIONS = Object.freeze([
     // Ασία
-    {id:"az", name:"Αζερμπαϊτζάν", continent:"Ασία", specs:["PE70","PE02"]},
-    {id:"am", name:"Αρμενία", continent:"Ασία", specs:["PE70","PE02"]},
-    {id:"ge", name:"Γεωργία", continent:"Ασία", specs:["PE70","PE02","PE11","PE79.01"]},
-    {id:"kz", name:"Καζακστάν", continent:"Ασία", specs:["PE70","PE02"]},
-    {id:"uae", name:"Η.Α.Ε.", continent:"Ασία", specs:["PE70","PE02"]},
-    {id:"jo", name:"Ιορδανία", continent:"Ασία", specs:["PE70","PE02"]},
-    {id:"il", name:"Ισραήλ", continent:"Ασία", specs:["PE70","PE02","PE03","PE04.01","PE04.02","PE04.03","PE04.04","PE04.05","PE06","PE86"]},
-    {id:"qa", name:"Κατάρ", continent:"Ασία", specs:["PE60","PE70","PE02"]},
-    {id:"uz", name:"Ουζμπεκιστάν", continent:"Ασία", specs:["PE70"]},
-    {id:"tr", name:"Τουρκία", continent:"Ασία", specs:["PE02","PE03","PE04.01","PE04.02","PE04.04","PE06","PE11","PE79.01","PE60","PE70","PE86"]},
+    {id:"az", name:"Αζερμπαϊτζάν", continent:"Ασία", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"am", name:"Αρμενία", continent:"Ασία", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"ge", name:"Γεωργία", continent:"Ασία", specs:["ΠΕ70","ΠΕ02","ΠΕ11","ΠΕ79.01"]},
+    {id:"kz", name:"Καζακστάν", continent:"Ασία", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"uae", name:"Η.Α.Ε.", continent:"Ασία", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"jo", name:"Ιορδανία", continent:"Ασία", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"il", name:"Ισραήλ", continent:"Ασία", specs:["ΠΕ70","ΠΕ02","ΠΕ03","ΠΕ04.01","ΠΕ04.02","ΠΕ04.03","ΠΕ04.04","ΠΕ04.05","ΠΕ06","ΠΕ86"]},
+    {id:"qa", name:"Κατάρ", continent:"Ασία", specs:["ΠΕ60","ΠΕ70","ΠΕ02"]},
+    {id:"uz", name:"Ουζμπεκιστάν", continent:"Ασία", specs:["ΠΕ70"]},
+    {id:"tr", name:"Τουρκία", continent:"Ασία", specs:["ΠΕ02","ΠΕ03","ΠΕ04.01","ΠΕ04.02","ΠΕ04.04","ΠΕ06","ΠΕ11","ΠΕ79.01","ΠΕ60","ΠΕ70","ΠΕ86"]},
 
     // Αφρική
-    {id:"eg", name:"Αίγυπτος", continent:"Αφρική", specs:["PE01","PE02","PE03","PE04.01","PE04.02","PE04.03","PE04.04","PE06","PE11","PE60","PE70","PE78","PE79.01","PE86"]},
-    {id:"et", name:"Αιθιοπία", continent:"Αφρική", specs:["PE70"]},
-    {id:"zm", name:"Ζάμπια", continent:"Αφρική", specs:["PE70"]},
-    {id:"zw", name:"Ζιμπάμπουε", continent:"Αφρική", specs:["PE70"]},
-    {id:"cd", name:"Λ. Δ. Κονγκό", continent:"Αφρική", specs:["PE60","PE70","PE02","PE03","PE04.01","PE04.02","PE86","PE06","PE05","PE11","PE80"]},
-    {id:"mg", name:"Μαδαγασκάρη", continent:"Αφρική", specs:["PE70","PE02"]},
-    {id:"za", name:"Νότια Αφρική", continent:"Αφρική", specs:["PE60","PE70","PE02","PE79.01","PE06","PE86","PE11"]},
-    {id:"tn", name:"Τυνησία", continent:"Αφρική", specs:["PE70","PE02"]},
+    {id:"eg", name:"Αίγυπτος", continent:"Αφρική", specs:["ΠΕ01","ΠΕ02","ΠΕ03","ΠΕ04.01","ΠΕ04.02","ΠΕ04.03","ΠΕ04.04","ΠΕ06","ΠΕ11","ΠΕ60","ΠΕ70","ΠΕ78","ΠΕ79.01","ΠΕ86"]},
+    {id:"et", name:"Αιθιοπία", continent:"Αφρική", specs:["ΠΕ70"]},
+    {id:"zm", name:"Ζάμπια", continent:"Αφρική", specs:["ΠΕ70"]},
+    {id:"zw", name:"Ζιμπάμπουε", continent:"Αφρική", specs:["ΠΕ70"]},
+    {id:"cd", name:"Λ. Δ. Κονγκό", continent:"Αφρική", specs:["ΠΕ60","ΠΕ70","ΠΕ02","ΠΕ03","ΠΕ04.01","ΠΕ04.02","ΠΕ86","ΠΕ06","ΠΕ05","ΠΕ11","ΠΕ80"]},
+    {id:"mg", name:"Μαδαγασκάρη", continent:"Αφρική", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"za", name:"Νότια Αφρική", continent:"Αφρική", specs:["ΠΕ60","ΠΕ70","ΠΕ02","ΠΕ79.01","ΠΕ06","ΠΕ86","ΠΕ11"]},
+    {id:"tn", name:"Τυνησία", continent:"Αφρική", specs:["ΠΕ70","ΠΕ02"]},
 
     // Ωκεανία
-    {id:"au", name:"Αυστραλία", continent:"Ωκεανία", specs:["PE02","PE06","PE60","PE70"]},
-    {id:"nz", name:"Νέα Ζηλανδία", continent:"Ωκεανία", specs:["PE70"]},
+    {id:"au", name:"Αυστραλία", continent:"Ωκεανία", specs:["ΠΕ02","ΠΕ06","ΠΕ60","ΠΕ70"]},
+    {id:"nz", name:"Νέα Ζηλανδία", continent:"Ωκεανία", specs:["ΠΕ70"]},
 
     // Ευρώπη
-    {id:"al", name:"Αλβανία", continent:"Ευρώπη", specs:["PE60","PE70","PE02","PE04.04","PE08","PE11","PE79.01","PE83","PE86","PE06"]},
-    {id:"at", name:"Αυστρία", continent:"Ευρώπη", specs:["PE60","PE70","PE02"]},
-    {id:"be", name:"Βέλγιο", continent:"Ευρώπη", specs:["PE60","PE70","PE01","PE02","PE03","PE04.01","PE04.02","PE04.04","PE05","PE06","PE08","PE11","PE78","PE79.01","PE80","PE86"]},
-    {id:"bg", name:"Βουλγαρία", continent:"Ευρώπη", specs:["PE60","PE70","PE02","PE11"]},
-    {id:"fr", name:"Γαλλία", continent:"Ευρώπη", specs:["PE60","PE70","PE02"]},
-    {id:"de_du", name:"Γερμανία — Σ.Γ.Ε. Ντίσελντορφ", continent:"Ευρώπη", specs:["PE01","PE02","PE03","PE04.01","PE04.02","PE04.04","PE04.05","PE06","PE07","PE11","PE79.01","PE78","PE80","PE86","PE60","PE70"]},
-    {id:"de_mu", name:"Γερμανία — Σ.Γ.Ε. Μονάχου", continent:"Ευρώπη", specs:["PE01","PE02","PE03","PE04.01","PE04.02","PE04.04","PE06","PE07","PE08","PE11","PE60","PE70","PE78","PE79.01","PE80","PE82","PE85","PE86","PE88.04"]},
-    {id:"dk", name:"Δανία", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"ch", name:"Ελβετία", continent:"Ευρώπη", specs:["PE60","PE70","PE02"]},
-    {id:"ie", name:"Ιρλανδία", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"es", name:"Ισπανία", continent:"Ευρώπη", specs:["PE60","PE70","PE02"]},
-    {id:"it", name:"Ιταλία", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"hr", name:"Κροατία", continent:"Ευρώπη", specs:["PE02"]},
-    {id:"lt", name:"Λιθουανία", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"lu", name:"Λουξεμβούργο", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"mt", name:"Μάλτα", continent:"Ευρώπη", specs:["PE70"]},
-    {id:"me", name:"Μαυροβούνιο", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"md", name:"Μολδαβία", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"nl", name:"Ολλανδία", continent:"Ευρώπη", specs:["PE60","PE70","PE02"]},
-    {id:"hu", name:"Ουγγαρία", continent:"Ευρώπη", specs:["PE60","PE70","PE02","PE11"]},
-    {id:"pl", name:"Πολωνία", continent:"Ευρώπη", specs:["PE70"]},
-    {id:"pt", name:"Πορτογαλία", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"ro", name:"Ρουμανία", continent:"Ευρώπη", specs:["PE70","PE60","PE01","PE02","PE03","PE04.01","PE04.02","PE04.04","PE06","PE11","PE79.01","PE80","PE86"]},
-    {id:"rs", name:"Σερβία", continent:"Ευρώπη", specs:["PE70","PE60","PE02","PE11"]},
-    {id:"sk", name:"Σλοβακία", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"si", name:"Σλοβενία", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"se", name:"Σουηδία", continent:"Ευρώπη", specs:["PE70","PE02"]},
-    {id:"no", name:"Νορβηγία", continent:"Ευρώπη", specs:["PE70","PE02"]},
+    {id:"al", name:"Αλβανία", continent:"Ευρώπη", specs:["ΠΕ60","ΠΕ70","ΠΕ02","ΠΕ04.04","ΠΕ08","ΠΕ11","ΠΕ79.01","ΠΕ83","ΠΕ86","ΠΕ06"]},
+    {id:"at", name:"Αυστρία", continent:"Ευρώπη", specs:["ΠΕ60","ΠΕ70","ΠΕ02"]},
+    {id:"be", name:"Βέλγιο", continent:"Ευρώπη", specs:["ΠΕ60","ΠΕ70","ΠΕ01","ΠΕ02","ΠΕ03","ΠΕ04.01","ΠΕ04.02","ΠΕ04.04","ΠΕ05","ΠΕ06","ΠΕ08","ΠΕ11","ΠΕ78","ΠΕ79.01","ΠΕ80","ΠΕ86"]},
+    {id:"bg", name:"Βουλγαρία", continent:"Ευρώπη", specs:["ΠΕ60","ΠΕ70","ΠΕ02","ΠΕ11"]},
+    {id:"fr", name:"Γαλλία", continent:"Ευρώπη", specs:["ΠΕ60","ΠΕ70","ΠΕ02"]},
+    {id:"de_du", name:"Γερμανία — Σ.Γ.Ε. Ντίσελντορφ", continent:"Ευρώπη", specs:["ΠΕ01","ΠΕ02","ΠΕ03","ΠΕ04.01","ΠΕ04.02","ΠΕ04.04","ΠΕ04.05","ΠΕ06","ΠΕ07","ΠΕ11","ΠΕ79.01","ΠΕ78","ΠΕ80","ΠΕ86","ΠΕ60","ΠΕ70"]},
+    {id:"de_mu", name:"Γερμανία — Σ.Γ.Ε. Μονάχου", continent:"Ευρώπη", specs:["ΠΕ01","ΠΕ02","ΠΕ03","ΠΕ04.01","ΠΕ04.02","ΠΕ04.04","ΠΕ06","ΠΕ07","ΠΕ08","ΠΕ11","ΠΕ60","ΠΕ70","ΠΕ78","ΠΕ79.01","ΠΕ80","ΠΕ82","ΠΕ85","ΠΕ86","ΠΕ88.04"]},
+    {id:"dk", name:"Δανία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"ch", name:"Ελβετία", continent:"Ευρώπη", specs:["ΠΕ60","ΠΕ70","ΠΕ02"]},
+    {id:"ie", name:"Ιρλανδία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"es", name:"Ισπανία", continent:"Ευρώπη", specs:["ΠΕ60","ΠΕ70","ΠΕ02"]},
+    {id:"it", name:"Ιταλία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"hr", name:"Κροατία", continent:"Ευρώπη", specs:["ΠΕ02"]},
+    {id:"lt", name:"Λιθουανία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"lu", name:"Λουξεμβούργο", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"mt", name:"Μάλτα", continent:"Ευρώπη", specs:["ΠΕ70"]},
+    {id:"me", name:"Μαυροβούνιο", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"md", name:"Μολδαβία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"nl", name:"Ολλανδία", continent:"Ευρώπη", specs:["ΠΕ60","ΠΕ70","ΠΕ02"]},
+    {id:"hu", name:"Ουγγαρία", continent:"Ευρώπη", specs:["ΠΕ60","ΠΕ70","ΠΕ02","ΠΕ11"]},
+    {id:"pl", name:"Πολωνία", continent:"Ευρώπη", specs:["ΠΕ70"]},
+    {id:"pt", name:"Πορτογαλία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"ro", name:"Ρουμανία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ60","ΠΕ01","ΠΕ02","ΠΕ03","ΠΕ04.01","ΠΕ04.02","ΠΕ04.04","ΠΕ06","ΠΕ11","ΠΕ79.01","ΠΕ80","ΠΕ86"]},
+    {id:"rs", name:"Σερβία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ60","ΠΕ02","ΠΕ11"]},
+    {id:"sk", name:"Σλοβακία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"si", name:"Σλοβενία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"se", name:"Σουηδία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"no", name:"Νορβηγία", continent:"Ευρώπη", specs:["ΠΕ70","ΠΕ02"]},
 
     // Αμερική
-    {id:"ar", name:"Αργεντινή", continent:"Αμερική", specs:["PE02","PE60","PE70"]},
-    {id:"ve", name:"Βενεζουέλα", continent:"Αμερική", specs:["PE70","PE02"]},
-    {id:"br", name:"Βραζιλία", continent:"Αμερική", specs:["PE70","PE02"]},
-    {id:"us", name:"Η.Π.Α.", continent:"Αμερική", specs:["PE01","PE02","PE03","PE06","PE08","PE11","PE60","PE70","PE79.01"]},
-    {id:"ca", name:"Καναδάς", continent:"Αμερική", specs:["PE60","PE70","PE02"]},
-    {id:"mx", name:"Μεξικό", continent:"Αμερική", specs:["PE70"]},
-    {id:"uy", name:"Ουρουγουάη", continent:"Αμερική", specs:["PE70","PE02","PE11"]},
-    {id:"pa", name:"Παναμάς", continent:"Αμερική", specs:["PE70"]},
-    {id:"pe", name:"Περού", continent:"Αμερική", specs:["PE70"]},
-    {id:"cl", name:"Χιλή", continent:"Αμερική", specs:["PE70","PE02"]}
+    {id:"ar", name:"Αργεντινή", continent:"Αμερική", specs:["ΠΕ02","ΠΕ60","ΠΕ70"]},
+    {id:"ve", name:"Βενεζουέλα", continent:"Αμερική", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"br", name:"Βραζιλία", continent:"Αμερική", specs:["ΠΕ70","ΠΕ02"]},
+    {id:"us", name:"Η.Π.Α.", continent:"Αμερική", specs:["ΠΕ01","ΠΕ02","ΠΕ03","ΠΕ06","ΠΕ08","ΠΕ11","ΠΕ60","ΠΕ70","ΠΕ79.01"]},
+    {id:"ca", name:"Καναδάς", continent:"Αμερική", specs:["ΠΕ60","ΠΕ70","ΠΕ02"]},
+    {id:"mx", name:"Μεξικό", continent:"Αμερική", specs:["ΠΕ70"]},
+    {id:"uy", name:"Ουρουγουάη", continent:"Αμερική", specs:["ΠΕ70","ΠΕ02","ΠΕ11"]},
+    {id:"pa", name:"Παναμάς", continent:"Αμερική", specs:["ΠΕ70"]},
+    {id:"pe", name:"Περού", continent:"Αμερική", specs:["ΠΕ70"]},
+    {id:"cl", name:"Χιλή", continent:"Αμερική", specs:["ΠΕ70","ΠΕ02"]}
   ]);
 
   // Παράρτημα V — μηνιαίο επιμίσθιο εκπαιδευτικών σε ευρώ.
@@ -117,6 +127,7 @@
   }
 
   function eligibleDestinations(specialty){
+    specialty = normalizeSpecialtyCode(specialty);
     if(!specialty) return [];
     return DESTINATIONS.filter(d => d.specs.includes(specialty));
   }
@@ -198,7 +209,7 @@
   }
 
   function rebuildPreferenceOptions(){
-    const specialty = $('specialty').value;
+    const specialty = normalizeSpecialtyCode($('specialty').value);
     const selects = [$('preference1'), $('preference2'), $('preference3')];
     const eligible = eligibleDestinations(specialty);
 
@@ -261,17 +272,17 @@
   }
 
   function updatePreferenceNotes(){
-    const specialty = $('specialty').value;
+    const specialty = normalizeSpecialtyCode($('specialty').value);
     const selected = [$('preference1').value, $('preference2').value, $('preference3').value].filter(Boolean);
     const notes = [];
 
     if(selected.includes('de_mu')){
       notes.push('Για τη Γερμανία — Σ.Γ.Ε. Μονάχου ισχύουν ειδικές προϋποθέσεις για τα επιχορηγούμενα σχολεία της Βαυαρίας και προηγούμενη άδεια διδασκαλίας από τη γερμανική υπηρεσία, όπου απαιτείται.');
-      if(specialty === 'PE78') notes.push('Στο Σ.Γ.Ε. Μονάχου η ΠΕ78 αφορά ειδικά Κοινωνιολόγους.');
-      if(specialty === 'PE80') notes.push('Στο Σ.Γ.Ε. Μονάχου η ΠΕ80 αφορά ειδικά Οικονομολόγους και, για τα γερμανόφωνα μαθήματα, απαιτείται αυξημένη γερμανομάθεια.');
-      if(specialty === 'PE82') notes.push('Για ΠΕ82 στη Βαυαρία επισημαίνεται αυξημένη γερμανομάθεια (Γ1) για τη διδασκαλία των μαθημάτων στη γερμανική.');
-      if(specialty === 'PE03') notes.push('Στη Βαυαρία τα Μαθηματικά διδάσκονται και στη γερμανική· για διδασκαλία γερμανόφωνων μαθημάτων απαιτείται Γ1.');
-      if(specialty === 'PE11') notes.push('Στα Γυμνάσια Μονάχου/Νυρεμβέργης η Φυσική Αγωγή κατανέμεται ανά φύλο μαθητών και οι αποσπάσεις εξαρτώνται από τις αντίστοιχες κενές θέσεις.');
+      if(specialty === 'ΠΕ78') notes.push('Στο Σ.Γ.Ε. Μονάχου η ΠΕ78 αφορά ειδικά Κοινωνιολόγους.');
+      if(specialty === 'ΠΕ80') notes.push('Στο Σ.Γ.Ε. Μονάχου η ΠΕ80 αφορά ειδικά Οικονομολόγους και, για τα γερμανόφωνα μαθήματα, απαιτείται αυξημένη γερμανομάθεια.');
+      if(specialty === 'ΠΕ82') notes.push('Για ΠΕ82 στη Βαυαρία επισημαίνεται αυξημένη γερμανομάθεια (Γ1) για τη διδασκαλία των μαθημάτων στη γερμανική.');
+      if(specialty === 'ΠΕ03') notes.push('Στη Βαυαρία τα Μαθηματικά διδάσκονται και στη γερμανική· για διδασκαλία γερμανόφωνων μαθημάτων απαιτείται Γ1.');
+      if(specialty === 'ΠΕ11') notes.push('Στα Γυμνάσια Μονάχου/Νυρεμβέργης η Φυσική Αγωγή κατανέμεται ανά φύλο μαθητών και οι αποσπάσεις εξαρτώνται από τις αντίστοιχες κενές θέσεις.');
     }
 
     if(selected.includes('ch')){
@@ -317,14 +328,16 @@
     normalizeYears('educationYears');
     normalizeYears('teachingYears');
 
+    const specialty = normalizeSpecialtyCode($('specialty').value);
+
     return {
-      specialty: $('specialty').value,
-      specialtySelected: $('specialty').value !== '',
+      specialty,
+      specialtySelected: specialty !== '',
       preference1: $('preference1').value,
       preference2: $('preference2').value,
       preference3: $('preference3').value,
       preferenceSelected: $('preference1').value !== '',
-      branchAllowed: ($('specialty').value && $('preference1').value) ? 'yes' : '',
+      branchAllowed: (specialty && $('preference1').value) ? 'yes' : '',
       educationYears: $('educationYears').value,
       educationYearsAnswered: $('educationYears').value !== '',
       teachingYears: $('teachingYears').value,

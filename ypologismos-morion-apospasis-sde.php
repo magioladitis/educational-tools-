@@ -52,11 +52,11 @@ renderDeadlineCard(array(
               <option value="">— Επιλογή —</option>
 <?php
 $sdeSecondmentSpecialties = array(
-    'PE01', 'PE02', 'PE03', 'PE04.01', 'PE04.02', 'PE04.03', 'PE04.04', 'PE04.05',
-    'PE06', 'PE70', 'PE78', 'PE80', 'PE85', 'PE86', 'PE87.01', 'PE88.01', 'PE88.05'
+    'ΠΕ01', 'ΠΕ02', 'ΠΕ03', 'ΠΕ04.01', 'ΠΕ04.02', 'ΠΕ04.03', 'ΠΕ04.04', 'ΠΕ04.05',
+    'ΠΕ06', 'ΠΕ70', 'ΠΕ78', 'ΠΕ80', 'ΠΕ85', 'ΠΕ86', 'ΠΕ87.01', 'ΠΕ88.01', 'ΠΕ88.05'
 );
 foreach ($sdeSecondmentSpecialties as $code) {
-    echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(teacherSpecialtyDisplayFromInternal($code), ENT_QUOTES, 'UTF-8') . '</option>';
+    echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(teacherSpecialtyDisplay($code), ENT_QUOTES, 'UTF-8') . '</option>';
 }
 ?>
               <option value="OTHER">Άλλη ειδικότητα</option>

@@ -3,6 +3,16 @@
   const $ = id => document.getElementById(id);
   const yes = id => $(id).value === 'yes';
   const value = id => $(id).value;
+  function specialtyCode(){
+    const raw = value('specialty');
+    if(globalThis.EducationCore && typeof globalThis.EducationCore.normalizeSpecialtyCode === 'function'){
+      return globalThis.EducationCore.normalizeSpecialtyCode(raw);
+    }
+    return String(raw || '').trim().toUpperCase()
+      .replace(/^(?:PE|PΕ|ΠE|ΠΕ)/, 'ΠΕ')
+      .replace(/^(?:TE|TΕ|ΤE|ΤΕ)/, 'ΤΕ')
+      .replace(/^(?:DE|DΕ|ΔE|ΔΕ)/, 'ΔΕ');
+  }
   const numberValue = id => Math.max(0, Number($(id).value || 0));
 
   function fmt(n) {
@@ -23,15 +33,15 @@
   }
 
   function specialtyChanged() {
-    const sp = value('specialty');
-    const needsMathCondition = sp === 'PE86' || sp.startsWith('PE04.');
+    const sp = specialtyCode();
+    const needsMathCondition = sp === 'ΠΕ86' || sp.startsWith('ΠΕ04.');
     $('mathInfoDegreeWrap').classList.toggle('hidden', !needsMathCondition);
-    $('formerPE09Wrap').classList.toggle('hidden', sp !== 'PE80');
-    $('formerPE1208Wrap').classList.toggle('hidden', sp !== 'PE85');
+    $('formerPE09Wrap').classList.toggle('hidden', sp !== 'ΠΕ80');
+    $('formerPE1208Wrap').classList.toggle('hidden', sp !== 'ΠΕ85');
     if(!needsMathCondition) $('mathInfoDegree').value = 'no';
-    if(sp !== 'PE80') $('formerPE09').value = 'no';
-    if(sp !== 'PE85') $('formerPE1208').value = 'no';
-    if (sp === 'PE86') {
+    if(sp !== 'ΠΕ80') $('formerPE09').value = 'no';
+    if(sp !== 'ΠΕ85') $('formerPE1208').value = 'no';
+    if (sp === 'ΠΕ86') {
       $('computer').value = 'yes';
       $('computer').disabled = true;
     } else {
@@ -42,7 +52,7 @@
 
   function getData() {
     return {
-      specialty: value('specialty'),
+      specialty: specialtyCode(),
       phd: value('phd'),
       master: value('master'),
       secondDegree: yes('secondDegree'),

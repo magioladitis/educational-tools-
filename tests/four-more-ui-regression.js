@@ -56,7 +56,7 @@ function fire(el,type){ if(!el.listeners[type]) throw new Error('missing '+type+
   E.eligibilitySchoolYears.value=''; E.formalEducationYears.value='';
   let customEvent=null, lastData=null, calcCount=0;
   global.AsepLanguageSelector={readEntries:()=>[],reset:()=>{}};
-  global.SDECalculator={calculateAll(data){ calcCount++; lastData=data; return {total:data.computer?1:0,education:{total:0,details:[],warnings:[]},experience:{total:0,formalPoints:0,details:[]},other:{total:data.computer?1:0,details:[],warnings:[]},assignments:data.specialty==='PE86'?[{literacy:'Πληροφορικός Γραμματισμός',assignment:'Α΄',note:''}]:[],eligibleByTwoYears:Number(data.eligibilitySchoolYears)>=2}; }};
+  global.SDECalculator={calculateAll(data){ calcCount++; lastData=data; return {total:data.computer?1:0,education:{total:0,details:[],warnings:[]},experience:{total:0,formalPoints:0,details:[]},other:{total:data.computer?1:0,details:[],warnings:[]},assignments:data.specialty==='ΠΕ86'?[{literacy:'Πληροφορικός Γραμματισμός',assignment:'Α΄',note:''}]:[],eligibleByTwoYears:Number(data.eligibilitySchoolYears)>=2}; }};
   global.document={getElementById:id=>E[id]||null,querySelectorAll:()=>[],addEventListener:(type,fn)=>{customEvent={type,fn};}};
   delete require.cache[require.resolve('../includes/sde-detachment-ui.js')]; require('../includes/sde-detachment-ui.js');
   assert('SDE specialty change externally wired', typeof E.specialty.listeners.change==='function');
@@ -66,7 +66,7 @@ function fire(el,type){ if(!el.listeners[type]) throw new Error('missing '+type+
   E.specialty.value='PE86'; fire(E.specialty,'change');
   assert('PE86 still forces computer knowledge', E.computer.value==='yes' && E.computer.disabled===true);
   assert('PE86 still reveals math/informatics condition', !E.mathInfoDegreeWrap.classList.contains('hidden'));
-  assert('SDE calculator receives PE86', lastData && lastData.specialty==='PE86');
+  assert('SDE controller canonicalizes legacy PE86 to ΠΕ86', lastData && lastData.specialty==='ΠΕ86');
   assert('SDE total render still updates', E.totalScore.textContent==='1');
   E.eligibilitySchoolYears.value='2'; fire(E.eligibilitySchoolYears,'input');
   assert('SDE input changes still recalculate', calcCount>=3);

@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('fs'),vm=require('vm'),path=require('path');const root=path.resolve(__dirname,'..');
 const ctx={console};ctx.globalThis=ctx;ctx.window=ctx;vm.createContext(ctx);function load(f){vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),ctx,{filename:f});}
-['includes/education-core.js','includes/language-calculations.js','includes/academic-calculations.js','includes/eae-table-eligibility.js','includes/onaseia-calculations.js','includes/sde-calculations.js','includes/sde-registry-calculations.js'].forEach(load);
+['includes/education-core.js','includes/language-calculations.js','includes/academic-calculations.js','includes/eae-table-eligibility.js','includes/onaseia-calculations.js','includes/sde-calculations.js','includes/sde-registry-calculations.js','includes/eep-eligibility-calculations.js'].forEach(load);
 let pass=0,fail=0;function t(n,c,x=''){if(c){console.log('PASS',n);pass++;}else{console.log('FAIL',n,x);fail++;}}
 let r=ctx.EducationAcademic.calculate({profile:'eae',specialty:'PE61',degreeGrade:8,mscCount:0});t('EAE PE61 Latin gets 20 specialization',r.mscPoints===20,r.mscPoints);
 r=ctx.EducationAcademic.calculate({profile:'eae',specialty:'PE11',degreeGrade:8,eaePe11Specialization:true});t('EAE PE11 Latin gets +8',r.specialProfilePoints===8,r.specialProfilePoints);
@@ -12,4 +12,7 @@ r=ctx.SDECalculator.calculateOther({specialty:'ΠΕ86',computer:false,languages:
 r=ctx.SDECalculator.calculateLanguages({specialty:'ΠΕ06',languages:[{language:'en',level:'excellent'}]});t('SDE Greek ΠΕ06 excludes English',r.points===0,r.points);
 a=ctx.SDERegistryCalc.educatorAssignments('TE16');b=ctx.SDERegistryCalc.educatorAssignments('ΤΕ16');t('SDE registry TE16 parity',JSON.stringify(a)===JSON.stringify(b)&&a.length>0);
 r=ctx.SDERegistryCalc.calculateOther({role:'educator',specialty:'ΠΕ86',computer:true,language1:'',languageLevel1:'none',language2:'',languageLevel2:'none'});t('SDE registry Greek ΠΕ86 computer excluded',r.computerPoints===0,r.computerPoints);
+
+let e1=ctx.EEPEligibility.getRequirements('PE25','nursing'),e2=ctx.EEPEligibility.getRequirements('ΠΕ25','nursing');t('2EA PE25 Latin/Greek eligibility parity',JSON.stringify(e1)===JSON.stringify(e2)&&e2.branch==='ΠΕ25'&&e2.items.length===2);
+let e3=ctx.EEPEligibility.getRequirements('PΕ23','');t('2EA mixed-script PΕ23 normalizes',e3.branch==='ΠΕ23'&&e3.items.length===1,e3.branch);
 console.log(`RESULT ${pass} PASS / ${fail} FAIL`);if(fail)process.exit(1);

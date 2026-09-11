@@ -45,18 +45,9 @@ renderDeadlineCard(array(
 <?php calculatorColumnsStart(); ?><?php calculatorMainStart(array('tag' => 'main')); ?>
 <?php calculatorCardStart(); ?><h2>1. Κλάδος και πρόταξη</h2><p class="cap">Ο κλάδος δεν αλλάζει τον βασικό πίνακα μοριοδότησης, αλλά ενεργοποιεί ειδικές επισημάνσεις και κανόνες πρόταξης.</p>
 <div class="field"><label for="specialty">Κλάδος ΕΕΠ</label><select id="specialty"><option value="">— Επιλογή —</option><?php
-$allowedEepSpecialties = array(
-    'PE21' => 'ΠΕ21',
-    'PE22' => 'ΠΕ22',
-    'PE23' => 'ΠΕ23',
-    'PE25' => 'ΠΕ25',
-    'PE28' => 'ΠΕ28',
-    'PE29' => 'ΠΕ29',
-    'PE30' => 'ΠΕ30',
-    'PE31' => 'ΠΕ31'
-);
-foreach ($allowedEepSpecialties as $value => $registryCode) {
-    echo '<option value="' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(teacherSpecialtyDisplay($registryCode), ENT_QUOTES, 'UTF-8') . '</option>';
+$allowedEepSpecialties = array('ΠΕ21', 'ΠΕ22', 'ΠΕ23', 'ΠΕ25', 'ΠΕ28', 'ΠΕ29', 'ΠΕ30', 'ΠΕ31');
+foreach ($allowedEepSpecialties as $code) {
+    echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(teacherSpecialtyDisplay($code), ENT_QUOTES, 'UTF-8') . '</option>';
 }
 ?></select></div>
 <div id="branchNote" class="info">Επίλεξε κλάδο για να εμφανιστούν οι ειδικές επισημάνσεις.</div>

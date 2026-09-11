@@ -4,7 +4,7 @@
  *
  * Scope: ASEP calculators only.
  * This component does NOT calculate points and does NOT implement specialty rules.
- * In particular, PE86 exclusions remain in each calculator/calculation module.
+ * In particular, ΠΕ86 exclusions remain in each calculator/calculation module.
  * The quick proof check only helps the user identify an accepted proof route.
  *
  * Conservative syntax for compatibility with older PHP runtimes.

@@ -60,7 +60,7 @@ sde_change = ['specialty','mathInfoDegree','formerPE09','formerPE1208','teleEduc
 sde_input = ['eligibilitySchoolYears','formalEducationYears','sdeTrainingHours','adultTrainingHours','sdeYears','sdeHourlyHours','adultEducationHours']
 for field in sde_change + sde_input + ['sdeDetachmentResetBtn']:
     check('SDE detachment UI references binding target ' + field, ("'" + field + "'") in sde_ui)
-check('SDE specialty-specific UI retained', "sp === 'PE86'" in sde_ui and "sp.startsWith('PE04.')" in sde_ui)
+check('SDE specialty-specific UI retained', "sp === 'ΠΕ86'" in sde_ui and "sp.startsWith('ΠΕ04.')" in sde_ui)
 check('SDE language custom event retained', "document.addEventListener('asep-language-change', calculate)" in sde_ui)
 
 par_page = (ROOT / 'posa-paravola.php').read_text(encoding='utf-8')
@@ -83,7 +83,7 @@ check('scale preserves 1GT points rule', 'grade20 * 3' in scale_ui)
 check('scale preserves hundredths fraction', 'denominator:100' in scale_ui)
 
 config = (ROOT / 'includes/config.php').read_text(encoding='utf-8')
-check('release version 3.20.95', "define('EDU_TOOLS_VERSION', '3.20.95')" in config)
+check('release version 3.20.96', "define('EDU_TOOLS_VERSION', '3.20.96')" in config)
 
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:

@@ -148,16 +148,14 @@ function teacherSpecialtyDisplay($code)
 
 function teacherSpecialtyCanonicalCode($code)
 {
-    $code = trim((string) $code);
-    if (strpos($code, 'PE') === 0) {
-        return 'ΠΕ' . substr($code, 2);
-    }
-    if (strpos($code, 'TE') === 0) {
-        return 'ΤΕ' . substr($code, 2);
-    }
-    if (strpos($code, 'DE') === 0) {
-        return 'ΔΕ' . substr($code, 2);
-    }
+    $code = strtoupper(trim((string) $code));
+    if ($code === '') return '';
+
+    // Canonical internal representation: Greek ΠΕ / ΤΕ / ΔΕ.
+    // Accept Latin and visually mixed-script prefixes at input boundaries.
+    $code = preg_replace('/^(?:PE|PΕ|ΠE|ΠΕ)/u', 'ΠΕ', $code);
+    $code = preg_replace('/^(?:TE|TΕ|ΤE|ΤΕ)/u', 'ΤΕ', $code);
+    $code = preg_replace('/^(?:DE|DΕ|ΔE|ΔΕ)/u', 'ΔΕ', $code);
     return $code;
 }
 
