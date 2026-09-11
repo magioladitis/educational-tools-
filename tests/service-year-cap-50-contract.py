@@ -30,6 +30,12 @@ pages_50 = {
 }
 for path, needles in pages_50.items():
     body = text(path)
+    # The MSD row template was extracted from the transfer PHP page into its
+    # cacheable UI controller. Keep the contract on the rendered feature, not
+    # on the old physical file location.
+    if path == 'ypologismos-morion-metathesis.php':
+        body += '\n' + text('includes/transfer-ui.js')
+        check('ypologismos-morion-metathesis.php loads transfer-ui.js', 'includes/transfer-ui.js' in text(path))
     for needle in needles:
         check(f'{path}: {needle}', needle in body)
 

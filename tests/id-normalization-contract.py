@@ -10,14 +10,20 @@ def ck(name, cond, detail=''):
 pages=sorted(ROOT.glob('*.php'))
 rendered={}
 camel=re.compile(r'^[a-z][A-Za-z0-9]*$')
-staffing_schema_id=re.compile(r'^(?:school_(?:registry_id|type|name|code)|gym_(?:general_[abc]|lang_[abc]_(?:fr|de|it)|tech_split_[abc])|gel_(?:general_[abc]|lang_[ab]_(?:fr|de)|b_(?:hum|sci)|c_(?:hum|scihealth|econit|field_math|field_bio|cond_math|cond_history))|ethics_[abc]_(?:exempt|timely|equivalent))$')
+staffing_schema_id=re.compile(r'^(?:school_(?:registry_id|type|name|code)|gym_(?:general_[abc]|lang_[abc]_(?:fr|de|it)|tech_split_[abc])|gel_(?:general_[abc]|lang_[ab]_(?:fr|de)|b_(?:hum|sci)|c_(?:hum|scihealth|econit|field_math|field_bio|cond_math|cond_history))|egel_b_period|ethics_[abc]_(?:exempt|timely|equivalent))$')
 def canonical_field_id(page_name, field_id):
     if camel.match(field_id):
         return True
     # The staffing simulator intentionally binds these IDs 1:1 to the portable
     # school-profile schema / POST keys. They are a declared snake_case API,
-    # not legacy IDs waiting for camelCase migration.
-    return page_name=='ypologismos-didaktikon-anagkon.php' and bool(staffing_schema_id.match(field_id))
+    # not legacy IDs waiting for camelCase migration. staffing-launcher.php is
+    # a diagnostic wrapper that requires and renders the exact same simulator.
+    return page_name in {'ypologismos-didaktikon-anagkon.php', 'staffing-launcher.php'} and bool(staffing_schema_id.match(field_id))
+
+ck('canonical id rule accepts declared staffing schema', canonical_field_id('ypologismos-didaktikon-anagkon.php','egel_b_period'))
+ck('canonical id rule accepts launcher declared staffing schema', canonical_field_id('staffing-launcher.php','school_registry_id'))
+ck('canonical id rule rejects undeclared snake_case', not canonical_field_id('ypologismos-didaktikon-anagkon.php','unexpected_legacy_id'))
+ck('canonical id rule rejects staffing schema id on unrelated page', not canonical_field_id('ergaleia.php','school_registry_id'))
 for page in pages:
     p=subprocess.run(['php',str(page)],capture_output=True,text=True)
     ck(page.name+' PHP render',p.returncode==0,p.stderr.strip())
@@ -34,6 +40,13 @@ for page in pages:
         i=el.get('id')
         if i and not canonical_field_id(page.name,i): bad.append(i)
     ck(page.name+' server-rendered field ids canonical',not bad,bad)
+
+# The staffing snake_case exception is deliberately narrow and must cover the
+# portable schema identically in the real simulator and its diagnostic wrapper.
+for staffing_page in ['ypologismos-didaktikon-anagkon.php', 'staffing-launcher.php']:
+    soup=rendered[staffing_page]
+    for cid in ['school_registry_id','school_type','school_name','school_code','gym_general_a','gel_general_a','egel_b_period']:
+        ck(staffing_page+' portable schema id '+cid, bool(soup.select_one('#'+cid)))
 
 # Canonical ASEP specialty field on selectable-call pages.
 for name in ['ypologismos-morion.php','ypologismos-morion-1gt-2024.php','ypologismos-morion-2ea-2025.php','ypologismos-morion-3ea-2025.php','ypologismos-morion-4ea-2025.php','ypologismos-morion-5ea-2022.php']:

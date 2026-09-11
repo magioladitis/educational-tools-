@@ -15,11 +15,17 @@ def check(name, ok, detail=''):
     checks.append((name, bool(ok), detail))
 
 # Greek-facing UI must never initialize score displays with an English decimal point.
+# Match a standalone 0.00 token only. A raw substring search also matches perfectly
+# valid numeric constants such as 0.0040 (0.40%) and tolerances such as 0.001.
 dot_zero_hits = []
+standalone_dot_zero = re.compile(r'(?<![\d.])0\.00(?!\d)')
+check('decimal scanner ignores numeric coefficient 0.0040', not standalone_dot_zero.search('rate: 0.0040'))
+check('decimal scanner ignores numeric tolerance 0.001', not standalone_dot_zero.search('diff > 0.001'))
+check('decimal scanner catches standalone UI 0.00', bool(standalone_dot_zero.search('value = \"0.00\"')))
 for path in production:
-    text = path.read_text(encoding='utf-8')
-    if '0.00' in text:
-        dot_zero_hits.append(str(path.relative_to(ROOT)))
+    for lineno, line in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
+        if standalone_dot_zero.search(line):
+            dot_zero_hits.append(f'{path.relative_to(ROOT)}:{lineno}')
 check('no production UI literal 0.00', not dot_zero_hits, ', '.join(dot_zero_hits))
 
 # A bare toFixed(2) is an easy way to reintroduce a decimal point in displayed scores.
