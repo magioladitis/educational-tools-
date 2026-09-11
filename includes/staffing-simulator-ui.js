@@ -27,12 +27,15 @@
     if(!payloadInput) return;
     const payload={};
     const fields=Array.from(form.querySelectorAll('[name^="'+prefix+'"]')).filter(function(el){
-      return el.name!==payloadName && /\[\]$/.test(el.name) && !el.disabled;
+      return el.name!==payloadName && /\[\]$/.test(el.name);
     });
+    // Κρατάμε θέση και για disabled πεδία. Έτσι οι παράλληλοι πίνακες
+    // slot/person/hours (και τα αντίστοιχα personnel arrays) δεν μπορούν να
+    // μετατοπιστούν μεταξύ τους όταν ένα control είναι προσωρινά disabled.
     fields.forEach(function(el){
       const key=el.name.replace(/\[\]$/,'');
       if(!payload[key]) payload[key]=[];
-      payload[key].push(el.value);
+      payload[key].push(el.disabled?'':el.value);
     });
     payloadInput.value=JSON.stringify(payload);
     fields.forEach(function(el){el.disabled=true;});
@@ -1034,6 +1037,17 @@
     if(!personnelList || personnelList.querySelector('[data-personnel-row]')) return;
     const empty=document.createElement('div'); empty.id='emptyPersonnelState'; empty.className='empty-personnel'; empty.textContent='Δεν έχει προστεθεί ακόμη εκπαιδευτικός. Πάτησε «+ Προσθήκη εκπαιδευτικού» ή «Εισαγωγή CSV» για να ξεκινήσεις.'; personnelList.appendChild(empty);
   }
+  function ensureImportedEaeSpecialtyOption(select,code){
+    if(!select||!/\.50$/.test(String(code||''))) return false;
+    const exists=Array.from(select.options||[]).some(function(opt){return opt.value===code;});
+    if(exists){select.value=code;return true;}
+    const option=document.createElement('option');
+    option.value=code;
+    option.textContent=code+' — Ειδική Αγωγή';
+    select.appendChild(option);
+    select.value=code;
+    return true;
+  }
   function addPersonnelFromData(person){
     if(!personnelTemplate || !personnelList) return {ok:false,unknownCode:false};
     const empty=document.getElementById('emptyPersonnelState'); if(empty) empty.remove();
@@ -1054,12 +1068,14 @@
     let matched=false;
     if(specialty && code){
       Array.from(specialty.options).forEach(function(opt){ if(opt.value===code){ specialty.value=code; matched=true; } });
+      if(!matched) matched=ensureImportedEaeSpecialtyOption(specialty,code);
     }
     const secondarySpecialty=row.querySelector('.personnel-secondary-specialty');
     const secondaryCode=person.secondary_specialty_code||'';
     let secondaryMatched=false;
     if(secondarySpecialty && secondaryCode){
       Array.from(secondarySpecialty.options).forEach(function(opt){ if(opt.value===secondaryCode){ secondarySpecialty.value=secondaryCode; secondaryMatched=true; } });
+      if(!secondaryMatched) secondaryMatched=ensureImportedEaeSpecialtyOption(secondarySpecialty,secondaryCode);
     }
     const name=row.querySelector('.personnel-name'); if(name) name.value=person.display_name||'';
     const years=row.querySelector('.personnel-years'); if(years) years.value=String(person.service_years||0);

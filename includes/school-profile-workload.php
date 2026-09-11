@@ -25,8 +25,16 @@ function schoolProfileWorkloadStaffingCodes()
     $codes = array_keys($registry);
     $result = array();
     foreach ($codes as $code) {
+        // Οι κωδικοί ΕΑΕ .50 αναγνωρίζονται στο μητρώο προσωπικού, αλλά δεν
+        // αποτελούν κλάδους του workload matrix της Γενικής Εκπαίδευσης.
+        if (function_exists('teacherSpecialtyIsEaeCode') && teacherSpecialtyIsEaeCode($code)) {
+            continue;
+        }
         $isParent = false;
         foreach ($codes as $other) {
+            if (function_exists('teacherSpecialtyIsEaeCode') && teacherSpecialtyIsEaeCode($other)) {
+                continue;
+            }
             if ($other !== $code && strpos($other, $code . '.') === 0) {
                 $isParent = true;
                 break;

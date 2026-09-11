@@ -21,7 +21,7 @@ check('compact allocation JSON parser exists', "staffingUiPayloadArrays('allocat
 check('cross-tab personnel state is emitted as one JSON hidden input', 'name="personnel_payload_json" value="' in text and "json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)" in text)
 check('cross-tab allocation state is emitted as one JSON hidden input', 'name="allocation_payload_json" value="' in text)
 check('client compacts repeated form controls before submit', 'function compactRepeatedFormState(form,prefix,payloadName)' in text and "compactRepeatedFormState(form,'personnel_','personnel_payload_json')" in text and "compactRepeatedFormState(form,'allocation_','allocation_payload_json')" in text)
-check('client disables repeated controls after serializing them', 'fields.forEach(function(el){el.disabled=true;});' in text)
+check('client preserves disabled placeholders before disabling repeated controls', "payload[key].push(el.disabled?'':el.value);" in text and 'fields.forEach(function(el){el.disabled=true;});' in text)
 check('director section band survives compact cross-tab state', "'personnel_director_sections_band'=>array()" in text and "$payload['personnel_director_sections_band'][]" in text)
 
 # 100 people × 16 roster fields would exceed the common PHP max_input_vars=1000

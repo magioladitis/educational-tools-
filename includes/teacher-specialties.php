@@ -110,8 +110,28 @@ function teacherSpecialties()
 
 function teacherSpecialtyInfo($code)
 {
+    $code = trim((string) $code);
     $registry = teacherSpecialties();
-    return isset($registry[$code]) ? $registry[$code] : null;
+    // Fast path: σχεδόν όλες οι κλήσεις έχουν ήδη κανονικοποιημένο ελληνικό
+    // κωδικό. Αποφεύγουμε περιττή canonicalization στο μεγάλο workload matrix.
+    if (isset($registry[$code])) return $registry[$code];
+    $code = teacherSpecialtyCanonicalCode($code);
+    if (isset($registry[$code])) return $registry[$code];
+
+    // Το myschool/stat4_8 χρησιμοποιεί κατάληξη .50 για κλάδους ΕΑΕ.
+    // Τους αναγνωρίζουμε δυναμικά χωρίς να τους εντάσσουμε στο βασικό registry,
+    // ώστε να μην αλλάζει το workload matrix της Γενικής Εκπαίδευσης.
+    if (preg_match('/\.50$/u', $code) === 1) {
+        $base = preg_replace('/\.50$/u', '', $code);
+        if (isset($registry[$base]) && isset($registry[$base]['label'])) {
+            return array(
+                'label' => $registry[$base]['label'] . ' Ειδικής Αγωγής',
+                'eae' => true,
+                'base_code' => $base,
+            );
+        }
+    }
+    return null;
 }
 
 function teacherSpecialtyLabel($code)
@@ -139,6 +159,12 @@ function teacherSpecialtyCanonicalCode($code)
         return 'ΔΕ' . substr($code, 2);
     }
     return $code;
+}
+
+function teacherSpecialtyIsEaeCode($code)
+{
+    $code = teacherSpecialtyCanonicalCode($code);
+    return preg_match('/\.50$/u', $code) === 1;
 }
 
 function teacherSpecialtyDisplayFromInternal($code)

@@ -542,6 +542,16 @@ function staffingUiRenderPersonnelSpecialtyOptions($options, $selected) {
         }
         echo '</optgroup>';
     }
+    // Δεν φορτώνουμε όλους τους .50 σε κάθε select: αν υπάρχει ήδη εισαγμένη
+    // εγγραφή ΕΑΕ, προσθέτουμε μόνο τον δικό της κωδικό. Έτσι δεν αυξάνεται
+    // άσκοπα το HTML/DOM σε μεγάλα μητρώα προσωπικού.
+    if ($selected !== '' && teacherSpecialtyIsEaeCode($selected)
+        && !in_array($selected, isset($options['relevant']) ? $options['relevant'] : array(), true)
+        && !in_array($selected, isset($options['other']) ? $options['other'] : array(), true)) {
+        echo '<optgroup label="Ειδική Αγωγή (.50)">';
+        echo '<option value="' . staffingUiH($selected) . '" selected>' . staffingUiH(teacherSpecialtyDisplay($selected)) . '</option>';
+        echo '</optgroup>';
+    }
 }
 
 /**
@@ -934,6 +944,10 @@ $personnelSummary = array(
     'required_hours'=>0,
     'external_hours'=>0,
     'available_here_hours'=>0,
+    'general_resolved_count'=>0,
+    'general_available_here_hours'=>0,
+    'eae_people_count'=>0,
+    'eae_available_here_hours'=>0,
     'by_code'=>array(),
 );
 if (!empty($personnelRows)) {
@@ -967,6 +981,8 @@ if (!empty($personnelRows)) {
             );
         }
         if ($code !== '') $personnelSummary['by_code'][$code]['people_count']++;
+        $isEaePerson = teacherSpecialtyIsEaeCode($code);
+        if ($isEaePerson) $personnelSummary['eae_people_count']++;
         if ($normalized['status'] !== 'resolved') {
             $personnelSummary['unresolved_count']++;
             continue;
@@ -978,6 +994,12 @@ if (!empty($personnelRows)) {
         $personnelSummary['required_hours'] += $required;
         $personnelSummary['external_hours'] += $external;
         $personnelSummary['available_here_hours'] += $available;
+        if ($isEaePerson) {
+            $personnelSummary['eae_available_here_hours'] += $available;
+        } else {
+            $personnelSummary['general_resolved_count']++;
+            $personnelSummary['general_available_here_hours'] += $available;
+        }
         if ($code !== '') {
             $personnelSummary['by_code'][$code]['resolved_count']++;
             $personnelSummary['by_code'][$code]['required_hours'] += $required;
@@ -999,6 +1021,10 @@ $allocationSlots = ($profile && $matrix) ? staffingUiSortAllocationSlots(personn
 $allocationPeople = array();
 foreach ($personnelRows as $personnelIndex=>$person) {
     if (isset($duplicateDirectorIndexes[$personnelIndex])) continue;
+    $personCode = isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '';
+    // Οι εκπαιδευτικοί .50 ανήκουν στην ΕΑΕ. Οι ώρες τους αποτυπώνονται
+    // χωριστά και δεν τροφοδοτούν την αυτόματη κατανομή μαθημάτων Γενικής.
+    if (teacherSpecialtyIsEaeCode($personCode)) continue;
     $p = $person;
     if (isset($p['role']) && $p['role'] === 'director') $p['school_general_section_count'] = $generalSectionTotal;
     $allocationPeople[] = $p;
@@ -1009,7 +1035,7 @@ if ($profile && $matrix && !empty($allocationPeople) && !empty($allocationRows))
     $allocationPlan = personnelWorkloadRosterSlotPlan($profile, $allocationPeople, $allocationRows);
     if (isset($allocationPlan['allocation_rows'])) $allocationRowResults = $allocationPlan['allocation_rows'];
 }
-$allocationEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only' && $personnelSummary['resolved_count'] > 0 && empty($duplicateDirectorIndexes);
+$allocationEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only' && $personnelSummary['general_resolved_count'] > 0 && !empty($allocationPeople) && empty($duplicateDirectorIndexes);
 $allocationAutoProposal = null;
 if ($allocationEnabled && $staffingAction === 'allocation_auto') {
     $allocationAutoProposal = teachingAllocationEngineProposal($profile, $allocationPeople, $allocationRows, $teachingModel);
@@ -1498,7 +1524,8 @@ uksort($specialtyLabelsClient, 'strnatcmp');
               <div class="summary-chip"><strong><?php echo (int)$personnelSummary['people_count']; ?></strong><span>εκπαιδευτικοί στο προσωρινό προσωπικό</span></div>
               <div class="summary-chip"><strong><?php echo (int)$personnelSummary['required_hours']; ?></strong><span>συνολικό υποχρεωτικό διδακτικό ωράριο</span></div>
               <div class="summary-chip"><strong><?php echo (int)$personnelSummary['external_hours']; ?></strong><span>ώρες ήδη δεσμευμένες σε άλλη μονάδα</span></div>
-              <div class="summary-chip"><strong><?php echo (int)$personnelSummary['available_here_hours']; ?></strong><span>ώρες διαθέσιμες για τη συγκεκριμένη μονάδα</span></div>
+              <div class="summary-chip"><strong><?php echo (int)$personnelSummary['available_here_hours']; ?></strong><span>ώρες διαθέσιμες συνολικά στη συγκεκριμένη μονάδα</span></div>
+              <div class="summary-chip eae-hours-chip"><strong><?php echo (int)$personnelSummary['eae_available_here_hours']; ?></strong><span>Διαθέσιμες ώρες ΕΑΕ <small>(κωδικοί .50)</small></span></div>
               <div class="summary-chip"><strong><?php echo (int)$personnelSummary['unresolved_count']; ?></strong><span>εγγραφές που χρειάζονται συμπλήρωση</span></div>
             </div>
 
@@ -1513,7 +1540,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                 </div>
               <?php endforeach; ?>
             </div>
-            <p class="help">Η σύνοψη δείχνει το διαθέσιμο διδακτικό ωράριο του προσωπικού ανά κλάδο. Η αντιστοίχιση με συγκεκριμένα μαθήματα γίνεται στην επόμενη καρτέλα.</p>
+            <p class="help">Η σύνοψη δείχνει το διαθέσιμο διδακτικό ωράριο του προσωπικού ανά κλάδο. Οι εκπαιδευτικοί με κωδικό που λήγει σε <strong>.50</strong> αναγνωρίζονται ως ΕΑΕ, οι ώρες τους εμφανίζονται χωριστά και δεν συμμετέχουν στην αυτόματη κατανομή μαθημάτων Γενικής Εκπαίδευσης. Η αντιστοίχιση με συγκεκριμένα μαθήματα γίνεται στην επόμενη καρτέλα.</p>
           <?php endif; ?>
 
           <form method="post" id="staffingPersonnelForm">
@@ -2068,6 +2095,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     <div class="print-summary-item"><strong><?php echo (int)$matrix['summary']['assignment_unit_hours']; ?></strong><span>ώρες με αντιστοιχισμένη ανάθεση</span></div>
     <div class="print-summary-item"><strong><?php echo (int)(isset($displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims']) ? $displayMatrix['summary']['presentation_staffing_leaf_codes_with_claims'] : 0); ?></strong><span>κλάδοι με επιλεξιμότητα</span></div>
     <div class="print-summary-item"><strong><?php echo (int)$personnelSummary['available_here_hours']; ?></strong><span>ώρες προσωπικού διαθέσιμες εδώ</span></div>
+    <div class="print-summary-item"><strong><?php echo (int)$personnelSummary['eae_available_here_hours']; ?></strong><span>διαθέσιμες ώρες ΕΑΕ (.50)</span></div>
     <div class="print-summary-item"><strong><?php echo staffingUiH(staffingUiReadinessLabel($matrix['readiness'])); ?></strong><span>κατάσταση δομικών στοιχείων</span></div>
   </div>
 
