@@ -12,14 +12,8 @@
   }
   function valueOf(id) { var el = byId(id); return el ? el.value : ''; }
   function checked(id) { var el = byId(id); return !!(el && !el.disabled && el.checked); }
-  function number(value) {
-    var n = Number(String(value == null ? '' : value).trim().replace(',', '.'));
-    return Number.isFinite(n) ? n : 0;
-  }
-  function formatDefault(value) {
-    var n = Math.round(((Number(value) || 0) + Number.EPSILON) * 100) / 100;
-    return n.toLocaleString('el-GR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
+  function number(value) { return global.EducationCore.parseNumber(value, 0); }
+  function formatDefault(value) { return global.EducationCore.formatPoints(value); }
 
   function specialtyId(c) { return idOf(c, 'specialtyId', 'specialty'); }
   function gradeScaleId(c) { return idOf(c, 'gradeScaleId', 'gradeScale'); }

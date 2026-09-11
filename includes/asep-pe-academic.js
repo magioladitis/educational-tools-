@@ -12,7 +12,7 @@
   function idOf(container,key,fallback){ return container && container.dataset[key] ? container.dataset[key] : fallback; }
   function valueOf(id){ var el=byId(id); if(!el)return ''; if(el.type==='checkbox')return el.checked?'yes':'no'; return el.value; }
   function yes(id){ var el=byId(id); if(!el||el.disabled)return false; if(el.type==='checkbox')return !!el.checked; return el.value==='yes'; }
-  function number(value){ var n=Number(String(value==null?'':value).trim().replace(',','.')); return Number.isFinite(n)?n:0; }
+  function number(value){ return global.EducationCore.parseNumber(value,0); }
   function profileOf(container){ var p=String(idOf(container,'profile','general')||'general').toLowerCase(); return p==='eep'||p==='eae'?p:'general'; }
   function booleanData(container,key,fallback){ if(!container||container.dataset[key]===undefined)return fallback; var v=String(container.dataset[key]).toLowerCase(); return v==='1'||v==='true'||v==='yes'; }
 

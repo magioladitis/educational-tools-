@@ -91,6 +91,47 @@
     return element;
   }
 
+  function parseNumber(value, fallback) {
+    var n = decimalNumber(value);
+    return Number.isFinite(n) ? n : (fallback === undefined ? 0 : fallback);
+  }
+
+  function roundNumber(value, digits) {
+    var places = Number.isFinite(Number(digits)) ? Math.max(0, Math.floor(Number(digits))) : 2;
+    var factor = Math.pow(10, places);
+    return Math.round((finiteNumber(value) + Number.EPSILON) * factor) / factor;
+  }
+
+  function formatGreekNumber(value, options) {
+    options = options || {};
+    var digits = options.roundDigits === undefined ? 2 : options.roundDigits;
+    var rounded = roundNumber(value, digits);
+    return rounded.toLocaleString('el-GR', {
+      minimumFractionDigits: options.minimumFractionDigits === undefined ? digits : options.minimumFractionDigits,
+      maximumFractionDigits: options.maximumFractionDigits === undefined ? digits : options.maximumFractionDigits
+    });
+  }
+
+  function formatPoints(value) {
+    return formatGreekNumber(value, { roundDigits: 2, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function summaryLines(lines) {
+    return (Array.isArray(lines) ? lines : []).filter(Boolean).join('\n');
+  }
+
+  function resetControls(root, options) {
+    root = root || document;
+    options = options || {};
+    var numberValue = options.numberValue === undefined ? '0' : String(options.numberValue);
+    var textValue = options.textValue === undefined ? '' : String(options.textValue);
+    root.querySelectorAll('input[type="number"]').forEach(function (el) { el.value = numberValue; });
+    root.querySelectorAll('input[type="text"]').forEach(function (el) { el.value = textValue; });
+    root.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(function (el) { el.checked = false; });
+    if (options.resetSelects) root.querySelectorAll('select').forEach(function (el) { el.selectedIndex = 0; });
+    return root;
+  }
+
   function normalizeSpecialtyCode(value) {
     var code = String(value == null ? '' : value)
       .trim()
@@ -133,6 +174,12 @@
     clampServiceYears: clampServiceYears,
     clampServiceMonths: clampServiceMonths,
     finiteNumber: finiteNumber,
+    parseNumber: parseNumber,
+    roundNumber: roundNumber,
+    formatGreekNumber: formatGreekNumber,
+    formatPoints: formatPoints,
+    summaryLines: summaryLines,
+    resetControls: resetControls,
     normalizeBoundedInput: normalizeBoundedInput,
     bindBoundedNumberInput: bindBoundedNumberInput,
     normalizeSpecialtyCode: normalizeSpecialtyCode,

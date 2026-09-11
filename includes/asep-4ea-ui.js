@@ -1,7 +1,7 @@
 (function(){
   "use strict";
   const $ = id => document.getElementById(id);
-  const fmt = v => (Math.round((Number(v)+Number.EPSILON)*100)/100).toLocaleString('el-GR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmt = EducationCore.formatPoints;
 
   function branchFamily(){
     const value = $('specialty').value;
@@ -58,7 +58,7 @@
   }
 
   function summary(v){
-    return [
+    return EducationCore.summaryLines([
       `Υπολογισμός μορίων 4ΕΑ/2025 — ${selectedBranchLabel()}`,
       `Σύνολο: ${fmt(v.total)}`,
       `Ακαδημαϊκά: ${fmt(v.academicResult.points)} / 120`,
@@ -71,7 +71,7 @@
       v.priorities.length?'Προτεραιότητες: '+v.priorities.join(' · '):'',
       EaeSensoryProof.summary(),
       AsepTeAcademic.trainingSummary('asepTeAcademic')
-    ].filter(Boolean).join('\n');
+    ]);
   }
 
   function sanitizeIntegerInput(el){
@@ -102,11 +102,8 @@
   });
 
   $('resetBtn').addEventListener('click',()=>{
-    document.querySelectorAll('input[type="number"]').forEach(el=>el.value='0');
+    EducationCore.resetControls(document,{numberValue:'0',textValue:''});
     $('degreeGrade').value='';
-    document.querySelectorAll('input[type="text"]').forEach(el=>el.value='');
-    document.querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked=false);
-    document.querySelectorAll('input[name="trainingProofDates"]').forEach(el=>el.checked=false);
     $('specialty').value='';
     $('mainCriterion').value='none';
     AsepServiceController.reset('asepService',{silent:true});

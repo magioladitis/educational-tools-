@@ -79,7 +79,7 @@ for p in ROOT.glob('*.php'):
 check(remaining==[],f'no root PHP page retains executable inline JS ({remaining})')
 
 config=(ROOT/'includes/config.php').read_text(encoding='utf-8')
-check("define('EDU_TOOLS_VERSION', '3.21.08');" in config,'asset version bumped to 3.21.08')
+check("define('EDU_TOOLS_VERSION', '3.21.09');" in config,'asset version bumped to 3.21.09')
 
 print(f'RESULT {PASS} PASS / {FAIL} FAIL')
 sys.exit(1 if FAIL else 0)

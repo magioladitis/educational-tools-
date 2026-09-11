@@ -5,10 +5,7 @@
   function byId(id) { return id ? document.getElementById(id) : null; }
   function resolve(ref) { return typeof ref === 'string' ? byId(ref) : ref; }
   function idOf(c, key, fallback) { return c && c.dataset[key] ? c.dataset[key] : fallback; }
-  function number(value) {
-    var n = Number(String(value == null ? '' : value).trim().replace(',', '.'));
-    return Number.isFinite(n) ? n : 0;
-  }
+  function number(value) { return global.EducationCore.parseNumber(value, 0); }
   function checked(id) { var el = byId(id); return !!(el && !el.disabled && el.checked); }
   function extraTrainingIds(c) {
     var raw = c && c.dataset.extraTrainingIds ? c.dataset.extraTrainingIds : '';
@@ -39,10 +36,7 @@
     }
     if (global.TrainingProof && typeof global.TrainingProof.syncAll === 'function') global.TrainingProof.syncAll();
   }
-  function fmt(value) {
-    var n = Math.round(((Number(value) || 0) + Number.EPSILON) * 100) / 100;
-    return n.toLocaleString('el-GR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
+  function fmt(value) { return global.EducationCore.formatPoints(value); }
 
   function sanitizeYears(el) {
     if (!el || el.value === '') return;

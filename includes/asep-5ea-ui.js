@@ -1,7 +1,7 @@
 (function(){
   'use strict';
   const $ = id => document.getElementById(id);
-  const fmt = v => (Math.round((Number(v)+Number.EPSILON)*100)/100).toLocaleString('el-GR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmt = EducationCore.formatPoints;
 
   function specialtyLabel(){
     const option=$('specialty').selectedOptions[0];
@@ -61,7 +61,7 @@
   }
 
   function summary(v){
-    return [
+    return EducationCore.summaryLines([
       'Υπολογισμός μορίων 5ΕΑ/2022 — '+specialtyLabel(),
       'Σύνολο: '+fmt(v.total),
       'Ακαδημαϊκά: '+fmt(v.academic.result.points)+' / 120',
@@ -76,7 +76,7 @@
       AsepPedagogicalProof.summary('pedagogical'),
       EaeSensoryProof.summary(),
       AsepDeAcademic.trainingSummary('asepDeAcademic')
-    ].filter(Boolean).join('\n');
+    ]);
   }
 
   document.addEventListener('input',e=>{sanitizeLocalInteger(e.target);calc();});
@@ -93,11 +93,8 @@
   });
 
   $('resetBtn').addEventListener('click',()=>{
-    document.querySelectorAll('input[type="number"]').forEach(el=>el.value='0');
+    EducationCore.resetControls(document,{numberValue:'0',textValue:''});
     $('degreeGrade').value='';
-    document.querySelectorAll('input[type="text"]').forEach(el=>el.value='');
-    document.querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked=false);
-    document.querySelectorAll('input[type="radio"]').forEach(el=>el.checked=false);
     $('specialty').value='';
     $('mainCriterion').value='none';
     AsepServiceController.reset('asepService',{silent:true});
