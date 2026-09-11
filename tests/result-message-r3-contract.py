@@ -12,7 +12,7 @@ for variant in ['status','success','warning','disclaimer']:
     check('helper supports '+variant, "'"+variant+"'" in layout)
     check('CSS result-message variant '+variant, '.result-message--'+variant in css)
 check('neutral status message style exists', '.edu-message--status' in css)
-check('central cache version is 3.20.91', "EDU_TOOLS_VERSION', '3.20.91" in config)
+check('central cache version is 3.20.92', "EDU_TOOLS_VERSION', '3.20.92" in config)
 standard={
  'ypologismos-morion.php':['pedagogicalPriorityBox','sidebarStatus'],
  'ypologismos-morion-1ea-2025.php':['priorityBox'],
@@ -27,7 +27,8 @@ for fn, ids in standard.items():
     text=(root/fn).read_text()
     for id_ in ids:
         check(fn+' keeps '+id_, id_ in text)
-check('3EA generated priorities use success semantic', 'result-message--success edu-message--success' in (root/'ypologismos-morion-3ea-2025.php').read_text())
+three_ea=(root/'ypologismos-morion-3ea-2025.php').read_text()+'\n'+(root/'includes/asep-3ea-ui.js').read_text()
+check('3EA generated priorities use success semantic', 'result-message--success edu-message--success' in three_ea)
 sde_ui=(root/'includes/sde-detachment-ui.js').read_text()
 check('SDE result messages use semantic status', 'result-message--status edu-message--status' in sde_ui)
 check('SDE result messages use semantic warning', 'result-message--warning edu-message--warning' in sde_ui)

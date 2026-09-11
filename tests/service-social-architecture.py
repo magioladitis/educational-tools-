@@ -18,15 +18,26 @@ def t(name,ok):
  if ok: print('PASS',name);passn+=1
  else: print('FAIL',name);fail+=1
 
-# Static source architecture
+# Static source architecture. UI/controller logic may live in an external page module.
+ui_modules={
+ 'ypologismos-morion.php':'includes/asep-points-ui.js',
+ 'ypologismos-morion-1gt-2024.php':'includes/asep-1gt-ui.js',
+ 'ypologismos-morion-1ea-2025.php':'includes/asep-1ea-ui.js',
+ 'ypologismos-morion-2ea-2025.php':'includes/asep-2ea-ui.js',
+ 'ypologismos-morion-3ea-2025.php':'includes/asep-3ea-ui.js',
+ 'ypologismos-morion-4ea-2025.php':'includes/asep-4ea-ui.js',
+}
 for name in pages:
- s=(ROOT/name).read_text()
- t(name+' uses service controller','AsepServiceController' in s)
- t(name+' uses social controller','AsepSocialCriteria' in s)
- t(name+' no direct EducationSocial.calculate','EducationSocial.calculate(' not in s)
- t(name+' no direct service primitives',not re.search(r'EducationService\.(regularPublic|difficult|threeMonthRegular2020|threeMonthRegular2021|threeMonthDifficult2020|threeMonthDifficult2021|privateSchool)\(',s))
- t(name+' service controller asset',"edu_asset_url('includes/asep-service-controller.js')" in s)
- t(name+' social controller asset',"edu_asset_url('includes/asep-social-criteria.js')" in s)
+ php=(ROOT/name).read_text()
+ ui=(ROOT/ui_modules[name]).read_text() if (ROOT/ui_modules[name]).exists() else ''
+ combined=php+'\n'+ui
+ t(name+' uses service controller','AsepServiceController' in combined)
+ t(name+' uses social controller','AsepSocialCriteria' in combined)
+ t(name+' no direct EducationSocial.calculate','EducationSocial.calculate(' not in combined)
+ t(name+' no direct service primitives',not re.search(r'EducationService\.(regularPublic|difficult|threeMonthRegular2020|threeMonthRegular2021|threeMonthDifficult2020|threeMonthDifficult2021|privateSchool)\(',combined))
+ t(name+' service controller asset',"edu_asset_url('includes/asep-service-controller.js')" in php)
+ t(name+' social controller asset',"edu_asset_url('includes/asep-social-criteria.js')" in php)
+ t(name+' page UI module loaded',Path(ui_modules[name]).name in php)
 
 # Rendered contracts — render on demand; do not depend on stored snapshots.
 for name in pages:
