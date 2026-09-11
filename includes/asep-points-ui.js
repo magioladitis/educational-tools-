@@ -110,7 +110,8 @@ let lastResultText = "";
   }
 
   function resetCalculator() {
-    document.getElementById("specialty").value = "";
+    const specialty = document.getElementById("specialty");
+    if (specialty) specialty.value = "";
     AsepPeAcademic.reset("asepPeAcademic", { silent: true });
 
     document.querySelectorAll('input[type="number"]').forEach(el => {
@@ -129,7 +130,7 @@ let lastResultText = "";
     lastResultText = "";
     document.getElementById("copyResultBtn").disabled = true;
     updateSidebarSummary();
-    document.getElementById("specialty").focus();
+    if (specialty) specialty.focus();
   }
 
   function calculatePoints() {
