@@ -50,7 +50,7 @@ nostaff['staffing_action']='profile'; nostaff['active_panel']='vacancies'
 nostaff_out=render(nostaff)
 check('vacancy tab is enabled even without personnel', re.search(r'<button[^>]*data-staffing-tab="vacancies"(?![^>]*disabled)[^>]*>5\. Κενά μαθημάτων</button>',nostaff_out) is not None)
 check('vacancy tab no-personnel render still contains uncovered slots', 'data-vacancy-row="gym.mathimatika@Α΄|whole|section|1"' in nostaff_out)
-check('B assignment exception-only availability is represented', 'Διαθέσιμο μόνο με κατ’ εξαίρεση υπέρβαση του ορίου Β΄ ανάθεσης' in SRC and "match.priority==='B' && bHours>=10" in SRC)
+check('B assignment exception-only availability is represented', 'Διαθέσιμο μόνο με κατ’ εξαίρεση υπέρβαση του ορίου Β΄ ανάθεσης' in SRC and "candidate.priority==='B' && bHours>=10" in SRC)
 
 secondary=dict(base)
 secondary.update({

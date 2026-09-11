@@ -991,13 +991,15 @@
       if(!event.target.matches('input:not([type="hidden"])')) return;
       const row=event.target.closest('[data-personnel-row]');
       if(!row) return;
-      updatePersonnelRow(row); refreshDirectorRoleConstraints(); markPersonnelDirty();
+      updatePersonnelRow(row); markPersonnelDirty();
     });
     personnelList.addEventListener('change',function(event){
       if(!event.target.matches('select')) return;
       const row=event.target.closest('[data-personnel-row]');
       if(!row) return;
-      updatePersonnelRow(row); refreshDirectorRoleConstraints(); markPersonnelDirty();
+      updatePersonnelRow(row);
+      if(event.target.matches('.personnel-role')) refreshDirectorRoleConstraints();
+      markPersonnelDirty();
     });
     personnelList.addEventListener('click',function(event){
       const remove=event.target.closest('.personnel-remove');
@@ -1372,9 +1374,12 @@
   }
 
   if(personnelList) personnelList.querySelectorAll('[data-personnel-row]').forEach(bindPersonnelRow);
-  function refreshPersonnelRows(){ if(personnelList) personnelList.querySelectorAll('[data-personnel-row]').forEach(updatePersonnelRow); }
-  document.querySelectorAll('[name="gym_general_a"],[name="gym_general_b"],[name="gym_general_c"],[name="gel_general_a"],[name="gel_general_b"],[name="gel_general_c"]').forEach(function(el){ el.addEventListener('input',refreshPersonnelRows); });
-  if(type) type.addEventListener('change',refreshPersonnelRows);
+  function refreshDirectorPersonnelRows(){
+    if(!personnelList)return;
+    personnelList.querySelectorAll('.personnel-role').forEach(function(role){if(role.value==='director')updatePersonnelRow(role.closest('[data-personnel-row]'));});
+  }
+  document.querySelectorAll('[name="gym_general_a"],[name="gym_general_b"],[name="gym_general_c"],[name="gel_general_a"],[name="gel_general_b"],[name="gel_general_c"]').forEach(function(el){ el.addEventListener('input',refreshDirectorPersonnelRows); });
+  if(type) type.addEventListener('change',refreshDirectorPersonnelRows);
   if(addPersonnel && personnelTemplate && personnelList){
     addPersonnel.addEventListener('click',function(){
       const empty=document.getElementById('emptyPersonnelState'); if(empty) empty.remove();
@@ -1447,6 +1452,14 @@
       return a.specialty_source==='primary'?-1:1;
     });
     return candidates[0];
+  }
+  const vacancyEligiblePeopleCache={};function vacancyEligiblePeopleForSlot(sid,slot){
+    if(Object.prototype.hasOwnProperty.call(vacancyEligiblePeopleCache,sid))return vacancyEligiblePeopleCache[sid];
+    const candidates=[];Object.keys(allocationPeopleData||{}).forEach(function(pid){
+      const match=allocationBestAssignment(allocationPeopleData[pid],slot);
+      if(match)candidates.push({pid:pid,priority:match.priority});
+    });
+    vacancyEligiblePeopleCache[sid]=candidates;return candidates;
   }
   function allocationAssignmentLabel(match){
     if(!match) return '';
@@ -1534,6 +1547,18 @@
   const vacancyRows=Array.from(document.querySelectorAll('[data-vacancy-row]'));
   const printVacancyRowsById={};
   Array.from(document.querySelectorAll('[data-print-vacancy-row]')).forEach(function(row){ printVacancyRowsById[row.getAttribute('data-print-vacancy-row')||'']=row; });
+  const vacancyRowCache={};
+  vacancyRows.forEach(function(row){
+    const sid=row.getAttribute('data-vacancy-row')||'', printRow=printVacancyRowsById[sid]||null;
+    vacancyRowCache[sid]={
+      hours:row.querySelector('[data-vacancy-hours]'),
+      status:row.querySelector('[data-vacancy-status]'),
+      search:(row.getAttribute('data-search')||'').toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,''),
+      printRow:printRow,
+      printHours:printRow?printRow.querySelector('[data-print-vacancy-hours]'):null,
+      printStatus:printRow?printRow.querySelector('[data-print-vacancy-status]'):null
+    };
+  });
   const vacancyFilter=document.getElementById('vacancyFilter');
   const stat51Panel=document.getElementById('stat51ComparePanel');
   const stat51FileInput=document.getElementById('stat51FileInput');
@@ -1674,15 +1699,14 @@
     stat51Registry=null;if(window.EducationMySchoolStat51)window.EducationMySchoolStat51.clearSession();stat51RenderComparison({});
   });
   const stat51SchoolCodeField=document.querySelector('[name="school_code"]');if(stat51SchoolCodeField)stat51SchoolCodeField.addEventListener('input',function(){stat51RefreshFromCurrentAllocation();});
-  function vacancyEligiblePeopleAvailability(slot,personAssigned,personPriority){
+  function vacancyEligiblePeopleAvailability(sid,slot,personAssigned,personPriority){
     let normal=0, exceptionB=0;
-    Object.keys(allocationPeopleData||{}).forEach(function(pid){
-      const person=allocationPeopleData[pid], match=allocationBestAssignment(person,slot);
-      if(!match) return;
+    vacancyEligiblePeopleForSlot(sid,slot).forEach(function(candidate){
+      const pid=candidate.pid, person=allocationPeopleData[pid];
       const remaining=Math.max(0,(person.available_here_hours||0)-(personAssigned[pid]||0));
       if(remaining<1) return;
       const bHours=personPriority&&personPriority[pid] ? (personPriority[pid].B||0) : 0;
-      if(match.priority==='B' && bHours>=10) exceptionB++; else normal++;
+      if(candidate.priority==='B' && bHours>=10) exceptionB++; else normal++;
     });
     return {normal:normal,exceptionB:exceptionB,total:normal+exceptionB};
   }
@@ -2086,6 +2110,9 @@
     over:document.querySelector('[data-allocation-over]'),
     errors:document.querySelector('[data-allocation-errors]')
   };
+  const vacancyTableWrap=document.getElementById('vacancyTableWrap');
+  const vacancyEmpty=document.getElementById('vacancyEmpty');
+  const printVacancyEmpty=document.getElementById('printVacancyEmpty');
   const vacancySummaryEls={
     total:document.querySelector('[data-vacancy-total]'),
     slots:document.querySelector('[data-vacancy-slots]'),
@@ -2127,10 +2154,10 @@
       const sid=row.getAttribute('data-vacancy-row')||'', slot=allocationSlotsData[sid]||null;
       if(!slot){ row.hidden=true; return; }
       const remaining=Math.max(0,(slot.capacity_hours||0)-(slotAssigned[sid]||0));
-      const availability=remaining>0?vacancyEligiblePeopleAvailability(slot,personAssigned,personPriority):{normal:0,exceptionB:0,total:0};
-      const availableCount=availability.total;
-      const hoursEl=row.querySelector('[data-vacancy-hours]'); if(hoursEl) hoursEl.textContent=String(remaining);
-      const status=row.querySelector('[data-vacancy-status]');
+      const availability=remaining>0?vacancyEligiblePeopleAvailability(sid,slot,personAssigned,personPriority):{normal:0,exceptionB:0,total:0};
+      const availableCount=availability.total, cached=vacancyRowCache[sid]||{};
+      const hoursEl=cached.hours||null; if(hoursEl) hoursEl.textContent=String(remaining);
+      const status=cached.status||null;
       if(status){
         status.classList.remove('has-staff','no-staff');
         if(remaining<1) status.textContent='—';
@@ -2138,24 +2165,22 @@
         else if(availability.exceptionB>0){ status.textContent='Διαθέσιμο μόνο με κατ’ εξαίρεση υπέρβαση του ορίου Β΄ ανάθεσης ('+availability.exceptionB+')'; status.classList.add('has-staff'); }
         else { status.textContent='Δεν υπάρχει επιλέξιμο προσωπικό με διαθέσιμο υπόλοιπο'; status.classList.add('no-staff'); }
       }
-      const printRow=printVacancyRowsById[sid]||null;
+      const printRow=cached.printRow||null;
       if(printRow){
-        const printHours=printRow.querySelector('[data-print-vacancy-hours]'); if(printHours) printHours.textContent=String(remaining);
-        const printStatus=printRow.querySelector('[data-print-vacancy-status]'); if(printStatus && status) printStatus.textContent=status.textContent;
+        if(cached.printHours) cached.printHours.textContent=String(remaining);
+        if(cached.printStatus && status) cached.printStatus.textContent=status.textContent;
         printRow.hidden=remaining<1;
       }
-      const hay=(row.getAttribute('data-search')||'').toLocaleLowerCase('el-GR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-      row.hidden=remaining<1||(q!==''&&!hay.includes(q));
+      row.hidden=remaining<1||(q!==''&&!(cached.search||'').includes(q));
       if(remaining>0){ total+=remaining; slots++; if(availableCount>0) hasStaff++; else noStaff++; }
     });
     if(vacancySummaryEls.total) vacancySummaryEls.total.textContent=String(total);
     if(vacancySummaryEls.slots) vacancySummaryEls.slots.textContent=String(slots);
     if(vacancySummaryEls.noStaff) vacancySummaryEls.noStaff.textContent=String(noStaff);
     if(vacancySummaryEls.hasStaff) vacancySummaryEls.hasStaff.textContent=String(hasStaff);
-    const tableWrap=document.getElementById('vacancyTableWrap'), empty=document.getElementById('vacancyEmpty');
-    if(tableWrap) tableWrap.hidden=slots===0;
-    if(empty) empty.hidden=slots!==0;
-    const printEmpty=document.getElementById('printVacancyEmpty'); if(printEmpty) printEmpty.hidden=slots!==0;
+    if(vacancyTableWrap) vacancyTableWrap.hidden=slots===0;
+    if(vacancyEmpty) vacancyEmpty.hidden=slots!==0;
+    if(printVacancyEmpty) printVacancyEmpty.hidden=slots!==0;
     stat51RenderComparison(slotAssigned||{});
   }
   if(vacancyFilter) vacancyFilter.addEventListener('input',function(){ const state=allocationCollectState(); updateVacancyView(state.slotAssigned,state.personAssigned,state.personPriority); });
