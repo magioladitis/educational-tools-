@@ -168,9 +168,9 @@ foreach ($abroadSpecialties as $internalCode) {
         <h2>3. Γλωσσομάθεια αξιολογικού πίνακα</h2>
         <p class="subtitle">Το Β2 είναι το ελάχιστο επίπεδο συμμετοχής και δεν μοριοδοτείται.</p>
 
-        <div id="mainLanguageWrap" class="field">
-          <label for="primaryLevel" id="primaryLevelLabel">Επίπεδο γλώσσας χώρας υποδοχής</label>
-          <select id="primaryLevel">
+        <div id="countryLanguageLevelWrap" class="field hidden">
+          <label for="countryLanguageLevel">Επίπεδο γλώσσας χώρας υποδοχής</label>
+          <select id="countryLanguageLevel">
             <option value="">— Επίλεξε —</option>
             <option value="b2">Β2 — Καλή γνώση · 0 μόρια</option>
             <option value="c1">Γ1 / C1 — Πολύ καλή γνώση</option>
@@ -186,6 +186,15 @@ foreach ($abroadSpecialties as $internalCode) {
               <option value="english">Αγγλικά</option>
               <option value="french">Γαλλικά</option>
               <option value="german">Γερμανικά</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="alternativeLanguageLevel">Επίπεδο εναλλακτικής γλώσσας</label>
+            <select id="alternativeLanguageLevel">
+              <option value="">— Επίλεξε —</option>
+              <option value="b2">Β2 — Καλή γνώση · 0 μόρια</option>
+              <option value="c1">Γ1 / C1 — Πολύ καλή γνώση</option>
+              <option value="c2">Γ2 / C2 — Άριστη γνώση</option>
             </select>
           </div>
           <div class="field">
@@ -210,7 +219,7 @@ foreach ($abroadSpecialties as $internalCode) {
           </select>
         </div>
 
-        <div id="primaryLanguageHelp" class="note">Επίλεξε πρώτα Βασικό ή Εναλλακτικό Πίνακα.</div>
+        <div id="tableLanguageHelp" class="note">Επίλεξε πρώτα Βασικό ή Εναλλακτικό Πίνακα.</div>
       <?php calculatorCardEnd(); ?>
 
       <?php calculatorCardStart(); ?>
@@ -307,6 +316,7 @@ foreach ($abroadSpecialties as $internalCode) {
 </main>
 
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/abroad-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/abroad-preference-rules.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/abroad-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
   <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>

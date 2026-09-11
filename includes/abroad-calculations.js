@@ -49,9 +49,9 @@
       + (options.secondDegree ? 15 : 0);
   }
 
-  function primaryLanguagePoints(tableType, level) {
-    if (tableType === "main") return MAIN_LANGUAGE_POINTS[level] || 0;
-    if (tableType === "alternative") return ALTERNATIVE_LANGUAGE_POINTS[level] || 0;
+  function tableLanguagePoints(tableType, countryLanguageLevel, alternativeLanguageLevel) {
+    if (tableType === "main") return MAIN_LANGUAGE_POINTS[countryLanguageLevel] || 0;
+    if (tableType === "alternative") return ALTERNATIVE_LANGUAGE_POINTS[alternativeLanguageLevel] || 0;
     return 0;
   }
 
@@ -68,7 +68,8 @@
     const blockingIssue = options.blockingIssue || "";
     const bilingualPosition = options.bilingualPosition || "";
 
-    const primaryLevel = options.primaryLevel || "";
+    const countryLanguageLevel = options.countryLanguageLevel || "";
+    const alternativeLanguageLevel = options.alternativeLanguageLevel || "";
     const alternativeLanguage = options.alternativeLanguage || "";
     const alternativeDifferentFromCountry = options.alternativeDifferentFromCountry || "";
     const hostBilingualLevel = options.hostBilingualLevel || "";
@@ -77,7 +78,11 @@
     const secondLanguageDistinct = options.secondLanguageDistinct || "";
 
     const academic = academicPoints(options);
-    const primary = primaryLanguagePoints(tableType, primaryLevel);
+    const tableLanguage = tableLanguagePoints(
+      tableType,
+      countryLanguageLevel,
+      alternativeLanguageLevel
+    );
     const second = secondLanguagePoints(
       secondLanguageLevel,
       secondLanguageDistinct === "yes"
@@ -112,16 +117,16 @@
     }
 
     if (tableType === "main") {
-      if (!primaryLevel) unanswered.push("επίπεδο γλώσσας χώρας υποδοχής");
-      else if (LEVEL_RANK[primaryLevel] < LEVEL_RANK.b2) {
+      if (!countryLanguageLevel) unanswered.push("επίπεδο γλώσσας χώρας υποδοχής");
+      else if (LEVEL_RANK[countryLanguageLevel] < LEVEL_RANK.b2) {
         issues.push("Για τον Βασικό Πίνακα απαιτείται τουλάχιστον Β2 στη γλώσσα της χώρας υποδοχής.");
       }
     }
 
     if (tableType === "alternative") {
       if (!alternativeLanguage) unanswered.push("εναλλακτική γλώσσα");
-      if (!primaryLevel) unanswered.push("επίπεδο εναλλακτικής γλώσσας");
-      else if (LEVEL_RANK[primaryLevel] < LEVEL_RANK.b2) {
+      if (!alternativeLanguageLevel) unanswered.push("επίπεδο εναλλακτικής γλώσσας");
+      else if (LEVEL_RANK[alternativeLanguageLevel] < LEVEL_RANK.b2) {
         issues.push("Για τον Εναλλακτικό Πίνακα απαιτείται τουλάχιστον Β2 στην αγγλική, γαλλική ή γερμανική.");
       }
 
@@ -135,7 +140,7 @@
     if (!bilingualPosition) {
       unanswered.push("αν η θέση απαιτεί διδασκαλία σε δύο γλώσσες");
     } else if (bilingualPosition === "yes") {
-      const bilingualLevel = tableType === "main" ? primaryLevel : hostBilingualLevel;
+      const bilingualLevel = tableType === "main" ? countryLanguageLevel : hostBilingualLevel;
       if (tableType === "alternative" && !hostBilingualLevel) {
         unanswered.push("επίπεδο γλώσσας χώρας για δίγλωσση διδασκαλία");
       } else if (LEVEL_RANK[bilingualLevel] < LEVEL_RANK.c1) {
@@ -159,7 +164,7 @@
 
     const eligible = unanswered.length === 0 && issues.length === 0;
 
-    const total = academic + primary + second;
+    const total = academic + tableLanguage + second;
     const theoreticalMax = tableType === "main"
       ? 185
       : (tableType === "alternative" ? 165 : 0);
@@ -167,7 +172,7 @@
     return {
       tableType,
       academic,
-      primaryLanguagePoints: primary,
+      tableLanguagePoints: tableLanguage,
       secondLanguagePoints: second,
       total,
       theoreticalMax,
@@ -185,7 +190,7 @@
     ALTERNATIVE_LANGUAGE_POINTS,
     SECOND_LANGUAGE_POINTS,
     academicPoints,
-    primaryLanguagePoints,
+    tableLanguagePoints,
     secondLanguagePoints,
     calculate
   });

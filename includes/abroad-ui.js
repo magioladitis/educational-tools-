@@ -109,7 +109,7 @@
   const allIds = [
     'specialty','preference1','preference2','preference3','educationYears','teachingYears','blockingIssue',
     'tableType','bilingualPosition','phd','master','secondMaster','secondDegree',
-    'primaryLevel','alternativeLanguage','alternativeDifferentFromCountry',
+    'countryLanguageLevel','alternativeLanguage','alternativeLanguageLevel','alternativeDifferentFromCountry',
     'hostBilingualLevel','secondLanguageLevel','secondLanguageDistinct'
   ];
 
@@ -274,20 +274,9 @@
   function updatePreferenceNotes(){
     const specialty = normalizeSpecialtyCode($('specialty').value);
     const selected = [$('preference1').value, $('preference2').value, $('preference3').value].filter(Boolean);
-    const notes = [];
-
-    if(selected.includes('de_mu')){
-      notes.push('Για τη Γερμανία — Σ.Γ.Ε. Μονάχου ισχύουν ειδικές προϋποθέσεις για τα επιχορηγούμενα σχολεία της Βαυαρίας και προηγούμενη άδεια διδασκαλίας από τη γερμανική υπηρεσία, όπου απαιτείται.');
-      if(specialty === 'ΠΕ78') notes.push('Στο Σ.Γ.Ε. Μονάχου η ΠΕ78 αφορά ειδικά Κοινωνιολόγους.');
-      if(specialty === 'ΠΕ80') notes.push('Στο Σ.Γ.Ε. Μονάχου η ΠΕ80 αφορά ειδικά Οικονομολόγους και, για τα γερμανόφωνα μαθήματα, απαιτείται αυξημένη γερμανομάθεια.');
-      if(specialty === 'ΠΕ82') notes.push('Για ΠΕ82 στη Βαυαρία επισημαίνεται αυξημένη γερμανομάθεια (Γ1) για τη διδασκαλία των μαθημάτων στη γερμανική.');
-      if(specialty === 'ΠΕ03') notes.push('Στη Βαυαρία τα Μαθηματικά διδάσκονται και στη γερμανική· για διδασκαλία γερμανόφωνων μαθημάτων απαιτείται Γ1.');
-      if(specialty === 'ΠΕ11') notes.push('Στα Γυμνάσια Μονάχου/Νυρεμβέργης η Φυσική Αγωγή κατανέμεται ανά φύλο μαθητών και οι αποσπάσεις εξαρτώνται από τις αντίστοιχες κενές θέσεις.');
-    }
-
-    if(selected.includes('ch')){
-      notes.push('Για την Ελβετία απαιτείται τουλάχιστον Β1 στην ομιλούμενη γλώσσα του τόπου εργασίας (προφορικός και γραπτός λόγος), πέρα από τον γενικό έλεγχο του πίνακα.');
-    }
+    const notes = global.AbroadPreferenceRules
+      ? global.AbroadPreferenceRules.notesFor(selected, specialty)
+      : [];
 
     $('preferenceNotes').innerHTML = notes.length
       ? '<div class="warning"><strong>Ειδικές επισημάνσεις για τις προτιμήσεις σου:</strong><ul class="edu-list-compact"><li>' + notes.join('</li><li>') + '</li></ul></div>'
@@ -299,19 +288,17 @@
     const tableType = $('tableType').value;
     const bilingual = $('bilingualPosition').value;
 
+    $('countryLanguageLevelWrap').classList.toggle('hidden', tableType !== 'main');
     $('alternativeFields').classList.toggle('hidden', tableType !== 'alternative');
 
     if(tableType === 'main'){
-      $('primaryLevelLabel').textContent = 'Επίπεδο γλώσσας χώρας υποδοχής';
-      $('primaryLanguageHelp').textContent =
+      $('tableLanguageHelp').textContent =
         'Βασικός Πίνακας: Β2 = 0 μόρια, Γ1/C1 = 30 μόρια, Γ2/C2 = 50 μόρια.';
     } else if(tableType === 'alternative'){
-      $('primaryLevelLabel').textContent = 'Επίπεδο εναλλακτικής γλώσσας (Αγγλικά / Γαλλικά / Γερμανικά)';
-      $('primaryLanguageHelp').textContent =
+      $('tableLanguageHelp').textContent =
         'Εναλλακτικός Πίνακας: Β2 = 0 μόρια, Γ1/C1 = 20 μόρια, Γ2/C2 = 30 μόρια.';
     } else {
-      $('primaryLevelLabel').textContent = 'Επίπεδο γλώσσας αξιολογικού πίνακα';
-      $('primaryLanguageHelp').textContent = 'Επίλεξε πρώτα Βασικό ή Εναλλακτικό Πίνακα.';
+      $('tableLanguageHelp').textContent = 'Επίλεξε πρώτα Βασικό ή Εναλλακτικό Πίνακα.';
     }
 
     $('hostBilingualWrap').classList.toggle(
@@ -351,8 +338,9 @@
       secondMaster: $('secondMaster').checked,
       secondDegree: $('secondDegree').checked,
 
-      primaryLevel: $('primaryLevel').value,
+      countryLanguageLevel: $('countryLanguageLevel').value,
       alternativeLanguage: $('alternativeLanguage').value,
+      alternativeLanguageLevel: $('alternativeLanguageLevel').value,
       alternativeDifferentFromCountry: $('alternativeDifferentFromCountry').value,
       hostBilingualLevel: $('hostBilingualLevel').value,
 
@@ -367,7 +355,7 @@
 
     $('grandTotal').textContent = fmt(r.total);
     $('academicResult').textContent = fmt(r.academic);
-    $('primaryResult').textContent = fmt(r.primaryLanguagePoints);
+    $('primaryResult').textContent = fmt(r.tableLanguagePoints);
     $('secondLanguageResult').textContent = fmt(r.secondLanguagePoints);
 
     if(r.tableType === 'main'){
@@ -434,7 +422,7 @@
       `Επιμίσθιο 2ης: ${$('preference2').value ? euro(stipendFor($('preference2').value)) + ' / μήνα' : '—'}`,
       `Επιμίσθιο 3ης: ${$('preference3').value ? euro(stipendFor($('preference3').value)) + ' / μήνα' : '—'}`,
       `Τίτλοι σπουδών: ${fmt(r.academic)}`,
-      `Γλώσσα πίνακα: ${fmt(r.primaryLanguagePoints)}`,
+      `Γλώσσα πίνακα: ${fmt(r.tableLanguagePoints)}`,
       `Δεύτερη ξένη γλώσσα: ${fmt(r.secondLanguagePoints)}`,
       `Σύνολο: ${fmt(r.total)}`,
       `Βασικός έλεγχος: ${r.eligible ? 'ΘΕΤΙΚΟΣ' : 'ΜΗ ΟΛΟΚΛΗΡΩΜΕΝΟΣ / ΜΗ ΘΕΤΙΚΟΣ'}`,
