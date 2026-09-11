@@ -455,7 +455,6 @@
     document.querySelectorAll('input[type="number"]').forEach(el => el.value = '');
     document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
     $('secondLanguageLevel').value = 'none';
-    updateUI();
     calculate();
     $('specialty').focus();
   }
@@ -476,7 +475,6 @@
     if(copyBtn) copyBtn.addEventListener('click', copySummary);
     if(resetBtn) resetBtn.addEventListener('click', reset);
 
-    updateUI();
     calculate();
   }
 

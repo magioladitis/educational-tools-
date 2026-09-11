@@ -153,13 +153,12 @@
       else el.selectedIndex = 0;
     });
     AsepLanguageSelector.reset('sdeLanguages', { silent: true });
-    specialtyChanged(); calculate();
+    specialtyChanged();
   }
 
   document.addEventListener('asep-language-change', calculate);
 
   specialtyChanged();
-  calculate();
 
   // External event bindings replacing the former inline onchange/oninput/onclick handlers.
   $('specialty').addEventListener('change', specialtyChanged);

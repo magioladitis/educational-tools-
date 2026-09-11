@@ -54,7 +54,8 @@
     return Object.keys(TYPE_LABELS).map(function (key) { return '<option value="' + key + '">' + esc(TYPE_LABELS[key]) + '</option>'; }).join('');
   }
 
-  function addRow(initial) {
+  function addRow(initial, options) {
+    options = options || {};
     rowCounter += 1;
     initial = initial || {};
     var row = document.createElement('section');
@@ -77,7 +78,7 @@
     if (initial.type) row.querySelector('.msd-type').value = initial.type;
     if (initial.category) row.querySelector('.msd-category').value = initial.category;
     syncRow(row);
-    calculate();
+    if (!options.silent) calculate();
   }
 
   function syncRow(row) {
@@ -181,7 +182,7 @@
     ['familyStatusEligible', 'coService', 'locality', 'firstPreference'].forEach(function (id) { byId(id).checked = false; });
     msdRows.innerHTML = '';
     rowCounter = 0;
-    addRow({ type: 'school', category: 'A' });
+    addRow({ type: 'school', category: 'A' }, { silent: true });
     syncMode();
   }
 
@@ -223,11 +224,11 @@
       if (!button) return;
       var row = button.closest('.transfer-service-row');
       if (row) row.remove();
-      if (!msdRows.querySelector('.transfer-service-row')) addRow();
+      if (!msdRows.querySelector('.transfer-service-row')) addRow(null, { silent: true });
       calculate();
     });
 
-    addRow({ type: 'school', category: 'A' });
+    addRow({ type: 'school', category: 'A' }, { silent: true });
     syncMode();
   }
 

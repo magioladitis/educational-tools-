@@ -16,6 +16,8 @@
     unemploymentPercent: 10
   });
 
+  const SDE_REGISTRY_CAREER_COUNSELLING_MAX = 7;
+
   const ROLE = Object.freeze({
     educator: 'Εκπαιδευτικό προσωπικό',
     psychologist: 'Σύμβουλος Ψυχολόγος',
@@ -113,9 +115,10 @@
       if (a) details.push({label:'ΣΔΕ ως Σύμβουλος Ψυχολόγος', points:round(a)});
       if (b) details.push({label:'Συμβουλευτικές υπηρεσίες σε ενήλικες', points:round(b)});
     } else if (role === 'career') {
-      // Το κείμενο του άρθρου 12 §2.1 αναφέρει «μέγιστο 12», αλλά η στήλη μορίων δίνει 7
-      // και η κατηγορία έχει σύνολο 13 με το §2.2 να δίνει 6. Χρησιμοποιείται το εσωτερικά συνεπές 7.
-      a = Math.min(Math.min(global.EducationCore.MAX_SERVICE_MONTHS, num(data.expSdeMonths)) * 0.25, 7);
+      a = Math.min(
+        Math.min(global.EducationCore.MAX_SERVICE_MONTHS, num(data.expSdeMonths)) * 0.25,
+        SDE_REGISTRY_CAREER_COUNSELLING_MAX
+      );
       b = Math.min(Math.min(global.EducationCore.MAX_SERVICE_MONTHS, num(data.expAdultCounsellingMonths)) * 0.25, 6);
       if (a) details.push({label:'ΣΔΕ ως Σύμβουλος Σταδιοδρομίας', points:round(a)});
       if (b) details.push({label:'Συμβουλευτικές υπηρεσίες απασχόλησης / επιχειρηματικότητας σε ενήλικες', points:round(b)});
