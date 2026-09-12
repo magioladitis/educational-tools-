@@ -726,6 +726,7 @@ function teachingAllocationEngineSolveRemaining($slots, $people, $personState, $
  */
 function teachingAllocationEngineProposal($profile, $people, $lockedAllocations = array(), $model = null, $matrix = null)
 {
+    if (!empty($GLOBALS['STAFFING_PERF_ENABLED']) && function_exists('staffingPerfCount')) staffingPerfCount('teachingAllocationEngineProposal');
     if ($model === null) $model = teachingWorkloadModel();
     if ($matrix === null) $matrix = schoolProfileWorkloadMatrix($profile, $model);
     $slots = personnelWorkloadAllocationSlots($profile, $matrix);

@@ -6,6 +6,25 @@
     catch(error){ console.error('Αποτυχία φόρτωσης ρυθμίσεων στελέχωσης.',error); }
     staffingRuntimeConfigNode.textContent='';
   }
+  const staffingPerfClientEnabled=!!staffingRuntimeConfig.perfEnabled;
+  function staffingPerfClientRecord(elementId,elapsed){
+    if(!staffingPerfClientEnabled||!window.performance) return;
+    const el=document.getElementById(elementId); if(!el) return;
+    const ms=Math.max(0,Number(elapsed)||0), text=ms.toLocaleString('el-GR',{minimumFractionDigits:2,maximumFractionDigits:2})+' ms';
+    if(!el.dataset.firstMs){ el.dataset.firstMs=String(ms); el.textContent=text+' (1η)'; return; }
+    const first=Number(el.dataset.firstMs)||0;
+    el.textContent=first.toLocaleString('el-GR',{minimumFractionDigits:2,maximumFractionDigits:2})+' ms 1η · '+text+' τελευταία';
+  }
+  if(staffingPerfClientEnabled&&window.performance){
+    window.addEventListener('load',function(){
+      setTimeout(function(){
+        const entries=typeof performance.getEntriesByType==='function'?performance.getEntriesByType('navigation'):[];
+        const nav=entries&&entries.length?entries[0]:null;
+        const elapsed=nav&&nav.loadEventEnd?nav.loadEventEnd:performance.now();
+        staffingPerfClientRecord('perfClientLoad',elapsed);
+      },0);
+    });
+  }
   const type=document.getElementById('school_type');
   const gym=document.getElementById('gymProfileFields');
   const gel=document.getElementById('gelProfileFields');
@@ -101,12 +120,22 @@
     // Οι προβολές 4/5/6 έχουν υπολογισμούς slot × προσωπικό ή optimizer.
     // Τους εκτελούμε μόνο όταν η αντίστοιχη καρτέλα ανοίγει.
     if(typeof allocationCollectState==='function'){
-      if(name==='allocation' && typeof refreshAllocationEligibilitySummary==='function') refreshAllocationEligibilitySummary();
+      if(name==='allocation' && typeof refreshAllocationEligibilitySummary==='function'){
+        const perfStart=staffingPerfClientEnabled&&window.performance?performance.now():0;
+        refreshAllocationEligibilitySummary();
+        if(perfStart) staffingPerfClientRecord('perfClientAllocation',performance.now()-perfStart);
+      }
       if(name==='vacancies' && typeof updateVacancyView==='function'){
+        const perfStart=staffingPerfClientEnabled&&window.performance?performance.now():0;
         const state=allocationCollectState();
         updateVacancyView(state.slotAssigned,state.personAssigned,state.personPriority);
+        if(perfStart) staffingPerfClientRecord('perfClientVacancies',performance.now()-perfStart);
       }
-      if(name==='specialties' && typeof renderSpecialtyBalance==='function') renderSpecialtyBalance(allocationCollectState());
+      if(name==='specialties' && typeof renderSpecialtyBalance==='function'){
+        const perfStart=staffingPerfClientEnabled&&window.performance?performance.now():0;
+        renderSpecialtyBalance(allocationCollectState());
+        if(perfStart) staffingPerfClientRecord('perfClientSpecialties',performance.now()-perfStart);
+      }
     }
   }
   function moveTabFocus(current,key){

@@ -209,6 +209,7 @@ function schoolProfileWorkloadUnitEligibility($assignment, $staffingCodes = null
 
 function schoolProfileWorkloadMatrix($profile, $model = null)
 {
+    if (!empty($GLOBALS['STAFFING_PERF_ENABLED']) && function_exists('staffingPerfCount')) staffingPerfCount('schoolProfileWorkloadMatrix');
     if ($model === null) {
         $model = teachingWorkloadModel();
     }

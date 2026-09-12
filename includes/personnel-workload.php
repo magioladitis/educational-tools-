@@ -350,6 +350,7 @@ function personnelWorkloadSecondaryObligation($person)
 
 function personnelWorkloadNormalizePerson($person)
 {
+    if (!empty($GLOBALS['STAFFING_PERF_ENABLED']) && function_exists('staffingPerfCount')) staffingPerfCount('personnelWorkloadNormalizePerson');
     $id = isset($person['person_id']) ? trim((string) $person['person_id']) : '';
     if ($id === '') {
         return array('status'=>'invalid','reason'=>'person_id_required');
@@ -596,6 +597,7 @@ function personnelWorkloadOpenOpportunities($matrix, $specialtyCode, $remainingB
 
 function personnelWorkloadRosterPlan($profile, $people, $allocations, $model = null, $matrix = null)
 {
+    if (!empty($GLOBALS['STAFFING_PERF_ENABLED']) && function_exists('staffingPerfCount')) staffingPerfCount('personnelWorkloadRosterPlan');
     if ($model === null) {
         $model = teachingWorkloadModel();
     }
@@ -871,6 +873,7 @@ function personnelWorkloadAllocationSlotLabel($profile, $unit, $sectionIndex)
  */
 function personnelWorkloadAllocationSlots($profile, $matrix = null)
 {
+    if (!empty($GLOBALS['STAFFING_PERF_ENABLED']) && function_exists('staffingPerfCount')) staffingPerfCount('personnelWorkloadAllocationSlots');
     if ($matrix === null) $matrix = schoolProfileWorkloadMatrix($profile);
     $claimsByUnit = array();
     if (isset($matrix['codes']) && is_array($matrix['codes'])) {
@@ -988,6 +991,7 @@ function personnelWorkloadBestAssignmentForSlot($slot, $person)
  */
 function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model = null, $matrix = null)
 {
+    if (!empty($GLOBALS['STAFFING_PERF_ENABLED']) && function_exists('staffingPerfCount')) staffingPerfCount('personnelWorkloadRosterSlotPlan');
     if ($model === null) $model = teachingWorkloadModel();
     if ($matrix === null) $matrix = schoolProfileWorkloadMatrix($profile, $model);
     $slots = personnelWorkloadAllocationSlots($profile, $matrix);
@@ -1323,6 +1327,7 @@ function personnelWorkloadVacancyCandidateCodesForSlot($slot)
  */
 function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAllocations = array(), $model = null, $basePlan = null, $matrix = null)
 {
+    if (!empty($GLOBALS['STAFFING_PERF_ENABLED']) && function_exists('staffingPerfCount')) staffingPerfCount('personnelWorkloadAutomaticBalanceProposal');
     if ($model === null) $model = teachingWorkloadModel();
     if ($matrix === null) $matrix = schoolProfileWorkloadMatrix($profile, $model);
     if ($basePlan === null) $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model, $matrix);
@@ -1410,6 +1415,7 @@ function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAlloc
  */
 function personnelWorkloadSpecialtyBalanceReport($profile, $people, $slotAllocations = array(), $model = null, $matrix = null)
 {
+    if (!empty($GLOBALS['STAFFING_PERF_ENABLED']) && function_exists('staffingPerfCount')) staffingPerfCount('personnelWorkloadSpecialtyBalanceReport');
     if ($model === null) $model = teachingWorkloadModel();
     if ($matrix === null) $matrix = schoolProfileWorkloadMatrix($profile, $model);
     $slots = personnelWorkloadAllocationSlots($profile, $matrix);

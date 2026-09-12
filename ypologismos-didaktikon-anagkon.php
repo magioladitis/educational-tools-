@@ -1,4 +1,36 @@
 <?php
+// Lightweight, opt-in performance diagnostics for this large calculator.
+// Enable only when needed with: ypologismos-didaktikon-anagkon.php?perf=1
+// With perf disabled the helpers return immediately and no diagnostic UI is rendered.
+$staffingPerfEnabled = isset($_GET['perf']) && (string) $_GET['perf'] === '1';
+$GLOBALS['STAFFING_PERF_ENABLED'] = $staffingPerfEnabled;
+$GLOBALS['STAFFING_PERF_REQUEST_START'] = microtime(true);
+$GLOBALS['STAFFING_PERF_PHASES'] = array();
+$GLOBALS['STAFFING_PERF_OPEN'] = array();
+$GLOBALS['STAFFING_PERF_COUNTERS'] = array();
+function staffingPerfBegin($key) {
+    if (empty($GLOBALS['STAFFING_PERF_ENABLED'])) return;
+    $GLOBALS['STAFFING_PERF_OPEN'][$key] = microtime(true);
+}
+function staffingPerfEnd($key) {
+    if (empty($GLOBALS['STAFFING_PERF_ENABLED']) || !isset($GLOBALS['STAFFING_PERF_OPEN'][$key])) return;
+    $elapsed = microtime(true) - $GLOBALS['STAFFING_PERF_OPEN'][$key];
+    unset($GLOBALS['STAFFING_PERF_OPEN'][$key]);
+    if (!isset($GLOBALS['STAFFING_PERF_PHASES'][$key])) $GLOBALS['STAFFING_PERF_PHASES'][$key] = 0.0;
+    $GLOBALS['STAFFING_PERF_PHASES'][$key] += $elapsed;
+}
+function staffingPerfCount($key, $amount = 1) {
+    if (empty($GLOBALS['STAFFING_PERF_ENABLED'])) return;
+    if (!isset($GLOBALS['STAFFING_PERF_COUNTERS'][$key])) $GLOBALS['STAFFING_PERF_COUNTERS'][$key] = 0;
+    $GLOBALS['STAFFING_PERF_COUNTERS'][$key] += (int) $amount;
+}
+function staffingPerfMs($seconds) {
+    return number_format(((float) $seconds) * 1000, 2, ',', '.');
+}
+function staffingPerfMiB($bytes) {
+    return number_format(((float) $bytes) / 1048576, 2, ',', '.');
+}
+staffingPerfBegin('includes');
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/school-profile-general-education.php';
 require_once __DIR__ . '/includes/school-profile-workload.php';
@@ -6,6 +38,7 @@ require_once __DIR__ . '/includes/ethics-class-formation.php';
 require_once __DIR__ . '/includes/personnel-workload.php';
 require_once __DIR__ . '/includes/teaching-allocation-engine.php';
 require_once __DIR__ . '/includes/teaching-workload-aggregation.php';
+staffingPerfEnd('includes');
 
 function staffingUiH($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
@@ -712,6 +745,7 @@ if ($submitted && $postedBasicSectionTotal > STAFFING_UI_MAX_BASIC_SECTIONS) {
 }
 
 if ($submitted && empty($schoolProfileInputErrors)) {
+    staffingPerfBegin('profile_build');
     if ($schoolType === 'gymnasio_lt') {
         try {
             if (!function_exists('schoolProfileBuildGymnasiumWithLyceumClasses2026')
@@ -903,16 +937,25 @@ if ($submitted && empty($schoolProfileInputErrors)) {
             ),
         ));
     }
+    staffingPerfEnd('profile_build');
+    staffingPerfBegin('readiness');
     $readiness = schoolProfileGeneralEducationReadiness($profile);
+    staffingPerfEnd('readiness');
     // Build only the regulatory workload needed by this school profile.
     // A Gymnasium request must not materialise EPAL/PEPAL/ENEEGYL/etc. data.
     // Composite Gymnasium + Lyceum Classes naturally requests both structures.
+    staffingPerfBegin('teaching_model');
     $teachingModel = teachingWorkloadModelForProfile($profile);
+    staffingPerfEnd('teaching_model');
+    staffingPerfBegin('matrix_build');
     $matrix = schoolProfileWorkloadMatrix($profile, $teachingModel);
+    staffingPerfEnd('matrix_build');
+    staffingPerfBegin('matrix_presentation');
     $presentation = staffingUiCollapseSkillsWorkshops($matrix);
     $displayMatrix = staffingUiSortCodesNatural($presentation['matrix']);
     $collapsedSkills = $presentation['collapsed'];
     $staffingNotices = staffingUiMatrixNotices($profile, $teachingModel);
+    staffingPerfEnd('matrix_presentation');
 }
 $generalSectionTotal = $profile ? schoolProfileTotalGeneralSections($profile) : 0;
 $directorSectionsBandAuto = personnelWorkloadDirectorSectionsBandFromCount($generalSectionTotal);
@@ -936,6 +979,7 @@ foreach ($personnelRows as $personnelIndex=>$person) {
         }
     }
 }
+staffingPerfBegin('personnel_summary');
 $personnelEvaluations = array();
 $personnelSummary = array(
     'people_count'=>0,
@@ -1009,15 +1053,20 @@ if (!empty($personnelRows)) {
     }
 }
 uksort($personnelSummary['by_code'], 'strnatcmp');
+staffingPerfEnd('personnel_summary');
 // Do not build the full teaching-workload model on the initial GET merely to
 // populate a template inside a disabled tab. The options become necessary only
 // after an explicit staffing calculation has unlocked the personnel stage.
+staffingPerfBegin('personnel_specialty_options');
 $personnelSpecialtyOptions = $submitted
     ? staffingUiPersonnelSpecialtyOptions($displayMatrix, $teachingModel)
     : array('relevant'=>array(), 'other'=>array());
+staffingPerfEnd('personnel_specialty_options');
 
 $allocationRows = staffingUiAllocationRowsFromPost();
+staffingPerfBegin('allocation_slots');
 $allocationSlots = ($profile && $matrix) ? staffingUiSortAllocationSlots(personnelWorkloadAllocationSlots($profile, $matrix)) : array();
+staffingPerfEnd('allocation_slots');
 $allocationPeople = array();
 foreach ($personnelRows as $personnelIndex=>$person) {
     if (isset($duplicateDirectorIndexes[$personnelIndex])) continue;
@@ -1032,21 +1081,26 @@ foreach ($personnelRows as $personnelIndex=>$person) {
 $allocationPlan = null;
 $allocationRowResults = array();
 if ($profile && $matrix && !empty($allocationPeople) && !empty($allocationRows)) {
+    staffingPerfBegin('allocation_plan');
     $allocationPlan = personnelWorkloadRosterSlotPlan($profile, $allocationPeople, $allocationRows, $teachingModel, $matrix);
     if (isset($allocationPlan['allocation_rows'])) $allocationRowResults = $allocationPlan['allocation_rows'];
+    staffingPerfEnd('allocation_plan');
 }
 $allocationEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only' && $personnelSummary['general_resolved_count'] > 0 && !empty($allocationPeople) && empty($duplicateDirectorIndexes);
 $allocationAutoProposal = null;
 if ($allocationEnabled && $staffingAction === 'allocation_auto') {
+    staffingPerfBegin('allocation_auto_optimizer');
     $allocationAutoProposal = teachingAllocationEngineProposal($profile, $allocationPeople, $allocationRows, $teachingModel, $matrix);
     if (isset($allocationAutoProposal['status']) && $allocationAutoProposal['status'] === 'ok') {
         $allocationRows = isset($allocationAutoProposal['combined_allocations']) ? $allocationAutoProposal['combined_allocations'] : $allocationRows;
         $allocationPlan = isset($allocationAutoProposal['combined_plan']) ? $allocationAutoProposal['combined_plan'] : $allocationPlan;
         $allocationRowResults = $allocationPlan && isset($allocationPlan['allocation_rows']) ? $allocationPlan['allocation_rows'] : array();
     }
+    staffingPerfEnd('allocation_auto_optimizer');
 }
 $vacanciesEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only';
 $specialtyBalanceEnabled = $vacanciesEnabled;
+staffingPerfBegin('client_payload');
 $allocationPeopleClient = array();
 foreach ($allocationPeople as $person) {
     $personId = isset($person['person_id']) ? $person['person_id'] : '';
@@ -1099,6 +1153,7 @@ foreach ($allocationSlots as $slotId=>$slot) {
         'remaining_hours'=>max(0, $remaining),
     );
 }
+staffingPerfEnd('client_payload');
 
 $specialtyBalanceReport = null;
 // Η Καρτέλα 6 ανανεώνεται πλήρως client-side όταν ανοίγει. Σε shared hosting
@@ -1106,8 +1161,11 @@ $specialtyBalanceReport = null;
 // μεγάλα σχολεία αυτό διπλασίαζε άσκοπα CPU και μνήμη και μπορούσε να δώσει 500.
 $specialtyBalanceServerNeeded = $specialtyBalanceEnabled && $activePanel === 'specialties';
 if ($specialtyBalanceServerNeeded) {
+    staffingPerfBegin('specialty_balance_server');
     $specialtyBalanceReport = personnelWorkloadSpecialtyBalanceReport($profile, $allocationPeople, $allocationRows, $teachingModel, $matrix);
+    staffingPerfEnd('specialty_balance_server');
 }
+staffingPerfBegin('specialty_labels');
 $specialtyLabelsClient = array();
 foreach ($allocationSlots as $slot) {
     if (empty($slot['eligible_by_priority'])) continue;
@@ -1126,6 +1184,7 @@ foreach ($allocationPeopleClient as $personData) {
     }
 }
 uksort($specialtyLabelsClient, 'strnatcmp');
+staffingPerfEnd('specialty_labels');
 ?>
 <!doctype html>
 <html lang="el">
@@ -1135,6 +1194,11 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   <title>Υπολογισμός διδακτικών αναγκών σχολικής μονάδας</title>
   <link rel="stylesheet" href="<?php echo staffingUiH(edu_asset_url('assets/common.css')); ?>">
   <link rel="stylesheet" href="<?php echo staffingUiH(edu_asset_url('assets/staffing-simulator.css')); ?>">
+  <?php if ($staffingPerfEnabled): ?><style>
+    .perf-diagnostic{margin-top:18px}.perf-diagnostic>summary{cursor:pointer;padding:14px 16px}.perf-diagnostic-body{padding:0 16px 16px}
+    .perf-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:12px 0 16px}.perf-kpis>div{border:1px solid var(--edu-border);border-radius:10px;padding:10px;background:var(--edu-surface)}
+    .perf-kpis strong,.perf-kpis span{display:block}.perf-kpis strong{font-size:1.05rem}.perf-kpis span{margin-top:3px;color:var(--edu-muted);font-size:.86rem}.perf-table{width:100%;border-collapse:collapse}.perf-table th,.perf-table td{padding:7px 9px;border-bottom:1px solid var(--edu-border);text-align:left}.perf-table .num{text-align:right;white-space:nowrap}
+  </style><?php endif; ?>
 </head>
 <body class="edu-ui edu-calc-standard edu-page-staffing-simulator">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -2266,6 +2330,74 @@ uksort($specialtyLabelsClient, 'strnatcmp');
 </section>
 <?php endif; ?>
 
+<?php if ($staffingPerfEnabled): ?>
+<?php
+  $staffingPerfTotal = microtime(true) - $GLOBALS['STAFFING_PERF_REQUEST_START'];
+  $staffingPerfPhases = $GLOBALS['STAFFING_PERF_PHASES'];
+  $staffingPerfCounters = $GLOBALS['STAFFING_PERF_COUNTERS'];
+  $staffingPerfPhaseLabels = array(
+      'includes'=>'Φόρτωση includes',
+      'profile_build'=>'Κατασκευή προφίλ σχολείου',
+      'readiness'=>'Έλεγχος ετοιμότητας',
+      'teaching_model'=>'Μοντέλο ωρολογίου / αναθέσεων',
+      'matrix_build'=>'schoolProfileWorkloadMatrix()',
+      'matrix_presentation'=>'Παρουσίαση matrix + notices',
+      'personnel_summary'=>'Κανονικοποίηση / σύνοψη προσωπικού',
+      'personnel_specialty_options'=>'Επιλογές ειδικοτήτων προσωπικού',
+      'allocation_slots'=>'Κατασκευή allocation slots',
+      'allocation_plan'=>'Έλεγχος χειροκίνητης κατανομής',
+      'allocation_auto_optimizer'=>'Αυτόματη κατανομή (server optimizer)',
+      'client_payload'=>'Payload κατανομής / κενών προς browser',
+      'specialty_balance_server'=>'Κενά / πλεονάσματα (server optimizer)',
+      'specialty_labels'=>'Labels ειδικοτήτων για browser',
+  );
+  $staffingPerfCounterLabels = array(
+      'schoolProfileWorkloadMatrix'=>'schoolProfileWorkloadMatrix()',
+      'personnelWorkloadNormalizePerson'=>'personnelWorkloadNormalizePerson()',
+      'personnelWorkloadAllocationSlots'=>'personnelWorkloadAllocationSlots()',
+      'personnelWorkloadRosterPlan'=>'personnelWorkloadRosterPlan()',
+      'personnelWorkloadRosterSlotPlan'=>'personnelWorkloadRosterSlotPlan()',
+      'personnelWorkloadAutomaticBalanceProposal'=>'personnelWorkloadAutomaticBalanceProposal()',
+      'personnelWorkloadSpecialtyBalanceReport'=>'personnelWorkloadSpecialtyBalanceReport()',
+      'teachingAllocationEngineProposal'=>'teachingAllocationEngineProposal()',
+  );
+?>
+<details class="card perf-diagnostic" open id="staffingPerfDiagnostic">
+  <summary><strong>Performance diagnostic</strong> · PHP <?php echo staffingPerfMs($staffingPerfTotal); ?> ms · peak <?php echo staffingPerfMiB(memory_get_peak_usage(true)); ?> MiB</summary>
+  <div class="perf-diagnostic-body">
+    <p class="help">Ενεργό μόνο επειδή το URL έχει <code>?perf=1</code>. Οι μετρήσεις είναι διαγνωστικές και δεν αλλάζουν τους υπολογισμούς.</p>
+    <div class="perf-kpis">
+      <div><strong><?php echo staffingPerfMs($staffingPerfTotal); ?> ms</strong><span>PHP έως το diagnostic panel</span></div>
+      <div><strong><?php echo staffingPerfMiB(memory_get_peak_usage(true)); ?> MiB</strong><span>peak memory</span></div>
+      <div><strong><?php echo count($allocationSlots); ?></strong><span>allocation slots</span></div>
+      <div><strong><?php echo count($allocationPeopleClient); ?></strong><span>εκπαιδευτικοί allocation</span></div>
+      <div><strong><?php echo count($allocationRows); ?></strong><span>γραμμές κατανομής</span></div>
+      <div><strong><?php echo staffingUiH($activePanel); ?></strong><span>active panel</span></div>
+    </div>
+    <h3>PHP phases</h3>
+    <div class="table-wrap"><table class="perf-table"><thead><tr><th>Φάση</th><th>Χρόνος</th><th>% PHP</th></tr></thead><tbody>
+      <?php foreach ($staffingPerfPhaseLabels as $perfKey=>$perfLabel): if (!isset($staffingPerfPhases[$perfKey])) continue; $perfSeconds=(float)$staffingPerfPhases[$perfKey]; ?>
+        <tr><td><?php echo staffingUiH($perfLabel); ?></td><td class="num"><?php echo staffingPerfMs($perfSeconds); ?> ms</td><td class="num"><?php echo $staffingPerfTotal > 0 ? number_format(($perfSeconds / $staffingPerfTotal) * 100, 1, ',', '.') : '0,0'; ?>%</td></tr>
+      <?php endforeach; ?>
+    </tbody></table></div>
+    <h3>Function call counters</h3>
+    <div class="table-wrap"><table class="perf-table"><thead><tr><th>Συνάρτηση</th><th>Κλήσεις</th></tr></thead><tbody>
+      <?php foreach ($staffingPerfCounterLabels as $perfKey=>$perfLabel): ?>
+        <tr><td><code><?php echo staffingUiH($perfLabel); ?></code></td><td class="num"><?php echo isset($staffingPerfCounters[$perfKey]) ? (int)$staffingPerfCounters[$perfKey] : 0; ?></td></tr>
+      <?php endforeach; ?>
+    </tbody></table></div>
+    <h3>Browser / lazy calculations</h3>
+    <div class="perf-kpis perf-client-kpis">
+      <div><strong id="perfClientLoad">—</strong><span>page load</span></div>
+      <div><strong id="perfClientAllocation">—</strong><span>Καρτέλα 4 · eligibility</span></div>
+      <div><strong id="perfClientVacancies">—</strong><span>Καρτέλα 5 · κενά</span></div>
+      <div><strong id="perfClientSpecialties">—</strong><span>Καρτέλα 6 · optimizer</span></div>
+    </div>
+    <p class="help">Ιδανικός έλεγχος: ίδιο μεγάλο σχολείο, ίδια δεδομένα προσωπικού και 2–3 επαναλήψεις ανά ενέργεια. Οι πρώτες client-side μετρήσεις περιλαμβάνουν και το γέμισμα της cache επιλεξιμότητας.</p>
+  </div>
+</details>
+<?php endif; ?>
+
 <script src="<?php echo staffingUiH(edu_asset_url('includes/teaching-hours-calculations.js')); ?>"></script>
 <script src="<?php echo staffingUiH(edu_asset_url('includes/school-profile-csv-import.js')); ?>"></script>
 <script src="<?php echo staffingUiH(edu_asset_url('includes/personnel-csv-import.js')); ?>"></script>
@@ -2276,6 +2408,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
   'maxBasicSections' => (int) STAFFING_UI_MAX_BASIC_SECTIONS,
   'initialAllocation' => $allocationPlan ? true : false,
   'hasCalculatedResults' => $calculationAvailable ? true : false,
+  'perfEnabled' => $staffingPerfEnabled ? true : false,
   'allocationPeople' => $allocationPeopleClient,
   'allocationSlots' => $allocationSlotsClient,
   'specialtyLabels' => $specialtyLabelsClient
