@@ -36,6 +36,9 @@ require_once __DIR__ . '/includes/school-profile-general-education.php';
 require_once __DIR__ . '/includes/ecclesiastical-schools.php';
 require_once __DIR__ . '/includes/school-profile-workload.php';
 require_once __DIR__ . '/includes/ethics-class-formation.php';
+require_once __DIR__ . '/includes/legal-sources.php';
+require_once __DIR__ . '/includes/teaching-assignments-legal.php';
+require_once __DIR__ . '/includes/weekly-timetable-legal.php';
 require_once __DIR__ . '/includes/personnel-workload.php';
 require_once __DIR__ . '/includes/teaching-allocation-engine.php';
 require_once __DIR__ . '/includes/teaching-workload-aggregation.php';
@@ -2369,17 +2372,46 @@ staffingPerfEnd('specialty_labels');
     Ο υπολογισμός συνδυάζει τα ωρολόγια προγράμματα και τις ισχύουσες αναθέσεις που χρησιμοποιούνται ήδη στα δύο αντίστοιχα εργαλεία της Εργαλειοθήκης. Τα αποτελέσματα είναι εργαλείο ελέγχου / προσομοίωσης και δεν αποτελούν από μόνα τους επίσημη πράξη προσδιορισμού λειτουργικών κενών ή τοποθέτησης εκπαιδευτικών.
   <?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardLinksStart(); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf', 'Υ.Α. 44257/Δ2/08-04-2026 — ΦΕΚ Β΄ 2132/09-04-2026 · Ημερήσιο Γυμνάσιο ↗'); ?>
+    <?php foreach (legalSourceLinksForKeys(weeklyTimetableLegalSourceKeysForSchools(array('gymnasio'))) as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-74472-d2-2020.html', 'Υ.Α. 74472/Δ2/2020 — ΦΕΚ Β΄ 2450/2020 · Τεχνολογία / Πληροφορική Γυμνασίου ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202106_09_04_26_OP%20EM%20GEL_ESP%20Gymnasio.pdf', 'Υ.Α. 43684/Δ2/07-04-2026 — ΦΕΚ Β΄ 2106/09-04-2026 · Ημερήσιο ΓΕΛ ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202106_09_04_26_OP%20EM%20GEL_ESP%20Gymnasio.pdf', 'Υ.Α. 43751/Δ2/07-04-2026 — ΦΕΚ Β΄ 2106/09-04-2026 · Εσπερινό Γυμνάσιο ↗'); ?>
-    <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/04/%CE%A6%CE%95%CE%9A-%CE%92-2102_09_04_26_%CE%A9%CE%A0-%CE%95%CE%A3%CE%A0-%CE%93%CE%95%CE%9B.pdf', 'Υ.Α. 43706/Δ2/07-04-2026 — ΦΕΚ Β΄ 2102/09-04-2026 · Εσπερινό ΓΕΛ ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'Υ.Α. 54058/Δ2/05-05-2026 — ΦΕΚ Β΄ 2583/07-05-2026 · Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
-    <?php sourceCardLink('https://www.et.gr/api/DownloadFekPdf?fek_pdf=2026/B/5555', 'Υ.Α. 112867/Δ2/31-08-2026 — ΦΕΚ Β΄ 5555/11-09-2026 · Τροποποίηση αναθέσεων Γυμνασίου / ΓΕΛ ↗'); ?>
-    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/ekklesiastike-ekpaideuse/upourgike-apophase-118380-th2-2021.html', 'Υ.Α. 118380/Θ2/2021 — ΦΕΚ Β΄ 4438/2021 · Πρότυπα Εκκλησιαστικά Σχολεία ↗'); ?>
+    <?php foreach (legalSourceLinksForKeys(weeklyTimetableLegalSourceKeysForSchools(array('gel', 'esperino_gymnasio', 'esperino_gel'))) as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
+    <?php
+      $assignmentLegalSources = legalSourcesForKeys(teachingAssignmentsLegalSourceKeysForSchools(array('gymnasio', 'esperino_gymnasio', 'gel', 'esperino_gel')));
+      foreach ($assignmentLegalSources as $assignmentLegalSource) {
+          if (!empty($assignmentLegalSource['url'])) {
+              $assignmentLegalLabel = '';
+              if (!empty($assignmentLegalSource['decision'])) $assignmentLegalLabel .= $assignmentLegalSource['decision'] . ' — ';
+              $assignmentLegalCitationTitle = isset($assignmentLegalSource['citation_title']) ? $assignmentLegalSource['citation_title'] : $assignmentLegalSource['title'];
+              $assignmentLegalLabel .= $assignmentLegalSource['fek'] . ' · ' . $assignmentLegalCitationTitle . ' ↗';
+              sourceCardLink($assignmentLegalSource['url'], $assignmentLegalLabel);
+          }
+          $assignmentLegalAmendments = isset($assignmentLegalSource['amendments']) && is_array($assignmentLegalSource['amendments'])
+              ? $assignmentLegalSource['amendments']
+              : array();
+          foreach ($assignmentLegalAmendments as $assignmentLegalAmendment) {
+              if (empty($assignmentLegalAmendment['url'])) continue;
+              $assignmentLegalAmendmentLabel = '';
+              if (!empty($assignmentLegalAmendment['decision'])) $assignmentLegalAmendmentLabel .= $assignmentLegalAmendment['decision'] . ' — ';
+              if (!empty($assignmentLegalAmendment['fek'])) $assignmentLegalAmendmentLabel .= $assignmentLegalAmendment['fek'];
+              $assignmentLegalAmendmentTitle = isset($assignmentLegalAmendment['title'])
+                  ? $assignmentLegalAmendment['title']
+                  : $assignmentLegalSource['title'];
+              $assignmentLegalAmendmentLabel .= ' · ' . $assignmentLegalAmendmentTitle . ' ↗';
+              sourceCardLink($assignmentLegalAmendment['url'], $assignmentLegalAmendmentLabel);
+          }
+      }
+    ?>
+    <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_timetable_2021', 'staffing'); ?>
+    <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
     <?php sourceCardLink('https://www.sch.gr/sites/sch-units/', 'Πανελλήνιο Σχολικό Δίκτυο — μητρώο σχολικών μονάδων / κωδικοί Υπουργείου ↗'); ?>
-    <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/02/%CE%95%CE%9E%CE%95-110640-2025-%CE%A4%CF%81%CE%BF%CF%80%CE%BF%CF%80%CE%BF%CE%AF%CE%B7%CF%83%CE%B7-%CF%84%CE%B7%CF%82-%CF%85%CF%80%CF%8C-%CF%83%CF%84%CE%BF%CE%B9%CF%87%CE%B5%CE%AF%CE%B1-118380-%CE%982-21-09-2021-%CE%A5%CE%91-%CE%A9%CF%81%CE%BF%CE%BB%CF%8C%CE%B3%CE%B9%CE%BF-%CE%A0%CF%81%CF%8C%CE%B3%CF%81%CE%B1%CE%BC%CE%BC%CE%B1-%CE%BC%CE%B1%CE%B8%CE%B7%CE%BC%CE%AC%CF%84%CF%89%CE%BD-%CF%84%CF%89%CE%BD-%CE%95%CE%BA%CE%BA%CE%BB%CE%B7%CF%83%CE%B9%CE%B1%CF%83%CF%84%CE%B9%CE%BA%CF%8E%CE%BD.pdf', 'Υ.Α. 110640/Θ2/2025 — ΦΕΚ Β΄ 4881/2025 · Πρότυπο Εκκλησιαστικό Γυμνάσιο ↗'); ?>
-    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/ekklesiastike-ekpaideuse/upourgike-apophase-63979-th2-2022.html', 'Υ.Α. 63979/Θ2/2022 — ΦΕΚ Β΄ 2781/2022 · Τροποποίηση Εκκλησιαστικού Λυκείου ↗'); ?>
+    <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_gymnasio_timetable_2025', 'staffing'); ?>
+    <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
+    <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_lykeio_timetable_2022', 'staffing'); ?>
+    <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
     <?php sourceCardLink(ethicsClassFormationPolicy()['source_url'], 'Υ.Α. 108070/Δ2/2026 — ΦΕΚ Β΄ 5231/2026 · Ηθική ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>

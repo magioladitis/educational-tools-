@@ -1,5 +1,7 @@
 <?php require_once __DIR__ . '/includes/config.php'; ?>
 <?php require_once __DIR__ . '/includes/weekly-timetable-data.php'; ?>
+<?php require_once __DIR__ . '/includes/legal-sources.php'; ?>
+<?php require_once __DIR__ . '/includes/weekly-timetable-legal.php'; ?>
 <?php require_once __DIR__ . '/includes/ethics-class-formation.php'; ?>
 <!doctype html>
 <html lang="el">
@@ -93,40 +95,32 @@
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink(ethicsClassFormationPolicy()['source_url'], 'Υ.Α. 108070/Δ2/2026 — ΦΕΚ Β΄ 5231/2026 · Διδασκαλία Ηθικής ↗'); ?>
     <?php sourceCardLink('https://religiousaffairs.minedu.gov.gr/en/directorates/directorate-for-religious-education-and-interfaith-relations/department-for-ecclesiastical-and-religious-education/model-ecclesiastical-schools/regulatory-framework', 'ΥΠΑΙΘΑ — Νομοθετικό πλαίσιο Προτύπων Εκκλησιαστικών Σχολείων ↗'); ?>
-    <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/02/%CE%95%CE%9E%CE%95-110640-2025-%CE%A4%CF%81%CE%BF%CF%80%CE%BF%CF%80%CE%BF%CE%AF%CE%B7%CF%83%CE%B7-%CF%84%CE%B7%CF%82-%CF%85%CF%80%CF%8C-%CF%83%CF%84%CE%BF%CE%B9%CF%87%CE%B5%CE%AF%CE%B1-118380-%CE%982-21-09-2021-%CE%A5%CE%91-%CE%A9%CF%81%CE%BF%CE%BB%CF%8C%CE%B3%CE%B9%CE%BF-%CE%A0%CF%81%CF%8C%CE%B3%CF%81%CE%B1%CE%BC%CE%BC%CE%B1-%CE%BC%CE%B1%CE%B8%CE%B7%CE%BC%CE%AC%CF%84%CF%89%CE%BD-%CF%84%CF%89%CE%BD-%CE%95%CE%BA%CE%BA%CE%BB%CE%B7%CF%83%CE%B9%CE%B1%CF%83%CF%84%CE%B9%CE%BA%CF%8E%CE%BD.pdf', 'ΦΕΚ Β΄ 4881/2025 — Πρότυπο Εκκλησιαστικό Γυμνάσιο ↗'); ?>
-    <?php sourceCardLink('https://dide-new.flo.sch.gr/to-orologio-programma-mathimaton-ton-ekklisiastikon-gymnasion-kai-genikon-ekklisiastikon-lykeion/', 'Υ.Α. 118380/Θ2/2021 — ΦΕΚ Β΄ 4438/2021 · Εκκλησιαστικό Γυμνάσιο/Λύκειο ↗'); ?>
-    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/ekklesiastike-ekpaideuse/upourgike-apophase-63979-th2-2022.html', 'ΦΕΚ Β΄ 2781/2022 — τροποποίηση Γ΄ Εκκλησιαστικού Λυκείου ↗'); ?>
+    <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_gymnasio_timetable_2025', 'overview'); ?>
+    <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
+    <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_timetable_2021', 'overview'); ?>
+    <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
+    <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_lykeio_timetable_2022', 'overview'); ?>
+    <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-74472-d2-2020.html', 'Υ.Α. 74472/Δ2/2020 — ΦΕΚ Β΄ 2450/2020 · Τεχνολογία / Πληροφορική Γυμνασίου ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf', 'ΦΕΚ Β΄ 2132/2026 — Ημερήσιο Γυμνάσιο ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202106_09_04_26_OP%20EM%20GEL_ESP%20Gymnasio.pdf', 'ΦΕΚ Β΄ 2106/2026 — Ημερήσιο ΓΕΛ & Εσπερινό Γυμνάσιο ↗'); ?>
-    <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/04/%CE%A6%CE%95%CE%9A-%CE%92-2102_09_04_26_%CE%A9%CE%A0-%CE%95%CE%A3%CE%A0-%CE%93%CE%95%CE%9B.pdf', 'ΦΕΚ Β΄ 2102/2026 — Εσπερινό ΓΕΛ ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202104_09_04_26_OP%20KALL%20GYMN%20GEL%201.pdf', 'ΦΕΚ Β΄ 2104/2026 — Καλλιτεχνικά Σχολεία ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'ΦΕΚ Β΄ 2583/2026 + Β΄ 5555/2026 — Αναθέσεις γενικής παιδείας Καλλιτεχνικών Σχολείων / διασταύρωση ↗'); ?>
-    <?php sourceCardLink('https://diavgeia.gov.gr/doc/99ΓΦ46ΝΚΠΔ-9Γ1?inline=true', 'ΦΕΚ Β΄ 3418/2024 — Αναθέσεις καλλιτεχνικής παιδείας / διασταύρωση ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202107_09_04_26_OP%20MOUSIKOU%20GYMN%20GEL.pdf', 'ΦΕΚ Β΄ 2107/2026 — Μουσικά Σχολεία ↗'); ?>
-    <?php sourceCardLink('https://dide.ioa.sch.gr/wordpress/wp-content/uploads/2023/09/%CE%A6%CE%95%CE%9A-4202-T%CE%95%CE%A5%CE%A7%CE%9F%CE%A3-%CE%92-25_09_2018_-%CE%91%CF%81%CE%B9%CE%B8%CE%BC-144236_%CE%942_%CE%91%CE%BD%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CE%B9%CF%82-%CE%BC%CE%B1%CE%B8%CE%B7%CE%BC%CE%AC%CF%84%CF%89%CE%BD-%CE%BC%CE%BF%CF%85%CF%83%CE%B9%CE%BA%CE%AE%CF%82-%CF%80%CE%B1%CE%B9%CE%B4%CE%B5%CE%AF%CE%B1%CF%82-%CE%9C%CE%BF%CF%85%CF%83%CE%B9%CE%BA%CF%8E%CE%BD-%CF%83%CF%87%CE%BF%CE%BB%CE%B5%CE%AF%CF%89%CE%BD.pdf', 'ΦΕΚ Β΄ 4202/2018 — Αναθέσεις μουσικής παιδείας / διασταύρωση τίτλων ↗'); ?>
+    <?php foreach (weeklyTimetableLegalOverviewLinks() as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
+    <?php foreach (weeklyTimetableSpecialSchoolOverviewLinks('arts_music') as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%202259tB22-04-2026%20me%20thema%20Orologio%20Programma%20ton%20mathematon%20tou%20Gymnasiou%20EN.E.E.GY-L.pdf', 'ΦΕΚ Β΄ 2259/2026 — Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%202149%20t.B%2016-04-2026%20me%20thema%20Orologio%20programma%20tou%20Lykeiou%20ton%20Eniaion%20Eidikon%20Epangelmatikon%20Gymnasion%20-%20Lykeion%20EN.E.E.GY.-L.pdf', 'ΦΕΚ Β΄ 2149/2026 — Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
-    <?php sourceCardLink('https://amea.gov.gr/legislation/5/726', 'Υ.Α. 57523/Γ6/2002 — ΦΕΚ Β΄ 765/2002 · Ωρολόγιο Ε.Ε.Ε.ΕΚ. ↗'); ?>
-    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/nomos-4415-2016.html', 'ν. 4415/2016 — έξι τάξεις & ΣΤ΄ Ε.Ε.Ε.ΕΚ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2026_04_08_EXE_44260_tropop_YA_OPS_mathema_ETHIKE_A_B_EPAL_PHEK_2151B_16.04.2026.pdf', 'ΦΕΚ Β΄ 2151/2026 — Α΄/Β΄ Ημερήσιου ΕΠΑ.Λ. & Α΄ Εσπερινού ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2018.05_YA_OPS_AB_taxes_EPAL_N_4386_2016_NEO_PHEK_2187B_12.06.2018.pdf', 'ΦΕΚ Β΄ 2187/2018 — Α΄/Β΄ ΕΠΑ.Λ. ↗'); ?>
+    <?php foreach (weeklyTimetableSpecialSchoolOverviewLinks('eeeek') as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
+    <?php $vocationalLegalLinks = weeklyTimetableVocationalOverviewLinks(); ?>
+    <?php foreach (array_slice($vocationalLegalLinks, 0, 2) as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/orologio-programma-g-taksi---epaggelmatiki-ekpaidefsi', 'ΥΠΑΙΘΑ — Ισχύοντα ωρολόγια Γ΄ τάξης Επαγγελματικής Εκπαίδευσης ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2017.04_YA_OPS_GD_taxes_EPAL_N.4386%20PHEK%201426%20B_26-4-17.pdf', 'ΦΕΚ Β΄ 1426/2017 — Γ΄ Ημερήσιου ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2017.06_tropop_YA_OPS_G_D_taxes_EPAL_N_4386_2016_PHEK_2072_t.B_15-6-17.pdf', 'ΦΕΚ Β΄ 2072/2017 — Τροποποιήσεις Γ΄ ΕΠΑ.Λ. (Γεωπονία κ.ά.) ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/FEK_2636B.pdf', 'ΦΕΚ Β΄ 2636/2018 — Τριετές Εσπερινό ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-ph2-89289-d4-2018.html', 'ΦΕΚ Β΄ 2122/2018 — Ξένες γλώσσες ειδικότητας Υπαλλήλου Τουριστικών Επιχειρήσεων ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2018/orologio%CE%9D%CE%91%CE%A5%CE%A4.pdf', 'ΦΕΚ Β΄ 3224/2018 — Ναυτιλιακά ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2018_09_26_tropop_YA_PHEK_1426B_2017_%20OPS_Tomea_EPHARM_TECHNON_EMER_EPAL_PHEK_4373B_01.10.2018.pdf', 'ΦΕΚ Β΄ 4373/2018 — Γραφικών Τεχνών / Σχεδιασμού–Διακόσμησης Γ΄ ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2018_10_30_tropop_YA_%20OPS_Tomea_EPHARM_TECHNON_PHEK%204373_01.10.2018_DIORTH.SPHAL._PHEK%204815B_30.10.2018.pdf', 'ΦΕΚ Β΄ 4815/2018 — Διορθώσεις σφαλμάτων Γ΄ ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2026_04_08_EXE_44286_tropop_YA_OPS_mathema_ETHIKE_B_PEPAL_PHEK_2136B_09.04.2026.pdf', 'ΦΕΚ Β΄ 2136/2026 — Α΄/Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2021_07_23_EXE_90217_YA_OPS_A_TAXES_P_EPAL_PHEK_3470B_29.07.2021.pdf', 'ΦΕΚ Β΄ 3470/2021 — Α΄ Π.ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2025/epal/%CE%99%CE%A3%CE%A7%CE%A5%CE%9F%CE%9D_%CE%98%CE%95%CE%A3%CE%9C%CE%99%CE%9A%CE%9F_%CE%A0%CE%9B%CE%91%CE%99%CE%A3%CE%99%CE%9F_%CE%95%CE%A0%CE%91%CE%9B_12-02-2025.pdf', 'ΦΕΚ Β΄ 4367/2021 — Α΄ Π.ΕΠΑ.Λ. / Αναθέσεις ανά θεματική ενότητα ↗'); ?>
-    <?php sourceCardLink('https://e-wall.net/wp-content/uploads/2023/12/%CE%95%CE%A0%CE%91%CE%9B.pdf', 'ΦΕΚ Β΄ 7403/2023 — Α΄ Π.ΕΠΑ.Λ. / κανόνας ανάθεσης & συνδιδασκαλία ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2022_08_25_EXE_103460_YA_OPS_B_taxes_P_EPAL_n4763_2020_PHEK_4578B_30.08.2022.pdf', 'ΦΕΚ Β΄ 4578/2022 — Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2022_09_16_EXE_112468_tropop_YA_OPS_B_taxes_P_EPAL_n4763_2020_PHEK_4961B_22.09.2022.pdf', 'ΦΕΚ Β΄ 4961/2022 — Διόρθωση Β΄ Π.ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/2023_08_28_EXE_93929_YA_OPS_G_taxes_P_EPAL_n4763_2020_PHEK_5251B_30.08.2023.pdf', 'ΦΕΚ Β΄ 5251/2023 — Γ΄ Π.ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2023/2023_09_13_%CE%95%CE%9E%CE%95_101003_%CE%A5%CE%91_%CE%91%CE%BD%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CE%B9%CF%82_%CE%9C%CE%B1%CE%B8%CE%B7%CE%BC%CE%AC%CF%84%CF%89%CE%BD_%CE%93_%CE%A4%CE%AC%CE%BE%CE%B7%CF%82_%CE%A0_%CE%95%CE%A0%CE%91%CE%9B_%CE%A6%CE%95%CE%9A_5510%CE%92_18.09.2023.pdf', 'ΦΕΚ Β΄ 5510/2023 — Γ΄ Π.ΕΠΑ.Λ. / Αναθέσεις (διασταύρωση τίτλων) ↗'); ?>
+    <?php foreach (array_slice($vocationalLegalLinks, 2) as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 
