@@ -166,12 +166,18 @@
     const isEveningGel=type.value==='esperino_gel';
     const isEveningGym=type.value==='esperino_gymnasio';
     const isComposite=type.value==='gymnasio_lt';
+    const isPesGym=type.value==='protypo_ekklisiastiko_gymnasio';
+    const isPesLykeio=type.value==='protypo_ekklisiastiko_lykeio';
     const showGym=type.value==='gymnasio'||isEveningGym||isComposite;
     const showGel=isGel||isEveningGel||isComposite;
     gym.hidden=!showGym;
     gel.hidden=!showGel;
     gym.querySelectorAll('input,select').forEach(el=>{ el.disabled=!showGym; });
     gel.querySelectorAll('input,select').forEach(el=>{ el.disabled=!showGel; });
+    const pesGym=document.getElementById('pesGymProfileFields');
+    const pesLykeio=document.getElementById('pesLykeioProfileFields');
+    if(pesGym){pesGym.hidden=!isPesGym;pesGym.querySelectorAll('input,select').forEach(el=>{el.disabled=!isPesGym;});}
+    if(pesLykeio){pesLykeio.hidden=!isPesLykeio;pesLykeio.querySelectorAll('input,select').forEach(el=>{el.disabled=!isPesLykeio;});}
     gym.querySelectorAll('[data-day-gym-only]').forEach(function(panel){
       const visible=showGym&&!isEveningGym;
       panel.hidden=!visible;
@@ -223,7 +229,7 @@
     });
   }
   document.querySelectorAll('[data-language-max-source]').forEach(function(input){ input.addEventListener('input',syncLanguageGroupMaximums); });
-  document.querySelectorAll('[id^="gym_general_"],[id^="gel_general_"]').forEach(function(input){ input.addEventListener('input',syncLanguageGroupMaximums); });
+  document.querySelectorAll('[id^="gym_general_"],[id^="gel_general_"],[id^="pes_gym_general_"],[id^="pes_lyc_general_"]').forEach(function(input){ input.addEventListener('input',syncLanguageGroupMaximums); });
   syncLanguageGroupMaximums();
 
   function basicSectionSafeInteger(input){
@@ -247,7 +253,7 @@
   }
   function syncBasicSectionLimit(changedInput){
     const isComposite=type && type.value==='gymnasio_lt';
-    const groups=isComposite ? [['composite',Array.from(document.querySelectorAll('[data-basic-section]'))]] : ['gym','gel'].map(function(kind){return [kind,Array.from(document.querySelectorAll('[data-basic-section="'+kind+'"]'))];});
+    const groups=isComposite ? [['composite',Array.from(document.querySelectorAll('[data-basic-section]'))]] : ['gym','gel','pesgym','peslyc'].map(function(kind){return [kind,Array.from(document.querySelectorAll('[data-basic-section="'+kind+'"]'))];});
     groups.forEach(function(entry){
       const kind=entry[0], inputs=entry[1];
       if(!inputs.length) return;
@@ -318,7 +324,9 @@
       esperino_gymnasio:'Εσπερινό Γυμνάσιο',
       gel:'Ημερήσιο ΓΕΛ',
       esperino_gel:'Εσπερινό ΓΕΛ',
-      gymnasio_lt:'Γυμνάσιο με Λ.Τ.'
+      gymnasio_lt:'Γυμνάσιο με Λ.Τ.',
+      protypo_ekklisiastiko_gymnasio:'Πρότυπο Εκκλησιαστικό Γυμνάσιο',
+      protypo_ekklisiastiko_lykeio:'Πρότυπο Εκκλησιαστικό Λύκειο'
     };
     return labels[value]||value||'—';
   }
@@ -834,6 +842,8 @@
     let prefixes=['gym_general_'];
     if(schoolType==='gel' || schoolType==='esperino_gel') prefixes=['gel_general_'];
     else if(schoolType==='gymnasio_lt') prefixes=['gym_general_','gel_general_'];
+    else if(schoolType==='protypo_ekklisiastiko_gymnasio') prefixes=['pes_gym_general_'];
+    else if(schoolType==='protypo_ekklisiastiko_lykeio') prefixes=['pes_lyc_general_'];
     return prefixes.reduce(function(total,prefix){
       return total+['a','b','c'].reduce(function(subtotal,suffix){
         const input=document.querySelector('[name="'+prefix+suffix+'"]');

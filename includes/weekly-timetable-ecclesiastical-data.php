@@ -87,10 +87,10 @@ function weeklyTimetableEcclesiasticalRows()
         array('course_id'=>'pes.lykeio.b.dogmatiki','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Μαθήματα Θρησκευτικής Εξειδίκευσης','subject'=>'Θέματα Δογματικής Θεολογίας','hours'=>array('Β΄'=>2)),
         array('course_id'=>'pes.lykeio.b.vyzantini_mousiki','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Μαθήματα Θρησκευτικής Εξειδίκευσης','subject'=>'Βυζαντινή Μουσική','hours'=>array('Β΄'=>2)),
         array('course_id'=>'pes.lykeio.b.eikonografia','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Μαθήματα Θρησκευτικής Εξειδίκευσης','subject'=>'Εικονογραφία','hours'=>array('Β΄'=>2)),
-        array('course_id'=>'pes.lykeio.b.hum.archaia','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Αρχαία Ελληνική Γλώσσα και Γραμματεία','hours'=>array('Β΄'=>3)),
-        array('course_id'=>'pes.lykeio.b.hum.latinika','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Λατινικά','hours'=>array('Β΄'=>2)),
-        array('course_id'=>'pes.lykeio.b.sci.fysiki','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών','subject'=>'Φυσική','hours'=>array('Β΄'=>3)),
-        array('course_id'=>'pes.lykeio.b.sci.mathimatika','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών','subject'=>'Μαθηματικά','hours'=>array('Β΄'=>2)),
+        array('course_id'=>'pes.lykeio.b.hum.archaia','school'=>'protypo_ekklisiastiko_lykeio','track'=>'humanities','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Αρχαία Ελληνική Γλώσσα και Γραμματεία','hours'=>array('Β΄'=>3)),
+        array('course_id'=>'pes.lykeio.b.hum.latinika','school'=>'protypo_ekklisiastiko_lykeio','track'=>'humanities','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Λατινικά','hours'=>array('Β΄'=>2)),
+        array('course_id'=>'pes.lykeio.b.sci.fysiki','school'=>'protypo_ekklisiastiko_lykeio','track'=>'science','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών','subject'=>'Φυσική','hours'=>array('Β΄'=>3)),
+        array('course_id'=>'pes.lykeio.b.sci.mathimatika','school'=>'protypo_ekklisiastiko_lykeio','track'=>'science','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών','subject'=>'Μαθηματικά','hours'=>array('Β΄'=>2)),
 
         // -----------------------------------------------------------------
         // Πρότυπο Εκκλησιαστικό Λύκειο — Γ΄ τάξη (11 + 6 + 18 = 35)
@@ -104,16 +104,16 @@ function weeklyTimetableEcclesiasticalRows()
         array('course_id'=>'pes.lykeio.g.ithiki_poimantiki','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Μαθήματα Θρησκευτικής Εξειδίκευσης','subject'=>'Θέματα Χριστιανικής Ηθικής και Ποιμαντικής Θεολογίας','hours'=>array('Γ΄'=>2)),
         array('course_id'=>'pes.lykeio.g.vyzantini_mousiki','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Μαθήματα Θρησκευτικής Εξειδίκευσης','subject'=>'Βυζαντινή Μουσική','hours'=>array('Γ΄'=>2)),
         array('course_id'=>'pes.lykeio.g.eikonografia','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Μαθήματα Θρησκευτικής Εξειδίκευσης','subject'=>'Εικονογραφία','hours'=>array('Γ΄'=>2)),
-        array('course_id'=>'pes.lykeio.g.hum.archaia','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Αρχαία Ελληνικά','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'pes.lykeio.g.hum.istoria','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Ιστορία','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'pes.lykeio.g.hum.latinika','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Λατινικά','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'pes.lykeio.g.sci.mathimatika','slot_id'=>'pes.lykeio.g.science_field_choice','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Μαθηματικά','hours'=>array('Γ΄'=>6),'mode'=>'alternative','condition'=>'Για το 2ο Επιστημονικό Πεδίο.'),
-        array('course_id'=>'pes.lykeio.g.sci.biologia','slot_id'=>'pes.lykeio.g.science_field_choice','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Βιολογία','hours'=>array('Γ΄'=>6),'mode'=>'alternative','condition'=>'Για το 3ο Επιστημονικό Πεδίο.'),
-        array('course_id'=>'pes.lykeio.g.sci.fysiki','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Φυσική','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'pes.lykeio.g.sci.chimeia','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Χημεία','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'pes.lykeio.g.econ.mathimatika','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Μαθηματικά','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'pes.lykeio.g.econ.pliroforiki','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Πληροφορική','hours'=>array('Γ΄'=>6)),
-        array('course_id'=>'pes.lykeio.g.econ.oikonomia','school'=>'protypo_ekklisiastiko_lykeio','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Οικονομία','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'pes.lykeio.g.hum.archaia','school'=>'protypo_ekklisiastiko_lykeio','track'=>'humanities','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Αρχαία Ελληνικά','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'pes.lykeio.g.hum.istoria','school'=>'protypo_ekklisiastiko_lykeio','track'=>'humanities','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Ιστορία','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'pes.lykeio.g.hum.latinika','school'=>'protypo_ekklisiastiko_lykeio','track'=>'humanities','group'=>'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών','subject'=>'Λατινικά','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'pes.lykeio.g.sci.mathimatika','slot_id'=>'pes.lykeio.g.science_field_choice','school'=>'protypo_ekklisiastiko_lykeio','track'=>'science_health','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Μαθηματικά','hours'=>array('Γ΄'=>6),'mode'=>'alternative','condition'=>'Για το 2ο Επιστημονικό Πεδίο.'),
+        array('course_id'=>'pes.lykeio.g.sci.biologia','slot_id'=>'pes.lykeio.g.science_field_choice','school'=>'protypo_ekklisiastiko_lykeio','track'=>'science_health','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Βιολογία','hours'=>array('Γ΄'=>6),'mode'=>'alternative','condition'=>'Για το 3ο Επιστημονικό Πεδίο.'),
+        array('course_id'=>'pes.lykeio.g.sci.fysiki','school'=>'protypo_ekklisiastiko_lykeio','track'=>'science_health','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Φυσική','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'pes.lykeio.g.sci.chimeia','school'=>'protypo_ekklisiastiko_lykeio','track'=>'science_health','group'=>'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας','subject'=>'Χημεία','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'pes.lykeio.g.econ.mathimatika','school'=>'protypo_ekklisiastiko_lykeio','track'=>'economics_it','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Μαθηματικά','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'pes.lykeio.g.econ.pliroforiki','school'=>'protypo_ekklisiastiko_lykeio','track'=>'economics_it','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Πληροφορική','hours'=>array('Γ΄'=>6)),
+        array('course_id'=>'pes.lykeio.g.econ.oikonomia','school'=>'protypo_ekklisiastiko_lykeio','track'=>'economics_it','group'=>'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής','subject'=>'Οικονομία','hours'=>array('Γ΄'=>6)),
     );
 
     return $rows;

@@ -76,7 +76,7 @@ return array (
       'protypo_ekklisiastiko_lykeio' => 
       array (
         'rows' => 55,
-        'sha256' => '0a0335f608c5e41189084e68523e4be3596d8457b6758b88a1f1e6a190b1afe1',
+        'sha256' => '6143b8ff2ff64104e433582a274d0cfcf87ff3e384ec3df8f5c2ea4c56718edb',
       ),
     ),
   ),

@@ -59,7 +59,7 @@ function staffingUiBasicSectionPostCounts($schoolType) {
             'lt_a'=>staffingUiInt('gel_general_a'), 'lt_b'=>staffingUiInt('gel_general_b'), 'lt_c'=>staffingUiInt('gel_general_c'),
         );
     }
-    $prefix = in_array($schoolType, array('gel','esperino_gel','gymnasio_lt'), true) ? 'gel_general_' : 'gym_general_';
+    $prefix = in_array($schoolType, array('gel','esperino_gel','gymnasio_lt'), true) ? 'gel_general_' : ($schoolType === 'protypo_ekklisiastiko_gymnasio' ? 'pes_gym_general_' : ($schoolType === 'protypo_ekklisiastiko_lykeio' ? 'pes_lyc_general_' : 'gym_general_'));
     return array(
         'a' => staffingUiInt($prefix . 'a'),
         'b' => staffingUiInt($prefix . 'b'),
@@ -86,6 +86,8 @@ function staffingUiSchoolTypeLabel($schoolType, $long = false) {
         'esperino_gymnasio' => array('short'=>'Εσπερινό Γυμνάσιο','long'=>'Εσπερινό Γυμνάσιο'),
         'esperino_gel' => array('short'=>'Εσπερινό ΓΕΛ','long'=>'Εσπερινό Γενικό Λύκειο'),
         'gymnasio_lt' => array('short'=>'Γυμνάσιο με Λ.Τ.','long'=>'Γυμνάσιο με Λ.Τ.'),
+        'protypo_ekklisiastiko_gymnasio' => array('short'=>'Πρότυπο Εκκλησιαστικό Γυμνάσιο','long'=>'Πρότυπο Εκκλησιαστικό Γυμνάσιο'),
+        'protypo_ekklisiastiko_lykeio' => array('short'=>'Πρότυπο Εκκλησιαστικό Λύκειο','long'=>'Πρότυπο Εκκλησιαστικό Λύκειο'),
     );
     if (!isset($labels[$schoolType])) $schoolType = 'gymnasio';
     return $labels[$schoolType][$long ? 'long' : 'short'];
@@ -113,14 +115,15 @@ function staffingUiEthicsGrade($suffix) {
     return staffingUiEthicsGradeWithPrefix('ethics_', $suffix);
 }
 function staffingUiIssueLabel($issue) {
-    if (preg_match('/^(gymnasio|gel):([^:]+):second_foreign_language_groups_exceeds_general_sections:([^:]+):(\d+)>(\d+)$/u', $issue, $m)) {
-        return 'Οι ομάδες «' . $m[3] . '» της ' . $m[2] . ' τάξης (' . $m[4]
-            . ') δεν μπορούν να ξεπερνούν τα ' . $m[5]
+    if (preg_match('/^(gymnasio|gel|protypo_ekklisiastiko_gymnasio|protypo_ekklisiastiko_lykeio):([^:]+):(second_foreign_language_groups_exceeds_general_sections|foreign_language_groups_exceeds_general_sections):([^:]+):(\d+)>(\d+)$/u', $issue, $m)) {
+        return 'Οι ομάδες «' . $m[4] . '» της ' . $m[2] . ' τάξης (' . $m[5]
+            . ') δεν μπορούν να ξεπερνούν τα ' . $m[6]
             . ' κανονικά τμήματα της ίδιας τάξης. (' . $issue . ')';
     }
     $map = array(
         'general_sections_required' => 'Χρειάζεται τουλάχιστον ένα τμήμα στην τάξη.',
         'second_foreign_language_groups_required' => 'Χρειάζονται οι πραγματικές ομάδες 2ης ξένης γλώσσας.',
+        'foreign_language_groups_required' => 'Χρειάζονται οι πραγματικές ομάδες ξένης γλώσσας.',
         'at_least_one_orientation_group_required' => 'Χρειάζεται τουλάχιστον μία πραγματική Ομάδα Προσανατολισμού.',
         'science_health_field_groups_required' => 'Χρειάζεται κατανομή ομάδων Μαθηματικών / Βιολογίας στη Γ΄ Θετικών–Υγείας.',
         'science_health_field_groups_empty' => 'Υπάρχει Θετικών–Υγείας αλλά δεν δηλώθηκε ομάδα Μαθηματικών ή Βιολογίας.',
@@ -528,6 +531,12 @@ function staffingUiSchoolStateKeys() {
         'gel_lang_a_fr','gel_lang_a_de','gel_lang_b_fr','gel_lang_b_de',
         'gel_b_hum','gel_b_sci','gel_c_hum','gel_c_scihealth','gel_c_econit',
         'gel_c_field_math','gel_c_field_bio','gel_c_cond_math','gel_c_cond_history','egel_b_period',
+        'pes_gym_general_a','pes_gym_general_b','pes_gym_general_c','pes_lyc_general_a','pes_lyc_general_b','pes_lyc_general_c',
+        'pes_gym_lang_a_fr','pes_gym_lang_a_de','pes_gym_lang_a_ru','pes_gym_lang_a_ar','pes_gym_lang_a_tr',
+        'pes_gym_lang_b_fr','pes_gym_lang_b_de','pes_gym_lang_b_ru','pes_gym_lang_b_ar','pes_gym_lang_b_tr',
+        'pes_gym_lang_c_fr','pes_gym_lang_c_de','pes_gym_lang_c_ru','pes_gym_lang_c_ar','pes_gym_lang_c_tr',
+        'pes_lyc_lang_a_en','pes_lyc_lang_a_fr','pes_lyc_lang_a_de','pes_lyc_lang_b_en','pes_lyc_lang_b_fr','pes_lyc_lang_b_de','pes_lyc_lang_c_en','pes_lyc_lang_c_fr','pes_lyc_lang_c_de',
+        'pes_b_hum','pes_b_sci','pes_c_hum','pes_c_scihealth','pes_c_econit','pes_c_field_math','pes_c_field_bio','pes_c_cond_math','pes_c_cond_history',
         'ethics_a_exempt','ethics_a_timely','ethics_a_equivalent','ethics_b_exempt','ethics_b_timely','ethics_b_equivalent','ethics_c_exempt','ethics_c_timely','ethics_c_equivalent',
         'lt_ethics_a_exempt','lt_ethics_a_timely','lt_ethics_a_equivalent','lt_ethics_b_exempt','lt_ethics_b_timely','lt_ethics_b_equivalent','lt_ethics_c_exempt','lt_ethics_c_timely','lt_ethics_c_equivalent'
     );
@@ -725,7 +734,7 @@ if ($requestMethod === 'POST') {
 $submitted = $requestMethod === 'POST'
     && in_array($staffingAction, array('profile','personnel','allocation','allocation_auto'), true);
 $schoolType = staffingUiPost('school_type', 'gymnasio');
-if (!in_array($schoolType, array('gymnasio','gel','esperino_gymnasio','esperino_gel','gymnasio_lt'), true)) $schoolType = 'gymnasio';
+if (!in_array($schoolType, array('gymnasio','gel','esperino_gymnasio','esperino_gel','gymnasio_lt','protypo_ekklisiastiko_gymnasio','protypo_ekklisiastiko_lykeio'), true)) $schoolType = 'gymnasio';
 // Keep identity available independently of which tab submitted the page.
 $schoolName = trim((string) staffingUiPost('school_name', ''));
 $schoolRegistryId = trim((string) staffingUiPost('school_registry_id', ''));
@@ -813,6 +822,50 @@ if ($submitted && empty($schoolProfileInputErrors)) {
             $profile = null;
             $schoolProfileInputErrors[] = 'Δεν ήταν δυνατό να φορτωθεί το προφίλ «Γυμνάσιο με Λυκειακές Τάξεις». Βεβαιώσου ότι έχουν ενημερωθεί μαζί το κύριο αρχείο και τα includes της ίδιας έκδοσης.';
         }
+    } elseif ($schoolType === 'protypo_ekklisiastiko_gymnasio') {
+        $profile = schoolProfileBuildEcclesiasticalGymnasium2026(array(
+            'profile_id' => 'ui-protypo-ekklisiastiko-gymnasio-' . date('YmdHis'),
+            'school' => array(
+                'type' => 'Πρότυπο Εκκλησιαστικό Γυμνάσιο',
+                'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
+                'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Πρότυπου Εκκλησιαστικού Γυμνασίου',
+            ),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
+            'general_sections' => array(
+                'Α΄' => staffingUiInt('pes_gym_general_a'), 'Β΄' => staffingUiInt('pes_gym_general_b'), 'Γ΄' => staffingUiInt('pes_gym_general_c'),
+            ),
+            'foreign_language_groups' => array(
+                'Α΄' => array('Γαλλικά'=>staffingUiInt('pes_gym_lang_a_fr'),'Γερμανικά'=>staffingUiInt('pes_gym_lang_a_de'),'Ρωσικά'=>staffingUiInt('pes_gym_lang_a_ru'),'Αραβικά'=>staffingUiInt('pes_gym_lang_a_ar'),'Τουρκικά'=>staffingUiInt('pes_gym_lang_a_tr')),
+                'Β΄' => array('Γαλλικά'=>staffingUiInt('pes_gym_lang_b_fr'),'Γερμανικά'=>staffingUiInt('pes_gym_lang_b_de'),'Ρωσικά'=>staffingUiInt('pes_gym_lang_b_ru'),'Αραβικά'=>staffingUiInt('pes_gym_lang_b_ar'),'Τουρκικά'=>staffingUiInt('pes_gym_lang_b_tr')),
+                'Γ΄' => array('Γαλλικά'=>staffingUiInt('pes_gym_lang_c_fr'),'Γερμανικά'=>staffingUiInt('pes_gym_lang_c_de'),'Ρωσικά'=>staffingUiInt('pes_gym_lang_c_ru'),'Αραβικά'=>staffingUiInt('pes_gym_lang_c_ar'),'Τουρκικά'=>staffingUiInt('pes_gym_lang_c_tr')),
+            ),
+        ));
+    } elseif ($schoolType === 'protypo_ekklisiastiko_lykeio') {
+        $profile = schoolProfileBuildEcclesiasticalLykeio2026(array(
+            'profile_id' => 'ui-protypo-ekklisiastiko-lykeio-' . date('YmdHis'),
+            'school' => array(
+                'type' => 'Πρότυπο Εκκλησιαστικό Λύκειο',
+                'registry_id' => $schoolRegistryId,
+                'ministry_code' => $schoolCode,
+                'name' => $schoolName !== '' ? $schoolName : 'Προσωρινό προφίλ Πρότυπου Εκκλησιαστικού Λυκείου',
+            ),
+            'source' => array('kind' => $schoolRegistryId !== '' ? 'school_registry_v1' : 'manual_frontend_test'),
+            'general_sections' => array(
+                'Α΄' => staffingUiInt('pes_lyc_general_a'), 'Β΄' => staffingUiInt('pes_lyc_general_b'), 'Γ΄' => staffingUiInt('pes_lyc_general_c'),
+            ),
+            'foreign_language_groups' => array(
+                'Α΄' => array('Αγγλικά'=>staffingUiInt('pes_lyc_lang_a_en'),'Γαλλικά'=>staffingUiInt('pes_lyc_lang_a_fr'),'Γερμανικά'=>staffingUiInt('pes_lyc_lang_a_de')),
+                'Β΄' => array('Αγγλικά'=>staffingUiInt('pes_lyc_lang_b_en'),'Γαλλικά'=>staffingUiInt('pes_lyc_lang_b_fr'),'Γερμανικά'=>staffingUiInt('pes_lyc_lang_b_de')),
+                'Γ΄' => array('Αγγλικά'=>staffingUiInt('pes_lyc_lang_c_en'),'Γαλλικά'=>staffingUiInt('pes_lyc_lang_c_fr'),'Γερμανικά'=>staffingUiInt('pes_lyc_lang_c_de')),
+            ),
+            'orientation_sections' => array(
+                'Β΄' => array('humanities'=>staffingUiInt('pes_b_hum'),'science'=>staffingUiInt('pes_b_sci')),
+                'Γ΄' => array('humanities'=>staffingUiInt('pes_c_hum'),'science_health'=>staffingUiInt('pes_c_scihealth'),'economics_it'=>staffingUiInt('pes_c_econit')),
+            ),
+            'grade_c_science_health_field_groups' => array('Μαθηματικά'=>staffingUiInt('pes_c_field_math'),'Βιολογία'=>staffingUiInt('pes_c_field_bio')),
+            'grade_c_conditional_groups' => array('Μαθηματικά'=>staffingUiInt('pes_c_cond_math'),'Ιστορία'=>staffingUiInt('pes_c_cond_history')),
+        ));
     } elseif ($schoolType === 'esperino_gymnasio') {
         $profile = schoolProfileBuildEveningGymnasium2026(array(
             'profile_id' => 'ui-esperino-gymnasio-' . date('YmdHis'),
@@ -1268,7 +1321,7 @@ staffingPerfEnd('specialty_labels');
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('class'=>'card staffing-panel','attrs'=>array('id'=>'staffingPanelSchool','data-staffing-panel'=>'school','role'=>'tabpanel','aria-labelledby'=>'staffingTabSchool','tabindex'=>'0') + ($activePanel !== 'school' ? array('hidden'=>true) : array()))); ?>
         <h2>1. Στοιχεία σχολικής μονάδας</h2>
-        <p class="cap">Η τρέχουσα έκδοση υποστηρίζει Ημερήσιο Γυμνάσιο, Εσπερινό Γυμνάσιο, Ημερήσιο ΓΕΛ, Εσπερινό ΓΕΛ και Γυμνάσιο με Λ.Τ.. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
+        <p class="cap">Η τρέχουσα έκδοση υποστηρίζει Ημερήσιο Γυμνάσιο, Εσπερινό Γυμνάσιο, Ημερήσιο ΓΕΛ, Εσπερινό ΓΕΛ, Γυμνάσιο με Λ.Τ. και Πρότυπα Εκκλησιαστικά Γυμνάσια/Λύκεια. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
         <div class="status-warn" id="schoolProfileStaleNotice" role="status" aria-live="polite" hidden><strong>Τα στοιχεία της σχολικής μονάδας άλλαξαν.</strong> Τα προηγούμενα αποτελέσματα, το προσωπικό, η κατανομή και τα κενά έχουν κλειδωθεί μέχρι να πατήσεις ξανά «Υπολόγισε διδακτικές ανάγκες».</div>
         <?php if (!empty($schoolProfileInputErrors)): ?>
           <div class="status-warn" role="alert"><strong>Ο υπολογισμός δεν εκτελέστηκε.</strong><ul><?php foreach ($schoolProfileInputErrors as $inputError): ?><li><?php echo staffingUiH($inputError); ?></li><?php endforeach; ?></ul></div>
@@ -1286,6 +1339,8 @@ staffingPerfEnd('specialty_labels');
                 <option value="gel"<?php echo $schoolType === 'gel' ? ' selected' : ''; ?>>Ημερήσιο Γενικό Λύκειο</option>
                 <option value="esperino_gel"<?php echo $schoolType === 'esperino_gel' ? ' selected' : ''; ?>>Εσπερινό ΓΕΛ</option>
                 <option value="gymnasio_lt"<?php echo $schoolType === 'gymnasio_lt' ? ' selected' : ''; ?>>Γυμνάσιο με Λ.Τ.</option>
+                <option value="protypo_ekklisiastiko_gymnasio"<?php echo $schoolType === 'protypo_ekklisiastiko_gymnasio' ? ' selected' : ''; ?>>Πρότυπο Εκκλησιαστικό Γυμνάσιο</option>
+                <option value="protypo_ekklisiastiko_lykeio"<?php echo $schoolType === 'protypo_ekklisiastiko_lykeio' ? ' selected' : ''; ?>>Πρότυπο Εκκλησιαστικό Λύκειο</option>
                 <optgroup label="Προσεχώς — προσωρινά ανενεργά">
                   <option value="epal" disabled>ΕΠΑΛ</option>
                   <option value="esperino_epal" disabled>Εσπερινό ΕΠΑΛ</option>
@@ -1294,8 +1349,6 @@ staffingPerfEnd('specialty_labels');
                   <option value="eeeek" disabled>Ε.Ε.Ε.ΕΚ.</option>
                   <option value="mousiko" disabled>Μουσικό Σχολείο</option>
                   <option value="kallitexniko" disabled>Καλλιτεχνικό Σχολείο</option>
-                  <option value="protypo_ekklisiastiko_gymnasio" disabled>Πρότυπο Εκκλησιαστικό Γυμνάσιο</option>
-                  <option value="protypo_ekklisiastiko_lykeio" disabled>Πρότυπο Εκκλησιαστικό Λύκειο</option>
                   <option value="sek" disabled>Εργαστηριακό Κέντρο</option>
                 </optgroup>
               </select>
@@ -1446,6 +1499,78 @@ staffingPerfEnd('specialty_labels');
             </section>
           </div>
 
+          <div id="pesGymProfileFields"<?php echo $schoolType === 'protypo_ekklisiastiko_gymnasio' ? '' : ' hidden'; ?>>
+            <section class="staffing-section">
+              <h3>Κανονικά τμήματα ανά τάξη</h3>
+              <p class="help">Το Πρότυπο Εκκλησιαστικό Γυμνάσιο έχει κοινό πρόγραμμα 30 ωρών και 6 ώρες μαθημάτων Θρησκευτικής Εξειδίκευσης ανά τάξη.</p>
+              <div class="mini-grid">
+                <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $suffix=>$grade): $name='pes_gym_general_'.$suffix; ?>
+                  <div class="field"><label for="<?php echo $name; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="120" inputmode="numeric" step="1" type="number" data-basic-section="pesgym" id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="<?php echo staffingUiH(staffingUiPost($name,'0')); ?>"></div>
+                <?php endforeach; ?>
+              </div>
+              <small class="profile-validation-error" data-basic-sections-error="pesgym" hidden></small>
+            </section>
+            <section class="staffing-section">
+              <h3>Ομάδες ξένης γλώσσας</h3>
+              <p class="help">Δήλωσε τις πραγματικές ομάδες. Το ισχύον ωρολόγιο προβλέπει Γαλλικά, Γερμανικά, Ρωσικά, Αραβικά ή Τουρκικά. Για Ρωσικά/Αραβικά/Τουρκικά διατηρείται ρητά η κανονιστική εκκρεμότητα ανάθεσης.</p>
+              <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $suffix=>$grade): ?>
+                <div class="grade-box"><h4><?php echo $grade; ?> τάξη</h4><div class="mini-grid">
+                  <?php foreach (array('fr'=>'Γαλλικά','de'=>'Γερμανικά','ru'=>'Ρωσικά','ar'=>'Αραβικά','tr'=>'Τουρκικά') as $langKey=>$langLabel): $name='pes_gym_lang_'.$suffix.'_'.$langKey; ?>
+                    <div class="field"><label for="<?php echo $name; ?>"><?php echo $langLabel; ?></label><input min="0" max="<?php echo (int)staffingUiInt('pes_gym_general_'.$suffix); ?>" step="1" type="number" id="<?php echo $name; ?>" name="<?php echo $name; ?>" data-language-max-source="pes_gym_general_<?php echo $suffix; ?>" data-language-grade="<?php echo $grade; ?>" data-language-name="<?php echo $langLabel; ?>" value="<?php echo staffingUiH(staffingUiPost($name,'0')); ?>"></div>
+                  <?php endforeach; ?>
+                </div></div>
+              <?php endforeach; ?>
+            </section>
+          </div>
+
+          <div id="pesLykeioProfileFields"<?php echo $schoolType === 'protypo_ekklisiastiko_lykeio' ? '' : ' hidden'; ?>>
+            <section class="staffing-section">
+              <h3>Κανονικά τμήματα ανά τάξη</h3>
+              <p class="help">Το Πρότυπο Εκκλησιαστικό Λύκειο έχει 35 ώρες ανά τάξη, με 6 ώρες Θρησκευτικής Εξειδίκευσης και τις προβλεπόμενες Ομάδες Προσανατολισμού στη Β΄/Γ΄.</p>
+              <div class="mini-grid">
+                <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $suffix=>$grade): $name='pes_lyc_general_'.$suffix; ?>
+                  <div class="field"><label for="<?php echo $name; ?>"><?php echo $grade; ?> τάξη</label><input min="0" max="120" inputmode="numeric" step="1" type="number" data-basic-section="peslyc" id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="<?php echo staffingUiH(staffingUiPost($name,'0')); ?>"></div>
+                <?php endforeach; ?>
+              </div>
+              <small class="profile-validation-error" data-basic-sections-error="peslyc" hidden></small>
+            </section>
+            <section class="staffing-section">
+              <h3>Ομάδες ξένης γλώσσας</h3>
+              <p class="help">Δήλωσε τις πραγματικές ομάδες Αγγλικών, Γαλλικών και Γερμανικών για κάθε τάξη.</p>
+              <?php foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $suffix=>$grade): ?>
+                <div class="grade-box"><h4><?php echo $grade; ?> τάξη</h4><div class="mini-grid">
+                  <?php foreach (array('en'=>'Αγγλικά','fr'=>'Γαλλικά','de'=>'Γερμανικά') as $langKey=>$langLabel): $name='pes_lyc_lang_'.$suffix.'_'.$langKey; ?>
+                    <div class="field"><label for="<?php echo $name; ?>"><?php echo $langLabel; ?></label><input min="0" max="<?php echo (int)staffingUiInt('pes_lyc_general_'.$suffix); ?>" step="1" type="number" id="<?php echo $name; ?>" name="<?php echo $name; ?>" data-language-max-source="pes_lyc_general_<?php echo $suffix; ?>" data-language-grade="<?php echo $grade; ?>" data-language-name="<?php echo $langLabel; ?>" value="<?php echo staffingUiH(staffingUiPost($name,'0')); ?>"></div>
+                  <?php endforeach; ?>
+                </div></div>
+              <?php endforeach; ?>
+            </section>
+            <section class="staffing-section">
+              <h3>Ομάδες Προσανατολισμού</h3>
+              <div class="grade-box"><h4>Β΄ Λυκείου</h4><div class="mini-grid two">
+                <div class="field"><label>Ανθρωπιστικών</label><input min="0" step="1" type="number" name="pes_b_hum" value="<?php echo staffingUiH(staffingUiPost('pes_b_hum','0')); ?>"></div>
+                <div class="field"><label>Θετικών</label><input min="0" step="1" type="number" name="pes_b_sci" value="<?php echo staffingUiH(staffingUiPost('pes_b_sci','0')); ?>"></div>
+              </div></div>
+              <div class="grade-box"><h4>Γ΄ Λυκείου</h4><div class="mini-grid">
+                <div class="field"><label>Ανθρωπιστικών</label><input min="0" step="1" type="number" name="pes_c_hum" value="<?php echo staffingUiH(staffingUiPost('pes_c_hum','0')); ?>"></div>
+                <div class="field"><label>Θετικών / Υγείας</label><input min="0" step="1" type="number" name="pes_c_scihealth" value="<?php echo staffingUiH(staffingUiPost('pes_c_scihealth','0')); ?>"></div>
+                <div class="field"><label>Οικονομίας / Πληροφορικής</label><input min="0" step="1" type="number" name="pes_c_econit" value="<?php echo staffingUiH(staffingUiPost('pes_c_econit','0')); ?>"></div>
+              </div></div>
+            </section>
+            <section class="staffing-section">
+              <h3>Γ΄ Λυκείου — ειδικές ομάδες</h3>
+              <div class="grade-box"><h4>Θετικών / Υγείας: 2ο και 3ο πεδίο</h4><div class="mini-grid two">
+                <div class="field"><label>Μαθηματικά <small>ομάδες 2ου πεδίου</small></label><input min="0" step="1" type="number" name="pes_c_field_math" value="<?php echo staffingUiH(staffingUiPost('pes_c_field_math','0')); ?>"></div>
+                <div class="field"><label>Βιολογία <small>ομάδες 3ου πεδίου</small></label><input min="0" step="1" type="number" name="pes_c_field_bio" value="<?php echo staffingUiH(staffingUiPost('pes_c_field_bio','0')); ?>"></div>
+              </div></div>
+              <div class="grade-box"><h4>Μαθήματα Γενικής Παιδείας υπό προϋπόθεση</h4><div class="mini-grid two">
+                <div class="field"><label>Μαθηματικά Γενικής Παιδείας</label><input min="0" step="1" type="number" name="pes_c_cond_math" value="<?php echo staffingUiH(staffingUiPost('pes_c_cond_math','0')); ?>"></div>
+                <div class="field"><label>Ιστορία Γενικής Παιδείας</label><input min="0" step="1" type="number" name="pes_c_cond_history" value="<?php echo staffingUiH(staffingUiPost('pes_c_cond_history','0')); ?>"></div>
+              </div></div>
+            </section>
+          </div>
+
+          <?php if ($schoolType === 'gymnasio_lt' || in_array($schoolType, array('gymnasio','gel','esperino_gymnasio','esperino_gel'), true)): ?>
           <section class="staffing-section">
             <?php if ($schoolType === 'gymnasio_lt'): ?>
               <?php staffingUiRenderEthicsPanel('ethics_', 'Ηθική / Θρησκευτικά — Γυμνάσιο', 'ethicsPanelGym'); ?>
@@ -1454,6 +1579,7 @@ staffingPerfEnd('specialty_labels');
               <?php staffingUiRenderEthicsPanel('ethics_', 'Ηθική / Θρησκευτικά', 'ethicsPanel'); ?>
             <?php endif; ?>
           </section>
+          <?php endif; ?>
 
           <div class="actions">
             <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="profile" data-staffing-request-action="profile">Υπολόγισε διδακτικές ανάγκες</button><input type="hidden" name="active_panel" value="results">
@@ -2127,6 +2253,9 @@ staffingPerfEnd('specialty_labels');
     <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/04/%CE%A6%CE%95%CE%9A-%CE%92-2102_09_04_26_%CE%A9%CE%A0-%CE%95%CE%A3%CE%A0-%CE%93%CE%95%CE%9B.pdf', 'Υ.Α. 43706/Δ2/07-04-2026 — ΦΕΚ Β΄ 2102/09-04-2026 · Εσπερινό ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'Υ.Α. 54058/Δ2/05-05-2026 — ΦΕΚ Β΄ 2583/07-05-2026 · Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.et.gr/api/DownloadFekPdf?fek_pdf=2026/B/5555', 'Υ.Α. 112867/Δ2/31-08-2026 — ΦΕΚ Β΄ 5555/11-09-2026 · Τροποποίηση αναθέσεων Γυμνασίου / ΓΕΛ ↗'); ?>
+    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/ekklesiastike-ekpaideuse/upourgike-apophase-118380-th2-2021.html', 'Υ.Α. 118380/Θ2/2021 — ΦΕΚ Β΄ 4438/2021 · Πρότυπα Εκκλησιαστικά Σχολεία ↗'); ?>
+    <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/02/%CE%95%CE%9E%CE%95-110640-2025-%CE%A4%CF%81%CE%BF%CF%80%CE%BF%CF%80%CE%BF%CE%AF%CE%B7%CF%83%CE%B7-%CF%84%CE%B7%CF%82-%CF%85%CF%80%CF%8C-%CF%83%CF%84%CE%BF%CE%B9%CF%87%CE%B5%CE%AF%CE%B1-118380-%CE%982-21-09-2021-%CE%A5%CE%91-%CE%A9%CF%81%CE%BF%CE%BB%CF%8C%CE%B3%CE%B9%CE%BF-%CE%A0%CF%81%CF%8C%CE%B3%CF%81%CE%B1%CE%BC%CE%BC%CE%B1-%CE%BC%CE%B1%CE%B8%CE%B7%CE%BC%CE%AC%CF%84%CF%89%CE%BD-%CF%84%CF%89%CE%BD-%CE%95%CE%BA%CE%BA%CE%BB%CE%B7%CF%83%CE%B9%CE%B1%CF%83%CF%84%CE%B9%CE%BA%CF%8E%CE%BD.pdf', 'Υ.Α. 110640/Θ2/2025 — ΦΕΚ Β΄ 4881/2025 · Πρότυπο Εκκλησιαστικό Γυμνάσιο ↗'); ?>
+    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/ekklesiastike-ekpaideuse/upourgike-apophase-63979-th2-2022.html', 'Υ.Α. 63979/Θ2/2022 — ΦΕΚ Β΄ 2781/2022 · Τροποποίηση Εκκλησιαστικού Λυκείου ↗'); ?>
     <?php sourceCardLink(ethicsClassFormationPolicy()['source_url'], 'Υ.Α. 108070/Δ2/2026 — ΦΕΚ Β΄ 5231/2026 · Ηθική ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>

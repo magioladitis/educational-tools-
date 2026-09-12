@@ -426,6 +426,134 @@ function schoolProfileBuildGymnasiumWithLyceumClasses2026($config)
     );
 }
 
+
+function schoolProfileBuildEcclesiasticalGymnasium2026($config)
+{
+    $grades = array('Α΄','Β΄','Γ΄');
+    $general = schoolProfileNormalizeGradeCounts(
+        isset($config['general_sections']) ? $config['general_sections'] : array(),
+        $grades
+    );
+    $languageGroups = schoolProfileNormalizeOptionGroups(
+        isset($config['foreign_language_groups']) ? $config['foreign_language_groups'] : array(),
+        $grades,
+        array('Γαλλικά','Γερμανικά','Ρωσικά','Αραβικά','Τουρκικά')
+    );
+    $validationIssues = array();
+    foreach ($languageGroups as $grade => $groups) {
+        foreach ($groups as $language => $count) {
+            if ($count > $general[$grade]) {
+                $validationIssues[] = 'protypo_ekklisiastiko_gymnasio:' . $grade
+                    . ':foreign_language_groups_exceeds_general_sections:'
+                    . $language . ':' . $count . '>' . $general[$grade];
+            }
+        }
+    }
+    $choiceOptions = array();
+    foreach ($languageGroups as $grade => $groups) {
+        $choiceOptions[$grade]['pes.gym.deuteri_xeni'] = $groups;
+    }
+    return array(
+        'profile_id' => isset($config['profile_id']) ? $config['profile_id'] : 'ecclesiastical-gymnasium-2026-2027',
+        'school_year' => isset($config['school_year']) ? $config['school_year'] : '2026-2027',
+        'school' => isset($config['school']) ? $config['school'] : array('type'=>'Πρότυπο Εκκλησιαστικό Γυμνάσιο'),
+        'source' => isset($config['source']) ? $config['source'] : array('kind'=>'manual_school_profile'),
+        'structures' => array(
+            'protypo_ekklisiastiko_gymnasio' => array(
+                'general_sections' => $general,
+                'choice_option_sections' => $choiceOptions,
+                'extra_course_sections' => array(),
+                'conditions' => array(),
+            ),
+        ),
+        'validation_issues' => $validationIssues,
+        'ethics' => array(
+            'formation_policy_scope' => 'scope_not_confirmed',
+            'by_structure_grade' => array(),
+        ),
+    );
+}
+
+function schoolProfileBuildEcclesiasticalLykeio2026($config)
+{
+    $grades = array('Α΄','Β΄','Γ΄');
+    $general = schoolProfileNormalizeGradeCounts(
+        isset($config['general_sections']) ? $config['general_sections'] : array(),
+        $grades
+    );
+    $trackSections = array(
+        'Β΄' => array('humanities'=>0,'science'=>0),
+        'Γ΄' => array('humanities'=>0,'science_health'=>0,'economics_it'=>0),
+    );
+    if (!empty($config['orientation_sections']) && is_array($config['orientation_sections'])) {
+        foreach ($trackSections as $grade => $tracks) {
+            foreach ($tracks as $track => $zero) {
+                if (isset($config['orientation_sections'][$grade][$track])) {
+                    $trackSections[$grade][$track] = max(0, (int)$config['orientation_sections'][$grade][$track]);
+                }
+            }
+        }
+    }
+
+    $foreignGroups = schoolProfileNormalizeOptionGroups(
+        isset($config['foreign_language_groups']) ? $config['foreign_language_groups'] : array(),
+        $grades,
+        array('Αγγλικά','Γαλλικά','Γερμανικά')
+    );
+    $choiceOptions = array();
+    $foreignCourseIds = array(
+        'Α΄'=>'pes.lykeio.a.xeni_glossa',
+        'Β΄'=>'pes.lykeio.b.xeni_glossa',
+        'Γ΄'=>'pes.lykeio.g.xeni_glossa',
+    );
+    $validationIssues = array();
+    foreach ($foreignGroups as $grade => $groups) {
+        foreach ($groups as $language => $count) {
+            if ($count > $general[$grade]) {
+                $validationIssues[] = 'protypo_ekklisiastiko_lykeio:' . $grade
+                    . ':foreign_language_groups_exceeds_general_sections:'
+                    . $language . ':' . $count . '>' . $general[$grade];
+            }
+        }
+        $choiceOptions[$grade][$foreignCourseIds[$grade]] = $groups;
+    }
+
+    $conditional = array();
+    if (!empty($config['grade_c_science_health_field_groups']) && is_array($config['grade_c_science_health_field_groups'])) {
+        $conditional['Γ΄']['pes.lykeio.g.sci.mathimatika'] = max(0, (int)(isset($config['grade_c_science_health_field_groups']['Μαθηματικά']) ? $config['grade_c_science_health_field_groups']['Μαθηματικά'] : 0));
+        $conditional['Γ΄']['pes.lykeio.g.sci.biologia'] = max(0, (int)(isset($config['grade_c_science_health_field_groups']['Βιολογία']) ? $config['grade_c_science_health_field_groups']['Βιολογία'] : 0));
+    }
+    if (!empty($config['grade_c_conditional_groups']) && is_array($config['grade_c_conditional_groups'])) {
+        if (array_key_exists('Μαθηματικά', $config['grade_c_conditional_groups'])) {
+            $conditional['Γ΄']['pes.lykeio.g.mathimatika_gen'] = max(0, (int)$config['grade_c_conditional_groups']['Μαθηματικά']);
+        }
+        if (array_key_exists('Ιστορία', $config['grade_c_conditional_groups'])) {
+            $conditional['Γ΄']['pes.lykeio.g.istoria_gen'] = max(0, (int)$config['grade_c_conditional_groups']['Ιστορία']);
+        }
+    }
+
+    return array(
+        'profile_id' => isset($config['profile_id']) ? $config['profile_id'] : 'ecclesiastical-lykeio-2026-2027',
+        'school_year' => isset($config['school_year']) ? $config['school_year'] : '2026-2027',
+        'school' => isset($config['school']) ? $config['school'] : array('type'=>'Πρότυπο Εκκλησιαστικό Λύκειο'),
+        'source' => isset($config['source']) ? $config['source'] : array('kind'=>'manual_school_profile'),
+        'structures' => array(
+            'protypo_ekklisiastiko_lykeio' => array(
+                'general_sections' => $general,
+                'track_sections' => $trackSections,
+                'choice_option_sections' => $choiceOptions,
+                'conditional_sections' => $conditional,
+                'conditions' => array(),
+            ),
+        ),
+        'validation_issues' => $validationIssues,
+        'ethics' => array(
+            'formation_policy_scope' => 'scope_not_confirmed',
+            'by_structure_grade' => array(),
+        ),
+    );
+}
+
 function schoolProfileGeneralEducationReadiness($profile)
 {
     $issues = isset($profile['validation_issues']) && is_array($profile['validation_issues'])
@@ -508,6 +636,57 @@ function schoolProfileGeneralEducationReadiness($profile)
         $period = isset($s['period_selection']['Β΄']) ? $s['period_selection']['Β΄'] : '';
         if (schoolProfileGeneralSectionCount($s, 'Β΄') > 0 && !in_array($period, array('Α΄ τετράμηνο','Β΄ τετράμηνο'), true)) {
             $issues[] = 'esperino_gel:Β΄:period_selection_required';
+        }
+    }
+
+    if (isset($structures['protypo_ekklisiastiko_gymnasio'])) {
+        $s = $structures['protypo_ekklisiastiko_gymnasio'];
+        foreach (array('Α΄','Β΄','Γ΄') as $grade) {
+            if (schoolProfileGeneralSectionCount($s, $grade) < 1) {
+                $issues[] = 'protypo_ekklisiastiko_gymnasio:' . $grade . ':general_sections_required';
+            }
+        }
+    }
+
+    if (isset($structures['protypo_ekklisiastiko_lykeio'])) {
+        $s = $structures['protypo_ekklisiastiko_lykeio'];
+        foreach (array('Α΄','Β΄','Γ΄') as $grade) {
+            if (schoolProfileGeneralSectionCount($s, $grade) < 1) {
+                $issues[] = 'protypo_ekklisiastiko_lykeio:' . $grade . ':general_sections_required';
+            }
+            $courseId = $grade === 'Α΄' ? 'pes.lykeio.a.xeni_glossa' : ($grade === 'Β΄' ? 'pes.lykeio.b.xeni_glossa' : 'pes.lykeio.g.xeni_glossa');
+            $language = schoolProfileChoiceOptionSections($s, $grade, $courseId);
+            if ($language === null || array_sum($language) < 1) {
+                $issues[] = 'protypo_ekklisiastiko_lykeio:' . $grade . ':foreign_language_groups_required';
+            }
+        }
+        $bTrackTotal = 0;
+        foreach (array('humanities','science') as $track) {
+            $bTrackTotal += isset($s['track_sections']['Β΄'][$track]) ? max(0,(int)$s['track_sections']['Β΄'][$track]) : 0;
+        }
+        if (schoolProfileGeneralSectionCount($s, 'Β΄') > 0 && $bTrackTotal < 1) {
+            $issues[] = 'protypo_ekklisiastiko_lykeio:Β΄:at_least_one_orientation_group_required';
+        }
+        $cTrackTotal = 0;
+        foreach (array('humanities','science_health','economics_it') as $track) {
+            $cTrackTotal += isset($s['track_sections']['Γ΄'][$track]) ? max(0,(int)$s['track_sections']['Γ΄'][$track]) : 0;
+        }
+        if (schoolProfileGeneralSectionCount($s, 'Γ΄') > 0 && $cTrackTotal < 1) {
+            $issues[] = 'protypo_ekklisiastiko_lykeio:Γ΄:at_least_one_orientation_group_required';
+        }
+        $mathField = schoolProfileConditionalSectionCount($s, 'Γ΄', 'pes.lykeio.g.sci.mathimatika');
+        $bioField = schoolProfileConditionalSectionCount($s, 'Γ΄', 'pes.lykeio.g.sci.biologia');
+        if (!empty($s['track_sections']['Γ΄']['science_health']) && (($mathField === null ? 0 : $mathField) + ($bioField === null ? 0 : $bioField)) < 1) {
+            $issues[] = 'protypo_ekklisiastiko_lykeio:Γ΄:science_health_field_groups_empty';
+        }
+        $mathConditional = schoolProfileConditionalSectionCount($s, 'Γ΄', 'pes.lykeio.g.mathimatika_gen');
+        $historyConditional = schoolProfileConditionalSectionCount($s, 'Γ΄', 'pes.lykeio.g.istoria_gen');
+        if (!empty($s['track_sections']['Γ΄']['humanities']) && ($mathConditional === null || $mathConditional < 1)) {
+            $issues[] = 'protypo_ekklisiastiko_lykeio:Γ΄:conditional_groups:pes.lykeio.g.mathimatika_gen:required';
+        }
+        $nonHumanitiesGroups = max(0,(int)$s['track_sections']['Γ΄']['science_health']) + max(0,(int)$s['track_sections']['Γ΄']['economics_it']);
+        if ($nonHumanitiesGroups > 0 && ($historyConditional === null || $historyConditional < 1)) {
+            $issues[] = 'protypo_ekklisiastiko_lykeio:Γ΄:conditional_groups:pes.lykeio.g.istoria_gen:required';
         }
     }
 

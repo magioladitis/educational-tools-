@@ -425,6 +425,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.b.hum.archaia',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'humanities',
     'group' => 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών',
     'subject' => 'Αρχαία Ελληνική Γλώσσα και Γραμματεία',
     'hours' => 
@@ -436,6 +437,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.b.hum.latinika',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'humanities',
     'group' => 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών',
     'subject' => 'Λατινικά',
     'hours' => 
@@ -447,6 +449,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.b.sci.fysiki',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'science',
     'group' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών',
     'subject' => 'Φυσική',
     'hours' => 
@@ -458,6 +461,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.b.sci.mathimatika',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'science',
     'group' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών',
     'subject' => 'Μαθηματικά',
     'hours' => 
@@ -607,6 +611,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.g.hum.archaia',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'humanities',
     'group' => 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών',
     'subject' => 'Αρχαία Ελληνικά',
     'hours' => 
@@ -618,6 +623,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.g.hum.istoria',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'humanities',
     'group' => 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών',
     'subject' => 'Ιστορία',
     'hours' => 
@@ -629,6 +635,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.g.hum.latinika',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'humanities',
     'group' => 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών',
     'subject' => 'Λατινικά',
     'hours' => 
@@ -641,6 +648,7 @@ return array (
     'course_id' => 'pes.lykeio.g.sci.mathimatika',
     'slot_id' => 'pes.lykeio.g.science_field_choice',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'science_health',
     'group' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας',
     'subject' => 'Μαθηματικά',
     'hours' => 
@@ -655,6 +663,7 @@ return array (
     'course_id' => 'pes.lykeio.g.sci.biologia',
     'slot_id' => 'pes.lykeio.g.science_field_choice',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'science_health',
     'group' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας',
     'subject' => 'Βιολογία',
     'hours' => 
@@ -668,6 +677,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.g.sci.fysiki',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'science_health',
     'group' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας',
     'subject' => 'Φυσική',
     'hours' => 
@@ -679,6 +689,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.g.sci.chimeia',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'science_health',
     'group' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας',
     'subject' => 'Χημεία',
     'hours' => 
@@ -690,6 +701,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.g.econ.mathimatika',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'economics_it',
     'group' => 'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής',
     'subject' => 'Μαθηματικά',
     'hours' => 
@@ -701,6 +713,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.g.econ.pliroforiki',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'economics_it',
     'group' => 'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής',
     'subject' => 'Πληροφορική',
     'hours' => 
@@ -712,6 +725,7 @@ return array (
   array (
     'course_id' => 'pes.lykeio.g.econ.oikonomia',
     'school' => 'protypo_ekklisiastiko_lykeio',
+    'track' => 'economics_it',
     'group' => 'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής',
     'subject' => 'Οικονομία',
     'hours' => 
