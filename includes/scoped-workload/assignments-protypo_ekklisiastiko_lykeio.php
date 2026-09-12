@@ -7,7 +7,88 @@
 return array (
   0 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
+    'grade' => 'Α΄',
+    'subject' => 'Στοιχεία Λειτουργικής και Τελετουργικής',
+    'section' => 'Μαθήματα Θρησκευτικής Εξειδίκευσης',
+    'special_codes' => 
+    array (
+      0 => 'ΠΕ01',
+    ),
+    'special_note' => 'Μάθημα εκκλησιαστικής/θρησκευτικής εξειδίκευσης. Εμφανίζεται ως ειδική πρόβλεψη Π.Ε.Σ. και όχι ως βαθμίδα Α΄/Β΄/Γ΄ του γενικού πίνακα αναθέσεων.',
+  ),
+  1 => 
+  array (
+    'school' => 'protypo_ekklisiastiko_lykeio',
+    'grade' => 'Β΄',
+    'subject' => 'Θέματα Δογματικής Θεολογίας',
+    'section' => 'Μαθήματα Θρησκευτικής Εξειδίκευσης',
+    'special_codes' => 
+    array (
+      0 => 'ΠΕ01',
+    ),
+    'special_note' => 'Μάθημα εκκλησιαστικής/θρησκευτικής εξειδίκευσης. Εμφανίζεται ως ειδική πρόβλεψη Π.Ε.Σ. και όχι ως βαθμίδα Α΄/Β΄/Γ΄ του γενικού πίνακα αναθέσεων.',
+  ),
+  2 => 
+  array (
+    'school' => 'protypo_ekklisiastiko_lykeio',
+    'grade' => 'Γ΄',
+    'subject' => 'Θέματα Χριστιανικής Ηθικής και Ποιμαντικής Θεολογίας',
+    'section' => 'Μαθήματα Θρησκευτικής Εξειδίκευσης',
+    'special_codes' => 
+    array (
+      0 => 'ΠΕ01',
+    ),
+    'special_note' => 'Μάθημα εκκλησιαστικής/θρησκευτικής εξειδίκευσης. Εμφανίζεται ως ειδική πρόβλεψη Π.Ε.Σ. και όχι ως βαθμίδα Α΄/Β΄/Γ΄ του γενικού πίνακα αναθέσεων.',
+  ),
+  3 => 
+  array (
+    'school' => 'protypo_ekklisiastiko_lykeio',
+    'grade' => '',
+    'grades' => 
+    array (
+      0 => 'Α΄',
+      1 => 'Β΄',
+      2 => 'Γ΄',
+    ),
+    'section' => 'Μαθήματα Θρησκευτικής Εξειδίκευσης',
+    'subject' => 'Βυζαντινή Μουσική',
+    'special_codes' => 
+    array (
+      0 => 'ΠΕ79.01',
+      1 => 'ΤΕ16',
+    ),
+    'special_notes' => 
+    array (
+      'ΠΕ79.01' => 'Προηγείται του ΤΕ16. Απαιτείται Δίπλωμα Βυζαντινής Μουσικής από αναγνωρισμένο φορέα.',
+      'ΤΕ16' => 'Μόνο ελλείψει ΠΕ79.01. Απαιτείται Δίπλωμα Βυζαντινής Μουσικής από αναγνωρισμένο φορέα.',
+    ),
+    'special_note' => 'Βυζαντινή Μουσική: ΠΕ79.01 και, ελλείψει αυτών, ΤΕ16. Απαραίτητο πρόσθετο προσόν για όλους: Δίπλωμα Βυζαντινής Μουσικής από αναγνωρισμένο φορέα (άρθρο 39 παρ. 9 ν. 3848/2010).',
+    'qualification_key' => 'pes_byzantine_music_diploma',
+  ),
+  4 => 
+  array (
+    'school' => 'protypo_ekklisiastiko_lykeio',
+    'grade' => '',
+    'grades' => 
+    array (
+      0 => 'Α΄',
+      1 => 'Β΄',
+      2 => 'Γ΄',
+    ),
+    'section' => 'Μαθήματα Θρησκευτικής Εξειδίκευσης',
+    'subject' => 'Εικονογραφία',
+    'special_codes' => 
+    array (
+      0 => 'ΠΕ01',
+      1 => 'ΠΕ08',
+    ),
+    'special_note' => 'Εικονογραφία: ανατίθεται μόνο σε εκπαιδευτικούς ΠΕ01/ΠΕ08 που πληρούν τις ειδικές και διαδοχικές προϋποθέσεις της Υ.Α. 71346/Θ2/10-06-2020 (Β΄ 2466), όπως τροποποιήθηκε με την 4404/Θ2/16-01-2023 (Β΄ 253). Η απλή ιδιότητα ΠΕ01 ή ΠΕ08 δεν αρκεί.',
+    'qualification_key' => 'pes_iconography_eligibility',
+  ),
+  5 => 
+  array (
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => 'Ελληνική Γλώσσα',
     'subject' => 'Αρχαία Ελληνική Γλώσσα και Γραμματεία',
@@ -16,20 +97,20 @@ return array (
       0 => 'ΠΕ02',
     ),
   ),
-  1 => 
+  6 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => 'Ελληνική Γλώσσα',
-    'subject' => 'Νεοελληνική Γλώσσα και Λογοτεχνία',
+    'subject' => 'Νέα Ελληνική Γλώσσα και Λογοτεχνία',
     'A' => 
     array (
       0 => 'ΠΕ02',
     ),
   ),
-  2 => 
+  7 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => 'Μαθηματικά',
     'subject' => 'Άλγεβρα',
@@ -38,9 +119,9 @@ return array (
       0 => 'ΠΕ03',
     ),
   ),
-  3 => 
+  8 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => 'Μαθηματικά',
     'subject' => 'Γεωμετρία',
@@ -49,9 +130,9 @@ return array (
       0 => 'ΠΕ03',
     ),
   ),
-  4 => 
+  9 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => 'Φυσικές Επιστήμες',
     'subject' => 'Φυσική',
@@ -67,9 +148,9 @@ return array (
       3 => 'ΠΕ04.05',
     ),
   ),
-  5 => 
+  10 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => 'Φυσικές Επιστήμες',
     'subject' => 'Χημεία',
@@ -90,9 +171,9 @@ return array (
       3 => 'ΠΕ04.05',
     ),
   ),
-  6 => 
+  11 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => 'Φυσικές Επιστήμες',
     'subject' => 'Βιολογία',
@@ -110,9 +191,9 @@ return array (
       4 => 'ΠΕ88.01',
     ),
   ),
-  7 => 
+  12 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => '',
     'subject' => 'Ιστορία',
@@ -129,9 +210,9 @@ return array (
       3 => 'ΠΕ78',
     ),
   ),
-  8 => 
+  13 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => '',
     'subject' => 'Πολιτική Παιδεία (Οικονομία, Πολιτικοί Θεσμοί και Αρχές Δικαίου και Κοινωνιολογία)',
@@ -149,9 +230,9 @@ return array (
       0 => 'ΠΕ02',
     ),
   ),
-  9 => 
+  14 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => '',
     'subject' => 'Θρησκευτικά',
@@ -160,49 +241,9 @@ return array (
       0 => 'ΠΕ01',
     ),
   ),
-  10 => 
+  15 => 
   array (
-    'school' => 'gel',
-    'grade' => 'Α΄',
-    'section' => '',
-    'subject' => 'Ηθική',
-    'A' => 
-    array (
-      0 => 'ΠΕ01',
-    ),
-    'B' => 
-    array (
-      0 => 'ΠΕ02',
-      1 => 'ΠΕ33',
-      2 => 'ΠΕ78',
-    ),
-  ),
-  11 => 
-  array (
-    'school' => 'gel',
-    'grade' => 'Α΄',
-    'section' => '',
-    'subject' => 'Αγγλικά',
-    'A' => 
-    array (
-      0 => 'ΠΕ06',
-    ),
-  ),
-  12 => 
-  array (
-    'school' => 'gel',
-    'grade' => 'Α΄',
-    'section' => '',
-    'subject' => '2η Ξένη Γλώσσα (Γαλλικά ή Γερμανικά)',
-    'A' => 
-    array (
-      0 => 'ΠΕ05',
-      1 => 'ΠΕ07',
-    ),
-  ),
-  13 => 
-  array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => '',
     'subject' => 'Φυσική Αγωγή',
@@ -211,9 +252,9 @@ return array (
       0 => 'ΠΕ11',
     ),
   ),
-  14 => 
+  16 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Α΄',
     'section' => '',
     'subject' => 'Εφαρμογές Πληροφορικής',
@@ -222,9 +263,9 @@ return array (
       0 => 'ΠΕ86',
     ),
   ),
-  15 => 
+  17 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Ελληνική Γλώσσα',
     'subject' => 'Αρχαία Ελληνική Γλώσσα και Γραμματεία',
@@ -233,20 +274,20 @@ return array (
       0 => 'ΠΕ02',
     ),
   ),
-  16 => 
+  18 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Ελληνική Γλώσσα',
-    'subject' => 'Νεοελληνική Γλώσσα και Λογοτεχνία',
+    'subject' => 'Νέα Ελληνική Γλώσσα και Λογοτεχνία',
     'A' => 
     array (
       0 => 'ΠΕ02',
     ),
   ),
-  17 => 
+  19 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Μαθηματικά',
     'subject' => 'Άλγεβρα',
@@ -255,9 +296,9 @@ return array (
       0 => 'ΠΕ03',
     ),
   ),
-  18 => 
+  20 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Μαθηματικά',
     'subject' => 'Γεωμετρία',
@@ -266,9 +307,9 @@ return array (
       0 => 'ΠΕ03',
     ),
   ),
-  19 => 
+  21 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Φυσικές Επιστήμες',
     'subject' => 'Φυσική',
@@ -284,9 +325,9 @@ return array (
       3 => 'ΠΕ04.05',
     ),
   ),
-  20 => 
+  22 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Φυσικές Επιστήμες',
     'subject' => 'Χημεία',
@@ -307,9 +348,9 @@ return array (
       3 => 'ΠΕ04.05',
     ),
   ),
-  21 => 
+  23 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Φυσικές Επιστήμες',
     'subject' => 'Βιολογία',
@@ -327,9 +368,9 @@ return array (
       4 => 'ΠΕ88.01',
     ),
   ),
-  22 => 
+  24 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => '',
     'subject' => 'Εισαγωγή στις Αρχές της Επιστήμης των Η/Υ',
@@ -338,9 +379,9 @@ return array (
       0 => 'ΠΕ86',
     ),
   ),
-  23 => 
+  25 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => '',
     'subject' => 'Ιστορία',
@@ -354,9 +395,9 @@ return array (
       0 => 'ΠΕ78',
     ),
   ),
-  24 => 
+  26 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => '',
     'subject' => 'Φιλοσοφία',
@@ -371,9 +412,9 @@ return array (
       1 => 'ΠΕ78',
     ),
   ),
-  25 => 
+  27 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => '',
     'subject' => 'Θρησκευτικά',
@@ -382,49 +423,9 @@ return array (
       0 => 'ΠΕ01',
     ),
   ),
-  26 => 
-  array (
-    'school' => 'gel',
-    'grade' => 'Β΄',
-    'section' => '',
-    'subject' => 'Ηθική',
-    'A' => 
-    array (
-      0 => 'ΠΕ01',
-    ),
-    'B' => 
-    array (
-      0 => 'ΠΕ02',
-      1 => 'ΠΕ33',
-      2 => 'ΠΕ78',
-    ),
-  ),
-  27 => 
-  array (
-    'school' => 'gel',
-    'grade' => 'Β΄',
-    'section' => '',
-    'subject' => 'Αγγλικά',
-    'A' => 
-    array (
-      0 => 'ΠΕ06',
-    ),
-  ),
   28 => 
   array (
-    'school' => 'gel',
-    'grade' => 'Β΄',
-    'section' => '',
-    'subject' => '2η Ξένη Γλώσσα (Γαλλικά ή Γερμανικά)',
-    'A' => 
-    array (
-      0 => 'ΠΕ05',
-      1 => 'ΠΕ07',
-    ),
-  ),
-  29 => 
-  array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => '',
     'subject' => 'Φυσική Αγωγή',
@@ -433,9 +434,9 @@ return array (
       0 => 'ΠΕ11',
     ),
   ),
-  30 => 
+  29 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών',
     'subject' => 'Αρχαία Ελληνική Γλώσσα και Γραμματεία',
@@ -444,9 +445,9 @@ return array (
       0 => 'ΠΕ02',
     ),
   ),
-  31 => 
+  30 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών',
     'subject' => 'Λατινικά',
@@ -455,9 +456,9 @@ return array (
       0 => 'ΠΕ02',
     ),
   ),
-  32 => 
+  31 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών',
     'subject' => 'Φυσική',
@@ -473,9 +474,9 @@ return array (
       3 => 'ΠΕ04.05',
     ),
   ),
-  33 => 
+  32 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Β΄',
     'section' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών',
     'subject' => 'Μαθηματικά',
@@ -484,9 +485,9 @@ return array (
       0 => 'ΠΕ03',
     ),
   ),
-  34 => 
+  33 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Μαθήματα Γενικής Παιδείας',
     'subject' => 'Θρησκευτικά',
@@ -495,26 +496,9 @@ return array (
       0 => 'ΠΕ01',
     ),
   ),
-  35 => 
+  34 => 
   array (
-    'school' => 'gel',
-    'grade' => 'Γ΄',
-    'section' => 'Μαθήματα Γενικής Παιδείας',
-    'subject' => 'Ηθική',
-    'A' => 
-    array (
-      0 => 'ΠΕ01',
-    ),
-    'B' => 
-    array (
-      0 => 'ΠΕ02',
-      1 => 'ΠΕ33',
-      2 => 'ΠΕ78',
-    ),
-  ),
-  36 => 
-  array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Μαθήματα Γενικής Παιδείας',
     'subject' => 'Νεοελληνική Γλώσσα και Λογοτεχνία',
@@ -523,9 +507,9 @@ return array (
       0 => 'ΠΕ02',
     ),
   ),
-  37 => 
+  35 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Μαθήματα Γενικής Παιδείας',
     'subject' => 'Ιστορία',
@@ -539,9 +523,9 @@ return array (
       0 => 'ΠΕ78',
     ),
   ),
-  38 => 
+  36 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Μαθήματα Γενικής Παιδείας',
     'subject' => 'Μαθηματικά',
@@ -550,20 +534,9 @@ return array (
       0 => 'ΠΕ03',
     ),
   ),
-  39 => 
+  37 => 
   array (
-    'school' => 'gel',
-    'grade' => 'Γ΄',
-    'section' => 'Μαθήματα Γενικής Παιδείας',
-    'subject' => 'Αγγλικά',
-    'A' => 
-    array (
-      0 => 'ΠΕ06',
-    ),
-  ),
-  40 => 
-  array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Μαθήματα Γενικής Παιδείας',
     'subject' => 'Φυσική Αγωγή',
@@ -572,9 +545,9 @@ return array (
       0 => 'ΠΕ11',
     ),
   ),
-  41 => 
+  38 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών',
     'subject' => 'Αρχαία Ελληνικά',
@@ -583,9 +556,9 @@ return array (
       0 => 'ΠΕ02',
     ),
   ),
-  42 => 
+  39 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών',
     'subject' => 'Ιστορία',
@@ -594,9 +567,9 @@ return array (
       0 => 'ΠΕ02',
     ),
   ),
-  43 => 
+  40 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών',
     'subject' => 'Λατινικά',
@@ -605,9 +578,9 @@ return array (
       0 => 'ΠΕ02',
     ),
   ),
-  44 => 
+  41 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας',
     'subject' => 'Μαθηματικά',
@@ -616,9 +589,9 @@ return array (
       0 => 'ΠΕ03',
     ),
   ),
-  45 => 
+  42 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας',
     'subject' => 'Βιολογία',
@@ -639,9 +612,9 @@ return array (
       0 => 'ΠΕ87.01',
     ),
   ),
-  46 => 
+  43 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας',
     'subject' => 'Φυσική',
@@ -657,9 +630,9 @@ return array (
       3 => 'ΠΕ04.05',
     ),
   ),
-  47 => 
+  44 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Ομάδα Προσανατολισμού Θετικών Σπουδών και Σπουδών Υγείας',
     'subject' => 'Χημεία',
@@ -680,9 +653,9 @@ return array (
       3 => 'ΠΕ04.05',
     ),
   ),
-  48 => 
+  45 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής',
     'subject' => 'Μαθηματικά',
@@ -691,9 +664,9 @@ return array (
       0 => 'ΠΕ03',
     ),
   ),
-  49 => 
+  46 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής',
     'subject' => 'Οικονομία',
@@ -710,9 +683,9 @@ return array (
       0 => 'ΠΕ78',
     ),
   ),
-  50 => 
+  47 => 
   array (
-    'school' => 'gel',
+    'school' => 'protypo_ekklisiastiko_lykeio',
     'grade' => 'Γ΄',
     'section' => 'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής',
     'subject' => 'Πληροφορική',
@@ -720,5 +693,65 @@ return array (
     array (
       0 => 'ΠΕ86',
     ),
+  ),
+  48 => 
+  array (
+    'school' => 'protypo_ekklisiastiko_lykeio',
+    'grade' => 'Α΄',
+    'section' => 'Μαθήματα Γενικής Παιδείας',
+    'subject' => 'Ξένη Γλώσσα (Αγγλικά ή Γαλλικά ή Γερμανικά)',
+    'A' => 
+    array (
+      0 => 'ΠΕ06',
+      1 => 'ΠΕ05',
+      2 => 'ΠΕ07',
+    ),
+    'A_notes' => 
+    array (
+      'ΠΕ06' => 'για την επιλογή Αγγλικών',
+      'ΠΕ05' => 'για την επιλογή Γαλλικών',
+      'ΠΕ07' => 'για την επιλογή Γερμανικών',
+    ),
+    'note' => 'Διδάσκεται μία από τις τρεις γλώσσες που προβλέπει το ωρολόγιο Π.Ε.Σ.',
+  ),
+  49 => 
+  array (
+    'school' => 'protypo_ekklisiastiko_lykeio',
+    'grade' => 'Β΄',
+    'section' => 'Μαθήματα Γενικής Παιδείας',
+    'subject' => 'Ξένη Γλώσσα (Αγγλικά ή Γαλλικά ή Γερμανικά)',
+    'A' => 
+    array (
+      0 => 'ΠΕ06',
+      1 => 'ΠΕ05',
+      2 => 'ΠΕ07',
+    ),
+    'A_notes' => 
+    array (
+      'ΠΕ06' => 'για την επιλογή Αγγλικών',
+      'ΠΕ05' => 'για την επιλογή Γαλλικών',
+      'ΠΕ07' => 'για την επιλογή Γερμανικών',
+    ),
+    'note' => 'Διδάσκεται μία από τις τρεις γλώσσες που προβλέπει το ωρολόγιο Π.Ε.Σ.',
+  ),
+  50 => 
+  array (
+    'school' => 'protypo_ekklisiastiko_lykeio',
+    'grade' => 'Γ΄',
+    'section' => 'Μαθήματα Γενικής Παιδείας',
+    'subject' => 'Ξένη Γλώσσα (Αγγλικά ή Γαλλικά ή Γερμανικά)',
+    'A' => 
+    array (
+      0 => 'ΠΕ06',
+      1 => 'ΠΕ05',
+      2 => 'ΠΕ07',
+    ),
+    'A_notes' => 
+    array (
+      'ΠΕ06' => 'για την επιλογή Αγγλικών',
+      'ΠΕ05' => 'για την επιλογή Γαλλικών',
+      'ΠΕ07' => 'για την επιλογή Γερμανικών',
+    ),
+    'note' => 'Διδάσκεται μία από τις τρεις γλώσσες που προβλέπει το ωρολόγιο Π.Ε.Σ.',
   ),
 );

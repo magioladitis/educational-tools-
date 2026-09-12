@@ -45,6 +45,7 @@ require_once __DIR__ . '/weekly-timetable-eneegyl-data.php';
 require_once __DIR__ . '/weekly-timetable-eeeek-data.php';
 require_once __DIR__ . '/weekly-timetable-ecclesiastical-data.php';
 require_once __DIR__ . '/teaching-timetable-crosswalk.php';
+require_once __DIR__ . '/scoped-workload-config.php';
 
 function weeklyTimetableSchoolTypes()
 {
@@ -631,18 +632,13 @@ function weeklyTimetableRowsForSchools($schools)
         return array();
     }
 
-    $snapshotSchools = array(
-        'gymnasio' => true,
-        'gel' => true,
-        'esperino_gymnasio' => true,
-        'esperino_gel' => true,
-    );
+    $snapshotSchools = array_fill_keys(scopedWorkloadActiveSchools(), true);
     $rows = array();
     $fallback = array();
     foreach (array_keys($requested) as $school) {
         if (isset($snapshotSchools[$school])) {
             $path = __DIR__ . '/scoped-workload/weekly-' . $school . '.php';
-            if (is_file($path)) {
+            if (scopedWorkloadSnapshotIsFresh('weekly', $path)) {
                 $part = require $path;
                 if (is_array($part)) {
                     foreach ($part as $row) {
