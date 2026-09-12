@@ -427,6 +427,67 @@ function schoolProfileBuildGymnasiumWithLyceumClasses2026($config)
 }
 
 
+/**
+ * Ενιαίο προφίλ για τις έξι πραγματικές σχολικές μονάδες που λειτουργούν
+ * ως Πρότυπο Εκκλησιαστικό Γυμνάσιο - Πρότυπο Εκκλησιαστικό Λύκειο.
+ *
+ * Δεν αντιγράφει κανονιστικά δεδομένα. Συνθέτει τα δύο ήδη ελεγμένα
+ * ecclesiastical profiles, ώστε το προσωπικό και η κατανομή να λειτουργούν
+ * σε κοινό pool στην ίδια σχολική μονάδα.
+ */
+function schoolProfileBuildEcclesiasticalGymnasiumLykeio2026($config)
+{
+    $commonSchool = isset($config['school']) ? $config['school'] : array('type'=>'Πρότυπο Εκκλησιαστικό Γυμνάσιο - Λύκειο');
+    $commonSource = isset($config['source']) ? $config['source'] : array('kind'=>'manual_school_profile');
+    $schoolYear = isset($config['school_year']) ? $config['school_year'] : '2026-2027';
+
+    $gym = schoolProfileBuildEcclesiasticalGymnasium2026(array(
+        'profile_id' => 'composite-ecclesiastical-gymnasium-part',
+        'school_year' => $schoolYear,
+        'school' => $commonSchool,
+        'source' => $commonSource,
+        'general_sections' => isset($config['gymnasium_general_sections']) ? $config['gymnasium_general_sections'] : array(),
+        'foreign_language_groups' => isset($config['gymnasium_foreign_language_groups']) ? $config['gymnasium_foreign_language_groups'] : array(),
+    ));
+
+    $lykeio = schoolProfileBuildEcclesiasticalLykeio2026(array(
+        'profile_id' => 'composite-ecclesiastical-lykeio-part',
+        'school_year' => $schoolYear,
+        'school' => $commonSchool,
+        'source' => $commonSource,
+        'general_sections' => isset($config['lykeio_general_sections']) ? $config['lykeio_general_sections'] : array(),
+        'foreign_language_groups' => isset($config['lykeio_foreign_language_groups']) ? $config['lykeio_foreign_language_groups'] : array(),
+        'orientation_sections' => isset($config['lykeio_orientation_sections']) ? $config['lykeio_orientation_sections'] : array(),
+        'grade_c_science_health_field_groups' => isset($config['lykeio_grade_c_science_health_field_groups']) ? $config['lykeio_grade_c_science_health_field_groups'] : array(),
+        'grade_c_conditional_groups' => isset($config['lykeio_grade_c_conditional_groups']) ? $config['lykeio_grade_c_conditional_groups'] : array(),
+    ));
+
+    return array(
+        'profile_id' => isset($config['profile_id']) ? $config['profile_id'] : 'ecclesiastical-gymnasium-lykeio-2026-2027',
+        'school_year' => $schoolYear,
+        'school' => $commonSchool,
+        'source' => $commonSource,
+        'structures' => array(
+            'protypo_ekklisiastiko_gymnasio' => $gym['structures']['protypo_ekklisiastiko_gymnasio'],
+            'protypo_ekklisiastiko_lykeio' => $lykeio['structures']['protypo_ekklisiastiko_lykeio'],
+        ),
+        'validation_issues' => array_values(array_merge(
+            isset($gym['validation_issues']) ? $gym['validation_issues'] : array(),
+            isset($lykeio['validation_issues']) ? $lykeio['validation_issues'] : array()
+        )),
+        'ethics' => array(
+            'formation_policy_scope' => 'scope_not_confirmed',
+            'by_structure_grade' => array(),
+        ),
+        'composite' => array(
+            'kind' => 'ecclesiastical_gymnasium_lykeio',
+            'shared_personnel_pool' => true,
+            'structures' => array('protypo_ekklisiastiko_gymnasio','protypo_ekklisiastiko_lykeio'),
+        ),
+    );
+}
+
+
 function schoolProfileBuildEcclesiasticalGymnasium2026($config)
 {
     $grades = array('Α΄','Β΄','Γ΄');

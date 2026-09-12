@@ -811,6 +811,8 @@ function personnelWorkloadStructureShortLabel($schoolCode)
         'gel'=>'ΛΤ',
         'esperino_gymnasio'=>'Εσπ. Γυμν.',
         'esperino_gel'=>'Εσπ. ΓΕΛ',
+        'protypo_ekklisiastiko_gymnasio'=>'Εκκλ. Γυμν.',
+        'protypo_ekklisiastiko_lykeio'=>'Εκκλ. Λύκ.',
     );
     return isset($map[$schoolCode]) ? $map[$schoolCode] : (string) $schoolCode;
 }
