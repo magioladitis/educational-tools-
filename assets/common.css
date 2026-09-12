@@ -420,9 +420,18 @@ body.edu-ui .edu-disclosure__body a { overflow-wrap: anywhere; }
 body.edu-ui .edu-result-disclosure { margin-top: var(--edu-result-section-gap); background: #fff; }
 body.edu-ui .edu-result-disclosure .edu-disclosure__body { color: var(--edu-text); }
 @media (max-width:650px) {
-  body.edu-ui .edu-disclosure { margin: 8px 0; border-radius: 10px; }
-  body.edu-ui .edu-disclosure__summary { min-height: 46px; padding: 11px 12px; }
-  body.edu-ui .edu-disclosure__body { padding: 0 12px 12px; }
+  /* Mobile vertical rhythm: one spacing owner per context.
+     Grid gaps space disclosures inside forms; adjacent margins space stacked
+     disclosures outside grids. This avoids the old grid-gap + top/bottom-margin
+     combination that produced visually inconsistent empty space. */
+  body.edu-ui .edu-field-grid,
+  body.edu-ui .field-grid { gap: 12px; }
+  body.edu-ui .edu-disclosure { margin: 0; border-radius: 10px; }
+  body.edu-ui .edu-disclosure + .edu-disclosure { margin-top: 12px; }
+  body.edu-ui .edu-field-grid > .edu-disclosure + .edu-disclosure,
+  body.edu-ui .field-grid > .edu-disclosure + .edu-disclosure { margin-top: 0; }
+  body.edu-ui .edu-disclosure__summary { min-height: 44px; padding: 12px 14px; }
+  body.edu-ui .edu-disclosure__body { padding: 0 14px 12px; }
 }
 @media print {
   body.edu-ui .edu-disclosure { border: 0; background: transparent; overflow: visible; }
@@ -1308,7 +1317,7 @@ body.edu-ui.edu-guide-standard .small-note { margin-top:18px; font-size:13px; li
   body.edu-ui.edu-calc-standard .hero { padding:24px 19px; }
   body.edu-ui.edu-calc-standard .field-grid { grid-template-columns:1fr; }
   body.edu-ui.edu-calc-standard .card { padding:16px; }
-  body.edu-ui.edu-calc-standard .actions { grid-template-columns:1fr; }
+  body.edu-ui.edu-calc-standard .actions { grid-template-columns:1fr; margin-top:20px; gap:10px; }
 }
 @media (max-width:760px) {
   body.edu-ui.edu-guide-standard { padding:18px 12px; }
