@@ -311,3 +311,38 @@ if (!function_exists('teachingAssignmentsVocationalOverviewLinks')) {
     }
 }
 
+if (!function_exists('teachingAssignmentsGeneralTimetableCrosscheckLinks')) {
+    /**
+     * Legacy source-card cross-checks for evening-school timetables.
+     *
+     * Legal facts and alternate URLs live in legal-sources.php; this helper
+     * preserves only the current presentation/order and emits no HTML.
+     */
+    function teachingAssignmentsGeneralTimetableCrosscheckLinks()
+    {
+        $links = array();
+
+        $eveningGym = legalSourceByKey('esperino_gymnasio_timetable_2026');
+        if ($eveningGym && ($url = legalSourceUrl($eveningGym, 'ministry_index'))) {
+            $links[] = array(
+                'source_key' => 'esperino_gymnasio_timetable_2026',
+                'relation' => 'timetable-crosscheck',
+                'url' => $url,
+                'label' => legalSourceCompactFek($eveningGym['fek']) . ' — Ωρολόγιο Εσπερινού Γυμνασίου ↗',
+            );
+        }
+
+        $eveningGel = legalSourceByKey('esperino_gel_timetable_2026');
+        if ($eveningGel && ($url = legalSourceUrl($eveningGel, 'legal_text'))) {
+            $links[] = array(
+                'source_key' => 'esperino_gel_timetable_2026',
+                'relation' => 'timetable-crosscheck',
+                'url' => $url,
+                'label' => legalSourceCompactFek($eveningGel['fek']) . ' — Ωρολόγιο Εσπερινού ΓΕΛ ↗',
+            );
+        }
+
+        return $links;
+    }
+}
+

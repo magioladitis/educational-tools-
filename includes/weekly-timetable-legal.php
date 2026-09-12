@@ -51,6 +51,12 @@ if (!function_exists('weeklyTimetableLegalSourceKeysForSchools')) {
                 'gymnasio_gel_assignments_2026',
                 'mousika_assignments_2018',
             ),
+            'eneegyl_gymnasio' => array(
+                'eneegyl_gymnasio_timetable_2026',
+            ),
+            'eneegyl_lykeio' => array(
+                'eneegyl_lykeio_timetable_2026',
+            ),
             'eeeek' => array(
                 'eeeek_timetable_2002',
                 'eeeek_six_classes_2016',

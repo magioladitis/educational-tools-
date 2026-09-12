@@ -374,8 +374,9 @@
     <?php foreach (legalSourceLinksForKeys(teachingAssignmentsLegalSourceKeysForSchools(array('gymnasio', 'esperino_gymnasio', 'gel', 'esperino_gel'))) as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/mousika-sxoleia-eisagogi-mathiton-mathitrion/70059-orologio-programma-ton-mathimaton-ton-a-v-kai-g-takseon-tou-esperinoy-gymnasiou-genikoy-lykeiou?filter_tag%5B0%5D=64', 'ΦΕΚ Β΄ 2106/2026 — Ωρολόγιο Εσπερινού Γυμνασίου ↗'); ?>
-    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/ya-43706-d2-2026.html', 'ΦΕΚ Β΄ 2102/2026 — Ωρολόγιο Εσπερινού ΓΕΛ ↗'); ?>
+    <?php foreach (teachingAssignmentsGeneralTimetableCrosscheckLinks() as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
     <?php sourceCardLink('https://religiousaffairs.minedu.gov.gr/el/allcategories-el-gr/epiloges-kategorias-el-gr/organotiki-domi-diefthynseis/dieythynsi-thriskeftikis-ekpaidefsis-diathriskeftikon-sxeseon/tmima-ekklisiastikis-ekpaidefsis-thriskeftikis-agogis/protypa-ekklisiastika-sxoleia/themata-ekpaideftikoy-prosopikoy-protypa-ekklisiastika-sxoleia', 'ΥΠΑΙΘΑ — Θέματα εκπαιδευτικού προσωπικού Π.Ε.Σ. ↗'); ?>
     <?php $pesTimetableLegalSource = legalSourceByKey('ecclesiastical_timetable_2021'); ?>
     <?php if ($pesTimetableLegalSource): sourceCardLink(legalSourceUrl($pesTimetableLegalSource, 'legal_text'), 'ΦΕΚ Β΄ 4438/2021 — Ωρολόγιο Εκκλησιαστικών Σχολείων ↗'); endif; ?>

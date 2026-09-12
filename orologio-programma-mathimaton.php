@@ -2,6 +2,7 @@
 <?php require_once __DIR__ . '/includes/weekly-timetable-data.php'; ?>
 <?php require_once __DIR__ . '/includes/legal-sources.php'; ?>
 <?php require_once __DIR__ . '/includes/weekly-timetable-legal.php'; ?>
+<?php require_once __DIR__ . '/includes/school-profile-legal.php'; ?>
 <?php require_once __DIR__ . '/includes/ethics-class-formation.php'; ?>
 <!doctype html>
 <html lang="el">
@@ -101,15 +102,18 @@
     <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
     <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_lykeio_timetable_2022', 'overview'); ?>
     <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
-    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-74472-d2-2020.html', 'Υ.Α. 74472/Δ2/2020 — ΦΕΚ Β΄ 2450/2020 · Τεχνολογία / Πληροφορική Γυμνασίου ↗'); ?>
+    <?php foreach (schoolProfileGeneralEducationLegalLinks() as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
     <?php foreach (weeklyTimetableLegalOverviewLinks() as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>
     <?php foreach (weeklyTimetableSpecialSchoolOverviewLinks('arts_music') as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%202259tB22-04-2026%20me%20thema%20Orologio%20Programma%20ton%20mathematon%20tou%20Gymnasiou%20EN.E.E.GY-L.pdf', 'ΦΕΚ Β΄ 2259/2026 — Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%202149%20t.B%2016-04-2026%20me%20thema%20Orologio%20programma%20tou%20Lykeiou%20ton%20Eniaion%20Eidikon%20Epangelmatikon%20Gymnasion%20-%20Lykeion%20EN.E.E.GY.-L.pdf', 'ΦΕΚ Β΄ 2149/2026 — Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗'); ?>
+    <?php foreach (legalSourceLinksForKeys(weeklyTimetableLegalSourceKeysForSchools(array('eneegyl_gymnasio', 'eneegyl_lykeio'))) as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
     <?php foreach (weeklyTimetableSpecialSchoolOverviewLinks('eeeek') as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>

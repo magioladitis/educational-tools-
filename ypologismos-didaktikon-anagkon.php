@@ -39,6 +39,7 @@ require_once __DIR__ . '/includes/ethics-class-formation.php';
 require_once __DIR__ . '/includes/legal-sources.php';
 require_once __DIR__ . '/includes/teaching-assignments-legal.php';
 require_once __DIR__ . '/includes/weekly-timetable-legal.php';
+require_once __DIR__ . '/includes/school-profile-legal.php';
 require_once __DIR__ . '/includes/personnel-workload.php';
 require_once __DIR__ . '/includes/teaching-allocation-engine.php';
 require_once __DIR__ . '/includes/teaching-workload-aggregation.php';
@@ -2375,7 +2376,9 @@ staffingPerfEnd('specialty_labels');
     <?php foreach (legalSourceLinksForKeys(weeklyTimetableLegalSourceKeysForSchools(array('gymnasio'))) as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>
-    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-74472-d2-2020.html', 'Υ.Α. 74472/Δ2/2020 — ΦΕΚ Β΄ 2450/2020 · Τεχνολογία / Πληροφορική Γυμνασίου ↗'); ?>
+    <?php foreach (schoolProfileGeneralEducationLegalLinks() as $legalLink): ?>
+      <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+    <?php endforeach; ?>
     <?php foreach (legalSourceLinksForKeys(weeklyTimetableLegalSourceKeysForSchools(array('gel', 'esperino_gymnasio', 'esperino_gel'))) as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>
