@@ -27,6 +27,8 @@ if (!function_exists('legalSourcesRegistry')) {
                 'date' => '2026-04-08',
                 'url' => 'https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202132_09_04_26_OP%20EM%20GYMN.pdf',
                 'valid_from' => '2026-2027',
+                'school_types' => array('gymnasio'),
+                'topics' => array('weekly_timetable', 'general_education'),
                 'link_label' => 'Υ.Α. 44257/Δ2/08-04-2026 — ΦΕΚ Β΄ 2132/09-04-2026 · Ημερήσιο Γυμνάσιο ↗',
             ),
             'gel_timetable_2026' => array(
@@ -37,6 +39,8 @@ if (!function_exists('legalSourcesRegistry')) {
                 'date' => '2026-04-07',
                 'url' => 'https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202106_09_04_26_OP%20EM%20GEL_ESP%20Gymnasio.pdf',
                 'valid_from' => '2026-2027',
+                'school_types' => array('gel'),
+                'topics' => array('weekly_timetable', 'general_education'),
                 'link_label' => 'Υ.Α. 43684/Δ2/07-04-2026 — ΦΕΚ Β΄ 2106/09-04-2026 · Ημερήσιο ΓΕΛ ↗',
             ),
             'esperino_gymnasio_timetable_2026' => array(
@@ -50,6 +54,8 @@ if (!function_exists('legalSourcesRegistry')) {
                     'ministry_index' => 'https://www.minedu.gov.gr/protovathmia-defterovathmia/mousika-sxoleia-eisagogi-mathiton-mathitrion/70059-orologio-programma-ton-mathimaton-ton-a-v-kai-g-takseon-tou-esperinoy-gymnasiou-genikoy-lykeiou?filter_tag%5B0%5D=64',
                 ),
                 'valid_from' => '2026-2027',
+                'school_types' => array('esperino_gymnasio'),
+                'topics' => array('weekly_timetable', 'general_education'),
                 'link_label' => 'Υ.Α. 43751/Δ2/07-04-2026 — ΦΕΚ Β΄ 2106/09-04-2026 · Εσπερινό Γυμνάσιο ↗',
             ),
             'esperino_gel_timetable_2026' => array(
@@ -63,6 +69,8 @@ if (!function_exists('legalSourcesRegistry')) {
                     'legal_text' => 'https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/ya-43706-d2-2026.html',
                 ),
                 'valid_from' => '2026-2027',
+                'school_types' => array('esperino_gel'),
+                'topics' => array('weekly_timetable', 'general_education'),
                 'link_label' => 'Υ.Α. 43706/Δ2/07-04-2026 — ΦΕΚ Β΄ 2102/09-04-2026 · Εσπερινό ΓΕΛ ↗',
             ),
 
@@ -75,6 +83,7 @@ if (!function_exists('legalSourcesRegistry')) {
                 'url' => 'https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-74472-d2-2020.html',
                 'valid_from' => '2020-2021',
                 'school_types' => array('gymnasio'),
+                'topics' => array('class_formation', 'technology', 'informatics', 'general_education'),
                 'link_label' => 'Υ.Α. 74472/Δ2/2020 — ΦΕΚ Β΄ 2450/2020 · Τεχνολογία / Πληροφορική Γυμνασίου ↗',
             ),
             'eneegyl_gymnasio_timetable_2026' => array(
@@ -86,6 +95,7 @@ if (!function_exists('legalSourcesRegistry')) {
                 'url' => 'https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%202259tB22-04-2026%20me%20thema%20Orologio%20Programma%20ton%20mathematon%20tou%20Gymnasiou%20EN.E.E.GY-L.pdf',
                 'valid_from' => '2026-2027',
                 'school_types' => array('eneegyl_gymnasio'),
+                'topics' => array('weekly_timetable', 'special_education', 'vocational_special_education'),
                 'link_label' => 'ΦΕΚ Β΄ 2259/2026 — Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗',
             ),
             'eneegyl_lykeio_timetable_2026' => array(
@@ -97,6 +107,7 @@ if (!function_exists('legalSourcesRegistry')) {
                 'url' => 'https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%202149%20t.B%2016-04-2026%20me%20thema%20Orologio%20programma%20tou%20Lykeiou%20ton%20Eniaion%20Eidikon%20Epangelmatikon%20Gymnasion%20-%20Lykeion%20EN.E.E.GY.-L.pdf',
                 'valid_from' => '2026-2027',
                 'school_types' => array('eneegyl_lykeio'),
+                'topics' => array('weekly_timetable', 'special_education', 'vocational_special_education'),
                 'link_label' => 'ΦΕΚ Β΄ 2149/2026 — Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ. ↗',
             ),
 
@@ -111,6 +122,8 @@ if (!function_exists('legalSourcesRegistry')) {
                     'legal_text' => 'https://www.e-nomothesia.gr/kat-ekpaideuse/ekklesiastike-ekpaideuse/upourgike-apophase-118380-th2-2021.html',
                 ),
                 'valid_from' => '2021-2022',
+                'school_types' => array('protypo_ekklisiastiko_gymnasio', 'protypo_ekklisiastiko_lykeio'),
+                'topics' => array('weekly_timetable', 'ecclesiastical_education'),
             ),
             'ecclesiastical_lykeio_timetable_2022' => array(
                 'title' => 'Τροποποίηση ωρολογίου Γ΄ Γενικού Εκκλησιαστικού Λυκείου',
@@ -120,6 +133,8 @@ if (!function_exists('legalSourcesRegistry')) {
                 'date' => '2022-05-30',
                 'url' => 'https://www.e-nomothesia.gr/kat-ekpaideuse/ekklesiastike-ekpaideuse/upourgike-apophase-63979-th2-2022.html',
                 'valid_from' => '2021-2022',
+                'school_types' => array('protypo_ekklisiastiko_lykeio'),
+                'topics' => array('weekly_timetable', 'ecclesiastical_education'),
             ),
             'ecclesiastical_gymnasio_timetable_2025' => array(
                 'title' => 'Τροποποίηση ωρολογίου Προτύπου Εκκλησιαστικού Γυμνασίου',
@@ -129,6 +144,8 @@ if (!function_exists('legalSourcesRegistry')) {
                 'date' => '2025-09-11',
                 'url' => 'https://dide.ira.sch.gr/wp-content/uploads/2026/02/%CE%95%CE%9E%CE%95-110640-2025-%CE%A4%CF%81%CE%BF%CF%80%CE%BF%CF%80%CE%BF%CE%AF%CE%B7%CF%83%CE%B7-%CF%84%CE%B7%CF%82-%CF%85%CF%80%CF%8C-%CF%83%CF%84%CE%BF%CE%B9%CF%87%CE%B5%CE%AF%CE%B1-118380-%CE%982-21-09-2021-%CE%A5%CE%91-%CE%A9%CF%81%CE%BF%CE%BB%CF%8C%CE%B3%CE%B9%CE%BF-%CE%A0%CF%81%CF%8C%CE%B3%CF%81%CE%B1%CE%BC%CE%BC%CE%B1-%CE%BC%CE%B1%CE%B8%CE%B7%CE%BC%CE%AC%CF%84%CF%89%CE%BD-%CF%84%CF%89%CE%BD-%CE%95%CE%BA%CE%BA%CE%BB%CE%B7%CF%83%CE%B9%CE%B1%CF%83%CF%84%CE%B9%CE%BA%CF%8E%CE%BD.pdf',
                 'valid_from' => '2025-2026',
+                'school_types' => array('protypo_ekklisiastiko_gymnasio'),
+                'topics' => array('weekly_timetable', 'ecclesiastical_education'),
             ),
 
             'ecclesiastical_iconography_2020' => array(
@@ -796,20 +813,25 @@ if (!function_exists('legalSourcesRegistry')) {
                 'date' => '2026-05-05',
                 'url' => 'https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio',
                 'valid_from' => '2026-2027',
+                'school_types' => array('gymnasio', 'esperino_gymnasio', 'gel', 'esperino_gel'),
+                'topics' => array('teaching_assignments', 'general_education'),
+                'amended_by' => array('gymnasio_gel_assignments_2026_5555'),
                 // Optional portable label. Consumers may ignore it and build
                 // their own presentation from the structured fields above.
                 'link_label' => 'ΥΠΑΙΘΑ — Αναθέσεις Γυμνασίου / ΓΕΛ ↗',
-                'amendments' => array(
-                    array(
-                        'title' => 'Τροποποίηση αναθέσεων Γυμνασίου / ΓΕΛ',
-                        'decision' => 'Υ.Α. 112867/Δ2/31-08-2026',
-                        'fek' => 'ΦΕΚ Β΄ 5555/11-09-2026',
-                        'date' => '2026-08-31',
-                        'url' => 'https://www.et.gr/api/DownloadFekPdf?fek_pdf=2026/B/5555',
-                        'valid_from' => '2026-2027',
-                        'link_label' => 'Υ.Α. 112867/Δ2/31-08-2026 — ΦΕΚ Β΄ 5555/11-09-2026 · Τροποποίηση αναθέσεων Γυμνασίου / ΓΕΛ ↗',
-                    ),
-                ),
+            ),
+            'gymnasio_gel_assignments_2026_5555' => array(
+                'title' => 'Τροποποίηση αναθέσεων Γυμνασίου / ΓΕΛ',
+                'citation_title' => 'Τροποποίηση αναθέσεων Γυμνασίου / ΓΕΛ',
+                'decision' => 'Υ.Α. 112867/Δ2/31-08-2026',
+                'fek' => 'ΦΕΚ Β΄ 5555/11-09-2026',
+                'date' => '2026-08-31',
+                'url' => 'https://www.et.gr/api/DownloadFekPdf?fek_pdf=2026/B/5555',
+                'valid_from' => '2026-2027',
+                'school_types' => array('gymnasio', 'esperino_gymnasio', 'gel', 'esperino_gel'),
+                'topics' => array('teaching_assignments', 'general_education'),
+                'amends' => array('gymnasio_gel_assignments_2026'),
+                'link_label' => 'Υ.Α. 112867/Δ2/31-08-2026 — ΦΕΚ Β΄ 5555/11-09-2026 · Τροποποίηση αναθέσεων Γυμνασίου / ΓΕΛ ↗',
             ),
         );
 

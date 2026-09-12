@@ -9,6 +9,8 @@
  * This file contains no HTML and does not load the assignment rows.
  */
 
+require_once __DIR__ . '/legal-sources.php';
+
 if (!function_exists('teachingAssignmentsLegalSourceKeysForSchools')) {
     function teachingAssignmentsLegalSourceKeysForSchools($schools)
     {
@@ -106,6 +108,7 @@ if (!function_exists('teachingAssignmentsLegalSourceKeysForSchools')) {
             // The common curriculum of P.E.S. reuses the current Gymnasio/GEL
             // assignment table, so the same legal act applies there too.
             $keys[] = 'gymnasio_gel_assignments_2026';
+            $keys[] = 'gymnasio_gel_assignments_2026_5555';
         }
         if ($usesEcclesiastical) {
             // P.E.S. assignments are also constrained by their special

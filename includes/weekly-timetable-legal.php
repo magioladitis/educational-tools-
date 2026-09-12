@@ -277,9 +277,10 @@ if (!function_exists('weeklyTimetableSpecialSchoolOverviewLinks')) {
             $generalAssignments = legalSourceByKey('gymnasio_gel_assignments_2026');
             if ($generalAssignments && ($url = legalSourceUrl($generalAssignments))) {
                 $baseFek = legalSourceCompactFek($generalAssignments['fek']);
+                $amendment = legalSourceByKey('gymnasio_gel_assignments_2026_5555');
                 $amendFek = '';
-                if (!empty($generalAssignments['amendments'][0]['fek'])) {
-                    $amendFek = legalSourceCompactFek($generalAssignments['amendments'][0]['fek']);
+                if ($amendment && !empty($amendment['fek'])) {
+                    $amendFek = legalSourceCompactFek($amendment['fek']);
                     $amendFek = preg_replace('/^ΦΕΚ\s+/u', '', $amendFek);
                 }
                 $label = $baseFek;
@@ -287,7 +288,7 @@ if (!function_exists('weeklyTimetableSpecialSchoolOverviewLinks')) {
                     $label .= ' + ' . $amendFek;
                 }
                 $links[] = array(
-                    'source_key'=>'gymnasio_gel_assignments_2026',
+                    'source_keys'=>array('gymnasio_gel_assignments_2026', 'gymnasio_gel_assignments_2026_5555'),
                     'url'=>$url,
                     'label'=>$label . ' — Αναθέσεις γενικής παιδείας Καλλιτεχνικών Σχολείων / διασταύρωση ↗',
                 );
