@@ -123,30 +123,71 @@ function staffingUiEthicsGrade($suffix) {
     return staffingUiEthicsGradeWithPrefix('ethics_', $suffix);
 }
 function staffingUiIssueLabel($issue) {
-    if (preg_match('/^(gymnasio|gel|protypo_ekklisiastiko_gymnasio|protypo_ekklisiastiko_lykeio):([^:]+):(second_foreign_language_groups_exceeds_general_sections|foreign_language_groups_exceeds_general_sections):([^:]+):(\d+)>(\d+)$/u', $issue, $m)) {
-        return 'Οι ομάδες «' . $m[4] . '» της ' . $m[2] . ' τάξης (' . $m[5]
-            . ') δεν μπορούν να ξεπερνούν τα ' . $m[6]
-            . ' κανονικά τμήματα της ίδιας τάξης. (' . $issue . ')';
-    }
-    $map = array(
-        'general_sections_required' => 'Χρειάζεται τουλάχιστον ένα τμήμα στην τάξη.',
-        'second_foreign_language_groups_required' => 'Χρειάζονται οι πραγματικές ομάδες 2ης ξένης γλώσσας.',
-        'foreign_language_groups_required' => 'Χρειάζονται οι πραγματικές ομάδες ξένης γλώσσας.',
-        'at_least_one_orientation_group_required' => 'Χρειάζεται τουλάχιστον μία πραγματική Ομάδα Προσανατολισμού.',
-        'science_health_field_groups_required' => 'Χρειάζεται κατανομή ομάδων Μαθηματικών / Βιολογίας στη Γ΄ Θετικών–Υγείας.',
-        'science_health_field_groups_empty' => 'Υπάρχει Θετικών–Υγείας αλλά δεν δηλώθηκε ομάδα Μαθηματικών ή Βιολογίας.',
-        'technology_informatics_split_sections_exceeds_general_sections' => 'Τα τμήματα με πάνω από 21 μαθητές δεν μπορούν να είναι περισσότερα από τα δηλωμένα τμήματα της ίδιας τάξης.',
+    $schoolLabels = array(
+        'gymnasio' => 'Γυμνάσιο',
+        'esperino_gymnasio' => 'Εσπερινό Γυμνάσιο',
+        'gel' => 'ΓΕΛ',
+        'esperino_gel' => 'Εσπερινό ΓΕΛ',
+        'protypo_ekklisiastiko_gymnasio' => 'Πρότυπο Εκκλησιαστικό Γυμνάσιο',
+        'protypo_ekklisiastiko_lykeio' => 'Πρότυπο Εκκλησιαστικό Λύκειο',
     );
-    foreach ($map as $needle => $label) {
-        if (strpos($issue, $needle) !== false) return $label . ' (' . $issue . ')';
+    $trackLabels = array(
+        'humanities' => 'Ανθρωπιστικών Σπουδών',
+        'science' => 'Θετικών Σπουδών',
+        'science_health' => 'Θετικών Σπουδών και Σπουδών Υγείας',
+        'economics_it' => 'Σπουδών Οικονομίας και Πληροφορικής',
+    );
+
+    if (preg_match('/^(gymnasio|gel|protypo_ekklisiastiko_gymnasio|protypo_ekklisiastiko_lykeio):([^:]+):(second_foreign_language_groups_exceeds_general_sections|foreign_language_groups_exceeds_general_sections):([^:]+):(\d+)>(\d+)$/u', $issue, $m)) {
+        return 'Στην ' . $m[2] . ' τάξη οι ομάδες «' . $m[4] . '» (' . $m[5]
+            . ') δεν μπορούν να είναι περισσότερες από τα ' . $m[6]
+            . ' κανονικά τμήματα της ίδιας τάξης.';
     }
-    if (strpos($issue, 'conditional_groups') !== false) {
-        return 'Χρειάζεται ο πραγματικός αριθμός ομάδων για το μάθημα υπό προϋπόθεση της Γ΄ ΓΕΛ. (' . $issue . ')';
+
+    if (preg_match('/^([^:]+):([^:]+):general_sections_required$/u', $issue, $m)) {
+        return 'Στην ' . $m[2] . ' τάξη χρειάζεται να δηλωθεί τουλάχιστον ένα κανονικό τμήμα.';
     }
-    if (strpos($issue, 'orientation_sections') !== false) {
-        return 'Χρειάζεται ο πραγματικός αριθμός ομάδων προσανατολισμού. (' . $issue . ')';
+    if (preg_match('/^([^:]+):([^:]+):second_foreign_language_groups_required$/u', $issue, $m)) {
+        return 'Στην ' . $m[2] . ' τάξη χρειάζεται να δηλωθούν οι πραγματικές ομάδες 2ης ξένης γλώσσας.';
     }
-    return $issue;
+    if (preg_match('/^([^:]+):([^:]+):foreign_language_groups_required$/u', $issue, $m)) {
+        return 'Στην ' . $m[2] . ' τάξη χρειάζεται να δηλωθούν οι πραγματικές ομάδες ξένης γλώσσας.';
+    }
+    if (preg_match('/^([^:]+):([^:]+):orientation_sections:([^:]+):required$/u', $issue, $m)) {
+        $track = isset($trackLabels[$m[3]]) ? $trackLabels[$m[3]] : 'της αντίστοιχης κατεύθυνσης';
+        return 'Στην ' . $m[2] . ' τάξη χρειάζεται να δηλωθεί ο πραγματικός αριθμός ομάδων Προσανατολισμού ' . $track . '.';
+    }
+    if (preg_match('/^([^:]+):([^:]+):at_least_one_orientation_group_required$/u', $issue, $m)) {
+        return 'Στην ' . $m[2] . ' τάξη χρειάζεται να δηλωθεί τουλάχιστον μία πραγματική Ομάδα Προσανατολισμού.';
+    }
+    if (preg_match('/^([^:]+):([^:]+):science_health_field_groups_required$/u', $issue, $m)) {
+        return 'Στην ' . $m[2] . ' τάξη χρειάζεται να δηλωθεί η κατανομή των ομάδων Θετικών / Υγείας σε Μαθηματικά και Βιολογία.';
+    }
+    if (preg_match('/^([^:]+):([^:]+):science_health_field_groups_empty$/u', $issue, $m)) {
+        return 'Στην ' . $m[2] . ' τάξη υπάρχει ομάδα Θετικών / Υγείας, αλλά δεν έχει δηλωθεί ομάδα Μαθηματικών ή Βιολογίας.';
+    }
+    if (preg_match('/^([^:]+):([^:]+):conditional_groups:([^:]+):required$/u', $issue, $m)) {
+        $courseId = $m[3];
+        if (strpos($courseId, 'mathimatika') !== false) {
+            $subject = 'Μαθηματικά Γενικής Παιδείας';
+        } elseif (strpos($courseId, 'istoria') !== false) {
+            $subject = 'Ιστορία Γενικής Παιδείας';
+        } else {
+            $subject = 'το μάθημα Γενικής Παιδείας υπό προϋπόθεση';
+        }
+        return 'Στην ' . $m[2] . ' τάξη χρειάζεται να δηλωθεί ο πραγματικός αριθμός ομάδων για το μάθημα «' . $subject . '».';
+    }
+    if (preg_match('/^([^:]+):([^:]+):technology_informatics_split_sections_exceeds_general_sections:(\d+)>(\d+)$/u', $issue, $m)) {
+        return 'Στην ' . $m[2] . ' τάξη τα τμήματα με πάνω από 21 μαθητές (' . $m[3]
+            . ') δεν μπορούν να είναι περισσότερα από τα ' . $m[4] . ' κανονικά τμήματα.';
+    }
+    if (preg_match('/^([^:]+):([^:]+):period_selection_(?:invalid|required)$/u', $issue, $m)) {
+        return 'Στη ' . $m[2] . ' τάξη χρειάζεται να επιλεγεί το τετράμηνο υπολογισμού.';
+    }
+
+    // Στο κανονικό UI δεν εμφανίζουμε εσωτερικά ids/κωδικούς υλοποίησης.
+    // Αν προστεθεί νέος κανόνας χωρίς φιλική ετικέτα, δείχνουμε ασφαλές γενικό μήνυμα.
+    return 'Υπάρχει μία εκκρεμότητα στα στοιχεία της σχολικής μονάδας. Έλεγξε τα υποχρεωτικά πεδία της αντίστοιχης τάξης.';
 }
 function staffingUiEthicsPanelHasInput($prefix) {
     foreach (array('a','b','c') as $suffix) {
