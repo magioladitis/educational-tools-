@@ -37,6 +37,7 @@ require_once __DIR__ . '/includes/ecclesiastical-schools.php';
 require_once __DIR__ . '/includes/school-profile-workload.php';
 require_once __DIR__ . '/includes/ethics-class-formation.php';
 require_once __DIR__ . '/includes/legal-sources.php';
+require_once __DIR__ . '/includes/reference-sources.php';
 require_once __DIR__ . '/includes/teaching-assignments-legal.php';
 require_once __DIR__ . '/includes/weekly-timetable-legal.php';
 require_once __DIR__ . '/includes/school-profile-legal.php';
@@ -2410,7 +2411,7 @@ staffingPerfEnd('specialty_labels');
     ?>
     <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_timetable_2021', 'staffing'); ?>
     <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
-    <?php sourceCardLink('https://www.sch.gr/sites/sch-units/', 'Πανελλήνιο Σχολικό Δίκτυο — μητρώο σχολικών μονάδων / κωδικοί Υπουργείου ↗'); ?>
+    <?php $referenceLink = referenceSourceLinkByKey('school_units_registry_psd'); if ($referenceLink) sourceCardLink($referenceLink['url'], $referenceLink['label']); ?>
     <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_gymnasio_timetable_2025', 'staffing'); ?>
     <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
     <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_lykeio_timetable_2022', 'staffing'); ?>

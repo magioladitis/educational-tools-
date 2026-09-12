@@ -1,6 +1,7 @@
 <?php require_once __DIR__ . '/includes/config.php'; ?>
 <?php require_once __DIR__ . '/includes/teaching-assignments-data.php'; ?>
 <?php require_once __DIR__ . '/includes/legal-sources.php'; ?>
+<?php require_once __DIR__ . '/includes/reference-sources.php'; ?>
 <?php require_once __DIR__ . '/includes/teaching-assignments-legal.php'; ?>
 <!doctype html>
 <html lang="el">
@@ -377,19 +378,19 @@
     <?php foreach (teachingAssignmentsGeneralTimetableCrosscheckLinks() as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>
-    <?php sourceCardLink('https://religiousaffairs.minedu.gov.gr/el/allcategories-el-gr/epiloges-kategorias-el-gr/organotiki-domi-diefthynseis/dieythynsi-thriskeftikis-ekpaidefsis-diathriskeftikon-sxeseon/tmima-ekklisiastikis-ekpaidefsis-thriskeftikis-agogis/protypa-ekklisiastika-sxoleia/themata-ekpaideftikoy-prosopikoy-protypa-ekklisiastika-sxoleia', 'ΥΠΑΙΘΑ — Θέματα εκπαιδευτικού προσωπικού Π.Ε.Σ. ↗'); ?>
+    <?php $referenceLink = referenceSourceLinkByKey('pes_staff_official_page'); if ($referenceLink) sourceCardLink($referenceLink['url'], $referenceLink['label']); ?>
     <?php $pesTimetableLegalSource = legalSourceByKey('ecclesiastical_timetable_2021'); ?>
     <?php if ($pesTimetableLegalSource): sourceCardLink(legalSourceUrl($pesTimetableLegalSource, 'legal_text'), 'ΦΕΚ Β΄ 4438/2021 — Ωρολόγιο Εκκλησιαστικών Σχολείων ↗'); endif; ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/anatheseis-mathimaton---eidiki-kai-entaksiaki-ekpaidefsi', 'ΥΠΑΙΘΑ — Αναθέσεις Ειδικής & Ενταξιακής Εκπαίδευσης ↗'); ?>
+    <?php $referenceLink = referenceSourceLinkByKey('eae_assignments_official_index'); if ($referenceLink) sourceCardLink($referenceLink['url'], $referenceLink['label']); ?>
     <?php foreach (legalSourceLinksForKeys(teachingAssignmentsLegalSourceKeysForSchools(array('eae_gymnasio', 'eae_lykeio', 'eneegyl_gymnasio', 'eneegyl_lykeio'))) as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/panelladikes-eksetaseis-pistopoiitika/gel-mixanografiko?catid=1524&id=35699%3Athesmiko-plaisio-leitourgias-epal-sp-299&view=article', 'ΥΠΑΙΘΑ — Θεσμικό πλαίσιο ΕΠΑ.Λ. / Αναθέσεις ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2025/epal/%CE%99%CE%A3%CE%A7%CE%A5%CE%9F%CE%9D_%CE%98%CE%95%CE%A3%CE%9C%CE%99%CE%9A%CE%9F_%CE%A0%CE%9B%CE%91%CE%99%CE%A3%CE%99%CE%9F_%CE%95%CE%A0%CE%91%CE%9B_12-02-2025.pdf', 'ΥΠΑΙΘΑ — Θεσμικό πλαίσιο Π.ΕΠΑ.Λ. / ΦΕΚ 4367, 5188, 7403 ↗'); ?>
+    <?php $referenceLink = referenceSourceLinkByKey('epal_assignments_official_framework'); if ($referenceLink) sourceCardLink($referenceLink['url'], $referenceLink['label']); ?>
+    <?php $referenceLink = referenceSourceLinkByKey('pepal_assignments_official_framework_2025'); if ($referenceLink) sourceCardLink($referenceLink['url'], $referenceLink['label']); ?>
     <?php foreach (teachingAssignmentsVocationalOverviewLinks() as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/a-v-vathmia-ekpaidefsi-mob/defterovathmia-2/kallitexnika', 'ΥΠΑΙΘΑ — Καλλιτεχνικά Σχολεία ↗'); ?>
+    <?php $referenceLink = referenceSourceLinkByKey('art_schools_official_page'); if ($referenceLink) sourceCardLink($referenceLink['url'], $referenceLink['label']); ?>
     <?php foreach (teachingAssignmentsSpecialSchoolOverviewLinks() as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>

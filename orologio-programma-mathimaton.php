@@ -1,6 +1,7 @@
 <?php require_once __DIR__ . '/includes/config.php'; ?>
 <?php require_once __DIR__ . '/includes/weekly-timetable-data.php'; ?>
 <?php require_once __DIR__ . '/includes/legal-sources.php'; ?>
+<?php require_once __DIR__ . '/includes/reference-sources.php'; ?>
 <?php require_once __DIR__ . '/includes/weekly-timetable-legal.php'; ?>
 <?php require_once __DIR__ . '/includes/school-profile-legal.php'; ?>
 <?php require_once __DIR__ . '/includes/ethics-class-formation.php'; ?>
@@ -95,7 +96,7 @@
   <?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink(ethicsClassFormationPolicy()['source_url'], 'Υ.Α. 108070/Δ2/2026 — ΦΕΚ Β΄ 5231/2026 · Διδασκαλία Ηθικής ↗'); ?>
-    <?php sourceCardLink('https://religiousaffairs.minedu.gov.gr/en/directorates/directorate-for-religious-education-and-interfaith-relations/department-for-ecclesiastical-and-religious-education/model-ecclesiastical-schools/regulatory-framework', 'ΥΠΑΙΘΑ — Νομοθετικό πλαίσιο Προτύπων Εκκλησιαστικών Σχολείων ↗'); ?>
+    <?php $referenceLink = referenceSourceLinkByKey('pes_regulatory_framework_official_page'); if ($referenceLink) sourceCardLink($referenceLink['url'], $referenceLink['label']); ?>
     <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_gymnasio_timetable_2025', 'overview'); ?>
     <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
     <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_timetable_2021', 'overview'); ?>
@@ -121,7 +122,7 @@
     <?php foreach (array_slice($vocationalLegalLinks, 0, 2) as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/orologio-programma-g-taksi---epaggelmatiki-ekpaidefsi', 'ΥΠΑΙΘΑ — Ισχύοντα ωρολόγια Γ΄ τάξης Επαγγελματικής Εκπαίδευσης ↗'); ?>
+    <?php $referenceLink = referenceSourceLinkByKey('vocational_grade_c_timetables_official_index'); if ($referenceLink) sourceCardLink($referenceLink['url'], $referenceLink['label']); ?>
     <?php foreach (array_slice($vocationalLegalLinks, 2) as $legalLink): ?>
       <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
     <?php endforeach; ?>
