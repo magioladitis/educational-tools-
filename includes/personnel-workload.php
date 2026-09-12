@@ -594,12 +594,14 @@ function personnelWorkloadOpenOpportunities($matrix, $specialtyCode, $remainingB
     return $rows;
 }
 
-function personnelWorkloadRosterPlan($profile, $people, $allocations, $model = null)
+function personnelWorkloadRosterPlan($profile, $people, $allocations, $model = null, $matrix = null)
 {
     if ($model === null) {
         $model = teachingWorkloadModel();
     }
-    $matrix = schoolProfileWorkloadMatrix($profile, $model);
+    if ($matrix === null) {
+        $matrix = schoolProfileWorkloadMatrix($profile, $model);
+    }
     $unitIndex = personnelWorkloadUnitIndex($matrix);
 
     $peopleIndex = array();
@@ -984,10 +986,10 @@ function personnelWorkloadBestAssignmentForSlot($slot, $person)
  * Μεταφράζει τα slot allocations στο υπάρχον aggregate personnel layer,
  * αλλά επιπλέον ελέγχει ξεχωριστά τη χωρητικότητα κάθε Α1/Α2/Ομάδας.
  */
-function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model = null)
+function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model = null, $matrix = null)
 {
     if ($model === null) $model = teachingWorkloadModel();
-    $matrix = schoolProfileWorkloadMatrix($profile, $model);
+    if ($matrix === null) $matrix = schoolProfileWorkloadMatrix($profile, $model);
     $slots = personnelWorkloadAllocationSlots($profile, $matrix);
 
     $peopleIndex = array();
@@ -1106,7 +1108,7 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
         $slotAssigned[$slotId] += $hours;
     }
 
-    $basePlan = personnelWorkloadRosterPlan($profile, $people, array_values($aggregate), $model);
+    $basePlan = personnelWorkloadRosterPlan($profile, $people, array_values($aggregate), $model, $matrix);
     $slotStates = array();
     $covered = 0; $unassigned = 0; $assignedSlotTotal = 0;
     foreach ($slots as $slotId=>$slot) {
@@ -1319,15 +1321,14 @@ function personnelWorkloadVacancyCandidateCodesForSlot($slot)
  * και σε ισοβαθμία κύρια πριν από 2η ειδικότητα. Το όριο Β΄ ανάθεσης 10 ωρών
  * τηρείται ως hard limit της αυτόματης πρότασης.
  */
-function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAllocations = array(), $model = null, $basePlan = null)
+function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAllocations = array(), $model = null, $basePlan = null, $matrix = null)
 {
     if ($model === null) $model = teachingWorkloadModel();
-    if ($basePlan === null) $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model);
+    if ($matrix === null) $matrix = schoolProfileWorkloadMatrix($profile, $model);
+    if ($basePlan === null) $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model, $matrix);
     if (!function_exists('teachingAllocationEngineProposal')) require_once __DIR__ . '/teaching-allocation-engine.php';
-
-    $matrix = schoolProfileWorkloadMatrix($profile, $model);
     $slots = personnelWorkloadAllocationSlots($profile, $matrix);
-    $engine = teachingAllocationEngineProposal($profile, $people, $slotAllocations, $model);
+    $engine = teachingAllocationEngineProposal($profile, $people, $slotAllocations, $model, $matrix);
 
     // Fallback state for invalid locked rows. In the normal path the exact same
     // optimizer state used by Tab 4 is returned below, so Tabs 4 and 6 cannot
@@ -1407,13 +1408,13 @@ function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAlloc
  *    αναθέσεις και προτιμά τον κλάδο που μπορεί να καλύψει τις περισσότερες
  *    από τις συνολικά ακάλυπτες ώρες.
  */
-function personnelWorkloadSpecialtyBalanceReport($profile, $people, $slotAllocations = array(), $model = null)
+function personnelWorkloadSpecialtyBalanceReport($profile, $people, $slotAllocations = array(), $model = null, $matrix = null)
 {
     if ($model === null) $model = teachingWorkloadModel();
-    $matrix = schoolProfileWorkloadMatrix($profile, $model);
+    if ($matrix === null) $matrix = schoolProfileWorkloadMatrix($profile, $model);
     $slots = personnelWorkloadAllocationSlots($profile, $matrix);
-    $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model);
-    $auto = personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAllocations, $model, $basePlan);
+    $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $model, $matrix);
+    $auto = personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAllocations, $model, $basePlan, $matrix);
 
     $open = array();
     $coverageByCode = array();

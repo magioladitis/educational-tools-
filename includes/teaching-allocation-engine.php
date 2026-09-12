@@ -724,12 +724,12 @@ function teachingAllocationEngineSolveRemaining($slots, $people, $personState, $
  * Δημόσιο API του engine. Οι $lockedAllocations είναι οι υπάρχουσες
  * χειροκίνητες γραμμές της Καρτέλας 4 και δεν αλλάζουν.
  */
-function teachingAllocationEngineProposal($profile, $people, $lockedAllocations = array(), $model = null)
+function teachingAllocationEngineProposal($profile, $people, $lockedAllocations = array(), $model = null, $matrix = null)
 {
     if ($model === null) $model = teachingWorkloadModel();
-    $matrix = schoolProfileWorkloadMatrix($profile, $model);
+    if ($matrix === null) $matrix = schoolProfileWorkloadMatrix($profile, $model);
     $slots = personnelWorkloadAllocationSlots($profile, $matrix);
-    $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $lockedAllocations, $model);
+    $basePlan = personnelWorkloadRosterSlotPlan($profile, $people, $lockedAllocations, $model, $matrix);
 
     $invalidRows = isset($basePlan['summary']['invalid_allocation_row_count']) ? (int)$basePlan['summary']['invalid_allocation_row_count'] : 0;
     if ($invalidRows > 0 || !empty($basePlan['summary']['overallocated_slot_hours'])) {
@@ -792,7 +792,7 @@ function teachingAllocationEngineProposal($profile, $people, $lockedAllocations 
     foreach ($proposal as $row) {
         $combined[] = array('person_id'=>$row['person_id'],'slot_id'=>$row['slot_id'],'hours'=>$row['hours']);
     }
-    $combinedPlan = personnelWorkloadRosterSlotPlan($profile, array_values($peopleIndex), $combined, $model);
+    $combinedPlan = personnelWorkloadRosterSlotPlan($profile, array_values($peopleIndex), $combined, $model, $matrix);
 
     $priorityHours = array('A'=>0,'B'=>0,'C'=>0,'SPECIAL'=>0);
     $splitSlots = array();

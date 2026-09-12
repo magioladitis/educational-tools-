@@ -528,6 +528,7 @@ return array (
     'A' => 
     array (
       0 => 'ΠΕ02',
+      1 => 'ΠΕ33',
     ),
     'B' => 
     array (

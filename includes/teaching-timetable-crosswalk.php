@@ -400,7 +400,7 @@ function teachingTimetableConfirmedRegulatoryGapMetadataForRow($row)
             'confirmed' => true,
             'kind' => 'partial_language_assignment_gap',
             'timetable_source' => 'ΦΕΚ Β΄ 4438/2021, όπως ισχύει με ΦΕΚ Β΄ 4881/2025',
-            'assignment_source' => 'ΦΕΚ Β΄ 2583/2026 + ισχύουσες οδηγίες στελέχωσης Π.Ε.Σ. 2026-2027',
+            'assignment_source' => 'ΦΕΚ Β΄ 2583/2026, όπως τροποποιήθηκε με Β΄ 5555/2026 + ισχύουσες οδηγίες στελέχωσης Π.Ε.Σ. 2026-2027',
             'inference_guard' => 'no_unpublished_language_specialty_inference',
             'related_scope' => 'Ρωσικά / Αραβικά / Τουρκικά· Γαλλικά/Γερμανικά παραμένουν ΠΕ05/ΠΕ07 στο εργαλείο αναθέσεων',
         );
@@ -422,7 +422,7 @@ function teachingTimetableConfirmedRegulatoryGapMetadataForRow($row)
             'confirmed' => true,
             'kind' => 'current_timetable_subject_missing_from_current_assignment_tables',
             'timetable_source' => 'ΦΕΚ Β΄ 2107/2026',
-            'assignment_source' => 'ΦΕΚ Β΄ 4202/2018 + ΦΕΚ Β΄ 2583/2026',
+            'assignment_source' => 'ΦΕΚ Β΄ 4202/2018 + ΦΕΚ Β΄ 2583/2026, όπως τροποποιήθηκε με Β΄ 5555/2026',
             'inference_guard' => 'do_not_revive_repealed_2015_assignment',
             'related_scope' => 'Υ.Α. 94541/Δ2/2015 (ΦΕΚ Β΄ 1356/2015), καταργημένη από το ΦΕΚ Β΄ 4202/2018',
         );

@@ -18,6 +18,13 @@
         const now=new Date();
         stamp.textContent='Εκτύπωση: '+now.toLocaleDateString('el-GR')+' '+now.toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit'});
       }
+      // Οι βαριές παράγωγες προβολές ανανεώνονται lazy. Πριν από εκτύπωση
+      // τις συγχρονίζουμε ρητά, ώστε το print snapshot να είναι πάντα πλήρες.
+      if(typeof allocationCollectState==='function'){
+        const state=allocationCollectState();
+        if(typeof updateVacancyView==='function') updateVacancyView(state.slotAssigned,state.personAssigned,state.personPriority);
+        if(typeof renderSpecialtyBalance==='function') renderSpecialtyBalance(state);
+      }
       window.print();
     });
   }
@@ -91,7 +98,16 @@
       tab.tabIndex=active?0:-1;
     });
     panels.forEach(function(panel){ panel.hidden=panel.getAttribute('data-staffing-panel')!==name; });
-    if(name==='specialties' && typeof allocationCollectState==='function' && typeof renderSpecialtyBalance==='function') renderSpecialtyBalance(allocationCollectState());
+    // Οι προβολές 4/5/6 έχουν υπολογισμούς slot × προσωπικό ή optimizer.
+    // Τους εκτελούμε μόνο όταν η αντίστοιχη καρτέλα ανοίγει.
+    if(typeof allocationCollectState==='function'){
+      if(name==='allocation' && typeof refreshAllocationEligibilitySummary==='function') refreshAllocationEligibilitySummary();
+      if(name==='vacancies' && typeof updateVacancyView==='function'){
+        const state=allocationCollectState();
+        updateVacancyView(state.slotAssigned,state.personAssigned,state.personPriority);
+      }
+      if(name==='specialties' && typeof renderSpecialtyBalance==='function') renderSpecialtyBalance(allocationCollectState());
+    }
   }
   function moveTabFocus(current,key){
     const enabled=tabs.filter(function(tab){return !tab.disabled;});
@@ -1461,6 +1477,26 @@
     });
     vacancyEligiblePeopleCache[sid]=candidates;return candidates;
   }
+  function allocationSlotHasEligiblePerson(sid,slot){
+    return !!slot && vacancyEligiblePeopleForSlot(sid,slot).length>0;
+  }
+  const allocationEligibilitySummary=document.getElementById('allocationEligibilitySummary');
+  let allocationEligibilitySummaryReady=false;
+  function refreshAllocationEligibilitySummary(){
+    if(allocationEligibilitySummaryReady) return;
+    let noEligibleSlots=0,noEligibleHours=0;
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const slot=allocationSlotsData[sid];
+      if(allocationSlotHasEligiblePerson(sid,slot)) return;
+      noEligibleSlots++;
+      noEligibleHours+=Math.max(0,(slot&&slot.capacity_hours)||0);
+    });
+    if(allocationEligibilitySummary){
+      allocationEligibilitySummary.hidden=noEligibleSlots<1;
+      allocationEligibilitySummary.innerHTML=noEligibleSlots<1?'':'<strong>Δεν εμφανίζονται '+noEligibleSlots+' μαθήματα / τμήματα χωρίς επιλέξιμο εκπαιδευτικό</strong> ('+noEligibleHours+' ώρες). Οι ώρες τους εξακολουθούν να υπολογίζονται στις ακάλυπτες ώρες.';
+    }
+    allocationEligibilitySummaryReady=true;
+  }
   function allocationAssignmentLabel(match){
     if(!match) return '';
     let text=allocationPriorityLabel(match.priority)+' ανάθεση';
@@ -1487,6 +1523,7 @@
     personEl.dataset.optionsLoaded='1';
   }
   function allocationPopulateAllSlots(row,preserveSelected){
+    refreshAllocationEligibilitySummary();
     const slotEl=row.querySelector('.allocation-slot');
     if(!slotEl) return;
     const oldSelected=slotEl.value||'';
@@ -1495,7 +1532,7 @@
     let currentGroup='', group=null;
     Object.keys(allocationSlotsData||{}).forEach(function(sid){
       const slot=allocationSlotsData[sid];
-      if(!slot||!slot.has_eligible_person) return;
+      if(!slot||!allocationSlotHasEligiblePerson(sid,slot)) return;
       const groupLabel=((slot.structure_label||'')?slot.structure_label+' · ':'')+(slot.grade||'Άλλο')+' τάξη';
       if(groupLabel!==currentGroup){ group=document.createElement('optgroup'); group.label=groupLabel; slotEl.appendChild(group); currentGroup=groupLabel; }
       const option=document.createElement('option'); option.value=slot.slot_id; option.textContent=slot.label; option.setAttribute('data-capacity',String(slot.capacity_hours)); if(oldSelected===slot.slot_id) option.selected=true; group.appendChild(option);
@@ -1529,7 +1566,7 @@
     let currentGrade=null, group=null;
     Object.keys(allocationSlotsData||{}).forEach(function(sid){
       const slot=allocationSlotsData[sid];
-      if(!slot.has_eligible_person) return;
+      if(!allocationSlotHasEligiblePerson(sid,slot)) return;
       if(person&&!allocationBestAssignment(person,slot)) return;
       if(slot.grade!==currentGrade){ group=document.createElement('optgroup'); group.label=(slot.grade||'Άλλο')+' τάξη'; slotEl.appendChild(group); currentGrade=slot.grade; }
       const option=document.createElement('option'); option.value=slot.slot_id; option.textContent=slot.label; option.setAttribute('data-capacity',String(slot.capacity_hours)); if(oldSelected===slot.slot_id) option.selected=true; group.appendChild(option);
@@ -2187,8 +2224,10 @@
   function updateAllocationSummary(){
     const state=allocationCollectState();
     if(!allocationList){
-      updateVacancyView(state.slotAssigned,state.personAssigned,state.personPriority);
-      renderSpecialtyBalance(state);
+      const activeStaffingTab=document.querySelector('[data-staffing-tab].is-active');
+      const activeStaffingPanel=activeStaffingTab?activeStaffingTab.getAttribute('data-staffing-tab'):'';
+      if(activeStaffingPanel==='vacancies') updateVacancyView(state.slotAssigned,state.personAssigned,state.personPriority);
+      if(activeStaffingPanel==='specialties') renderSpecialtyBalance(state);
       return;
     }
     const rowState=state.rowState, personAssigned=state.personAssigned, personPriority=state.personPriority, personSource=state.personSource, slotAssigned=state.slotAssigned;
@@ -2230,8 +2269,11 @@
       staffingContextUnassigned.classList.toggle('has-warning',state.unassigned>0);
     }
     updateAllocationSlotOptionAvailability(slotAssigned);
-    updateVacancyView(slotAssigned,personAssigned,personPriority);
-    renderSpecialtyBalance(state);
+    const activeStaffingTab=document.querySelector('[data-staffing-tab].is-active');
+    const activeStaffingPanel=activeStaffingTab?activeStaffingTab.getAttribute('data-staffing-tab'):'';
+    if(activeStaffingPanel==='allocation') refreshAllocationEligibilitySummary();
+    if(activeStaffingPanel==='vacancies') updateVacancyView(slotAssigned,personAssigned,personPriority);
+    if(activeStaffingPanel==='specialties') renderSpecialtyBalance(state);
     Object.keys(allocationPeopleData||{}).forEach(function(pid){
       let summary=allocationPersonSummaryCache[pid];
       if(summary===undefined){ summary=document.querySelector('[data-allocation-person-summary="'+CSS.escape(pid)+'"]')||null; allocationPersonSummaryCache[pid]=summary; }

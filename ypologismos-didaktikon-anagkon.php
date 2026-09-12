@@ -1032,13 +1032,13 @@ foreach ($personnelRows as $personnelIndex=>$person) {
 $allocationPlan = null;
 $allocationRowResults = array();
 if ($profile && $matrix && !empty($allocationPeople) && !empty($allocationRows)) {
-    $allocationPlan = personnelWorkloadRosterSlotPlan($profile, $allocationPeople, $allocationRows);
+    $allocationPlan = personnelWorkloadRosterSlotPlan($profile, $allocationPeople, $allocationRows, $teachingModel, $matrix);
     if (isset($allocationPlan['allocation_rows'])) $allocationRowResults = $allocationPlan['allocation_rows'];
 }
 $allocationEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only' && $personnelSummary['general_resolved_count'] > 0 && !empty($allocationPeople) && empty($duplicateDirectorIndexes);
 $allocationAutoProposal = null;
 if ($allocationEnabled && $staffingAction === 'allocation_auto') {
-    $allocationAutoProposal = teachingAllocationEngineProposal($profile, $allocationPeople, $allocationRows, $teachingModel);
+    $allocationAutoProposal = teachingAllocationEngineProposal($profile, $allocationPeople, $allocationRows, $teachingModel, $matrix);
     if (isset($allocationAutoProposal['status']) && $allocationAutoProposal['status'] === 'ok') {
         $allocationRows = isset($allocationAutoProposal['combined_allocations']) ? $allocationAutoProposal['combined_allocations'] : $allocationRows;
         $allocationPlan = isset($allocationAutoProposal['combined_plan']) ? $allocationAutoProposal['combined_plan'] : $allocationPlan;
@@ -1049,7 +1049,10 @@ $vacanciesEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !=
 $specialtyBalanceEnabled = $vacanciesEnabled;
 $allocationPeopleClient = array();
 foreach ($allocationPeople as $person) {
-    $normalized = personnelWorkloadNormalizePerson($person);
+    $personId = isset($person['person_id']) ? $person['person_id'] : '';
+    $normalized = ($personId !== '' && isset($personnelEvaluations[$personId]))
+        ? $personnelEvaluations[$personId]
+        : personnelWorkloadNormalizePerson($person);
     if ($normalized['status'] !== 'resolved') continue;
     $allocationPeopleClient[$person['person_id']] = array(
         'person_id'=>$person['person_id'],
@@ -1062,24 +1065,10 @@ foreach ($allocationPeople as $person) {
         'available_here_hours'=>(int)$normalized['remaining_before_profile_hours'],
     );
 }
-$allocationSelectableSlots = array();
-$allocationNoEligibleSlotCount = 0;
-$allocationNoEligibleHours = 0;
-foreach ($allocationSlots as $slotId=>$slot) {
-    $hasEligiblePerson = false;
-    foreach ($allocationPeopleClient as $personData) {
-        if (personnelWorkloadBestAssignmentForSlot($slot, $personData) !== null) {
-            $hasEligiblePerson = true;
-            break;
-        }
-    }
-    if ($hasEligiblePerson) {
-        $allocationSelectableSlots[$slotId] = $slot;
-    } else {
-        $allocationNoEligibleSlotCount++;
-        $allocationNoEligibleHours += isset($slot['capacity_hours']) ? (int)$slot['capacity_hours'] : 0;
-    }
-}
+// Η επιλεξιμότητα slot × προσωπικό υπολογίζεται πλέον lazy στον browser.
+// Αποφεύγουμε έτσι O(slots × personnel) PHP κόστος σε κάθε POST, ακόμη κι όταν
+// ο χρήστης βρίσκεται σε άσχετη καρτέλα. Η ίδια κανονιστική πληροφορία
+// (eligible_by_priority + κύρια/2η ειδικότητα) αποστέλλεται ήδη στο client.
 $allocationSlotsClient = array();
 foreach ($allocationSlots as $slotId=>$slot) {
     $reportingBucket = $profile ? personnelWorkloadReportingBucketForSlot($profile, $slot) : null;
@@ -1094,7 +1083,6 @@ foreach ($allocationSlots as $slotId=>$slot) {
         'capacity_hours'=>(int)$slot['capacity_hours'],
         'eligible_by_priority'=>$slot['eligible_by_priority'],
         'top_priority'=>isset($slot['top_priority']) ? $slot['top_priority'] : null,
-        'has_eligible_person'=>isset($allocationSelectableSlots[$slotId]),
         'reporting_bucket'=>$reportingBucket,
         'choice_option'=>isset($slot['choice_option']) ? $slot['choice_option'] : '',
         'track'=>isset($slot['track']) ? $slot['track'] : (isset($slot['profile_track']) ? $slot['profile_track'] : ''),
@@ -1109,7 +1097,6 @@ foreach ($allocationSlots as $slotId=>$slot) {
     }
     $vacancySlotState[$slotId] = array(
         'remaining_hours'=>max(0, $remaining),
-        'has_eligible_person'=>isset($allocationSelectableSlots[$slotId]),
     );
 }
 
@@ -1119,7 +1106,7 @@ $specialtyBalanceReport = null;
 // μεγάλα σχολεία αυτό διπλασίαζε άσκοπα CPU και μνήμη και μπορούσε να δώσει 500.
 $specialtyBalanceServerNeeded = $specialtyBalanceEnabled && $activePanel === 'specialties';
 if ($specialtyBalanceServerNeeded) {
-    $specialtyBalanceReport = personnelWorkloadSpecialtyBalanceReport($profile, $allocationPeople, $allocationRows, $teachingModel);
+    $specialtyBalanceReport = personnelWorkloadSpecialtyBalanceReport($profile, $allocationPeople, $allocationRows, $teachingModel, $matrix);
 }
 $specialtyLabelsClient = array();
 foreach ($allocationSlots as $slot) {
@@ -1833,7 +1820,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
                   <div>
                     <strong>Κατανομή ανά μάθημα / τμήμα</strong>
                     <div class="help">Επίλεξε πρώτα συγκεκριμένο τμήμα / ομάδα + μάθημα και μετά έναν από τους επιλέξιμους εκπαιδευτικούς. Η επιλεξιμότητα ελέγχει μαζί κύρια και 2η ειδικότητα και επιλέγει την καλύτερη ανάθεση.</div>
-                    <?php if ($allocationNoEligibleSlotCount > 0): ?><div class="help"><strong>Δεν εμφανίζονται <?php echo (int)$allocationNoEligibleSlotCount; ?> μαθήματα / τμήματα χωρίς επιλέξιμο εκπαιδευτικό</strong> (<?php echo (int)$allocationNoEligibleHours; ?> ώρες). Οι ώρες τους εξακολουθούν να υπολογίζονται στις ακάλυπτες ώρες.</div><?php endif; ?>
+                    <div class="help" id="allocationEligibilitySummary" hidden></div>
                     <div class="help">Όταν καλυφθούν πλήρως οι ώρες ενός μαθήματος / τμήματος, η επιλογή του γίνεται αυτόματα ανενεργή στις υπόλοιπες γραμμές κατανομής.</div>
                   </div>
                   <div class="allocation-toolbar-actions">
@@ -1953,7 +1940,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
               <tbody>
               <?php foreach ($allocationSlots as $vacancySlotId=>$vacancySlot): ?>
                 <?php
-                  $vacancyState = isset($vacancySlotState[$vacancySlotId]) ? $vacancySlotState[$vacancySlotId] : array('remaining_hours'=>(int)$vacancySlot['capacity_hours'],'has_eligible_person'=>false);
+                  $vacancyState = isset($vacancySlotState[$vacancySlotId]) ? $vacancySlotState[$vacancySlotId] : array('remaining_hours'=>(int)$vacancySlot['capacity_hours']);
                   $vacancyRemaining = isset($vacancyState['remaining_hours']) ? (int)$vacancyState['remaining_hours'] : 0;
                   $vacancyEligibility = isset($vacancySlot['eligible_by_priority']) ? $vacancySlot['eligible_by_priority'] : array();
                   $vacancySearchParts = array(isset($vacancySlot['slot_label'])?$vacancySlot['slot_label']:'', isset($vacancySlot['subject'])?$vacancySlot['subject']:'');
@@ -2075,6 +2062,7 @@ uksort($specialtyLabelsClient, 'strnatcmp');
     <?php sourceCardLink('https://www.minedu.gov.gr/images/joomlart/PDFs/PHEK%20B%202106_09_04_26_OP%20EM%20GEL_ESP%20Gymnasio.pdf', 'Υ.Α. 43751/Δ2/07-04-2026 — ΦΕΚ Β΄ 2106/09-04-2026 · Εσπερινό Γυμνάσιο ↗'); ?>
     <?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2026/04/%CE%A6%CE%95%CE%9A-%CE%92-2102_09_04_26_%CE%A9%CE%A0-%CE%95%CE%A3%CE%A0-%CE%93%CE%95%CE%9B.pdf', 'Υ.Α. 43706/Δ2/07-04-2026 — ΦΕΚ Β΄ 2102/09-04-2026 · Εσπερινό ΓΕΛ ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/dioikitika-themata-geniko-lykeio', 'Υ.Α. 54058/Δ2/05-05-2026 — ΦΕΚ Β΄ 2583/07-05-2026 · Αναθέσεις Γυμνασίου / ΓΕΛ ↗'); ?>
+    <?php sourceCardLink('https://www.et.gr/api/DownloadFekPdf?fek_pdf=2026/B/5555', 'Υ.Α. 112867/Δ2/31-08-2026 — ΦΕΚ Β΄ 5555/11-09-2026 · Τροποποίηση αναθέσεων Γυμνασίου / ΓΕΛ ↗'); ?>
     <?php sourceCardLink(ethicsClassFormationPolicy()['source_url'], 'Υ.Α. 108070/Δ2/2026 — ΦΕΚ Β΄ 5231/2026 · Ηθική ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
