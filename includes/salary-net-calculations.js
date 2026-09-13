@@ -183,7 +183,7 @@
   }
 
   function earningsFromOptions(options) {
-    const detailed = ["basicMonthly", "familyAllowanceMonthly", "positionAllowanceMonthly", "remoteAllowanceMonthly"]
+    const detailed = ["basicMonthly", "familyAllowanceMonthly", "positionAllowanceMonthly", "remoteAllowanceMonthly", "personalDifferenceMonthly"]
       .some(function (key) { return hasOwn(options, key); });
 
     if (!detailed) {
@@ -194,6 +194,7 @@
         family: 0,
         position: 0,
         remote: 0,
+        personalDifference: 0,
         gross: legacyGross
       };
     }
@@ -202,7 +203,8 @@
     const family = nonNegativeNumber(options.familyAllowanceMonthly);
     const position = nonNegativeNumber(options.positionAllowanceMonthly);
     const remote = nonNegativeNumber(options.remoteAllowanceMonthly);
-    const supportedGross = basic + family + position + remote;
+    const personalDifference = nonNegativeNumber(options.personalDifferenceMonthly);
+    const supportedGross = basic + family + position + remote + personalDifference;
     const gross = hasOwn(options, "grossMonthly")
       ? nonNegativeNumber(options.grossMonthly)
       : supportedGross;
@@ -216,6 +218,7 @@
       family: family,
       position: position,
       remote: remote,
+      personalDifference: personalDifference,
       gross: Math.max(gross, supportedGross),
       unsupportedRegular: Math.max(0, gross - supportedGross)
     };
@@ -249,16 +252,17 @@
   function buildDeductionComponents(earnings, profileKey, insuredStatus, supplementaryFund) {
     const gross = earnings.gross;
     if (profileKey === "substitute") {
+      const kpkBase = Math.max(0, gross - earnings.personalDifference);
       return {
-        components: [component("efkaKpk101", "ΕΦΚΑ — ΚΠΚ 101", 0.1337, gross, "13,37% επί των ασφαλιστέων αποδοχών")],
-        pensionBase: gross,
+        components: [component("efkaKpk101", "ΕΦΚΑ — ΚΠΚ 101", 0.1337, kpkBase, "13,37% επί των ασφαλιστέων αποδοχών · η προσωπική διαφορά εξαιρείται")],
+        pensionBase: kpkBase,
         lumpSumBase: 0,
         mtpyPrimaryBase: 0,
         mtpyReducedBase: 0,
-        healthBase: gross,
-        unemploymentBase: gross,
-        deductionBreakdown: "ΚΠΚ 101 · συνολική εισφορά ασφαλισμένου 13,37%",
-        basesLabel: "ΚΠΚ 101: " + roundMoney(gross).toFixed(2).replace(".", ",") + " €"
+        healthBase: kpkBase,
+        unemploymentBase: 0,
+        deductionBreakdown: "ΚΠΚ 101 · συνολική εισφορά ασφαλισμένου 13,37%" + (earnings.personalDifference > 0 ? " · προσωπική διαφορά εκτός ασφαλιστικής βάσης" : ""),
+        basesLabel: "ΚΠΚ 101: " + roundMoney(kpkBase).toFixed(2).replace(".", ",") + " €"
       };
     }
 
@@ -267,10 +271,13 @@
     const supplementaryLabel = supplementaryIsTeka ? "ΤΕΚΑ" : "e-ΕΦΚΑ";
     const basicAndPosition = earnings.basic + earnings.position;
     const familyAndRemote = earnings.family + earnings.remote;
-    const pensionBase = oldInsured ? basicAndPosition : gross;
-    const lumpSumBase = oldInsured ? earnings.basic : gross;
-    const mtpyPrimaryBase = oldInsured ? basicAndPosition : gross;
+    const personalDifference = earnings.personalDifference || 0;
+    const insuredGrossExcludingPersonalDifference = Math.max(0, gross - personalDifference);
+    const pensionBase = oldInsured ? basicAndPosition : insuredGrossExcludingPersonalDifference;
+    const lumpSumBase = oldInsured ? earnings.basic : insuredGrossExcludingPersonalDifference;
+    const mtpyPrimaryBase = oldInsured ? basicAndPosition : insuredGrossExcludingPersonalDifference;
     const mtpyReducedBase = oldInsured ? familyAndRemote : 0;
+    const healthBase = insuredGrossExcludingPersonalDifference;
     const components = [
       component(
         "efkaPensionSupplementary",
@@ -283,8 +290,8 @@
           ? "6,67% κύρια σύνταξη e-ΕΦΚΑ + 3% επικουρική ΤΕΚΑ · ίδια ασφαλιστέα βάση"
           : "6,67% κύρια σύνταξη + 3% επικουρική e-ΕΦΚΑ · ίδια ασφαλιστέα βάση"
       ),
-      component("healthInKind", "ΕΦΚΑ υγεία — παροχές σε είδος", 0.0165, gross, "1,65% επί των πάσης φύσεως τακτικών αποδοχών"),
-      component("healthCash", "ΕΦΚΑ υγεία — παροχές σε χρήμα", 0.0040, gross, "0,40% επί των πάσης φύσεως τακτικών αποδοχών"),
+      component("healthInKind", "ΕΦΚΑ υγεία — παροχές σε είδος", 0.0165, healthBase, "1,65% επί των ασφαλιστέων τακτικών αποδοχών · χωρίς προσωπική διαφορά"),
+      component("healthCash", "ΕΦΚΑ υγεία — παροχές σε χρήμα", 0.0040, healthBase, "0,40% επί των ασφαλιστέων τακτικών αποδοχών · χωρίς προσωπική διαφορά"),
       component(
         "lumpSum",
         "Τ.Π.Δ.Υ. / εφάπαξ",
@@ -306,6 +313,16 @@
       components.push(component("mtpy", "Μ.Τ.Π.Υ.", 0.0450, mtpyPrimaryBase, "4,5% επί των συντάξιμων αποδοχών"));
     }
 
+    if (personalDifference > 0) {
+      components.push(component(
+        "mtpyPersonalDifference",
+        "Μ.Τ.Π.Υ. — προσωπική διαφορά",
+        0.0200,
+        personalDifference,
+        "2% επί της προσωπικής διαφοράς του άρθρου 27 παρ. 1 ν. 4354/2015"
+      ));
+    }
+
     components.push(component(
       "unemployment",
       "Εισφορά για την καταπολέμηση της ανεργίας",
@@ -317,14 +334,19 @@
     const pensionSupplementaryText = supplementaryIsTeka
       ? "Κύρια e-ΕΦΚΑ 6,67% + επικουρική ΤΕΚΑ 3%"
       : "Κύρια e-ΕΦΚΑ 6,67% + επικουρική e-ΕΦΚΑ 3%";
-    const deductionBreakdown = oldInsured
-      ? pensionSupplementaryText + ": βασικός+θέση · Υγεία 2,05%: μικτά · ΤΠΔΥ 4%: βασικός · ΜΤΠΥ 4,5%: βασικός+θέση και 1%: οικογενειακή/παραμεθόριο · Ανεργία 2%: μικτά"
-      : pensionSupplementaryText + " · Υγεία 2,05% · ΤΠΔΥ 4% · ΜΤΠΥ 4,5% · Ανεργία 2% επί των αντίστοιχων ασφαλιστέων αποδοχών";
+    const personalDifferenceBreakdown = personalDifference > 0
+      ? " · Προσωπική διαφορά: ΜΤΠΥ 2% + ανεργία 2%, χωρίς ΕΦΚΑ/υγεία/ΤΠΔΥ"
+      : "";
+    const deductionBreakdown = (oldInsured
+      ? pensionSupplementaryText + ": βασικός+θέση · Υγεία 2,05%: ασφαλιστέα μικτά · ΤΠΔΥ 4%: βασικός · ΜΤΠΥ 4,5%: βασικός+θέση και 1%: οικογενειακή/παραμεθόριο · Ανεργία 2%: μικτά"
+      : pensionSupplementaryText + " · Υγεία 2,05% · ΤΠΔΥ 4% · ΜΤΠΥ 4,5% · Ανεργία 2% επί των αντίστοιχων ασφαλιστέων αποδοχών")
+      + personalDifferenceBreakdown;
 
     const euro = function (value) { return roundMoney(value).toFixed(2).replace(".", ",") + " €"; };
-    const basesLabel = oldInsured
-      ? "Κύρια/επικουρική (" + supplementaryLabel + "): " + euro(pensionBase) + " · ΤΠΔΥ: " + euro(lumpSumBase) + " · ΜΤΠΥ 4,5%: " + euro(mtpyPrimaryBase) + " · ΜΤΠΥ 1%: " + euro(mtpyReducedBase) + " · Υγεία/ανεργία: " + euro(gross)
-      : "Κύρια/επικουρική (" + supplementaryLabel + ")/ΤΠΔΥ/ΜΤΠΥ: " + euro(pensionBase) + " · Υγεία/ανεργία: " + euro(gross);
+    const basesLabel = (oldInsured
+      ? "Κύρια/επικουρική (" + supplementaryLabel + "): " + euro(pensionBase) + " · ΤΠΔΥ: " + euro(lumpSumBase) + " · ΜΤΠΥ 4,5%: " + euro(mtpyPrimaryBase) + " · ΜΤΠΥ 1%: " + euro(mtpyReducedBase) + " · Υγεία: " + euro(healthBase) + " · Ανεργία: " + euro(gross)
+      : "Κύρια/επικουρική (" + supplementaryLabel + ")/ΤΠΔΥ/ΜΤΠΥ 4,5%: " + euro(pensionBase) + " · Υγεία: " + euro(healthBase) + " · Ανεργία: " + euro(gross))
+      + (personalDifference > 0 ? " · ΜΤΠΥ προσωπικής διαφοράς 2%: " + euro(personalDifference) : "");
 
     return {
       components: components,
@@ -332,7 +354,7 @@
       lumpSumBase: lumpSumBase,
       mtpyPrimaryBase: mtpyPrimaryBase,
       mtpyReducedBase: mtpyReducedBase,
-      healthBase: gross,
+      healthBase: healthBase,
       unemploymentBase: gross,
       supplementaryFund: supplementaryFund === "teka" ? "teka" : "efka",
       supplementaryFundLabel: supplementaryLabel,

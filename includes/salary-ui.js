@@ -78,7 +78,8 @@
       printAmountRow('Βασικός μισθός — Μ.Κ. ' + result.finalMK, result.basicGrossSalary),
       printAmountRow('Οικογενειακή παροχή', payroll.familyAllowance),
       printAmountRow('Επίδομα θέσης ευθύνης', payroll.positionAllowance, { note: payroll.positionLabel }),
-      printAmountRow('Επίδομα απομακρυσμένων - παραμεθορίων περιοχών', payroll.remoteAllowance)
+      printAmountRow('Επίδομα απομακρυσμένων - παραμεθορίων περιοχών', payroll.remoteAllowance),
+      payroll.personalDifference > 0 ? printAmountRow('Προσωπική διαφορά', payroll.personalDifference) : ''
     ].join('');
 
     let deductionRows = '';
@@ -194,7 +195,8 @@
     const remoteAllowance = byId('remoteAreaAllowance').checked
       ? window.EducationSalaryNet.REMOTE_AREA_ALLOWANCE_MONTHLY
       : 0;
-    const grossForNet = result.basicGrossSalary + familyAllowance + positionAllowance + remoteAllowance;
+    const personalDifference = money('personalDifference');
+    const grossForNet = result.basicGrossSalary + familyAllowance + positionAllowance + remoteAllowance + personalDifference;
     const otherDeductionParts = [
       ['ΑΔΕΔΥ', money('adedYDeduction')],
       ['ΟΛΜΕ / ΔΟΕ', money('federationDeduction')],
@@ -208,6 +210,7 @@
       familyAllowanceMonthly: familyAllowance,
       positionAllowanceMonthly: positionAllowance,
       remoteAllowanceMonthly: remoteAllowance,
+      personalDifferenceMonthly: personalDifference,
       profile: byId('payrollProfile').value,
       insuredStatus: byId('insuredStatus').value,
       ageGroup: byId('ageGroup').value,
@@ -219,6 +222,7 @@
     byId('familyAllowanceResult').textContent = formatEuroCents(familyAllowance);
     byId('positionAllowanceResult').textContent = formatEuroCents(positionAllowance);
     byId('remoteAllowanceResult').textContent = formatEuroCents(remoteAllowance);
+    byId('personalDifferenceResult').textContent = formatEuroCents(personalDifference);
     byId('grossForNetResult').textContent = formatEuroCents(grossForNet);
     byId('payrollProfileResult').textContent = net.profileLabel;
     const insuredStatusSelect = byId('insuredStatus');
@@ -258,6 +262,7 @@
     setResultRowVisible('familyAllowanceResult', familyAllowance > 0);
     setResultRowVisible('positionAllowanceResult', positionAllowance > 0);
     setResultRowVisible('remoteAllowanceResult', remoteAllowance > 0);
+    setResultRowVisible('personalDifferenceResult', personalDifference > 0);
     setResultRowVisible('maternityPensionReductionResult', net.maternityPensionReductionAmount > 0);
     setResultRowVisible('registrationDeductionResult', net.registrationDeduction > 0);
     setResultRowVisible('otherDeductionsResult', net.otherDeductions > 0);
@@ -273,6 +278,7 @@
       positionAllowance: positionAllowance,
       positionLabel: window.EducationSalaryNet.positionAllowanceLabel(positionKey),
       remoteAllowance: remoteAllowance,
+      personalDifference: personalDifference,
       grossForNet: grossForNet,
       otherDeductionParts: otherDeductionParts.map(function (item) {
         return [item[0], window.EducationSalaryNet.roundMoney(item[1])];
@@ -359,6 +365,7 @@
     byId('dependentChildren').value = '0';
     byId('positionAllowance').value = 'none';
     byId('remoteAreaAllowance').checked = false;
+    byId('personalDifference').value = '0';
     byId('maternityPensionReduction').checked = false;
     byId('adedYDeduction').value = '0';
     byId('federationDeduction').value = '0';
