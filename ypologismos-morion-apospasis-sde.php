@@ -6,6 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.webmanifest">
   <meta name="description" content="Υπολογισμός μορίων απόσπασης μονίμων εκπαιδευτικών στα Σχολεία Δεύτερης Ευκαιρίας (ΣΔΕ) και έλεγχος αποδεκτών ειδικοτήτων/γραμματισμών σύμφωνα με το ΦΕΚ Β' 4088/03.07.2026.">
   <title>Υπολογισμός μορίων απόσπασης στα ΣΔΕ</title>
 <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">

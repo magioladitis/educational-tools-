@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.webmanifest">
 <meta name="description" content="Μετατροπή βαθμού πτυχίου από 10βάθμια σε 20βάθμια κλίμακα και από δεκαδική ή λεκτική μορφή σε ακέραιο μέρος, αριθμητή και παρονομαστή για 1ΓΕ/2026 και 1ΓΤ/2024.">
 <title>Μετατροπή κλίμακας βαθμού πτυχίου</title>
 <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">

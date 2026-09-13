@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "Εργαλειοθήκη Εκπαιδευτικού",
+  "short_name": "Εργαλειοθήκη",
+  "description": "Δωρεάν εργαλεία και υπολογιστές για εκπαιδευτικούς: ΑΣΕΠ, αναπληρωτές, ειδική αγωγή, αποσπάσεις, μεταθέσεις, σχολική μονάδα, ΣΔΕ και ΣΑΕΚ.",
+  "lang": "el-GR",
+  "dir": "ltr",
+  "start_url": "./ergaleia.php",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f7fb",
+  "theme_color": "#1f6feb",
+  "categories": [
+    "education",
+    "utilities",
+    "productivity"
+  ],
+  "prefer_related_applications": false
+}

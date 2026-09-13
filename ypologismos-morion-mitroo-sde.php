@@ -5,6 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.webmanifest">
   <meta name="description" content="Υπολογισμός μορίων Μητρώου ΣΔΕ για ωρομίσθιο εκπαιδευτικό προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας βάσει της Υ.Α. 75975/Κ1, ΦΕΚ Β' 3224/25.06.2025.">
   <title>Μόρια Μητρώου ΣΔΕ</title>
 <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">

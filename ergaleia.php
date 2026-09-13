@@ -49,6 +49,7 @@ $h = function ($value) use ($flags) {
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <link rel="manifest" href="manifest.webmanifest">
   <meta content="Εργαλειοθήκη Εκπαιδευτικού: δωρεάν εργαλεία για ΑΣΕΠ, αναπληρωτές, ειδική αγωγή, αποσπάσεις, μεταθέσεις, σχολική μονάδα, ΣΔΕ και ΣΑΕΚ." name="description">
   <title>Εργαλειοθήκη Εκπαιδευτικού</title>
   <link href="<?php echo $h(edu_asset_url('assets/common.css')); ?>" rel="stylesheet">

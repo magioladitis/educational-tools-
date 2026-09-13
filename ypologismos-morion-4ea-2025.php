@@ -5,6 +5,7 @@
 <!-- UI consolidation v3.20: shared design system in assets/common.css -->
 <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.webmanifest">
   <meta name="description" content="Υπολογισμός μορίων για την προκήρυξη ΑΣΕΠ 4ΕΑ/2025 για εκπαιδευτικούς Ειδικής Αγωγής κατηγορίας ΤΕ (ΤΕ01, ΤΕ02, ΤΕ16).">
   <title>Υπολογισμός μορίων 4ΕΑ/2025</title>
 <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
