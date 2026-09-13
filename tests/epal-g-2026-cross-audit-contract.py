@@ -12,6 +12,8 @@ import re
 import subprocess
 import unicodedata
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 
 php = r'''
@@ -213,8 +215,8 @@ check('EPAL G assignments expose exactly 35 specialty sections', len(assignment_
 check('EPAL G assignments cover every timetable specialty label', all(any(label in section for section in assignment_sections) for label in specialty_labels.values()))
 
 # Public source cards / internal metadata must expose the complete Γ΄ legal chain.
-assignment_page = (ROOT / 'anatheseis-mathimaton.php').read_text()
-timetable_page = (ROOT / 'orologio-programma-mathimaton.php').read_text()
+assignment_page = render_php('anatheseis-mathimaton.php')
+timetable_page = render_php('orologio-programma-mathimaton.php')
 assignment_data = (ROOT / 'includes/teaching-assignments-epal.php').read_text()
 for fek in ('1664/2018', '2637/2018', '3520/2018', '2779/2019', '3609/2020', '5206/2023'):
     check(f'assignment page/source exposes {fek}', fek in assignment_page or fek in assignment_data)

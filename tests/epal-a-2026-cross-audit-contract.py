@@ -4,6 +4,8 @@ from pathlib import Path
 import json
 import subprocess
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 php = r'''
 require "includes/weekly-timetable-data.php";
@@ -110,8 +112,8 @@ check('evening A EPAL architectural drawing display 2Σ', e_drawing and (e_drawi
 check('evening A EPAL composition display 2Σ', e_composition and (e_composition.get('hours_display') or {}).get('Α΄') == '2Σ')
 
 # Source cards must expose the legal chain used in this audit.
-timetable_page = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
-assign_page = (ROOT / 'anatheseis-mathimaton.php').read_text(encoding='utf-8')
+timetable_page = render_php('orologio-programma-mathimaton.php')
+assign_page = render_php('anatheseis-mathimaton.php')
 for fek in ('2151/2026', '2187/2018', '2636/2018'):
     check(f'timetable source includes FEK B {fek}', fek in timetable_page)
 for fek in ('1664/2018', '1975/2025', '2625/2026'):

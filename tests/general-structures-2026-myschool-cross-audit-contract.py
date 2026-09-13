@@ -8,6 +8,8 @@ from pathlib import Path
 import json
 import subprocess
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 php = r'''
 require "includes/weekly-timetable-data.php";
@@ -107,8 +109,8 @@ check('public timetable strips assignment_choice_options', all('assignment_choic
 check('public timetable strips assignment_subject_alias', all('assignment_subject_alias' not in r for r in public_rows))
 
 # Public source cards must expose the corresponding legal sources, never myschool.
-timetable_page = (ROOT / 'orologio-programma-mathimaton.php').read_text()
-assignments_page = (ROOT / 'anatheseis-mathimaton.php').read_text()
+timetable_page = render_php('orologio-programma-mathimaton.php')
+assignments_page = render_php('anatheseis-mathimaton.php')
 for fek in ('2132/2026', '2106/2026', '2102/2026', '2636/2018', '2151/2026', '2122/2018'):
     check(f'timetable sources include FEK B {fek}', fek in timetable_page)
 for fek in ('2583/2026', '1664/2018', '2625/2026', '2151/2026', '2122/2018'):

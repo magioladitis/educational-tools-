@@ -4,6 +4,8 @@ from pathlib import Path
 import json
 import subprocess
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 
 php = r'''
@@ -67,8 +69,8 @@ check('music gym restricted row retained', bool(music_foreign))
 check('music gym PE34 excluded', music_foreign is not None and 'ΠΕ34' not in (music_foreign.get('A') or []))
 
 # Source transparency on both public tools.
-timetable_page = (ROOT / 'orologio-programma-mathimaton.php').read_text()
-assignment_page = (ROOT / 'anatheseis-mathimaton.php').read_text()
+timetable_page = render_php('orologio-programma-mathimaton.php')
+assignment_page = render_php('anatheseis-mathimaton.php')
 for label, text in [('timetable page', timetable_page), ('assignment page', assignment_page)]:
     check(f'{label} cites FEK 2104/2026', '2104/2026' in text)
     check(f'{label} cites FEK 2583/2026', '2583/2026' in text)

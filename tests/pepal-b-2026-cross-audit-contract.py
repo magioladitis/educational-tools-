@@ -6,6 +6,8 @@ import re
 import subprocess
 import unicodedata
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 
 php = r'''
@@ -184,8 +186,8 @@ check('2624 Ethics A/B exact', eth and eth.get('A') == ['ΠΕ01'] and eth.get('B
 check('2624 Ethics effective 2026-2027 note', eth and '2026-2027' in (eth.get('note') or ''))
 
 # Public source cards: current official Ministry/Diavgeia links for key amendments.
-assign_page = (ROOT / 'anatheseis-mathimaton.php').read_text(encoding='utf-8')
-timetable_page = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
+assign_page = render_php('anatheseis-mathimaton.php')
+timetable_page = render_php('orologio-programma-mathimaton.php')
 check('assignment page cites 4983/2022', 'ΦΕΚ Β΄ 4983/2022 — Β΄ Π.ΕΠΑ.Λ.' in assign_page)
 check('assignment page 4983 uses Diavgeia', 'diavgeia.gov.gr/doc/%CE%A8%CE%A0%CE%A4246%CE%9C%CE%A4%CE%9B%CE%97-%CE%914%CE%97' in assign_page)
 check('assignment page 418 uses official Ministry PDF', 'www.minedu.gov.gr/publications/docs2020/2023_01_25_' in assign_page and 'ΦΕΚ Β΄ 418/2023 — Β΄ Π.ΕΠΑ.Λ.' in assign_page)

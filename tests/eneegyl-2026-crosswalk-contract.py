@@ -6,6 +6,8 @@ import subprocess
 import re
 import unicodedata
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 
 php = r'''
@@ -108,8 +110,8 @@ for row in gap_rows:
     check(f'gap note internal: {row.get("course_id")}', '2149/2026' in (row.get('assignment_link_note') or '') and '3216/2026' in (row.get('assignment_link_note') or ''))
 
 # Public source cards remain FEK-based; myschool is an audit aid, not a normative public source.
-assign_page = (ROOT / 'anatheseis-mathimaton.php').read_text(encoding='utf-8')
-timetable_page = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
+assign_page = render_php('anatheseis-mathimaton.php')
+timetable_page = render_php('orologio-programma-mathimaton.php')
 check('assignments source includes FEK 3216/2026', 'ΦΕΚ Β΄ 3216/2026' in assign_page)
 check('timetable source includes FEK 2149/2026', 'ΦΕΚ Β΄ 2149/2026' in timetable_page)
 check('myschool not exposed as normative source', 'myschool' not in assign_page.lower() and 'myschool' not in timetable_page.lower())

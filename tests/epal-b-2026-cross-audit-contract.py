@@ -3,13 +3,15 @@ from pathlib import Path
 import json
 import subprocess
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = (ROOT / 'includes' / 'weekly-timetable-data.php').read_text(encoding='utf-8')
 CROSS = (ROOT / 'includes' / 'teaching-timetable-crosswalk.php').read_text(encoding='utf-8')
 ASSIGN = (ROOT / 'includes' / 'teaching-assignments-epal.php').read_text(encoding='utf-8')
-PAGE = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
+PAGE = render_php('orologio-programma-mathimaton.php')
 UI = (ROOT / 'includes' / 'weekly-timetable-ui.js').read_text(encoding='utf-8')
-ASSIGN_PAGE = (ROOT / 'anatheseis-mathimaton.php').read_text(encoding='utf-8')
+ASSIGN_PAGE = render_php('anatheseis-mathimaton.php')
 
 checks = []
 def check(name, cond):

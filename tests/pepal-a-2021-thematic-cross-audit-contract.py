@@ -4,6 +4,8 @@ from pathlib import Path
 import json
 import subprocess
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 
 php = r'''
@@ -58,12 +60,12 @@ public_blocks = [r for r in public_rows if r.get('school') == 'pepal' and r.get(
 check('six public PEPAL A blocks remain visible', len(public_blocks) == 6)
 check('public PEPAL A payload has no assignment metadata', all(not any(k.startswith('assignment_') for k in r) for r in public_blocks))
 
-weekly_page = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
-assign_page = (ROOT / 'anatheseis-mathimaton.php').read_text(encoding='utf-8')
+weekly_page = render_php('orologio-programma-mathimaton.php')
+assign_page = render_php('anatheseis-mathimaton.php')
 crosswalk = (ROOT / 'includes' / 'teaching-timetable-crosswalk.php').read_text(encoding='utf-8')
 check('weekly sources include FEK 3470/2021', 'ΦΕΚ Β΄ 3470/2021 — Α΄ Π.ΕΠΑ.Λ.' in weekly_page)
 check('weekly sources include FEK 4367/2021', 'ΦΕΚ Β΄ 4367/2021 — Α΄ Π.ΕΠΑ.Λ. / Αναθέσεις ανά θεματική ενότητα' in weekly_page)
-check('weekly sources include FEK 7403/2023', 'ΦΕΚ Β΄ 7403/2023 — Α΄ Π.ΕΠΑ.Λ. / κανόνας ανάθεσης & συνδιδασκαλία' in weekly_page)
+check('weekly sources include FEK 7403/2023', 'ΦΕΚ Β΄ 7403/2023' in weekly_page and 'κανόνας ανάθεσης' in weekly_page and 'συνδιδασκαλία' in weekly_page)
 check('assignments source text explains thematic rule', 'οι αναθέσεις γίνονται με βάση τις επιμέρους ενότητες' in assign_page)
 check('crosswalk documents no invented per-topic hours', 'δεν επινοούμε per-topic ώρες' in crosswalk)
 check('crosswalk documents Teachers Association rule', 'Σύλλογο' in crosswalk and 'Διδασκόντων' in crosswalk)

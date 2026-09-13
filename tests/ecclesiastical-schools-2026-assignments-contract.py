@@ -97,10 +97,10 @@ check('PES Gym data filter wired', "row.school === 'protypo_ekklisiastiko_gymnas
 check('PES Lyceum data filter wired', "row.school === 'protypo_ekklisiastiko_lykeio'" in PAGE_UI)
 check('PES special legal source text visible', '71346/Θ2/2020' in PAGE and '4404/Θ2/2023' in PAGE and 'Δίπλωμα Βυζαντινής Μουσικής' in PAGE)
 
-# Didactic-needs calculator gets placeholders only: disabled options, no enabled option/case/profile.
-check('PES Gym didactic-needs placeholder disabled', '<option value="protypo_ekklisiastiko_gymnasio" disabled>' in NEEDS)
-check('PES Lyceum didactic-needs placeholder disabled', '<option value="protypo_ekklisiastiko_lykeio" disabled>' in NEEDS)
-check('exactly two PES references in didactic-needs file', NEEDS.count('protypo_ekklisiastiko_') == 2)
+# Didactic-needs calculator now supports the real P.E.S. structures rather than placeholders.
+check('PES combined Gymnasium-Lyceum enabled in didactic-needs', '<option value="protypo_ekklisiastiko_gymnasio_lykeio"' in NEEDS and '<option value="protypo_ekklisiastiko_gymnasio_lykeio" disabled' not in NEEDS)
+check('PES standalone Lyceum enabled in didactic-needs', '<option value="protypo_ekklisiastiko_lykeio"' in NEEDS and '<option value="protypo_ekklisiastiko_lykeio" disabled' not in NEEDS)
+check('PES didactic-needs has active profile handling', "elseif ($schoolType === 'protypo_ekklisiastiko_gymnasio_lykeio')" in NEEDS and "elseif ($schoolType === 'protypo_ekklisiastiko_lykeio')" in NEEDS)
 
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:

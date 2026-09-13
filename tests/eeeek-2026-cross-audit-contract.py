@@ -4,6 +4,8 @@ from pathlib import Path
 import json
 import subprocess
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 
 php = r'''
@@ -112,8 +114,8 @@ check('ST workload has no fake fixed total', st_model and st_model.get('hours_mo
 check('ST thematic hours are not attributed', st_model and st_model.get('component_hours_status') == 'not_fixed_by_regulation')
 
 # Public UI presence, but no school-specific profile is fabricated from the supplied mislabeled snapshot.
-assign_page = (ROOT/'anatheseis-mathimaton.php').read_text(encoding='utf-8')
-time_page = (ROOT/'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
+assign_page = render_php('anatheseis-mathimaton.php')
+time_page = render_php('orologio-programma-mathimaton.php')
 check('assignments UI exposes EEEEΚ filter', 'schoolEeeek' in assign_page and 'ΦΕΚ Β΄ 1761/2018' in assign_page)
 check('timetable UI documents EEEEΚ', 'Ε.Ε.Ε.ΕΚ.' in time_page and '57523/Γ6/2002' in time_page and 'ΣΤ΄ τάξη' in time_page)
 check('EEEΕK Corfu conservative school profile available', (ROOT/'includes/school-profile-eeeek-kerkyra-2026.php').exists())

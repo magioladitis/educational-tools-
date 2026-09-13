@@ -6,6 +6,8 @@ import re
 import subprocess
 import unicodedata
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 
 php = r'''
@@ -124,8 +126,8 @@ row = find_assignment(engineer, 'Μηχανολογικές Κατασκευές
 check('5510 engineer constructions A/B', row and row.get('A') == ['ΠΕ82'] and row.get('B') == ['ΤΕ02.02'])
 
 # Public source cards must expose both autonomous legal sources, with reciprocal cross-check.
-assignment_page = (ROOT / 'anatheseis-mathimaton.php').read_text()
-timetable_page = (ROOT / 'orologio-programma-mathimaton.php').read_text()
+assignment_page = render_php('anatheseis-mathimaton.php')
+timetable_page = render_php('orologio-programma-mathimaton.php')
 check('assignment page cites ΦΕΚ 5510/2023', 'ΦΕΚ Β΄ 5510/2023 — Γ΄ Π.ΕΠΑ.Λ.' in assignment_page)
 check('assignment page cites ΦΕΚ 5251/2023 cross-check', 'ΦΕΚ Β΄ 5251/2023 — Γ΄ Π.ΕΠΑ.Λ. / Ωρολόγιο (διασταύρωση τίτλων)' in assignment_page)
 check('timetable page cites ΦΕΚ 5251/2023', 'ΦΕΚ Β΄ 5251/2023 — Γ΄ Π.ΕΠΑ.Λ.' in timetable_page)

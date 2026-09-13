@@ -4,10 +4,12 @@ from pathlib import Path
 import json
 import subprocess
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = (ROOT / 'includes' / 'weekly-timetable-data.php').read_text(encoding='utf-8')
 EDATA = (ROOT / 'includes' / 'weekly-timetable-ecclesiastical-data.php').read_text(encoding='utf-8')
-PAGE = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
+PAGE = render_php('orologio-programma-mathimaton.php')
 
 php = r'''
 require "includes/weekly-timetable-data.php";

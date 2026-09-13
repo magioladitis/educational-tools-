@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
+from test_runtime_helpers import render_php
+
 ROOT=Path(__file__).resolve().parents[1]
-PAGE=(ROOT/'ypologismos-didaktikon-anagkon.php').read_text(encoding='utf-8')
+PAGE=render_php('ypologismos-didaktikon-anagkon.php')
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
 

@@ -4,6 +4,8 @@ from pathlib import Path
 import json
 import subprocess
 
+from test_runtime_helpers import render_php
+
 ROOT = Path(__file__).resolve().parents[1]
 
 php = r'''
@@ -107,13 +109,14 @@ check('music lyceum gap instance count 8', music_lyc_gap_instances == 8)
 
 # Source transparency: timetable page must link both the current timetable FEK and
 # the assignment FEK used for title cross-checking. Assignment page already does too.
-timetable_page = (ROOT / 'orologio-programma-mathimaton.php').read_text()
-assignment_page = (ROOT / 'anatheseis-mathimaton.php').read_text()
+timetable_page = render_php('orologio-programma-mathimaton.php')
+assignment_page = render_php('anatheseis-mathimaton.php')
 for label, text in [('timetable page', timetable_page), ('assignment page', assignment_page)]:
     check(f'{label} cites FEK 2107/2026', '2107/2026' in text)
     check(f'{label} cites FEK 4202/2018', '4202/2018' in text)
 
-check('timetable page uses browser-safe public rows', 'weeklyTimetablePublicRows()' in timetable_page)
+timetable_source = (ROOT / 'orologio-programma-mathimaton.php').read_text(encoding='utf-8')
+check('timetable page uses browser-safe public rows', 'weeklyTimetablePublicRows()' in timetable_source)
 public_php = r'''require "includes/weekly-timetable-data.php"; echo json_encode(weeklyTimetablePublicRows(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);'''
 public_rows = json.loads(subprocess.check_output(['php', '-r', public_php], cwd=ROOT, text=True))
 check(
