@@ -808,7 +808,13 @@ a:focus-visible {
     overscroll-behavior-inline: contain;
   }
 
-  body.edu-ui.edu-calc-standard .checkrow {
+  body.edu-ui.edu-calc-standard .checkrow,
+  body.edu-ui .check-row,
+  body.edu-ui .checkbox-group label {
+    min-height: 44px;
+  }
+
+  body.edu-ui .segmented-choice span {
     min-height: 44px;
   }
 
@@ -2676,11 +2682,24 @@ body.edu-ui.edu-tools-directory .tool-group .tools-grid{margin-top:0}
 }
 @media(max-width:620px){
   body.edu-ui.edu-tools-directory .page-shell{padding:18px 13px 35px}
-  body.edu-ui.edu-tools-directory .hero{padding:30px 22px;border-radius:17px}
+  body.edu-ui.edu-tools-directory .hero{padding:27px 20px;border-radius:17px}
   body.edu-ui.edu-tools-directory .hero p{font-size:15px}
-  body.edu-ui.edu-tools-directory .tools-grid{grid-template-columns:1fr}
-  body.edu-ui.edu-tools-directory .tool-card{min-height:230px}
+  body.edu-ui.edu-tools-directory .hero-actions{gap:8px;margin-top:18px}
+  body.edu-ui.edu-tools-directory .hero-action{min-height:44px;padding:9px 12px}
+  body.edu-ui.edu-tools-directory .tools-grid{grid-template-columns:1fr;gap:12px}
+  body.edu-ui.edu-tools-directory .tool-card{min-height:0;padding:17px}
+  body.edu-ui.edu-tools-directory .tool-card .card-top{margin-bottom:10px}
+  body.edu-ui.edu-tools-directory .tool-card h2,
+  body.edu-ui.edu-tools-directory .tool-card h3{font-size:18px;margin-bottom:7px}
+  body.edu-ui.edu-tools-directory .tool-card p{font-size:14px;line-height:1.45;margin-bottom:11px}
+  body.edu-ui.edu-tools-directory .tool-card .button-like{margin-top:2px}
   body.edu-ui.edu-tools-directory .toolbar{padding:14px}
+  body.edu-ui.edu-tools-directory .filters{
+    flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding:1px 1px 6px;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-inline:contain;scrollbar-width:thin
+  }
+  body.edu-ui.edu-tools-directory .filter-btn{flex:0 0 auto;min-height:44px;white-space:nowrap;padding:9px 13px}
+  body.edu-ui.edu-tools-directory .deadline-shortcut{min-height:44px;display:inline-flex;align-items:center}
   body.edu-ui.edu-tools-directory .directory-section__heading,
   body.edu-ui.edu-tools-directory .toolbar-heading,
   body.edu-ui.edu-tools-directory .tool-group__heading{align-items:flex-start;flex-direction:column;gap:7px}

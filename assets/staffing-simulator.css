@@ -182,6 +182,11 @@
 }
 @media(max-width:960px){.edu-page-staffing-simulator .personnel-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .branch-summary-row{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main{grid-template-columns:1fr 1fr}.edu-page-staffing-simulator .allocation-row-main .allocation-status{grid-column:1/-1;grid-row:auto}.edu-page-staffing-simulator .allocation-row-main .allocation-remove{grid-column:auto;grid-row:auto}.edu-page-staffing-simulator .allocation-person-summary-row{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){
+  .edu-page-staffing-simulator .mode-tabs{
+    width:100%;flex-wrap:nowrap;overflow-x:auto;padding:1px 1px 5px;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-inline:contain;scrollbar-width:thin
+  }
+  .edu-page-staffing-simulator .mode-tab{flex:0 0 auto;min-height:44px;white-space:nowrap}
   .edu-page-staffing-simulator .specialty-balance-table{font-size:12px}
   .edu-page-staffing-simulator .specialty-balance-table th,.edu-page-staffing-simulator .specialty-balance-table td{padding-left:4px;padding-right:4px}
   .edu-page-staffing-simulator .specialty-balance-table th:nth-child(1),.edu-page-staffing-simulator .specialty-balance-table td:nth-child(1){width:18%}

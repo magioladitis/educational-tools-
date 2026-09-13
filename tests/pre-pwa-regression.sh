@@ -11,6 +11,7 @@ run_py() {
 }
 
 run_py tests/mobile-hardening-contract.py
+run_py tests/mobile-browser-usability-contract.py
 run_py tests/pwa-manifest-contract.py
 run_py tests/php-inline-js-separation-contract.py
 run_py tests/layout-phase4a-contract.py

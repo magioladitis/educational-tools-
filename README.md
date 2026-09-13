@@ -1,3 +1,13 @@
+## 2026-09-13 — Mobile-browser usability pass (360 / 390 / 430px)
+- Η εμπειρία από browser στο κινητό παραμένει η βασική προτεραιότητα, ανεξάρτητα από μελλοντική εγκατάσταση ως PWA.
+- Η κεντρική `ergaleia.php` έγινε πιο συμπαγής σε κινητό: οι κάρτες δεν κρατούν desktop `min-height`, μειώθηκαν κενά/τυπογραφική πυκνότητα και τα φίλτρα έγιναν οριζόντια scrollable chips αντί να καταλαμβάνουν πολλές γραμμές.
+- Τα mobile φίλτρα, hero actions, workflow tabs και βασικά option controls διατηρούν touch target τουλάχιστον 44px.
+- Στις Διδακτικές Ανάγκες τα 6 workflow tabs λειτουργούν σε οριζόντιο touch strip σε <=760px αντί να τυλίγονται σε πολλές σειρές.
+- Ενισχύθηκαν τα `.check-row`, `.checkrow`, checkbox-group labels και segmented choices για πιο άνετη αφή, χωρίς αλλαγή στους υπολογισμούς.
+- Διατηρείται η αρχή ότι οι πραγματικά φαρδιοί πίνακες κάνουν ελεγχόμενο horizontal scroll· δεν εισάγεται `overflow-x:hidden`.
+- Προστέθηκε `tests/mobile-browser-usability-contract.py` και εντάχθηκε στο `tests/pre-pwa-regression.sh`.
+- Τελικός έλεγχος: 177/177 test files PASS σε απομονωμένο test copy, PRE-PWA REGRESSION GATE PASS, 107/107 production PHP lint, 76/76 JS syntax, inline-JS separation 6/6 PASS.
+
 ## 2026-09-13 — Mobile hardening pass (v3.21.14)
 - Τα κοινά form controls γίνονται 16px σε οθόνες έως 700px, ώστε να αποφεύγεται το ανεπιθύμητο focus zoom του iOS Safari.
 - Τα βασικά mobile touch targets (navigation, buttons, summaries) διατηρούν ελάχιστο ύψος 44px, ακόμη και στα 320–360px.
