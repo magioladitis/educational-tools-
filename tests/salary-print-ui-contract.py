@@ -3,7 +3,8 @@ root = Path(__file__).resolve().parents[1]
 p = root / 'ypologismos-misthologikou-klimakiou.php'
 s = p.read_text(encoding='utf-8')
 ui = (root / 'includes' / 'salary-ui.js').read_text(encoding='utf-8')
-app = s + '\n' + ui
+css = (root / 'assets' / 'salary-scale.css').read_text(encoding='utf-8')
+app = s + '\n' + ui + '\n' + css
 checks = []
 def need(label, needle):
     if needle not in app:

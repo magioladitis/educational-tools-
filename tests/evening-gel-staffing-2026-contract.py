@@ -114,11 +114,11 @@ if r.returncode:
     print(r.stderr); raise SystemExit(r.returncode)
 out=r.stdout
 check('Evening GEL is selectable, not placeholder', '<option value="esperino_gel" selected>Εσπερινό ΓΕΛ</option>' in out and '<option value="esperino_gel" disabled>' not in out)
-check('result sidebar names Evening GEL', '<span>Δομή</span><strong>Εσπερινό ΓΕΛ</strong>' in out)
+check('context bar names Evening GEL', 'id="staffingContextType">Εσπερινό ΓΕΛ</span>' in out)
 check('render reports 118 assigned hours', '<strong>118</strong><span>ώρες με αντιστοιχισμένη ανάθεση</span>' in out)
 check('day GEL second-language block server-hidden for Evening GEL', re.search(r'id="gelLanguageGroupsSection"[^>]*\shidden',out) is not None)
 check('Evening GEL semester selector is visible', re.search(r'id="eveningGelPeriodSection"(?![^>]*\shidden)',out) is not None and 'name="egel_b_period"' in out)
-check('source card identifies FEK 2102 for Evening GEL', 'ΦΕΚ Β΄ 2102/2026 — Εσπερινό ΓΕΛ' in out)
+check('source card identifies FEK 2102 for Evening GEL', 'ΦΕΚ Β΄ 2102/09-04-2026 · Εσπερινό ΓΕΛ' in out)
 
 # End-to-end public automatic allocation.
 auto=dict(post)

@@ -101,11 +101,11 @@ if r.returncode:
     print(r.stderr); raise SystemExit(r.returncode)
 out=r.stdout
 check('Evening Gymnasium is selectable, not placeholder', '<option value="esperino_gymnasio" selected>Εσπερινό Γυμνάσιο</option>' in out and '<option value="esperino_gymnasio" disabled>' not in out)
-check('result sidebar names Evening Gymnasium', '<span>Δομή</span><strong>Εσπερινό Γυμνάσιο</strong>' in out)
+check('context bar names Evening Gymnasium', 'id="staffingContextType">Εσπερινό Γυμνάσιο</span>' in out)
 check('render reports 74 assigned hours', '<strong>74</strong><span>ώρες με αντιστοιχισμένη ανάθεση</span>' in out)
 check('foreign-language block server-hidden for Evening Gymnasium', re.search(r'id="gymLanguageGroupsSection"[^>]*\shidden',out) is not None)
 check('technology split block server-hidden for Evening Gymnasium', re.search(r'id="technologyInformaticsPanel"[^>]*\shidden',out) is not None)
-check('source card identifies FEK 2106 for Evening Gymnasium', 'ΦΕΚ Β΄ 2106/2026 — Ημερήσιο ΓΕΛ / Εσπερινό Γυμνάσιο' in out)
+check('source card identifies FEK 2106 for Evening Gymnasium', 'ΦΕΚ Β΄ 2106/09-04-2026 · Εσπερινό Γυμνάσιο' in out)
 
 # End-to-end automatic allocation through the public page pipeline.
 auto=dict(post)

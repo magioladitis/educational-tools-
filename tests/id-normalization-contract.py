@@ -10,7 +10,7 @@ def ck(name, cond, detail=''):
 pages=sorted(ROOT.glob('*.php'))
 rendered={}
 camel=re.compile(r'^[a-z][A-Za-z0-9]*$')
-staffing_schema_id=re.compile(r'^(?:school_(?:registry_id|type|name|code)|gym_(?:general_[abc]|lang_[abc]_(?:fr|de|it)|tech_split_[abc])|gel_(?:general_[abc]|lang_[ab]_(?:fr|de)|b_(?:hum|sci)|c_(?:hum|scihealth|econit|field_math|field_bio|cond_math|cond_history))|egel_b_period|ethics_[abc]_(?:exempt|timely|equivalent))$')
+staffing_schema_id=re.compile(r'^(?:school_(?:registry_id|type|name|code)|gym_(?:general_[abc]|lang_[abc]_(?:fr|de|it)|tech_split_[abc])|gel_(?:general_[abc]|lang_[ab]_(?:fr|de)|b_(?:hum|sci)|c_(?:hum|scihealth|econit|field_math|field_bio|cond_math|cond_history))|egel_b_period|ethics_[abc]_(?:exempt|timely|equivalent)|ecclesiastical_(?:combined|lykeio)_school_key|pes_gym_(?:general_[abc]|lang_[abc]_(?:fr|de|ru|ar|tr))|pes_lyc_(?:general_[abc]|lang_[abc]_(?:en|fr|de)))$')
 def canonical_field_id(page_name, field_id):
     if camel.match(field_id):
         return True

@@ -34,6 +34,7 @@ expected_eneegyl = {
     'eneegyl.lykeio.c.health.fallback.5', 'eneegyl.lykeio.c.health.fallback.6',
 }
 expected_music_gym = {'mgym.theatro', 'mgym.istoria_texnis'}
+expected_pes_gym = {'pes.gym.deuteri_xeni'}
 expected_music_lyc = {
     'mgel.music.elliniki_paradosiaki',
     'mgel.c.choice.elliniki_paradosiaki',
@@ -42,10 +43,10 @@ expected_music_lyc = {
     'mgel.c.choice.choral',
     'mgel.c.choice.ixolipsia2',
 }
-expected_ids = expected_eneegyl | expected_music_gym | expected_music_lyc
+expected_ids = expected_eneegyl | expected_music_gym | expected_music_lyc | expected_pes_gym
 
 gaps = [r for r in rows if r.get('assignment_link_status') == 'regulatory_gap']
-check('25 regulatory-gap rows exact', len(gaps) == 25 and {r.get('course_id') for r in gaps} == expected_ids)
+check('26 regulatory-gap rows exact', len(gaps) == 26 and {r.get('course_id') for r in gaps} == expected_ids)
 check('all gaps explicitly confirmed', all(r.get('assignment_gap_confirmed') is True for r in gaps))
 check('all gaps have machine-readable kind', all(bool(r.get('assignment_gap_kind')) for r in gaps))
 check('all gaps have timetable source', all(bool(r.get('assignment_gap_timetable_source')) for r in gaps))
@@ -53,14 +54,16 @@ check('all gaps have assignment source', all(bool(r.get('assignment_gap_assignme
 check('all gaps have inference guard', all(bool(r.get('assignment_gap_inference_guard')) for r in gaps))
 
 instances = sum(len(r.get('hours') or {}) for r in gaps)
-check('29 regulatory-gap grade instances', instances == 29)
+check('32 regulatory-gap grade instances', instances == 32)
 
 en = [r for r in gaps if r.get('course_id') in expected_eneegyl]
 mg = [r for r in gaps if r.get('course_id') in expected_music_gym]
 ml = [r for r in gaps if r.get('course_id') in expected_music_lyc]
+pg = [r for r in gaps if r.get('course_id') in expected_pes_gym]
 check('ENEEGYL 17 rows / 17 instances', len(en) == 17 and sum(len(r.get('hours') or {}) for r in en) == 17)
 check('Music Gym 2 rows / 4 instances', len(mg) == 2 and sum(len(r.get('hours') or {}) for r in mg) == 4)
 check('Music Lyceum 6 rows / 8 instances', len(ml) == 6 and sum(len(r.get('hours') or {}) for r in ml) == 8)
+check('PES Gym 1 row / 3 instances', len(pg) == 1 and sum(len(r.get('hours') or {}) for r in pg) == 3)
 
 check('ENEEGYL source pair exact', all(
     r.get('assignment_gap_timetable_source') == 'ΦΕΚ Β΄ 2149/2026'
@@ -70,6 +73,7 @@ check('ENEEGYL source pair exact', all(
 ))
 check('Music timetable source exact', all(r.get('assignment_gap_timetable_source') == 'ΦΕΚ Β΄ 2107/2026' for r in mg + ml))
 check('Music Gym repealed-table guard', all(r.get('assignment_gap_inference_guard') == 'do_not_revive_repealed_2015_assignment' for r in mg))
+check('PES Gym language gap guard', all(r.get('assignment_gap_inference_guard') == 'no_unpublished_language_specialty_inference' for r in pg))
 
 # Same title in another grade/context is evidence to document, never authority to copy.
 for row in en:
@@ -99,8 +103,8 @@ check('public payload strips every assignment_* key', all(
 check('internal payload retains gap metadata', any('assignment_gap_kind' in row for row in rows))
 
 readme = (ROOT / 'README.md').read_text(encoding='utf-8')
-check('README classification count current', '2.084/2.084' in readme)
-check('README documents confirmed regulatory gaps', '29 επιβεβαιωμένα κανονιστικά `regulatory_gap`' in readme)
+check('README classification count current', '2.197/2.197' in readme)
+check('README documents confirmed regulatory gaps', '32 επιβεβαιωμένα κανονιστικά `regulatory_gap`' in readme)
 
 audit = ROOT / 'docs' / 'audits' / 'REGULATORY-GAPS-2026-AUDIT-2026-09-05.md'
 check('dedicated regulatory-gap audit exists', audit.exists())

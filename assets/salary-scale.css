@@ -1,0 +1,42 @@
+.payroll-print-sheet { display:none; }
+    body.edu-ui.edu-calc-standard .result-row[hidden],
+    body.edu-ui.edu-calc-standard .payroll-deduction-details[hidden] { display:none !important; }
+    .payroll-deduction-toggle {
+      border:0; background:transparent; padding:0; margin:0; color:var(--blue-dark);
+      font:inherit; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    }
+    .payroll-deduction-toggle:hover, .payroll-deduction-toggle:focus-visible { text-decoration:underline; }
+    .payroll-deduction-toggle-icon { display:inline-block; transition:transform .16s ease; }
+    .payroll-deduction-toggle[aria-expanded="true"] .payroll-deduction-toggle-icon { transform:rotate(180deg); }
+    .payroll-deduction-details {
+      margin:0 0 8px; padding:4px 0 7px 12px; border-left:3px solid var(--edu-result-row-separator);
+    }
+    .payroll-deduction-detail-row {
+      display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; padding:6px 0;
+      border-top:1px dashed var(--edu-result-row-separator); font-size:13px;
+    }
+    .payroll-deduction-detail-row:first-child { border-top:0; }
+    .payroll-deduction-detail-row strong { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+    .payroll-deduction-detail-note { display:block; margin-top:2px; color:var(--muted); font-size:11px; font-weight:400; line-height:1.35; }
+    @media print {
+      @page { size:A4; margin:12mm; }
+      body > * { display:none !important; }
+      body > #payrollPrintSheet { display:block !important; }
+      #payrollPrintSheet {
+        color:#111; background:#fff; font:12px/1.38 Arial, Helvetica, sans-serif;
+        width:100%; margin:0; padding:0;
+      }
+      #payrollPrintSheet h1 { margin:0 0 3px; text-align:center; font-size:18px; letter-spacing:.2px; }
+      #payrollPrintSheet .print-subtitle { text-align:center; margin:0 0 14px; color:#444; }
+      #payrollPrintSheet .print-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+      #payrollPrintSheet .print-box { border:1px solid #777; padding:8px; break-inside:avoid; }
+      #payrollPrintSheet .print-box h2 { margin:0 0 6px; font-size:12px; text-transform:uppercase; }
+      #payrollPrintSheet table { width:100%; border-collapse:collapse; margin:0 0 12px; break-inside:avoid; }
+      #payrollPrintSheet th, #payrollPrintSheet td { border:1px solid #999; padding:5px 6px; vertical-align:top; }
+      #payrollPrintSheet th { background:#eee !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; text-align:left; }
+      #payrollPrintSheet td.amount { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+      #payrollPrintSheet tr.total-row td { font-weight:700; border-top:2px solid #555; }
+      #payrollPrintSheet .print-net { border:2px solid #333; padding:9px 12px; margin-top:10px; display:flex; justify-content:space-between; font-size:16px; font-weight:700; }
+      #payrollPrintSheet .print-note { margin-top:12px; color:#444; font-size:10.5px; }
+      #payrollPrintSheet .print-meta { margin-top:8px; text-align:right; color:#666; font-size:10px; }
+    }

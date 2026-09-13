@@ -148,16 +148,16 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Η εκτύπωση myschool Π.ΕΠΑ.Λ. Κέρκυρας επιβεβαιώνει επιχειρησιακά ότι τα έξι αντικείμενα εμφανίζονται ως ενιαία blocks· χρησιμοποιείται μόνο ως operational cross-check και όχι ως κανονιστική πηγή.
 - Στις δημόσιες πηγές του Ωρολογίου προστέθηκαν τα ΦΕΚ Β΄ 4367/2021 και Β΄ 7403/2023 για τη διασταύρωση των αναθέσεων της Α΄ Π.ΕΠΑ.Λ.
 - Τα νέα `assignment_*` metadata παραμένουν αποκλειστικά server-side μέσω `weeklyTimetablePublicRows()`.
-- Το cross-audit ταξινομεί πλέον και τις 2.084/2.084 περιπτώσεις. Η πλήρης ταξινόμηση δεν σημαίνει ότι όλες έχουν διαθέσιμη ανάθεση: τα 29 επιβεβαιωμένα κανονιστικά `regulatory_gap` παραμένουν σκόπιμα κενά και φέρουν machine-readable metadata που απαγορεύει αυθαίρετο δανεισμό ανάθεσης από άλλη τάξη/ειδικότητα ή από καταργημένη απόφαση.
+- Το cross-audit ταξινομεί πλέον και τις 2.197/2.197 περιπτώσεις. Η πλήρης ταξινόμηση δεν σημαίνει ότι όλες έχουν διαθέσιμη ανάθεση: τα 32 επιβεβαιωμένα κανονιστικά `regulatory_gap` παραμένουν σκόπιμα κενά και φέρουν machine-readable metadata που απαγορεύει αυθαίρετο δανεισμό ανάθεσης από άλλη τάξη/ειδικότητα ή από καταργημένη απόφαση.
 
 ## Εσωτερικό Teaching Workload Model (2026-09-05)
 - Προστέθηκε το server-side `includes/teaching-workload-model.php`, χωρίς καμία αλλαγή στο public UI των `anatheseis-mathimaton.php` και `orologio-programma-mathimaton.php`.
 - Το μοντέλο δημιουργεί μία σταθερή εγγραφή ανά `course_id@τάξη` και ενώνει: ωρολόγιο πρόγραμμα → ώρες → κανονιστικό context → Α΄/Β΄/Γ΄ ανάθεση.
-- Και οι 2.084/2.084 περιπτώσεις τάξης ταξινομούνται χωρίς unresolved/ambiguous mapping: 1.824 `direct`, 99 `alias`, 80 `components`, 45 `choice_dependent`, 7 `thematic_dependent`, 29 `regulatory_gap`.
+- Και οι 2.197/2.197 περιπτώσεις τάξης ταξινομούνται χωρίς unresolved/ambiguous mapping: 1.931 `direct`, 99 `alias`, 80 `components`, 48 `choice_dependent`, 7 `thematic_dependent`, 32 `regulatory_gap`.
 - Οι 80 συνδυασμένες Θ/Ε γραμμές διατηρούνται ως 160 ξεχωριστά assignment targets, όλα επιλυμένα. Δεν εφαρμόζεται μία ανάθεση αυθαίρετα σε ολόκληρο το Θ+Ε.
-- Οι 45 choice-dependent περιπτώσεις παράγουν 761 πραγματικές επιλογές και 761/761 επιλύονται σε υπαρκτές αναθέσεις. Οι branch-specific ξένες γλώσσες περιορίζονται στον πραγματικό κλάδο της επιλογής.
+- Οι 48 choice-dependent περιπτώσεις παράγουν 770 πραγματικές επιλογές και 770/770 επιλύονται σε υπαρκτές αναθέσεις. Οι branch-specific ξένες γλώσσες περιορίζονται στον πραγματικό κλάδο της επιλογής.
 - Τα 6 blocks της Α΄ Π.ΕΠΑ.Λ. παραμένουν `thematic_dependent`: συνδέονται με τις πραγματικές θεματικές αναθέσεις, χωρίς επινοημένη κατανομή ωρών ανά υποενότητα.
-- Τα 29 επιβεβαιωμένα `regulatory_gap` παραμένουν hard stop χωρίς assignment payload και διατηρούν inference guard.
+- Τα 32 επιβεβαιωμένα `regulatory_gap` παραμένουν hard stop χωρίς assignment payload και διατηρούν inference guard.
 - Για 6 περιπτώσεις με ωράριο που αλλάζει ανά τετράμηνο διατηρείται `period_hours` και `hours_mode=periodic`. Δεν εκτίθεται παραπλανητικό σταθερό `hours_total`.
 - Η context resolution λαμβάνει υπόψη ειδικότητα/τομέα/ομάδα και όχι μόνο τον τίτλο. Έτσι ομώνυμα μαθήματα, όπως «Στοιχεία Ψύξης - Κλιματισμού», επιλύονται στη σωστή ανάθεση της συγκεκριμένης ειδικότητας.
 - Νέο `tests/teaching-workload-model-contract.py`: 7383/7383 PASS. Στοχευμένα cross-audits/regressions παραμένουν πράσινα και PHP lint 66/66.
@@ -170,7 +170,7 @@ This hotfix makes the public/regular educational service limit explicit and enfo
 - Οι Θ/Ε αναθέσεις κρατούν ακριβείς component ώρες. Οι choices διατηρούν `slot_hours` και δεν αντιγράφονται σε κάθε component όταν η κατανομή δεν είναι θεσμικά καθορισμένη.
 - Τα variants Υγείας αποκτούν `variant_scope_key`, ενώ η Β΄ Π.ΕΠΑ.Λ. Υγείας διατηρεί `required=2`, `distinct=true`.
 - Τα `special_notes` της Α΄ Π.ΕΠΑ.Λ. διατηρούνται πλέον στο workload payload.
-- 78 ρητοί κωδικοί αναθέσεων παράγουν 10.847 aggregation claims: 8.001 fixed, 372 variant, 2.115 choice, 140 condition, 25 periodic και 194 thematic. Τα 29 regulatory gaps δεν παράγουν assignment claim.
+- 78 ρητοί κωδικοί αναθέσεων παράγουν 11.389 aggregation claims: 8.494 fixed, 372 variant, 2.124 choice, 180 condition, 25 periodic και 194 thematic. Τα 32 regulatory gaps δεν παράγουν assignment claim.
 - Νέο `tests/teaching-workload-aggregation-contract.py`: 364/364 PASS. Τα προηγούμενα workload/cross-audit regressions παραμένουν πράσινα και PHP lint 67/67.
 
 ## Ε.Ε.Ε.ΕΚ. — Ωρολόγιο, Αναθέσεις και cross-audit (2026-09-05)

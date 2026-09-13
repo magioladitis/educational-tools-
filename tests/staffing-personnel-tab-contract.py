@@ -148,7 +148,7 @@ check('frontend marks imported duplicate Directors invalid without silent rewrit
 check('staffing matrix headings are simply A B C', '<th>Α΄</th><th>Β΄</th><th>Γ΄</th>' in text and '<th>Α΄ επιλεξιμότητα</th>' not in text)
 
 check('frontend uses personnel workload normalize', 'personnelWorkloadNormalizePerson' in text)
-check('frontend still does not auto allocate', 'personnelWorkloadRosterPlan' not in text and 'personnelWorkloadEvaluatePerson' not in text)
+check('frontend still does not execute auto allocation', re.search(r"(?<!['\"])personnelWorkloadRosterPlan\s*\(", text) is None and re.search(r"(?<!['\"])personnelWorkloadEvaluatePerson\s*\(", text) is None)
 
 failed=[n for n,ok in checks if not ok]
 for n,ok in checks: print(('PASS' if ok else 'FAIL')+': '+n)

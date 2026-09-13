@@ -1353,11 +1353,6 @@ staffingPerfEnd('specialty_labels');
   <title>Υπολογισμός διδακτικών αναγκών σχολικής μονάδας</title>
   <link rel="stylesheet" href="<?php echo staffingUiH(edu_asset_url('assets/common.css')); ?>">
   <link rel="stylesheet" href="<?php echo staffingUiH(edu_asset_url('assets/staffing-simulator.css')); ?>">
-  <?php if ($staffingPerfEnabled): ?><style>
-    .perf-diagnostic{margin-top:18px}.perf-diagnostic>summary{cursor:pointer;padding:14px 16px}.perf-diagnostic-body{padding:0 16px 16px}
-    .perf-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:12px 0 16px}.perf-kpis>div{border:1px solid var(--edu-border);border-radius:10px;padding:10px;background:var(--edu-surface)}
-    .perf-kpis strong,.perf-kpis span{display:block}.perf-kpis strong{font-size:1.05rem}.perf-kpis span{margin-top:3px;color:var(--edu-muted);font-size:.86rem}.perf-table{width:100%;border-collapse:collapse}.perf-table th,.perf-table td{padding:7px 9px;border-bottom:1px solid var(--edu-border);text-align:left}.perf-table .num{text-align:right;white-space:nowrap}
-  </style><?php endif; ?>
 </head>
 <body class="edu-ui edu-calc-standard edu-page-staffing-simulator">
 <?php require_once __DIR__ . '/includes/header.php'; ?>

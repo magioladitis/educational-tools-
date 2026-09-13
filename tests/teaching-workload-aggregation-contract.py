@@ -39,10 +39,10 @@ def claims(code, **criteria):
 
 check('78 explicit assignment codes indexed', summary == {
     'known_codes': 78,
-    'claims_across_known_codes': 11384,
+    'claims_across_known_codes': 11389,
     'claim_categories': {
         'choice': 2124,
-        'condition': 175,
+        'condition': 180,
         'fixed': 8494,
         'periodic': 25,
         'thematic': 194,
