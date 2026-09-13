@@ -15,6 +15,14 @@ CATALOG = (ROOT / 'includes' / 'tools-catalog.php').read_text(encoding='utf-8')
 DIRECTORY_JS = (ROOT / 'assets' / 'tools-directory.js').read_text(encoding='utf-8')
 CSS = (ROOT / 'assets' / 'weekly-timetable.css').read_text(encoding='utf-8')
 
+# Public source links are assembled dynamically from the central legal-source
+# registry. Contract tests must inspect the rendered page rather than require
+# those generated labels/URLs to be duplicated as literals in the PHP view.
+PAGE_RENDERED = subprocess.run(
+    ['php', str(ROOT / 'orologio-programma-mathimaton.php')],
+    cwd=str(ROOT), capture_output=True, text=True, check=True
+).stdout
+
 checks = []
 def check(name, cond): checks.append((name, bool(cond)))
 
@@ -64,7 +72,7 @@ check('internal timetable-assignment crosswalk loaded', 'teaching-timetable-cros
 check('ENEEGYL health fallback variant data', 'weeklyTimetableEneegylHealthFallbackProgramData' in EDATA and "'4Θ + 1Ε'" in EDATA and "'1Θ + 4Ε'" in EDATA and "'1Θ + 3Ε'" in EDATA)
 check('ENEEGYL health variant selector config', "'variants_by_grade_track'" in DATA and "'two_specials' => 'Διδάσκονται δύο Ειδικά Μαθήματα'" in DATA and "'one_special' => 'Δεν είναι δυνατή η διδασκαλία δεύτερου Ειδικού Μαθήματος'" in DATA)
 check('page supports timetable variant selector', 'id="variantField"' in PAGE and 'function currentVariants(school, grade, track)' in UI and 'row.variant && row.variant !== variant' in UI)
-check('ENEEGYL public sources exposed', '2259/2026 — Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.' in PAGE and '2149/2026 — Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ.' in PAGE)
+check('ENEEGYL public sources exposed', 'ΦΕΚ Β΄ 2259/2026 — Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.' in PAGE_RENDERED and 'ΦΕΚ Β΄ 2149/2026 — Λύκειο ΕΝ.Ε.Ε.ΓΥ.-Λ.' in PAGE_RENDERED)
 check('ENEEGYL roadmap remains internal', 'ΕΝ.Ε.Ε.ΓΥ.-Λ.' in PAGE and 'μελλοντική διασύνδεση με αναθέσεις' not in PAGE)
 check('evening GEL preserves 1/2', "'Β΄'=>'1 / 2'" in DATA)
 check('evening GEL preserves 2/1', "'Β΄'=>'2 / 1'" in DATA)
@@ -79,11 +87,11 @@ check('page exposes school and grade selectors', 'id="schoolType"' in PAGE and '
 check('artistic direction selector', 'id="trackField"' in PAGE and 'id="track"' in PAGE and 'row.track && row.track !== track' in UI)
 check('dynamic direction or sector label', 'id="trackLabel"' in PAGE and 'function currentTracks(school, grade)' in UI and 'function currentTrackLabel(school, grade)' in UI and 'trackLabel.textContent = currentTrackLabel(school, grade)' in UI)
 check('dynamic specialty selector', 'id="specialtyField"' in PAGE and 'id="specialty"' in PAGE and 'function currentSpecialties(school, grade, track)' in UI and 'row.specialty && row.specialty !== specialty' in UI)
-check('C PEPAL official source exposed', '5251/2023 — Γ΄ Π.ΕΠΑ.Λ.' in PAGE and 'orologio-programma-g-taksi---epaggelmatiki-ekpaidefsi' in PAGE)
+check('C PEPAL official source exposed', 'ΦΕΚ Β΄ 5251/2023 — Γ΄ Π.ΕΠΑ.Λ.' in PAGE_RENDERED and '2023_08_28_EXE_93929_YA_OPS_G_taxes_P_EPAL_n4763_2020_PHEK_5251B_30.08.2023.pdf' in PAGE_RENDERED)
 check('professional hour badges avoid duplicate unit', 'function hoursBadgeText(row)' in UI and "/[ΘΕΣ]|ΠΑ/.test(text) ? text : text + ' ώρ.'" in UI)
 check('professional legend exposed', '<strong>Θ</strong> = θεωρία' in PAGE and '<strong>ΠΑ</strong> = πρακτική άσκηση' in PAGE)
 check('public religion ethics row is combined', "publicRow.subject = 'Θρησκευτικά / Ηθική'" in UI)
-check('Gymnasium Technology Informatics split rule is documented', 'Τεχνολογία / Πληροφορική — Ημερήσιο Γυμνάσιο' in PAGE and 'πάνω από <strong>21 μαθητές/ήτριες</strong>' in PAGE and '74472/Δ2/2020' in PAGE)
+check('Gymnasium Technology Informatics split rule is documented', 'Τεχνολογία / Πληροφορική — Ημερήσιο Γυμνάσιο' in PAGE_RENDERED and 'πάνω από <strong>21 μαθητές/ήτριες</strong>' in PAGE_RENDERED and '74472/Δ2/2020' in PAGE_RENDERED)
 check('public roadmap UI removed', 'class="architecture-note"' not in PAGE and 'Έτοιμο για μελλοντική διασύνδεση με αναθέσεις' not in PAGE)
 check('internal course ids stay out of public UI', 'ID: ' not in PAGE and "row.course_id" not in UI)
 check('page has no inline style block', '<style>' not in PAGE)
