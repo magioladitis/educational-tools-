@@ -65,7 +65,6 @@ $h = function ($value) use ($flags) {
     <div class="hero-meta" aria-label="Σύνοψη Εργαλειοθήκης">
       <span><?php echo count($tools); ?> διαθέσιμα εργαλεία</span>
       <span><?php echo count($groups); ?> βασικές κατηγορίες</span>
-      <span>Ξεχωριστή σελίδα προθεσμιών</span>
     </div>
     <div class="hero-actions">
       <a class="hero-action hero-action--primary" href="#tool-categories">Δες κατηγορίες</a>
@@ -80,7 +79,6 @@ $h = function ($value) use ($flags) {
         <span class="section-kicker">ΞΕΚΙΝΑ ΑΠΟ ΕΔΩ</span>
         <h2 id="toolCategoriesTitle">Κατηγορίες εργαλείων</h2>
       </div>
-      <p>Διάλεξε οικογένεια εργαλείων ή χρησιμοποίησε την αναζήτηση πιο κάτω.</p>
     </div>
 
     <div class="category-grid">
