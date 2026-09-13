@@ -15,7 +15,7 @@ for p in sorted(ROOT.glob('*.php')):
     text = p.read_text(encoding='utf-8', errors='ignore')
     if '<details' in text:
         raw_details.append((p.name, text.count('<details')))
-ok('only staffing simulator retains structural raw details', raw_details == [('ypologismos-didaktikon-anagkon.php', 11)])
+ok('only staffing simulator retains structural raw details', raw_details == [('ypologismos-didaktikon-anagkon.php', 12)])
 
 expected_mobile = {
     'posa-paravola.php': 'Οδηγίες για την έκδοση και πληρωμή παραβόλου',

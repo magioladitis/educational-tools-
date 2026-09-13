@@ -238,3 +238,52 @@
 .edu-page-staffing-simulator .stat51-table tr.is-difference .stat51-check,.edu-page-staffing-simulator .stat51-table tr.is-only .stat51-check{font-weight:800;color:#8a6400}
 .edu-page-staffing-simulator .stat51-table tr.is-difference .stat51-diff,.edu-page-staffing-simulator .stat51-table tr.is-only .stat51-diff{font-weight:800}
 .edu-page-staffing-simulator .stat51-empty{margin-top:12px}
+
+
+/* Mobile hardening v3.21.14 — preserve readability instead of squeezing data. */
+@media(max-width:760px){
+  .edu-page-staffing-simulator .matrix-wrap,
+  .edu-page-staffing-simulator .personnel-csv-preview{
+    max-width:100%;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-inline:contain;
+  }
+  .edu-page-staffing-simulator .specialty-balance-table{
+    min-width:680px;
+  }
+  .edu-page-staffing-simulator .claim-list{
+    min-width:0;
+  }
+  .edu-page-staffing-simulator .personnel-toolbar .field,
+  .edu-page-staffing-simulator .personnel-csv-actions .field{
+    min-width:0;
+    width:100%;
+  }
+  .edu-page-staffing-simulator .personnel-row-main .personnel-remove-compact{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    min-height:44px;
+  }
+  .edu-page-staffing-simulator .staffing-context-chip{
+    max-width:100%;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+  .edu-page-staffing-simulator .staffing-help-panel{
+    width:min(430px,calc(100vw - 24px));
+    max-height:min(70vh,calc(100dvh - 96px));
+  }
+}
+@media(max-width:360px){
+  .edu-page-staffing-simulator #staffingMatrixTable th:first-child,
+  .edu-page-staffing-simulator #staffingMatrixTable td:first-child{
+    width:156px;
+    max-width:156px;
+  }
+  .edu-page-staffing-simulator #staffingMatrixTable th:nth-child(n+2),
+  .edu-page-staffing-simulator #staffingMatrixTable td:nth-child(n+2){
+    width:48px;
+    min-width:48px;
+  }
+}

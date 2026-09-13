@@ -129,3 +129,13 @@ body.edu-ui.edu-calc-standard.edu-page-weekly-timetable .timetable-group h3 + .t
     padding:5px 8px;
   }
 }
+
+
+/* Mobile hardening v3.21.14 — long course names/conditions stay inside the row. */
+@media (max-width:560px){
+  .edu-page-weekly-timetable .timetable-course-title,
+  .edu-page-weekly-timetable .timetable-course-detail,
+  .edu-page-weekly-timetable .timetable-group h3{
+    overflow-wrap:anywhere;
+  }
+}

@@ -16,10 +16,10 @@ check('deadlines navigation has an accessible label', 'aria-label="Προθεσ�
 check('categories summary has an accessible label', 'summary aria-label="Κατηγορίες"' in header)
 check('desktop text labels are preserved', header.count('edu-tools-global-nav__label') == 3 and 'edu-tools-global-header__back-label' in header)
 check('mobile breakpoint hides all textual navigation labels', bool(re.search(r'@media \(max-width: 700px\).*?\.edu-tools-global-header__back-label,\s*\.edu-tools-global-nav__label\s*\{\s*display:\s*none;', css, re.S)))
-check('mobile navigation uses fixed touch targets', bool(re.search(r'@media \(max-width: 700px\).*?width:\s*40px;.*?height:\s*40px;', css, re.S)))
+check('mobile navigation uses fixed touch targets', bool(re.search(r'@media \(max-width: 700px\).*?width:\s*44px;.*?height:\s*44px;', css, re.S)))
 check('mobile category chevron is hidden', bool(re.search(r'@media \(max-width: 700px\).*?\.edu-tools-global-menu > summary::after\s*\{\s*display:\s*none;', css, re.S)))
 check('legacy rule no longer removes first mobile navigation link', '.edu-tools-global-nav__link:first-child { display: none; }' not in css)
-check('very narrow screens retain four icon controls', '@media (max-width: 360px)' in css and 'width: 38px;' in css)
+check('very narrow screens retain four 44px icon controls', '@media (max-width: 360px)' in css and 'width: 44px;' in css)
 
 failed = [label for label, ok in checks if not ok]
 print(f'RESULT {len(checks)-len(failed)} PASS / {len(failed)} FAIL')

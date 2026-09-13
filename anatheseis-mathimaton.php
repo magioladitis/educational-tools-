@@ -128,6 +128,13 @@
       .edu-page-teaching-assignments .school-type-options{
         grid-template-columns:1fr;
       }
+      .edu-page-teaching-assignments #assignmentResults h3{
+        flex-wrap:wrap;
+      }
+      .edu-page-teaching-assignments #assignmentResults .result-row > span,
+      .edu-page-teaching-assignments .school-type-options label{
+        overflow-wrap:anywhere;
+      }
     }
   </style>
 </head>

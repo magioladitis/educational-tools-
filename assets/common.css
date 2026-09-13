@@ -692,10 +692,10 @@ a:focus-visible {
   .edu-tools-global-header__back,
   .edu-tools-global-nav__link,
   .edu-tools-global-menu > summary {
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
-    min-height: 40px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
     padding: 0;
     justify-content: center;
     border-radius: 10px;
@@ -751,13 +751,88 @@ a:focus-visible {
 
   .edu-tools-global-nav { gap: 3px; }
 
+  /* Touch targets stay at 44px; only spacing tightens here. */
+}
+
+/* --------------------------------------------------------------------------
+   Mobile hardening v3.21.14
+   Interaction-only safeguards: no calculator logic or desktop layout changes.
+   -------------------------------------------------------------------------- */
+@media (max-width: 700px) {
+  /* Avoid iOS Safari focus-zoom on controls whose page-specific CSS uses 15px. */
+  body.edu-ui input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  body.edu-ui select,
+  body.edu-ui textarea {
+    max-width: 100%;
+    min-width: 0;
+    font-size: 16px !important;
+  }
+
+  /* Keep interactive controls comfortably tappable on phones. */
+  body.edu-ui button:not(.filter-btn),
+  body.edu-ui .edu-btn,
+  body.edu-ui details > summary,
   .edu-tools-global-header__back,
   .edu-tools-global-nav__link,
   .edu-tools-global-menu > summary {
-    width: 38px;
-    min-width: 38px;
-    height: 38px;
-    min-height: 38px;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  /* Grid/flex children and long Greek labels must be allowed to shrink/wrap. */
+  body.edu-ui .field-grid > *,
+  body.edu-ui .edu-field-grid > *,
+  body.edu-ui .layout > *,
+  body.edu-ui .card > *,
+  body.edu-ui .section > *,
+  body.edu-ui .panel > * {
+    min-width: 0;
+  }
+  body.edu-ui label,
+  body.edu-ui .help,
+  body.edu-ui .small-note,
+  body.edu-ui .info-note,
+  body.edu-ui .note,
+  body.edu-ui .warning,
+  body.edu-ui .source,
+  body.edu-ui .edu-disclosure__body {
+    overflow-wrap: anywhere;
+  }
+
+  /* Native-feeling horizontal scrolling for intentionally wide data tables. */
+  body.edu-ui .table-wrap,
+  body.edu-ui .matrix-wrap,
+  body.edu-ui .edu-overflow-x-auto {
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
+  }
+
+  body.edu-ui.edu-calc-standard .checkrow {
+    min-height: 44px;
+  }
+
+  .edu-back-to-top {
+    right: max(12px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 360px) {
+  /* Keep WCAG-size navigation targets; reclaim space from gaps, not hit areas. */
+  .edu-tools-global-header__inner {
+    padding-left: 5px;
+    padding-right: 5px;
+    gap: 3px;
+  }
+  .edu-tools-global-nav { gap: 2px; }
+  .edu-tools-global-header__back,
+  .edu-tools-global-nav__link,
+  .edu-tools-global-menu > summary {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
   }
 }
 
@@ -1317,7 +1392,8 @@ body.edu-ui.edu-guide-standard .small-note { margin-top:18px; font-size:13px; li
   body.edu-ui.edu-calc-standard .hero { padding:24px 19px; }
   body.edu-ui.edu-calc-standard .field-grid { grid-template-columns:1fr; }
   body.edu-ui.edu-calc-standard .card { padding:16px; }
-  body.edu-ui.edu-calc-standard .actions { grid-template-columns:1fr; margin-top:20px; gap:10px; }
+  body.edu-ui.edu-calc-standard .actions { grid-template-columns:1fr; }
+  body.edu-ui.edu-calc-standard .actions { margin-top:20px; gap:10px; }
 }
 @media (max-width:760px) {
   body.edu-ui.edu-guide-standard { padding:18px 12px; }
