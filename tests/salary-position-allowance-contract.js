@@ -29,6 +29,8 @@ check('large lyceum director', S.positionAllowanceMonthly('lyceum_director_large
 check('education matters head', S.positionAllowanceMonthly('education_matters_head'), 390);
 check('gymnasium director', S.positionAllowanceMonthly('gymnasium_director'), 358);
 check('large gymnasium director', S.positionAllowanceMonthly('gymnasium_director_large'), 429);
+check('primary school director', S.positionAllowanceMonthly('primary_school_director'), 358);
+check('large primary school director', S.positionAllowanceMonthly('primary_school_director_large'), 429);
 check('vice director', S.positionAllowanceMonthly('vice_director'), 195);
 check('small school head', S.positionAllowanceMonthly('small_school_head'), 215);
 check('unknown is safe', S.positionAllowanceMonthly('unknown'), 0);

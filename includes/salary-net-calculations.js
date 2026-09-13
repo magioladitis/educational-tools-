@@ -103,6 +103,8 @@
     education_matters_head: Object.freeze({ label: "Προϊστάμενος Τμήματος Εκπαιδευτικών Θεμάτων", amount: 390 }),
     gymnasium_director: Object.freeze({ label: "Διευθυντής Γυμνασίου / Ε.Κ. / αντίστοιχης δομής", amount: 358 }),
     gymnasium_director_large: Object.freeze({ label: "Διευθυντής Γυμνασίου / αντίστοιχης δομής με ≥120 μαθητές (Σ.Μ.Ε.Α.Ε. ≥30)", amount: 429 }),
+    primary_school_director: Object.freeze({ label: "Διευθυντής Δημοτικού / Νηπιαγωγείου (4θέσιο και άνω)", amount: 358 }),
+    primary_school_director_large: Object.freeze({ label: "Διευθυντής Δημοτικού / Νηπιαγωγείου (4θέσιο και άνω) με ≥120 μαθητές", amount: 429 }),
     vice_director: Object.freeze({ label: "Υποδιευθυντής σχολικής μονάδας / Ε.Κ. / Σ.Δ.Ε. / Σ.Α.Ε.Κ. ή Υπεύθυνος Τομέα Ε.Κ.", amount: 195 }),
     small_school_head: Object.freeze({ label: "Προϊστάμενος 1θέσιου–3θέσιου Δημοτικού / Νηπιαγωγείου", amount: 215 })
   });

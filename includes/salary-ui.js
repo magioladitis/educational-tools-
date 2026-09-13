@@ -102,7 +102,7 @@
     payroll.otherDeductionParts.forEach(function (item) {
       if (item[1] > 0) deductionRows += printAmountRow(item[0], item[1]);
     });
-    deductionRows += printAmountRow('Φόρος εισοδήματος — μηνιαία παρακράτηση', net.monthlyTax);
+    deductionRows += printAmountRow('Φόρος εισοδήματος (Φ.Μ.Υ.) — μηνιαία παρακράτηση', net.monthlyTax);
 
     const totalService = integer('serviceYears', 50) * 12 + integer('serviceMonths', 11);
     const qualificationText = selectedText('qualification');
@@ -147,7 +147,7 @@
         '<div class="print-box"><h2>Σύνοψη</h2>' +
           '<div><strong>Τακτικές κρατήσεις μετά τυχόν μείωση:</strong> ' + formatEuroCents(net.standardDeductions) + '</div>' +
           '<div><strong>Λοιπές κρατήσεις:</strong> ' + formatEuroCents(net.otherDeductions) + '</div>' +
-          '<div><strong>Μηνιαία παρακράτηση φόρου:</strong> ' + formatEuroCents(net.monthlyTax) + '</div>' +
+          '<div><strong>Φ.Μ.Υ. — μηνιαία παρακράτηση φόρου:</strong> ' + formatEuroCents(net.monthlyTax) + '</div>' +
         '</div>' +
       '</div>' +
       '<div class="print-net"><span>ΕΚΤΙΜΩΜΕΝΟ ΠΛΗΡΩΤΕΟ</span><span>' + formatEuroCents(net.estimatedNet) + '</span></div>' ;

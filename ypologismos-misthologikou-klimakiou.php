@@ -165,6 +165,8 @@
                 <option value="lyceum_director_large">Διευθυντής ΓΕΛ / ΕΠΑΛ / αντίστοιχης δομής ≥120 μαθητές (Σ.Μ.Ε.Α.Ε. ≥30) — 501 €</option>
                 <option value="gymnasium_director">Διευθυντής Γυμνασίου / Ε.Κ. / αντίστοιχης δομής — 358 €</option>
                 <option value="gymnasium_director_large">Διευθυντής Γυμνασίου / αντίστοιχης δομής ≥120 μαθητές (Σ.Μ.Ε.Α.Ε. ≥30) — 429 €</option>
+                <option value="primary_school_director">Διευθυντής Δημοτικού / Νηπιαγωγείου (4θέσιο και άνω) — 358 €</option>
+                <option value="primary_school_director_large">Διευθυντής Δημοτικού / Νηπιαγωγείου (4θέσιο και άνω) με ≥120 μαθητές — 429 €</option>
                 <option value="vice_director">Υποδιευθυντής / Υπεύθυνος Τομέα Ε.Κ. / αντίστοιχη θέση — 195 €</option>
                 <option value="small_school_head">Προϊστάμενος 1θέσιου–3θέσιου Δημοτικού / Νηπιαγωγείου — 215 €</option>
               </optgroup>
@@ -286,7 +288,7 @@
       <h3>Ενδεικτικές καθαρές αποδοχές</h3>
       <?php calculatorResultRow(array('label' => 'Σύνολο μικτών για εκτίμηση', 'value' => '1.232,00 €', 'value_id' => 'grossForNetResult')); ?>
       <?php calculatorResultRow(array('label' => 'Τακτικές κρατήσεις', 'value' => '0,00 €', 'value_id' => 'standardDeductionsResult')); ?>
-      <?php calculatorResultRow(array('label' => 'Μηνιαία παρακράτηση φόρου', 'value' => '0,00 €', 'value_id' => 'monthlyTaxResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Φ.Μ.Υ. — μηνιαία παρακράτηση φόρου', 'value' => '0,00 €', 'value_id' => 'monthlyTaxResult')); ?>
       <?php calculatorSubtotalRow(array('label' => 'Εκτιμώμενο καθαρό', 'value' => '0,00 €', 'value_id' => 'estimatedNetResult')); ?>
 
       <?php calculatorDisclosureStart(array(
