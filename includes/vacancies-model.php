@@ -141,7 +141,7 @@ function vacanciesDashboardStats($roundId)
 function vacanciesDashboardSchools($roundId)
 {
     $roundId = (int) $roundId;
-    $sql = "SELECT sc.id, sc.name, sc.ministry_code, sub.status, sub.submitted_at, sub.revision_no, COALESCE(SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END),0) vacancies, COALESCE(SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END),0) surpluses FROM vacancy_schools sc LEFT JOIN (SELECT s1.* FROM vacancy_submissions s1 JOIN (SELECT school_id, MAX(revision_no) rev FROM vacancy_submissions WHERE round_id=".$roundId." GROUP BY school_id) x ON x.school_id=s1.school_id AND x.rev=s1.revision_no WHERE s1.round_id=".$roundId.") sub ON sub.school_id=sc.id LEFT JOIN vacancy_entries e ON e.submission_id=sub.id WHERE sc.active=1 GROUP BY sc.id, sc.name, sc.ministry_code, sub.status, sub.submitted_at, sub.revision_no ORDER BY CASE WHEN sub.status='submitted' THEN 0 WHEN sub.status='draft' THEN 1 ELSE 2 END, sc.name";
+    $sql = "SELECT sc.id, sc.name, sc.ministry_code, sub.status, sub.submitted_at, sub.revision_no, sub.school_note, COALESCE(SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END),0) vacancies, COALESCE(SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END),0) surpluses FROM vacancy_schools sc LEFT JOIN (SELECT s1.* FROM vacancy_submissions s1 JOIN (SELECT school_id, MAX(revision_no) rev FROM vacancy_submissions WHERE round_id=".$roundId." GROUP BY school_id) x ON x.school_id=s1.school_id AND x.rev=s1.revision_no WHERE s1.round_id=".$roundId.") sub ON sub.school_id=sc.id LEFT JOIN vacancy_entries e ON e.submission_id=sub.id WHERE sc.active=1 GROUP BY sc.id, sc.name, sc.ministry_code, sub.status, sub.submitted_at, sub.revision_no, sub.school_note ORDER BY CASE WHEN sub.status='submitted' THEN 0 WHEN sub.status='draft' THEN 1 ELSE 2 END, sc.name";
     return vacanciesQueryAll($sql);
 }
 
@@ -150,6 +150,101 @@ function vacanciesDashboardSpecialties($roundId)
     $roundId = (int) $roundId;
     $latestSql = "SELECT s.school_id, MAX(s.revision_no) rev FROM vacancy_submissions s WHERE s.round_id=".$roundId." AND s.status='submitted' GROUP BY s.school_id";
     return vacanciesQueryAll("SELECT sp.code, sp.label, SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END) vacancies, SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END) surpluses FROM vacancy_submissions s JOIN (".$latestSql.") latest ON latest.school_id=s.school_id AND latest.rev=s.revision_no JOIN vacancy_entries e ON e.submission_id=s.id JOIN vacancy_specialties sp ON sp.id=e.specialty_id WHERE s.round_id=".$roundId." AND s.status='submitted' GROUP BY sp.id, sp.code, sp.label HAVING vacancies>0 OR surpluses>0 ORDER BY vacancies DESC, sp.code");
+}
+
+function vacanciesDashboardAllocation($roundId)
+{
+    $roundId = (int) $roundId;
+    $result = array('specialties' => array(), 'schools' => array());
+    if ($roundId <= 0) return $result;
+
+    $latestSql = "SELECT school_id, MAX(revision_no) rev FROM vacancy_submissions WHERE round_id=".$roundId." AND status='submitted' GROUP BY school_id";
+    $rows = vacanciesQueryAll(
+        "SELECT sc.id AS school_id, sc.name AS school_name, sc.ministry_code, " .
+        "sp.id AS specialty_id, sp.code, sp.label, sp.sort_order, " .
+        "e.balance_type, e.hours, e.change_reason, e.change_note " .
+        "FROM vacancy_submissions s " .
+        "JOIN (".$latestSql.") latest ON latest.school_id=s.school_id AND latest.rev=s.revision_no " .
+        "JOIN vacancy_schools sc ON sc.id=s.school_id " .
+        "JOIN vacancy_entries e ON e.submission_id=s.id " .
+        "JOIN vacancy_specialties sp ON sp.id=e.specialty_id " .
+        "WHERE s.round_id=".$roundId." AND s.status='submitted' " .
+        "ORDER BY sp.sort_order, sp.code, e.balance_type, e.hours DESC, sc.name"
+    );
+
+    foreach ($rows as $row) {
+        $specialtyId = (int) $row['specialty_id'];
+        $schoolId = (int) $row['school_id'];
+        $hours = (int) $row['hours'];
+        $type = (string) $row['balance_type'];
+        if ($hours <= 0 || !in_array($type, array('vacancy', 'surplus'), true)) continue;
+
+        if (!isset($result['specialties'][$specialtyId])) {
+            $result['specialties'][$specialtyId] = array(
+                'id' => $specialtyId,
+                'code' => $row['code'],
+                'label' => $row['label'],
+                'sort_order' => (int) $row['sort_order'],
+                'vacancies' => 0,
+                'surpluses' => 0,
+                'vacancy_schools' => array(),
+                'surplus_schools' => array(),
+            );
+        }
+        if (!isset($result['schools'][$schoolId])) {
+            $result['schools'][$schoolId] = array(
+                'id' => $schoolId,
+                'name' => $row['school_name'],
+                'ministry_code' => $row['ministry_code'],
+                'vacancies' => 0,
+                'surpluses' => 0,
+                'entries' => array(),
+            );
+        }
+
+        $entry = array(
+            'school_id' => $schoolId,
+            'school_name' => $row['school_name'],
+            'ministry_code' => $row['ministry_code'],
+            'specialty_id' => $specialtyId,
+            'code' => $row['code'],
+            'label' => $row['label'],
+            'type' => $type,
+            'hours' => $hours,
+            'reason' => $row['change_reason'],
+            'note' => $row['change_note'],
+        );
+
+        if ($type === 'vacancy') {
+            $result['specialties'][$specialtyId]['vacancies'] += $hours;
+            $result['specialties'][$specialtyId]['vacancy_schools'][] = $entry;
+            $result['schools'][$schoolId]['vacancies'] += $hours;
+        } else {
+            $result['specialties'][$specialtyId]['surpluses'] += $hours;
+            $result['specialties'][$specialtyId]['surplus_schools'][] = $entry;
+            $result['schools'][$schoolId]['surpluses'] += $hours;
+        }
+        $result['schools'][$schoolId]['entries'][] = $entry;
+    }
+
+    $result['specialties'] = array_values($result['specialties']);
+    usort($result['specialties'], function ($a, $b) {
+        if ((int) $a['vacancies'] === (int) $b['vacancies']) {
+            if ((int) $a['surpluses'] === (int) $b['surpluses']) {
+                return strcmp((string) $a['code'], (string) $b['code']);
+            }
+            return (int) $a['surpluses'] > (int) $b['surpluses'] ? -1 : 1;
+        }
+        return (int) $a['vacancies'] > (int) $b['vacancies'] ? -1 : 1;
+    });
+
+    $result['schools'] = array_values($result['schools']);
+    usort($result['schools'], function ($a, $b) {
+        if ((int) $a['vacancies'] === (int) $b['vacancies']) return strcmp((string) $a['name'], (string) $b['name']);
+        return (int) $a['vacancies'] > (int) $b['vacancies'] ? -1 : 1;
+    });
+
+    return $result;
 }
 
 function vacanciesCreateRound($title, $referenceDate, $schoolYear)

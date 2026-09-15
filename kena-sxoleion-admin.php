@@ -42,10 +42,17 @@ $round = vacanciesRound($roundId);
 $stats = $round ? vacanciesDashboardStats($roundId) : array();
 $schools = $round ? vacanciesDashboardSchools($roundId) : array();
 $specialties = $round ? vacanciesDashboardSpecialties($roundId) : array();
+$allocation = $round ? vacanciesDashboardAllocation($roundId) : array('specialties' => array(), 'schools' => array());
+$reasonOptions = vacanciesReasonOptions();
 $previousRound = $round ? vacanciesPreviousRound($round) : null;
 $comparison = ($round && $previousRound) ? vacanciesCompareRounds($roundId, (int) $previousRound['id']) : null;
 $config = vacanciesConfig();
 $defaultSchoolYear = ($config && isset($config['default_school_year'])) ? (string) $config['default_school_year'] : '2026-2027';
+$roundStatusLabels = array(
+    'open' => 'Ανοικτός',
+    'closed' => 'Κλειστός',
+    'draft' => 'Πρόχειρος',
+);
 ?>
 <!DOCTYPE html>
 <html lang="el">
@@ -71,7 +78,9 @@ $defaultSchoolYear = ($config && isset($config['default_school_year'])) ? (strin
   <section class="card vacancy-round-picker">
     <form method="get" action="kena-sxoleion-admin.php">
       <div class="field"><label for="round">Γύρος καταγραφής</label><select id="round" name="round" onchange="this.form.submit()">
-      <?php foreach ($rounds as $r) { ?><option value="<?php echo (int) $r['id']; ?>"<?php echo (int)$r['id']===$roundId?' selected':''; ?>><?php echo vacanciesH($r['title'] . ' · ' . $r['status']); ?></option><?php } ?>
+      <?php foreach ($rounds as $r) {
+        $roundStatusLabel = isset($roundStatusLabels[$r['status']]) ? $roundStatusLabels[$r['status']] : $r['status'];
+      ?><option value="<?php echo (int) $r['id']; ?>"<?php echo (int)$r['id']===$roundId?' selected':''; ?>><?php echo vacanciesH($r['title'] . ' · ' . $roundStatusLabel); ?></option><?php } ?>
       </select></div>
     </form>
   </section>
@@ -131,20 +140,114 @@ $defaultSchoolYear = ($config && isset($config['default_school_year'])) ? (strin
     </section>
     <?php } ?>
 
+    <section class="card vacancy-allocation">
+      <div class="section-head"><div><h2>Επιχειρησιακή εικόνα ανά ειδικότητα</h2><p>Για κάθε ειδικότητα φαίνονται τα συνολικά κενά, τα πλεονάσματα και ακριβώς ποια σχολεία χρειάζονται ή διαθέτουν ώρες. Το «θεωρητικά ακάλυπτο» είναι απλή αριθμητική ένδειξη και όχι αυτόματη απόφαση μετακίνησης.</p></div></div>
+      <?php if (empty($allocation['specialties'])) { ?>
+        <div class="vacancy-empty">Δεν υπάρχουν ακόμη οριστικές υποβολές με κενά ή πλεονάσματα.</div>
+      <?php } else { ?>
+      <div class="table-wrap"><table class="vacancy-table vacancy-allocation-summary">
+        <thead><tr><th>Ειδικότητα</th><th>Κενά</th><th>Σχολεία με κενό</th><th>Πλεονάσματα</th><th>Σχολεία με πλεόνασμα</th><th>Θεωρητικά ακάλυπτο</th></tr></thead>
+        <tbody>
+        <?php foreach ($allocation['specialties'] as $spec) {
+          $uncovered = max(0, (int)$spec['vacancies'] - (int)$spec['surpluses']);
+        ?>
+          <tr>
+            <td><strong><?php echo vacanciesH($spec['code']); ?></strong> — <?php echo vacanciesH($spec['label']); ?></td>
+            <td><strong><?php echo (int)$spec['vacancies']; ?></strong></td>
+            <td><?php echo count($spec['vacancy_schools']); ?></td>
+            <td><strong><?php echo (int)$spec['surpluses']; ?></strong></td>
+            <td><?php echo count($spec['surplus_schools']); ?></td>
+            <td><strong><?php echo $uncovered; ?></strong></td>
+          </tr>
+        <?php } ?>
+        </tbody>
+      </table></div>
+
+      <div class="vacancy-allocation-list">
+      <?php foreach ($allocation['specialties'] as $spec) { ?>
+        <details class="vacancy-allocation-details">
+          <summary><strong><?php echo vacanciesH($spec['code']); ?></strong> — <?php echo vacanciesH($spec['label']); ?> <span>Κενά <?php echo (int)$spec['vacancies']; ?> · Πλεονάσματα <?php echo (int)$spec['surpluses']; ?></span></summary>
+          <div class="vacancy-allocation-columns">
+            <div>
+              <h3>Σχολεία με κενό</h3>
+              <?php if (empty($spec['vacancy_schools'])) { ?><p class="vacancy-muted">Δεν υπάρχουν.</p><?php } else { ?>
+              <div class="table-wrap"><table class="vacancy-table"><thead><tr><th>Σχολείο</th><th>Ώρες</th><th>Αιτία</th></tr></thead><tbody>
+              <?php foreach ($spec['vacancy_schools'] as $entry) { ?>
+                <tr><td><strong><?php echo vacanciesH($entry['school_name']); ?></strong><small><?php echo vacanciesH($entry['ministry_code']); ?></small></td><td><strong><?php echo (int)$entry['hours']; ?></strong></td><td><?php echo vacanciesH(isset($reasonOptions[$entry['reason']]) ? $reasonOptions[$entry['reason']] : '—'); ?><?php if (!empty($entry['note'])) { ?><small><?php echo vacanciesH($entry['note']); ?></small><?php } ?></td></tr>
+              <?php } ?>
+              </tbody></table></div>
+              <?php } ?>
+            </div>
+            <div>
+              <h3>Σχολεία με πλεόνασμα</h3>
+              <?php if (empty($spec['surplus_schools'])) { ?><p class="vacancy-muted">Δεν υπάρχουν.</p><?php } else { ?>
+              <div class="table-wrap"><table class="vacancy-table"><thead><tr><th>Σχολείο</th><th>Ώρες</th></tr></thead><tbody>
+              <?php foreach ($spec['surplus_schools'] as $entry) { ?>
+                <tr><td><strong><?php echo vacanciesH($entry['school_name']); ?></strong><small><?php echo vacanciesH($entry['ministry_code']); ?></small></td><td><strong><?php echo (int)$entry['hours']; ?></strong></td></tr>
+              <?php } ?>
+              </tbody></table></div>
+              <?php } ?>
+            </div>
+          </div>
+        </details>
+      <?php } ?>
+      </div>
+      <?php } ?>
+    </section>
+
     <section class="card">
       <div class="section-head"><div><h2>Κατάσταση σχολικών μονάδων</h2><p>«Δεν υπέβαλε» και «0 κενά» εμφανίζονται διαφορετικά.</p></div></div>
       <div class="table-wrap"><table class="vacancy-table">
-        <thead><tr><th>Σχολείο</th><th>Κατάσταση</th><th>Κενά</th><th>Πλεονάσματα</th><th>Αναθ.</th><th>Υποβολή</th></tr></thead>
+        <thead><tr><th>Σχολείο</th><th>Κατάσταση</th><th>Κενά</th><th>Πλεονάσματα</th><th>Αναθ.</th><th>Υποβολή</th><th>Παρατηρήσεις</th></tr></thead>
         <tbody>
         <?php foreach ($schools as $row) {
           $status = isset($row['status']) ? $row['status'] : '';
           $statusLabel = $status === 'submitted' ? 'Οριστική' : ($status === 'draft' ? 'Πρόχειρη' : 'Δεν υπέβαλε');
           $statusClass = $status === 'submitted' ? 'ok' : ($status === 'draft' ? 'draft' : 'missing');
         ?>
-          <tr><td><strong><?php echo vacanciesH($row['name']); ?></strong><small><?php echo vacanciesH($row['ministry_code']); ?></small></td><td><span class="vacancy-badge vacancy-badge--<?php echo $statusClass; ?>"><?php echo vacanciesH($statusLabel); ?></span></td><td><?php echo $status ? (int)$row['vacancies'] : '—'; ?></td><td><?php echo $status ? (int)$row['surpluses'] : '—'; ?></td><td><?php echo $status ? '#'.(int)$row['revision_no'] : '—'; ?></td><td><?php echo !empty($row['submitted_at']) ? vacanciesH($row['submitted_at']) : '—'; ?></td></tr>
+          <tr>
+            <td><strong><?php echo vacanciesH($row['name']); ?></strong><small><?php echo vacanciesH($row['ministry_code']); ?></small></td>
+            <td><span class="vacancy-badge vacancy-badge--<?php echo $statusClass; ?>"><?php echo vacanciesH($statusLabel); ?></span></td>
+            <td><?php echo $status ? (int)$row['vacancies'] : '—'; ?></td>
+            <td><?php echo $status ? (int)$row['surpluses'] : '—'; ?></td>
+            <td><?php echo $status ? '#'.(int)$row['revision_no'] : '—'; ?></td>
+            <td><?php echo !empty($row['submitted_at']) ? vacanciesH($row['submitted_at']) : '—'; ?></td>
+            <td>
+              <?php if ($status && trim((string)($row['school_note'] ?? '')) !== '') { ?>
+                <details class="vacancy-note-details">
+                  <summary>Παρατηρήσεις</summary>
+                  <div class="vacancy-note-popover"><?php echo nl2br(vacanciesH($row['school_note'])); ?></div>
+                </details>
+              <?php } else { ?>
+                <span class="vacancy-muted">—</span>
+              <?php } ?>
+            </td>
+          </tr>
         <?php } ?>
         </tbody>
       </table></div>
+    </section>
+
+    <section class="card vacancy-school-breakdown">
+      <div class="section-head"><div><h2>Ανάλυση ανά σχολείο και ειδικότητα</h2><p>Ανοίγεις κάθε σχολική μονάδα και βλέπεις αμέσως σε ποιες ειδικότητες έχει κενό ή πλεόνασμα.</p></div></div>
+      <?php if (empty($allocation['schools'])) { ?>
+        <div class="vacancy-empty">Δεν υπάρχουν ακόμη αναλυτικά στοιχεία από οριστικές υποβολές.</div>
+      <?php } else { ?>
+      <div class="vacancy-allocation-list">
+      <?php foreach ($allocation['schools'] as $schoolAllocation) { ?>
+        <details class="vacancy-allocation-details vacancy-school-details">
+          <summary><strong><?php echo vacanciesH($schoolAllocation['name']); ?></strong> <small><?php echo vacanciesH($schoolAllocation['ministry_code']); ?></small><span>Κενά <?php echo (int)$schoolAllocation['vacancies']; ?> · Πλεονάσματα <?php echo (int)$schoolAllocation['surpluses']; ?></span></summary>
+          <div class="table-wrap"><table class="vacancy-table"><thead><tr><th>Ειδικότητα</th><th>Κατάσταση</th><th>Ώρες</th><th>Αιτία / σημείωση</th></tr></thead><tbody>
+          <?php foreach ($schoolAllocation['entries'] as $entry) {
+            $entryStatus = $entry['type'] === 'vacancy' ? 'Κενό' : 'Πλεόνασμα';
+          ?>
+            <tr><td><strong><?php echo vacanciesH($entry['code']); ?></strong> — <?php echo vacanciesH($entry['label']); ?></td><td><?php echo vacanciesH($entryStatus); ?></td><td><strong><?php echo (int)$entry['hours']; ?></strong></td><td><?php echo vacanciesH(isset($reasonOptions[$entry['reason']]) ? $reasonOptions[$entry['reason']] : '—'); ?><?php if (!empty($entry['note'])) { ?><small><?php echo vacanciesH($entry['note']); ?></small><?php } ?></td></tr>
+          <?php } ?>
+          </tbody></table></div>
+        </details>
+      <?php } ?>
+      </div>
+      <?php } ?>
     </section>
 
     <section class="card">

@@ -50,3 +50,24 @@ body.edu-vacancies .vacancy-comparison-grid strong{display:block;font-size:24px;
 body.edu-vacancies .vacancy-details{margin-top:10px}
 body.edu-vacancies .vacancy-details summary{cursor:pointer;font-weight:800;padding:8px 0}
 @media(max-width:760px){body.edu-vacancies .vacancy-admin-grid{grid-template-columns:1fr}body.edu-vacancies .vacancy-comparison-grid{grid-template-columns:1fr 1fr}}
+body.edu-vacancies .vacancy-allocation-list{display:grid;gap:10px;margin-top:16px}
+body.edu-vacancies .vacancy-allocation-details{border:1px solid #dce4ee;border-radius:14px;background:#fff;overflow:hidden}
+body.edu-vacancies .vacancy-allocation-details summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;cursor:pointer;padding:13px 15px;font-weight:700;background:#fbfdff}
+body.edu-vacancies .vacancy-allocation-details summary span{margin-left:auto;color:#526071;font-weight:600}
+body.edu-vacancies .vacancy-allocation-details[open] summary{border-bottom:1px solid #e6ebf1}
+body.edu-vacancies .vacancy-allocation-columns{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:14px}
+body.edu-vacancies .vacancy-allocation-columns h3{margin:0 0 8px}
+body.edu-vacancies .vacancy-muted{color:#64748b;margin:8px 0}
+body.edu-vacancies .vacancy-school-details .table-wrap{padding:0 14px 14px}
+body.edu-vacancies .vacancy-school-details summary small{color:#7b8795;font-weight:500}
+body.edu-vacancies .vacancy-allocation-summary td:nth-child(n+2),body.edu-vacancies .vacancy-allocation-summary th:nth-child(n+2){text-align:center}
+@media(max-width:760px){body.edu-vacancies .vacancy-allocation-columns{grid-template-columns:1fr}body.edu-vacancies .vacancy-allocation-details summary span{width:100%;margin-left:0}}
+
+
+/* v1.3: observations button in school status table */
+.vacancy-note-details{position:relative;display:inline-block}
+.vacancy-note-details>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:.4rem .7rem;border:1px solid var(--border,#d7dde5);border-radius:.6rem;background:var(--card,#fff);font-weight:700;white-space:nowrap}
+.vacancy-note-details>summary::-webkit-details-marker{display:none}
+.vacancy-note-details[open]>summary{box-shadow:0 0 0 2px rgba(37,99,235,.12)}
+.vacancy-note-popover{position:absolute;z-index:30;right:0;top:calc(100% + .45rem);width:min(520px,82vw);max-height:320px;overflow:auto;padding:.85rem 1rem;border:1px solid var(--border,#d7dde5);border-radius:.75rem;background:var(--card,#fff);box-shadow:0 14px 35px rgba(15,23,42,.16);line-height:1.45;white-space:normal;text-align:left}
+@media (max-width:700px){.vacancy-note-popover{position:fixed;left:1rem;right:1rem;top:auto;bottom:1rem;width:auto;max-height:55vh}}
