@@ -11,24 +11,39 @@ if (isset($_GET['logout'])) {
 }
 $actor = vacanciesActor();
 if ($actor) {
-    header('Location: ' . ($actor['role'] === 'admin' ? 'kena-sxoleion-admin.php' : 'kena-sxoleion.php'));
+    header('Location: ' . vacanciesRedirectForActor($actor));
     exit;
 }
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $role = isset($_POST['role']) ? (string) $_POST['role'] : 'school';
-    $key = isset($_POST['access_key']) ? (string) $_POST['access_key'] : '';
-    $schoolId = isset($_POST['school_id']) ? (int) $_POST['school_id'] : 0;
     if (!vacanciesCsrfValid(isset($_POST['csrf']) ? $_POST['csrf'] : '')) {
         $error = 'Η συνεδρία έληξε. Ανανέωσε τη σελίδα και προσπάθησε ξανά.';
-    } elseif (vacanciesDevLogin($role, $key, $schoolId)) {
-        header('Location: ' . ($role === 'admin' ? 'kena-sxoleion-admin.php' : 'kena-sxoleion.php'));
-        exit;
     } else {
-        $error = 'Δεν ήταν δυνατή η δοκιμαστική σύνδεση. Έλεγξε τον ρόλο, το σχολείο και το κλειδί πρόσβασης.';
+        $loginMode = isset($_POST['login_mode']) ? (string) $_POST['login_mode'] : 'account';
+        if ($loginMode === 'pilot') {
+            $role = isset($_POST['role']) ? (string) $_POST['role'] : 'school';
+            $key = isset($_POST['access_key']) ? (string) $_POST['access_key'] : '';
+            $schoolId = isset($_POST['school_id']) ? (int) $_POST['school_id'] : 0;
+            if (vacanciesDevLogin($role, $key, $schoolId)) {
+                header('Location: ' . vacanciesRedirectForActor(vacanciesActor()));
+                exit;
+            }
+            $error = 'Δεν ήταν δυνατή η πιλοτική σύνδεση.';
+        } else {
+            $username = isset($_POST['username']) ? (string) $_POST['username'] : '';
+            $password = isset($_POST['password']) ? (string) $_POST['password'] : '';
+            if (vacanciesAccountLogin($username, $password)) {
+                header('Location: ' . vacanciesRedirectForActor(vacanciesActor()));
+                exit;
+            }
+            // Deliberately generic so the page does not reveal whether a username exists.
+            usleep(250000);
+            $error = 'Λανθασμένο όνομα χρήστη ή κωδικός πρόσβασης.';
+        }
     }
 }
 $schools = vacanciesDbReady() ? vacanciesSchools() : array();
+$accountsReady = vacanciesAccountsReady();
 ?>
 <!DOCTYPE html>
 <html lang="el">
@@ -43,59 +58,51 @@ $schools = vacanciesDbReady() ? vacanciesSchools() : array();
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <main class="page-shell vacancies-shell">
   <section class="hero vacancies-hero">
-    <span class="hero-kicker">ΠΙΛΟΤΙΚΗ ΕΦΑΡΜΟΓΗ</span>
+    <span class="hero-kicker">ΚΑΤΑΓΡΑΦΗ ΚΕΝΩΝ</span>
     <h1>Καταγραφή Κενών Σχολικών Μονάδων</h1>
-    <p>Άμεση υποβολή κενών και πλεονασμάτων ανά σχολείο, με ιστορικό αναθεωρήσεων και σαφή διάκριση ανάμεσα στο «0» και στο «δεν έχει υποβληθεί».</p>
+    <p>Κάθε λογαριασμός διευθυντή είναι συνδεδεμένος αποκλειστικά με τη σχολική μονάδα του. Δεν απαιτείται — και δεν επιτρέπεται — επιλογή άλλου σχολείου.</p>
   </section>
 
   <?php if (!is_file(vacanciesConfigPath())) { ?>
-    <section class="card vacancy-status vacancy-status--warning">
-      <h2>Χρειάζεται αρχική ρύθμιση</h2>
-      <p>Δεν υπάρχει ακόμη το ιδιωτικό αρχείο <code>includes/vacancies-config.php</code>. Αντέγραψε το <code>includes/vacancies-config.example.php</code>, συμπλήρωσε τη MySQL βάση και κάνε import τα δύο SQL αρχεία του φακέλου <code>sql/</code>.</p>
-    </section>
+    <section class="card vacancy-status vacancy-status--warning"><h2>Χρειάζεται αρχική ρύθμιση</h2><p>Δεν υπάρχει ακόμη το ιδιωτικό <code>includes/vacancies-config.php</code>.</p></section>
   <?php } elseif (!vacanciesDbReady()) { ?>
-    <section class="card vacancy-status vacancy-status--danger">
-      <h2>Δεν υπάρχει σύνδεση με τη βάση</h2>
-      <p>Η εφαρμογή βρήκε configuration αλλά δεν μπόρεσε να συνδεθεί στη MySQL. Έλεγξε host, database, user και password.</p>
-    </section>
-  <?php } elseif (!vacanciesDevLoginEnabled()) { ?>
-    <section class="card vacancy-status vacancy-status--info">
-      <h2>Η δοκιμαστική είσοδος είναι κλειστή</h2>
-      <p>Αυτό είναι το ασφαλές default. Το επόμενο production βήμα είναι σύνδεση με SSO ΠΣΔ. Για κλειστή τοπική/πιλοτική δοκιμή μπορεί προσωρινά να ενεργοποιηθεί το <code>dev_mode</code> στο ιδιωτικό configuration.</p>
-    </section>
+    <section class="card vacancy-status vacancy-status--danger"><h2>Δεν υπάρχει σύνδεση με τη βάση</h2><p>Έλεγξε τα στοιχεία της MariaDB στο ιδιωτικό configuration.</p></section>
   <?php } else { ?>
+    <?php if ($error !== '') { ?><div class="vacancy-alert vacancy-alert--danger"><?php echo vacanciesH($error); ?></div><?php } ?>
+
+    <?php if ($accountsReady) { ?>
     <section class="card vacancies-login-card">
-      <div class="section-head">
-        <div><h2>Δοκιμαστική είσοδος</h2><p>Μόνο για κλειστό pilot πριν από το SSO ΠΣΔ.</p></div>
-      </div>
-      <?php if ($error !== '') { ?><div class="vacancy-alert vacancy-alert--danger"><?php echo vacanciesH($error); ?></div><?php } ?>
-      <form method="post" action="kena-sxoleion-login.php" data-vacancies-login>
+      <div class="section-head"><div><h2>Είσοδος</h2><p>Χρησιμοποίησε τον προσωπικό λογαριασμό που έχει αποδοθεί στη σχολική μονάδα ή στη Διεύθυνση.</p></div></div>
+      <form method="post" action="kena-sxoleion-login.php" autocomplete="on">
         <input type="hidden" name="csrf" value="<?php echo vacanciesH(vacanciesCsrfToken()); ?>">
+        <input type="hidden" name="login_mode" value="account">
         <div class="field-grid">
-          <div class="field">
-            <label for="role">Ρόλος δοκιμής</label>
-            <select id="role" name="role">
-              <option value="school">Σχολική μονάδα</option>
-              <option value="admin">Διεύθυνση / διαχειριστής</option>
-            </select>
-          </div>
-          <div class="field" data-school-picker>
-            <label for="school_id">Σχολική μονάδα</label>
-            <select id="school_id" name="school_id">
-              <option value="">— Επίλεξε σχολείο —</option>
-              <?php foreach ($schools as $school) { ?>
-                <option value="<?php echo (int) $school['id']; ?>"><?php echo vacanciesH($school['name']); ?></option>
-              <?php } ?>
-            </select>
-          </div>
-          <div class="field full">
-            <label for="access_key">Κλειδί pilot</label>
-            <input id="access_key" name="access_key" type="password" autocomplete="current-password" required>
-          </div>
+          <div class="field"><label for="username">Όνομα χρήστη</label><input id="username" name="username" autocomplete="username" maxlength="80" required></div>
+          <div class="field"><label for="password">Κωδικός πρόσβασης</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
         </div>
         <div class="button-row"><button class="primary" type="submit">Είσοδος</button></div>
       </form>
     </section>
+    <?php } else { ?>
+      <section class="card vacancy-status vacancy-status--warning"><h2>Δεν έχει εγκατασταθεί ακόμη η διαχείριση λογαριασμών</h2><p>Εκτέλεσε το migration <code>sql/vacancies-v1.5-accounts-school-profile.sql</code>. Μέχρι τότε μπορεί να χρησιμοποιηθεί μόνο η κλειστή πιλοτική είσοδος, εφόσον είναι ενεργή.</p></section>
+    <?php } ?>
+
+    <?php if (vacanciesDevLoginEnabled()) { ?>
+    <details class="card vacancy-dev-login">
+      <summary>Πιλοτική είσοδος ανάπτυξης</summary>
+      <p class="vacancy-muted">Μόνο για δοκιμές. Απενεργοποίησέ την (<code>dev_mode=false</code>) πριν δοθούν πραγματικοί λογαριασμοί στα σχολεία.</p>
+      <form method="post" action="kena-sxoleion-login.php" data-vacancies-login>
+        <input type="hidden" name="csrf" value="<?php echo vacanciesH(vacanciesCsrfToken()); ?>">
+        <input type="hidden" name="login_mode" value="pilot">
+        <div class="field-grid">
+          <div class="field"><label for="role">Ρόλος δοκιμής</label><select id="role" name="role"><option value="school">Διευθυντής Σχολείου</option><option value="admin">Διεύθυνση / διαχειριστής</option></select></div>
+          <div class="field" data-school-picker><label for="school_id">Σχολική μονάδα</label><select id="school_id" name="school_id"><option value="">— Επίλεξε σχολείο —</option><?php foreach ($schools as $school) { ?><option value="<?php echo (int) $school['id']; ?>"><?php echo vacanciesH($school['name']); ?></option><?php } ?></select></div>
+          <div class="field full"><label for="access_key">Κλειδί pilot</label><input id="access_key" name="access_key" type="password" autocomplete="off" required></div>
+        </div>
+        <div class="button-row"><button class="secondary" type="submit">Πιλοτική είσοδος</button></div>
+      </form>
+    </details>
+    <?php } ?>
   <?php } ?>
 </main>
 <script src="<?php echo vacanciesH(edu_asset_url('assets/vacancies.js')); ?>"></script>

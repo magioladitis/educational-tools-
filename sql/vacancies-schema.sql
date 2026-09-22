@@ -5,11 +5,34 @@ CREATE TABLE IF NOT EXISTS vacancy_schools (
   ministry_code VARCHAR(20) NOT NULL,
   name VARCHAR(190) NOT NULL,
   school_type VARCHAR(120) NOT NULL DEFAULT '',
+  address VARCHAR(255) NOT NULL DEFAULT '',
+  email VARCHAR(190) NOT NULL DEFAULT '',
+  phone VARCHAR(80) NOT NULL DEFAULT '',
   active TINYINT(1) NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_vacancy_school_code (ministry_code),
   KEY idx_vacancy_school_active_name (active, name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS vacancy_users (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  username VARCHAR(80) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  role ENUM('admin','school_director') NOT NULL,
+  school_id INT UNSIGNED NULL,
+  display_name VARCHAR(190) NOT NULL DEFAULT '',
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  must_change_password TINYINT(1) NOT NULL DEFAULT 1,
+  last_login_at DATETIME NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_vacancy_user_username (username),
+  UNIQUE KEY uq_vacancy_user_school (school_id),
+  KEY idx_vacancy_user_role_active (role, active),
+  CONSTRAINT fk_vacancy_user_school FOREIGN KEY (school_id) REFERENCES vacancy_schools(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS vacancy_specialties (
@@ -39,13 +62,14 @@ CREATE TABLE IF NOT EXISTS vacancy_submissions (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   round_id INT UNSIGNED NOT NULL,
   school_id INT UNSIGNED NOT NULL,
+  education_scope ENUM('general','special') NOT NULL DEFAULT 'general',
   revision_no INT UNSIGNED NOT NULL DEFAULT 1,
   status ENUM('draft','submitted') NOT NULL DEFAULT 'draft',
   school_note TEXT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   submitted_at DATETIME NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY uq_vacancy_submission_revision (round_id, school_id, revision_no),
+  UNIQUE KEY uq_vacancy_submission_scope_revision (round_id, school_id, education_scope, revision_no),
   KEY idx_vacancy_submission_round_status (round_id, status),
   KEY idx_vacancy_submission_school (school_id, round_id),
   CONSTRAINT fk_vacancy_submission_round FOREIGN KEY (round_id) REFERENCES vacancy_rounds(id),

@@ -71,3 +71,148 @@ body.edu-vacancies .vacancy-allocation-summary td:nth-child(n+2),body.edu-vacanc
 .vacancy-note-details[open]>summary{box-shadow:0 0 0 2px rgba(37,99,235,.12)}
 .vacancy-note-popover{position:absolute;z-index:30;right:0;top:calc(100% + .45rem);width:min(520px,82vw);max-height:320px;overflow:auto;padding:.85rem 1rem;border:1px solid var(--border,#d7dde5);border-radius:.75rem;background:var(--card,#fff);box-shadow:0 14px 35px rgba(15,23,42,.16);line-height:1.45;white-space:normal;text-align:left}
 @media (max-width:700px){.vacancy-note-popover{position:fixed;left:1rem;right:1rem;top:auto;bottom:1rem;width:auto;max-height:55vh}}
+
+/* v1.4: unified drill-down views */
+body.edu-vacancies .vacancy-drill-table .vacancy-drill-main-row.is-expanded td{background:#fbfdff}
+body.edu-vacancies .vacancy-drill-toggle{display:flex;align-items:flex-start;gap:.5rem;width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}
+body.edu-vacancies .vacancy-drill-toggle:hover strong{text-decoration:underline}
+body.edu-vacancies .vacancy-drill-toggle:focus-visible{outline:2px solid #2563eb;outline-offset:4px;border-radius:4px}
+body.edu-vacancies .vacancy-drill-chevron{display:inline-flex;align-items:center;justify-content:center;width:1.2rem;height:1.2rem;flex:0 0 1.2rem;margin-top:.05rem;font-size:1.3rem;line-height:1;color:#64748b;transition:transform .16s ease}
+body.edu-vacancies .vacancy-drill-toggle[aria-expanded="true"] .vacancy-drill-chevron{transform:rotate(90deg)}
+body.edu-vacancies .vacancy-drill-row>td{padding:0;border-bottom:1px solid #dce4ee;background:#f8fafc}
+body.edu-vacancies .vacancy-drill-row[hidden]{display:none}
+body.edu-vacancies .vacancy-drill-panel{padding:14px 16px 16px}
+body.edu-vacancies .vacancy-inner-table th{position:static;background:#fff}
+body.edu-vacancies .vacancy-inner-table tr:last-child td{border-bottom:0}
+body.edu-vacancies .vacancy-school-toggle small{display:block;color:#7b8795;margin-top:2px;font-weight:500}
+body.edu-vacancies .vacancy-zero-submission{display:flex;gap:.55rem;align-items:flex-start;flex-wrap:wrap;padding:12px 14px;border:1px solid #bbf7d0;border-radius:10px;background:#f0fdf4;color:#166534}
+body.edu-vacancies .vacancy-zero-submission span{color:#3f6212}
+body.edu-vacancies .vacancy-footnote{margin:12px 0 0;color:#64748b;font-size:.92rem}
+body.edu-vacancies .vacancy-school-status-table td:nth-child(3),
+body.edu-vacancies .vacancy-school-status-table td:nth-child(4),
+body.edu-vacancies .vacancy-school-status-table td:nth-child(5){text-align:center}
+@media(max-width:760px){
+  body.edu-vacancies .vacancy-drill-panel{padding:10px}
+  body.edu-vacancies .vacancy-drill-toggle{min-width:220px}
+  body.edu-vacancies .vacancy-school-status-table .vacancy-note-details>summary{min-height:32px;padding:.32rem .55rem}
+}
+
+/* v1.5: authenticated school accounts + school profile */
+body.edu-vacancies .vacancies-top-actions{gap:14px;align-items:center;flex-wrap:wrap}
+body.edu-vacancies .vacancy-signed-in-as{margin-right:auto;color:#64748b;font-weight:700}
+body.edu-vacancies .vacancy-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;padding:6px;border:1px solid #dce4ee;border-radius:14px;background:#fff}
+body.edu-vacancies .vacancy-tabs a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 13px;border-radius:10px;text-decoration:none;font-weight:800;color:#475569}
+body.edu-vacancies .vacancy-tabs a:hover{background:#f1f5f9;color:#0f172a}
+body.edu-vacancies .vacancy-tabs a.is-active{background:#e8efff;color:#1d4ed8}
+body.edu-vacancies .vacancy-profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0}
+body.edu-vacancies .vacancy-profile-grid>div{border:1px solid #e2e8f0;border-radius:12px;padding:13px 14px;background:#fbfdff}
+body.edu-vacancies .vacancy-profile-grid dt{color:#64748b;font-size:.86rem;font-weight:800;margin:0 0 5px}
+body.edu-vacancies .vacancy-profile-grid dd{margin:0;font-weight:700;line-height:1.45}
+body.edu-vacancies .vacancy-kpi-text{font-size:20px!important}
+body.edu-vacancies .vacancy-current-revision{display:flex;gap:7px;align-items:center;padding:6px 10px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-weight:700;white-space:nowrap}
+body.edu-vacancies .vacancy-dev-login>summary{cursor:pointer;font-weight:800}
+body.edu-vacancies .vacancy-account-chip{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0}
+body.edu-vacancies .vacancy-account-chip span{color:#64748b}
+body.edu-vacancies .vacancies-narrow-shell{max-width:760px}
+body.edu-vacancies .vacancy-inline-account-form{display:grid;grid-template-columns:1fr 1.4fr auto;gap:12px;align-items:end}
+body.edu-vacancies .vacancy-inline-account-form .field{margin:0}
+body.edu-vacancies .vacancy-user-actions{display:flex;gap:7px;flex-wrap:wrap}
+body.edu-vacancies .vacancy-user-actions form{margin:0}
+body.edu-vacancies .vacancy-user-actions button{white-space:nowrap}
+body.edu-vacancies .vacancy-credential-card{border-left:5px solid #2563eb}
+body.edu-vacancies .vacancy-credential-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+body.edu-vacancies .vacancy-credential-grid>div{padding:12px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0}
+body.edu-vacancies .vacancy-credential-grid span{display:block;color:#64748b;font-size:.85rem;font-weight:700;margin-bottom:5px}
+body.edu-vacancies .vacancy-credential-grid code{display:block;font-size:1rem;font-weight:800;user-select:all}
+body.edu-vacancies .button-like{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+@media(max-width:760px){
+  body.edu-vacancies .vacancy-profile-grid{grid-template-columns:1fr}
+  body.edu-vacancies .vacancy-inline-account-form{grid-template-columns:1fr}
+  body.edu-vacancies .vacancy-credential-grid{grid-template-columns:1fr}
+  body.edu-vacancies .vacancy-tabs{display:grid;grid-template-columns:1fr}
+  body.edu-vacancies .vacancy-tabs a{width:100%}
+  body.edu-vacancies .vacancy-signed-in-as{width:100%;margin-right:0}
+}
+
+/* v1.5.1 — ασφαλής διαχείριση λογαριασμών */
+body.edu-vacancies .vacancy-button-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+body.edu-vacancies .vacancy-account-list{display:grid;gap:14px}
+body.edu-vacancies .vacancy-account-card{border:1px solid #dbe4ee;border-radius:14px;padding:14px;background:#fff}
+body.edu-vacancies .vacancy-account-summary{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+body.edu-vacancies .vacancy-account-summary>div:first-child{display:grid;gap:4px}
+body.edu-vacancies .vacancy-account-summary code{font-size:1rem}
+body.edu-vacancies .vacancy-account-summary span,body.edu-vacancies .vacancy-account-summary small{display:block}
+body.edu-vacancies .vacancy-account-state{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+body.edu-vacancies .vacancy-badge--neutral{background:#f1f5f9;border-color:#cbd5e1;color:#334155}
+body.edu-vacancies .vacancy-account-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;color:#475569;font-size:.9rem}
+body.edu-vacancies .vacancy-account-editor{margin-top:12px;border-top:1px solid #e2e8f0;padding-top:10px}
+body.edu-vacancies .vacancy-account-editor summary{cursor:pointer;font-weight:800;color:#1d4ed8;list-style:none}
+body.edu-vacancies .vacancy-account-editor summary::-webkit-details-marker{display:none}
+body.edu-vacancies .vacancy-account-editor summary::before{content:'▸';display:inline-block;margin-right:7px;transition:transform .15s ease}
+body.edu-vacancies .vacancy-account-editor[open] summary::before{transform:rotate(90deg)}
+body.edu-vacancies .vacancy-account-edit-form{display:grid;grid-template-columns:1fr 1.4fr 1fr 1.8fr auto;gap:10px;align-items:end;margin-top:12px}
+body.edu-vacancies .vacancy-account-edit-form .field{margin:0}
+body.edu-vacancies .vacancy-account-actions{margin-top:12px;padding-top:12px;border-top:1px dashed #cbd5e1}
+body.edu-vacancies .vacancy-danger-button{appearance:none;border:1px solid #fecaca;background:#fff1f2;color:#be123c;border-radius:9px;padding:9px 12px;font-weight:800;cursor:pointer}
+body.edu-vacancies .vacancy-danger-button:hover{background:#ffe4e6}
+body.edu-vacancies .vacancy-account-self-note{margin-top:12px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:.9rem}
+
+@media (max-width:1100px){
+  body.edu-vacancies .vacancy-account-edit-form{grid-template-columns:1fr 1fr}
+  body.edu-vacancies .vacancy-account-edit-form>button{grid-column:1/-1}
+}
+@media (max-width:620px){
+  body.edu-vacancies .vacancy-account-summary{display:grid}
+  body.edu-vacancies .vacancy-account-state{justify-content:flex-start}
+  body.edu-vacancies .vacancy-account-meta{display:grid;gap:6px}
+  body.edu-vacancies .vacancy-account-edit-form{grid-template-columns:1fr}
+  body.edu-vacancies .vacancy-account-edit-form>button{grid-column:auto;width:100%}
+  body.edu-vacancies .vacancy-account-actions{display:grid}
+  body.edu-vacancies .vacancy-account-actions form,body.edu-vacancies .vacancy-account-actions button{width:100%}
+}
+
+/* v1.5.2 — legacy-compatible Excel export */
+body.edu-vacancies .vacancy-round-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:end}
+body.edu-vacancies .vacancy-round-toolbar form{margin:0}
+body.edu-vacancies .vacancy-round-toolbar .field{margin:0}
+body.edu-vacancies .vacancy-export-button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 14px;border:1px solid #cbd5e1;border-radius:9px;background:#e8edf4;color:#263445;font-weight:800;text-decoration:none;white-space:nowrap}
+body.edu-vacancies .vacancy-export-button:hover{background:#dbe2eb;text-decoration:none}
+body.edu-vacancies .vacancy-export-help{margin:10px 0 0;color:#64748b;font-size:.9rem}
+@media(max-width:620px){body.edu-vacancies .vacancy-round-toolbar{grid-template-columns:1fr}body.edu-vacancies .vacancy-export-button{width:100%}}
+
+
+/* v1.5.2b — responsive top action icons */
+body.edu-vacancies .vacancy-top-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:7px 10px;border:1px solid #dbe4ee;border-radius:10px;background:#fff;color:#334155;font-weight:800;text-decoration:none;line-height:1}
+body.edu-vacancies .vacancy-top-action:hover{background:#f8fafc;color:#0f172a;text-decoration:none}
+body.edu-vacancies .vacancy-top-action--current{background:#eef5ff;border-color:#bfdbfe;color:#1d4ed8;box-shadow:inset 0 0 0 1px rgba(59,130,246,.06)}
+body.edu-vacancies .vacancy-top-action--current:hover{background:#e8f1ff;color:#1d4ed8}
+body.edu-vacancies .vacancy-top-action__icon{width:18px;height:18px;display:block;fill:currentColor;flex:0 0 auto}
+body.edu-vacancies .vacancy-top-action--logout{color:#9f1239;border-color:#fecdd3;background:#fffafb}
+body.edu-vacancies .vacancy-top-action--logout:hover{background:#fff1f2;color:#881337}
+@media(max-width:620px){
+  body.edu-vacancies .vacancies-top-actions{gap:8px}
+  body.edu-vacancies .vacancy-top-action{width:42px;height:42px;min-height:42px;padding:0;border-radius:11px}
+  body.edu-vacancies .vacancy-top-action__icon{width:20px;height:20px}
+  body.edu-vacancies .vacancy-top-action__label{display:none}
+}
+
+
+/* v1.5.4 — subtle save confirmation beside the submit actions. */
+.vacancy-save-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  font-size: .9rem;
+  font-weight: 600;
+  opacity: .78;
+  white-space: nowrap;
+}
+@media (max-width: 620px) {
+  .vacancy-save-status {
+    width: 100%;
+    justify-content: center;
+    min-height: auto;
+    margin-top: .15rem;
+    font-size: .85rem;
+  }
+}

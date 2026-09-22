@@ -12,7 +12,7 @@ return array(
         'pass' => 'CHANGE_ME',
         'charset' => 'utf8mb4',
     ),
-    // Pilot mode only. Keep false before giving the URL to schools.
+    // Pilot/bootstrap mode only. Keep false before giving real account credentials to schools.
     'dev_mode' => false,
     'dev_admin_key' => 'CHANGE_ME_LONG_RANDOM_VALUE',
     'dev_school_key' => 'CHANGE_ME_DIFFERENT_LONG_RANDOM_VALUE',

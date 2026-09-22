@@ -57,6 +57,23 @@
     bindRemove(document);
     refreshEmpty();
 
+
+
+    var drillToggles = document.querySelectorAll('[data-vacancy-drill-toggle]');
+    Array.prototype.forEach.call(drillToggles, function (toggle) {
+      toggle.addEventListener('click', function () {
+        var targetId = toggle.getAttribute('data-vacancy-drill-toggle');
+        if (!targetId) return;
+        var target = document.getElementById(targetId);
+        if (!target) return;
+        var isOpen = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        target.hidden = isOpen;
+        var row = toggle.closest ? toggle.closest('tr') : null;
+        if (row) row.classList.toggle('is-expanded', !isOpen);
+      });
+    });
+
     var finalButton = document.querySelector('[data-final-submit]');
     if (finalButton) {
       finalButton.addEventListener('click', function (event) {
@@ -67,3 +84,42 @@
     }
   });
 }());
+
+
+/* v1.5.4 — protect school vacancy edits that have not been saved yet. */
+(function () {
+  'use strict';
+
+  var form = document.querySelector('[data-vacancies-form]');
+  if (!form) return;
+
+  var dirty = false;
+  var submitting = false;
+
+  function markDirty(event) {
+    if (!event || !event.target) return;
+    if (!form.contains(event.target)) return;
+    if (event.target.matches('button[type="submit"]')) return;
+    dirty = true;
+  }
+
+  form.addEventListener('input', markDirty);
+  form.addEventListener('change', markDirty);
+
+  /* Add/remove specialty buttons change the effective form even when no input event fires. */
+  form.addEventListener('click', function (event) {
+    var target = event.target.closest('[data-add-specialty], [data-remove-entry]');
+    if (target) dirty = true;
+  });
+
+  form.addEventListener('submit', function () {
+    submitting = true;
+    dirty = false;
+  });
+
+  window.addEventListener('beforeunload', function (event) {
+    if (!dirty || submitting) return;
+    event.preventDefault();
+    event.returnValue = '';
+  });
+})();
