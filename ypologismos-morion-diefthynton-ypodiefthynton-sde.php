@@ -1,4 +1,7 @@
-<?php require_once __DIR__ . '/includes/config.php'; ?>
+<?php
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/legal-sources.php';
+?>
 <!doctype html>
 <html lang="el">
 <head>
@@ -198,7 +201,15 @@
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 
-  <?php sourceCardStart(); ?><p><strong>Πηγή:</strong> Υ.Α. 70621/Κ1, ΦΕΚ Β΄ 3037/19.06.2025 «Καθορισμός κριτηρίων και διαδικασίας επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (Σ.Δ.Ε.)».</p><?php sourceCardDisclaimerStart(); ?>Το εργαλείο παρέχει ενδεικτικό υπολογισμό· η τελική κρίση ανήκει στην αρμόδια Επιτροπή Επιλογής.<?php sourceCardDisclaimerEnd(); ?><?php sourceCardEnd(); ?>
+  <?php sourceCardStart(); ?>
+    <p><strong>Πηγή:</strong> Υ.Α. 70621/Κ1/13-06-2025, ΦΕΚ Β΄ 3037/19-06-2025 «Καθορισμός κριτηρίων και διαδικασίας επιλογής Διευθυντών και Υποδιευθυντών Σχολείων Δεύτερης Ευκαιρίας (Σ.Δ.Ε.)».</p>
+    <?php sourceCardDisclaimerStart(); ?>Το εργαλείο παρέχει ενδεικτικό υπολογισμό· η τελική κρίση ανήκει στην αρμόδια Επιτροπή Επιλογής.<?php sourceCardDisclaimerEnd(); ?>
+    <?php sourceCardLinksStart(); ?>
+      <?php foreach (legalSourceLinksForKeys(array('sde_leadership_selection_2025')) as $legalLink): ?>
+        <?php sourceCardLink($legalLink['url'], $legalLink['label']); ?>
+      <?php endforeach; ?>
+    <?php sourceCardLinksEnd(); ?>
+  <?php sourceCardEnd(); ?>
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 </main>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

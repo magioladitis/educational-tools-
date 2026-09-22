@@ -19,6 +19,18 @@ if (!function_exists('legalSourcesRegistry')) {
         }
 
         $registry = array(
+            'sde_leadership_selection_2025' => array(
+                'title' => 'Κριτήρια και διαδικασία επιλογής Διευθυντών και Υποδιευθυντών Σ.Δ.Ε.',
+                'citation_title' => 'Διευθυντές και Υποδιευθυντές Σ.Δ.Ε.',
+                'decision' => 'Υ.Α. 70621/Κ1/13-06-2025',
+                'fek' => 'ΦΕΚ Β΄ 3037/19-06-2025',
+                'date' => '2025-06-13',
+                'url' => 'https://ia37rg02wpsa01.blob.core.windows.net/fek/02/2025/20250203037.pdf',
+                'valid_from' => '2025-2026',
+                'school_types' => array('sde'),
+                'topics' => array('leadership_selection', 'adult_education', 'school_directors', 'school_deputy_directors'),
+                'link_label' => 'Υ.Α. 70621/Κ1/13-06-2025 — ΦΕΚ Β΄ 3037/19-06-2025 · Διευθυντές και Υποδιευθυντές Σ.Δ.Ε. ↗',
+            ),
             'gymnasio_timetable_2026' => array(
                 'title' => 'Ωρολόγιο Πρόγραμμα Ημερήσιου Γυμνασίου',
                 'citation_title' => 'Ημερήσιο Γυμνάσιο',
