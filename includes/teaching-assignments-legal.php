@@ -120,6 +120,7 @@ if (!function_exists('teachingAssignmentsLegalSourceKeysForSchools')) {
         }
         if ($usesEae) {
             $keys[] = 'eae_assignments_2026';
+            $keys[] = 'eae_assignments_2026_5610';
         }
         if ($usesEneegyl) {
             $keys[] = 'eneegyl_assignments_2026';
@@ -348,4 +349,3 @@ if (!function_exists('teachingAssignmentsGeneralTimetableCrosscheckLinks')) {
         return $links;
     }
 }
-
