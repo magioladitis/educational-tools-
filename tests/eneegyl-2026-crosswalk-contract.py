@@ -35,6 +35,12 @@ def norm(text):
 
 ene = [r for r in rows if r.get('school') == 'eneegyl_lykeio']
 
+# FEK B 5733/2026: the amendment is deliberately narrow.
+gym_music = next((a for a in assignments if a.get('school') == 'eneegyl_gymnasio' and a.get('subject') == 'Μουσική/Θεατρική Αγωγή'), None)
+check('5733 ENEEGYL gym music TE16 is A assignment', gym_music is not None and gym_music.get('A') == ['ΠΕ79.01','ΠΕ91','ΤΕ16'] and not gym_music.get('B'))
+childcare_music = next((a for a in assignments if a.get('school') == 'eneegyl_lykeio' and a.get('grade') == 'Δ΄' and 'Βοηθός Βρεφονηπιοκόμων' in a.get('section','') and a.get('subject') == 'Μουσικοκινητική Αγωγή'), None)
+check('5733 ENEEGYL D childcare TE16 is A assignment', childcare_music is not None and childcare_music.get('A') == ['ΠΕ79.01','ΠΕ87.09','ΤΕ01.30','ΤΕ16'] and not childcare_music.get('B'))
+
 # Safe title corrections verified against FEK B 2149/2026 and operational myschool naming.
 check('no EXCELL typo in ENEEGYL timetable', not any('EXCELL' in (r.get('subject') or '') for r in ene))
 excel = next((r for r in ene if r.get('course_id') == 'eneegyl.lykeio.c.admin.3'), None)
@@ -113,6 +119,7 @@ for row in gap_rows:
 assign_page = render_php('anatheseis-mathimaton.php')
 timetable_page = render_php('orologio-programma-mathimaton.php')
 check('assignments source includes FEK 3216/2026', 'ΦΕΚ Β΄ 3216/2026' in assign_page)
+check('assignments source includes FEK 5733/2026 amendment', 'ΦΕΚ Β΄ 5733/2026 — Τροποποίηση αναθέσεων ΕΝ.Ε.Ε.ΓΥ.-Λ.' in assign_page)
 check('timetable source includes FEK 2149/2026', 'ΦΕΚ Β΄ 2149/2026' in timetable_page)
 check('myschool not exposed as normative source', 'myschool' not in assign_page.lower() and 'myschool' not in timetable_page.lower())
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Contract for Γ΄ Π.ΕΠΑ.Λ. assignments (ΦΕΚ 5510/2023) ↔ timetable (ΦΕΚ 5251/2023)."""
+"""Contract for Γ΄ Π.ΕΠΑ.Λ. assignments (ΦΕΚ 5510/2023, amended by 5710/2026) ↔ timetable."""
 from pathlib import Path
 import json
 import re
@@ -120,6 +120,8 @@ check('5510 garment fibers title exists', bool(find_assignment(garment, 'Υφα�
 check('5510 furniture CAD/CAM exists', bool(find_assignment(furniture, 'Ψηφιακός Σχεδιασμός CAD/CAM')))
 row = find_assignment(childcare, 'Δημιουργία και Έκφραση στην Προσχολική Ηλικία ΙΙ')
 check('5510 childcare new title A/B', row and row.get('A') == ['ΠΕ87.09', 'ΤΕ01.30'] and row.get('B') == ['ΠΕ87.06'])
+row = find_assignment(childcare, 'Μουσικοκινητική Αγωγή')
+check('5710 childcare TE16 is A assignment', row and row.get('A') == ['ΠΕ79.01','ΠΕ87.09','ΤΕ01.30','ΤΕ16'] and not row.get('B'))
 row = find_assignment(captain, 'Ν.Η.Ο. - Επικοινωνίες')
 check('5510 captain NHO title excludes timetable PA suffix', row and row.get('A') == ['ΠΕ83', 'ΠΕ84', 'ΠΕ90'])
 row = find_assignment(engineer, 'Μηχανολογικές Κατασκευές Πλοίου - Σχέδιο με Η/Υ')
@@ -129,6 +131,7 @@ check('5510 engineer constructions A/B', row and row.get('A') == ['ΠΕ82'] and 
 assignment_page = render_php('anatheseis-mathimaton.php')
 timetable_page = render_php('orologio-programma-mathimaton.php')
 check('assignment page cites ΦΕΚ 5510/2023', 'ΦΕΚ Β΄ 5510/2023 — Γ΄ Π.ΕΠΑ.Λ.' in assignment_page)
+check('assignment page cites ΦΕΚ 5710/2026 amendment', 'ΦΕΚ Β΄ 5710/2026 — Μουσικοκινητική Αγωγή Γ΄ Π.ΕΠΑ.Λ.' in assignment_page)
 check('assignment page cites ΦΕΚ 5251/2023 cross-check', 'ΦΕΚ Β΄ 5251/2023 — Γ΄ Π.ΕΠΑ.Λ. / Ωρολόγιο (διασταύρωση τίτλων)' in assignment_page)
 check('timetable page cites ΦΕΚ 5251/2023', 'ΦΕΚ Β΄ 5251/2023 — Γ΄ Π.ΕΠΑ.Λ.' in timetable_page)
 check('timetable page cites ΦΕΚ 5510/2023 cross-check', 'ΦΕΚ Β΄ 5510/2023 — Γ΄ Π.ΕΠΑ.Λ. / Αναθέσεις (διασταύρωση τίτλων)' in timetable_page)

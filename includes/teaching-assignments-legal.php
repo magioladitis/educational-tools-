@@ -124,6 +124,7 @@ if (!function_exists('teachingAssignmentsLegalSourceKeysForSchools')) {
         }
         if ($usesEneegyl) {
             $keys[] = 'eneegyl_assignments_2026';
+            $keys[] = 'eneegyl_assignments_2026_5733';
         }
         if ($usesArt) {
             $keys[] = 'kallitexnika_assignments_2018';
@@ -136,6 +137,7 @@ if (!function_exists('teachingAssignmentsLegalSourceKeysForSchools')) {
         }
         if ($usesEeeek) {
             $keys[] = 'eeeek_assignments_2018';
+            $keys[] = 'eeeek_assignments_2026_5733';
         }
         if ($usesEpal) {
             $keys = array_merge($keys, array(
@@ -149,6 +151,7 @@ if (!function_exists('teachingAssignmentsLegalSourceKeysForSchools')) {
                 'epal_assignments_2023_5206',
                 'epal_assignments_2025_1975',
                 'epal_assignments_2026_2625',
+                'epal_assignments_2026_5710',
             ));
         }
         if ($usesPepal) {
@@ -163,6 +166,7 @@ if (!function_exists('teachingAssignmentsLegalSourceKeysForSchools')) {
                 'pepal_b_assignments_2023_5206',
                 'pepal_b_assignments_2026_2624',
                 'pepal_g_assignments_2023',
+                'pepal_g_assignments_2026_5710',
             ));
         }
 
@@ -240,12 +244,21 @@ if (!function_exists('teachingAssignmentsSpecialSchoolOverviewLinks')) {
             );
         }
 
+        $eeeekCurrent = legalSourceByKey('eeeek_assignments_2026_5733');
+        if ($eeeekCurrent && ($url = legalSourceUrl($eeeekCurrent))) {
+            $links[] = array(
+                'source_key'=>'eeeek_assignments_2026_5733',
+                'url'=>$url,
+                'label'=>legalSourceCompactFek($eeeekCurrent['fek']) . ' — Τροποποίηση αναθέσεων Ε.Ε.Ε.ΕΚ. ↗',
+            );
+        }
+
         $eeeekAssignments = legalSourceByKey('eeeek_assignments_2018');
         if ($eeeekAssignments && ($url = legalSourceUrl($eeeekAssignments))) {
             $links[] = array(
                 'source_key'=>'eeeek_assignments_2018',
                 'url'=>$url,
-                'label'=>legalSourceCompactFek($eeeekAssignments['fek']) . ' — Αναθέσεις μαθημάτων Ε.Ε.Ε.ΕΚ. ↗',
+                'label'=>legalSourceCompactFek($eeeekAssignments['fek']) . ' — Αναθέσεις μαθημάτων Ε.Ε.Ε.ΕΚ. (βασική απόφαση) ↗',
             );
         }
 
@@ -272,6 +285,7 @@ if (!function_exists('teachingAssignmentsVocationalOverviewLinks')) {
             'pepal_b_assignments_2023_5206',
             'pepal_b_assignments_2026_2624',
             'pepal_g_assignments_2023',
+            'pepal_g_assignments_2026_5710',
         );
         $links = legalSourceLinksForKeys($keys);
 
@@ -296,6 +310,7 @@ if (!function_exists('teachingAssignmentsVocationalOverviewLinks')) {
             'epal_assignments_2023_5206',
             'epal_assignments_2025_1975',
             'epal_assignments_2026_2625',
+            'epal_assignments_2026_5710',
         );
         foreach (legalSourceLinksForKeys($epalKeys) as $link) {
             $links[] = $link;

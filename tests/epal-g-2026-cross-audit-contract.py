@@ -196,6 +196,8 @@ def find_assignment(label_fragment, subject):
         and label_fragment in a.get('section', '') and a.get('subject') == subject
     ), None)
 
+row = find_assignment('Βοηθός Βρεφονηπιοκόμων', 'Μουσικοκινητική Αγωγή')
+check('5710 EPAL G childcare TE16 is A assignment', row and row.get('A') == ['ΠΕ79.01','ΠΕ87.09','ΤΕ01.30','ΤΕ16'] and not row.get('B'))
 row = find_assignment('Υπάλληλος Τουριστικών Επιχειρήσεων', 'Γαλλικά ή Γερμανικά ή Ισπανικά ή Ιταλικά')
 check('2637 tourism four-language A assignment exact', row and row.get('A') == ['ΠΕ05', 'ΠΕ07', 'ΠΕ34', 'ΠΕ40'])
 row = find_assignment('Τεχνικός Δομικών Έργων και Γεωπληροφορικής', 'Αρχιτεκτονικό Σχέδιο')
@@ -216,6 +218,7 @@ check('EPAL G assignments cover every timetable specialty label', all(any(label 
 
 # Public source cards / internal metadata must expose the complete Γ΄ legal chain.
 assignment_page = render_php('anatheseis-mathimaton.php')
+check('assignment page cites FEK 5710/2026 EPAL amendment', 'ΦΕΚ Β΄ 5710/2026 — Μουσικοκινητική Αγωγή Γ΄ ΕΠΑ.Λ.' in assignment_page)
 timetable_page = render_php('orologio-programma-mathimaton.php')
 assignment_data = (ROOT / 'includes/teaching-assignments-epal.php').read_text()
 for fek in ('1664/2018', '2637/2018', '3520/2018', '2779/2019', '3609/2020', '5206/2023'):

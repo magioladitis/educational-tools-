@@ -85,7 +85,7 @@ check('42 workshop assignment rows', len([x for x in assignments if x.get('secti
 check('42 workshop definitions unique', len(workshops) == 42 and len({x.get('subject') for x in workshops}) == 42)
 check('language assignment exact', arow('Γλώσσα').get('A') == ['ΠΕ02','ΠΕ70','ΠΕ71'])
 check('math assignment exact', arow('Μαθηματικά').get('A') == ['ΠΕ03','ΠΕ70','ΠΕ71'])
-check('music assignment exact', arow('Μουσική').get('A') == ['ΠΕ79.01'] and arow('Μουσική').get('B') == ['ΤΕ16'])
+check('music assignment exact after FEK 5733/2026', arow('Μουσική').get('A') == ['ΠΕ79.01','ΤΕ16'] and not arow('Μουσική').get('B'))
 check('aesthetic assignment exact', arow('Αισθητική Αγωγή').get('A') == ['ΠΕ08'] and arow('Αισθητική Αγωγή').get('B') == ['ΠΕ89.01'])
 # Protect the official-FEK reading against a known secondary transcription that inserts PE18.27 in B assignment.
 build = arow('Οικοδομικής-Μεταλλοτεχνίας')
@@ -116,7 +116,7 @@ check('ST thematic hours are not attributed', st_model and st_model.get('compone
 # Public UI presence, but no school-specific profile is fabricated from the supplied mislabeled snapshot.
 assign_page = render_php('anatheseis-mathimaton.php')
 time_page = render_php('orologio-programma-mathimaton.php')
-check('assignments UI exposes EEEEΚ filter', 'schoolEeeek' in assign_page and 'ΦΕΚ Β΄ 1761/2018' in assign_page)
+check('assignments UI exposes EEEEΚ filter and current amendment', 'schoolEeeek' in assign_page and 'ΦΕΚ Β΄ 1761/2018' in assign_page and 'ΦΕΚ Β΄ 5733/2026' in assign_page)
 check('timetable UI documents EEEEΚ', 'Ε.Ε.Ε.ΕΚ.' in time_page and '57523/Γ6/2002' in time_page and 'ΣΤ΄ τάξη' in time_page)
 check('EEEΕK Corfu conservative school profile available', (ROOT/'includes/school-profile-eeeek-kerkyra-2026.php').exists())
 
