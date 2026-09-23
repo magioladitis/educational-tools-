@@ -38,4 +38,4 @@
 - `teaching-workload-aggregation-contract.py`: 618/618 PASS.
 - `php tools/scoped-workload-sync.php --check`: όλα τα ενεργά scoped snapshots παραμένουν συγχρονισμένα.
 
-Σημείωση: το γενικό `pre-pwa-regression.sh` έχει προϋπάρχουσα ασυμφωνία έκδοσης στο `mobile-hardening-contract.py` (αναμένει 3.21.14 ενώ η τρέχουσα `EDU_TOOLS_VERSION` είναι 3.22.0). Δεν σχετίζεται με τις κανονιστικές αλλαγές των αναθέσεων.
+Σημείωση καθαρισμού: αφαιρέθηκαν οι παλιές hard-coded απαιτήσεις για έκδοση `3.21.14` από regression tests. Οι έλεγχοι επιβεβαιώνουν πλέον ότι υπάρχει έγκυρη κεντρική semantic έκδοση `EDU_TOOLS_VERSION`, ώστε να μη γίνονται stale σε κάθε επόμενο release bump. Κατά την πλήρη εκτέλεση του `pre-pwa-regression.sh` διορθώθηκαν επίσης δύο προϋπάρχοντα ευρήματα: προστέθηκε manifest discovery στις πέντε σελίδες «Κενά σχολείων» και μεταφέρθηκαν τα εναπομείναντα inline handlers/JS των σελίδων διαχείρισης στο κοινό `assets/vacancies.js`. Το regression gate ολοκληρώνεται πλέον με PASS. Η κεντρική έκδοση αυξήθηκε σε `3.22.1` για ασφαλές cache busting του ενημερωμένου JavaScript.

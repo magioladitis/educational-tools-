@@ -81,6 +81,7 @@ foreach ($users as $user) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.webmanifest">
   <title>Λογαριασμοί — Καταγραφή Κενών</title>
   <link rel="stylesheet" href="<?php echo vacanciesH(edu_asset_url('assets/common.css')); ?>">
   <link rel="stylesheet" href="<?php echo vacanciesH(edu_asset_url('assets/vacancies.css')); ?>">
@@ -254,7 +255,7 @@ foreach ($users as $user) {
             </details>
 
             <div class="vacancy-user-actions vacancy-account-actions">
-              <form method="post" action="kena-sxoleion-users.php" onsubmit="return confirm('Να δημιουργηθεί νέος προσωρινός κωδικός; Ο προηγούμενος θα πάψει να ισχύει.');">
+              <form method="post" action="kena-sxoleion-users.php" data-confirm="Να δημιουργηθεί νέος προσωρινός κωδικός; Ο προηγούμενος θα πάψει να ισχύει.">
                 <input type="hidden" name="csrf" value="<?php echo vacanciesH(vacanciesCsrfToken()); ?>">
                 <input type="hidden" name="user_action" value="reset_password">
                 <input type="hidden" name="user_id" value="<?php echo $uid; ?>">
@@ -267,7 +268,7 @@ foreach ($users as $user) {
                 <input type="hidden" name="active" value="<?php echo !empty($u['active']) ? 0 : 1; ?>">
                 <button class="secondary" type="submit"><?php echo !empty($u['active']) ? 'Απενεργοποίηση' : 'Ενεργοποίηση'; ?></button>
               </form>
-              <form method="post" action="kena-sxoleion-users.php" onsubmit="return confirm('Ο λογαριασμός <?php echo vacanciesH(addslashes($u['username'])); ?> θα διαγραφεί οριστικά. Συνέχεια;');">
+              <form method="post" action="kena-sxoleion-users.php" data-confirm="<?php echo vacanciesH('Ο λογαριασμός ' . $u['username'] . ' θα διαγραφεί οριστικά. Συνέχεια;'); ?>">
                 <input type="hidden" name="csrf" value="<?php echo vacanciesH(vacanciesCsrfToken()); ?>">
                 <input type="hidden" name="user_action" value="delete_account">
                 <input type="hidden" name="user_id" value="<?php echo $uid; ?>">
@@ -281,21 +282,6 @@ foreach ($users as $user) {
   </section>
 </main>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-<script>
-(function () {
-  document.querySelectorAll('.vacancy-role-select').forEach(function (select) {
-    var targetId = select.getAttribute('data-school-target');
-    var target = targetId ? document.getElementById(targetId) : null;
-    if (!target) return;
-    function syncSchool() {
-      var isAdmin = select.value === 'admin';
-      target.disabled = isAdmin;
-      if (isAdmin) target.value = '0';
-    }
-    select.addEventListener('change', syncSchool);
-    syncSchool();
-  });
-}());
-</script>
+<script src="<?php echo vacanciesH(edu_asset_url('assets/vacancies.js')); ?>"></script>
 </body>
 </html>

@@ -9,6 +9,35 @@
     }
     if (role) { role.addEventListener('change', syncRole); syncRole(); }
 
+    var autoSubmitControls = document.querySelectorAll('[data-auto-submit="true"]');
+    Array.prototype.forEach.call(autoSubmitControls, function (control) {
+      control.addEventListener('change', function () {
+        if (control.form) control.form.submit();
+      });
+    });
+
+    var confirmForms = document.querySelectorAll('form[data-confirm]');
+    Array.prototype.forEach.call(confirmForms, function (confirmForm) {
+      confirmForm.addEventListener('submit', function (event) {
+        var message = confirmForm.getAttribute('data-confirm') || '';
+        if (message && !window.confirm(message)) event.preventDefault();
+      });
+    });
+
+    var accountRoleSelects = document.querySelectorAll('.vacancy-role-select[data-school-target]');
+    Array.prototype.forEach.call(accountRoleSelects, function (select) {
+      var targetId = select.getAttribute('data-school-target');
+      var target = targetId ? document.getElementById(targetId) : null;
+      if (!target) return;
+      function syncAccountSchool() {
+        var isAdmin = select.value === 'admin';
+        target.disabled = isAdmin;
+        if (isAdmin) target.value = '0';
+      }
+      select.addEventListener('change', syncAccountSchool);
+      syncAccountSchool();
+    });
+
     var list = document.getElementById('vacancyEntries');
     var picker = document.getElementById('specialtyPicker');
     var template = document.getElementById('vacancyEntryTemplate');

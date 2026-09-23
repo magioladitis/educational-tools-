@@ -17,7 +17,7 @@ check('hours help marked mobile-collapsible', "'attrs' => array('data-mobile-col
 check('hours help closes central disclosure', 'calculatorDisclosureEnd();' in page)
 check('legacy static h2 removed', '<h2>Τι σημαίνει «ώρες»</h2>' not in page)
 check('shared mobile collapse handles disclosures', '.edu-disclosure[data-mobile-collapsed="true"]' in common and "details.removeAttribute('open')" in common)
-check('release version 3.21.14', "define('EDU_TOOLS_VERSION', '3.21.14');" in config)
+check('central semantic release version present', bool(re.search(r"define\('EDU_TOOLS_VERSION',\s*'\d+\.\d+\.\d+'\);", config)))
 
 proc=subprocess.run(['php', str(ROOT/'orologio-programma-mathimaton.php')], cwd=str(ROOT), capture_output=True, text=True)
 html=proc.stdout

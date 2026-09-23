@@ -66,6 +66,7 @@ $roundStatusLabels = array(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.webmanifest">
   <title>Dashboard κενών σχολικών μονάδων</title>
   <link rel="stylesheet" href="<?php echo vacanciesH(edu_asset_url('assets/common.css')); ?>">
   <link rel="stylesheet" href="<?php echo vacanciesH(edu_asset_url('assets/vacancies.css')); ?>">
@@ -90,7 +91,7 @@ $roundStatusLabels = array(
   <section class="card vacancy-round-picker">
     <div class="vacancy-round-toolbar">
       <form method="get" action="kena-sxoleion-admin.php">
-        <div class="field"><label for="round">Γύρος καταγραφής</label><select id="round" name="round" onchange="this.form.submit()">
+        <div class="field"><label for="round">Γύρος καταγραφής</label><select id="round" name="round" data-auto-submit="true">
         <?php foreach ($rounds as $r) {
           $roundStatusLabel = isset($roundStatusLabels[$r['status']]) ? $roundStatusLabels[$r['status']] : $r['status'];
         ?><option value="<?php echo (int) $r['id']; ?>"<?php echo (int)$r['id']===$roundId?' selected':''; ?>><?php echo vacanciesH($r['title'] . ' · ' . $roundStatusLabel); ?></option><?php } ?>

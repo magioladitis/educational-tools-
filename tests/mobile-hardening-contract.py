@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 root = Path(__file__).resolve().parents[1]
 common = (root / 'assets' / 'common.css').read_text(encoding='utf-8')
@@ -12,7 +13,7 @@ def check(label, cond):
     checks.append((label, bool(cond)))
     print(('PASS' if cond else 'FAIL'), label)
 
-check('release bumped to v3.21.14', "EDU_TOOLS_VERSION', '3.21.14" in config)
+check('central semantic release version present', bool(re.search(r"define\('EDU_TOOLS_VERSION',\s*'\d+\.\d+\.\d+'\);", config)))
 check('mobile controls use 16px to avoid iOS focus zoom', 'font-size: 16px !important;' in common)
 check('mobile controls retain 44px touch targets', 'min-height: 44px;' in common)
 check('narrow navigation does not shrink below 44px', 'width: 38px;' not in common and common.count('width: 44px;') >= 2)
@@ -22,7 +23,7 @@ check('safe-area aware back-to-top control', 'env(safe-area-inset-right)' in com
 check('staffing specialty table remains readable', 'min-width:680px;' in staffing)
 check('staffing claim list can shrink on phone', '.claim-list' in staffing and 'min-width:0;' in staffing)
 check('staffing help respects dynamic viewport height', '100dvh' in staffing)
-check('weekly timetable long text wraps', 'Mobile hardening v3.21.14' in timetable and 'overflow-wrap:anywhere;' in timetable)
+check('weekly timetable long text wraps', 'Mobile hardening' in timetable and 'overflow-wrap:anywhere;' in timetable)
 check('teaching assignments result headings wrap', '#assignmentResults h3' in assignments and 'flex-wrap:wrap;' in assignments)
 check('no global overflow-x hiding introduced', 'body.edu-ui {\n  overflow-x: hidden' not in common and 'html {\n  overflow-x: hidden' not in common)
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import sys
+import re
 root=Path(__file__).resolve().parents[1]
 page=(root/'ypologismos-misthologikou-klimakiou.php').read_text()
 ui=(root/'includes/salary-ui.js').read_text()
@@ -15,7 +16,7 @@ check('2016-2017 group heading', 'Χρόνος 2016–2017:' in page)
 check('freeze years concise label', 'Έτη υπηρεσίας στη διετία' in page)
 check('freeze months concise label', 'Επιπλέον μήνες στη διετία' in page)
 check('freeze fields nested together', '<div class="field-grid">' in page and page.index('id="suspendedYears"') < page.index('id="suspendedMonths"'))
-check('central cache version present', "define('EDU_TOOLS_VERSION'" in config and "3.21.14" in config)
+check('central cache version present', bool(re.search(r"define\('EDU_TOOLS_VERSION',\s*'\d+\.\d+\.\d+'\);", config)))
 check('2026 basic salary result row', 'basicSalaryResult' in page and 'Βασικός μισθός (μικτά) από 01/04/2026' in page)
 check('2026 salary circular source', '54692 ΕΞ 2026/03-04-2026' in page and 'ΨΕ7ΨΗ-ΚΧΧ' in page)
 check('salary disclaimer distinguishes basic from total pay', 'βασικό μισθό του Μ.Κ.' in page and 'οικογενειακή παροχή' in page and 'επίδομα θέσης ευθύνης' in page and 'καταβαλλόμενη προσωπική διαφορά' in page)

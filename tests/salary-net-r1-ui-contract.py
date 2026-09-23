@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import sys
+import re
 root=Path(__file__).resolve().parents[1]
 page=(root/'ypologismos-misthologikou-klimakiou.php').read_text()
 ui=(root/'includes/salary-ui.js').read_text()
@@ -27,7 +28,7 @@ check('contribution source', 'Υπουργείο Εργασίας — Ασφαλ
 check('MTPY source', 'ΜΤΠΥ — Επικαιροποιημένος Οδηγός Κρατήσεων' in page)
 check('tax engine defines profiles', all(x in net for x in ['permanent:', 'newly_appointed:', 'substitute:']))
 check('tax engine has 2026 bracket cutoffs', all(x in net for x in ['to: 10000','to: 20000','to: 30000','to: 40000','to: 60000']))
-check('asset version bumped', "define('EDU_TOOLS_VERSION', '3.21.14')" in config)
+check('central semantic asset version present', bool(re.search(r"define\('EDU_TOOLS_VERSION',\s*'\d+\.\d+\.\d+'\);", config)))
 check('remote allowance checkbox', 'id="remoteAreaAllowance"' in page and '+100 € μικτά / μήνα' in page)
 check('remote allowance result rows', 'remoteAllowanceResult' in page and 'grossForNetResult' in page)
 check('remote allowance source', 'ΥΠΑΙΘ — Επίδομα απομακρυσμένων / παραμεθορίων 100 €' in page and 'ΓΓΠΣ — Κράτηση ΜΤΠΥ' in page)

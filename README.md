@@ -1,3 +1,10 @@
+## 2026-09-23 — Regression gate cleanup (v3.22.1)
+
+- Regression tests no longer pin the historical `3.21.14` release; they validate the centralized semantic `EDU_TOOLS_VERSION`.
+- All public «Κενά σχολείων» pages now expose `manifest.webmanifest`.
+- Remaining inline handlers/JavaScript in vacancy administration were moved to `assets/vacancies.js`.
+- `tests/pre-pwa-regression.sh`: PASS.
+
 ## 2026-09-23 — ΦΕΚ Β΄ 5710 & 5733 / επικαιροποίηση αναθέσεων ΤΕ16
 - Ενσωματώθηκαν οι τροποποιήσεις των ΦΕΚ Β΄ 5710/22-09-2026 και Β΄ 5733/22-09-2026, με ισχύ από το σχολικό έτος 2026-2027.
 - Ο ΤΕ16 μεταφέρθηκε σε **Α΄ ανάθεση** στα ακριβώς επηρεαζόμενα μαθήματα: «Μουσικοκινητική Αγωγή» Γ΄ ΕΠΑ.Λ., Γ΄ Π.ΕΠΑ.Λ. και Δ΄ Λυκείου ΕΝ.Ε.Ε.ΓΥ.-Λ., καθώς και «Μουσική» στα Ε.Ε.Ε.ΕΚ. και στο Γυμνάσιο ΕΝ.Ε.Ε.ΓΥ.-Λ.
