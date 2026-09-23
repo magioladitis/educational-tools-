@@ -219,6 +219,7 @@ check('EPAL G assignments cover every timetable specialty label', all(any(label 
 # Public source cards / internal metadata must expose the complete Γ΄ legal chain.
 assignment_page = render_php('anatheseis-mathimaton.php')
 check('assignment page cites FEK 5710/2026 EPAL amendment', 'ΦΕΚ Β΄ 5710/2026 — Μουσικοκινητική Αγωγή Γ΄ ΕΠΑ.Λ.' in assignment_page)
+check('5710 EPAL source links directly to National Printing Office record', 'https://search.et.gr/el/fek/?fekId=805702' in assignment_page)
 timetable_page = render_php('orologio-programma-mathimaton.php')
 assignment_data = (ROOT / 'includes/teaching-assignments-epal.php').read_text()
 for fek in ('1664/2018', '2637/2018', '3520/2018', '2779/2019', '3609/2020', '5206/2023'):
