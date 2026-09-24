@@ -14,6 +14,7 @@
   <main class="page-shell">
     <?php require_once __DIR__ . '/includes/header.php'; ?>
     <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+    <?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 
     <?php calculatorHero(array(
       'title' => 'Μόρια Αναπληρωτή στο Ψηφιακό Φροντιστήριο',
@@ -22,7 +23,26 @@
       'badges' => array('Σύνολο επιλογής: 100 μονάδες', 'Β + Γ πριν από τη συνέντευξη: έως 65', 'Βίντεο: βάση 20/35')
     )); ?>
 
-    <div class="info"><strong>Προθεσμία αιτήσεων:</strong> από 24/09/2026, ώρα 14:00, έως 05/10/2026, ώρα 17:00, μέσω της ηλεκτρονικής πλατφόρμας του ΙΕΠ.</div>
+    <?php
+    renderDeadlineCard(array(
+      'title' => '📅 Προθεσμία αιτήσεων Ψηφιακού Φροντιστηρίου',
+      'intro' => 'Η αντίστροφη μέτρηση γίνεται σε ώρα Ελλάδας.',
+      'items' => array(
+        array(
+          'title' => 'Προσωρινοί αναπληρωτές 2026–2027',
+          'meta_html' => 'Ηλεκτρονικές αιτήσεις μέσω ΙΕΠ από <strong>24/09/2026, 14:00</strong> έως <strong>05/10/2026, 17:00</strong>.',
+          'start' => '2026-09-24T14:00:00+03:00',
+          'end' => '2026-10-05T17:00:00+03:00',
+          'source_url' => 'https://diavgeia.gov.gr/doc/%CE%A8%CE%A6%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%98%CE%A66?inline=true',
+          'source_label' => 'Πρόσκληση 126274/Δ7/24-09-2026 · ΑΔΑ ΨΦΑ446ΝΚΠΔ-ΘΦ6 ↗',
+          'open_text' => 'Η περίοδος υποβολής αιτήσεων είναι ανοικτή.',
+          'before_text' => 'Η περίοδος υποβολής αιτήσεων δεν έχει ανοίξει ακόμη.',
+          'closed_text' => 'Η προθεσμία υποβολής αιτήσεων έχει λήξει.'
+        )
+      ),
+      'note_html' => 'Το countdown είναι ενημερωτικό. Για την ακριβή ισχύ της προθεσμίας υπερισχύει πάντοτε η επίσημη πρόσκληση.'
+    ));
+    ?>
 
     <?php calculatorColumnsStart(); ?>
       <?php calculatorMainStart(); ?>
