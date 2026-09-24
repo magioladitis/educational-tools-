@@ -20,6 +20,7 @@
     'ypologismos-morion-4ea-2025.php': {},
     'ypologismos-morion-5ea-2022.php': {},
     'ypologismos-morion-apospasis-psifiako-frontistirio.php': {},
+    'ypologismos-morion-anapliroti-psifiako-frontistirio.php': {},
     'ypologismos-morion-apospasis-sde.php': {},
     'ypologismos-morion-apospasis-exoteriko.php': {},
     'ypologismos-morion-apospasis-evropaika-scholeia.php': {},

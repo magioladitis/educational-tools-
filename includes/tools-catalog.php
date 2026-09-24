@@ -245,6 +245,18 @@ return array(
         ),
         array(
             'number' => 18,
+            'href' => 'ypologismos-morion-anapliroti-psifiako-frontistirio.php',
+            'group' => 'asep-anaplirotes',
+            'categories' => 'anaplirotes asep',
+            'search' => 'ψηφιακό φροντιστήριο αναπληρωτές προσωρινοί αναπληρωτές μόρια μοριοδότηση πρόσληψη βιντεοσκοπημένο μάθημα συνέντευξη πανελλαδικές ΤΠΕ Β Αθήνας πενταετής εμπειρία',
+            'tag' => 'Αναπληρωτές',
+            'tag_class' => 'green',
+            'new' => true,
+            'title' => 'Μόρια Αναπληρωτή στο Ψηφιακό Φροντιστήριο',
+            'description' => 'Υπολόγισε τη μοριοδότηση επιλογής έως 100 μονάδες, έλεγξε βασικές προϋποθέσεις και δες την προσαυξημένη προϋπηρεσία 1,5 μόριο/μήνα.'
+        ),
+        array(
+            'number' => 19,
             'href' => 'ypologismos-morion-apospasis-sde.php',
             'group' => 'eidikes-domes',
             'categories' => 'apospaseis sde',
@@ -256,7 +268,7 @@ return array(
             'description' => 'Έλεγξε αν η ειδικότητά σου είναι αποδεκτή και υπολόγισε τη μοριοδότηση έως 40 μόρια για απόσπαση στα Σχολεία Δεύτερης Ευκαιρίας.'
         ),
         array(
-            'number' => 19,
+            'number' => 20,
             'href' => 'ypologismos-morion-apospasis-exoteriko.php',
             'group' => 'metakiniseis',
             'categories' => 'apospaseis',
@@ -268,7 +280,7 @@ return array(
             'description' => 'Υπολόγισε τα μόρια τίτλων και γλωσσομάθειας και κάνε βασικό έλεγχο δικαιώματος για Βασικό ή Εναλλακτικό Πίνακα απόσπασης στο εξωτερικό.'
         ),
         array(
-            'number' => 20,
+            'number' => 21,
             'href' => 'ypologismos-morion-apospasis-evropaika-scholeia.php',
             'group' => 'metakiniseis',
             'categories' => 'apospaseis',
@@ -280,7 +292,7 @@ return array(
             'description' => 'Υπολόγισε τα μόρια τυπικών προσόντων και εμπειρίας πριν από τη συνέντευξη και το τελικό σύνολο μετά την προφορική διαδικασία.'
         ),
         array(
-            'number' => 21,
+            'number' => 22,
             'href' => 'metatropi-klimakas.php',
             'group' => 'asep-anaplirotes',
             'categories' => 'asep',
@@ -292,7 +304,7 @@ return array(
             'description' => 'Μετέτρεψε βαθμό από 10βάθμια σε 20βάθμια κλίμακα ή από λεκτική μορφή και πάρε έτοιμα τα πεδία Ακέραιο μέρος – Αριθμητής – Παρονομαστής.'
         ),
         array(
-            'number' => 22,
+            'number' => 23,
             'href' => 'ypologismos-morion-diefthynton-ypodiefthynton-sde.php',
             'group' => 'eidikes-domes',
             'categories' => 'sde',
@@ -304,7 +316,7 @@ return array(
             'description' => 'Υπολόγισε τα μόρια για θέσεις Διευθυντή ή Υποδιευθυντή ΣΔΕ, με τυπικά προσόντα, διδακτική και διοικητική εμπειρία, επιμόρφωση και συνέντευξη όπου προβλέπεται.'
         ),
         array(
-            'number' => 23,
+            'number' => 24,
             'href' => 'ypologismos-morion-mitroo-sde.php',
             'group' => 'eidikes-domes',
             'categories' => 'sde',
@@ -316,7 +328,7 @@ return array(
             'description' => 'Ενιαίος υπολογιστής για Εκπαιδευτικό Προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας, με δυναμικά κριτήρια και κοινωνικές προσαυξήσεις.'
         ),
         array(
-            'number' => 24,
+            'number' => 25,
             'href' => 'ypologismos-morion-sivitanidios-saek.php',
             'group' => 'eidikes-domes',
             'categories' => 'saek',
@@ -328,7 +340,7 @@ return array(
             'description' => 'Υπολόγισε τη βασική βαθμολογία και τις κοινωνικές προσαυξήσεις για την πρόσκληση ωρομίσθιων εκπαιδευτών 2026–2027.'
         ),
         array(
-            'number' => 25,
+            'number' => 26,
             'href' => 'ypologismos-didaktikou-orariou.php',
             'group' => 'ypiresiaka',
             'categories' => 'ypiresiaka',
@@ -340,7 +352,7 @@ return array(
             'description' => 'Υπολόγισε το διδακτικό ωράριο εκπαιδευτικών σε Νηπιαγωγείο, Δημοτικό ή Δευτεροβάθμια και το ωράριο υποστηρικτικού έργου ΕΕΠ/ΕΒΠ.'
         ),
         array(
-            'number' => 26,
+            'number' => 27,
             'href' => 'ypologismos-misthologikou-klimakiou.php',
             'group' => 'ypiresiaka',
             'categories' => 'ypiresiaka',
@@ -352,7 +364,7 @@ return array(
             'description' => 'Υπολόγισε ενδεικτικά το Μ.Κ., τον βασικό μικτό μισθό, επιδόματα, κρατήσεις, φόρο και εκτιμώμενες καθαρές αποδοχές.'
         ),
         array(
-            'number' => 27,
+            'number' => 28,
             'href' => 'ypologismos-morion-metathesis.php',
             'group' => 'metakiniseis',
             'categories' => 'metatheseis ypiresiaka',
@@ -364,7 +376,7 @@ return array(
             'description' => 'Υπολόγισε τα βασικά μόρια μετάθεσης Δ.Ε. και αναλυτικά τις Μ.Σ.Δ., με δυσπρόσιτα/απομακρυσμένα, καταστήματα κράτησης, Ψηφιακό Φροντιστήριο και ειδικές υπηρετήσεις.'
         ),
         array(
-            'number' => 28,
+            'number' => 29,
             'href' => 'ypologismos-morion-topothetisis-neodioriston.php',
             'group' => 'metakiniseis',
             'categories' => 'metatheseis ypiresiaka',
@@ -376,7 +388,7 @@ return array(
             'description' => 'Υπολόγισε τα μόρια προσωρινής τοποθέτησης από οικογενειακούς λόγους, συνυπηρέτηση και εντοπιότητα, μαζί με τη σειρά κριτηρίων ισοβαθμίας.'
         ),
         array(
-            'number' => 29,
+            'number' => 30,
             'href' => 'anatheseis-mathimaton.php',
             'group' => 'ypiresiaka',
             'categories' => 'ypiresiaka eidiki-agogi',
@@ -388,7 +400,7 @@ return array(
             'description' => 'Δες ποια μαθήματα έχει ο κλάδος σου σε Α΄, Β΄ και Γ΄ ανάθεση, με φίλτρα ανά τύπο σχολείου και τις αντίστοιχες επίσημες πηγές.'
         ),
         array(
-            'number' => 30,
+            'number' => 31,
             'href' => 'dikaioma-ypodiefthynti-saek.php',
             'group' => 'eidikes-domes',
             'categories' => 'saek',
@@ -400,7 +412,7 @@ return array(
             'description' => 'Έλεγξε τις βασικές προϋποθέσεις και τα κωλύματα της πρόσκλησης Κ5/113585/01-09-2026 για τις κενές θέσεις Υποδιευθυντών δημόσιων Σ.Α.Ε.Κ.'
         ),
         array(
-            'number' => 31,
+            'number' => 32,
             'href' => 'orologio-programma-mathimaton.php',
             'group' => 'ypiresiaka',
             'categories' => 'ypiresiaka orologio',
@@ -412,7 +424,7 @@ return array(
             'description' => 'Δες τις εβδομαδιαίες ώρες κάθε μαθήματος ανά τύπο σχολείου και τάξη, με χωριστή εμφάνιση των Ομάδων Προσανατολισμού.'
         ),
         array(
-            'number' => 32,
+            'number' => 33,
             'href' => 'ypologismos-didaktikon-anagkon.php',
             'group' => 'ypiresiaka',
             'categories' => 'ypiresiaka orologio topothetiseis',
@@ -424,7 +436,7 @@ return array(
             'description' => 'Δημιούργησε school profile για Ημερήσιο Γυμνάσιο ή ΓΕΛ και δες τις πραγματικές ώρες curriculum ανά κλάδο και προτεραιότητα ανάθεσης.'
         ),
         array(
-            'number' => 33,
+            'number' => 34,
             'href' => 'kena-sxoleion-login.php',
             'group' => 'ypiresiaka',
             'categories' => 'ypiresiaka στελέχωση κενά σχολεία',

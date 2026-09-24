@@ -87,7 +87,6 @@ $h = function ($value) use ($flags) {
           $description = isset($groupConfig['description']) ? $groupConfig['description'] : '';
           $short = isset($groupConfig['short']) ? $groupConfig['short'] : '';
           $tone = isset($groupConfig['tone']) ? $groupConfig['tone'] : 'blue';
-          $count = isset($groupCounts[$groupSlug]) ? (int) $groupCounts[$groupSlug] : 0;
           ?>
       <a
         class="category-card<?php echo isset($categoryToneClasses[$tone]) ? ' ' . $h($categoryToneClasses[$tone]) : ''; ?>"
@@ -99,7 +98,6 @@ $h = function ($value) use ($flags) {
           <strong><?php echo $h($title); ?></strong>
           <span><?php echo $h($description); ?></span>
         </span>
-        <span class="category-card__count"><?php echo $count; ?> εργαλεία</span>
       </a>
       <?php } ?>
     </div>
@@ -137,7 +135,6 @@ $h = function ($value) use ($flags) {
           <h2 id="groupTitle-<?php echo $h($groupSlug); ?>"><?php echo $h($title); ?></h2>
           <p><?php echo $h($description); ?></p>
         </div>
-        <span class="tool-group__count"><?php echo count($groupTools); ?></span>
       </div>
       <div class="tools-grid">
         <?php foreach ($groupTools as $tool) {

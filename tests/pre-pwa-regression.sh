@@ -19,6 +19,7 @@ run_py tests/abroad-mobile-refactor-contract.py
 run_py tests/salary-mobile-refactor-contract.py
 run_py tests/transfer-mobile-refactor-contract.py
 run_py tests/weekly-timetable-2026-contract.py
+run_py tests/digital-tutoring-substitute-2026-contract.py
 
 echo "==> source registry audit"
 php tools/source-registry-audit.php
