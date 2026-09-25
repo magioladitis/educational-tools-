@@ -20,6 +20,8 @@ if (!function_exists('renderDeadlineCard')) {
         $headingId = isset($config['heading_id']) ? trim((string) $config['heading_id']) : '';
         $collapsible = !empty($config['collapsible']);
         $expanded = !isset($config['expanded']) || !empty($config['expanded']);
+        $archiveAfterDays = isset($config['archive_after_days']) ? max(0, (int) $config['archive_after_days']) : 0;
+        $archiveCutoff = $archiveAfterDays > 0 ? time() - ($archiveAfterDays * 86400) : null;
 
         if ($headingId === '') {
             static $deadlineCardCounter = 0;
@@ -64,6 +66,19 @@ if (!function_exists('renderDeadlineCard')) {
         $start = isset($item['start']) ? trim((string) $item['start']) : '';
         $end = isset($item['end']) ? trim((string) $item['end']) : '';
         $endExclusive = isset($item['end_exclusive']) ? trim((string) $item['end_exclusive']) : '';
+
+        // Keep expired deadlines visible for the configured archive window.
+        // After that, hide them from the page while keeping them in deadlines.php.
+        if ($archiveCutoff !== null) {
+            $deadlineEnd = $endExclusive !== '' ? $endExclusive : $end;
+            if ($deadlineEnd !== '') {
+                $deadlineEndTimestamp = strtotime($deadlineEnd);
+                if ($deadlineEndTimestamp !== false && $deadlineEndTimestamp < $archiveCutoff) {
+                    continue;
+                }
+            }
+        }
+
         $openText = isset($item['open_text']) ? (string) $item['open_text'] : 'Η προθεσμία είναι ανοικτή.';
         $beforeText = isset($item['before_text']) ? (string) $item['before_text'] : 'Η προθεσμία δεν έχει ανοίξει ακόμη.';
         $closedText = isset($item['closed_text']) ? (string) $item['closed_text'] : 'Η προθεσμία έχει λήξει.';
