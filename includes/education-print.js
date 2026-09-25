@@ -24,6 +24,7 @@
     'ypologismos-morion-apospasis-sde.php': {},
     'ypologismos-morion-apospasis-exoteriko.php': {},
     'ypologismos-morion-apospasis-evropaika-scholeia.php': {},
+    'ypologismos-morion-scholeio-evropaikis-paideias-irakleiou.php': {},
     'ypologismos-morion-diefthynton-ypodiefthynton-sde.php': {},
     'ypologismos-morion-mitroo-sde.php': {},
     'ypologismos-morion-sivitanidios-saek.php': {},
