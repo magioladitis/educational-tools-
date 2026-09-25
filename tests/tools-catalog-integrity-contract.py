@@ -39,7 +39,7 @@ check('all tool groups exist', all(tool.get('group') in groups for tool in tools
 check('rendered card count matches catalog', rendered_cards == len(tools))
 check('hero tool count matches catalog', f'<span>{len(tools)} διαθέσιμα εργαλεία</span>' in rendered)
 check('directory results count is dynamic', "'Εμφανίζονται ' + visible + ' εργαλεία.'" in DIRECTORY_JS)
-check('weekly timetable is catalog tool 31', any(tool.get('number') == 31 and tool.get('href') == 'orologio-programma-mathimaton.php' for tool in tools))
+check('weekly timetable is catalog tool 32', any(tool.get('number') == 32 and tool.get('href') == 'orologio-programma-mathimaton.php' for tool in tools))
 
 failed = [name for name, passed in checks if not passed]
 for name, passed in checks:
