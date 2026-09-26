@@ -7,15 +7,16 @@ checks = []
 def ok(name, cond):
     checks.append((name, bool(cond)))
 
-# Global policy: raw <details> are reserved for the staffing simulator's structural
-# input panels/popovers. Ordinary calculator/guide help must use the shared
-# calculator disclosure component so mobile collapse behavior stays centralized.
+# Global policy: raw <details> are reserved for structural/admin UI where native
+# disclosure semantics are intentional (staffing simulator and vacancies app).
+# Ordinary calculator/guide help must use the shared calculator disclosure
+# component so mobile collapse behavior stays centralized.
 raw_details = []
 for p in sorted(ROOT.glob('*.php')):
     text = p.read_text(encoding='utf-8', errors='ignore')
     if '<details' in text:
         raw_details.append((p.name, text.count('<details')))
-ok('only staffing simulator retains structural raw details', raw_details == [('ypologismos-didaktikon-anagkon.php', 12)])
+ok('raw details stay limited to structural/admin UI', raw_details == [('kena-sxoleion-admin.php', 2), ('kena-sxoleion-login.php', 1), ('kena-sxoleion-users.php', 1), ('ypologismos-didaktikon-anagkon.php', 12)])
 
 expected_mobile = {
     'posa-paravola.php': 'Οδηγίες για την έκδοση και πληρωμή παραβόλου',

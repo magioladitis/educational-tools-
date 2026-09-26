@@ -2348,7 +2348,7 @@ body.edu-page-onaseia .total-row{font-weight:700;background:#e6f4ea;color:var(--
 body.edu-page-onaseia .warning{margin-top:16px;padding:12px;border-radius:8px;background:var(--warning-bg);color:var(--warning-text);font-weight:700}
 body.edu-page-onaseia .credits{margin-top:24px;text-align:center;font-size:13px;color:#777}
 @media(max-width:900px){body.edu-page-onaseia .layout{grid-template-columns:1fr}body.edu-page-onaseia .results{position:static}}
-@media(max-width:760px){body.edu-ui.edu-page-onaseia{padding:16px}body.edu-page-onaseia .app-box{padding:18px}body.edu-page-onaseia .field-grid{grid-template-columns:1fr}body.edu-page-onaseia .service-row{grid-template-columns:1fr}body.edu-page-onaseia .remove-row{width:100%}body.edu-page-onaseia .actions{grid-template-columns:1fr}body.edu-page-onaseia h1{font-size:24px}}
+@media(max-width:760px){body.edu-ui.edu-page-onaseia{padding:16px}body.edu-page-onaseia .app-box{padding:18px}body.edu-page-onaseia .field-grid{grid-template-columns:1fr}body.edu-page-onaseia .service-row{grid-template-columns:1fr}body.edu-page-onaseia .remove-row{width:100%}body.edu-page-onaseia .actions{grid-template-columns:1fr}body.edu-page-onaseia .mode-row label{min-height:44px;padding:6px 0}body.edu-page-onaseia h1{font-size:24px}}
 
 /* Degree-scale conversion utility. */
 body.edu-ui.edu-page-grade-converter{--blue:#1f6feb;--blue-dark:#174ea6;--muted:#5f6368;--border:#d9e0e8;--soft:#eef4ff;--green:#137333;--green-soft:#e6f4ea;--orange:#8a5300;--orange-soft:#fff4e5;margin:0;padding:30px;background:#f5f7fb;color:#202124;line-height:1.5}

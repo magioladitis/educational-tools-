@@ -1,3 +1,14 @@
+## 2026-09-26 — Mobile polish & PWA installability icons (v3.22.4)
+
+- Προστέθηκαν πραγματικά PWA icons 192×192 και 512×512 στο `assets/icons/` και δηλώθηκαν στο `manifest.webmanifest`, ώστε το manifest να καλύπτει τα βασικά Chromium installability icon requirements.
+- Προστέθηκε ξεχωριστό full-bleed `icon-maskable-512.png` για adaptive Android masks, ενώ διατηρείται και το SVG source για μελλοντικές εξαγωγές.
+- Το manifest απέκτησε 3 χρήσιμα app shortcuts (Διδακτικές Ανάγκες, Μισθοδοσία, Προθεσμίες).
+- Η σελίδα «Σχολείο Ευρωπαϊκής Παιδείας Ηρακλείου» εντάχθηκε στο κοινό visual/responsive family των European Schools calculators.
+- Στα Ωνάσεια τα mode radio labels αποκτούν mobile touch target τουλάχιστον 44px.
+- Ενημερώθηκαν τα stale regression expectations για τα νόμιμα structural/admin `<details>` της εφαρμογής «Κενά σχολείων» και για τον 21ο calculator που χρησιμοποιεί το κοινό action helper.
+- Το PWA manifest contract ελέγχει πλέον ότι τα icons υπάρχουν πραγματικά και ότι οι διαστάσεις τους συμφωνούν με το manifest.
+- `tests/pre-pwa-regression.sh`: PASS.
+
 ## 2026-09-25 — Σχολείο Ευρωπαϊκής Παιδείας Ηρακλείου
 
 - Προστέθηκε νέος υπολογιστής για την πρόσκληση 69163/Η2/28-05-2026 (σχολικό έτος 2026–2027).

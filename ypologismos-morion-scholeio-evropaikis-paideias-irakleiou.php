@@ -9,7 +9,7 @@
   <title>Μόρια — Σχολείο Ευρωπαϊκής Παιδείας Ηρακλείου</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
-<body class="edu-ui edu-page-heraklion-european-education">
+<body class="edu-ui edu-page-european-schools edu-page-heraklion-european-education">
 <main class="page-shell">
   <?php require_once __DIR__ . '/includes/header.php'; ?>
   <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>

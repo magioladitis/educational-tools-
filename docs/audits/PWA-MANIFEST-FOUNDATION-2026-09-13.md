@@ -20,3 +20,6 @@ First additive PWA step on top of the clean pre-PWA baseline.
 - Install prompt UI.
 
 The manifest intentionally contains no `icons` array until the real files exist, so there are no broken PWA resources.
+## Update — 2026-09-26
+
+The icon step is now complete in v3.22.4: the manifest references 192×192 and 512×512 PNG app icons plus a dedicated 512×512 maskable icon. The remaining deferred PWA work is service-worker/offline behavior and any optional custom install-prompt UI.

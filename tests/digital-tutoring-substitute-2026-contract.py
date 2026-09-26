@@ -23,5 +23,5 @@ assert "course:'Ισπανικά'" in js and "branches:['ΠΕ40']" in js
 assert 'Math.min(6, years * 2 + Math.floor(months / 4))' in js
 assert 'Math.min(15, serviceMonths * 1.5)' in js
 assert 'ypologismos-morion-anapliroti-psifiako-frontistirio.php' in catalog
-assert "define('EDU_TOOLS_VERSION', '3.22.3');" in config
+assert "define('EDU_TOOLS_VERSION', '3.22.4');" in config
 print('digital-tutoring-substitute-2026-contract: PASS')
