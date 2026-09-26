@@ -8,7 +8,7 @@
   if (window.location.protocol !== 'https:' && !isLocalhost) return;
 
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('service-worker.js', { scope: './' }).catch(function () {
+    navigator.serviceWorker.register('service-worker.js', { scope: './', updateViaCache: 'none' }).catch(function () {
       /* Progressive enhancement: the tools remain fully usable without SW. */
     });
   });

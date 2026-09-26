@@ -3,12 +3,18 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/components/source-card.php';
 /** Common header / navigation for Educational Tools — shared UI. */
 ?>
+<?php
+$eduCurrentPage = basename(isset($_SERVER['SCRIPT_NAME']) ? (string) $_SERVER['SCRIPT_NAME'] : '');
+$eduHomeCurrent = $eduCurrentPage === 'ergaleia.php' ? ' aria-current="page"' : '';
+$eduDeadlinesCurrent = $eduCurrentPage === 'prothesmies.php' ? ' aria-current="page"' : '';
+?>
+<a class="edu-skip-link" href="#main-content">Μετάβαση στο κύριο περιεχόμενο</a>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/specialty-code-normalization.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/education-core.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/education-print.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <header class="edu-tools-global-header" aria-label="Πλοήγηση Εργαλειοθήκης Εκπαιδευτικού">
   <div class="edu-tools-global-header__inner">
-    <a class="edu-tools-global-header__back" href="ergaleia.php" aria-label="Αρχική Εργαλειοθήκης" title="Αρχική Εργαλειοθήκης">
+    <a class="edu-tools-global-header__back" href="ergaleia.php"<?php echo $eduHomeCurrent; ?> aria-label="Αρχική Εργαλειοθήκης" title="Αρχική Εργαλειοθήκης">
       <span class="edu-tools-global-header__brand-icon" aria-hidden="true">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
           <path d="M3 11.5 12 4l9 7.5"></path>
@@ -31,7 +37,7 @@ require_once __DIR__ . '/components/source-card.php';
         </span>
         <span class="edu-tools-global-nav__label">Όλα τα εργαλεία</span>
       </a>
-      <a class="edu-tools-global-nav__link" href="prothesmies.php" aria-label="Προθεσμίες" title="Προθεσμίες">
+      <a class="edu-tools-global-nav__link" href="prothesmies.php"<?php echo $eduDeadlinesCurrent; ?> aria-label="Προθεσμίες" title="Προθεσμίες">
         <span class="edu-tools-global-nav__icon" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
             <rect x="3" y="5" width="18" height="16" rx="2"></rect>

@@ -1,4 +1,11 @@
 > Αρχιτεκτονική και canonical sources: [`ARCHITECTURE.md`](ARCHITECTURE.md)
+## 2026-09-26 — Accessibility + production PWA hardening (v3.22.14)
+
+- Shared skip-to-content navigation, `aria-current`, stronger focus-visible styling and reduced-motion support.
+- Fixed accessible names/label associations in staffing profile fields, including the Ηθική/Θρησκευτικά panel.
+- Service-worker registration now uses `updateViaCache: none` for reliable release discovery.
+- Added `tests/accessibility-production-contract.py` and `PRODUCTION-AUDIT.md`; the accessibility contract is part of the release gate.
+
 
 ## 2026-09-26 — Specialty normalization + personnel workload Phase 3C (v3.22.13)
 

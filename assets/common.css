@@ -3428,3 +3428,40 @@ body.edu-ui.edu-page-teaching-hours .edu-result-disclosure #ruleResult { font-we
   body.edu-ui.edu-page-teaching-hours .result-row > span { max-width: 58%; }
   body.edu-ui.edu-page-teaching-hours .result-row > strong { max-width: 42%; }
 }
+
+
+/* Accessibility hardening -------------------------------------------------- */
+.edu-skip-link {
+  position: fixed;
+  left: 12px;
+  top: 12px;
+  z-index: 10000;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #fff;
+  color: #0b3d75;
+  border: 2px solid #0b3d75;
+  font-weight: 800;
+  transform: translateY(-180%);
+}
+.edu-skip-link:focus { transform: translateY(0); }
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+a:focus-visible {
+  outline: 3px solid #1f6feb;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

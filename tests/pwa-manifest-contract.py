@@ -172,7 +172,7 @@ check('central PWA bootstrap exists', pwa_js_path.is_file())
 pwa_js = pwa_js_path.read_text(encoding='utf-8', errors='replace') if pwa_js_path.is_file() else ''
 check('PWA bootstrap feature-detects service workers', "'serviceWorker' in navigator" in pwa_js)
 check('PWA bootstrap only registers in secure/localhost context', "window.location.protocol !== 'https:'" in pwa_js and 'localhost' in pwa_js)
-check('PWA bootstrap registers root service worker with app scope', "register('service-worker.js', { scope: './' })" in pwa_js)
+check('PWA bootstrap registers root service worker with app scope', "register('service-worker.js'" in pwa_js and "scope: './'" in pwa_js)
 
 check('root service-worker.js exists', sw_path.is_file())
 sw = sw_path.read_text(encoding='utf-8', errors='replace') if sw_path.is_file() else ''

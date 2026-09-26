@@ -140,6 +140,16 @@
     window.setInterval(updateAll, 1000);
   }
 
+  function installAccessibilityLandmarks() {
+    var main = document.querySelector('main, [role="main"], .app, .page-shell');
+    if (main && !main.id) main.id = 'main-content';
+    else if (main && main.id !== 'main-content' && !document.getElementById('main-content')) main.id = 'main-content';
+  }
+
+  function prefersReducedMotion() {
+    return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }
+
   function installBackToTop() {
     if (document.querySelector('.edu-back-to-top')) return;
 
@@ -156,7 +166,7 @@
     }
 
     button.addEventListener('click', function () {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
     });
 
     window.addEventListener('scroll', update, { passive: true });
@@ -165,6 +175,7 @@
 
   function init() {
     document.body.classList.add('edu-ui');
+    installAccessibilityLandmarks();
     enhanceButtons(document);
     enhanceResults(document);
     embedSourceCards();

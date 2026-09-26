@@ -210,9 +210,12 @@ function staffingUiRenderEthicsPanel($prefix, $title, $panelId) {
     echo '<p class="help">Αν δεν έχεις ακόμη τα στοιχεία απαλλαγών, άφησε την ενότητα κλειστή. Οι αντίστοιχες ώρες θα παραμείνουν σε εκκρεμότητα και δεν θα προστεθούν τεχνητά στα αποτελέσματα.</p>';
     foreach (array('a'=>'Α΄','b'=>'Β΄','c'=>'Γ΄') as $s=>$grade) {
         echo '<div class="grade-box"><h4>' . staffingUiH($grade) . ' τάξη</h4><div class="mini-grid">';
-        echo '<div class="field"><label>Απαλλασσόμενοι/ες</label><input min="0" step="1" type="number" name="' . staffingUiH($prefix.$s.'_exempt') . '" value="' . staffingUiH(staffingUiPost($prefix.$s.'_exempt')) . '" placeholder="άγνωστο"></div>';
-        echo '<div class="field"><label>Συμπληρώθηκαν έως 5η ημέρα;</label><select name="' . staffingUiH($prefix.$s.'_timely') . '"><option value=""' . (staffingUiPost($prefix.$s.'_timely')===''?' selected':'') . '>— άγνωστο —</option><option value="1"' . (staffingUiPost($prefix.$s.'_timely')==='1'?' selected':'') . '>Ναι</option><option value="0"' . (staffingUiPost($prefix.$s.'_timely')==='0'?' selected':'') . '>Όχι</option></select></div>';
-        echo '<div class="field"><label>Ισοδύναμα τμήματα Ηθικής <small>0 = κρίθηκε ότι δεν σχηματίζεται</small></label><input min="0" step="1" type="number" name="' . staffingUiH($prefix.$s.'_equivalent') . '" value="' . staffingUiH(staffingUiPost($prefix.$s.'_equivalent')) . '" placeholder="άγνωστο"></div>';
+        $exemptId = $prefix.$s.'_exempt';
+        $timelyId = $prefix.$s.'_timely';
+        $equivalentId = $prefix.$s.'_equivalent';
+        echo '<div class="field"><label for="' . staffingUiH($exemptId) . '">Απαλλασσόμενοι/ες</label><input id="' . staffingUiH($exemptId) . '" min="0" step="1" type="number" name="' . staffingUiH($exemptId) . '" value="' . staffingUiH(staffingUiPost($exemptId)) . '" placeholder="άγνωστο"></div>';
+        echo '<div class="field"><label for="' . staffingUiH($timelyId) . '">Συμπληρώθηκαν έως 5η ημέρα;</label><select id="' . staffingUiH($timelyId) . '" name="' . staffingUiH($timelyId) . '"><option value=""' . (staffingUiPost($timelyId)===''?' selected':'') . '>— άγνωστο —</option><option value="1"' . (staffingUiPost($timelyId)==='1'?' selected':'') . '>Ναι</option><option value="0"' . (staffingUiPost($timelyId)==='0'?' selected':'') . '>Όχι</option></select></div>';
+        echo '<div class="field"><label for="' . staffingUiH($equivalentId) . '">Ισοδύναμα τμήματα Ηθικής <small>0 = κρίθηκε ότι δεν σχηματίζεται</small></label><input id="' . staffingUiH($equivalentId) . '" min="0" step="1" type="number" name="' . staffingUiH($equivalentId) . '" value="' . staffingUiH(staffingUiPost($equivalentId)) . '" placeholder="άγνωστο"></div>';
         echo '</div></div>';
     }
     echo '</div></details>';
@@ -1589,16 +1592,16 @@ staffingPerfEnd('specialty_labels');
               <div class="grade-box">
                 <h4>Β΄ ΓΕΛ</h4>
                 <div class="mini-grid two">
-                  <div class="field"><label>Ανθρωπιστικών</label><input min="0" step="1" type="number" name="gel_b_hum" value="<?php echo staffingUiH(staffingUiPost('gel_b_hum', '0')); ?>"></div>
-                  <div class="field"><label>Θετικών</label><input min="0" step="1" type="number" name="gel_b_sci" value="<?php echo staffingUiH(staffingUiPost('gel_b_sci', '0')); ?>"></div>
+                  <div class="field"><label for="gel_b_hum">Ανθρωπιστικών</label><input id="gel_b_hum" min="0" step="1" type="number" name="gel_b_hum" value="<?php echo staffingUiH(staffingUiPost('gel_b_hum', '0')); ?>"></div>
+                  <div class="field"><label for="gel_b_sci">Θετικών</label><input id="gel_b_sci" min="0" step="1" type="number" name="gel_b_sci" value="<?php echo staffingUiH(staffingUiPost('gel_b_sci', '0')); ?>"></div>
                 </div>
               </div>
               <div class="grade-box">
                 <h4>Γ΄ ΓΕΛ</h4>
                 <div class="mini-grid">
-                  <div class="field"><label>Ανθρωπιστικών</label><input min="0" step="1" type="number" name="gel_c_hum" value="<?php echo staffingUiH(staffingUiPost('gel_c_hum', '0')); ?>"></div>
-                  <div class="field"><label>Θετικών / Υγείας</label><input min="0" step="1" type="number" name="gel_c_scihealth" value="<?php echo staffingUiH(staffingUiPost('gel_c_scihealth', '0')); ?>"></div>
-                  <div class="field"><label>Οικονομίας / Πληροφορικής</label><input min="0" step="1" type="number" name="gel_c_econit" value="<?php echo staffingUiH(staffingUiPost('gel_c_econit', '0')); ?>"></div>
+                  <div class="field"><label for="gel_c_hum">Ανθρωπιστικών</label><input id="gel_c_hum" min="0" step="1" type="number" name="gel_c_hum" value="<?php echo staffingUiH(staffingUiPost('gel_c_hum', '0')); ?>"></div>
+                  <div class="field"><label for="gel_c_scihealth">Θετικών / Υγείας</label><input id="gel_c_scihealth" min="0" step="1" type="number" name="gel_c_scihealth" value="<?php echo staffingUiH(staffingUiPost('gel_c_scihealth', '0')); ?>"></div>
+                  <div class="field"><label for="gel_c_econit">Οικονομίας / Πληροφορικής</label><input id="gel_c_econit" min="0" step="1" type="number" name="gel_c_econit" value="<?php echo staffingUiH(staffingUiPost('gel_c_econit', '0')); ?>"></div>
                 </div>
               </div>
             </section>
@@ -1607,16 +1610,16 @@ staffingPerfEnd('specialty_labels');
               <div class="grade-box">
                 <h4>Θετικών / Υγείας: 2ο και 3ο πεδίο</h4>
                 <div class="mini-grid two">
-                  <div class="field"><label>Μαθηματικά <small>ομάδες 2ου πεδίου</small></label><input min="0" step="1" type="number" name="gel_c_field_math" value="<?php echo staffingUiH(staffingUiPost('gel_c_field_math', '0')); ?>"></div>
-                  <div class="field"><label>Βιολογία <small>ομάδες 3ου πεδίου</small></label><input min="0" step="1" type="number" name="gel_c_field_bio" value="<?php echo staffingUiH(staffingUiPost('gel_c_field_bio', '0')); ?>"></div>
+                  <div class="field"><label for="gel_c_field_math">Μαθηματικά <small>ομάδες 2ου πεδίου</small></label><input id="gel_c_field_math" min="0" step="1" type="number" name="gel_c_field_math" value="<?php echo staffingUiH(staffingUiPost('gel_c_field_math', '0')); ?>"></div>
+                  <div class="field"><label for="gel_c_field_bio">Βιολογία <small>ομάδες 3ου πεδίου</small></label><input id="gel_c_field_bio" min="0" step="1" type="number" name="gel_c_field_bio" value="<?php echo staffingUiH(staffingUiPost('gel_c_field_bio', '0')); ?>"></div>
                 </div>
               </div>
               <div class="grade-box">
                 <h4>Μαθήματα Γενικής Παιδείας υπό προϋπόθεση</h4>
                 <p class="help">Δήλωσε τις πραγματικές ομάδες που διδάσκονται τα αντίστοιχα μαθήματα· δεν τις εξάγουμε αυτόματα από τα γενικά τμήματα.</p>
                 <div class="mini-grid two">
-                  <div class="field"><label>Μαθηματικά Γενικής Παιδείας</label><input min="0" step="1" type="number" name="gel_c_cond_math" value="<?php echo staffingUiH(staffingUiPost('gel_c_cond_math', '0')); ?>"></div>
-                  <div class="field"><label>Ιστορία Γενικής Παιδείας</label><input min="0" step="1" type="number" name="gel_c_cond_history" value="<?php echo staffingUiH(staffingUiPost('gel_c_cond_history', '0')); ?>"></div>
+                  <div class="field"><label for="gel_c_cond_math">Μαθηματικά Γενικής Παιδείας</label><input id="gel_c_cond_math" min="0" step="1" type="number" name="gel_c_cond_math" value="<?php echo staffingUiH(staffingUiPost('gel_c_cond_math', '0')); ?>"></div>
+                  <div class="field"><label for="gel_c_cond_history">Ιστορία Γενικής Παιδείας</label><input id="gel_c_cond_history" min="0" step="1" type="number" name="gel_c_cond_history" value="<?php echo staffingUiH(staffingUiPost('gel_c_cond_history', '0')); ?>"></div>
                 </div>
               </div>
             </section>
@@ -1673,24 +1676,24 @@ staffingPerfEnd('specialty_labels');
             <section class="staffing-section">
               <h3>Ομάδες Προσανατολισμού</h3>
               <div class="grade-box"><h4>Β΄ Λυκείου</h4><div class="mini-grid two">
-                <div class="field"><label>Ανθρωπιστικών</label><input min="0" step="1" type="number" name="pes_b_hum" value="<?php echo staffingUiH(staffingUiPost('pes_b_hum','0')); ?>"></div>
-                <div class="field"><label>Θετικών</label><input min="0" step="1" type="number" name="pes_b_sci" value="<?php echo staffingUiH(staffingUiPost('pes_b_sci','0')); ?>"></div>
+                <div class="field"><label for="pes_b_hum">Ανθρωπιστικών</label><input id="pes_b_hum" min="0" step="1" type="number" name="pes_b_hum" value="<?php echo staffingUiH(staffingUiPost('pes_b_hum','0')); ?>"></div>
+                <div class="field"><label for="pes_b_sci">Θετικών</label><input id="pes_b_sci" min="0" step="1" type="number" name="pes_b_sci" value="<?php echo staffingUiH(staffingUiPost('pes_b_sci','0')); ?>"></div>
               </div></div>
               <div class="grade-box"><h4>Γ΄ Λυκείου</h4><div class="mini-grid">
-                <div class="field"><label>Ανθρωπιστικών</label><input min="0" step="1" type="number" name="pes_c_hum" value="<?php echo staffingUiH(staffingUiPost('pes_c_hum','0')); ?>"></div>
-                <div class="field"><label>Θετικών / Υγείας</label><input min="0" step="1" type="number" name="pes_c_scihealth" value="<?php echo staffingUiH(staffingUiPost('pes_c_scihealth','0')); ?>"></div>
-                <div class="field"><label>Οικονομίας / Πληροφορικής</label><input min="0" step="1" type="number" name="pes_c_econit" value="<?php echo staffingUiH(staffingUiPost('pes_c_econit','0')); ?>"></div>
+                <div class="field"><label for="pes_c_hum">Ανθρωπιστικών</label><input id="pes_c_hum" min="0" step="1" type="number" name="pes_c_hum" value="<?php echo staffingUiH(staffingUiPost('pes_c_hum','0')); ?>"></div>
+                <div class="field"><label for="pes_c_scihealth">Θετικών / Υγείας</label><input id="pes_c_scihealth" min="0" step="1" type="number" name="pes_c_scihealth" value="<?php echo staffingUiH(staffingUiPost('pes_c_scihealth','0')); ?>"></div>
+                <div class="field"><label for="pes_c_econit">Οικονομίας / Πληροφορικής</label><input id="pes_c_econit" min="0" step="1" type="number" name="pes_c_econit" value="<?php echo staffingUiH(staffingUiPost('pes_c_econit','0')); ?>"></div>
               </div></div>
             </section>
             <section class="staffing-section">
               <h3>Γ΄ Λυκείου — ειδικές ομάδες</h3>
               <div class="grade-box"><h4>Θετικών / Υγείας: 2ο και 3ο πεδίο</h4><div class="mini-grid two">
-                <div class="field"><label>Μαθηματικά <small>ομάδες 2ου πεδίου</small></label><input min="0" step="1" type="number" name="pes_c_field_math" value="<?php echo staffingUiH(staffingUiPost('pes_c_field_math','0')); ?>"></div>
-                <div class="field"><label>Βιολογία <small>ομάδες 3ου πεδίου</small></label><input min="0" step="1" type="number" name="pes_c_field_bio" value="<?php echo staffingUiH(staffingUiPost('pes_c_field_bio','0')); ?>"></div>
+                <div class="field"><label for="pes_c_field_math">Μαθηματικά <small>ομάδες 2ου πεδίου</small></label><input id="pes_c_field_math" min="0" step="1" type="number" name="pes_c_field_math" value="<?php echo staffingUiH(staffingUiPost('pes_c_field_math','0')); ?>"></div>
+                <div class="field"><label for="pes_c_field_bio">Βιολογία <small>ομάδες 3ου πεδίου</small></label><input id="pes_c_field_bio" min="0" step="1" type="number" name="pes_c_field_bio" value="<?php echo staffingUiH(staffingUiPost('pes_c_field_bio','0')); ?>"></div>
               </div></div>
               <div class="grade-box"><h4>Μαθήματα Γενικής Παιδείας υπό προϋπόθεση</h4><div class="mini-grid two">
-                <div class="field"><label>Μαθηματικά Γενικής Παιδείας</label><input min="0" step="1" type="number" name="pes_c_cond_math" value="<?php echo staffingUiH(staffingUiPost('pes_c_cond_math','0')); ?>"></div>
-                <div class="field"><label>Ιστορία Γενικής Παιδείας</label><input min="0" step="1" type="number" name="pes_c_cond_history" value="<?php echo staffingUiH(staffingUiPost('pes_c_cond_history','0')); ?>"></div>
+                <div class="field"><label for="pes_c_cond_math">Μαθηματικά Γενικής Παιδείας</label><input id="pes_c_cond_math" min="0" step="1" type="number" name="pes_c_cond_math" value="<?php echo staffingUiH(staffingUiPost('pes_c_cond_math','0')); ?>"></div>
+                <div class="field"><label for="pes_c_cond_history">Ιστορία Γενικής Παιδείας</label><input id="pes_c_cond_history" min="0" step="1" type="number" name="pes_c_cond_history" value="<?php echo staffingUiH(staffingUiPost('pes_c_cond_history','0')); ?>"></div>
               </div></div>
             </section>
           </div>
