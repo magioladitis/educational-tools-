@@ -62,17 +62,23 @@
   }
 
 
-  function collapseResponsiveSourceCards() {
-    if (!window.matchMedia || !window.matchMedia('(max-width: 650px)').matches) return;
+  function initialiseResponsiveSourceCards() {
+    var collapseForTouch = !!(window.matchMedia && window.matchMedia(
+      '(max-width: 650px), (hover: none) and (pointer: coarse)'
+    ).matches);
 
-    /* Generic mobile-first disclosures may stay open on desktop but collapse on phones. */
+    /* Generic mobile-first disclosures stay collapsed on phones/touch devices. */
     document.querySelectorAll('.edu-disclosure[data-mobile-collapsed="true"]').forEach(function (details) {
-      details.removeAttribute('open');
+      if (collapseForTouch) details.removeAttribute('open');
     });
 
-    /* Backwards-compatible source-card hook used by the first pilot pages. */
+    /* Source cards render closed to avoid a flash-open state on iOS/PWA.
+       Desktop progressively expands them after capability/viewport detection. */
     document.querySelectorAll('.edu-source-card[data-mobile-collapsed="true"] > .edu-source-card__details').forEach(function (details) {
-      details.removeAttribute('open');
+      var card = details.parentElement;
+      var desktopExpanded = card && card.getAttribute('data-desktop-expanded') === 'true';
+      if (collapseForTouch || !desktopExpanded) details.removeAttribute('open');
+      else details.setAttribute('open', '');
     });
   }
 
@@ -179,7 +185,7 @@
     enhanceButtons(document);
     enhanceResults(document);
     embedSourceCards();
-    collapseResponsiveSourceCards();
+    initialiseResponsiveSourceCards();
     installBackToTop();
     installDeadlineCountdowns(document);
 

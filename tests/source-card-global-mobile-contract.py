@@ -16,8 +16,11 @@ def check(name, ok):
 check('legacy sourceCardStart delegates to responsive disclosure', 'sourceCardDisclosureStart($config);' in source)
 check('legacy sourceCardEnd delegates to responsive disclosure close', 'sourceCardDisclosureEnd();' in source)
 check('legacy source cards default mobile collapsed', "$config['mobile_collapsed'] = true" in source)
-check('legacy source cards default desktop open', "$config['open'] = true" in source)
+check('legacy source cards render closed initially', "$config['open'] = false" in source)
+check('legacy source cards request desktop progressive expansion', "$config['desktop_expanded'] = true" in source)
 check('mobile collapse hook supports source cards', '.edu-source-card[data-mobile-collapsed="true"]' in common)
+check('touch devices collapse source cards including landscape phones', '(hover: none) and (pointer: coarse)' in common)
+check('desktop progressive expansion hook exists', 'data-desktop-expanded' in common and "details.setAttribute('open', '')" in common)
 check('print clone expands details', "querySelectorAll('details').forEach" in printer and "setAttribute('open', '')" in printer)
 
 legacy_pages=[]
@@ -38,6 +41,6 @@ for name in ['dikaiologitika-tekna-anapiria.php', 'ypologismos-morion-apospasis.
     check(name + ' renders', proc.returncode == 0)
     html=proc.stdout
     check(name + ' responsive source card', 'edu-source-card--responsive' in html and 'data-mobile-collapsed="true"' in html)
-    check(name + ' source details default open', 'edu-source-card__details" open' in html)
+    check(name + ' source details default closed', 'edu-source-card__details" open' not in html)
 
 print(f'RESULT {len(checks)} PASS / 0 FAIL')

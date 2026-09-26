@@ -1,3 +1,11 @@
+## 2026-09-26 — Mobile legal-source disclosure hardening (v3.22.15)
+
+- Οι κάρτες «Πηγές / Νομική βάση» αποδίδονται πλέον κλειστές στο αρχικό HTML, ώστε σε iPhone/PWA να μην εμφανίζονται στιγμιαία ανοιχτές πριν τρέξει το JavaScript.
+- Το κοινό `assets/common.js` τις ανοίγει προοδευτικά μόνο σε desktop συσκευές. Σε μικρό viewport ή touch/coarse-pointer συσκευή παραμένουν κλειστές, ακόμη και σε landscape κινητού.
+- Διατηρείται η πλήρης ανάπτυξη στην εκτύπωση μέσω του υπάρχοντος print layer.
+- Προστέθηκαν regression checks για default-closed markup, touch/mobile collapse και desktop progressive expansion.
+- Έκδοση/cache busting: `EDU_TOOLS_VERSION = 3.22.15`.
+
 > Αρχιτεκτονική και canonical sources: [`ARCHITECTURE.md`](ARCHITECTURE.md)
 ## 2026-09-26 — Accessibility + production PWA hardening (v3.22.14)
 
