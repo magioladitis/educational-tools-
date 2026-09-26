@@ -1,3 +1,11 @@
+## 2026-09-26 — Personnel workload browser parity · Phase 1 (v3.22.8)
+
+- Προστέθηκε `includes/personnel-workload-calculations.js` με browser-side pure calculations που αντιστοιχούν στις person-level συναρτήσεις του `includes/personnel-workload.php`: service days/labels, branch resolution, director section bands, secondary base hours, obligation και person normalization.
+- Η καρτέλα προσωπικού χρησιμοποιεί πλέον το browser-side parity module τόσο για την κλίμακα τμημάτων όσο και για τον υπολογισμό Υ.Ω. Διευθυντή/Υποδιευθυντή, αντί για ξεχωριστή frontend υλοποίηση. Η σελίδα δεν χρειάζεται πλέον να φορτώνει το γενικό `teaching-hours-calculations.js`.
+- Προστέθηκε `tests/personnel-workload-client-parity-contract.py` με PHP↔JS parity vectors για ΠΕ/ΤΕ/ΔΕ, διοικητικούς ρόλους, myschool override, χειροκίνητο Υ.Ω. και εξωτερικές ώρες.
+- Το allocation/slot/optimizer layer παραμένει προσωρινά server-side reference μέχρι να αποκτήσει ξεχωριστό parity contract· δεν έγινε αλλαγή στη λογική κενών/πλεονασμάτων σε αυτή τη φάση.
+- Το parity contract εντάχθηκε στο κεντρικό pre-PWA regression gate.
+
 ## 2026-09-26 — Shared PWA head & service worker (v3.22.7)
 
 - Συγκεντρώθηκαν manifest/favicon/Apple-touch metadata στο `includes/head-pwa.php` αντί να επαναλαμβάνονται σε κάθε PHP σελίδα.

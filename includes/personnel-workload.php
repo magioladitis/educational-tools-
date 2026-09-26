@@ -15,6 +15,8 @@
  *   με ασφάλεια μόνο από τον κωδικό ειδικότητας.
  *
  * PHP 5.6 compatible. Δεν φορτώνεται από δημόσια σελίδα.
+ * Οι person-level pure calculations έχουν browser parity στο
+ * personnel-workload-calculations.js· αυτό το αρχείο παραμένει canonical server reference.
  */
 
 require_once __DIR__ . '/school-profile-workload.php';

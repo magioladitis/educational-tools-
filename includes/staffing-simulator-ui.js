@@ -892,6 +892,9 @@
     },0);
   }
   function directorSectionsBandFromCount(count){
+    if(window.PersonnelWorkloadCalculations && typeof window.PersonnelWorkloadCalculations.directorSectionsBandFromCount==='function'){
+      return window.PersonnelWorkloadCalculations.directorSectionsBandFromCount(count)||'';
+    }
     count=Math.max(0,parseInt(count,10)||0);
     if(count<3) return '';
     if(count<=5) return '3-5';
@@ -1012,36 +1015,34 @@
       const atUnit=Math.max(0,parseInt(atUnitEl&&atUnitEl.value?atUnitEl.value:'0',10)||0);
       if(rule) rule.textContent='myschool stat4_8 · Υ.Ω. '+base+' − μείωση '+reduction+' = '+required+' ώρες · ώρες Υ.Ω. στον φορέα '+atUnit+'.';
     }else if(managementRole){
-      if(!window.EducationTeachingHours){
+      if(!window.PersonnelWorkloadCalculations){
         if(requiredInput) requiredInput.value='';
         if(availableEl) availableEl.textContent='—';
-        if(error){error.hidden=false;error.textContent='Δεν φορτώθηκε ο υπολογισμός ωραρίου διοικητικών ρόλων.';}
+        if(error){error.hidden=false;error.textContent='Δεν φορτώθηκε ο browser-side υπολογισμός ωραρίου προσωπικού.';}
         return;
       }
       const directorSectionInfo=updateDirectorSectionInfo(row);
-      if(roleValue==='director' && !directorSectionInfo.band){
-        if(requiredInput) requiredInput.value='';
-        if(availableEl) availableEl.textContent='—';
-        if(rule) rule.textContent='';
-        if(error){error.hidden=false;error.textContent='Για Διευθυντή/ντρια χρειάζονται τα δηλωμένα κανονικά τμήματα της σχολικής μονάδας.';}
-        return;
-      }
-      const result=window.EducationTeachingHours.secondary({
-        branch:'PE',
+      const result=window.PersonnelWorkloadCalculations.secondaryObligation({
+        specialty_code:code,
         role:roleValue,
-        years:years?years.value:0,
-        months:months?months.value:0,
-        days:days?days.value:0,
-        sections:directorSectionInfo.band
-      });
+        school_general_section_count:roleValue==='director'?directorSectionInfo.count:undefined,
+        service:{
+          years:years?years.value:0,
+          months:months?months.value:0,
+          days:days?days.value:0
+        }
+      },{assumeKnownSpecialty:true});
       if(!result || !result.valid){
         if(requiredInput) requiredInput.value='';
         if(availableEl) availableEl.textContent='—';
         if(rule) rule.textContent='';
-        if(error){error.hidden=false;error.textContent=(result&&result.error)?result.error:'Δεν μπορεί να υπολογιστεί το ωράριο της διοικητικής θέσης.';}
+        const message=result&&result.reason==='director_sections_band_required'
+          ? 'Για Διευθυντή/ντρια χρειάζονται τα δηλωμένα κανονικά τμήματα της σχολικής μονάδας.'
+          : 'Δεν μπορεί να υπολογιστεί το ωράριο της διοικητικής θέσης.';
+        if(error){error.hidden=false;error.textContent=message;}
         return;
       }
-      required=Math.max(0,parseInt(result.hours,10)||0);
+      required=Math.max(0,parseInt(result.required_teaching_hours,10)||0);
       if(requiredInput) requiredInput.value=String(required);
       if(rule) rule.textContent=result.rule||'';
     }else{

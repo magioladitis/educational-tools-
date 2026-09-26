@@ -2,7 +2,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'edu-tools-static-';
-const CACHE_NAME = CACHE_PREFIX + '3.22.7';
+const CACHE_NAME = CACHE_PREFIX + '3.22.8';
 const STATIC_ASSET_RE = /\.(?:css|js|png|svg|ico|webp|jpg|jpeg|gif|woff2?|webmanifest)$/i;
 
 self.addEventListener('install', function () {

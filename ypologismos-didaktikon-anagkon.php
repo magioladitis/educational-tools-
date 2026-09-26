@@ -2683,7 +2683,7 @@ staffingPerfEnd('specialty_labels');
 </details>
 <?php endif; ?>
 
-<script src="<?php echo staffingUiH(edu_asset_url('includes/teaching-hours-calculations.js')); ?>"></script>
+<script src="<?php echo staffingUiH(edu_asset_url('includes/personnel-workload-calculations.js')); ?>"></script>
 <script src="<?php echo staffingUiH(edu_asset_url('includes/school-profile-csv-import.js')); ?>"></script>
 <script src="<?php echo staffingUiH(edu_asset_url('includes/personnel-csv-import.js')); ?>"></script>
 <script src="<?php echo staffingUiH(edu_asset_url('includes/myschool-staff-import.js')); ?>"></script>

@@ -34,7 +34,7 @@ check(len(ui.encode('utf-8')) < 180000,'external controller remains below 180 KB
 check(len(gzip.compress(ui.encode('utf-8'),9)) < 40000,'external controller remains below 40 KB gzip')
 
 # Dependency order: existing calculation/import modules must load before the controller.
-order=['teaching-hours-calculations.js','school-profile-csv-import.js','personnel-csv-import.js','myschool-staff-import.js','myschool-stat51-import.js','staffing-simulator-ui.js']
+order=['personnel-workload-calculations.js','school-profile-csv-import.js','personnel-csv-import.js','myschool-staff-import.js','myschool-stat51-import.js','staffing-simulator-ui.js']
 positions=[page.find(x) for x in order]
 check(all(x>=0 for x in positions) and positions==sorted(positions),'dependency load order preserved')
 
