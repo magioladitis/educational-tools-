@@ -2138,7 +2138,7 @@ staffingPerfEnd('specialty_labels');
                     <div class="help">Όταν καλυφθούν πλήρως οι ώρες ενός μαθήματος / τμήματος, η επιλογή του γίνεται αυτόματα ανενεργή στις υπόλοιπες γραμμές κατανομής.</div>
                   </div>
                   <div class="allocation-toolbar-actions">
-                    <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="allocation_auto" data-staffing-request-action="allocation_auto" id="autoAllocateRemaining">Αυτόματη πρόταση κάλυψης</button>
+                    <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="allocation_auto" data-staffing-request-action="allocation_auto" data-staffing-client-action="allocation_auto" id="autoAllocateRemaining">Αυτόματη πρόταση κάλυψης</button>
                     <button class="edu-btn-secondary" type="button" id="addAllocationRow">+ Προσθήκη μαθήματος</button>
                     <button class="edu-btn-secondary" type="button" id="clearAllocationRows">Καθαρισμός κατανομής</button>
                   </div>
@@ -2181,7 +2181,7 @@ staffingPerfEnd('specialty_labels');
                 </div>
 
                 <div class="actions">
-                  <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="allocation" data-staffing-request-action="allocation">Έλεγχος κατανομής</button>
+                  <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="allocation" data-staffing-request-action="allocation" data-staffing-client-action="allocation">Έλεγχος κατανομής</button>
                 </div>
               </form>
 

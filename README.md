@@ -1,3 +1,12 @@
+## 2026-09-26 — Personnel workload browser optimizer · Phase 3A (v3.22.10)
+
+- Εξήχθη ο ήδη υπάρχων client-side atomic optimizer από το `staffing-simulator-ui.js` στο pure module `includes/personnel-workload-calculations.js`. Το UI πλέον καλεί `PersonnelWorkloadCalculations.optimizeRemaining()` αντί να διατηρεί δικό του branch-and-bound/DP implementation.
+- Η «Αυτόματη πρόταση κάλυψης» και ο «Έλεγχος κατανομής» εκτελούνται client-side χωρίς POST όταν το shared module είναι διαθέσιμο. Τα υπάρχοντα submit/PHP paths παραμένουν ως progressive fallback/reference.
+- Προστέθηκαν ενισχυμένα safety contracts: 86 deterministic PHP↔JS differential scenarios, invariants για atomic slots/capacity/B΄≤10/eligibility, 30 randomized tiny cases απέναντι σε ανεξάρτητο brute-force oracle, 4 real-school-profile parity cases και mutation tests για B΄ hard limit και SPECIAL-vs-B objective.
+- Προστέθηκε architecture contract που επιβεβαιώνει ότι τα client allocation actions προλαβαίνουν το submit/compact path και ότι δεν εισάγεται fetch/XHR.
+- Διατηρήθηκαν τα performance budgets του staffing controller χωρίς αύξηση ορίων.
+- Όλα τα νέα optimizer/client-action contracts εντάχθηκαν στο `tests/pre-pwa-regression.sh`.
+
 ## 2026-09-26 — Personnel workload browser parity · Phase 2 (v3.22.9)
 
 - Μεταφέρθηκαν στο `includes/personnel-workload-calculations.js` οι pure συναρτήσεις slot eligibility: `priorityForSlotCode()`, `priorityRank()` και `bestAssignmentForSlot()`.

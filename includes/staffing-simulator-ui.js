@@ -82,6 +82,11 @@
           event.preventDefault();
           return;
         }
+        const clientAction=button.getAttribute('data-staffing-client-action')||'';
+        if(clientAction!=='' && typeof handleStaffingClientAction==='function' && handleStaffingClientAction(clientAction,button)){
+          event.preventDefault();
+          return;
+        }
         if(typeof form.reportValidity==='function' && !form.reportValidity()){
           event.preventDefault();
           return;
@@ -1901,113 +1906,10 @@
     return o;
   }
   function allocationOptimizeRemaining(personStateInput,slotStateInput){
-    const originalPeople=JSON.parse(JSON.stringify(personStateInput||{}));
-    const originalSlots=JSON.parse(JSON.stringify(slotStateInput||{}));
-    const peopleIds=Object.keys(originalPeople).filter(function(pid){return (originalPeople[pid].remaining_hours||0)>0;}).sort(function(a,b){return String(a).localeCompare(String(b),'el',{numeric:true});});
-    const routesBySlot={};
-    Object.keys(allocationSlotsData||{}).forEach(function(sid){
-      const state=originalSlots[sid]||{}, need=Math.max(0,state.remaining_hours||0);
-      if(need<1||state.atomic_blocked) return;
-      const routes={};
-      peopleIds.forEach(function(pid){
-        const match=allocationBestAssignment(allocationPeopleData[pid],allocationSlotsData[sid]);
-        if(!match) return;
-        const ps=originalPeople[pid];
-        if((ps.remaining_hours||0)<need) return;
-        if(match.priority==='B'&&(ps.b_remaining_hours||0)<need) return;
-        routes[pid]=match;
-      });
-      if(Object.keys(routes).length) routesBySlot[sid]=routes;
-    });
-
-    // Fast atomic seed. It is only the initial lower bound; the exact search
-    // below is what fixes combinations such as 6 versus 3+2+2.
-    const seedPeople=JSON.parse(JSON.stringify(originalPeople)), seedSlots=JSON.parse(JSON.stringify(originalSlots)), seed=[];
-    Object.keys(routesBySlot).sort(function(a,b){
-      const ca=Object.keys(routesBySlot[a]).length,cb=Object.keys(routesBySlot[b]).length;if(ca!==cb)return ca-cb;
-      const ha=seedSlots[a].remaining_hours||0,hb=seedSlots[b].remaining_hours||0;if(ha!==hb)return hb-ha;
-      return String(a).localeCompare(String(b),'el',{numeric:true});
-    }).forEach(function(sid){
-      const need=seedSlots[sid].remaining_hours||0;
-      const candidates=Object.keys(routesBySlot[sid]).filter(function(pid){
-        const m=routesBySlot[sid][pid],ps=seedPeople[pid];
-        return ps&&(ps.remaining_hours||0)>=need&&(m.priority!=='B'||(ps.b_remaining_hours||0)>=need);
-      }).sort(function(a,b){
-        const ma=routesBySlot[sid][a],mb=routesBySlot[sid][b];
-        const r=allocationPriorityRank(ma.priority)-allocationPriorityRank(mb.priority);if(r)return r;
-        if(ma.specialty_source!==mb.specialty_source)return ma.specialty_source==='primary'?-1:1;
-        const la=(seedPeople[a].remaining_hours||0)-need,lb=(seedPeople[b].remaining_hours||0)-need;if(la!==lb)return la-lb;
-        return String(a).localeCompare(String(b),'el',{numeric:true});
-      });
-      if(!candidates.length)return;
-      const pid=candidates[0],m=routesBySlot[sid][pid],slot=allocationSlotsData[sid];
-      seed.push({person_id:pid,slot_id:sid,slot_label:slot.slot_label||slot.label||sid,subject:slot.subject||'',hours:need,priority:m.priority,used_specialty_code:m.used_specialty_code,specialty_source:m.specialty_source,source:'automatic_live_seed'});
-      seedPeople[pid].remaining_hours-=need;
-      if(m.priority==='B'){seedPeople[pid].b_assignment_hours=(seedPeople[pid].b_assignment_hours||0)+need;seedPeople[pid].b_remaining_hours=Math.max(0,10-seedPeople[pid].b_assignment_hours);}
-      seedSlots[sid].remaining_hours=0;
-    });
-
-    const groupMap=new Map();
-    Object.keys(routesBySlot).forEach(function(sid){
-      const need=originalSlots[sid].remaining_hours||0,routes=routesBySlot[sid];
-      const sig=Object.keys(routes).sort().map(function(pid){const m=routes[pid];return pid+'='+m.priority+'/'+m.specialty_source+'/'+m.used_specialty_code;}).join(';');
-      const key=need+'|'+sig;
-      if(!groupMap.has(key))groupMap.set(key,{need:need,routes:routes,slot_ids:[]});
-      groupMap.get(key).slot_ids.push(sid);
-    });
-    const groups=Array.from(groupMap.values()).sort(function(a,b){const ca=Object.keys(a.routes).length,cb=Object.keys(b.routes).length;if(ca!==cb)return ca-cb;if(a.need!==b.need)return b.need-a.need;return String(a.slot_ids[0]).localeCompare(String(b.slot_ids[0]),'el',{numeric:true});});
-    const personToGroups={};
-    groups.forEach(function(g,gi){Object.keys(g.routes).forEach(function(pid){if(!personToGroups[pid])personToGroups[pid]=[];personToGroups[pid].push(gi);});});
-    const visited=new Set(),components=[];
-    groups.forEach(function(g,start){
-      if(visited.has(start))return;
-      const queue=[start],gis=[],pids=new Set();visited.add(start);
-      while(queue.length){const gi=queue.shift();gis.push(gi);Object.keys(groups[gi].routes).forEach(function(pid){pids.add(pid);(personToGroups[pid]||[]).forEach(function(ngi){if(!visited.has(ngi)){visited.add(ngi);queue.push(ngi);}});});}
-      components.push({group_indexes:gis,person_ids:Array.from(pids)});
-    });
-    const seedBySlot={};seed.forEach(function(row){seedBySlot[row.slot_id]=row;});
-    let finalRows=[],allCertified=true,totalNodes=0;
-
-    components.forEach(function(component){
-      const cg=component.group_indexes.map(function(i){return groups[i];}), cpids=component.person_ids.slice().sort();
-      if(cpids.length===1){
-        const pid=cpids[0],cap=originalPeople[pid].remaining_hours||0,bcap=originalPeople[pid].b_remaining_hours||0,items=[];
-        cg.forEach(function(g){const m=g.routes[pid];if(!m)return;g.slot_ids.forEach(function(sid){items.push({sid:sid,need:g.need,m:m});});});
-        let dp=new Map();dp.set('0:0',{objective:{covered:0,top:0,b:0,primary:0},rows:[],used:0,bused:0});
-        items.forEach(function(item){const next=new Map(dp);dp.forEach(function(st){totalNodes++;const nu=st.used+item.need,nb=st.bused+(item.m.priority==='B'?item.need:0);if(nu>cap||nb>bcap)return;const o={...st.objective};o.covered+=item.need;if(item.m.priority==='A'||item.m.priority==='SPECIAL')o.top+=item.need;else if(item.m.priority==='B')o.b+=item.need;if(item.m.specialty_source==='primary')o.primary+=item.need;const slot=allocationSlotsData[item.sid],rows=st.rows.concat([{person_id:pid,slot_id:item.sid,slot_label:slot.slot_label||slot.label||item.sid,subject:slot.subject||'',hours:item.need,priority:item.m.priority,used_specialty_code:item.m.used_specialty_code,specialty_source:item.m.specialty_source,source:'automatic_live_optimizer_dp'}]);const key=nu+':'+nb,prev=next.get(key);if(!prev||allocationObjectiveCompare(o,prev.objective)>0)next.set(key,{objective:o,rows:rows,used:nu,bused:nb});});dp=next;});
-        let best={objective:{covered:0,top:0,b:0,primary:0},rows:[]};dp.forEach(function(st){if(allocationObjectiveCompare(st.objective,best.objective)>0)best=st;});finalRows=finalRows.concat(best.rows);return;
-      }
-      const counts=cg.map(function(g){return g.slot_ids.length;}),originalCounts=counts.slice();
-      const rem={},brem={};cpids.forEach(function(pid){rem[pid]=originalPeople[pid].remaining_hours||0;brem[pid]=originalPeople[pid].b_remaining_hours||0;});
-      const equiv={};cpids.forEach(function(pid){equiv[pid]=cg.map(function(g){const m=g.routes[pid];return m?(m.priority+'/'+m.specialty_source+'/'+m.used_specialty_code):'-';}).join(';');});
-      let bestRows=[];cg.forEach(function(g){g.slot_ids.forEach(function(sid){if(seedBySlot[sid])bestRows.push(seedBySlot[sid]);});});
-      let bestObj=allocationObjectiveForRows(bestRows),currentRows=[],cur={covered:0,top:0,b:0,primary:0},nodes=0,aborted=false;
-      const memo=new Map(),nodeLimit=30000;
-      function search(){
-        if(aborted)return;if(++nodes>nodeLimit){aborted=true;return;}
-        let remainingHours=0,done=true;cg.forEach(function(g,gi){if(counts[gi]>0){done=false;remainingHours+=counts[gi]*g.need;}});
-        if(done){if(allocationObjectiveCompare(cur,bestObj)>0){bestObj={...cur};bestRows=currentRows.map(function(r){return {...r};});}return;}
-        const personHours=cpids.reduce(function(t,pid){return t+(rem[pid]||0);},0),upper=cur.covered+Math.min(remainingHours,personHours);
-        if(upper<bestObj.covered)return;if(upper===bestObj.covered&&cur.top+Math.min(remainingHours,personHours)<bestObj.top)return;
-        const equivStates={};cpids.forEach(function(pid){const sig=equiv[pid]||pid;if(!equivStates[sig])equivStates[sig]=[];equivStates[sig].push(rem[pid]+':'+brem[pid]);});
-        const key=counts.join(',')+'|'+Object.keys(equivStates).sort().map(function(sig){return sig+'='+equivStates[sig].sort().join(',');}).join('|');
-        const seen=memo.get(key);if(seen&&(seen.top>cur.top||(seen.top===cur.top&&seen.primary>=cur.primary)))return;memo.set(key,{top:cur.top,primary:cur.primary});
-        let chosen=-1,cands=[],few=1e9;
-        cg.forEach(function(g,gi){if(counts[gi]<1)return;const local=Object.keys(g.routes).filter(function(pid){const m=g.routes[pid];return rem[pid]>=g.need&&(m.priority!=='B'||brem[pid]>=g.need);}).map(function(pid){return {pid:pid,m:g.routes[pid],left:rem[pid]-g.need};});if(chosen<0||local.length<few||(local.length===few&&g.need>cg[chosen].need)){chosen=gi;cands=local;few=local.length;}});
-        if(chosen<0)return;
-        if(!cands.length){const old=counts[chosen];counts[chosen]=0;search();counts[chosen]=old;return;}
-        cands.sort(function(a,b){const r=allocationPriorityRank(a.m.priority)-allocationPriorityRank(b.m.priority);if(r)return r;if(a.m.specialty_source!==b.m.specialty_source)return a.m.specialty_source==='primary'?-1:1;if(a.left!==b.left)return a.left-b.left;return String(a.pid).localeCompare(String(b.pid),'el',{numeric:true});});
-        const g=cg[chosen],idx=originalCounts[chosen]-counts[chosen],sid=g.slot_ids[idx],slot=allocationSlotsData[sid];counts[chosen]--;
-        const sym=new Set();
-        cands.forEach(function(c){const pid=c.pid,m=c.m,sk=equiv[pid]+'|'+rem[pid]+'|'+brem[pid];if(sym.has(sk))return;sym.add(sk);rem[pid]-=g.need;if(m.priority==='B')brem[pid]-=g.need;currentRows.push({person_id:pid,slot_id:sid,slot_label:slot.slot_label||slot.label||sid,subject:slot.subject||'',hours:g.need,priority:m.priority,used_specialty_code:m.used_specialty_code,specialty_source:m.specialty_source,source:'automatic_live_optimizer'});cur.covered+=g.need;if(m.priority==='A'||m.priority==='SPECIAL')cur.top+=g.need;else if(m.priority==='B')cur.b+=g.need;if(m.specialty_source==='primary')cur.primary+=g.need;search();if(m.specialty_source==='primary')cur.primary-=g.need;if(m.priority==='A'||m.priority==='SPECIAL')cur.top-=g.need;else if(m.priority==='B')cur.b-=g.need;cur.covered-=g.need;currentRows.pop();if(m.priority==='B')brem[pid]+=g.need;rem[pid]+=g.need;});
-        search();counts[chosen]++;
-      }
-      search();totalNodes+=nodes;if(aborted)allCertified=false;finalRows=finalRows.concat(bestRows);
-    });
-
-    const finalPeople=JSON.parse(JSON.stringify(originalPeople)),finalSlots=JSON.parse(JSON.stringify(originalSlots));
-    finalRows.forEach(function(row){const ps=finalPeople[row.person_id],ss=finalSlots[row.slot_id],h=row.hours||0;if(!ps||!ss)return;ps.remaining_hours=Math.max(0,(ps.remaining_hours||0)-h);if(row.priority==='B'){ps.b_assignment_hours=(ps.b_assignment_hours||0)+h;ps.b_remaining_hours=Math.max(0,10-ps.b_assignment_hours);}ss.remaining_hours=0;});
-    return {allocations:finalRows,people:finalPeople,slots:finalSlots,summary:{auto_covered_hours:finalRows.reduce(function(t,r){return t+(r.hours||0);},0),maximum_coverage_certified:allCertified,optimizer_search_nodes:totalNodes}};
+    if(!window.PersonnelWorkloadCalculations||typeof window.PersonnelWorkloadCalculations.optimizeRemaining!=='function'){
+      return {allocations:[],people:personStateInput||{},slots:slotStateInput||{},summary:{auto_covered_hours:0,covered_hours:0,maximum_coverage_certified:false,optimizer_search_nodes:0,optimizer_unavailable:true}};
+    }
+    return window.PersonnelWorkloadCalculations.optimizeRemaining(allocationSlotsData,allocationPeopleData,personStateInput,slotStateInput);
   }
   function specialtyBuildReport(state){
     const personState={}, slotState={};
@@ -2304,7 +2206,7 @@
     if(allocationSummaryEls.over) allocationSummaryEls.over.textContent=String(state.overSlots);
     if(allocationSummaryEls.errors) allocationSummaryEls.errors.textContent=String(errorRows);
     const allocationLiveStatus=document.getElementById('allocationLiveStatus');
-    if(allocationLiveStatus) allocationLiveStatus.textContent='Κατανομή: '+state.basicAssigned+' ώρες κατανεμημένες, '+state.unassigned+' ακάλυπτες, '+errorRows+' γραμμές με σφάλμα.';
+    if(allocationLiveStatus){ allocationLiveStatus.textContent='Κατανομή: '+state.basicAssigned+' ώρες κατανεμημένες, '+state.unassigned+' ακάλυπτες, '+errorRows+' γραμμές με σφάλμα.'; allocationLiveStatus.classList.remove('is-error'); }
     const hasAllocationSlots=Object.keys(allocationSlotsData||{}).some(function(sid){return Math.max(0,(allocationSlotsData[sid]&&allocationSlotsData[sid].capacity_hours)||0)>0;});
     const hasAllocationContext=hasAllocationSlots && (staffingContextInitialAllocation || allocationRows().length>0);
     if(staffingContextAssigned){
@@ -2385,6 +2287,87 @@
       if(!allocationList.querySelector('[data-allocation-row]')){const empty=document.createElement('div');empty.id='emptyAllocationState';empty.className='allocation-empty';empty.textContent='Δεν έχει γίνει ακόμη κατανομή. Πάτησε «+ Προσθήκη μαθήματος» για να ξεκινήσεις.';allocationList.appendChild(empty);}
       updateAllocationSummary();
     });
+  }
+  function allocationAppendOptimizerRow(item){
+    if(!allocationTemplate||!allocationList||!item) return null;
+    const empty=document.getElementById('emptyAllocationState'); if(empty) empty.remove();
+    const fragment=allocationTemplate.content.cloneNode(true), row=fragment.querySelector('[data-allocation-row]');
+    if(!row) return null;
+    allocationList.appendChild(fragment); bindAllocationRow(row);
+    const slotEl=row.getElementsByClassName('allocation-slot')[0]||null, personEl=row.getElementsByClassName('allocation-person')[0]||null, hoursEl=row.getElementsByClassName('allocation-hours')[0]||null;
+    const slot=item.slot_id?allocationSlotsData[item.slot_id]||null:null, person=item.person_id?allocationPeopleData[item.person_id]||null:null;
+    if(slotEl){
+      slotEl.innerHTML='';
+      const option=document.createElement('option'); option.value=item.slot_id||''; option.textContent=slot?(slot.label||slot.slot_label||item.slot_id):item.slot_id||''; option.selected=true; slotEl.appendChild(option);
+      slotEl.dataset.optionsLoaded='0';
+    }
+    if(personEl){
+      personEl.innerHTML='';
+      const option=document.createElement('option'); option.value=item.person_id||''; option.textContent=(person?(person.label||item.person_id):item.person_id||'')+(item.priority?' · '+allocationAssignmentLabel(item):''); option.selected=true; personEl.appendChild(option);
+      personEl.disabled=false; personEl.dataset.optionsLoaded='0';
+    }
+    if(hoursEl){ hoursEl.value=String(item.hours||0); if(slot) hoursEl.max=String(slot.capacity_hours||item.hours||0); }
+    return row;
+  }
+  function allocationClientMessage(text,isError){
+    const live=document.getElementById('allocationLiveStatus');
+    if(live){ live.textContent=text; live.classList.toggle('is-error',!!isError); }
+  }
+  function handleStaffingClientAction(action,button){
+    if(action!=='allocation'&&action!=='allocation_auto') return false;
+    const W=window.PersonnelWorkloadCalculations;
+    if(!W||typeof W.validateRosterSlotAllocations!=='function') return false;
+    const state=allocationCollectState();
+    const invalid=state.rowState.filter(function(st){ return (st.pid||st.sid||st.hours)&&!!st.finalError; });
+    if(action==='allocation'){
+      updateAllocationSummary();
+      if(invalid.length){
+        allocationClientMessage('Η κατανομή έχει '+invalid.length+' γραμμή/ές με σφάλμα. Διόρθωσέ τες πριν συνεχίσεις.',true);
+        const focus=invalid[0].row&&((invalid[0].row.getElementsByClassName('allocation-slot')[0])||(invalid[0].row.getElementsByClassName('allocation-person')[0])||(invalid[0].row.getElementsByClassName('allocation-hours')[0])); if(focus) focus.focus();
+      }else allocationClientMessage('Ο έλεγχος κατανομής ολοκληρώθηκε στον browser: '+state.basicAssigned+' ώρες κατανεμημένες, '+state.unassigned+' ακάλυπτες.',false);
+      return true;
+    }
+    if(typeof W.optimizeRemaining!=='function') return false;
+    if(invalid.length){
+      allocationClientMessage('Διόρθωσε πρώτα τις υπάρχουσες γραμμές κατανομής πριν ζητήσεις αυτόματη πρόταση.',true);
+      const focus=invalid[0].row&&((invalid[0].row.getElementsByClassName('allocation-slot')[0])||(invalid[0].row.getElementsByClassName('allocation-person')[0])||(invalid[0].row.getElementsByClassName('allocation-hours')[0])); if(focus) focus.focus();
+      return true;
+    }
+    const personState={}, slotState={};
+    Object.keys(allocationPeopleData||{}).forEach(function(pid){
+      const person=allocationPeopleData[pid]||{}, assigned=state.personAssigned[pid]||0, bHours=(state.personPriority[pid]&&state.personPriority[pid].B)||0;
+      personState[pid]={
+        remaining_hours:Math.max(0,(person.available_here_hours||0)-assigned),
+        b_assignment_hours:bHours,
+        b_remaining_hours:Math.max(0,10-bHours),
+        primary_code:person.specialty_code||'',
+        secondary_code:person.secondary_specialty_code||''
+      };
+    });
+    Object.keys(allocationSlotsData||{}).forEach(function(sid){
+      const slot=allocationSlotsData[sid]||{}, assigned=state.slotAssigned[sid]||0, remaining=Math.max(0,(slot.capacity_hours||0)-assigned);
+      slotState[sid]={remaining_hours:remaining,atomic_blocked:assigned>0&&remaining>0};
+    });
+    if(button) button.disabled=true;
+    let optimized;
+    try{ optimized=W.optimizeRemaining(allocationSlotsData,allocationPeopleData,personState,slotState); }
+    catch(error){
+      if(button) button.disabled=false;
+      console.error('Αποτυχία client-side optimizer.',error);
+      return false; // progressive server fallback if the browser optimizer itself fails
+    }
+    if(button) button.disabled=false;
+    const proposed=optimized&&Array.isArray(optimized.allocations)?optimized.allocations:[];
+    proposed.forEach(allocationAppendOptimizerRow);
+    updateAllocationSummary();
+    const covered=optimized&&optimized.summary?(optimized.summary.auto_covered_hours||optimized.summary.covered_hours||0):0;
+    const certified=!!(optimized&&optimized.summary&&optimized.summary.maximum_coverage_certified);
+    if(proposed.length){
+      allocationClientMessage('Η αυτόματη πρόταση προστέθηκε στον browser: '+covered+' ώρες σε '+proposed.length+' αδιαίρετα μαθήματα/τμήματα.'+(certified?' Η μέγιστη κάλυψη πιστοποιήθηκε από τον optimizer.':' Η πρόταση είναι έγκυρη αλλά η μέγιστη κάλυψη δεν πιστοποιήθηκε εντός του ορίου αναζήτησης.'),!certified);
+    }else{
+      allocationClientMessage('Δεν εντοπίστηκαν επιπλέον ώρες που να μπορούν να καλυφθούν αυτόματα από το διαθέσιμο προσωπικό.',false);
+    }
+    return true;
   }
   if(allocationList) allocationRows().forEach(bindAllocationRow);
   if(addAllocation&&allocationTemplate&&allocationList){

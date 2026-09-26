@@ -3,6 +3,7 @@ from pathlib import Path
 import json, subprocess, re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=(ROOT/'ypologismos-didaktikon-anagkon.php').read_text(encoding='utf-8')+'\n'+(ROOT/'includes'/'staffing-simulator-ui.js').read_text(encoding='utf-8')
+OPT=(ROOT/'includes'/'personnel-workload-calculations.js').read_text(encoding='utf-8')
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
 def php_json(code):
@@ -58,7 +59,7 @@ check('Tab 6 fixes six-hour audit counterexample', x['tab6_6']['summary']['auto_
 
 check('live Tab 6 no longer uses partial Math.min slot filling', 'Math.min(remaining,available)' not in PAGE)
 check('live Tab 6 marks partially locked slots atomic-blocked', 'atomic_blocked:assigned>0&&remaining>0' in PAGE)
-check('live Tab 6 includes exact optimizer path', 'automatic_live_optimizer_dp' in PAGE and 'automatic_live_optimizer' in PAGE)
+check('live Tab 6 delegates exact optimizer to shared module', 'PersonnelWorkloadCalculations.optimizeRemaining' in PAGE and 'automatic_optimizer_dp' in OPT and 'automatic_optimizer' in OPT)
 
 m=re.search(r"function schoolGeneralSectionCount\(\)\{.*?\n  \}",PAGE,re.S)
 check('director section-count helper found', m is not None)

@@ -1,9 +1,9 @@
 /*
  * Browser-side pure calculations for includes/personnel-workload.php.
  *
- * Phase 1 intentionally covers person normalization / compulsory-hours rules
- * only. Allocation slots, roster planning and the optimizer remain server-side
- * reference implementations until their own parity contracts are complete.
+ * Phase 1 covers person normalization / compulsory-hours rules. Phase 2 adds
+ * slot validation and assignment-route parity. Phase 3A extracts the browser
+ * atomic optimizer into this pure module while PHP remains the reference.
  */
 (function (global) {
   'use strict';
@@ -504,6 +504,357 @@
     };
   }
 
+
+  function objectiveCompare(a, b) {
+    a = a || {}; b = b || {};
+    var keys = ['covered', 'top', 'b', 'primary'];
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+      var av = Math.floor(Number(a[key]) || 0);
+      var bv = Math.floor(Number(b[key]) || 0);
+      if (av === bv) continue;
+      return av > bv ? 1 : -1;
+    }
+    return 0;
+  }
+
+  function objectiveForRows(rows) {
+    var o = { covered: 0, top: 0, b: 0, primary: 0 };
+    (Array.isArray(rows) ? rows : []).forEach(function (row) {
+      var h = nonNegativeInt(row && row.hours);
+      var p = row && row.priority ? String(row.priority) : '';
+      o.covered += h;
+      if (p === 'A' || p === 'SPECIAL') o.top += h;
+      else if (p === 'B') o.b += h;
+      if (row && row.specialty_source === 'primary') o.primary += h;
+    });
+    return o;
+  }
+
+  function cloneJson(value) {
+    return JSON.parse(JSON.stringify(value == null ? {} : value));
+  }
+
+  function naturalCompare(a, b) {
+    return String(a == null ? '' : a).localeCompare(String(b == null ? '' : b), 'el', { numeric: true });
+  }
+
+  /*
+   * Pure browser optimizer corresponding to teachingAllocationEngineSolveRemaining().
+   * It operates only on already-built slots/person state and does not read DOM/global
+   * staffing state. This is intentionally extracted before the PHP reference is removed.
+   */
+  function optimizeRemaining(slotsInput, peopleInput, personStateInput, slotStateInput) {
+    var slots = slotsInput && typeof slotsInput === 'object' ? slotsInput : {};
+    var peopleIndex = keyedPeople(peopleInput);
+    var originalPeople = cloneJson(personStateInput || {});
+    var originalSlots = cloneJson(slotStateInput || {});
+    var peopleIds = Object.keys(originalPeople).filter(function (pid) {
+      return peopleIndex[pid] && nonNegativeInt(originalPeople[pid].remaining_hours) > 0;
+    }).sort(naturalCompare);
+
+    var routesBySlot = {};
+    var routeCount = 0;
+    var openSlotCount = 0;
+    Object.keys(slots).forEach(function (sid) {
+      var state = originalSlots[sid] || {};
+      var need = nonNegativeInt(state.remaining_hours);
+      if (need < 1 || state.atomic_blocked) return;
+      openSlotCount++;
+      var routes = {};
+      peopleIds.forEach(function (pid) {
+        var match = bestAssignmentForSlot(slots[sid], peopleIndex[pid]);
+        if (!match) return;
+        var ps = originalPeople[pid] || {};
+        if (nonNegativeInt(ps.remaining_hours) < need) return;
+        if (match.priority === 'B' && nonNegativeInt(ps.b_remaining_hours) < need) return;
+        routes[pid] = match;
+        routeCount++;
+      });
+      if (Object.keys(routes).length) routesBySlot[sid] = routes;
+    });
+
+    // Fast atomic lower bound. Exact search below may improve it.
+    var seedPeople = cloneJson(originalPeople);
+    var seedSlots = cloneJson(originalSlots);
+    var seed = [];
+    Object.keys(routesBySlot).sort(function (a, b) {
+      var ca = Object.keys(routesBySlot[a]).length, cb = Object.keys(routesBySlot[b]).length;
+      if (ca !== cb) return ca - cb;
+      var ha = nonNegativeInt(seedSlots[a] && seedSlots[a].remaining_hours);
+      var hb = nonNegativeInt(seedSlots[b] && seedSlots[b].remaining_hours);
+      if (ha !== hb) return hb - ha;
+      return naturalCompare(a, b);
+    }).forEach(function (sid) {
+      var need = nonNegativeInt(seedSlots[sid] && seedSlots[sid].remaining_hours);
+      var candidates = Object.keys(routesBySlot[sid]).filter(function (pid) {
+        var m = routesBySlot[sid][pid], ps = seedPeople[pid];
+        return ps && nonNegativeInt(ps.remaining_hours) >= need && (m.priority !== 'B' || nonNegativeInt(ps.b_remaining_hours) >= need);
+      }).sort(function (a, b) {
+        var ma = routesBySlot[sid][a], mb = routesBySlot[sid][b];
+        var r = priorityRank(ma.priority) - priorityRank(mb.priority); if (r) return r;
+        if (ma.specialty_source !== mb.specialty_source) return ma.specialty_source === 'primary' ? -1 : 1;
+        var la = nonNegativeInt(seedPeople[a].remaining_hours) - need;
+        var lb = nonNegativeInt(seedPeople[b].remaining_hours) - need;
+        if (la !== lb) return la - lb;
+        return naturalCompare(a, b);
+      });
+      if (!candidates.length) return;
+      var pid = candidates[0], m = routesBySlot[sid][pid], slot = slots[sid] || {};
+      seed.push({
+        person_id: pid, slot_id: sid, slot_label: slot.slot_label || slot.label || sid, subject: slot.subject || '',
+        hours: need, priority: m.priority, used_specialty_code: m.used_specialty_code,
+        specialty_source: m.specialty_source, source: 'automatic_proposal'
+      });
+      seedPeople[pid].remaining_hours = nonNegativeInt(seedPeople[pid].remaining_hours) - need;
+      if (m.priority === 'B') {
+        seedPeople[pid].b_assignment_hours = nonNegativeInt(seedPeople[pid].b_assignment_hours) + need;
+        seedPeople[pid].b_remaining_hours = Math.max(0, 10 - seedPeople[pid].b_assignment_hours);
+      }
+      seedSlots[sid].remaining_hours = 0;
+    });
+
+    var groupMap = new Map();
+    Object.keys(routesBySlot).forEach(function (sid) {
+      var need = nonNegativeInt(originalSlots[sid] && originalSlots[sid].remaining_hours);
+      var routes = routesBySlot[sid];
+      var sig = Object.keys(routes).sort(naturalCompare).map(function (pid) {
+        var m = routes[pid];
+        return pid + '=' + m.priority + '/' + m.specialty_source + '/' + m.used_specialty_code;
+      }).join(';');
+      var key = need + '|' + sig;
+      if (!groupMap.has(key)) groupMap.set(key, { need: need, routes: routes, slot_ids: [] });
+      groupMap.get(key).slot_ids.push(sid);
+    });
+    var groups = Array.from(groupMap.values()).sort(function (a, b) {
+      var ca = Object.keys(a.routes).length, cb = Object.keys(b.routes).length;
+      if (ca !== cb) return ca - cb;
+      if (a.need !== b.need) return b.need - a.need;
+      return naturalCompare(a.slot_ids[0], b.slot_ids[0]);
+    });
+
+    var personToGroups = {};
+    groups.forEach(function (g, gi) {
+      Object.keys(g.routes).forEach(function (pid) {
+        if (!personToGroups[pid]) personToGroups[pid] = [];
+        personToGroups[pid].push(gi);
+      });
+    });
+    var visited = new Set(), components = [];
+    groups.forEach(function (_g, start) {
+      if (visited.has(start)) return;
+      var queue = [start], gis = [], pids = new Set();
+      visited.add(start);
+      while (queue.length) {
+        var gi = queue.shift(); gis.push(gi);
+        Object.keys(groups[gi].routes).forEach(function (pid) {
+          pids.add(pid);
+          (personToGroups[pid] || []).forEach(function (ngi) {
+            if (!visited.has(ngi)) { visited.add(ngi); queue.push(ngi); }
+          });
+        });
+      }
+      components.push({ group_indexes: gis, person_ids: Array.from(pids) });
+    });
+
+    var seedBySlot = {};
+    seed.forEach(function (row) { seedBySlot[row.slot_id] = row; });
+    var finalRows = [], allCertified = true, totalNodes = 0, fallbackComponents = 0;
+
+    components.forEach(function (component) {
+      var cg = component.group_indexes.map(function (i) { return groups[i]; });
+      var cpids = component.person_ids.slice().sort(naturalCompare);
+      if (cpids.length === 1) {
+        var pid = cpids[0];
+        var cap = nonNegativeInt(originalPeople[pid] && originalPeople[pid].remaining_hours);
+        var bcap = nonNegativeInt(originalPeople[pid] && originalPeople[pid].b_remaining_hours);
+        var items = [];
+        cg.forEach(function (g) {
+          var m = g.routes[pid]; if (!m) return;
+          g.slot_ids.forEach(function (sid) { items.push({ sid: sid, need: g.need, m: m }); });
+        });
+        var dp = new Map();
+        dp.set('0:0', { objective: { covered: 0, top: 0, b: 0, primary: 0 }, rows: [], used: 0, bused: 0 });
+        items.forEach(function (item) {
+          var next = new Map(dp);
+          dp.forEach(function (st) {
+            totalNodes++;
+            var nu = st.used + item.need;
+            var nb = st.bused + (item.m.priority === 'B' ? item.need : 0);
+            if (nu > cap || nb > bcap) return;
+            var o = Object.assign({}, st.objective);
+            o.covered += item.need;
+            if (item.m.priority === 'A' || item.m.priority === 'SPECIAL') o.top += item.need;
+            else if (item.m.priority === 'B') o.b += item.need;
+            if (item.m.specialty_source === 'primary') o.primary += item.need;
+            var slot = slots[item.sid] || {};
+            var rows = st.rows.concat([{
+              person_id: pid, slot_id: item.sid, slot_label: slot.slot_label || slot.label || item.sid,
+              subject: slot.subject || '', hours: item.need, priority: item.m.priority,
+              used_specialty_code: item.m.used_specialty_code, specialty_source: item.m.specialty_source,
+              source: 'automatic_optimizer_dp'
+            }]);
+            var key = nu + ':' + nb, prev = next.get(key);
+            if (!prev || objectiveCompare(o, prev.objective) > 0) next.set(key, { objective: o, rows: rows, used: nu, bused: nb });
+          });
+          dp = next;
+        });
+        var best = { objective: { covered: 0, top: 0, b: 0, primary: 0 }, rows: [] };
+        dp.forEach(function (st) { if (objectiveCompare(st.objective, best.objective) > 0) best = st; });
+        finalRows = finalRows.concat(best.rows);
+        return;
+      }
+
+      var counts = cg.map(function (g) { return g.slot_ids.length; });
+      var originalCounts = counts.slice();
+      var rem = {}, brem = {};
+      cpids.forEach(function (pid2) {
+        rem[pid2] = nonNegativeInt(originalPeople[pid2] && originalPeople[pid2].remaining_hours);
+        brem[pid2] = nonNegativeInt(originalPeople[pid2] && originalPeople[pid2].b_remaining_hours);
+      });
+      var equiv = {};
+      cpids.forEach(function (pid2) {
+        equiv[pid2] = cg.map(function (g) {
+          var m = g.routes[pid2];
+          return m ? (m.priority + '/' + m.specialty_source + '/' + m.used_specialty_code) : '-';
+        }).join(';');
+      });
+      var bestRows = [];
+      cg.forEach(function (g) { g.slot_ids.forEach(function (sid) { if (seedBySlot[sid]) bestRows.push(seedBySlot[sid]); }); });
+      var bestObj = objectiveForRows(bestRows), currentRows = [], cur = { covered: 0, top: 0, b: 0, primary: 0 };
+      var nodes = 0, aborted = false, memo = new Map(), nodeLimit = 30000;
+
+      function search() {
+        if (aborted) return;
+        if (++nodes > nodeLimit) { aborted = true; return; }
+        var remainingHours = 0, done = true;
+        cg.forEach(function (g, gi) { if (counts[gi] > 0) { done = false; remainingHours += counts[gi] * g.need; } });
+        if (done) {
+          if (objectiveCompare(cur, bestObj) > 0) {
+            bestObj = Object.assign({}, cur);
+            bestRows = currentRows.map(function (r) { return Object.assign({}, r); });
+          }
+          return;
+        }
+        var personHours = cpids.reduce(function (t, pid2) { return t + (rem[pid2] || 0); }, 0);
+        var upper = cur.covered + Math.min(remainingHours, personHours);
+        if (upper < bestObj.covered) return;
+        if (upper === bestObj.covered && cur.top + Math.min(remainingHours, personHours) < bestObj.top) return;
+
+        var equivStates = {};
+        cpids.forEach(function (pid2) {
+          var sig = equiv[pid2] || pid2;
+          if (!equivStates[sig]) equivStates[sig] = [];
+          equivStates[sig].push(rem[pid2] + ':' + brem[pid2]);
+        });
+        var memoKey = counts.join(',') + '|' + Object.keys(equivStates).sort(naturalCompare).map(function (sig) {
+          return sig + '=' + equivStates[sig].sort(naturalCompare).join(',');
+        }).join('|');
+        var seen = memo.get(memoKey);
+        if (seen && (seen.top > cur.top || (seen.top === cur.top && seen.primary >= cur.primary))) return;
+        memo.set(memoKey, { top: cur.top, primary: cur.primary });
+
+        var chosen = -1, cands = [], few = 1e9;
+        cg.forEach(function (g, gi) {
+          if (counts[gi] < 1) return;
+          var local = Object.keys(g.routes).filter(function (pid2) {
+            var m = g.routes[pid2];
+            return rem[pid2] >= g.need && (m.priority !== 'B' || brem[pid2] >= g.need);
+          }).map(function (pid2) { return { pid: pid2, m: g.routes[pid2], left: rem[pid2] - g.need }; });
+          if (chosen < 0 || local.length < few || (local.length === few && g.need > cg[chosen].need)) {
+            chosen = gi; cands = local; few = local.length;
+          }
+        });
+        if (chosen < 0) return;
+        if (!cands.length) {
+          var old = counts[chosen]; counts[chosen] = 0; search(); counts[chosen] = old; return;
+        }
+        cands.sort(function (a, b) {
+          var r = priorityRank(a.m.priority) - priorityRank(b.m.priority); if (r) return r;
+          if (a.m.specialty_source !== b.m.specialty_source) return a.m.specialty_source === 'primary' ? -1 : 1;
+          if (a.left !== b.left) return a.left - b.left;
+          return naturalCompare(a.pid, b.pid);
+        });
+        var g = cg[chosen], idx = originalCounts[chosen] - counts[chosen], sid = g.slot_ids[idx], slot = slots[sid] || {};
+        counts[chosen]--;
+        var sym = new Set();
+        cands.forEach(function (c) {
+          var pid2 = c.pid, m = c.m, sk = equiv[pid2] + '|' + rem[pid2] + '|' + brem[pid2];
+          if (sym.has(sk)) return; sym.add(sk);
+          rem[pid2] -= g.need;
+          if (m.priority === 'B') brem[pid2] -= g.need;
+          currentRows.push({
+            person_id: pid2, slot_id: sid, slot_label: slot.slot_label || slot.label || sid,
+            subject: slot.subject || '', hours: g.need, priority: m.priority,
+            used_specialty_code: m.used_specialty_code, specialty_source: m.specialty_source,
+            source: 'automatic_optimizer'
+          });
+          cur.covered += g.need;
+          if (m.priority === 'A' || m.priority === 'SPECIAL') cur.top += g.need;
+          else if (m.priority === 'B') cur.b += g.need;
+          if (m.specialty_source === 'primary') cur.primary += g.need;
+          search();
+          if (m.specialty_source === 'primary') cur.primary -= g.need;
+          if (m.priority === 'A' || m.priority === 'SPECIAL') cur.top -= g.need;
+          else if (m.priority === 'B') cur.b -= g.need;
+          cur.covered -= g.need;
+          currentRows.pop();
+          if (m.priority === 'B') brem[pid2] += g.need;
+          rem[pid2] += g.need;
+        });
+        search();
+        counts[chosen]++;
+      }
+
+      search();
+      totalNodes += nodes;
+      if (aborted) { allCertified = false; fallbackComponents++; }
+      finalRows = finalRows.concat(bestRows);
+    });
+
+    var finalPeople = cloneJson(originalPeople), finalSlots = cloneJson(originalSlots);
+    finalRows.forEach(function (row) {
+      var ps = finalPeople[row.person_id], ss = finalSlots[row.slot_id], h = nonNegativeInt(row.hours);
+      if (!ps || !ss) return;
+      ps.remaining_hours = Math.max(0, nonNegativeInt(ps.remaining_hours) - h);
+      if (row.priority === 'B') {
+        ps.b_assignment_hours = nonNegativeInt(ps.b_assignment_hours) + h;
+        ps.b_remaining_hours = Math.max(0, 10 - ps.b_assignment_hours);
+      }
+      ss.remaining_hours = 0;
+    });
+    finalRows.sort(function (a, b) {
+      var sa = slots[a.slot_id] || {}, sb = slots[b.slot_id] || {};
+      var g = naturalCompare(sa.grade || '', sb.grade || ''); if (g) return g;
+      var s = naturalCompare(sa.subject || '', sb.subject || ''); if (s) return s;
+      return naturalCompare(a.slot_id, b.slot_id);
+    });
+    var covered = finalRows.reduce(function (t, r) { return t + nonNegativeInt(r.hours); }, 0);
+    var remainingSlotHours = 0;
+    Object.keys(finalSlots).forEach(function (sid) {
+      var state = finalSlots[sid] || {};
+      if (state.atomic_blocked) return;
+      remainingSlotHours += nonNegativeInt(state.remaining_hours);
+    });
+    return {
+      allocations: finalRows,
+      people: finalPeople,
+      slots: finalSlots,
+      summary: {
+        covered_hours: covered,
+        auto_covered_hours: covered,
+        remaining_slot_hours: remainingSlotHours,
+        route_count: routeCount,
+        optimization_group_count: openSlotCount,
+        atomic: true,
+        optimizer_component_count: components.length,
+        optimizer_search_nodes: totalNodes,
+        maximum_coverage_certified: allCertified,
+        optimizer_safety_fallback_components: fallbackComponents
+      }
+    };
+  }
+
   global.PersonnelWorkloadCalculations = Object.freeze({
     canonicalSpecialtyCode: canonicalSpecialtyCode,
     nonNegativeInt: nonNegativeInt,
@@ -517,6 +868,9 @@
     priorityForSlotCode: priorityForSlotCode,
     priorityRank: priorityRank,
     bestAssignmentForSlot: bestAssignmentForSlot,
-    validateRosterSlotAllocations: validateRosterSlotAllocations
+    validateRosterSlotAllocations: validateRosterSlotAllocations,
+    objectiveCompare: objectiveCompare,
+    objectiveForRows: objectiveForRows,
+    optimizeRemaining: optimizeRemaining
   });
 })(typeof window !== 'undefined' ? window : globalThis);
