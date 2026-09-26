@@ -3,6 +3,7 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/components/source-card.php';
 /** Common header / navigation for Educational Tools — shared UI. */
 ?>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/specialty-code-normalization.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/education-core.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/education-print.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <header class="edu-tools-global-header" aria-label="Πλοήγηση Εργαλειοθήκης Εκπαιδευτικού">

@@ -37,6 +37,7 @@ check('policy priority ranks document SPECIAL=A',policy.get('priority_ranks')=={
 check('policy B limit is explicit',policy.get('b_limit_hours')==10)
 check('equivalent-optimum semantics are explicit',policy.get('solution_equivalence')=='same_lexicographic_objective_and_invariants' and policy.get('assignment_identity_guaranteed') is False)
 check('client/server safety budgets are explicit',policy.get('global_node_budget')==30000 and policy.get('component_node_limit')==12000 and policy.get('max_component_people')==28)
+check('policy pins specialty normalization schema',policy.get('specialty_code_normalization_schema')=='teacher_specialty_code_normalization_v1')
 
 # Canonical data-drift fixture: Gymnasium Music includes TE16 in A after the 2026 shift.
 php_fixture=r'''
@@ -51,8 +52,8 @@ p=subprocess.run(['php','-r',php_fixture],cwd=ROOT,text=True,capture_output=True
 if p.returncode: print(p.stderr);sys.exit(1)
 fixture=json.loads(p.stdout); slot=fixture['slot']
 check('canonical Gymnasium Music data has TE16 in A tier','ΤΕ16' in slot['eligible_by_priority'].get('A',[]))
-node=r'''const fs=require('fs'),vm=require('vm');global.window=global;vm.runInThisContext(fs.readFileSync(process.argv[1],'utf8'));const x=JSON.parse(fs.readFileSync(0,'utf8'));const W=global.PersonnelWorkloadCalculations;const p={person_id:'te16',specialty_code:'ΤΕ16'};const a=W.bestAssignmentForSlot(x.slot,p,x.policy);const changed=JSON.parse(JSON.stringify(x.slot));changed.eligible_by_priority.A=(changed.eligible_by_priority.A||[]).filter(c=>c!=='ΤΕ16');changed.eligible_by_priority.B=(changed.eligible_by_priority.B||[]).concat(['ΤΕ16']);const b=W.bestAssignmentForSlot(changed,p,x.policy);const custom=Object.assign({},x.policy,{priority_ranks:Object.assign({},x.policy.priority_ranks,{A:2,B:1})});const dual={eligible_by_priority:{A:['ΠΕ01'],B:['ΠΕ02'],C:[],SPECIAL:[]}};const c=W.bestAssignmentForSlot(dual,{specialty_code:'ΠΕ01',secondary_specialty_code:'ΠΕ02'},custom);process.stdout.write(JSON.stringify({a:a,b:b,c:c}));'''
-n=subprocess.run(['node','-e',node,str(MOD)],cwd=ROOT,input=json.dumps(fixture,ensure_ascii=False),text=True,capture_output=True)
+node=r'''const fs=require('fs'),vm=require('vm');global.window=global;vm.runInThisContext(fs.readFileSync(process.argv[1],'utf8'));vm.runInThisContext(fs.readFileSync(process.argv[2],'utf8'));const x=JSON.parse(fs.readFileSync(0,'utf8'));const W=global.PersonnelWorkloadCalculations;const p={person_id:'te16',specialty_code:'ΤΕ16'};const a=W.bestAssignmentForSlot(x.slot,p,x.policy);const changed=JSON.parse(JSON.stringify(x.slot));changed.eligible_by_priority.A=(changed.eligible_by_priority.A||[]).filter(c=>c!=='ΤΕ16');changed.eligible_by_priority.B=(changed.eligible_by_priority.B||[]).concat(['ΤΕ16']);const b=W.bestAssignmentForSlot(changed,p,x.policy);const custom=Object.assign({},x.policy,{priority_ranks:Object.assign({},x.policy.priority_ranks,{A:2,B:1})});const dual={eligible_by_priority:{A:['ΠΕ01'],B:['ΠΕ02'],C:[],SPECIAL:[]}};const c=W.bestAssignmentForSlot(dual,{specialty_code:'ΠΕ01',secondary_specialty_code:'ΠΕ02'},custom);process.stdout.write(JSON.stringify({a:a,b:b,c:c}));'''
+n=subprocess.run(['node','-e',node,str(ROOT/'includes'/'specialty-code-normalization.js'),str(MOD)],cwd=ROOT,input=json.dumps(fixture,ensure_ascii=False),text=True,capture_output=True)
 if n.returncode: print(n.stderr);sys.exit(1)
 out=json.loads(n.stdout)
 check('client reads TE16 A tier from server slot data',out['a'] and out['a']['priority']=='A')

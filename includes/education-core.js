@@ -132,19 +132,21 @@
     return root;
   }
 
+  function specialtyCodeApi() {
+    if (global.EducationSpecialtyCodes && typeof global.EducationSpecialtyCodes.normalize === 'function') {
+      return global.EducationSpecialtyCodes;
+    }
+    if (typeof module !== 'undefined' && module.exports && typeof require === 'function') {
+      try {
+        global.EducationSpecialtyCodes = require('./specialty-code-normalization.js');
+        return global.EducationSpecialtyCodes;
+      } catch (error) {}
+    }
+    throw new Error('EducationSpecialtyCodes is required before EducationCore specialty normalization.');
+  }
+
   function normalizeSpecialtyCode(value) {
-    var code = String(value == null ? '' : value)
-      .trim()
-      .toUpperCase()
-      .replace(/\s+/g, '');
-
-    if (!code) return '';
-
-    // Accept Greek, Latin and mixed-script PE/TE/DE prefixes.
-    code = code.replace(/^(?:PE|PΕ|ΠE|ΠΕ)/, 'ΠΕ');
-    code = code.replace(/^(?:TE|TΕ|ΤE|ΤΕ)/, 'ΤΕ');
-    code = code.replace(/^(?:DE|DΕ|ΔE|ΔΕ)/, 'ΔΕ');
-    return code;
+    return specialtyCodeApi().normalize(value);
   }
 
   function toLatinSpecialtyCode(value) {

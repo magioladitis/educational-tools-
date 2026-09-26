@@ -28,7 +28,8 @@
     time_budget_ms: 1250,
     eligibility_source: 'server_allocation_slots.eligible_by_priority',
     solution_equivalence: 'same_lexicographic_objective_and_invariants',
-    assignment_identity_guaranteed: false
+    assignment_identity_guaranteed: false,
+    specialty_code_normalization_schema: 'teacher_specialty_code_normalization_v1'
   };
 
   function optimizerPolicy(input) {
@@ -52,6 +53,7 @@
       eligibility_source: String(input.eligibility_source || DEFAULT_OPTIMIZER_POLICY.eligibility_source),
       solution_equivalence: String(input.solution_equivalence || DEFAULT_OPTIMIZER_POLICY.solution_equivalence),
       assignment_identity_guaranteed: input.assignment_identity_guaranteed === true,
+      specialty_code_normalization_schema: String(input.specialty_code_normalization_schema || DEFAULT_OPTIMIZER_POLICY.specialty_code_normalization_schema),
       __normalized_optimizer_policy: true
     };
     if (!p.b_limit_hours) p.b_limit_hours = DEFAULT_OPTIMIZER_POLICY.b_limit_hours;
@@ -60,16 +62,21 @@
     return p;
   }
 
-  function canonicalSpecialtyCode(value) {
-    if (global.EducationCore && typeof global.EducationCore.normalizeSpecialtyCode === 'function') {
-      return global.EducationCore.normalizeSpecialtyCode(value);
+  function specialtyCodeApi() {
+    if (global.EducationSpecialtyCodes && typeof global.EducationSpecialtyCodes.normalize === 'function') {
+      return global.EducationSpecialtyCodes;
     }
-    var code = String(value == null ? '' : value).trim().toUpperCase().replace(/\s+/g, '');
-    if (!code) return '';
-    code = code.replace(/^(?:PE|PΕ|ΠE|ΠΕ)/, 'ΠΕ');
-    code = code.replace(/^(?:TE|TΕ|ΤE|ΤΕ)/, 'ΤΕ');
-    code = code.replace(/^(?:DE|DΕ|ΔE|ΔΕ)/, 'ΔΕ');
-    return code;
+    if (typeof module !== 'undefined' && module.exports && typeof require === 'function') {
+      try {
+        global.EducationSpecialtyCodes = require('./specialty-code-normalization.js');
+        return global.EducationSpecialtyCodes;
+      } catch (error) {}
+    }
+    throw new Error('EducationSpecialtyCodes is required by personnel-workload-calculations.js.');
+  }
+
+  function canonicalSpecialtyCode(value) {
+    return specialtyCodeApi().normalize(value);
   }
 
   function nonNegativeInt(value, max) {

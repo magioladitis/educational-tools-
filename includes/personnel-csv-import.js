@@ -7,20 +7,24 @@
   function normalizeHeader(value){
     return stripDiacritics(value).toLowerCase().replace(/[“”"'`´]/g,'').replace(/[^a-z0-9α-ω]+/g,' ').trim().replace(/\s+/g,' ');
   }
-  function normalizeSpecialtyCode(value){
-    var text=stripDiacritics(value).toUpperCase().replace(/PE/g,'ΠΕ').replace(/TE/g,'ΤΕ').replace(/DE/g,'ΔΕ');
-    var m=text.match(/(ΠΕ|ΤΕ|ΔΕ)\s*([0-9]{1,2})(?:\s*[.\-_/]\s*([0-9]{1,2}))?/);
-    if(!m) return '';
-    var main=String(parseInt(m[2],10));
-    if(main.length<2) main='0'+main;
-    var out=m[1]+main;
-    if(m[3]){
-      var sub=String(parseInt(m[3],10));
-      if(sub.length<2) sub='0'+sub;
-      out+='.'+sub;
+  function specialtyCodeApi(){
+    if(root.EducationSpecialtyCodes && typeof root.EducationSpecialtyCodes.normalize==='function') return root.EducationSpecialtyCodes;
+    if(typeof module!=='undefined' && module.exports && typeof require==='function'){
+      try{ root.EducationSpecialtyCodes=require('./specialty-code-normalization.js'); return root.EducationSpecialtyCodes; }catch(error){}
     }
-    return out;
+    throw new Error('EducationSpecialtyCodes is required by personnel-csv-import.js.');
   }
+  // CSV cells may contain labels around the code. Extraction is intentionally
+  // permissive, but the final code is always normalized by the shared canonicalizer.
+  function normalizeSpecialtyCode(value){
+    var api=specialtyCodeApi();
+    if(typeof api.extract==='function') return api.extract(value);
+    return api.normalize(value);
+  }
+  function canonicalSpecialtyCode(value){
+    return specialtyCodeApi().normalize(value);
+  }
+
   function parseDelimited(text, delimiter){
     text=String(text == null ? '' : text).replace(/^\uFEFF/,'');
     var rows=[], row=[], field='', quoted=false;
@@ -232,6 +236,7 @@
     normalizeHeader:normalizeHeader,
     normalizeObligationSource:normalizeObligationSource,
     normalizeSpecialtyCode:normalizeSpecialtyCode,
+    canonicalSpecialtyCode:canonicalSpecialtyCode,
     parseDelimited:parseDelimited,
     detectDelimiter:detectDelimiter,
     parse:parse,

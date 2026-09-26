@@ -21,11 +21,12 @@ check('client auto action appends proposal instead of replacing manual rows', 'p
 append_frag=UI[UI.index('function allocationAppendOptimizerRow'):UI.index('function allocationClientMessage')]
 check('optimizer proposal rows preserve lazy select loading', "dataset.optionsLoaded='0'" in append_frag and 'allocationPopulateAllSlots(row,false)' not in append_frag and 'allocationPopulatePeopleForSlot(row,false)' not in append_frag)
 check('client check action uses live validator without POST', "if(action==='allocation')" in handler and 'updateAllocationSummary();' in handler)
-check('optimizer exception deliberately allows server fallback', "return false; // progressive server fallback" in handler)
+check('optimizer exception deliberately allows server fallback', "return false; // progressive server fallback" in handler and 'staffingSetClientOptimizerCapability(button.form,false)' in handler)
 check('no fetch/XHR introduced for allocation actions', 'fetch(' not in handler and 'XMLHttpRequest' not in handler)
-check('server optimizer remains as progressive fallback/reference', "$staffingAction === 'allocation_auto'" in PAGE and 'teachingAllocationEngineProposal' in PAGE)
-check('JS-capable forms advertise client optimizer capability', "client_optimizer_capable" in UI and "capability.value='1'" in UI)
+check('server optimizer remains only as progressive fallback/reference', "$staffingAction === 'allocation_auto' && !$clientOptimizerCapable" in PAGE and 'teachingAllocationEngineProposal' in PAGE)
+check('JS-capable forms advertise capability only after schema compatibility', "client_optimizer_capable" in UI and 'staffingClientOptimizerCompatibility().ok' in UI and 'staffingSetClientOptimizerCapability(form,true)' in UI)
 check('specialty server report is no-JS/direct fallback only', "$specialtyBalanceServerNeeded = $specialtyBalanceEnabled && $activePanel === 'specialties' && !$clientOptimizerCapable;" in PAGE)
 if FAIL:
     print('\nStaffing client allocation actions: FAIL (%d)'%len(FAIL));sys.exit(1)
-print('\nStaffing client allocation actions: PASS (%d checks)'%(15))
+check('normalization schema mismatch disables client optimizer', 'expectedSchema!==compatibility.actualSchema' in handler or 'expectedSchema!==actualSchema' in UI)
+print('\nStaffing client allocation actions: PASS (%d checks)'%(16))

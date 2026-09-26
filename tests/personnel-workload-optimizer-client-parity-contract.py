@@ -148,8 +148,8 @@ php_code=r'''require "includes/teaching-allocation-engine.php";$sc=json_decode(s
 php=subprocess.run(['php','-d','memory_limit=1024M','-r',php_code],input=payload,text=True,capture_output=True,cwd=ROOT)
 if php.returncode: print(php.stderr);sys.exit(1)
 php_out=json.loads(php.stdout)
-node_script=r'''const fs=require('fs'),vm=require('vm');global.window=global;vm.runInThisContext(fs.readFileSync(process.argv[1],'utf8'));const sc=JSON.parse(fs.readFileSync(0,'utf8')),W=global.PersonnelWorkloadCalculations;const out=sc.map(s=>{const r=W.optimizeRemaining(s.slots,s.people,s.person_state,s.slot_state);return {name:s.name,allocations:r.allocations,summary:r.summary,people:r.people,slots:r.slots};});process.stdout.write(JSON.stringify(out));'''
-node=subprocess.run(['node','-e',node_script,str(MOD)],input=payload,text=True,capture_output=True,cwd=ROOT)
+node_script=r'''const fs=require('fs'),vm=require('vm');global.window=global;vm.runInThisContext(fs.readFileSync(process.argv[1],'utf8'));vm.runInThisContext(fs.readFileSync(process.argv[2],'utf8'));const sc=JSON.parse(fs.readFileSync(0,'utf8')),W=global.PersonnelWorkloadCalculations;const out=sc.map(s=>{const r=W.optimizeRemaining(s.slots,s.people,s.person_state,s.slot_state);return {name:s.name,allocations:r.allocations,summary:r.summary,people:r.people,slots:r.slots};});process.stdout.write(JSON.stringify(out));'''
+node=subprocess.run(['node','-e',node_script,str(ROOT/'includes'/'specialty-code-normalization.js'),str(MOD)],input=payload,text=True,capture_output=True,cwd=ROOT)
 if node.returncode: print(node.stderr);sys.exit(1)
 js_out=json.loads(node.stdout)
 check('PHP and JS returned same scenario count',len(js_out)==len(php_out)==len(scenarios))

@@ -146,17 +146,39 @@ function teacherSpecialtyDisplay($code)
     return $label !== '' ? $code . ' — ' . $label : $code;
 }
 
+function teacherSpecialtyNormalizationSchema()
+{
+    return 'teacher_specialty_code_normalization_v1';
+}
+
 function teacherSpecialtyCanonicalCode($code)
 {
-    $code = strtoupper(trim((string) $code));
+    $code = trim((string) $code);
     if ($code === '') return '';
 
-    // Canonical internal representation: Greek ΠΕ / ΤΕ / ΔΕ.
-    // Accept Latin and visually mixed-script prefixes at input boundaries.
-    $code = preg_replace('/^(?:PE|PΕ|ΠE|ΠΕ)/u', 'ΠΕ', $code);
-    $code = preg_replace('/^(?:TE|TΕ|ΤE|ΤΕ)/u', 'ΤΕ', $code);
-    $code = preg_replace('/^(?:DE|DΕ|ΔE|ΔΕ)/u', 'ΔΕ', $code);
-    return $code;
+    // Canonical contract: ΠΕ/ΤΕ/ΔΕ + two-digit main code + optional
+    // two-digit subcode separated with a dot. Input may use Latin/mixed
+    // prefixes, internal whitespace and . - _ / as the subcode separator.
+    $compact = preg_replace('/\s+/u', '', $code);
+    $prefix = '';
+    $main = '';
+    $sub = null;
+
+    if (preg_match('/^(?:PE|PΕ|ΠE|ΠΕ)([0-9]{1,2})(?:[.\-_\/]([0-9]{1,2}))?$/iu', $compact, $m) === 1) {
+        $prefix = 'ΠΕ';
+    } elseif (preg_match('/^(?:TE|TΕ|ΤE|ΤΕ)([0-9]{1,2})(?:[.\-_\/]([0-9]{1,2}))?$/iu', $compact, $m) === 1) {
+        $prefix = 'ΤΕ';
+    } elseif (preg_match('/^(?:DE|DΕ|ΔE|ΔΕ)([0-9]{1,2})(?:[.\-_\/]([0-9]{1,2}))?$/iu', $compact, $m) === 1) {
+        $prefix = 'ΔΕ';
+    } else {
+        return '';
+    }
+
+    $main = str_pad((string) ((int) $m[1]), 2, '0', STR_PAD_LEFT);
+    if (isset($m[2]) && $m[2] !== '') {
+        $sub = str_pad((string) ((int) $m[2]), 2, '0', STR_PAD_LEFT);
+    }
+    return $prefix . $main . ($sub !== null ? '.' . $sub : '');
 }
 
 function teacherSpecialtyIsEaeCode($code)

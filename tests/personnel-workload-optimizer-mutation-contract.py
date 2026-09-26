@@ -11,8 +11,8 @@ def check(name,ok):
 def run(mod,scenario):
     with tempfile.NamedTemporaryFile('w',suffix='.js',encoding='utf-8',delete=False) as f:
         f.write(mod); path=f.name
-    js=r'''const fs=require('fs'),vm=require('vm');global.window=global;vm.runInThisContext(fs.readFileSync(process.argv[1],'utf8'));const s=JSON.parse(fs.readFileSync(0,'utf8'));const r=global.PersonnelWorkloadCalculations.optimizeRemaining(s.slots,s.people,s.person_state,s.slot_state);process.stdout.write(JSON.stringify(r));'''
-    p=subprocess.run(['node','-e',js,path],input=json.dumps(scenario,ensure_ascii=False),text=True,capture_output=True,cwd=ROOT)
+    js=r'''const fs=require('fs'),vm=require('vm');global.window=global;vm.runInThisContext(fs.readFileSync(process.argv[1],'utf8'));vm.runInThisContext(fs.readFileSync(process.argv[2],'utf8'));const s=JSON.parse(fs.readFileSync(0,'utf8'));const r=global.PersonnelWorkloadCalculations.optimizeRemaining(s.slots,s.people,s.person_state,s.slot_state);process.stdout.write(JSON.stringify(r));'''
+    p=subprocess.run(['node','-e',js,str(ROOT/'includes'/'specialty-code-normalization.js'),path],input=json.dumps(scenario,ensure_ascii=False),text=True,capture_output=True,cwd=ROOT)
     Path(path).unlink(missing_ok=True)
     if p.returncode: raise RuntimeError(p.stderr)
     return json.loads(p.stdout)

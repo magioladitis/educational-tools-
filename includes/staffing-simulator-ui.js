@@ -6,6 +6,19 @@
     catch(error){ console.error('Αποτυχία φόρτωσης ρυθμίσεων στελέχωσης.',error); }
     staffingRuntimeConfigNode.textContent='';
   }
+  function staffingClientOptimizerCompatibility(){
+    const policy=staffingRuntimeConfig.optimizerPolicy&&typeof staffingRuntimeConfig.optimizerPolicy==='object'?staffingRuntimeConfig.optimizerPolicy:{};
+    const expectedSchema=String(policy.specialty_code_normalization_schema||'');
+    const actualSchema=window.EducationSpecialtyCodes&&window.EducationSpecialtyCodes.schema?String(window.EducationSpecialtyCodes.schema):'';
+    const optimizerAvailable=!!(window.PersonnelWorkloadCalculations&&typeof window.PersonnelWorkloadCalculations.optimizeRemaining==='function');
+    return {ok:optimizerAvailable&&expectedSchema!==''&&expectedSchema===actualSchema,optimizerAvailable:optimizerAvailable,expectedSchema:expectedSchema,actualSchema:actualSchema};
+  }
+  function staffingSetClientOptimizerCapability(form,enabled){
+    if(!form) return;
+    let capability=form.elements&&form.elements.namedItem?form.elements.namedItem('client_optimizer_capable'):null;
+    if(!capability&&enabled){ capability=document.createElement('input'); capability.type='hidden'; capability.name='client_optimizer_capable'; form.appendChild(capability); }
+    if(capability) capability.value=enabled?'1':'0';
+  }
   const staffingPerfClientEnabled=!!staffingRuntimeConfig.perfEnabled;
   function staffingPerfClientRecord(elementId,elapsed){
     if(!staffingPerfClientEnabled||!window.performance) return;
@@ -112,11 +125,7 @@
   }
   ['staffingProfileForm','staffingPersonnelForm','staffingAllocationForm'].forEach(function(id){
     const form=document.getElementById(id);
-    if(form && window.PersonnelWorkloadCalculations && typeof window.PersonnelWorkloadCalculations.optimizeRemaining==='function'){
-      let capability=form.elements&&form.elements.namedItem?form.elements.namedItem('client_optimizer_capable'):null;
-      if(!capability){ capability=document.createElement('input'); capability.type='hidden'; capability.name='client_optimizer_capable'; form.appendChild(capability); }
-      capability.value='1';
-    }
+    if(form && staffingClientOptimizerCompatibility().ok) staffingSetClientOptimizerCapability(form,true);
     installExplicitRequestGate(form);
   });
 
@@ -2308,6 +2317,12 @@
   }
   function handleStaffingClientAction(action,button){
     if(action!=='allocation'&&action!=='allocation_auto') return false;
+    const compatibility=staffingClientOptimizerCompatibility();
+    if(!compatibility.ok){
+      if(compatibility.optimizerAvailable&&compatibility.expectedSchema!==compatibility.actualSchema) console.error('Ασυμβατό schema κανονικοποίησης ειδικοτήτων· ενεργοποιείται server fallback.',compatibility);
+      if(button&&button.form) staffingSetClientOptimizerCapability(button.form,false);
+      return false;
+    }
     const W=window.PersonnelWorkloadCalculations;
     if(!W||typeof W.validateRosterSlotAllocations!=='function') return false;
     const state=allocationCollectState();
@@ -2346,6 +2361,7 @@
     try{ optimized=W.optimizeRemaining(allocationSlotsData,allocationPeopleData,personState,slotState,optimizerPolicyData); }
     catch(error){
       if(button) button.disabled=false;
+      if(button&&button.form) staffingSetClientOptimizerCapability(button.form,false);
       console.error('Αποτυχία client-side optimizer.',error);
       return false; // progressive server fallback if the browser optimizer itself fails
     }

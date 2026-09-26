@@ -785,6 +785,7 @@ if ($requestMethod === 'POST') {
     $staffingAction = staffingUiPost('staffing_action', '');
     if ($staffingAction === '') $staffingAction = staffingUiPost('staffing_action_fallback', '');
 }
+$clientOptimizerCapable = staffingUiPost('client_optimizer_capable', '0') === '1';
 $submitted = $requestMethod === 'POST'
     && in_array($staffingAction, array('profile','personnel','allocation','allocation_auto'), true);
 $schoolType = staffingUiPost('school_type', 'gymnasio');
@@ -1247,7 +1248,7 @@ if ($profile && $matrix && !empty($allocationPeople) && !empty($allocationRows))
 }
 $allocationEnabled = $submitted && $profile && $matrix && $matrix['readiness'] !== 'structure_only' && $personnelSummary['general_resolved_count'] > 0 && !empty($allocationPeople) && empty($duplicateDirectorIndexes);
 $allocationAutoProposal = null;
-if ($allocationEnabled && $staffingAction === 'allocation_auto') {
+if ($allocationEnabled && $staffingAction === 'allocation_auto' && !$clientOptimizerCapable) {
     staffingPerfBegin('allocation_auto_optimizer');
     $allocationAutoProposal = teachingAllocationEngineProposal($profile, $allocationPeople, $allocationRows, $teachingModel, $matrix);
     if (isset($allocationAutoProposal['status']) && $allocationAutoProposal['status'] === 'ok') {
@@ -1315,7 +1316,6 @@ foreach ($allocationSlots as $slotId=>$slot) {
 staffingPerfEnd('client_payload');
 
 $specialtyBalanceReport = null;
-$clientOptimizerCapable = staffingUiPost('client_optimizer_capable', '0') === '1';
 // Η Καρτέλα 6 ανανεώνεται πλήρως client-side όταν ανοίγει. Σε shared hosting
 // δεν εκτελούμε τον βαρύ optimizer σε κάθε POST της Καρτέλας 3/4, γιατί σε
 // μεγάλα σχολεία αυτό διπλασίαζε άσκοπα CPU και μνήμη και μπορούσε να δώσει 500.

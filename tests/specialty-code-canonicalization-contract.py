@@ -8,6 +8,7 @@ def check(name, cond):
     print(('PASS' if cond else 'FAIL') + ': ' + name)
 
 core=(ROOT/'includes/education-core.js').read_text(encoding='utf-8')
+specialty_js=(ROOT/'includes/specialty-code-normalization.js').read_text(encoding='utf-8')
 teacher=(ROOT/'includes/teacher-specialties.php').read_text(encoding='utf-8')
 abroad_php=(ROOT/'ypologismos-morion-apospasis-exoteriko.php').read_text(encoding='utf-8')
 abroad_ui=(ROOT/'includes/abroad-ui.js').read_text(encoding='utf-8')
@@ -20,7 +21,8 @@ sde_det_php=(ROOT/'ypologismos-morion-apospasis-sde.php').read_text(encoding='ut
 sde_det_ui=(ROOT/'includes/sde-detachment-ui.js').read_text(encoding='utf-8')
 sde_calc=(ROOT/'includes/sde-calculations.js').read_text(encoding='utf-8')
 
-check('shared JS canonicalizer maps mixed PE/TE/DE prefixes', all(x in core for x in ["PΕ|ΠE|ΠΕ", "TΕ|ΤE|ΤΕ", "DΕ|ΔE|ΔΕ"]))
+check('shared JS canonicalizer maps mixed PE/TE/DE prefixes', all(x in specialty_js for x in ["PE|PΕ|ΠE|ΠΕ", "TE|TΕ|ΤE|ΤΕ", "DE|DΕ|ΔE|ΔΕ"]))
+check('EducationCore delegates to shared specialty canonicalizer', 'specialtyCodeApi().normalize(value)' in core)
 check('shared PHP canonicalizer accepts mixed PE/TE/DE prefixes', all(x in teacher for x in ["PΕ|ΠE|ΠΕ", "TΕ|ΤE|ΤΕ", "DΕ|ΔE|ΔΕ"]))
 
 # Actual specialty code literals are Greek in the four migrated families.
@@ -69,6 +71,7 @@ check('PHP mixed-script normalization regression',proc.returncode==0 and got==ex
 allowed={
  'ypologismos-didaktikou-orariou.php': {'TE01','DE01_ARCH','DE01_TECH'},
  'includes/personnel-csv-import.js': {'DE01_ARCH','DE01_TECH'},
+ 'includes/personnel-workload-calculations.js': {'TE01','DE01_ARCH','DE01_TECH'},
  'includes/personnel-workload.php': {'TE01','DE01_ARCH','DE01_TECH'},
  'includes/teaching-hours-calculations.js': {'TE01','DE01_ARCH','DE01_TECH'},
  'includes/asep-te-academic.js': {'TE16','TE01','TE02'},

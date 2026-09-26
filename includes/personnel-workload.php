@@ -958,6 +958,7 @@ function personnelWorkloadOptimizerPolicy()
         'eligibility_source'=>'server_allocation_slots.eligible_by_priority',
         'solution_equivalence'=>'same_lexicographic_objective_and_invariants',
         'assignment_identity_guaranteed'=>false,
+        'specialty_code_normalization_schema'=>teacherSpecialtyNormalizationSchema(),
     );
     return $policy;
 }

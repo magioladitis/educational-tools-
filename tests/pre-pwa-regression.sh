@@ -20,6 +20,12 @@ run_py tests/salary-mobile-refactor-contract.py
 run_py tests/transfer-mobile-refactor-contract.py
 run_py tests/weekly-timetable-2026-contract.py
 run_py tests/digital-tutoring-substitute-2026-contract.py
+run_py tests/specialty-code-normalization-parity-contract.py
+run_py tests/specialty-code-canonicalization-contract.py
+echo "==> education core contract"
+node tests/education-core-contract.js
+echo "==> personnel CSV import regression"
+node tests/personnel-csv-import-regression.js
 run_py tests/personnel-workload-client-parity-contract.py
 run_py tests/personnel-workload-allocation-client-parity-contract.py
 run_py tests/personnel-workload-optimizer-client-parity-contract.py

@@ -130,6 +130,7 @@ def run_node_core(payload: str, iterations: int) -> list[dict]:
     code = r'''
 const fs=require('fs'),vm=require('vm');global.window=global;
 vm.runInThisContext(fs.readFileSync(process.argv[1],'utf8'));
+vm.runInThisContext(fs.readFileSync(process.argv[2],'utf8'));
 const cs=JSON.parse(fs.readFileSync(0,'utf8')),W=global.PersonnelWorkloadCalculations,out=[];
 for(const c of cs){
   let last;for(let i=0;i<5;i++)last=W.optimizeRemaining(c.slots,c.people,c.person_state,c.slot_state);
@@ -140,7 +141,7 @@ for(const c of cs){
 process.stdout.write(JSON.stringify(out));
 ''' % (iterations, iterations)
     p = subprocess.run(
-        ['node', '-e', code, str(MODULE)], input=payload, text=True,
+        ['node', '-e', code, str(ROOT / 'includes' / 'specialty-code-normalization.js'), str(MODULE)], input=payload, text=True,
         capture_output=True, cwd=ROOT,
     )
     if p.returncode:
@@ -169,6 +170,7 @@ def browser_html(payload: str, iterations: int) -> str:
     # allocationAppendOptimizerRow(): one row, slot select, person select, hours input.
     escaped_payload = payload.replace('</', '<\\/')
     return f'''<!doctype html><meta charset="utf-8"><title>Personnel workload browser benchmark</title>
+<script src="../includes/specialty-code-normalization.js"></script>
 <script src="../includes/personnel-workload-calculations.js"></script>
 <div id="rows" style="position:absolute;left:-10000px;top:0;width:800px"></div><pre id="result">pending</pre>
 <script>

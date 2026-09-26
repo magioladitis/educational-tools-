@@ -86,7 +86,7 @@ if php.returncode!=0:
     print(php.stderr);sys.exit(1)
 php_out=json.loads(php.stdout)
 
-node_script='''const fs=require('fs'),vm=require('vm');global.window=global;vm.runInThisContext(fs.readFileSync(%s,'utf8'));
+node_script='''const fs=require('fs'),vm=require('vm');global.window=global;vm.runInThisContext(fs.readFileSync(%s,'utf8'));vm.runInThisContext(fs.readFileSync(%s,'utf8'));
 const W=global.PersonnelWorkloadCalculations,slots=%s,people=%s,scenarios=%s;
 const peopleIndex={};people.forEach(p=>peopleIndex[p.person_id]=p);
 const out={rank:{},best:[],scenarios:{}};
@@ -95,7 +95,7 @@ const bestVectors=[['u_hist|section|1',people[0]],['u_econ|section|1',people[0]]
 bestVectors.forEach((v)=>out.best.push(W.bestAssignmentForSlot(slots[v[0]],v[1])));
 Object.keys(scenarios).forEach(name=>{const r=W.validateRosterSlotAllocations(slots,peopleIndex,scenarios[name]);out.scenarios[name]={allocation_rows:r.allocation_rows,summary:r.summary};});
 process.stdout.write(JSON.stringify(out));
-''' % (json.dumps(str(module_path)),json.dumps(php_out['slots'],ensure_ascii=False),json.dumps(people,ensure_ascii=False),json.dumps(scenarios,ensure_ascii=False))
+''' % (json.dumps(str(ROOT/'includes/specialty-code-normalization.js')),json.dumps(str(module_path)),json.dumps(php_out['slots'],ensure_ascii=False),json.dumps(people,ensure_ascii=False),json.dumps(scenarios,ensure_ascii=False))
 node=subprocess.run(['node','-e',node_script],text=True,capture_output=True,cwd=ROOT)
 if node.returncode!=0:
     print(node.stderr);sys.exit(1)

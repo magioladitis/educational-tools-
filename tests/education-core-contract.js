@@ -3,6 +3,7 @@ const fs=require('fs'),vm=require('vm'),path=require('path');
 const root=path.resolve(__dirname,'..');
 const ctx={console};ctx.globalThis=ctx;ctx.window=ctx;vm.createContext(ctx);
 function load(f){vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),ctx,{filename:f});}
+load('includes/specialty-code-normalization.js');
 load('includes/education-core.js');
 load('includes/language-calculations.js');
 load('includes/academic-calculations.js');

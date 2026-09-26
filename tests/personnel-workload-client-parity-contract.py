@@ -52,7 +52,7 @@ for c in cases:
             labels.update({'ΠΕ03':'Μαθηματικοί','ΠΕ02':'Φιλόλογοι','ΤΕ01.04':'Ψυκτικοί','ΔΕ01.05':'Οικοδόμοι'})
 node_script='''
 const fs=require('fs'),vm=require('vm');
-global.window=global; vm.runInThisContext(fs.readFileSync(%s,'utf8'));
+global.window=global; vm.runInThisContext(fs.readFileSync(%s,'utf8')); vm.runInThisContext(fs.readFileSync(%s,'utf8'));
 const cases=%s, labels=%s;
 const opt={specialtyLabels:labels,isKnownSpecialty:(c)=>Object.prototype.hasOwnProperty.call(labels,c)};
 const W=global.PersonnelWorkloadCalculations;
@@ -65,7 +65,7 @@ const out={helpers:{service_days:{},service_label:{},branch:{},band:{},base:{}},
 ['PE','TE01','DE01_ARCH','DE01_TECH'].forEach(b=>{out.helpers.base[b]={};[0,2160,2161,4320,4321,7199,7200].forEach(d=>out.helpers.base[b][String(d)]=W.secondaryTeacherBaseHours(b,d));});
 cases.forEach(c=>out.cases[c.id]={obligation:W.secondaryObligation(c.p,opt),normalized:W.normalizePerson(c.p,opt)});
 process.stdout.write(JSON.stringify(out));
-''' % (json.dumps(str(ROOT/'includes/personnel-workload-calculations.js')),json.dumps(cases,ensure_ascii=False),json.dumps(labels,ensure_ascii=False))
+''' % (json.dumps(str(ROOT/'includes/specialty-code-normalization.js')),json.dumps(str(ROOT/'includes/personnel-workload-calculations.js')),json.dumps(cases,ensure_ascii=False),json.dumps(labels,ensure_ascii=False))
 node=subprocess.run(['node','-e',node_script],text=True,capture_output=True,cwd=ROOT)
 if node.returncode!=0:
     print(node.stderr); sys.exit(1)

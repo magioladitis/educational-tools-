@@ -1,3 +1,13 @@
+## 2026-09-26 — Specialty normalization + personnel workload Phase 3C (v3.22.13)
+
+- Ενοποιήθηκε η κανονικοποίηση κωδικών ειδικότητας σε κοινό browser module `includes/specialty-code-normalization.js` με schema `teacher_specialty_code_normalization_v1`.
+- PHP και JS ακολουθούν κοινά contract vectors: mixed Greek/Latin prefixes, εσωτερικά κενά, zero-padding (`PE3` → `ΠΕ03`) και υποκωδικοί με `. - _ /` (`TE1/4` → `ΤΕ01.04`).
+- Το CSV import κρατά permissive εξαγωγή από ελεύθερο κείμενο, αλλά το τελικό code canonicalization γίνεται αποκλειστικά από το κοινό module.
+- Ο optimizer policy δηλώνει πλέον `specialty_code_normalization_schema`. Αν browser/server schema διαφέρουν, ο client optimizer απενεργοποιείται και γίνεται ασφαλές PHP fallback.
+- Το `allocation_auto` server optimizer εκτελείται μόνο όταν `client_optimizer_capable=0`. Σε client exception το UI μηδενίζει ρητά το capability πριν αφήσει το submit fallback.
+- Ενισχύθηκε το release gate με PHP↔JS normalization parity, canonicalization audit, EducationCore regression και personnel CSV import regression.
+- Έκδοση/cache busting: `EDU_TOOLS_VERSION = 3.22.13`.
+
 ## 2026-09-26 — Personnel workload performance benchmark (v3.22.12)
 - Προστέθηκε `tests/personnel-workload-performance-benchmark.py` με κοινά synthetic small / typical / large workloads για τον PHP reference optimizer και τον browser JS optimizer.
 - Το quick `--contract` μπήκε στο `pre-pwa-regression.sh`: ελέγχει objective parity, certification, ίδιο search-node count, valid allocation fixtures, γενναιόδωρα wall-clock ceilings και relative scaling large/typical. Τα όρια είναι σκόπιμα χαλαρά ώστε να πιάνουν καταστροφικές regressions και όχι φυσιολογικό CI noise.

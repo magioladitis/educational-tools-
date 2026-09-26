@@ -48,8 +48,8 @@ echo json_encode($cases,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 p=subprocess.run(['php','-d','memory_limit=1024M','-r',php],text=True,capture_output=True,cwd=ROOT)
 if p.returncode: print(p.stderr);sys.exit(1)
 cases=json.loads(p.stdout)
-node=r'''const fs=require('fs'),vm=require('vm');global.window=global;vm.runInThisContext(fs.readFileSync(process.argv[1],'utf8'));const cs=JSON.parse(fs.readFileSync(0,'utf8')),W=global.PersonnelWorkloadCalculations;process.stdout.write(JSON.stringify(cs.map(c=>W.optimizeRemaining(c.slots,c.people,c.person_state,c.slot_state,c.policy))));'''
-n=subprocess.run(['node','-e',node,str(MOD)],input=json.dumps(cases,ensure_ascii=False),text=True,capture_output=True,cwd=ROOT)
+node=r'''const fs=require('fs'),vm=require('vm');global.window=global;vm.runInThisContext(fs.readFileSync(process.argv[1],'utf8'));vm.runInThisContext(fs.readFileSync(process.argv[2],'utf8'));const cs=JSON.parse(fs.readFileSync(0,'utf8')),W=global.PersonnelWorkloadCalculations;process.stdout.write(JSON.stringify(cs.map(c=>W.optimizeRemaining(c.slots,c.people,c.person_state,c.slot_state,c.policy))));'''
+n=subprocess.run(['node','-e',node,str(ROOT/'includes'/'specialty-code-normalization.js'),str(MOD)],input=json.dumps(cases,ensure_ascii=False),text=True,capture_output=True,cwd=ROOT)
 if n.returncode: print(n.stderr);sys.exit(1)
 js=json.loads(n.stdout)
 for c,j in zip(cases,js):
