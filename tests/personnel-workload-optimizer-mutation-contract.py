@@ -23,10 +23,10 @@ def slot(sid,h,by):
 sc={'slots':{'b1':slot('b1',5,{'B':['ΠΕ78']}),'b2':slot('b2',5,{'B':['ΠΕ78']}),'b3':slot('b3',2,{'B':['ΠΕ78']})},'people':[{'person_id':'b','specialty_code':'ΠΕ78'}],'person_state':{'b':{'remaining_hours':20,'b_assignment_hours':0,'b_remaining_hours':10}},'slot_state':{'b1':{'remaining_hours':5},'b2':{'remaining_hours':5},'b3':{'remaining_hours':2}}}
 base=run(src,sc); basecov=sum(x['hours'] for x in base['allocations'])
 check('baseline mutation fixture enforces 10h B limit',basecov==10)
-needle="var bcap = nonNegativeInt(originalPeople[pid] && originalPeople[pid].b_remaining_hours);"
-check('B-limit mutation target exists',needle in src)
+needle="b_priority: 'B'"
+check('B-priority policy mutation target exists',needle in src)
 if needle in src:
-    mutant=src.replace(needle,"var bcap = 9999;",1)
+    mutant=src.replace(needle,"b_priority: 'X'",1)
     bad=run(mutant,sc); badcov=sum(x['hours'] for x in bad['allocations'])
     check('B-limit mutant is detected by fixture',badcov!=10)
 
@@ -34,9 +34,10 @@ if needle in src:
 sc2={'slots':{'x':slot('x',4,{'SPECIAL':['ΠΕ01'],'B':['ΠΕ02']})},'people':[{'person_id':'sp','specialty_code':'ΠΕ01'},{'person_id':'b','specialty_code':'ΠΕ02'}],'person_state':{'sp':{'remaining_hours':4,'b_assignment_hours':0,'b_remaining_hours':10},'b':{'remaining_hours':4,'b_assignment_hours':0,'b_remaining_hours':10}},'slot_state':{'x':{'remaining_hours':4}}}
 base2=run(src,sc2)
 check('baseline mutation fixture prefers SPECIAL',base2['allocations'] and base2['allocations'][0]['person_id']=='sp')
-# Remove SPECIAL from all top-objective increments. This should make B win the next objective dimension.
-mutant2=src.replace("if (p === 'A' || p === 'SPECIAL') o.top += h;","if (p === 'A') o.top += h;")
-mutant2=mutant2.replace("m.priority === 'A' || m.priority === 'SPECIAL'","m.priority === 'A'").replace("item.m.priority === 'A' || item.m.priority === 'SPECIAL'","item.m.priority === 'A'")
+# Remove SPECIAL from the canonical optimizer policy. This should make B win the next objective dimension.
+needle2="top_priorities: ['A', 'SPECIAL']"
+check('SPECIAL policy mutation target exists',needle2 in src)
+mutant2=src.replace(needle2,"top_priorities: ['A']",1)
 bad2=run(mutant2,sc2)
 check('SPECIAL-priority mutant is detected by fixture',bad2['allocations'] and bad2['allocations'][0]['person_id']!='sp')
 

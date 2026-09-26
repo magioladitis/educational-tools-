@@ -25,6 +25,11 @@
 
 require_once __DIR__ . '/personnel-workload.php';
 
+function teachingAllocationEngineClientContract()
+{
+    return personnelWorkloadOptimizerPolicy();
+}
+
 /**
  * Χαμηλού επιπέδου solver για το υπόλοιπο ενός ήδη έγκυρου πλάνου.
  * $personState: person_id => remaining_hours, b_assignment_hours, b_remaining_hours
@@ -154,7 +159,7 @@ function teachingAllocationEngineHeuristicSolveRemaining($slots, $people, $perso
         $personState[$personId]['remaining_hours'] = max(0, (int)$personState[$personId]['remaining_hours'] - $need);
         if ($match['priority'] === 'B') {
             $personState[$personId]['b_assignment_hours'] = (int)$personState[$personId]['b_assignment_hours'] + $need;
-            $personState[$personId]['b_remaining_hours'] = max(0, 10 - (int)$personState[$personId]['b_assignment_hours']);
+            $personState[$personId]['b_remaining_hours'] = max(0, personnelWorkloadOptimizerPolicy()['b_limit_hours'] - (int)$personState[$personId]['b_assignment_hours']);
         }
         $slotState[$slotId]['remaining_hours'] = 0;
         return true;
@@ -238,7 +243,7 @@ function teachingAllocationEngineHeuristicSolveRemaining($slots, $people, $perso
                         $personState[$targetId]['remaining_hours'] += $moveHours;
                         if ($existing['priority'] === 'B') {
                             $personState[$targetId]['b_assignment_hours'] = max(0, (int)$personState[$targetId]['b_assignment_hours'] - $moveHours);
-                            $personState[$targetId]['b_remaining_hours'] = max(0, 10 - (int)$personState[$targetId]['b_assignment_hours']);
+                            $personState[$targetId]['b_remaining_hours'] = max(0, personnelWorkloadOptimizerPolicy()['b_limit_hours'] - (int)$personState[$targetId]['b_assignment_hours']);
                         }
                         // Move whole existing slot to alternate.
                         $allocations[$idx]['person_id'] = $altId;
@@ -249,7 +254,7 @@ function teachingAllocationEngineHeuristicSolveRemaining($slots, $people, $perso
                         $personState[$altId]['remaining_hours'] -= $moveHours;
                         if ($altMatch['priority'] === 'B') {
                             $personState[$altId]['b_assignment_hours'] = (int)$personState[$altId]['b_assignment_hours'] + $moveHours;
-                            $personState[$altId]['b_remaining_hours'] = max(0, 10 - (int)$personState[$altId]['b_assignment_hours']);
+                            $personState[$altId]['b_remaining_hours'] = max(0, personnelWorkloadOptimizerPolicy()['b_limit_hours'] - (int)$personState[$altId]['b_assignment_hours']);
                         }
                         if ($assignWhole($slotId,$targetId,$targetMatch,'automatic_repair')) { $progress = true; break 4; }
                     }
@@ -302,7 +307,8 @@ function teachingAllocationEngineHeuristicSolveRemaining($slots, $people, $perso
  */
 function teachingAllocationEngineCompareObjective($a, $b)
 {
-    foreach (array('covered','top','b','primary') as $key) {
+    $policy = personnelWorkloadOptimizerPolicy();
+    foreach ($policy['objective_order'] as $key) {
         $av = isset($a[$key]) ? (int)$a[$key] : 0;
         $bv = isset($b[$key]) ? (int)$b[$key] : 0;
         if ($av === $bv) continue;
@@ -313,13 +319,14 @@ function teachingAllocationEngineCompareObjective($a, $b)
 
 function teachingAllocationEngineObjectiveForRows($rows)
 {
+    $policy = personnelWorkloadOptimizerPolicy();
     $o = array('covered'=>0,'top'=>0,'b'=>0,'primary'=>0);
     foreach ($rows as $row) {
         $h = isset($row['hours']) ? max(0, (int)$row['hours']) : 0;
         $p = isset($row['priority']) ? (string)$row['priority'] : '';
         $o['covered'] += $h;
-        if ($p === 'A' || $p === 'SPECIAL') $o['top'] += $h;
-        elseif ($p === 'B') $o['b'] += $h;
+        if (in_array($p, $policy['top_priorities'], true)) $o['top'] += $h;
+        elseif ($p === $policy['b_priority']) $o['b'] += $h;
         if (isset($row['specialty_source']) && $row['specialty_source'] === 'primary') $o['primary'] += $h;
     }
     return $o;
@@ -641,8 +648,9 @@ function teachingAllocationEngineSolveRemaining($slots, $people, $personState, $
     // large memoized branch-and-bound can consume far more memory than the
     // final answer warrants. When the budget is exhausted we keep the valid
     // heuristic seed and explicitly mark the optimum as uncertified.
-    $optimizerDeadline = microtime(true) + 1.25;
-    $globalNodeBudget = 30000;
+    $optimizerPolicy = personnelWorkloadOptimizerPolicy();
+    $optimizerDeadline = microtime(true) + ((int)$optimizerPolicy['time_budget_ms'] / 1000);
+    $globalNodeBudget = (int)$optimizerPolicy['global_node_budget'];
     $safetyFallbackComponents = 0;
     foreach ($components as $component) {
         $componentGroups=array(); $slotSet=array(); $componentPeople=array(); $componentRouteCount=0;
@@ -657,13 +665,13 @@ function teachingAllocationEngineSolveRemaining($slots, $people, $personState, $
 
         $personCount=count($componentPeople);
         $groupCount=count($componentGroups);
-        $tooComplex = $personCount > 28 || $componentRouteCount > 1400 || ($personCount > 1 && $groupCount > 100);
+        $tooComplex = $personCount > (int)$optimizerPolicy['max_component_people'] || $componentRouteCount > (int)$optimizerPolicy['max_component_routes'] || ($personCount > 1 && $groupCount > (int)$optimizerPolicy['max_component_groups']);
         $outOfBudget = $globalNodeBudget < 1 || microtime(true) > $optimizerDeadline;
         if ($tooComplex || $outOfBudget) {
             $optimized=array('allocations'=>$seedRows,'objective'=>teachingAllocationEngineObjectiveForRows($seedRows),'nodes'=>0,'certified'=>false);
             $safetyFallbackComponents++;
         } else {
-            $componentNodeLimit=min(12000,$globalNodeBudget);
+            $componentNodeLimit=min((int)$optimizerPolicy['component_node_limit'],$globalNodeBudget);
             // One-teacher components use bounded DP and are safe even with many
             // interchangeable slots; multi-teacher components use B&B.
             $optimized=teachingAllocationEngineOptimizeComponent($componentGroups,$componentPeople,$personState,$seedRows,$componentNodeLimit,$optimizerDeadline);
@@ -683,7 +691,7 @@ function teachingAllocationEngineSolveRemaining($slots, $people, $personState, $
         $finalPeople[$pid]['remaining_hours']=max(0,(int)$finalPeople[$pid]['remaining_hours']-$h);
         if ($row['priority']==='B') {
             $finalPeople[$pid]['b_assignment_hours']=(int)$finalPeople[$pid]['b_assignment_hours']+$h;
-            $finalPeople[$pid]['b_remaining_hours']=max(0,10-(int)$finalPeople[$pid]['b_assignment_hours']);
+            $finalPeople[$pid]['b_remaining_hours']=max(0,personnelWorkloadOptimizerPolicy()['b_limit_hours']-(int)$finalPeople[$pid]['b_assignment_hours']);
         }
         $finalSlots[$sid]['remaining_hours']=0;
     }
@@ -714,6 +722,11 @@ function teachingAllocationEngineSolveRemaining($slots, $people, $personState, $
             'maximum_coverage_certified'=>$allCertified,
             'heuristic_seed_hours'=>isset($heuristic['summary']['covered_hours'])?(int)$heuristic['summary']['covered_hours']:0,
             'optimizer_safety_fallback_components'=>$safetyFallbackComponents,
+            'optimizer_policy_schema'=>$optimizerPolicy['schema'],
+            'optimizer_algorithm'=>$optimizerPolicy['algorithm'],
+            'optimizer_solution_status'=>$allCertified ? 'certified_optimum' : 'best_known_fallback',
+            'optimizer_solution_equivalence'=>$optimizerPolicy['solution_equivalence'],
+            'optimizer_assignment_identity_guaranteed'=>!empty($optimizerPolicy['assignment_identity_guaranteed']),
         ),
         'people'=>$finalPeople,
         'slots'=>$finalSlots,
@@ -768,7 +781,7 @@ function teachingAllocationEngineProposal($profile, $people, $lockedAllocations 
         $personState[$personId] = array(
             'remaining_hours'=>$remaining,
             'b_assignment_hours'=>$bHours,
-            'b_remaining_hours'=>max(0, 10 - $bHours),
+            'b_remaining_hours'=>max(0, personnelWorkloadOptimizerPolicy()['b_limit_hours'] - $bHours),
             'primary_code'=>isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '',
             'secondary_code'=>isset($person['secondary_specialty_code']) ? teacherSpecialtyCanonicalCode($person['secondary_specialty_code']) : '',
         );

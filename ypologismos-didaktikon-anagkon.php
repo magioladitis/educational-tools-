@@ -1315,10 +1315,11 @@ foreach ($allocationSlots as $slotId=>$slot) {
 staffingPerfEnd('client_payload');
 
 $specialtyBalanceReport = null;
+$clientOptimizerCapable = staffingUiPost('client_optimizer_capable', '0') === '1';
 // Η Καρτέλα 6 ανανεώνεται πλήρως client-side όταν ανοίγει. Σε shared hosting
 // δεν εκτελούμε τον βαρύ optimizer σε κάθε POST της Καρτέλας 3/4, γιατί σε
 // μεγάλα σχολεία αυτό διπλασίαζε άσκοπα CPU και μνήμη και μπορούσε να δώσει 500.
-$specialtyBalanceServerNeeded = $specialtyBalanceEnabled && $activePanel === 'specialties';
+$specialtyBalanceServerNeeded = $specialtyBalanceEnabled && $activePanel === 'specialties' && !$clientOptimizerCapable;
 if ($specialtyBalanceServerNeeded) {
     staffingPerfBegin('specialty_balance_server');
     $specialtyBalanceReport = personnelWorkloadSpecialtyBalanceReport($profile, $allocationPeople, $allocationRows, $teachingModel, $matrix);
@@ -2694,6 +2695,7 @@ staffingPerfEnd('specialty_labels');
   'initialAllocation' => $allocationPlan ? true : false,
   'hasCalculatedResults' => $calculationAvailable ? true : false,
   'perfEnabled' => $staffingPerfEnabled ? true : false,
+  'optimizerPolicy' => teachingAllocationEngineClientContract(),
   'allocationPeople' => $allocationPeopleClient,
   'allocationSlots' => $allocationSlotsClient,
   'specialtyLabels' => $specialtyLabelsClient

@@ -3,13 +3,62 @@
  *
  * Phase 1 covers person normalization / compulsory-hours rules. Phase 2 adds
  * slot validation and assignment-route parity. Phase 3A extracts the browser
- * atomic optimizer into this pure module while PHP remains the reference.
+ * atomic optimizer into this pure module while PHP remains the reference. Phase 3B
+ * adds a server-generated optimizer policy and explicit equivalent-optimum semantics.
  */
 (function (global) {
   'use strict';
 
   var ALLOWED_BRANCHES = ['PE', 'TE01', 'DE01_ARCH', 'DE01_TECH'];
   var ALLOWED_ROLES = ['teacher', 'director', 'lab_director', 'vice_or_sector', 'lab_responsible', 'epal_ek_lab_sector'];
+  var DEFAULT_OPTIMIZER_POLICY = {
+    schema: 'staffing_optimizer_policy_v1',
+    algorithm: 'component_bnb_symmetry_v1',
+    priority_scan_order: ['A', 'B', 'C', 'SPECIAL'],
+    priority_ranks: { A: 1, SPECIAL: 1, B: 2, C: 3 },
+    objective_order: ['covered', 'top', 'b', 'primary'],
+    top_priorities: ['A', 'SPECIAL'],
+    b_priority: 'B',
+    b_limit_hours: 10,
+    global_node_budget: 30000,
+    component_node_limit: 12000,
+    max_component_people: 28,
+    max_component_routes: 1400,
+    max_component_groups: 100,
+    time_budget_ms: 1250,
+    eligibility_source: 'server_allocation_slots.eligible_by_priority',
+    solution_equivalence: 'same_lexicographic_objective_and_invariants',
+    assignment_identity_guaranteed: false
+  };
+
+  function optimizerPolicy(input) {
+    if (input && input.__normalized_optimizer_policy === true) return input;
+    input = input && typeof input === 'object' ? input : {};
+    var p = {
+      schema: String(input.schema || DEFAULT_OPTIMIZER_POLICY.schema),
+      algorithm: String(input.algorithm || DEFAULT_OPTIMIZER_POLICY.algorithm),
+      priority_scan_order: Array.isArray(input.priority_scan_order) ? input.priority_scan_order.slice() : DEFAULT_OPTIMIZER_POLICY.priority_scan_order.slice(),
+      priority_ranks: Object.assign({}, DEFAULT_OPTIMIZER_POLICY.priority_ranks, input.priority_ranks || {}),
+      objective_order: Array.isArray(input.objective_order) ? input.objective_order.slice() : DEFAULT_OPTIMIZER_POLICY.objective_order.slice(),
+      top_priorities: Array.isArray(input.top_priorities) ? input.top_priorities.slice() : DEFAULT_OPTIMIZER_POLICY.top_priorities.slice(),
+      b_priority: String(input.b_priority || DEFAULT_OPTIMIZER_POLICY.b_priority),
+      b_limit_hours: nonNegativeInt(input.b_limit_hours == null ? DEFAULT_OPTIMIZER_POLICY.b_limit_hours : input.b_limit_hours),
+      global_node_budget: nonNegativeInt(input.global_node_budget == null ? DEFAULT_OPTIMIZER_POLICY.global_node_budget : input.global_node_budget),
+      component_node_limit: nonNegativeInt(input.component_node_limit == null ? DEFAULT_OPTIMIZER_POLICY.component_node_limit : input.component_node_limit),
+      max_component_people: nonNegativeInt(input.max_component_people == null ? DEFAULT_OPTIMIZER_POLICY.max_component_people : input.max_component_people),
+      max_component_routes: nonNegativeInt(input.max_component_routes == null ? DEFAULT_OPTIMIZER_POLICY.max_component_routes : input.max_component_routes),
+      max_component_groups: nonNegativeInt(input.max_component_groups == null ? DEFAULT_OPTIMIZER_POLICY.max_component_groups : input.max_component_groups),
+      time_budget_ms: nonNegativeInt(input.time_budget_ms == null ? DEFAULT_OPTIMIZER_POLICY.time_budget_ms : input.time_budget_ms),
+      eligibility_source: String(input.eligibility_source || DEFAULT_OPTIMIZER_POLICY.eligibility_source),
+      solution_equivalence: String(input.solution_equivalence || DEFAULT_OPTIMIZER_POLICY.solution_equivalence),
+      assignment_identity_guaranteed: input.assignment_identity_guaranteed === true,
+      __normalized_optimizer_policy: true
+    };
+    if (!p.b_limit_hours) p.b_limit_hours = DEFAULT_OPTIMIZER_POLICY.b_limit_hours;
+    if (!p.global_node_budget) p.global_node_budget = DEFAULT_OPTIMIZER_POLICY.global_node_budget;
+    if (!p.component_node_limit) p.component_node_limit = DEFAULT_OPTIMIZER_POLICY.component_node_limit;
+    return p;
+  }
 
   function canonicalSpecialtyCode(value) {
     if (global.EducationCore && typeof global.EducationCore.normalizeSpecialtyCode === 'function') {
@@ -285,10 +334,11 @@
   }
 
 
-  function priorityForSlotCode(slot, specialtyCode) {
+  function priorityForSlotCode(slot, specialtyCode, policyInput) {
+    var policy = optimizerPolicy(policyInput);
     var code = canonicalSpecialtyCode(specialtyCode);
     if (!code || !slot || !slot.eligible_by_priority) return null;
-    var order = ['A', 'B', 'C', 'SPECIAL'];
+    var order = policy.priority_scan_order;
     for (var i = 0; i < order.length; i++) {
       var priority = order[i];
       var values = Array.isArray(slot.eligible_by_priority[priority]) ? slot.eligible_by_priority[priority] : [];
@@ -299,28 +349,29 @@
     return null;
   }
 
-  function priorityRank(priority) {
-    var order = { A: 1, SPECIAL: 1, B: 2, C: 3 };
-    return Object.prototype.hasOwnProperty.call(order, priority) ? order[priority] : 99;
+  function priorityRank(priority, policyInput) {
+    var ranks = optimizerPolicy(policyInput).priority_ranks;
+    return Object.prototype.hasOwnProperty.call(ranks, priority) ? Number(ranks[priority]) : 99;
   }
 
-  function bestAssignmentForSlot(slot, person) {
+  function bestAssignmentForSlot(slot, person, policyInput) {
+    var policy = optimizerPolicy(policyInput);
     person = person || {};
     var primary = canonicalSpecialtyCode(person.specialty_code);
     var secondary = canonicalSpecialtyCode(person.secondary_specialty_code);
     var candidates = [];
     var priority;
     if (primary) {
-      priority = priorityForSlotCode(slot, primary);
+      priority = priorityForSlotCode(slot, primary, policy);
       if (priority !== null) candidates.push({ priority: priority, used_specialty_code: primary, specialty_source: 'primary' });
     }
     if (secondary && secondary !== primary) {
-      priority = priorityForSlotCode(slot, secondary);
+      priority = priorityForSlotCode(slot, secondary, policy);
       if (priority !== null) candidates.push({ priority: priority, used_specialty_code: secondary, specialty_source: 'secondary' });
     }
     if (!candidates.length) return null;
     candidates.sort(function (a, b) {
-      var rank = priorityRank(a.priority) - priorityRank(b.priority);
+      var rank = priorityRank(a.priority, policy) - priorityRank(b.priority, policy);
       if (rank !== 0) return rank;
       if (a.specialty_source === b.specialty_source) return 0;
       return a.specialty_source === 'primary' ? -1 : 1;
@@ -353,7 +404,8 @@
    * aggregate personnel optimizer/evaluator; that remains the PHP reference
    * until Phase 3.
    */
-  function validateRosterSlotAllocations(slots, people, allocations) {
+  function validateRosterSlotAllocations(slots, people, allocations, policyInput) {
+    var policy = optimizerPolicy(policyInput);
     slots = slots && typeof slots === 'object' ? slots : {};
     allocations = Array.isArray(allocations) ? allocations : [];
     var peopleIndex = keyedPeople(people);
@@ -412,7 +464,7 @@
           row.valid = false; row.errors.push('atomic_slot_requires_full_hours');
         }
         if (Object.prototype.hasOwnProperty.call(peopleIndex, personId)) {
-          var assignment = bestAssignmentForSlot(slot, peopleIndex[personId]);
+          var assignment = bestAssignmentForSlot(slot, peopleIndex[personId], policy);
           if (assignment === null) {
             row.valid = false; row.errors.push('specialty_not_eligible');
           } else {
@@ -464,9 +516,9 @@
     var bHoursOverLimitTotal = 0;
     Object.keys(personPriority).forEach(function (personId) {
       var bHours = personPriority[personId].B || 0;
-      if (bHours <= 10) return;
+      if (bHours <= policy.b_limit_hours) return;
       peopleOverBLimit++;
-      bHoursOverLimitTotal += bHours - 10;
+      bHoursOverLimitTotal += bHours - policy.b_limit_hours;
       rowResults.forEach(function (row) {
         if (row.valid && row.person_id === personId && row.priority === 'B' && row.warnings.indexOf('b_assignment_hours_exceed_10_limit') < 0) {
           row.warnings.push('b_assignment_hours_exceed_10_limit');
@@ -505,9 +557,10 @@
   }
 
 
-  function objectiveCompare(a, b) {
+  function objectiveCompare(a, b, policyInput) {
+    var policy = optimizerPolicy(policyInput);
     a = a || {}; b = b || {};
-    var keys = ['covered', 'top', 'b', 'primary'];
+    var keys = policy.objective_order;
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
       var av = Math.floor(Number(a[key]) || 0);
@@ -518,14 +571,15 @@
     return 0;
   }
 
-  function objectiveForRows(rows) {
+  function objectiveForRows(rows, policyInput) {
+    var policy = optimizerPolicy(policyInput);
     var o = { covered: 0, top: 0, b: 0, primary: 0 };
     (Array.isArray(rows) ? rows : []).forEach(function (row) {
       var h = nonNegativeInt(row && row.hours);
       var p = row && row.priority ? String(row.priority) : '';
       o.covered += h;
-      if (p === 'A' || p === 'SPECIAL') o.top += h;
-      else if (p === 'B') o.b += h;
+      if (policy.top_priorities.indexOf(p) >= 0) o.top += h;
+      else if (p === policy.b_priority) o.b += h;
       if (row && row.specialty_source === 'primary') o.primary += h;
     });
     return o;
@@ -544,7 +598,9 @@
    * It operates only on already-built slots/person state and does not read DOM/global
    * staffing state. This is intentionally extracted before the PHP reference is removed.
    */
-  function optimizeRemaining(slotsInput, peopleInput, personStateInput, slotStateInput) {
+  function optimizeRemaining(slotsInput, peopleInput, personStateInput, slotStateInput, policyInput) {
+    var policy = optimizerPolicy(policyInput);
+    var optimizerStartedAt = (global.performance && typeof global.performance.now === 'function') ? global.performance.now() : Date.now();
     var slots = slotsInput && typeof slotsInput === 'object' ? slotsInput : {};
     var peopleIndex = keyedPeople(peopleInput);
     var originalPeople = cloneJson(personStateInput || {});
@@ -563,7 +619,7 @@
       openSlotCount++;
       var routes = {};
       peopleIds.forEach(function (pid) {
-        var match = bestAssignmentForSlot(slots[sid], peopleIndex[pid]);
+        var match = bestAssignmentForSlot(slots[sid], peopleIndex[pid], policy);
         if (!match) return;
         var ps = originalPeople[pid] || {};
         if (nonNegativeInt(ps.remaining_hours) < need) return;
@@ -592,7 +648,7 @@
         return ps && nonNegativeInt(ps.remaining_hours) >= need && (m.priority !== 'B' || nonNegativeInt(ps.b_remaining_hours) >= need);
       }).sort(function (a, b) {
         var ma = routesBySlot[sid][a], mb = routesBySlot[sid][b];
-        var r = priorityRank(ma.priority) - priorityRank(mb.priority); if (r) return r;
+        var r = priorityRank(ma.priority, policy) - priorityRank(mb.priority, policy); if (r) return r;
         if (ma.specialty_source !== mb.specialty_source) return ma.specialty_source === 'primary' ? -1 : 1;
         var la = nonNegativeInt(seedPeople[a].remaining_hours) - need;
         var lb = nonNegativeInt(seedPeople[b].remaining_hours) - need;
@@ -607,9 +663,9 @@
         specialty_source: m.specialty_source, source: 'automatic_proposal'
       });
       seedPeople[pid].remaining_hours = nonNegativeInt(seedPeople[pid].remaining_hours) - need;
-      if (m.priority === 'B') {
+      if (m.priority === policy.b_priority) {
         seedPeople[pid].b_assignment_hours = nonNegativeInt(seedPeople[pid].b_assignment_hours) + need;
-        seedPeople[pid].b_remaining_hours = Math.max(0, 10 - seedPeople[pid].b_assignment_hours);
+        seedPeople[pid].b_remaining_hours = Math.max(0, policy.b_limit_hours - seedPeople[pid].b_assignment_hours);
       }
       seedSlots[sid].remaining_hours = 0;
     });
@@ -660,10 +716,25 @@
     var seedBySlot = {};
     seed.forEach(function (row) { seedBySlot[row.slot_id] = row; });
     var finalRows = [], allCertified = true, totalNodes = 0, fallbackComponents = 0;
+    var globalNodeBudget = policy.global_node_budget;
+    function optimizerTimeExceeded() {
+      var now = (global.performance && typeof global.performance.now === 'function') ? global.performance.now() : Date.now();
+      return policy.time_budget_ms > 0 && (now - optimizerStartedAt) > policy.time_budget_ms;
+    }
 
     components.forEach(function (component) {
       var cg = component.group_indexes.map(function (i) { return groups[i]; });
       var cpids = component.person_ids.slice().sort(naturalCompare);
+      var componentRouteCount = cg.reduce(function (sum, g) { return sum + Object.keys(g.routes || {}).length; }, 0);
+      var tooComplex = cpids.length > policy.max_component_people || componentRouteCount > policy.max_component_routes || (cpids.length > 1 && cg.length > policy.max_component_groups);
+      if (tooComplex || globalNodeBudget < 1 || optimizerTimeExceeded()) {
+        var fallbackRows = [];
+        cg.forEach(function (g) { g.slot_ids.forEach(function (sid) { if (seedBySlot[sid]) fallbackRows.push(seedBySlot[sid]); }); });
+        finalRows = finalRows.concat(fallbackRows);
+        allCertified = false;
+        fallbackComponents++;
+        return;
+      }
       if (cpids.length === 1) {
         var pid = cpids[0];
         var cap = nonNegativeInt(originalPeople[pid] && originalPeople[pid].remaining_hours);
@@ -674,18 +745,22 @@
           g.slot_ids.forEach(function (sid) { items.push({ sid: sid, need: g.need, m: m }); });
         });
         var dp = new Map();
+        var dpAborted = false, dpNodes = 0;
         dp.set('0:0', { objective: { covered: 0, top: 0, b: 0, primary: 0 }, rows: [], used: 0, bused: 0 });
         items.forEach(function (item) {
+          if (dpAborted) return;
           var next = new Map(dp);
           dp.forEach(function (st) {
-            totalNodes++;
+            if (dpAborted) return;
+            dpNodes++;
+            if (dpNodes > Math.min(policy.component_node_limit, globalNodeBudget) || optimizerTimeExceeded()) { dpAborted = true; return; }
             var nu = st.used + item.need;
-            var nb = st.bused + (item.m.priority === 'B' ? item.need : 0);
+            var nb = st.bused + (item.m.priority === policy.b_priority ? item.need : 0);
             if (nu > cap || nb > bcap) return;
             var o = Object.assign({}, st.objective);
             o.covered += item.need;
-            if (item.m.priority === 'A' || item.m.priority === 'SPECIAL') o.top += item.need;
-            else if (item.m.priority === 'B') o.b += item.need;
+            if (policy.top_priorities.indexOf(item.m.priority) >= 0) o.top += item.need;
+            else if (item.m.priority === policy.b_priority) o.b += item.need;
             if (item.m.specialty_source === 'primary') o.primary += item.need;
             var slot = slots[item.sid] || {};
             var rows = st.rows.concat([{
@@ -695,13 +770,16 @@
               source: 'automatic_optimizer_dp'
             }]);
             var key = nu + ':' + nb, prev = next.get(key);
-            if (!prev || objectiveCompare(o, prev.objective) > 0) next.set(key, { objective: o, rows: rows, used: nu, bused: nb });
+            if (!prev || objectiveCompare(o, prev.objective, policy) > 0) next.set(key, { objective: o, rows: rows, used: nu, bused: nb });
           });
           dp = next;
         });
         var best = { objective: { covered: 0, top: 0, b: 0, primary: 0 }, rows: [] };
-        dp.forEach(function (st) { if (objectiveCompare(st.objective, best.objective) > 0) best = st; });
+        dp.forEach(function (st) { if (objectiveCompare(st.objective, best.objective, policy) > 0) best = st; });
+        totalNodes += dpNodes;
+        globalNodeBudget = Math.max(0, globalNodeBudget - dpNodes);
         finalRows = finalRows.concat(best.rows);
+        if (dpAborted) { allCertified = false; fallbackComponents++; }
         return;
       }
 
@@ -721,16 +799,16 @@
       });
       var bestRows = [];
       cg.forEach(function (g) { g.slot_ids.forEach(function (sid) { if (seedBySlot[sid]) bestRows.push(seedBySlot[sid]); }); });
-      var bestObj = objectiveForRows(bestRows), currentRows = [], cur = { covered: 0, top: 0, b: 0, primary: 0 };
-      var nodes = 0, aborted = false, memo = new Map(), nodeLimit = 30000;
+      var bestObj = objectiveForRows(bestRows, policy), currentRows = [], cur = { covered: 0, top: 0, b: 0, primary: 0 };
+      var nodes = 0, aborted = false, memo = new Map(), nodeLimit = Math.min(policy.component_node_limit, globalNodeBudget);
 
       function search() {
         if (aborted) return;
-        if (++nodes > nodeLimit) { aborted = true; return; }
+        if (++nodes > nodeLimit || optimizerTimeExceeded()) { aborted = true; return; }
         var remainingHours = 0, done = true;
         cg.forEach(function (g, gi) { if (counts[gi] > 0) { done = false; remainingHours += counts[gi] * g.need; } });
         if (done) {
-          if (objectiveCompare(cur, bestObj) > 0) {
+          if (objectiveCompare(cur, bestObj, policy) > 0) {
             bestObj = Object.assign({}, cur);
             bestRows = currentRows.map(function (r) { return Object.assign({}, r); });
           }
@@ -770,7 +848,7 @@
           var old = counts[chosen]; counts[chosen] = 0; search(); counts[chosen] = old; return;
         }
         cands.sort(function (a, b) {
-          var r = priorityRank(a.m.priority) - priorityRank(b.m.priority); if (r) return r;
+          var r = priorityRank(a.m.priority, policy) - priorityRank(b.m.priority, policy); if (r) return r;
           if (a.m.specialty_source !== b.m.specialty_source) return a.m.specialty_source === 'primary' ? -1 : 1;
           if (a.left !== b.left) return a.left - b.left;
           return naturalCompare(a.pid, b.pid);
@@ -782,7 +860,7 @@
           var pid2 = c.pid, m = c.m, sk = equiv[pid2] + '|' + rem[pid2] + '|' + brem[pid2];
           if (sym.has(sk)) return; sym.add(sk);
           rem[pid2] -= g.need;
-          if (m.priority === 'B') brem[pid2] -= g.need;
+          if (m.priority === policy.b_priority) brem[pid2] -= g.need;
           currentRows.push({
             person_id: pid2, slot_id: sid, slot_label: slot.slot_label || slot.label || sid,
             subject: slot.subject || '', hours: g.need, priority: m.priority,
@@ -790,16 +868,16 @@
             source: 'automatic_optimizer'
           });
           cur.covered += g.need;
-          if (m.priority === 'A' || m.priority === 'SPECIAL') cur.top += g.need;
-          else if (m.priority === 'B') cur.b += g.need;
+          if (policy.top_priorities.indexOf(m.priority) >= 0) cur.top += g.need;
+          else if (m.priority === policy.b_priority) cur.b += g.need;
           if (m.specialty_source === 'primary') cur.primary += g.need;
           search();
           if (m.specialty_source === 'primary') cur.primary -= g.need;
-          if (m.priority === 'A' || m.priority === 'SPECIAL') cur.top -= g.need;
-          else if (m.priority === 'B') cur.b -= g.need;
+          if (policy.top_priorities.indexOf(m.priority) >= 0) cur.top -= g.need;
+          else if (m.priority === policy.b_priority) cur.b -= g.need;
           cur.covered -= g.need;
           currentRows.pop();
-          if (m.priority === 'B') brem[pid2] += g.need;
+          if (m.priority === policy.b_priority) brem[pid2] += g.need;
           rem[pid2] += g.need;
         });
         search();
@@ -807,7 +885,7 @@
       }
 
       search();
-      totalNodes += nodes;
+      totalNodes += nodes; globalNodeBudget = Math.max(0, globalNodeBudget - nodes);
       if (aborted) { allCertified = false; fallbackComponents++; }
       finalRows = finalRows.concat(bestRows);
     });
@@ -817,9 +895,9 @@
       var ps = finalPeople[row.person_id], ss = finalSlots[row.slot_id], h = nonNegativeInt(row.hours);
       if (!ps || !ss) return;
       ps.remaining_hours = Math.max(0, nonNegativeInt(ps.remaining_hours) - h);
-      if (row.priority === 'B') {
+      if (row.priority === policy.b_priority) {
         ps.b_assignment_hours = nonNegativeInt(ps.b_assignment_hours) + h;
-        ps.b_remaining_hours = Math.max(0, 10 - ps.b_assignment_hours);
+        ps.b_remaining_hours = Math.max(0, policy.b_limit_hours - ps.b_assignment_hours);
       }
       ss.remaining_hours = 0;
     });
@@ -850,12 +928,18 @@
         optimizer_component_count: components.length,
         optimizer_search_nodes: totalNodes,
         maximum_coverage_certified: allCertified,
-        optimizer_safety_fallback_components: fallbackComponents
+        optimizer_safety_fallback_components: fallbackComponents,
+        optimizer_policy_schema: policy.schema,
+        optimizer_algorithm: policy.algorithm,
+        optimizer_solution_status: allCertified ? 'certified_optimum' : 'best_known_fallback',
+        optimizer_solution_equivalence: policy.solution_equivalence,
+        optimizer_assignment_identity_guaranteed: policy.assignment_identity_guaranteed === true
       }
     };
   }
 
   global.PersonnelWorkloadCalculations = Object.freeze({
+    optimizerPolicy: optimizerPolicy,
     canonicalSpecialtyCode: canonicalSpecialtyCode,
     nonNegativeInt: nonNegativeInt,
     serviceDays: serviceDays,

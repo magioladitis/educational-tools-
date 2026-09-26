@@ -25,6 +25,7 @@ run_py tests/personnel-workload-allocation-client-parity-contract.py
 run_py tests/personnel-workload-optimizer-client-parity-contract.py
 run_py tests/personnel-workload-optimizer-real-profile-contract.py
 run_py tests/personnel-workload-optimizer-mutation-contract.py
+run_py tests/personnel-workload-optimizer-policy-contract.py
 run_py tests/staffing-client-allocation-actions-contract.py
 
 echo "==> teaching assignments legacy-specialty contract"

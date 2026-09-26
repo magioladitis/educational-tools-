@@ -110,7 +110,15 @@
       requestButtons.forEach(function(button){button.disabled=true;});
     });
   }
-  ['staffingProfileForm','staffingPersonnelForm','staffingAllocationForm'].forEach(function(id){ installExplicitRequestGate(document.getElementById(id)); });
+  ['staffingProfileForm','staffingPersonnelForm','staffingAllocationForm'].forEach(function(id){
+    const form=document.getElementById(id);
+    if(form && window.PersonnelWorkloadCalculations && typeof window.PersonnelWorkloadCalculations.optimizeRemaining==='function'){
+      let capability=form.elements&&form.elements.namedItem?form.elements.namedItem('client_optimizer_capable'):null;
+      if(!capability){ capability=document.createElement('input'); capability.type='hidden'; capability.name='client_optimizer_capable'; form.appendChild(capability); }
+      capability.value='1';
+    }
+    installExplicitRequestGate(form);
+  });
 
   const tabs=Array.from(document.querySelectorAll('[data-staffing-tab]'));
   const panels=Array.from(document.querySelectorAll('[data-staffing-panel]'));
@@ -1505,6 +1513,8 @@
     });
   }
 
+  const optimizerPolicyData=staffingRuntimeConfig.optimizerPolicy&&typeof staffingRuntimeConfig.optimizerPolicy==='object'?staffingRuntimeConfig.optimizerPolicy:{};
+  const optimizerBLimit=Math.max(1,parseInt(optimizerPolicyData.b_limit_hours||10,10)||10);
   const allocationPeopleData=staffingRuntimeConfig.allocationPeople&&typeof staffingRuntimeConfig.allocationPeople==='object'?staffingRuntimeConfig.allocationPeople:{};
   const allocationSlotsData=staffingRuntimeConfig.allocationSlots&&typeof staffingRuntimeConfig.allocationSlots==='object'?staffingRuntimeConfig.allocationSlots:{};
   const specialtyLabelsData=staffingRuntimeConfig.specialtyLabels&&typeof staffingRuntimeConfig.specialtyLabels==='object'?staffingRuntimeConfig.specialtyLabels:{};
@@ -1513,13 +1523,13 @@
   const allocationTemplate=document.getElementById('allocationRowTemplate');
   const addAllocation=document.getElementById('addAllocationRow');
   const clearAllocation=document.getElementById('clearAllocationRows');
-  const allocationBAssignmentWarning='Οι ώρες μαθημάτων Β΄ ανάθεσης, από τη βασική και τη δεύτερη ειδικότητα συνολικά, υπερβαίνουν το όριο των 10 διδακτικών ωρών. Υπέρβαση επιτρέπεται μόνο κατ’ εξαίρεση, ύστερα από απόφαση ΠΥΣΔΕ και υπό τις προβλεπόμενες προϋποθέσεις.';
+  const allocationBAssignmentWarning='Οι ώρες μαθημάτων Β΄ ανάθεσης, από τη βασική και τη δεύτερη ειδικότητα συνολικά, υπερβαίνουν το όριο των '+optimizerBLimit+' διδακτικών ωρών. Υπέρβαση επιτρέπεται μόνο κατ’ εξαίρεση, ύστερα από απόφαση ΠΥΣΔΕ και υπό τις προβλεπόμενες προϋποθέσεις.';
   function allocationPriority(code,slot){
     if(!window.PersonnelWorkloadCalculations) return '';
-    return window.PersonnelWorkloadCalculations.priorityForSlotCode(slot,code)||'';
+    return window.PersonnelWorkloadCalculations.priorityForSlotCode(slot,code,optimizerPolicyData)||'';
   }
   function allocationPriorityRank(priority){
-    return window.PersonnelWorkloadCalculations?window.PersonnelWorkloadCalculations.priorityRank(priority):99;
+    return window.PersonnelWorkloadCalculations?window.PersonnelWorkloadCalculations.priorityRank(priority,optimizerPolicyData):99;
   }
   function allocationPriorityLabel(priority){
     if(priority==='A') return 'Α΄';
@@ -1529,7 +1539,7 @@
     return priority||'';
   }
   function allocationBestAssignment(person,slot){
-    return window.PersonnelWorkloadCalculations?window.PersonnelWorkloadCalculations.bestAssignmentForSlot(slot,person):null;
+    return window.PersonnelWorkloadCalculations?window.PersonnelWorkloadCalculations.bestAssignmentForSlot(slot,person,optimizerPolicyData):null;
   }
   const vacancyEligiblePeopleCache={};function vacancyEligiblePeopleForSlot(sid,slot){
     if(Object.prototype.hasOwnProperty.call(vacancyEligiblePeopleCache,sid))return vacancyEligiblePeopleCache[sid];
@@ -1835,7 +1845,7 @@
       if(pid||sid||hours){ activeToRow.push(rowIndex); active.push({person_id:pid,slot_id:sid,hours:hours}); }
     });
     const validation=window.PersonnelWorkloadCalculations
-      ? window.PersonnelWorkloadCalculations.validateRosterSlotAllocations(allocationSlotsData,allocationPeopleData,active)
+      ? window.PersonnelWorkloadCalculations.validateRosterSlotAllocations(allocationSlotsData,allocationPeopleData,active,optimizerPolicyData)
       : {allocation_rows:[],slot_attempted:{},slot_assigned:{},person_assigned:{},person_priority:{},person_source:{},overallocated_slots:{},summary:{assigned_slot_hours_total:0,unassigned_slot_hours:allocationTotalCapacity,overallocated_slot_hours:0}};
     const validatedByRow={};
     (validation.allocation_rows||[]).forEach(function(result,activeIndex){ validatedByRow[activeToRow[activeIndex]]=result; });
@@ -1888,28 +1898,11 @@
     }
     return {priority:firstPriority,codes:firstLegal.slice(),legal_priority:firstPriority,legal_codes:firstLegal.slice(),excluded_legacy_codes:Array.from(new Set(excluded)),legacy_only_fallback:firstLegal.length>0};
   }
-  function allocationObjectiveCompare(a,b){
-    for(const key of ['covered','top','b','primary']){
-      const av=a[key]||0,bv=b[key]||0;
-      if(av!==bv) return av>bv?1:-1;
-    }
-    return 0;
-  }
-  function allocationObjectiveForRows(rows){
-    const o={covered:0,top:0,b:0,primary:0};
-    (rows||[]).forEach(function(row){
-      const h=Math.max(0,parseInt(row.hours||0,10)||0), p=row.priority||'';
-      o.covered+=h;
-      if(p==='A'||p==='SPECIAL') o.top+=h; else if(p==='B') o.b+=h;
-      if(row.specialty_source==='primary') o.primary+=h;
-    });
-    return o;
-  }
   function allocationOptimizeRemaining(personStateInput,slotStateInput){
     if(!window.PersonnelWorkloadCalculations||typeof window.PersonnelWorkloadCalculations.optimizeRemaining!=='function'){
       return {allocations:[],people:personStateInput||{},slots:slotStateInput||{},summary:{auto_covered_hours:0,covered_hours:0,maximum_coverage_certified:false,optimizer_search_nodes:0,optimizer_unavailable:true}};
     }
-    return window.PersonnelWorkloadCalculations.optimizeRemaining(allocationSlotsData,allocationPeopleData,personStateInput,slotStateInput);
+    return window.PersonnelWorkloadCalculations.optimizeRemaining(allocationSlotsData,allocationPeopleData,personStateInput,slotStateInput,optimizerPolicyData);
   }
   function specialtyBuildReport(state){
     const personState={}, slotState={};
@@ -1919,7 +1912,7 @@
       personState[pid]={
         remaining_hours:Math.max(0,(person.available_here_hours||0)-assigned),
         b_assignment_hours:bHours,
-        b_remaining_hours:Math.max(0,10-bHours),
+        b_remaining_hours:Math.max(0,optimizerBLimit-bHours),
         primary_code:person.specialty_code||'',
         secondary_code:person.secondary_specialty_code||''
       };
@@ -2339,7 +2332,7 @@
       personState[pid]={
         remaining_hours:Math.max(0,(person.available_here_hours||0)-assigned),
         b_assignment_hours:bHours,
-        b_remaining_hours:Math.max(0,10-bHours),
+        b_remaining_hours:Math.max(0,optimizerBLimit-bHours),
         primary_code:person.specialty_code||'',
         secondary_code:person.secondary_specialty_code||''
       };
@@ -2350,7 +2343,7 @@
     });
     if(button) button.disabled=true;
     let optimized;
-    try{ optimized=W.optimizeRemaining(allocationSlotsData,allocationPeopleData,personState,slotState); }
+    try{ optimized=W.optimizeRemaining(allocationSlotsData,allocationPeopleData,personState,slotState,optimizerPolicyData); }
     catch(error){
       if(button) button.disabled=false;
       console.error('Αποτυχία client-side optimizer.',error);

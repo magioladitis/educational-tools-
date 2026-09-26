@@ -21,6 +21,9 @@ def objective(rows):
         if r.get('specialty_source')=='primary': o['primary']+=h
     return o
 
+def normalized_allocations(rows):
+    return sorted((r.get('slot_id',''),r.get('person_id',''),int(r.get('hours',0)),r.get('priority',''),r.get('specialty_source',''),r.get('used_specialty_code','')) for r in rows)
+
 def route(slot,person):
     primary=person.get('specialty_code',''); secondary=person.get('secondary_specialty_code','')
     candidates=[]
@@ -106,6 +109,19 @@ scenarios.append(scenario('golden_secondary_route',{'x':sx('x',3,{'ΠΕ02':'A','
 scenarios.append(scenario('golden_atomic_blocked',{'x':sx('x',4,{'ΠΕ03':'A'})},
  [{'person_id':'p','specialty_code':'ΠΕ03'}],{'p':{'remaining_hours':4,'b_assignment_hours':0,'b_remaining_hours':10}},
  {'x':{'remaining_hours':2,'atomic_blocked':True}}))
+# Deliberate multiple-optimum fixture: both engines are allowed to choose a
+# different teacher for s1 as long as the certified lexicographic objective is identical.
+scenarios.append(scenario('golden_equivalent_optima',{
+ 's1':sx('s1',2,{'ΠΕ01':'A','ΠΕ03':'B','ΠΕ04.01':'C','ΠΕ80':'C'}),
+ 's2':sx('s2',5,{'ΠΕ03':'B','ΠΕ01':'SPECIAL','ΠΕ02':'SPECIAL','ΠΕ04.01':'SPECIAL'})},
+ [{'person_id':'p1','specialty_code':'ΠΕ80'},{'person_id':'p2','specialty_code':'ΠΕ80','secondary_specialty_code':'ΠΕ02'}],
+ {'p1':{'remaining_hours':10,'b_assignment_hours':5,'b_remaining_hours':5},'p2':{'remaining_hours':11,'b_assignment_hours':5,'b_remaining_hours':5}}))
+
+# Safety-budget fixture: >28 people in one connected component must use the
+# documented best-known heuristic fallback and mark the result uncertified.
+fb_people=[{'person_id':f'f{i:02d}','specialty_code':'ΠΕ03'} for i in range(1,30)]
+fb_state={p['person_id']:{'remaining_hours':1,'b_assignment_hours':0,'b_remaining_hours':10} for p in fb_people}
+scenarios.append(scenario('fallback_large_component',{'f1':sx('f1',1,{'ΠΕ03':'A'}),'f2':sx('f2',1,{'ΠΕ03':'A'})},fb_people,fb_state))
 
 rng=random.Random(20260926); codes=['ΠΕ01','ΠΕ02','ΠΕ03','ΠΕ04.01','ΠΕ80']; priorities=['A','SPECIAL','B','C']
 for case in range(80):
@@ -138,10 +154,13 @@ if node.returncode: print(node.stderr);sys.exit(1)
 js_out=json.loads(node.stdout)
 check('PHP and JS returned same scenario count',len(js_out)==len(php_out)==len(scenarios))
 parity_ok=True; certified_ok=True; invariant_ok=True; detail=''
+exact_solution_count=0; equivalent_optimum_count=0
 for sc,p,j in zip(scenarios,php_out,js_out):
     po=objective(p['allocations']); jo=objective(j['allocations'])
     if po!=jo:
         parity_ok=False; detail=f"{sc['name']} PHP={po} JS={jo}"; break
+    if normalized_allocations(p['allocations']) == normalized_allocations(j['allocations']): exact_solution_count += 1
+    else: equivalent_optimum_count += 1
     if sc['name'].startswith(('golden_','random_')) and (not p['summary'].get('maximum_coverage_certified') or not j['summary'].get('maximum_coverage_certified')):
         certified_ok=False; detail=f"uncertified {sc['name']}"; break
     # Structural invariants for JS output.
@@ -160,7 +179,8 @@ for sc,p,j in zip(scenarios,php_out,js_out):
         if assigned[pid]>int(sc['person_state'][pid]['remaining_hours']) or bassigned[pid]>int(sc['person_state'][pid]['b_remaining_hours']):
             invariant_ok=False;detail=f"capacity/B invariant {sc['name']}";break
     if not invariant_ok: break
-check('86 deterministic scenarios match PHP lexicographic objective',parity_ok,detail)
+check('88 deterministic scenarios match PHP lexicographic objective',parity_ok,detail)
+check('solution parity is classified as exact vs equivalent optimum',exact_solution_count+equivalent_optimum_count==len(scenarios),f'exact={exact_solution_count} equivalent={equivalent_optimum_count}')
 check('all small differential scenarios are certified by both solvers',certified_ok,detail)
 check('JS optimizer preserves atomic/capacity/B/eligibility invariants',invariant_ok,detail)
 
@@ -172,6 +192,14 @@ check('golden B hard limit remains 10h',objective(byname['golden_b_limit']['allo
 check('golden scarcity case reaches 6h',objective(byname['golden_scarcity']['allocations'])['covered']==6)
 check('primary wins equal-priority route over secondary',len(byname['golden_secondary_route']['allocations'])==1 and byname['golden_secondary_route']['allocations'][0]['specialty_source']=='primary')
 check('atomic-blocked slot is never auto-completed',byname['golden_atomic_blocked']['allocations']==[])
+eqp=phpmap['golden_equivalent_optima'] if 'phpmap' in globals() else next(x for x in php_out if x['name']=='golden_equivalent_optima')
+eqj=byname['golden_equivalent_optima']
+check('documented equivalent-optimum fixture has same certified objective',objective(eqp['allocations'])==objective(eqj['allocations']) and eqp['summary'].get('maximum_coverage_certified') and eqj['summary'].get('maximum_coverage_certified'))
+check('equivalent-optimum fixture may differ in exact rows',normalized_allocations(eqp['allocations'])!=normalized_allocations(eqj['allocations']))
+fbp=next(x for x in php_out if x['name']=='fallback_large_component'); fbj=byname['fallback_large_component']
+check('large-component safety fallback is explicit on both engines',not fbp['summary'].get('maximum_coverage_certified') and not fbj['summary'].get('maximum_coverage_certified'))
+check('safety fallback still preserves objective parity',objective(fbp['allocations'])==objective(fbj['allocations']))
+print('  ℹ optimizer solution classification: exact=%d, equivalent-optimum=%d' % (exact_solution_count,equivalent_optimum_count))
 
 # Independent brute-force oracle on the first 30 small random scenarios (trim to <=3 people, <=6 slots).
 oracle_cases=[]
@@ -191,4 +219,4 @@ if FAIL:
     print('\nOptimizer client parity: FAIL (%d)'%len(FAIL))
     for x in FAIL: print(' - '+x)
     sys.exit(1)
-print('\nOptimizer client parity: PASS (%d checks)'%(5+1+3+6+1))
+print('\nOptimizer client parity: PASS')

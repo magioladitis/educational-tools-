@@ -4,7 +4,9 @@ import subprocess,json,re
 ROOT=Path(__file__).resolve().parents[1]
 PAGE=ROOT/'ypologismos-didaktikon-anagkon.php'
 UI=ROOT/'includes'/'staffing-simulator-ui.js'
+OPT=ROOT/'includes'/'personnel-workload-calculations.js'
 SRC=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
+OPTSRC=OPT.read_text(encoding='utf-8')
 CSS=(ROOT/'assets/staffing-simulator.css').read_text(encoding='utf-8')
 checks=[]
 def check(name,cond): checks.append((name,bool(cond)))
@@ -32,8 +34,8 @@ check('signed declaration convention visible', 'έλλειμμα με πρόση
 check('portable DDE export schema declared', 'staffing_balance_v1' in out and 'Λήψη CSV για ΔΔΕ' in out)
 check('CSV carries school identity columns', all(x in SRC for x in ['school_code','school_name','report_key','deficit_hours','surplus_hours','balance_hours']))
 check('live smart report functions exist', 'function specialtyBuildReport(state)' in SRC and 'function renderSpecialtyBalance(state)' in SRC and 'renderSpecialtyBalance(state);' in SRC)
-check('live auto balance uses second specialty eligibility', 'allocationBestAssignment(allocationPeopleData[pid],allocationSlotsData[sid])' in SRC and 'secondary_specialty_code' in SRC and 'specialty_source' in SRC)
-check('automatic proposal respects B limit', 'b_remaining_hours:Math.max(0,10-bHours)' in SRC and "match.priority==='B'&&(ps.b_remaining_hours||0)<need" in SRC and "if(m.priority==='B')brem[pid]-=g.need" in SRC)
+check('live auto balance uses second specialty eligibility', 'allocationBestAssignment' in SRC and 'secondary_specialty_code' in SRC and 'secondary_specialty_code' in OPTSRC and 'specialty_source' in OPTSRC)
+check('automatic proposal respects B limit', 'b_remaining_hours:Math.max(0,optimizerBLimit-bHours)' in SRC and 'b_limit_hours: 10' in OPTSRC and 'policy.b_priority' in OPTSRC)
 check('smart choice uses top candidates not fallback', 'function specialtyTopCandidates(slot)' in SRC and 'slot.top_priority' in SRC)
 check('specialty tab becomes stale after personnel edits', 'const specialtiesTab=' in SRC and 'specialtiesTab.disabled=true' in SRC)
 check('school-profile edits stale specialty tab too', "['results','personnel','allocation','vacancies','specialties']" in SRC)

@@ -1,3 +1,13 @@
+## 2026-09-26 — Personnel workload browser optimizer · Phase 3B (v3.22.11)
+
+- Κεντρικοποιήθηκε η πολιτική του optimizer στο server-side `personnelWorkloadOptimizerPolicy()` και αποστέλλεται στον browser ως `optimizerPolicy`: σειρά/βαθμοί προτεραιότητας, objective order, όριο Β΄ ανάθεσης και safety budgets δεν διατηρούνται πλέον ως ανεξάρτητη production πηγή στο UI.
+- Η επιλεξιμότητα παραμένει data-driven από τα server-built `allocationSlots[].eligible_by_priority`. Ο browser optimizer δεν περιέχει hard-coded πίνακα κλάδων/αναθέσεων. Προστέθηκε ειδικό TE16 regression fixture που αποδεικνύει ότι αλλαγή tier στο canonical slot data περνά στον client χωρίς αλλαγή JavaScript.
+- Ευθυγραμμίστηκαν τα client safety limits με τον server: global node budget 30.000, component limit 12.000, complexity cutoffs και nominal time budget 1.250 ms. Και οι δύο engines δηλώνουν ρητά `certified_optimum` ή `best_known_fallback`.
+- Τεκμηριώθηκε ότι η ταυτότητα των rows δεν είναι μέρος του objective: διαφορετικές αναθέσεις επιτρέπονται μόνο όταν έχουν το ίδιο λεξικογραφικό objective και τηρούν όλα τα invariants. Το differential harness ταξινομεί πλέον `exact` έναντι `equivalent-optimum` αντί να κρύβει τις ισοπαλίες.
+- Προστέθηκε πραγματικό school-profile golden fixture: Γυμνάσιο 2026 + ΤΕ16/1 ώρα πρέπει και σε PHP και σε JS να καταλήγει ακριβώς στη Μουσική Α1 ως Α΄ ανάθεση. Προστέθηκε επίσης explicit large-component fallback fixture.
+- Η Καρτέλα 6 παραμένει client-first. JS-capable forms δηλώνουν `client_optimizer_capable=1`, ενώ ο βαρύς server specialty report κρατιέται μόνο ως no-JS/direct fallback. Το `allocation_auto` PHP path παραμένει ως progressive fallback αν ο browser optimizer αποτύχει.
+- Τα νέα policy/source checks εντάχθηκαν στο `pre-pwa-regression.sh`, ενώ διατηρήθηκαν χωρίς αύξηση τα staffing performance budgets.
+
 ## 2026-09-26 — Personnel workload browser optimizer · Phase 3A (v3.22.10)
 
 - Εξήχθη ο ήδη υπάρχων client-side atomic optimizer από το `staffing-simulator-ui.js` στο pure module `includes/personnel-workload-calculations.js`. Το UI πλέον καλεί `PersonnelWorkloadCalculations.optimizeRemaining()` αντί να διατηρεί δικό του branch-and-bound/DP implementation.

@@ -936,11 +936,38 @@ function personnelWorkloadAllocationSlots($profile, $matrix = null)
     return $slots;
 }
 
+function personnelWorkloadOptimizerPolicy()
+{
+    static $policy = null;
+    if ($policy !== null) return $policy;
+    $policy = array(
+        'schema'=>'staffing_optimizer_policy_v1',
+        'algorithm'=>'component_bnb_symmetry_v1',
+        'priority_scan_order'=>array('A','B','C','SPECIAL'),
+        'priority_ranks'=>array('A'=>1,'SPECIAL'=>1,'B'=>2,'C'=>3),
+        'objective_order'=>array('covered','top','b','primary'),
+        'top_priorities'=>array('A','SPECIAL'),
+        'b_priority'=>'B',
+        'b_limit_hours'=>10,
+        'global_node_budget'=>30000,
+        'component_node_limit'=>12000,
+        'max_component_people'=>28,
+        'max_component_routes'=>1400,
+        'max_component_groups'=>100,
+        'time_budget_ms'=>1250,
+        'eligibility_source'=>'server_allocation_slots.eligible_by_priority',
+        'solution_equivalence'=>'same_lexicographic_objective_and_invariants',
+        'assignment_identity_guaranteed'=>false,
+    );
+    return $policy;
+}
+
 function personnelWorkloadPriorityForSlotCode($slot, $specialtyCode)
 {
     $code = teacherSpecialtyCanonicalCode($specialtyCode);
     if ($code === '' || empty($slot['eligible_by_priority'])) return null;
-    foreach (array('A','B','C','SPECIAL') as $priority) {
+    $policy = personnelWorkloadOptimizerPolicy();
+    foreach ($policy['priority_scan_order'] as $priority) {
         if (!empty($slot['eligible_by_priority'][$priority]) && in_array($code, $slot['eligible_by_priority'][$priority], true)) return $priority;
     }
     return null;
@@ -948,8 +975,8 @@ function personnelWorkloadPriorityForSlotCode($slot, $specialtyCode)
 
 function personnelWorkloadPriorityRank($priority)
 {
-    $order = array('A'=>1, 'SPECIAL'=>1, 'B'=>2, 'C'=>3);
-    return isset($order[$priority]) ? $order[$priority] : 99;
+    $policy = personnelWorkloadOptimizerPolicy();
+    return isset($policy['priority_ranks'][$priority]) ? $policy['priority_ranks'][$priority] : 99;
 }
 
 /**
@@ -1152,15 +1179,17 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
             $bHoursByPerson[$row['person_id']] += (int) $row['hours'];
         }
     }
+    $optimizerPolicy = personnelWorkloadOptimizerPolicy();
+    $bLimit = (int)$optimizerPolicy['b_limit_hours'];
     $peopleOverBLimit = 0;
     $bHoursOverLimitTotal = 0;
     foreach ($bHoursByPerson as $personId=>$bHours) {
-        if ($bHours <= 10) continue;
+        if ($bHours <= $bLimit) continue;
         $peopleOverBLimit++;
-        $bHoursOverLimitTotal += $bHours - 10;
+        $bHoursOverLimitTotal += $bHours - $bLimit;
         if (isset($basePlan['people'][$personId])) {
             $basePlan['people'][$personId]['b_assignment_hours'] = $bHours;
-            $basePlan['people'][$personId]['b_assignment_limit_hours'] = 10;
+            $basePlan['people'][$personId]['b_assignment_limit_hours'] = $bLimit;
             $basePlan['people'][$personId]['b_assignment_limit_exceeded'] = true;
             if (!isset($basePlan['people'][$personId]['allocation_warnings'])) $basePlan['people'][$personId]['allocation_warnings'] = array();
             $basePlan['people'][$personId]['allocation_warnings'][] = 'b_assignment_hours_exceed_10_limit';
@@ -1177,8 +1206,8 @@ function personnelWorkloadRosterSlotPlan($profile, $people, $slotAllocations, $m
     foreach ($peopleIndex as $personId=>$person) {
         if (!isset($basePlan['people'][$personId])) continue;
         if (!isset($basePlan['people'][$personId]['b_assignment_hours'])) $basePlan['people'][$personId]['b_assignment_hours'] = isset($bHoursByPerson[$personId]) ? (int) $bHoursByPerson[$personId] : 0;
-        if (!isset($basePlan['people'][$personId]['b_assignment_limit_hours'])) $basePlan['people'][$personId]['b_assignment_limit_hours'] = 10;
-        if (!isset($basePlan['people'][$personId]['b_assignment_limit_exceeded'])) $basePlan['people'][$personId]['b_assignment_limit_exceeded'] = $basePlan['people'][$personId]['b_assignment_hours'] > 10;
+        if (!isset($basePlan['people'][$personId]['b_assignment_limit_hours'])) $basePlan['people'][$personId]['b_assignment_limit_hours'] = $bLimit;
+        if (!isset($basePlan['people'][$personId]['b_assignment_limit_exceeded'])) $basePlan['people'][$personId]['b_assignment_limit_exceeded'] = $basePlan['people'][$personId]['b_assignment_hours'] > personnelWorkloadOptimizerPolicy()['b_limit_hours'];
     }
 
     $invalidRows = 0;
@@ -1354,7 +1383,7 @@ function personnelWorkloadAutomaticBalanceProposal($profile, $people, $slotAlloc
         $peopleState[$personId] = array(
             'remaining_hours'=>$remaining,
             'b_assignment_hours'=>$bHours,
-            'b_remaining_hours'=>max(0,10-$bHours),
+            'b_remaining_hours'=>max(0, personnelWorkloadOptimizerPolicy()['b_limit_hours']-$bHours),
             'primary_code'=>isset($person['specialty_code']) ? teacherSpecialtyCanonicalCode($person['specialty_code']) : '',
             'secondary_code'=>isset($person['secondary_specialty_code']) ? teacherSpecialtyCanonicalCode($person['secondary_specialty_code']) : '',
         );

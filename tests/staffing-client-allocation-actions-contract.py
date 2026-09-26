@@ -14,7 +14,7 @@ gate=UI[UI.index('function installExplicitRequestGate'):UI.index("['staffingProf
 check('request gate invokes client handler before compacting fields', gate.find('handleStaffingClientAction')>=0 and gate.find('handleStaffingClientAction') < gate.find('compactRepeatedFormState'))
 check('handled client action prevents default POST', "if(clientAction!=='' && typeof handleStaffingClientAction==='function' && handleStaffingClientAction(clientAction,button)){" in gate and 'event.preventDefault();' in gate[gate.find('handleStaffingClientAction'):])
 handler=UI[UI.index('function handleStaffingClientAction'):UI.index('if(allocationList) allocationRows().forEach')]
-check('client auto action delegates shared optimizer', 'W.optimizeRemaining(allocationSlotsData,allocationPeopleData,personState,slotState)' in handler)
+check('client auto action delegates shared optimizer', 'W.optimizeRemaining(allocationSlotsData,allocationPeopleData,personState,slotState,optimizerPolicyData)' in handler)
 check('client auto action validates existing rows first', 'const invalid=state.rowState.filter' in handler and "if(invalid.length)" in handler)
 check('client auto action preserves atomic partial locks', 'atomic_blocked:assigned>0&&remaining>0' in handler)
 check('client auto action appends proposal instead of replacing manual rows', 'proposed.forEach(allocationAppendOptimizerRow)' in handler and 'allocationRows().forEach(function(row){row.remove();})' not in handler)
@@ -24,6 +24,8 @@ check('client check action uses live validator without POST', "if(action==='allo
 check('optimizer exception deliberately allows server fallback', "return false; // progressive server fallback" in handler)
 check('no fetch/XHR introduced for allocation actions', 'fetch(' not in handler and 'XMLHttpRequest' not in handler)
 check('server optimizer remains as progressive fallback/reference', "$staffingAction === 'allocation_auto'" in PAGE and 'teachingAllocationEngineProposal' in PAGE)
+check('JS-capable forms advertise client optimizer capability', "client_optimizer_capable" in UI and "capability.value='1'" in UI)
+check('specialty server report is no-JS/direct fallback only', "$specialtyBalanceServerNeeded = $specialtyBalanceEnabled && $activePanel === 'specialties' && !$clientOptimizerCapable;" in PAGE)
 if FAIL:
     print('\nStaffing client allocation actions: FAIL (%d)'%len(FAIL));sys.exit(1)
-print('\nStaffing client allocation actions: PASS (%d checks)'%(13))
+print('\nStaffing client allocation actions: PASS (%d checks)'%(15))
