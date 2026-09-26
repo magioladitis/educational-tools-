@@ -211,7 +211,19 @@ objective divergence / invalid result  ← FAIL
 
 ### Client-first, όχι client-only
 
-Validation και automatic proposal γίνονται client-side όταν το browser contract είναι συμβατό. Ο PHP engine παραμένει reference, no-JS fallback και safety fallback σε exception/schema mismatch.
+Μετά τον πρώτο server-side υπολογισμό της σχολικής μονάδας, το browser έχει ήδη το canonical workload matrix contract και τα allocation slots. Ο έλεγχος της Καρτέλας 3 (`normalizeRoster()`), το unlock της Καρτέλας 4, το allocation validation και το automatic proposal γίνονται client-side όταν workload module + specialty-normalization schema είναι συμβατά.
+
+Η τρέχουσα ροή είναι:
+
+```text
+Καρτέλα 1 → explicit server POST → profile / matrix / allocation slots
+Καρτέλα 3 → client normalizeRoster() → Καρτέλα 4 unlock (χωρίς POST)
+Καρτέλα 4/5/6 → client validation / optimizer / derived views
+```
+
+Το πρώτο profile/matrix build παραμένει server-side canonical boundary. Δεν αντιγράφουμε ωρολόγια/αναθέσεις/profile builders σε JavaScript.
+
+Ο PHP personnel POST και ο PHP engine παραμένουν reference, no-JS fallback και safety fallback σε module exception/schema mismatch. Πριν από πιθανό allocation fallback, ο browser συγχρονίζει το live personnel payload στο allocation form ώστε ο server να λάβει ακριβώς το ίδιο roster.
 
 ---
 
@@ -226,6 +238,7 @@ HTTP → PHP bootstrap → recomputation → full HTML render → response → r
 Performance guard:
 
 ```bash
+python3 tests/personnel-stage-client-transition-contract.py
 python3 tests/personnel-workload-performance-benchmark.py --contract
 ```
 

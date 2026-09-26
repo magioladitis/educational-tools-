@@ -1346,6 +1346,12 @@ foreach ($allocationPeopleClient as $personData) {
         if ($canonical !== '' && !isset($specialtyLabelsClient[$canonical])) $specialtyLabelsClient[$canonical] = teacherSpecialtyLabel($canonical);
     }
 }
+foreach (array('relevant','other') as $optionGroup) {
+    foreach (isset($personnelSpecialtyOptions[$optionGroup]) && is_array($personnelSpecialtyOptions[$optionGroup]) ? $personnelSpecialtyOptions[$optionGroup] : array() as $code) {
+        $canonical = teacherSpecialtyCanonicalCode($code);
+        if ($canonical !== '' && !isset($specialtyLabelsClient[$canonical])) $specialtyLabelsClient[$canonical] = teacherSpecialtyLabel($canonical);
+    }
+}
 uksort($specialtyLabelsClient, 'strnatcmp');
 staffingPerfEnd('specialty_labels');
 ?>
@@ -1998,8 +2004,9 @@ staffingPerfEnd('specialty_labels');
             </div>
 
             <div class="actions">
-              <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="personnel" data-staffing-request-action="personnel">Έλεγχος ωραρίων προσωπικού</button>
+              <button class="edu-btn-primary" type="submit" name="staffing_action_fallback" value="personnel" data-staffing-request-action="personnel" data-staffing-client-action="personnel">Έλεγχος ωραρίων προσωπικού</button>
             </div>
+            <div class="personnel-csv-status" id="personnelCheckStatus" role="status" aria-live="polite" aria-atomic="true"></div>
           </form>
 
           <template id="personnelRowTemplate">
@@ -2045,9 +2052,8 @@ staffingPerfEnd('specialty_labels');
           <p class="cap">Δημιούργησε αυτόματη πρόταση ή άλλαξε χειροκίνητα την κατανομή των πραγματικών μαθημάτων / ομάδων στους διαθέσιμους εκπαιδευτικούς. Το εργαλείο ελέγχει την ισχύουσα ανάθεση, το ατομικό υπόλοιπο ωραρίου και τη χωρητικότητα κάθε συγκεκριμένου τμήματος / ομάδας.</p>
           <div class="info-note"><strong>Πρόταση κάλυψης — πάντα επεξεργάσιμη.</strong> Ο αυτόματος μηχανισμός επιδιώκει πρώτα τη μέγιστη δυνατή κάλυψη των ωρών σε ολόκληρη τη σχολική μονάδα και έπειτα προτιμά Α΄/ειδική ανάθεση πριν από Β΄ και Β΄ πριν από Γ΄. Οι γραμμές που έχει ήδη ορίσει ο χρήστης διατηρούνται και η πρόταση συμπληρώνει μόνο το υπόλοιπο. Ο Διευθυντής μπορεί στη συνέχεια να αλλάξει οποιοδήποτε όνομα ή μάθημα και να ξαναελέγξει αμέσως κενά / πλεονάσματα.</div>
 
-          <?php if (!$allocationEnabled): ?>
-            <div class="allocation-empty">Για να ενεργοποιηθεί η κατανομή χρειάζεται τουλάχιστον ένας εκπαιδευτικός με πλήρως υπολογισμένο ωράριο στο tab «Εκπαιδευτικοί».</div>
-          <?php else: ?>
+          <div class="allocation-empty" id="allocationGateMessage"<?php echo $allocationEnabled ? ' hidden' : ''; ?>>Για να ενεργοποιηθεί η κατανομή χρειάζεται τουλάχιστον ένας εκπαιδευτικός Γενικής Εκπαίδευσης με πλήρως υπολογισμένο ωράριο στο tab «Εκπαιδευτικοί».</div>
+          <div id="allocationWorkspace"<?php echo $allocationEnabled ? '' : ' hidden'; ?>>
             <?php
               $allocationTotalHours = (int)$matrix['summary']['assignment_unit_hours'];
               $allocationAssignedHours = $allocationPlan ? (int)$allocationPlan['summary']['assigned_slot_hours_total'] : 0;
@@ -2201,7 +2207,7 @@ staffingPerfEnd('specialty_labels');
                 </div>
               </template>
             </div>
-          <?php endif; ?>
+          </div>
         <?php calculatorCardEnd(); ?>
 
         <?php calculatorCardStart(array('class'=>'card staffing-panel vacancies-card','attrs'=>array('id'=>'staffingPanelVacancies','data-staffing-panel'=>'vacancies','role'=>'tabpanel','aria-labelledby'=>'staffingTabVacancies','tabindex'=>'0') + ($activePanel !== 'vacancies' ? array('hidden'=>true) : array()))); ?>

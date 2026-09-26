@@ -28,6 +28,7 @@ node tests/education-core-contract.js
 echo "==> personnel CSV import regression"
 node tests/personnel-csv-import-regression.js
 run_py tests/personnel-workload-client-parity-contract.py
+run_py tests/personnel-stage-client-transition-contract.py
 run_py tests/personnel-workload-allocation-client-parity-contract.py
 run_py tests/personnel-workload-optimizer-client-parity-contract.py
 run_py tests/personnel-workload-optimizer-real-profile-contract.py

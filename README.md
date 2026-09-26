@@ -1,3 +1,12 @@
+## 2026-09-26 — Personnel stage client transition · Phase 4 (v3.22.16)
+
+- Ο «Έλεγχος ωραρίων προσωπικού» της Καρτέλας 3 γίνεται πλέον client-side όταν το κοινό workload module και το specialty-normalization schema είναι συμβατά· δεν απαιτείται δεύτερο POST/reload για να ενεργοποιηθεί η Καρτέλα 4.
+- Το allocation shell/slots αποδίδονται ήδη μετά τον πρώτο server-side υπολογισμό της σχολικής μονάδας και παραμένουν κλειδωμένα μέχρι να περάσει ο client personnel check.
+- Προστέθηκε pure `normalizeRoster()` στο `personnel-workload-calculations.js`, με parity απέναντι στην PHP για duplicate director, ΕΑΕ `.50`, unresolved rows, myschool ωράριο και 2η ειδικότητα.
+- Το client transition συγχρονίζει το τρέχον personnel payload μέσα στο allocation form, ώστε PHP/no-JS/exception fallback να συνεχίζει να δουλεύει με τα ίδια ακριβώς δεδομένα.
+- Ο PHP personnel POST παραμένει πλήρως λειτουργικός ως progressive fallback/reference. Το νέο `tests/personnel-stage-client-transition-contract.py` μπήκε στο release gate.
+- Έκδοση/cache busting: `EDU_TOOLS_VERSION = 3.22.16`.
+
 ## 2026-09-26 — Mobile legal-source disclosure hardening (v3.22.15)
 
 - Οι κάρτες «Πηγές / Νομική βάση» αποδίδονται πλέον κλειστές στο αρχικό HTML, ώστε σε iPhone/PWA να μην εμφανίζονται στιγμιαία ανοιχτές πριν τρέξει το JavaScript.

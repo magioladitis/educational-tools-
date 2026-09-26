@@ -122,7 +122,8 @@ check('specific unresolved dependency notice replaces counter', 'Εκκρεμο�
 check('regulatory issues are contextual rather than counters', "staffingNotices['regulatory']" in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')) and 'Υπάρχει κανονιστική εκκρεμότητα που επηρεάζει τον υπολογισμό.' in (PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8')))
 check('Greek terminology in matrix', '<th scope="col">Α΄</th><th scope="col">Β΄</th><th scope="col">Γ΄</th>' in l and 'Αποκλειστική κορυφαία' not in l and 'Χαμηλότερη ανάθεση</th>' not in l)
 check('Greek readiness label', 'Έτοιμο για πίνακα επιλεξιμότητας' in l)
-check('English UI terminology removed', all(term not in l for term in ['School profile','assignment units','Assignment units','eligibility','Fallback','unresolved dependencies','regulatory gaps','simulator / test harness','backend','roster']))
+visible_l=re.sub(r'<script\b[^>]*>.*?</script>','',l,flags=re.S|re.I)
+check('English UI terminology removed', all(term not in visible_l for term in ['School profile','assignment units','Assignment units','eligibility','Fallback','unresolved dependencies','regulatory gaps','simulator / test harness','backend','roster']))
 
 text=(PAGE.read_text(encoding='utf-8')+'\n'+UI.read_text(encoding='utf-8'))
 check('frontend uses common profile builder', 'schoolProfileBuildDayGymnasium2026' in text and 'schoolProfileBuildDayGel2026' in text)

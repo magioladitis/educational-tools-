@@ -341,6 +341,113 @@
   }
 
 
+  function normalizeRoster(people, options) {
+    people = Array.isArray(people) ? people : [];
+    options = options && typeof options === 'object' ? options : {};
+    var sectionCount = nonNegativeInt(options.school_general_section_count == null ? 0 : options.school_general_section_count);
+    var seenDirector = false;
+    var duplicateDirectorIndexes = [];
+    var evaluations = {};
+    var normalizedRows = [];
+    var allocationPeople = {};
+    var summary = {
+      people_count: 0,
+      resolved_count: 0,
+      unresolved_count: 0,
+      required_hours: 0,
+      external_hours: 0,
+      available_here_hours: 0,
+      general_resolved_count: 0,
+      general_available_here_hours: 0,
+      eae_people_count: 0,
+      eae_available_here_hours: 0,
+      by_code: {}
+    };
+
+    people.forEach(function (rawPerson, index) {
+      rawPerson = rawPerson && typeof rawPerson === 'object' ? rawPerson : {};
+      var person = Object.assign({}, rawPerson);
+      if (rawPerson.service && typeof rawPerson.service === 'object') person.service = Object.assign({}, rawPerson.service);
+      var role = person.role == null ? 'teacher' : String(person.role);
+      var duplicateDirector = false;
+      if (role === 'director') {
+        if (seenDirector) { duplicateDirector = true; duplicateDirectorIndexes.push(index); }
+        else seenDirector = true;
+        if (person.school_general_section_count == null) person.school_general_section_count = sectionCount;
+      }
+      var code = canonicalSpecialtyCode(person.specialty_code);
+      var normalized = duplicateDirector ? {
+        status: 'invalid', valid: false, reason: 'multiple_directors_not_allowed', specialty_code: code
+      } : normalizePerson(person, options);
+      var personId = String(person.person_id == null ? '' : person.person_id).trim();
+      if (personId) evaluations[personId] = normalized;
+      normalizedRows.push({ person: person, normalized: normalized, duplicate_director: duplicateDirector, index: index });
+
+      summary.people_count++;
+      if (code && !summary.by_code[code]) {
+        summary.by_code[code] = {
+          code: code,
+          label: specialtyLabel(code, options),
+          people_count: 0,
+          resolved_count: 0,
+          required_hours: 0,
+          external_hours: 0,
+          available_here_hours: 0
+        };
+      }
+      if (code) summary.by_code[code].people_count++;
+      var isEae = /\.50$/.test(code);
+      if (isEae) summary.eae_people_count++;
+      if (normalized.status !== 'resolved') {
+        summary.unresolved_count++;
+        return;
+      }
+      summary.resolved_count++;
+      var required = nonNegativeInt(normalized.required_teaching_hours);
+      var external = nonNegativeInt(normalized.assigned_external_hours);
+      var available = nonNegativeInt(normalized.remaining_before_profile_hours);
+      summary.required_hours += required;
+      summary.external_hours += external;
+      summary.available_here_hours += available;
+      if (isEae) {
+        summary.eae_available_here_hours += available;
+      } else {
+        summary.general_resolved_count++;
+        summary.general_available_here_hours += available;
+      }
+      if (code) {
+        summary.by_code[code].resolved_count++;
+        summary.by_code[code].required_hours += required;
+        summary.by_code[code].external_hours += external;
+        summary.by_code[code].available_here_hours += available;
+      }
+      if (!duplicateDirector && !isEae && personId) {
+        var secondary = canonicalSpecialtyCode(person.secondary_specialty_code);
+        var name = String(person.display_name == null ? '' : person.display_name).trim();
+        var codes = code + (secondary ? ' / 2η ' + secondary : '');
+        allocationPeople[personId] = {
+          person_id: personId,
+          display_name: name,
+          label: (codes + ' · ' + (name || 'Χωρίς ονοματεπώνυμο')).replace(/^[ ·]+|[ ·]+$/g, ''),
+          specialty_code: code,
+          secondary_specialty_code: secondary,
+          required_hours: required,
+          external_hours: external,
+          available_here_hours: available
+        };
+      }
+    });
+
+    return {
+      evaluations: evaluations,
+      normalized_rows: normalizedRows,
+      duplicate_director_indexes: duplicateDirectorIndexes,
+      summary: summary,
+      allocation_people: allocationPeople,
+      allocation_enabled: duplicateDirectorIndexes.length === 0 && summary.general_resolved_count > 0 && Object.keys(allocationPeople).length > 0
+    };
+  }
+
   function priorityForSlotCode(slot, specialtyCode, policyInput) {
     var policy = optimizerPolicy(policyInput);
     var code = canonicalSpecialtyCode(specialtyCode);
@@ -956,6 +1063,7 @@
     secondaryTeacherBaseHours: secondaryTeacherBaseHours,
     secondaryObligation: secondaryObligation,
     normalizePerson: normalizePerson,
+    normalizeRoster: normalizeRoster,
     priorityForSlotCode: priorityForSlotCode,
     priorityRank: priorityRank,
     bestAssignmentForSlot: bestAssignmentForSlot,

@@ -13,6 +13,13 @@
     const optimizerAvailable=!!(window.PersonnelWorkloadCalculations&&typeof window.PersonnelWorkloadCalculations.optimizeRemaining==='function');
     return {ok:optimizerAvailable&&expectedSchema!==''&&expectedSchema===actualSchema,optimizerAvailable:optimizerAvailable,expectedSchema:expectedSchema,actualSchema:actualSchema};
   }
+  function staffingClientPersonnelCompatibility(){
+    const policy=staffingRuntimeConfig.optimizerPolicy&&typeof staffingRuntimeConfig.optimizerPolicy==='object'?staffingRuntimeConfig.optimizerPolicy:{};
+    const expectedSchema=String(policy.specialty_code_normalization_schema||'');
+    const actualSchema=window.EducationSpecialtyCodes&&window.EducationSpecialtyCodes.schema?String(window.EducationSpecialtyCodes.schema):'';
+    const moduleAvailable=!!(window.PersonnelWorkloadCalculations&&typeof window.PersonnelWorkloadCalculations.normalizeRoster==='function');
+    return {ok:moduleAvailable&&expectedSchema!==''&&expectedSchema===actualSchema,moduleAvailable:moduleAvailable,expectedSchema:expectedSchema,actualSchema:actualSchema};
+  }
   function staffingSetClientOptimizerCapability(form,enabled){
     if(!form) return;
     let capability=form.elements&&form.elements.namedItem?form.elements.namedItem('client_optimizer_capable'):null;
@@ -840,6 +847,8 @@
   }
 
   const personnelList=document.getElementById('personnelList');
+  const personnelForm=document.getElementById('staffingPersonnelForm');
+  const personnelCheckStatus=document.getElementById('personnelCheckStatus');
   const allocationTab=document.querySelector('[data-staffing-tab="allocation"]');
   const vacanciesTab=document.querySelector('[data-staffing-tab="vacancies"]');
   const specialtiesTab=document.querySelector('[data-staffing-tab="specialties"]');
@@ -1528,11 +1537,145 @@
   const allocationSlotsData=staffingRuntimeConfig.allocationSlots&&typeof staffingRuntimeConfig.allocationSlots==='object'?staffingRuntimeConfig.allocationSlots:{};
   const specialtyLabelsData=staffingRuntimeConfig.specialtyLabels&&typeof staffingRuntimeConfig.specialtyLabels==='object'?staffingRuntimeConfig.specialtyLabels:{};
   const specialtyReportSchemaVersion='staffing_balance_v1';
+  const allocationGateMessage=document.getElementById('allocationGateMessage');
+  const allocationWorkspace=document.getElementById('allocationWorkspace');
+  const allocationPersonSummary=document.getElementById('allocationPersonSummary');
   const allocationList=document.getElementById('allocationList');
   const allocationTemplate=document.getElementById('allocationRowTemplate');
   const addAllocation=document.getElementById('addAllocationRow');
   const clearAllocation=document.getElementById('clearAllocationRows');
   const allocationBAssignmentWarning='Οι ώρες μαθημάτων Β΄ ανάθεσης, από τη βασική και τη δεύτερη ειδικότητα συνολικά, υπερβαίνουν το όριο των '+optimizerBLimit+' διδακτικών ωρών. Υπέρβαση επιτρέπεται μόνο κατ’ εξαίρεση, ύστερα από απόφαση ΠΥΣΔΕ και υπό τις προβλεπόμενες προϋποθέσεις.';
+
+  function personnelRawRowsFromDom(){
+    if(!personnelList) return [];
+    return Array.from(personnelList.querySelectorAll('[data-personnel-row]')).map(function(row){
+      function value(selector){ const el=row.querySelector(selector); return el?String(el.value==null?'':el.value):''; }
+      const specialty=value('.personnel-specialty').trim(), name=value('.personnel-name').trim();
+      if(!specialty && !name) return null;
+      return {
+        person_id:value('input[name="personnel_person_id[]"]').trim(),
+        display_name:name,
+        specialty_code:specialty,
+        secondary_specialty_code:value('.personnel-secondary-specialty').trim(),
+        required_teaching_hours:value('.personnel-required').trim(),
+        service:{years:value('.personnel-years'),months:value('.personnel-months'),days:value('.personnel-days')},
+        role:value('.personnel-role')||'teacher',
+        assigned_external_hours:value('.personnel-external')||'0',
+        director_sections_band:'',
+        hours_branch:'',
+        obligation_source:value('.personnel-obligation-source').trim(),
+        source_base_required_hours:value('.personnel-source-base-required').trim(),
+        source_reduction_hours:value('.personnel-source-reduction').trim(),
+        source_hours_at_unit:value('.personnel-source-at-unit').trim()
+      };
+    }).filter(Boolean);
+  }
+  function personnelPayloadFromRows(rows){
+    const keys=['person_id','display_name','specialty_code','secondary_specialty_code','required_teaching_hours','service_years','service_months','service_days','role','assigned_external_hours','director_sections_band','hours_branch','obligation_source','source_base_required_hours','source_reduction_hours','source_hours_at_unit'];
+    const payload={}; keys.forEach(function(k){payload['personnel_'+k]=[];});
+    (rows||[]).forEach(function(person){
+      payload.personnel_person_id.push(person.person_id||'');
+      payload.personnel_display_name.push(person.display_name||'');
+      payload.personnel_specialty_code.push(person.specialty_code||'');
+      payload.personnel_secondary_specialty_code.push(person.secondary_specialty_code||'');
+      payload.personnel_required_teaching_hours.push(person.required_teaching_hours==null?'':person.required_teaching_hours);
+      payload.personnel_service_years.push(person.service&&person.service.years!=null?person.service.years:0);
+      payload.personnel_service_months.push(person.service&&person.service.months!=null?person.service.months:0);
+      payload.personnel_service_days.push(person.service&&person.service.days!=null?person.service.days:0);
+      payload.personnel_role.push(person.role||'teacher');
+      payload.personnel_assigned_external_hours.push(person.assigned_external_hours==null?0:person.assigned_external_hours);
+      payload.personnel_director_sections_band.push(person.director_sections_band||'');
+      payload.personnel_hours_branch.push(person.hours_branch||'');
+      payload.personnel_obligation_source.push(person.obligation_source||'');
+      payload.personnel_source_base_required_hours.push(person.source_base_required_hours||'');
+      payload.personnel_source_reduction_hours.push(person.source_reduction_hours||'');
+      payload.personnel_source_hours_at_unit.push(person.source_hours_at_unit||'');
+    });
+    return payload;
+  }
+  function syncPersonnelPayloadToAllocationFallback(rows){
+    const allocationForm=document.getElementById('staffingAllocationForm');
+    if(!allocationForm) return;
+    let input=allocationForm.querySelector('input[name="personnel_payload_json"]');
+    if(!input){input=document.createElement('input');input.type='hidden';input.name='personnel_payload_json';allocationForm.appendChild(input);}
+    input.value=JSON.stringify(personnelPayloadFromRows(rows));
+  }
+  function replaceAllocationPeople(next){
+    Object.keys(allocationPeopleData).forEach(function(key){delete allocationPeopleData[key];});
+    Object.keys(next||{}).forEach(function(key){allocationPeopleData[key]=next[key];});
+    document.querySelectorAll('[data-allocation-row]').forEach(function(row){
+      const person=row.querySelector('.allocation-person'); if(person) person.dataset.optionsLoaded='0';
+      const slot=row.querySelector('.allocation-slot'); if(slot) slot.dataset.optionsLoaded='0';
+    });
+  }
+  function renderAllocationPersonSummaries(){
+    if(!allocationPersonSummary) return;
+    allocationPersonSummary.innerHTML='';
+    if(typeof allocationPersonSummaryCache==='object') Object.keys(allocationPersonSummaryCache).forEach(function(key){delete allocationPersonSummaryCache[key];});
+    Object.keys(allocationPeopleData).sort(function(a,b){return String(allocationPeopleData[a].label||a).localeCompare(String(allocationPeopleData[b].label||b),'el',{numeric:true});}).forEach(function(pid){
+      const p=allocationPeopleData[pid]||{}, row=document.createElement('div');
+      row.className='allocation-person-summary-row'; row.setAttribute('data-allocation-person-summary',pid);
+      function metric(value,label,attr){const d=document.createElement('div'),strong=document.createElement('strong'),small=document.createElement('small');strong.textContent=String(value);if(attr)strong.setAttribute(attr,'');small.textContent=label;d.appendChild(strong);d.appendChild(small);return d;}
+      const head=document.createElement('div'), title=document.createElement('strong');
+      title.textContent=(p.specialty_code||'')+' · '+(p.display_name||'Χωρίς ονοματεπώνυμο'); head.appendChild(title);
+      if(p.secondary_specialty_code){const small=document.createElement('small');small.textContent='2η ειδικότητα '+p.secondary_specialty_code;head.appendChild(small);}
+      row.appendChild(head);
+      row.appendChild(metric(p.required_hours||0,'υποχρεωτικό ωράριο','data-person-required'));
+      row.appendChild(metric(0,'ανατεθειμένες ώρες','data-person-assigned'));
+      row.appendChild(metric(p.available_here_hours||0,'υπόλοιπο','data-person-remaining'));
+      row.appendChild(metric(0,'Α΄ ανάθεση','data-person-a'));
+      const b=metric('0/'+optimizerBLimit,'Β΄ ανάθεση','data-person-b');row.appendChild(b);
+      const meta=document.createElement('div');meta.className='allocation-person-meta';meta.setAttribute('data-person-source-summary','');meta.textContent='Μέσω κύριας '+(p.specialty_code||'')+': 0 ώρ.'+(p.secondary_specialty_code?' · μέσω 2ης '+p.secondary_specialty_code+': 0 ώρ.':'')+((p.external_hours||0)>0?' · '+p.external_hours+' ώρ. σε άλλη μονάδα':'');row.appendChild(meta);
+      const warning=document.createElement('div');warning.className='b-limit-warning';warning.setAttribute('data-person-b-warning','');warning.hidden=true;warning.textContent=allocationBAssignmentWarning;row.appendChild(warning);
+      const assignments=document.createElement('div');assignments.className='allocation-person-assignments';assignments.setAttribute('data-person-assignments','');const empty=document.createElement('div');empty.className='allocation-person-assignment-item';empty.setAttribute('data-empty-assignment','');empty.textContent='Δεν έχουν κατανεμηθεί μαθήματα.';assignments.appendChild(empty);row.appendChild(assignments);
+      allocationPersonSummary.appendChild(row);
+    });
+  }
+  function personnelClientMessage(text,kind){
+    if(!personnelCheckStatus) return;
+    personnelCheckStatus.textContent=text;
+    personnelCheckStatus.classList.remove('is-error','is-success','is-warning');
+    if(kind) personnelCheckStatus.classList.add('is-'+kind);
+  }
+  function handlePersonnelClientCheck(button){
+    const compatibility=staffingClientPersonnelCompatibility();
+    if(!compatibility.ok){
+      if(compatibility.moduleAvailable&&compatibility.expectedSchema!==compatibility.actualSchema) console.error('Ασυμβατό schema κανονικοποίησης ειδικοτήτων στον έλεγχο προσωπικού· ενεργοποιείται server fallback.',compatibility);
+      return false;
+    }
+    if(!personnelForm||!personnelList) return false;
+    personnelList.querySelectorAll('[data-personnel-row]').forEach(updatePersonnelRow);
+    refreshDirectorRoleConstraints();
+    if(typeof personnelForm.reportValidity==='function'&&!personnelForm.reportValidity()) return true;
+    const rawPeople=personnelRawRowsFromDom();
+    if(!rawPeople.length){personnelClientMessage('Πρόσθεσε τουλάχιστον έναν εκπαιδευτικό πριν από τον έλεγχο ωραρίων.','error');return true;}
+    const labels=Object.assign({},specialtyLabelsData);
+    personnelList.querySelectorAll('.personnel-specialty, .personnel-secondary-specialty').forEach(function(select){
+      const code=String(select.value||'').trim(); if(!code) return; const opt=select.options&&select.selectedIndex>=0?select.options[select.selectedIndex]:null; if(!labels[code])labels[code]=opt?String(opt.textContent||code):code;
+    });
+    let roster;
+    try{
+      roster=window.PersonnelWorkloadCalculations.normalizeRoster(rawPeople,{school_general_section_count:schoolGeneralSectionCount(),specialtyLabels:labels,isKnownSpecialty:function(code){return Object.prototype.hasOwnProperty.call(labels,code);}});
+    }catch(error){console.error('Αποτυχία client-side ελέγχου προσωπικού.',error);return false;}
+    const invalidRows=(roster.normalized_rows||[]).filter(function(item){return !item.normalized||item.normalized.status!=='resolved';});
+    if(roster.duplicate_director_indexes&&roster.duplicate_director_indexes.length){personnelClientMessage(singleDirectorMessage,'error');return true;}
+    if(!roster.allocation_enabled){
+      personnelClientMessage('Ο έλεγχος ολοκληρώθηκε, αλλά δεν υπάρχει ακόμη εκπαιδευτικός Γενικής Εκπαίδευσης με πλήρως υπολογισμένο διαθέσιμο ωράριο για να ενεργοποιηθεί η κατανομή.'+(invalidRows.length?' Εκκρεμούν '+invalidRows.length+' εγγραφές.':''),'warning');
+      if(allocationTab) allocationTab.disabled=true;
+      if(allocationGateMessage) allocationGateMessage.hidden=false;
+      if(allocationWorkspace) allocationWorkspace.hidden=true;
+      return true;
+    }
+    replaceAllocationPeople(roster.allocation_people||{});
+    syncPersonnelPayloadToAllocationFallback(rawPeople);
+    renderAllocationPersonSummaries();
+    if(allocationGateMessage) allocationGateMessage.hidden=true;
+    if(allocationWorkspace) allocationWorkspace.hidden=false;
+    [allocationTab,vacanciesTab,specialtiesTab].forEach(function(tab){if(tab){tab.disabled=false;tab.title='';}});
+    updateAllocationSummary();
+    personnelClientMessage('Ο έλεγχος ωραρίων ολοκληρώθηκε στον browser: '+roster.summary.resolved_count+' έγκυρες εγγραφές, '+roster.summary.general_available_here_hours+' διαθέσιμες ώρες Γενικής Εκπαίδευσης.'+(roster.summary.unresolved_count?' '+roster.summary.unresolved_count+' εγγραφή/ές χρειάζονται ακόμη συμπλήρωση και δεν συμμετέχουν στην κατανομή.':''),roster.summary.unresolved_count?'warning':'success');
+    return true;
+  }
   function allocationPriority(code,slot){
     if(!window.PersonnelWorkloadCalculations) return '';
     return window.PersonnelWorkloadCalculations.priorityForSlotCode(slot,code,optimizerPolicyData)||'';
@@ -2316,6 +2459,7 @@
     if(live){ live.textContent=text; live.classList.toggle('is-error',!!isError); }
   }
   function handleStaffingClientAction(action,button){
+    if(action==='personnel') return handlePersonnelClientCheck(button);
     if(action!=='allocation'&&action!=='allocation_auto') return false;
     const compatibility=staffingClientOptimizerCompatibility();
     if(!compatibility.ok){
