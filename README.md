@@ -1,3 +1,26 @@
+## 2026-09-26 — Shared PWA head & service worker (v3.22.7)
+
+- Συγκεντρώθηκαν manifest/favicon/Apple-touch metadata στο `includes/head-pwa.php` αντί να επαναλαμβάνονται σε κάθε PHP σελίδα.
+- Προστέθηκε `assets/pwa.js` για κοινή εγγραφή του root `service-worker.js` μόνο σε HTTPS/localhost.
+- Ο service worker χρησιμοποιεί συντηρητικό network-first cache μόνο για στατικά assets· δεν cache-άρει PHP/HTML/navigation responses.
+- Προστέθηκε `.htaccess` MIME mapping για `.webmanifest`/`.js` και revalidation του manifest/service worker.
+- Το `tests/pwa-manifest-contract.py` ελέγχει πλέον shared-head adoption, service-worker registration/cache policy και Apache MIME rules.
+
+## 2026-09-26 — Browser favicon & ΠΕ15 assignment cleanup (v3.22.6)
+
+- Προστέθηκαν browser icons (`favicon.ico`, 16×16, 32×32) και `apple-touch-icon` 180×180 σε όλες τις δημόσιες σελίδες, πέρα από τα PWA icons του manifest.
+- Στις αναθέσεις ΕΝ.Ε.Ε.ΓΥ.-Λ. ο παλαιός κλάδος ΠΕ15 αφαιρέθηκε από την ενεργή Β΄ ανάθεση. Η ισχύουσα επιλογή παραμένει ΠΕ80 και η ιστορική πληροφορία εμφανίζεται μόνο ως σημείωση: «Προτεραιότητα: πρώην ΠΕ09 και ΠΕ15».
+- Το `teachingAssignmentKnownSpecialties()` φιλτράρει αμυντικά τον ΠΕ15 και νέο regression contract αποτυγχάνει αν παλαιός κλάδος ξαναμπεί σε A/B/C/special_codes.
+- Το PWA/browser-icon contract ελέγχει πλέον ύπαρξη/διαστάσεις favicon και παρουσία των icon links σε όλες τις δημόσιες σελίδες.
+
+## 2026-09-26 — Legal sources deep-link & contract hardening (v3.22.5)
+
+- Τα ΦΕΚ Β΄ 5733/22-09-2026 για ΕΝ.Ε.Ε.ΓΥ.-Λ. και Ε.Ε.Ε.ΕΚ. δείχνουν πλέον στο συγκεκριμένο record του Εθνικού Τυπογραφείου (`fekId=805734`) αντί για τη γενική αναζήτηση.
+- Συμπληρώθηκαν οι 5 ελλείπουσες ακριβείς ημερομηνίες αποφάσεων (`date`) και τα αντίστοιχα dated `decision` strings για ΕΠΑ.Λ./Π.ΕΠΑ.Λ. 2026 και Ναυτιλιακά ΕΠΑ.Λ. 2018.
+- Προστέθηκε ισχυρό `tests/legal-sources-contract-test.php`: duplicate authored keys χωρίς εξάρτηση από indentation, πλήρες schema/date/HTTPS/deep-link validation, αμφίδρομος έλεγχος σχέσεων και από τις δύο κατευθύνσεις, alternate URL validation, pinned Εθνικό Τυπογραφείο deep links, helper API smoke tests και έλεγχος consumer source-key mappings.
+- Το legal-sources contract εντάχθηκε στο `tests/pre-pwa-regression.sh`, ώστε generic FEK links ή dangling legal-source mappings να μπλοκάρουν release.
+- Αφαιρέθηκε ένα νέο stale hard-coded version assertion από το Digital Tutoring contract· ελέγχεται ξανά semantic `EDU_TOOLS_VERSION` αντί για συγκεκριμένο release number.
+
 ## 2026-09-26 — Mobile polish & PWA installability icons (v3.22.4)
 
 - Προστέθηκαν πραγματικά PWA icons 192×192 και 512×512 στο `assets/icons/` και δηλώθηκαν στο `manifest.webmanifest`, ώστε το manifest να καλύπτει τα βασικά Chromium installability icon requirements.

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="manifest.webmanifest">
+  <?php require __DIR__ . '/includes/head-pwa.php'; ?>
   <meta name="description" content="Υπολογισμός μορίων για το Σχολείο Ευρωπαϊκής Παιδείας Ηρακλείου με βάση την πρόσκληση 69163/Η2/28-05-2026 για το σχολικό έτος 2026-2027.">
   <title>Μόρια — Σχολείο Ευρωπαϊκής Παιδείας Ηρακλείου</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">

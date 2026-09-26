@@ -564,6 +564,13 @@ function teachingAssignmentKnownSpecialties()
         unset($codes[$umbrellaCode]);
     }
 
+    /* Παλαιοί/καταργημένοι κλάδοι μπορεί να αναφέρονται μόνο σε σημειώσεις
+     * προτεραιότητας των ισχυόντων κλάδων (π.χ. ΠΕ80 — πρώην ΠΕ15), όχι ως
+     * αυτόνομες επιλογές ειδικότητας στο εργαλείο αναθέσεων. */
+    foreach (array('ΠΕ15') as $legacyCode) {
+        unset($codes[$legacyCode]);
+    }
+
     $result = array_keys($codes);
     natcasesort($result);
     return array_values($result);

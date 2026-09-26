@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="manifest.webmanifest">
+  <?php require __DIR__ . '/includes/head-pwa.php'; ?>
   <meta name="description" content="Ενεργές και προσεχείς προθεσμίες για εκπαιδευτικούς, αιτήσεις, αποσπάσεις, ΣΑΕΚ και άλλες διαδικασίες.">
   <title>Προθεσμίες Εκπαιδευτικών | Εργαλειοθήκη Εκπαιδευτικού</title>
   <link href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>" rel="stylesheet">

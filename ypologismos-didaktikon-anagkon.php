@@ -1350,7 +1350,7 @@ staffingPerfEnd('specialty_labels');
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="manifest.webmanifest">
+  <?php require __DIR__ . '/includes/head-pwa.php'; ?>
   <title>Υπολογισμός διδακτικών αναγκών σχολικής μονάδας</title>
   <link rel="stylesheet" href="<?php echo staffingUiH(edu_asset_url('assets/common.css')); ?>">
   <link rel="stylesheet" href="<?php echo staffingUiH(edu_asset_url('assets/staffing-simulator.css')); ?>">

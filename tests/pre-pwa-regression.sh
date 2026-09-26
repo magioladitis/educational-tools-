@@ -21,6 +21,12 @@ run_py tests/transfer-mobile-refactor-contract.py
 run_py tests/weekly-timetable-2026-contract.py
 run_py tests/digital-tutoring-substitute-2026-contract.py
 
+echo "==> teaching assignments legacy-specialty contract"
+php tests/teaching-assignments-legacy-specialties-contract.php
+
+echo "==> legal sources contract"
+php tests/legal-sources-contract-test.php
+
 echo "==> source registry audit"
 php tools/source-registry-audit.php
 

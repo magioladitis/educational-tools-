@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="manifest.webmanifest">
+  <?php require __DIR__ . '/includes/head-pwa.php'; ?>
 <meta name="description" content="Υπολογισμός μορίων για την ιστορική προκήρυξη ΑΣΕΠ 5ΕΑ/2022 για εκπαιδευτικούς Ειδικής Αγωγής κατηγορίας ΔΕ, κλάδων ΔΕ01 και ΔΕ02.">
 <title>Υπολογισμός μορίων 5ΕΑ/2022</title>
 <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">

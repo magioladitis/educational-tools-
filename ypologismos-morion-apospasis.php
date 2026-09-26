@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="manifest.webmanifest">
+  <?php require __DIR__ . '/includes/head-pwa.php'; ?>
   <meta name="description" content="Ενδεικτικός υπολογισμός μορίων απόσπασης εκπαιδευτικών από ΠΥΣΠΕ/ΠΥΣΔΕ σε ΠΥΣΠΕ/ΠΥΣΔΕ για το διδακτικό έτος 2026-2027.">
   <title>Μόρια Απόσπασης</title>
 

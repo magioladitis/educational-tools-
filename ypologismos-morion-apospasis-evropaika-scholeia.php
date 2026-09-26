@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="manifest.webmanifest">
+  <?php require __DIR__ . '/includes/head-pwa.php'; ?>
 <meta name="description" content="Υπολογισμός μορίων απόσπασης εκπαιδευτικών στα Ευρωπαϊκά Σχολεία με βάση την πρόσκληση 33598/Η2/18-3-2026.">
 <title>Μόρια Απόσπασης σε Ευρωπαϊκά Σχολεία</title>
 <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">

@@ -1,0 +1,16 @@
+# Educational Tools — PWA/browser metadata support.
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  AddType application/javascript .js
+</IfModule>
+
+# Let browsers revalidate the manifest/service worker on every visit so a new
+# release is discovered promptly. Versioned static assets may be cached longer.
+<IfModule mod_headers.c>
+  <FilesMatch "^(manifest\.webmanifest|service-worker\.js)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(?:png|ico|svg|webp|jpg|jpeg|gif|woff2?)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>

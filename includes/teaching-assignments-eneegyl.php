@@ -20,7 +20,7 @@ return array(
     array('school'=>'eneegyl_gymnasio','grade'=>'','section'=>'','subject'=>'Γεωλογία-Γεωγραφία','A'=>array('ΠΕ04.05','ΠΕ04.03'),'B'=>array('ΠΕ04.01','ΠΕ04.02','ΠΕ04.04','ΠΕ80'),'B_notes'=>array('ΠΕ80'=>'μόνο πρώην ΠΕ15'),'C'=>array('ΠΕ03','ΠΕ85','ΠΕ88.01'),'C_notes'=>array('ΠΕ85'=>'με προτεραιότητα πρώην ΠΕ12.08')),
     array('school'=>'eneegyl_gymnasio','grade'=>'','section'=>'','subject'=>'Οικιακή Οικονομία','A'=>array('ΠΕ80'),'A_notes'=>array('ΠΕ80'=>'με προτεραιότητα πρώην ΠΕ15'),'B'=>array('ΠΕ78','ΠΕ88.01'),'C'=>array('ΠΕ11','ΠΕ87.01','ΠΕ87.02')),
     array('school'=>'eneegyl_gymnasio','grade'=>'','section'=>'','subject'=>'Ιστορία','A'=>array('ΠΕ02','ΠΕ33'),'B'=>array('ΠΕ05','ΠΕ06','ΠΕ07','ΠΕ34','ΠΕ78'),'C'=>array('ΠΕ01')),
-    array('school'=>'eneegyl_gymnasio','grade'=>'','section'=>'','subject'=>'Κοινωνική και Πολιτική Αγωγή','A'=>array('ΠΕ78'),'B'=>array('ΠΕ01','ΠΕ02','ΠΕ80','ΠΕ15'),'B_notes'=>array('ΠΕ80'=>'με προτεραιότητα πρώην ΠΕ09 και ΠΕ15')),
+    array('school'=>'eneegyl_gymnasio','grade'=>'','section'=>'','subject'=>'Κοινωνική και Πολιτική Αγωγή','A'=>array('ΠΕ78'),'B'=>array('ΠΕ01','ΠΕ02','ΠΕ80'),'B_notes'=>array('ΠΕ80'=>'Προτεραιότητα: πρώην ΠΕ09 και ΠΕ15')),
     array('school'=>'eneegyl_gymnasio','grade'=>'','section'=>'','subject'=>'Οικονομικά','A'=>array('ΠΕ80'),'A_notes'=>array('ΠΕ80'=>'με προτεραιότητα πρώην ΠΕ09'),'B'=>array('ΠΕ78')),
     array('school'=>'eneegyl_gymnasio','grade'=>'','section'=>'','subject'=>'Θρησκευτικά','A'=>array('ΠΕ01'),'C'=>array('ΠΕ02')),
     array('school'=>'eneegyl_gymnasio','grade'=>'','section'=>'','subject'=>'Ηθική','A'=>array('ΠΕ01'),'B'=>array('ΠΕ02','ΠΕ33','ΠΕ78')),
