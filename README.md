@@ -1,3 +1,5 @@
+> Αρχιτεκτονική και canonical sources: [`ARCHITECTURE.md`](ARCHITECTURE.md)
+
 ## 2026-09-26 — Specialty normalization + personnel workload Phase 3C (v3.22.13)
 
 - Ενοποιήθηκε η κανονικοποίηση κωδικών ειδικότητας σε κοινό browser module `includes/specialty-code-normalization.js` με schema `teacher_specialty_code_normalization_v1`.
