@@ -1,3 +1,10 @@
+## 2026-09-26 — Personnel workload performance benchmark (v3.22.12)
+- Προστέθηκε `tests/personnel-workload-performance-benchmark.py` με κοινά synthetic small / typical / large workloads για τον PHP reference optimizer και τον browser JS optimizer.
+- Το quick `--contract` μπήκε στο `pre-pwa-regression.sh`: ελέγχει objective parity, certification, ίδιο search-node count, valid allocation fixtures, γενναιόδωρα wall-clock ceilings και relative scaling large/typical. Τα όρια είναι σκόπιμα χαλαρά ώστε να πιάνουν καταστροφικές regressions και όχι φυσιολογικό CI noise.
+- Το πλήρες benchmark μετρά επίσης default PHP GET rendering, Node/V8 validation και, όπου υπάρχει λειτουργικό headless Chromium, payload hydration / validation / optimizer / representative DOM row rendering. Chromium failure/absence δεν μπλοκάρει το correctness gate.
+- Baseline στο τρέχον container: default PHP GET 24.42 ms / 65,190 B HTML· optimizer PHP vs Node/V8: small 0.088/0.211 ms, typical 0.519/1.052 ms, large 2.163/3.229 ms· client validation 0.014/0.041/0.107 ms. Το PHP core είναι ελαφρώς ταχύτερο ως αλγόριθμος, αλλά το client path αποφεύγει ολόκληρο HTTP/PHP/full-page round trip, που είναι το ουσιαστικό UX κέρδος.
+- Έκδοση/cache busting: `EDU_TOOLS_VERSION = 3.22.12`.
+
 ## 2026-09-26 — Personnel workload browser optimizer · Phase 3B (v3.22.11)
 
 - Κεντρικοποιήθηκε η πολιτική του optimizer στο server-side `personnelWorkloadOptimizerPolicy()` και αποστέλλεται στον browser ως `optimizerPolicy`: σειρά/βαθμοί προτεραιότητας, objective order, όριο Β΄ ανάθεσης και safety budgets δεν διατηρούνται πλέον ως ανεξάρτητη production πηγή στο UI.

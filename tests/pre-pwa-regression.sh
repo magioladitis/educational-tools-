@@ -26,6 +26,8 @@ run_py tests/personnel-workload-optimizer-client-parity-contract.py
 run_py tests/personnel-workload-optimizer-real-profile-contract.py
 run_py tests/personnel-workload-optimizer-mutation-contract.py
 run_py tests/personnel-workload-optimizer-policy-contract.py
+echo "==> personnel workload performance budget"
+python3 tests/personnel-workload-performance-benchmark.py --contract
 run_py tests/staffing-client-allocation-actions-contract.py
 
 echo "==> teaching assignments legacy-specialty contract"
