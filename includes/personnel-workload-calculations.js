@@ -284,6 +284,226 @@
     return result;
   }
 
+
+  function priorityForSlotCode(slot, specialtyCode) {
+    var code = canonicalSpecialtyCode(specialtyCode);
+    if (!code || !slot || !slot.eligible_by_priority) return null;
+    var order = ['A', 'B', 'C', 'SPECIAL'];
+    for (var i = 0; i < order.length; i++) {
+      var priority = order[i];
+      var values = Array.isArray(slot.eligible_by_priority[priority]) ? slot.eligible_by_priority[priority] : [];
+      for (var j = 0; j < values.length; j++) {
+        if (canonicalSpecialtyCode(values[j]) === code) return priority;
+      }
+    }
+    return null;
+  }
+
+  function priorityRank(priority) {
+    var order = { A: 1, SPECIAL: 1, B: 2, C: 3 };
+    return Object.prototype.hasOwnProperty.call(order, priority) ? order[priority] : 99;
+  }
+
+  function bestAssignmentForSlot(slot, person) {
+    person = person || {};
+    var primary = canonicalSpecialtyCode(person.specialty_code);
+    var secondary = canonicalSpecialtyCode(person.secondary_specialty_code);
+    var candidates = [];
+    var priority;
+    if (primary) {
+      priority = priorityForSlotCode(slot, primary);
+      if (priority !== null) candidates.push({ priority: priority, used_specialty_code: primary, specialty_source: 'primary' });
+    }
+    if (secondary && secondary !== primary) {
+      priority = priorityForSlotCode(slot, secondary);
+      if (priority !== null) candidates.push({ priority: priority, used_specialty_code: secondary, specialty_source: 'secondary' });
+    }
+    if (!candidates.length) return null;
+    candidates.sort(function (a, b) {
+      var rank = priorityRank(a.priority) - priorityRank(b.priority);
+      if (rank !== 0) return rank;
+      if (a.specialty_source === b.specialty_source) return 0;
+      return a.specialty_source === 'primary' ? -1 : 1;
+    });
+    return candidates[0];
+  }
+
+  function keyedPeople(people) {
+    var index = {};
+    if (Array.isArray(people)) {
+      people.forEach(function (person) {
+        var id = String(person && person.person_id != null ? person.person_id : '').trim();
+        if (id) index[id] = person;
+      });
+      return index;
+    }
+    if (people && typeof people === 'object') {
+      Object.keys(people).forEach(function (key) {
+        var person = people[key];
+        var id = String(person && person.person_id != null ? person.person_id : key).trim();
+        if (id) index[id] = person;
+      });
+    }
+    return index;
+  }
+
+  /*
+   * Pure browser equivalent of the slot-level validation phase in
+   * personnelWorkloadRosterSlotPlan(). It deliberately stops before the
+   * aggregate personnel optimizer/evaluator; that remains the PHP reference
+   * until Phase 3.
+   */
+  function validateRosterSlotAllocations(slots, people, allocations) {
+    slots = slots && typeof slots === 'object' ? slots : {};
+    allocations = Array.isArray(allocations) ? allocations : [];
+    var peopleIndex = keyedPeople(people);
+    var slotAttempted = {};
+    var slotAssigned = {};
+    var personAssigned = {};
+    var personPriority = {};
+    var personSource = {};
+    Object.keys(slots).forEach(function (slotId) {
+      slotAttempted[slotId] = 0;
+      slotAssigned[slotId] = 0;
+    });
+    Object.keys(peopleIndex).forEach(function (personId) {
+      personAssigned[personId] = 0;
+      personPriority[personId] = { A: 0, B: 0, C: 0, SPECIAL: 0 };
+      personSource[personId] = { primary: 0, secondary: 0 };
+    });
+
+    var rowResults = allocations.map(function (allocation, i) {
+      allocation = allocation || {};
+      var personId = String(allocation.person_id == null ? '' : allocation.person_id).trim();
+      var slotId = String(allocation.slot_id == null ? '' : allocation.slot_id).trim();
+      var hours = nonNegativeInt(allocation.hours);
+      var row = {
+        row_index: i,
+        person_id: personId,
+        slot_id: slotId,
+        hours: hours,
+        valid: true,
+        errors: [],
+        warnings: [],
+        priority: null,
+        used_specialty_code: '',
+        specialty_source: ''
+      };
+      if (!personId || !Object.prototype.hasOwnProperty.call(peopleIndex, personId)) {
+        row.valid = false; row.errors.push('unknown_person');
+      }
+      if (!slotId || !Object.prototype.hasOwnProperty.call(slots, slotId)) {
+        row.valid = false; row.errors.push('unknown_slot');
+      }
+      if (hours < 1) {
+        row.valid = false; row.errors.push('positive_hours_required');
+      }
+      if (Object.prototype.hasOwnProperty.call(slots, slotId)) {
+        var slot = slots[slotId] || {};
+        var capacity = Math.max(0, Math.floor(Number(slot.capacity_hours) || 0));
+        row.unit_id = slot.unit_id;
+        row.slot_label = slot.slot_label;
+        row.subject = slot.subject;
+        row.capacity_hours = capacity;
+        if (hours > capacity) {
+          row.valid = false; row.errors.push('hours_exceed_slot_capacity');
+        }
+        if (hours > 0 && hours !== capacity) {
+          row.valid = false; row.errors.push('atomic_slot_requires_full_hours');
+        }
+        if (Object.prototype.hasOwnProperty.call(peopleIndex, personId)) {
+          var assignment = bestAssignmentForSlot(slot, peopleIndex[personId]);
+          if (assignment === null) {
+            row.valid = false; row.errors.push('specialty_not_eligible');
+          } else {
+            row.priority = assignment.priority;
+            row.used_specialty_code = assignment.used_specialty_code;
+            row.specialty_source = assignment.specialty_source;
+            if (slot.top_priority !== undefined && slot.top_priority !== null && row.priority !== slot.top_priority) {
+              row.warnings.push('uses_lower_priority_assignment');
+            }
+          }
+        }
+      }
+      if (row.valid) slotAttempted[slotId] = (slotAttempted[slotId] || 0) + hours;
+      return row;
+    });
+
+    var overallocatedSlots = {};
+    var rawOver = 0;
+    Object.keys(slots).forEach(function (slotId) {
+      var capacity = Math.max(0, Math.floor(Number(slots[slotId] && slots[slotId].capacity_hours) || 0));
+      var attempted = slotAttempted[slotId] || 0;
+      var overage = Math.max(0, attempted - capacity);
+      if (overage > 0) {
+        overallocatedSlots[slotId] = overage;
+        rawOver += overage;
+      }
+    });
+    if (Object.keys(overallocatedSlots).length) {
+      rowResults.forEach(function (row) {
+        if (row.slot_id && Object.prototype.hasOwnProperty.call(overallocatedSlots, row.slot_id)) {
+          row.valid = false;
+          if (row.errors.indexOf('slot_overallocated_across_roster') < 0) row.errors.push('slot_overallocated_across_roster');
+        }
+      });
+    }
+
+    rowResults.forEach(function (row) {
+      if (!row.valid) return;
+      var hours = row.hours;
+      personAssigned[row.person_id] = (personAssigned[row.person_id] || 0) + hours;
+      if (!personPriority[row.person_id]) personPriority[row.person_id] = { A: 0, B: 0, C: 0, SPECIAL: 0 };
+      personPriority[row.person_id][row.priority] = (personPriority[row.person_id][row.priority] || 0) + hours;
+      if (!personSource[row.person_id]) personSource[row.person_id] = { primary: 0, secondary: 0 };
+      personSource[row.person_id][row.specialty_source] = (personSource[row.person_id][row.specialty_source] || 0) + hours;
+      slotAssigned[row.slot_id] = (slotAssigned[row.slot_id] || 0) + hours;
+    });
+
+    var peopleOverBLimit = 0;
+    var bHoursOverLimitTotal = 0;
+    Object.keys(personPriority).forEach(function (personId) {
+      var bHours = personPriority[personId].B || 0;
+      if (bHours <= 10) return;
+      peopleOverBLimit++;
+      bHoursOverLimitTotal += bHours - 10;
+      rowResults.forEach(function (row) {
+        if (row.valid && row.person_id === personId && row.priority === 'B' && row.warnings.indexOf('b_assignment_hours_exceed_10_limit') < 0) {
+          row.warnings.push('b_assignment_hours_exceed_10_limit');
+        }
+      });
+    });
+
+    var assignedTotal = 0;
+    var unassigned = 0;
+    Object.keys(slots).forEach(function (slotId) {
+      var capacity = Math.max(0, Math.floor(Number(slots[slotId] && slots[slotId].capacity_hours) || 0));
+      var assigned = slotAssigned[slotId] || 0;
+      assignedTotal += assigned;
+      unassigned += Math.max(0, capacity - assigned);
+    });
+    var invalidRows = rowResults.reduce(function (count, row) { return count + (row.valid ? 0 : 1); }, 0);
+
+    return {
+      valid: rawOver === 0 && invalidRows === 0,
+      allocation_rows: rowResults,
+      slot_attempted: slotAttempted,
+      slot_assigned: slotAssigned,
+      person_assigned: personAssigned,
+      person_priority: personPriority,
+      person_source: personSource,
+      overallocated_slots: overallocatedSlots,
+      summary: {
+        assigned_slot_hours_total: assignedTotal,
+        unassigned_slot_hours: unassigned,
+        overallocated_slot_hours: rawOver,
+        invalid_allocation_row_count: invalidRows,
+        people_over_b_assignment_limit_count: peopleOverBLimit,
+        b_assignment_hours_over_limit_total: bHoursOverLimitTotal
+      }
+    };
+  }
+
   global.PersonnelWorkloadCalculations = Object.freeze({
     canonicalSpecialtyCode: canonicalSpecialtyCode,
     nonNegativeInt: nonNegativeInt,
@@ -293,6 +513,10 @@
     directorSectionsBandFromCount: directorSectionsBandFromCount,
     secondaryTeacherBaseHours: secondaryTeacherBaseHours,
     secondaryObligation: secondaryObligation,
-    normalizePerson: normalizePerson
+    normalizePerson: normalizePerson,
+    priorityForSlotCode: priorityForSlotCode,
+    priorityRank: priorityRank,
+    bestAssignmentForSlot: bestAssignmentForSlot,
+    validateRosterSlotAllocations: validateRosterSlotAllocations
   });
 })(typeof window !== 'undefined' ? window : globalThis);

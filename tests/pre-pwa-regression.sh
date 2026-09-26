@@ -21,6 +21,7 @@ run_py tests/transfer-mobile-refactor-contract.py
 run_py tests/weekly-timetable-2026-contract.py
 run_py tests/digital-tutoring-substitute-2026-contract.py
 run_py tests/personnel-workload-client-parity-contract.py
+run_py tests/personnel-workload-allocation-client-parity-contract.py
 
 echo "==> teaching assignments legacy-specialty contract"
 php tests/teaching-assignments-legacy-specialties-contract.php

@@ -1510,17 +1510,11 @@
   const clearAllocation=document.getElementById('clearAllocationRows');
   const allocationBAssignmentWarning='Οι ώρες μαθημάτων Β΄ ανάθεσης, από τη βασική και τη δεύτερη ειδικότητα συνολικά, υπερβαίνουν το όριο των 10 διδακτικών ωρών. Υπέρβαση επιτρέπεται μόνο κατ’ εξαίρεση, ύστερα από απόφαση ΠΥΣΔΕ και υπό τις προβλεπόμενες προϋποθέσεις.';
   function allocationPriority(code,slot){
-    if(!code||!slot||!slot.eligible_by_priority) return '';
-    const order=['A','B','C','SPECIAL'];
-    for(let i=0;i<order.length;i++){
-      const p=order[i], arr=slot.eligible_by_priority[p]||[];
-      if(arr.indexOf(code)>=0) return p;
-    }
-    return '';
+    if(!window.PersonnelWorkloadCalculations) return '';
+    return window.PersonnelWorkloadCalculations.priorityForSlotCode(slot,code)||'';
   }
   function allocationPriorityRank(priority){
-    const rank={A:1,SPECIAL:1,B:2,C:3};
-    return rank[priority]||99;
+    return window.PersonnelWorkloadCalculations?window.PersonnelWorkloadCalculations.priorityRank(priority):99;
   }
   function allocationPriorityLabel(priority){
     if(priority==='A') return 'Α΄';
@@ -1530,24 +1524,7 @@
     return priority||'';
   }
   function allocationBestAssignment(person,slot){
-    if(!person||!slot) return null;
-    const candidates=[];
-    const primary=person.specialty_code||'';
-    const secondary=person.secondary_specialty_code||'';
-    const p1=allocationPriority(primary,slot);
-    if(p1) candidates.push({priority:p1,used_specialty_code:primary,specialty_source:'primary'});
-    if(secondary&&secondary!==primary){
-      const p2=allocationPriority(secondary,slot);
-      if(p2) candidates.push({priority:p2,used_specialty_code:secondary,specialty_source:'secondary'});
-    }
-    if(!candidates.length) return null;
-    candidates.sort(function(a,b){
-      const d=allocationPriorityRank(a.priority)-allocationPriorityRank(b.priority);
-      if(d) return d;
-      if(a.specialty_source===b.specialty_source) return 0;
-      return a.specialty_source==='primary'?-1:1;
-    });
-    return candidates[0];
+    return window.PersonnelWorkloadCalculations?window.PersonnelWorkloadCalculations.bestAssignmentForSlot(slot,person):null;
   }
   const vacancyEligiblePeopleCache={};function vacancyEligiblePeopleForSlot(sid,slot){
     if(Object.prototype.hasOwnProperty.call(vacancyEligiblePeopleCache,sid))return vacancyEligiblePeopleCache[sid];
@@ -1827,68 +1804,59 @@
     });
     return {normal:normal,exceptionB:exceptionB,total:normal+exceptionB};
   }
+  function allocationValidationErrorMessage(result,state){
+    const errors=result&&Array.isArray(result.errors)?result.errors:[];
+    if(errors.indexOf('unknown_slot')>=0) return 'Δεν έχει επιλεγεί έγκυρο τμήμα / ομάδα και μάθημα.';
+    if(errors.indexOf('unknown_person')>=0) return 'Δεν έχει επιλεγεί έγκυρος εκπαιδευτικός.';
+    if(errors.indexOf('positive_hours_required')>=0) return 'Οι ώρες πρέπει να είναι θετικές.';
+    if(errors.indexOf('hours_exceed_slot_capacity')>=0) return 'Οι ώρες υπερβαίνουν τις '+((state.slot&&state.slot.capacity_hours)||0)+' ώρες του συγκεκριμένου τμήματος / ομάδας.';
+    if(errors.indexOf('atomic_slot_requires_full_hours')>=0) return 'Η ανάθεση στο συγκεκριμένο τμήμα / ομάδα είναι ατομική: πρέπει να δηλωθούν ακριβώς '+((state.slot&&state.slot.capacity_hours)||0)+' ώρες.';
+    if(errors.indexOf('specialty_not_eligible')>=0){
+      const person=state.person||{};
+      return 'Οι ειδικότητες '+(person.specialty_code||'')+(person.secondary_specialty_code?' / '+person.secondary_specialty_code:'')+' δεν έχουν ανάθεση στο συγκεκριμένο μάθημα.';
+    }
+    if(errors.indexOf('slot_overallocated_across_roster')>=0){
+      const attempted=(result&&result.slot_id&&state.validation&&state.validation.slot_attempted[result.slot_id])||0;
+      return 'Το ίδιο τμήμα / ομάδα έχει συνολικά '+attempted+' ώρες, ενώ διαθέτει '+((state.slot&&state.slot.capacity_hours)||0)+'.';
+    }
+    return errors.length?'Η γραμμή κατανομής δεν είναι έγκυρη.':'';
+  }
   function allocationCollectState(){
-    const personAssigned={}, personPriority={}, personSource={}, slotAssigned={}, slotAttempted={}, rowState=[];
-    Object.keys(allocationPeopleData||{}).forEach(function(id){
-      personAssigned[id]=0;
-      personPriority[id]={A:0,B:0,C:0,SPECIAL:0};
-      personSource[id]={primary:0,secondary:0};
-    });
-    Object.keys(allocationSlotsData||{}).forEach(function(id){ slotAssigned[id]=0; slotAttempted[id]=0; });
-
-    allocationRows().forEach(function(row){
+    const rows=allocationRows(), raw=[], active=[], activeToRow=[];
+    rows.forEach(function(row,rowIndex){
       const personEl=row.querySelector('.allocation-person'), slotEl=row.querySelector('.allocation-slot'), hoursEl=row.querySelector('.allocation-hours');
       const pid=personEl?personEl.value:'', sid=slotEl?slotEl.value:'', hours=Math.max(0,parseInt(hoursEl&&hoursEl.value?hoursEl.value:'0',10)||0);
-      const person=allocationPeopleData[pid]||null, slot=allocationSlotsData[sid]||null, match=person&&slot?allocationBestAssignment(person,slot):null;
-      let error='', warnings=[];
-      if((pid||sid||hours)&&!slot) error='Δεν έχει επιλεγεί έγκυρο τμήμα / ομάδα και μάθημα.';
-      else if((pid||sid||hours)&&!person) error='Δεν έχει επιλεγεί έγκυρος εκπαιδευτικός.';
-      else if((pid||sid)&&hours<1) error='Οι ώρες πρέπει να είναι θετικές.';
-      else if(person&&slot&&hours>slot.capacity_hours) error='Οι ώρες υπερβαίνουν τις '+slot.capacity_hours+' ώρες του συγκεκριμένου τμήματος / ομάδας.';
-      else if(person&&slot&&hours>0&&!match) error='Οι ειδικότητες '+person.specialty_code+(person.secondary_specialty_code?' / '+person.secondary_specialty_code:'')+' δεν έχουν ανάθεση στο συγκεκριμένο μάθημα.';
-      if(!error&&person&&slot&&hours>0&&match){
-        slotAttempted[sid]=(slotAttempted[sid]||0)+hours;
-              }
-      rowState.push({row:row,pid:pid,sid:sid,hours:hours,person:person,slot:slot,match:match,error:error,warnings:warnings,finalError:''});
+      raw.push({row:row,pid:pid,sid:sid,hours:hours});
+      if(pid||sid||hours){ activeToRow.push(rowIndex); active.push({person_id:pid,slot_id:sid,hours:hours}); }
     });
-
-    const overallocatedSlots={};
-    let overSlots=0;
-    Object.keys(allocationSlotsData||{}).forEach(function(sid){
-      const cap=allocationSlotsData[sid].capacity_hours||0, attempted=slotAttempted[sid]||0, over=Math.max(0,attempted-cap);
-      if(over>0){ overallocatedSlots[sid]=over; overSlots+=over; }
-    });
-
-    let basicAssigned=0;
-    rowState.forEach(function(st){
-      st.finalError=st.error;
-      if(!st.finalError&&st.sid&&overallocatedSlots[st.sid]){
-        st.finalError='Το ίδιο τμήμα / ομάδα έχει συνολικά '+(slotAttempted[st.sid]||0)+' ώρες, ενώ διαθέτει '+st.slot.capacity_hours+'.';
+    const validation=window.PersonnelWorkloadCalculations
+      ? window.PersonnelWorkloadCalculations.validateRosterSlotAllocations(allocationSlotsData,allocationPeopleData,active)
+      : {allocation_rows:[],slot_attempted:{},slot_assigned:{},person_assigned:{},person_priority:{},person_source:{},overallocated_slots:{},summary:{assigned_slot_hours_total:0,unassigned_slot_hours:allocationTotalCapacity,overallocated_slot_hours:0}};
+    const validatedByRow={};
+    (validation.allocation_rows||[]).forEach(function(result,activeIndex){ validatedByRow[activeToRow[activeIndex]]=result; });
+    const rowState=raw.map(function(item,rowIndex){
+      const person=allocationPeopleData[item.pid]||null, slot=allocationSlotsData[item.sid]||null, result=validatedByRow[rowIndex]||null;
+      let match=null, error='', warnings=[];
+      if(result){
+        if(result.priority) match={priority:result.priority,used_specialty_code:result.used_specialty_code,specialty_source:result.specialty_source};
+        const stateForMessage={person:person,slot:slot,validation:validation};
+        error=allocationValidationErrorMessage(result,stateForMessage);
+        if(result.valid) error='';
+        if(result.valid&&Array.isArray(result.warnings)&&result.warnings.indexOf('uses_lower_priority_assignment')>=0) warnings.push('Χρήση χαμηλότερης προτεραιότητας ανάθεσης.');
       }
-      if(st.finalError||!st.person||!st.slot||st.hours<1||!st.match) return;
-      personAssigned[st.pid]=(personAssigned[st.pid]||0)+st.hours;
-      personPriority[st.pid][st.match.priority]=(personPriority[st.pid][st.match.priority]||0)+st.hours;
-      personSource[st.pid][st.match.specialty_source]=(personSource[st.pid][st.match.specialty_source]||0)+st.hours;
-      slotAssigned[st.sid]=(slotAssigned[st.sid]||0)+st.hours;
-      basicAssigned+=st.hours;
-    });
-
-    let unassigned=0;
-    Object.keys(allocationSlotsData||{}).forEach(function(sid){
-      const cap=allocationSlotsData[sid].capacity_hours||0, assigned=slotAssigned[sid]||0;
-      unassigned+=Math.max(0,cap-assigned);
+      return {row:item.row,pid:item.pid,sid:item.sid,hours:item.hours,person:person,slot:slot,match:match,error:error,warnings:warnings,finalError:error,validationResult:result};
     });
     return {
       rowState:rowState,
-      personAssigned:personAssigned,
-      personPriority:personPriority,
-      personSource:personSource,
-      slotAssigned:slotAssigned,
-      slotAttempted:slotAttempted,
-      overallocatedSlots:overallocatedSlots,
-      overSlots:overSlots,
-      unassigned:unassigned,
-      basicAssigned:basicAssigned
+      personAssigned:validation.person_assigned||{},
+      personPriority:validation.person_priority||{},
+      personSource:validation.person_source||{},
+      slotAssigned:validation.slot_assigned||{},
+      slotAttempted:validation.slot_attempted||{},
+      overallocatedSlots:validation.overallocated_slots||{},
+      overSlots:(validation.summary&&validation.summary.overallocated_slot_hours)||0,
+      unassigned:(validation.summary&&validation.summary.unassigned_slot_hours)||0,
+      basicAssigned:(validation.summary&&validation.summary.assigned_slot_hours_total)||0
     };
   }
   function currentAllocationTotals(){

@@ -1,3 +1,12 @@
+## 2026-09-26 — Personnel workload browser parity · Phase 2 (v3.22.9)
+
+- Μεταφέρθηκαν στο `includes/personnel-workload-calculations.js` οι pure συναρτήσεις slot eligibility: `priorityForSlotCode()`, `priorityRank()` και `bestAssignmentForSlot()`.
+- Προστέθηκε browser-side `validateRosterSlotAllocations()` με parity προς `personnelWorkloadRosterSlotPlan()` για atomic slot hours, eligibility κύριας/2ης ειδικότητας, lower-priority warnings, cross-row over-allocation και συνολικό όριο 10 ωρών Β΄ ανάθεσης.
+- Το `staffing-simulator-ui.js` δεν διατηρεί πλέον δεύτερη ανεξάρτητη υλοποίηση της επιλογής καλύτερης ανάθεσης ή του slot-level validation.
+- Διορθώθηκε parity κενό στο UI: μερική κατανομή ενός atomic slot (π.χ. 1 από 2 ώρες) επισημαίνεται πλέον ως μη έγκυρη, όπως ήδη έκανε η PHP reference implementation.
+- Νέο `tests/personnel-workload-allocation-client-parity-contract.py` συγκρίνει PHP ↔ JS πάνω στα ίδια synthetic slots και καλύπτει κύρια/2η ειδικότητα, atomic partial, ineligible specialty, άγνωστα IDs, over-allocation, lower-priority και >10 ώρες Β΄ ανάθεσης.
+- Το νέο parity contract προστέθηκε στο `tests/pre-pwa-regression.sh`. Ο optimizer/automatic balance παραμένει server/reference για Phase 3.
+
 ## 2026-09-26 — Personnel workload browser parity · Phase 1 (v3.22.8)
 
 - Προστέθηκε `includes/personnel-workload-calculations.js` με browser-side pure calculations που αντιστοιχούν στις person-level συναρτήσεις του `includes/personnel-workload.php`: service days/labels, branch resolution, director section bands, secondary base hours, obligation και person normalization.
