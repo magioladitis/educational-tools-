@@ -42,8 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-$schools = vacanciesDbReady() ? vacanciesSchools() : array();
-$accountsReady = vacanciesAccountsReady();
+$serviceReady = is_file(vacanciesConfigPath()) && vacanciesDbReady();
+$schools = $serviceReady ? vacanciesSchools() : array();
+$accountsReady = $serviceReady ? vacanciesAccountsReady() : false;
 ?>
 <!DOCTYPE html>
 <html lang="el">
@@ -64,10 +65,12 @@ $accountsReady = vacanciesAccountsReady();
     <p>Κάθε λογαριασμός διευθυντή είναι συνδεδεμένος αποκλειστικά με τη σχολική μονάδα του. Δεν απαιτείται — και δεν επιτρέπεται — επιλογή άλλου σχολείου.</p>
   </section>
 
-  <?php if (!is_file(vacanciesConfigPath())) { ?>
-    <section class="card vacancy-status vacancy-status--warning"><h2>Χρειάζεται αρχική ρύθμιση</h2><p>Δεν υπάρχει ακόμη το ιδιωτικό <code>includes/vacancies-config.php</code>.</p></section>
-  <?php } elseif (!vacanciesDbReady()) { ?>
-    <section class="card vacancy-status vacancy-status--danger"><h2>Δεν υπάρχει σύνδεση με τη βάση</h2><p>Έλεγξε τα στοιχεία της MariaDB στο ιδιωτικό configuration.</p></section>
+  <?php if (!$serviceReady) { ?>
+    <section class="card vacancy-status vacancy-status--info" role="status">
+      <h2>Η εφαρμογή δεν είναι διαθέσιμη εδώ</h2>
+      <p>Η υπηρεσία «Καταγραφή Κενών Σχολικών Μονάδων» λειτουργεί σε ξεχωριστό περιβάλλον.</p>
+      <div class="button-row"><a class="secondary button-like" href="ergaleia.php">Επιστροφή στα εργαλεία</a></div>
+    </section>
   <?php } else { ?>
     <?php if ($error !== '') { ?><div class="vacancy-alert vacancy-alert--danger"><?php echo vacanciesH($error); ?></div><?php } ?>
 
@@ -85,7 +88,7 @@ $accountsReady = vacanciesAccountsReady();
       </form>
     </section>
     <?php } else { ?>
-      <section class="card vacancy-status vacancy-status--warning"><h2>Δεν έχει εγκατασταθεί ακόμη η διαχείριση λογαριασμών</h2><p>Εκτέλεσε το migration <code>sql/vacancies-v1.5-accounts-school-profile.sql</code>. Μέχρι τότε μπορεί να χρησιμοποιηθεί μόνο η κλειστή πιλοτική είσοδος, εφόσον είναι ενεργή.</p></section>
+      <section class="card vacancy-status vacancy-status--info" role="status"><h2>Η υπηρεσία δεν είναι προσωρινά διαθέσιμη</h2><p>Παρακαλούμε δοκιμάστε ξανά αργότερα.</p></section>
     <?php } ?>
 
     <?php if (vacanciesDevLoginEnabled()) { ?>

@@ -67,8 +67,10 @@ check('data-directory-label' in home and 'activeCategoryFilter' in home and 'cle
 check('active-category-filter' in css and '.category-card.is-active' in css, 'active category has compact shared visual state')
 
 # Runtime version/cache alignment and syntax.
-check("define('EDU_TOOLS_VERSION', '3.22.19');" in config, 'runtime asset version bumped to 3.22.19')
-check("CACHE_NAME = CACHE_PREFIX + '3.22.19'" in sw, 'service-worker cache version matches runtime version')
+version_match=re.search(r"define\('EDU_TOOLS_VERSION',\s*'([^']+)'\)", config)
+release_version=version_match.group(1) if version_match else ''
+check(bool(release_version) and re.match(r'^\d+\.\d+\.\d+$', release_version) is not None, 'runtime asset version uses semantic versioning')
+check(bool(release_version) and ("CACHE_NAME = CACHE_PREFIX + '%s'" % release_version) in sw, 'service-worker cache version matches runtime version')
 check(subprocess.run(['node','--check',str(ROOT/'assets/app-experience.js')],capture_output=True).returncode==0, 'app-experience JS syntax')
 check(subprocess.run(['node','--check',str(ROOT/'includes/saek-deputy-eligibility-ui.js')],capture_output=True).returncode==0, 'SAEK JS syntax')
 check(subprocess.run(['php','-l',str(ROOT/'includes/header.php')],capture_output=True).returncode==0, 'header PHP syntax')
