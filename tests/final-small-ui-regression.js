@@ -21,14 +21,14 @@ search.value='';buttons[1].listeners.click[0]();ok(!cards[1].classList.contains(
 let prevented=false;links[0].listeners.click[0]({preventDefault(){prevented=true}});ok(prevented&&!cards[2].classList.contains('hidden-card')&&toolbar.scrolled===true,'directory category link filters and scrolls');
 
 // 2) SAEK deputy eligibility: external buttons and decision flow.
-const ids=['saek','status','requiredDegree','experience','evaluationRefusal','unsuitable','retirement','result','progressText','progressFill','checkEligibilityBtn','resetBtn'];
+const ids=['saek','status','requiredDegree','experience','evaluationRefusal','unsuitable','retirement','result','checkEligibilityBtn','resetBtn'];
 const E={};ids.forEach(id=>E[id]=el());
 const sctx={console,document:{getElementById:id=>E[id]},Array};sctx.window=sctx;vm.createContext(sctx);load(sctx,'includes/saek-deputy-eligibility-ui.js');
 ok((E.checkEligibilityBtn.listeners.click||[]).length===1&&(E.resetBtn.listeners.click||[]).length===1,'SAEK actions externally bound once');
-Object.assign(E.saek,{value:'eligible'});Object.assign(E.status,{value:'yes'});Object.assign(E.requiredDegree,{value:'yes'});Object.assign(E.experience,{value:'yes'});Object.assign(E.evaluationRefusal,{value:'no'});Object.assign(E.unsuitable,{value:'no'});Object.assign(E.retirement,{value:'no'});
+Object.assign(E.saek,{value:'eligible'});Object.assign(E.status,{value:'eligible'});Object.assign(E.requiredDegree,{value:'yes'});Object.assign(E.experience,{value:'yes'});Object.assign(E.evaluationRefusal,{value:'no'});Object.assign(E.unsuitable,{value:'no'});Object.assign(E.retirement,{value:'no'});
 E.checkEligibilityBtn.listeners.click[0]();ok(E.result.className.includes('eligible')&&E.result.innerHTML.includes('πληροίς'),'SAEK eligible path preserved');
 E.saek.value='other';E.checkEligibilityBtn.listeners.click[0]();ok(E.result.className.includes('not-eligible')&&E.result.innerHTML.includes('26 Σ.Α.Ε.Κ.'),'SAEK excluded-school path preserved');
-E.resetBtn.listeners.click[0]();ok(E.progressText.textContent==='0/7 απαντήσεις'&&E.result.style.display==='none','SAEK reset/progress preserved');
+E.resetBtn.listeners.click[0]();ok(E.result.style.display==='none'&&E.saek.value===''&&E.retirement.value==='','SAEK reset preserved without progress UI');
 
 // 3) European Schools canonical engine sanity: the UI still targets an unchanged engine.
 const ectx={console};ectx.window=ectx;vm.createContext(ectx);load(ectx,'includes/education-core.js');load(ectx,'includes/european-schools-calculations.js');

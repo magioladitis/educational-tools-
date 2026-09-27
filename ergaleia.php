@@ -73,6 +73,26 @@ $h = function ($value) use ($flags) {
     </div>
   </section>
 
+  <section class="edu-personal-tools" data-edu-personal-tools aria-labelledby="personalToolsTitle" hidden>
+    <div class="directory-section__heading">
+      <div>
+        <span class="section-kicker">ΓΡΗΓΟΡΗ ΠΡΟΣΒΑΣΗ</span>
+        <h2 id="personalToolsTitle">Για σένα</h2>
+      </div>
+      <p>Τα εργαλεία που χρησιμοποίησες πρόσφατα και όσα έχεις αποθηκεύσει ως αγαπημένα στη συγκεκριμένη συσκευή.</p>
+    </div>
+    <div class="edu-personal-tools__grid">
+      <section class="edu-personal-tools__group" data-edu-personal-group="recent" aria-labelledby="recentToolsTitle" hidden>
+        <h3 id="recentToolsTitle">Πρόσφατα</h3>
+        <div class="edu-personal-tools__list" data-edu-personal-list="recent"></div>
+      </section>
+      <section class="edu-personal-tools__group" data-edu-personal-group="favorites" aria-labelledby="favoriteToolsTitle" hidden>
+        <h3 id="favoriteToolsTitle">Αγαπημένα</h3>
+        <div class="edu-personal-tools__list" data-edu-personal-list="favorites"></div>
+      </section>
+    </div>
+  </section>
+
   <section class="directory-section" id="tool-categories" aria-labelledby="toolCategoriesTitle">
     <div class="directory-section__heading">
       <div>

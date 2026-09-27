@@ -60,7 +60,7 @@ key_tokens={
  'includes/asep-3ea-ui.js':["document.addEventListener('input',render)","$('copyBtn').addEventListener('click'",'AsepPeAcademic.calculate'],
  'includes/asep-2ea-ui.js':["document.addEventListener('input',render)","$('copyBtn').addEventListener('click'",'syncEligibilityUI'],
  'includes/asep-1ea-ui.js':["document.addEventListener('input',render)","$('copyBtn').addEventListener('click'",'EducationCore.bindBoundedNumberInput'],
- 'includes/saek-deputy-eligibility-ui.js':["checkEligibilityBtn').addEventListener('click',checkEligibility)","resetBtn').addEventListener('click',resetForm)",'updateProgress();'],
+ 'includes/saek-deputy-eligibility-ui.js':["checkEligibilityBtn').addEventListener('click',checkEligibility)","resetBtn').addEventListener('click',resetForm)",'fieldIds'],
 }
 for js,tokens in key_tokens.items():
     s=(ROOT/js).read_text(encoding='utf-8')

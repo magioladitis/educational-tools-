@@ -13,7 +13,7 @@
           button.classList.contains('edu-btn-primary') || button.classList.contains('edu-btn-secondary')) return;
 
       /* Stateful / component buttons keep their page-specific appearance. */
-      if (button.matches('.filter-btn, .add-row, .remove-row, .tab, .tab-btn, .mode-tab')) return;
+      if (button.matches('.filter-btn, .add-row, .remove-row, .tab, .tab-btn, .mode-tab, .edu-tools-menu-action, .edu-install-help__close')) return;
       if (button.closest('.filters, .mode-tabs, [role="tablist"], .segmented-choice')) return;
 
       var text = normaliseText(button.textContent);

@@ -1,6 +1,6 @@
 # Αρχιτεκτονική — Εργαλειοθήκη Εκπαιδευτικού
 
-**Reference baseline:** v3.22.13 · 2026-09-26
+**Reference baseline:** v3.22.17 · 2026-09-27
 
 Το αρχείο αυτό είναι ο σύντομος οδηγός συντήρησης της Εργαλειοθήκης. Πριν από κάθε αλλαγή πρέπει να είναι σαφές:
 
@@ -70,6 +70,7 @@ staffing-simulator-ui.js
 | Browser workload/optimizer | `includes/personnel-workload-calculations.js` | Pure shared module· όχι optimizer μέσα στο UI. |
 | Optimizer policy | `personnelWorkloadOptimizerPolicy()` | Objective, ranks, B΄ limit, budgets, schemas. |
 | PWA/browser head | `includes/head-pwa.php` | Manifest/favicon/SW bootstrap μία φορά. |
+| Local app experience | `assets/app-experience.js` | Πρόσφατα/Αγαπημένα, Share και Install· μόνο client-side, χωρίς business rules. |
 | Release version | `includes/config.php` + `service-worker.js` | Coordinated version/cache bump όταν αλλάζουν runtime assets. |
 
 ---
@@ -251,6 +252,18 @@ python3 tests/personnel-workload-performance-benchmark.py
 Δεν αυξάνουμε performance budget απλώς για να περάσει regression· πρώτα διορθώνουμε την αιτία.
 
 ---
+
+
+### Local app experience
+
+Το `assets/app-experience.js` χειρίζεται μόνο προαιρετικές λειτουργίες εμπειρίας εφαρμογής:
+
+- `eduToolsRecentV1` — έως 5 πρόσφατα εργαλεία,
+- `eduToolsFavoritesV1` — αγαπημένα εργαλεία στη συγκεκριμένη συσκευή,
+- native Share / αντιγραφή συνδέσμου,
+- PWA install prompt ή οδηγίες εγκατάστασης.
+
+Τα δεδομένα αυτά είναι **local-only** (`localStorage`), με namespace που παράγεται από το manifest/app path ώστε να μην συγκρούονται σε shared origins όπως `users.sch.gr`. Δεν επηρεάζουν υπολογισμούς και δεν αποστέλλονται στον server. Το catalog παραμένει canonical στο `includes/tools-catalog.php`· η αρχική αγνοεί αποθηκευμένα href που δεν υπάρχουν πλέον στο catalog.
 
 ## 9. PWA / browser shell
 

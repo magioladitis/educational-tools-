@@ -18,8 +18,6 @@
 </section>
 <p class="intro">Απάντησε στις ερωτήσεις. Το εργαλείο ελέγχει τις ρητές προϋποθέσεις και τα κωλύματα της πρόσκλησης· δεν πραγματοποιεί μοριοδότηση.</p>
 
-<div class="progress-panel" aria-live="polite"><div class="progress-head"><span>Πρόοδος συμπλήρωσης</span><span id="progressText">0/7 απαντήσεις</span></div><div class="progress-track" aria-hidden="true"><div id="progressFill" class="progress-fill"></div></div></div>
-
 <div class="question"><label for="saek">Σ.Α.Ε.Κ. στην οποία υπηρετείς</label><select id="saek"><option value="">-- Επιλογή --</option>
 <option>Σ.Α.Ε.Κ. Δράμας</option><option>Θεματική Σ.Α.Ε.Κ. Αιγάλεω</option><option>Θεματική Σ.Α.Ε.Κ. Αχαρνών</option><option>Σ.Α.Ε.Κ. Γαλατσίου</option><option>Σ.Α.Ε.Κ. Δάφνης-Υμηττού</option><option>Σ.Α.Ε.Κ. Κηφισιάς</option><option>Σ.Α.Ε.Κ. Σαλαμίνας</option><option>Σ.Α.Ε.Κ. Χαλανδρίου</option><option>Σ.Α.Ε.Κ. Χίου</option><option>Σ.Α.Ε.Κ. Καστοριάς</option><option>Σ.Α.Ε.Κ. Άρτας</option><option>Σ.Α.Ε.Κ. Ηγουμενίτσας</option><option>Σ.Α.Ε.Κ. Ιωαννίνων</option><option>Σ.Α.Ε.Κ. Κόνιτσας</option><option>Πειραματική Σ.Α.Ε.Κ. Καρδίτσας</option><option>Σ.Α.Ε.Κ. Κεφαλληνίας</option><option>Σ.Α.Ε.Κ. Λευκάδας</option><option>Πειραματική Σ.Α.Ε.Κ. Βέροιας</option><option>Πειραματική Σ.Α.Ε.Κ. Θέρμης</option><option>Σ.Α.Ε.Κ. Χανίων</option><option>Σ.Α.Ε.Κ. Θήρας</option><option>Σ.Α.Ε.Κ. Νάξου</option><option>Σ.Α.Ε.Κ. Μεγαλόπολης</option><option>Σ.Α.Ε.Κ. Σπάρτης</option><option>Σ.Α.Ε.Κ. Στεμνίτσας</option><option>Σ.Α.Ε.Κ. Λιβαδειάς</option><option value="other">Άλλη Σ.Α.Ε.Κ.</option></select></div>
 
@@ -29,11 +27,11 @@
 
 <div class="question"><label for="experience">Έχεις τουλάχιστον δύο (2) έτη διοικητικής εμπειρίας ή εκπαιδευτικής υπηρεσίας στην επαγγελματική εκπαίδευση ή κατάρτιση;</label><select id="experience"><option value="">-- Επιλογή --</option><option value="yes">Ναι</option><option value="no">Όχι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
 
-<div class="question"><label for="evaluationRefusal">Έχεις ασκήσει καθήκοντα Διευθυντή/Υποδιευθυντή δημόσιας Σ.Α.Ε.Κ. και εμπίπτεις στον εξαετή αποκλεισμό λόγω άρνησης ή παρακώλυσης της προβλεπόμενης αξιολόγησης;</label><select id="evaluationRefusal"><option value="">-- Επιλογή --</option><option value="no">Όχι</option><option value="yes">Ναι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
+<div class="question"><label for="evaluationRefusal">Έχεις ασκήσει καθήκοντα Διευθυντή/Υποδιευθυντή δημόσιας Σ.Α.Ε.Κ. και εμπίπτεις στον εξαετή αποκλεισμό λόγω άρνησης ή παρακώλυσης της προβλεπόμενης αξιολόγησης;</label><select id="evaluationRefusal"><option value="">-- Επιλογή --</option><option value="yes">Ναι</option><option value="no">Όχι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
 
-<div class="question"><label for="unsuitable">Έχει αξιολογηθεί το έργο σου ως «ακατάλληλο» και βρίσκεσαι ακόμη μέσα στον προβλεπόμενο τριετή αποκλεισμό;</label><select id="unsuitable"><option value="">-- Επιλογή --</option><option value="no">Όχι</option><option value="yes">Ναι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
+<div class="question"><label for="unsuitable">Έχει αξιολογηθεί το έργο σου ως «ακατάλληλο» και βρίσκεσαι ακόμη μέσα στον προβλεπόμενο τριετή αποκλεισμό;</label><select id="unsuitable"><option value="">-- Επιλογή --</option><option value="yes">Ναι</option><option value="no">Όχι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
 
-<div class="question"><label for="retirement">Αποχωρείς υποχρεωτικά από την υπηρεσία λόγω συνταξιοδότησης έως και τις 10/09/2027;</label><select id="retirement"><option value="">-- Επιλογή --</option><option value="no">Όχι</option><option value="yes">Ναι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
+<div class="question"><label for="retirement">Αποχωρείς υποχρεωτικά από την υπηρεσία λόγω συνταξιοδότησης έως και τις 10/09/2027;</label><select id="retirement"><option value="">-- Επιλογή --</option><option value="yes">Ναι</option><option value="no">Όχι</option><option value="unknown">Δεν είμαι σίγουρος/η</option></select></div>
 
 <div class="button-row"><button type="button" id="checkEligibilityBtn">Έλεγχος δικαιώματος υποψηφιότητας</button><button type="button" class="reset-button" id="resetBtn">Καθαρισμός</button></div>
 <div id="result" class="result" role="status" aria-live="polite"></div>

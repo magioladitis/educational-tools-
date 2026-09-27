@@ -250,6 +250,132 @@ body.edu-ui ::selection {
   text-decoration: none;
 }
 
+.edu-tools-global-menu__section + .edu-tools-global-menu__section {
+  margin-top: 7px;
+  padding-top: 7px;
+  border-top: 1px solid var(--edu-border);
+}
+
+.edu-tools-global-menu__heading {
+  display: block;
+  padding: 5px 11px 4px;
+  color: var(--edu-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.edu-tools-menu-action {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 40px;
+  margin: 0;
+  padding: 10px 11px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #344054;
+  text-align: left;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.edu-tools-menu-action:hover,
+.edu-tools-menu-action:focus-visible {
+  background: var(--edu-primary-soft);
+  color: var(--edu-primary-dark);
+}
+
+.edu-tools-menu-action.is-active { color: #9a6700; }
+.edu-tools-menu-action__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  flex: 0 0 20px;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.edu-app-toast {
+  position: fixed;
+  z-index: 120;
+  left: 50%;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  max-width: min(420px, calc(100vw - 28px));
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #172033;
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(16,24,40,.24);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.edu-app-toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+
+.edu-install-help[hidden] { display: none !important; }
+.edu-install-help {
+  position: fixed;
+  z-index: 130;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+.edu-install-help__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15,23,42,.52);
+}
+.edu-install-help__panel {
+  position: relative;
+  z-index: 1;
+  width: min(520px, 100%);
+  max-height: min(82vh, 620px);
+  overflow: auto;
+  padding: 22px;
+  border: 1px solid var(--edu-border);
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(15,23,42,.26);
+}
+.edu-install-help__panel h2 {
+  margin: 0 42px 12px 0;
+  color: var(--edu-text);
+  font-size: 22px;
+}
+.edu-install-help__content { color: #344054; font-size: 15px; line-height: 1.6; }
+.edu-install-help__content ol { margin: 0; padding-left: 22px; }
+.edu-install-help__content li + li { margin-top: 8px; }
+.edu-install-help__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #eef2f7;
+  color: #344054;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+.edu-install-help__close:hover { background: #e2e8f0; }
+
 .edu-tools-global-footer {
   margin-top: 28px;
   padding: 18px 16px 26px;
@@ -860,6 +986,8 @@ a:focus-visible {
   .edu-tools-global-header,
   .edu-tools-global-footer,
   .edu-back-to-top,
+  .edu-app-toast,
+  .edu-install-help,
   body.edu-ui button,
   body.edu-ui .actions,
   body.edu-ui .button-row {
@@ -2612,6 +2740,37 @@ body.edu-ui.edu-tools-directory .hero-action:hover{background:rgba(0,0,0,.2);tex
 body.edu-ui.edu-tools-directory .hero-action--primary{background:#fff;color:var(--blue-dark);border-color:#fff}
 body.edu-ui.edu-tools-directory .hero-action--primary:hover{background:#f3f7ff}
 body.edu-ui.edu-tools-directory .directory-section{margin-top:28px}
+body.edu-ui.edu-tools-directory .edu-personal-tools{
+  margin-top:24px;padding:18px;border:1px solid #d9e5f6;border-radius:17px;
+  background:linear-gradient(180deg,#f8fbff 0%,#fff 100%);box-shadow:0 4px 16px rgba(28,39,55,.04)
+}
+body.edu-ui.edu-tools-directory .edu-personal-tools[hidden]{display:none!important}
+body.edu-ui.edu-tools-directory .edu-personal-tools__grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:12px
+}
+body.edu-ui.edu-tools-directory .edu-personal-tools__group[hidden]{display:none!important}
+body.edu-ui.edu-tools-directory .edu-personal-tools__group h3{
+  margin:0 0 9px;color:var(--edu-primary-dark);font-size:15px
+}
+body.edu-ui.edu-tools-directory .edu-personal-tools__list{display:grid;gap:8px}
+body.edu-ui.edu-tools-directory .edu-personal-tool{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;
+  padding:11px 12px;border:1px solid var(--edu-border);border-radius:11px;background:#fff;
+  color:inherit;text-decoration:none;box-shadow:0 2px 8px rgba(28,39,55,.035)
+}
+body.edu-ui.edu-tools-directory .edu-personal-tool:hover{
+  border-color:#a8c7fa;background:#fbfdff;text-decoration:none
+}
+body.edu-ui.edu-tools-directory .edu-personal-tool__text{display:block;min-width:0}
+body.edu-ui.edu-tools-directory .edu-personal-tool__text strong{
+  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;line-height:1.35
+}
+body.edu-ui.edu-tools-directory .edu-personal-tool__text small{
+  display:block;margin-top:2px;color:var(--edu-muted);font-size:11.5px
+}
+body.edu-ui.edu-tools-directory .edu-personal-tool__arrow{
+  flex:0 0 auto;color:var(--edu-primary);font-size:18px;font-weight:800
+}
 body.edu-ui.edu-tools-directory .directory-section__heading,
 body.edu-ui.edu-tools-directory .toolbar-heading,
 body.edu-ui.edu-tools-directory .tool-group__heading{
@@ -2678,6 +2837,8 @@ body.edu-ui.edu-tools-directory .tool-group .tools-grid{margin-top:0}
 @media(max-width:900px){
   body.edu-ui.edu-tools-directory .tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   body.edu-ui.edu-tools-directory .category-grid{grid-template-columns:1fr}
+  body.edu-ui.edu-tools-directory .edu-personal-tools{padding:15px}
+  body.edu-ui.edu-tools-directory .edu-personal-tools__grid{grid-template-columns:1fr;gap:13px}
   body.edu-ui.edu-tools-directory .info-grid{grid-template-columns:1fr}
 }
 @media(max-width:620px){
@@ -3464,4 +3625,10 @@ a:focus-visible {
     transition-duration: .01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Front-end polish v3.22.17 — install/share/local personalization. */
+.edu-tools-menu-action[hidden]{display:none!important}
+@media (display-mode: standalone){
+  [data-edu-install]{display:none!important}
 }

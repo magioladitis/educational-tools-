@@ -2,9 +2,7 @@
 const fieldIds=['saek','status','requiredDegree','experience','evaluationRefusal','unsuitable','retirement'];
 function valueOf(id){return document.getElementById(id).value;}
 function showResult(message,cssClass){const r=document.getElementById('result');r.style.display='block';r.className='result '+cssClass;r.innerHTML=message;}
-function updateProgress(){const done=fieldIds.filter(id=>valueOf(id)!=='').length;document.getElementById('progressText').textContent=done+'/7 απαντήσεις';document.getElementById('progressFill').style.width=(done/7*100)+'%';}
-fieldIds.forEach(id=>document.getElementById(id).addEventListener('change',updateProgress));
-function resetForm(){fieldIds.forEach(id=>document.getElementById(id).value='');const r=document.getElementById('result');r.style.display='none';r.innerHTML='';updateProgress();}
+function resetForm(){fieldIds.forEach(id=>document.getElementById(id).value='');const r=document.getElementById('result');r.style.display='none';r.innerHTML='';}
 function checkEligibility(){
  const vals=fieldIds.map(valueOf); if(vals.includes('')){showResult('Συμπλήρωσε πρώτα όλες τις ερωτήσεις.','unknown');return;}
  if(valueOf('saek')==='other'){showResult('Η Σ.Α.Ε.Κ. που δήλωσες δεν περιλαμβάνεται στις 26 Σ.Α.Ε.Κ. με κενές θέσεις της συγκεκριμένης πρόσκλησης. Δεν μπορείς να υποβάλεις αίτηση στο πλαίσιο αυτής της πρόσκλησης.','not-eligible');return;}
@@ -20,4 +18,3 @@ function checkEligibility(){
 
 document.getElementById('checkEligibilityBtn').addEventListener('click',checkEligibility);
 document.getElementById('resetBtn').addEventListener('click',resetForm);
-updateProgress();
