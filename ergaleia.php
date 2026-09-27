@@ -64,12 +64,6 @@ $h = function ($value) use ($flags) {
     <p>Υπολογιστές, έλεγχοι και οδηγοί οργανωμένοι πλέον σε θεματικές ενότητες, ώστε να βρίσκεις γρηγορότερα το εργαλείο που χρειάζεσαι.</p>
     <div class="hero-meta" aria-label="Σύνοψη Εργαλειοθήκης">
       <span><?php echo count($tools); ?> διαθέσιμα εργαλεία</span>
-      <span><?php echo count($groups); ?> βασικές κατηγορίες</span>
-    </div>
-    <div class="hero-actions">
-      <a class="hero-action hero-action--primary" href="#tool-categories">Δες κατηγορίες</a>
-      <a class="hero-action" href="#tools-directory">Όλα τα εργαλεία</a>
-      <a class="hero-action" href="prothesmies.php">Προθεσμίες →</a>
     </div>
   </section>
 

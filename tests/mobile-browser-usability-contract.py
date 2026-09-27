@@ -36,7 +36,7 @@ check('directory mobile cards remove desktop min-height', 'body.edu-ui.edu-tools
 check('directory mobile grid tightens spacing', 'body.edu-ui.edu-tools-directory .tools-grid{grid-template-columns:1fr;gap:12px}' in common)
 check('directory filters become horizontal touch strip', 'flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding:1px 1px 6px;' in common)
 check('directory filter chips remain 44px touch targets', '.filter-btn{flex:0 0 auto;min-height:44px;white-space:nowrap' in common)
-check('directory hero actions remain 44px touch targets', '.hero-action{min-height:44px;' in common)
+check('directory hero has no obsolete action-button CSS', '.hero-action{' not in common and '.hero-actions{' not in common)
 
 # Heavy staffing workflow: tabs scroll instead of consuming multiple lines.
 check('staffing mobile tabs are horizontal scroll strip', '.edu-page-staffing-simulator .mode-tabs{' in staffing and 'flex-wrap:nowrap;overflow-x:auto;' in staffing)

@@ -277,8 +277,12 @@
     var section = document.querySelector('[data-edu-personal-tools]');
     if (!section) return;
     var index = cardIndex();
-    var hasRecent = renderPersonalGroup('recent', readList(RECENTS_KEY), index);
-    var hasFavorites = renderPersonalGroup('favorites', readList(FAVORITES_KEY), index);
+    var favorites = readList(FAVORITES_KEY);
+    var favoriteSet = Object.create(null);
+    favorites.forEach(function (href) { favoriteSet[href] = true; });
+    var recents = readList(RECENTS_KEY).filter(function (href) { return !favoriteSet[href]; });
+    var hasRecent = renderPersonalGroup('recent', recents, index);
+    var hasFavorites = renderPersonalGroup('favorites', favorites, index);
     section.hidden = !(hasRecent || hasFavorites);
   }
 
