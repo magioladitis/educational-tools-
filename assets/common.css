@@ -1051,7 +1051,6 @@ body.edu-ui .app-box.edu-modernized > .edu-legacy-hero .intro {
 body.edu-ui .app-box.edu-modernized > .section,
 body.edu-ui .app-box.edu-modernized > .panel,
 body.edu-ui .app-box.edu-modernized > .question,
-body.edu-ui .app-box.edu-modernized > .progress-panel,
 body.edu-ui .app-box.edu-modernized > .deadline-card,
 body.edu-ui .app-box.edu-modernized > .quick-card,
 body.edu-ui .app-box.edu-modernized > .important,
@@ -1069,7 +1068,6 @@ body.edu-ui .app-box.edu-modernized > .edu-legacy-main-card {
 body.edu-ui .app-box.edu-modernized > .section,
 body.edu-ui .app-box.edu-modernized > .panel,
 body.edu-ui .app-box.edu-modernized > .question,
-body.edu-ui .app-box.edu-modernized > .progress-panel,
 body.edu-ui .app-box.edu-modernized > .deadline-card,
 body.edu-ui .app-box.edu-modernized > .quick-card,
 body.edu-ui .app-box.edu-modernized > .important,
@@ -2917,19 +2915,8 @@ body.edu-ui.edu-asep-tools-hub .credits{
    Eligibility guide — dikaioma-symmetoxis.php (CSS consolidation v3.20.9-b4)
    ========================================================================== */
 body.edu-ui.edu-guide-eligibility .app-box.edu-modernized { max-width:760px; }
-body.edu-ui.edu-guide-eligibility .progress-panel {
-  margin:0 0 22px; padding:14px; border:1px solid #d8e2f2; border-radius:10px;
-  background:#f7faff;
-}
-body.edu-ui.edu-guide-eligibility .progress-head {
-  display:flex; justify-content:space-between; gap:12px; align-items:center;
-  margin-bottom:8px; font-weight:700; color:var(--edu-primary-dark);
-}
-body.edu-ui.edu-guide-eligibility .progress-track {
-  width:100%; height:10px; overflow:hidden; border-radius:999px; background:#dfe7f3;
-}
-body.edu-ui.edu-guide-eligibility .progress-fill {
-  width:0; height:100%; background:var(--edu-primary); transition:width .2s ease;
+body.edu-ui.edu-guide-eligibility .question.has-missing {
+  border-color:#d4a72c; background:#fffdf5;
 }
 body.edu-ui.edu-guide-eligibility .question.has-impediment {
   border-color:#e4a09a; background:#fff8f7;

@@ -5,10 +5,11 @@ function el(id,value='',tag='SELECT'){ const listeners={}; return {id,value,tagN
 
 // Eligibility
 {
- global.window=global; const ids=['birthYear','citizenship','health','qualifications','dismissed','criminal','convictionImpediment','indictmentImpediment','civilRightsOrSupport','commercial','politicalOffice','publicFullTime','privateEducation','military','progressText','progressFill','result','eligibilityCheckBtn','eligibilityResetBtn']; const E={}; ids.forEach(x=>E[x]=el(x)); E.birthYear.tagName='INPUT'; E.progressFill.style={};
+ global.window=global; const ids=['birthYear','citizenship','health','qualifications','dismissed','criminal','convictionImpediment','indictmentImpediment','civilRightsOrSupport','commercial','politicalOffice','publicFullTime','privateEducation','military','result','eligibilityCheckBtn','eligibilityResetBtn']; const E={}; ids.forEach(x=>E[x]=el(x)); E.birthYear.tagName='INPUT';
  global.document={readyState:'complete',getElementById:id=>E[id]||null,addEventListener:()=>{},createElement:()=>el('new')};
  delete require.cache[require.resolve('../includes/eligibility-guide-ui.js')]; require('../includes/eligibility-guide-ui.js');
  assert('eligibility click wired',typeof E.eligibilityCheckBtn.listeners.click==='function'); assert('eligibility reset wired',typeof E.eligibilityResetBtn.listeners.click==='function');
+ global.EligibilityGuideUI.checkEligibility(); assert('eligibility missing-answer count shown',E.result.innerHTML.includes('Απομένουν 14 ερωτήσεις χωρίς απάντηση'));
  Object.assign(E.birthYear,{value:'1985'}); E.citizenship.value='eligible'; E.health.value='yes'; E.qualifications.value='yes'; ['dismissed','criminal','convictionImpediment','indictmentImpediment','civilRightsOrSupport','commercial','politicalOffice','publicFullTime','privateEducation'].forEach(x=>E[x].value='no'); E.military.value='not_applicable';
  global.EligibilityGuideUI.checkEligibility(); assert('eligibility positive result preserved',E.result.innerHTML.includes('έχεις δικαίωμα συμμετοχής'));
 }

@@ -25,15 +25,6 @@
     Απάντησε στις παρακάτω ερωτήσεις για έναν ενδεικτικό έλεγχο των γενικών προϋποθέσεων συμμετοχής.
   </p>
 
-  <div class="progress-panel" aria-live="polite">
-    <div class="progress-head">
-      <span>Πρόοδος συμπλήρωσης</span>
-      <span id="progressText">0/14 απαντήσεις</span>
-    </div>
-    <div class="progress-track" aria-hidden="true">
-      <div id="progressFill" class="progress-fill"></div>
-    </div>
-  </div>
 
 	<div class="question">
 	  <label for="birthYear">Έτος γέννησης υποψηφίου/ας</label>

@@ -1,6 +1,6 @@
 /*
  * Browser UI controller for dikaioma-symmetoxis.php.
- * The PHP page owns the questions/content; this file owns progress, validation,
+ * The PHP page owns the questions/content; this file owns validation,
  * result rendering and interaction wiring.
  */
 (function(global){
@@ -32,6 +32,14 @@ function valueOf(id) {
     "privateEducation",
     "military"
   ];
+
+  let validationAttempted = false;
+
+  function setMissingState(field, isMissing) {
+    const question = field.closest(".question");
+    if (!question) return;
+    question.classList.toggle("has-missing", Boolean(isMissing));
+  }
 
   const immediateImpediments = {
     citizenship: {
@@ -91,13 +99,6 @@ function valueOf(id) {
     }
   }
 
-  function updateProgress() {
-    const answered = fieldIds.filter(id => String(valueOf(id)).trim() !== "").length;
-    const total = fieldIds.length;
-    document.getElementById("progressText").textContent = `${answered}/${total} απαντήσεις`;
-    document.getElementById("progressFill").style.width = `${(answered / total) * 100}%`;
-  }
-
   function updateImmediateWarning(field) {
     const id = field.id;
 
@@ -129,7 +130,9 @@ function valueOf(id) {
 
   function updateFormState(event) {
     const field = event.target;
-    updateProgress();
+    if (validationAttempted) {
+      setMissingState(field, String(field.value).trim() === "");
+    }
     updateImmediateWarning(field);
 
     // Αποφεύγουμε να μένει στην οθόνη παλιό αποτέλεσμα μετά από αλλαγή απάντησης.
@@ -139,16 +142,17 @@ function valueOf(id) {
   }
 
   function resetForm() {
+    validationAttempted = false;
     fieldIds.forEach(id => {
       const field = document.getElementById(id);
       field.value = "";
       setInlineWarning(field, "");
+      setMissingState(field, false);
     });
 
     const result = document.getElementById("result");
     result.style.display = "none";
     result.innerHTML = "";
-    updateProgress();
     document.getElementById("birthYear").focus();
   }
 
@@ -175,26 +179,20 @@ function valueOf(id) {
     const privateEducation = valueOf("privateEducation");
     const military = valueOf("military");
 
-    const requiredFields = [
-      citizenship,
-      health,
-      qualifications,
-      dismissed,
-      criminal,
-	  convictionImpediment,
-	  indictmentImpediment,
-	  civilRightsOrSupport,
-      commercial,
-      politicalOffice,
-      publicFullTime,
-      privateEducation,
-      military
-    ];
+    validationAttempted = true;
+    const missingIds = fieldIds.filter(id => String(valueOf(id)).trim() === "");
+    fieldIds.forEach(id => {
+      const field = document.getElementById(id);
+      setMissingState(field, missingIds.includes(id));
+    });
 
-	if (!birthYear || requiredFields.includes("")) {
-	  showResult("Παρακαλώ απάντησε σε όλες τις ερωτήσεις.", "unknown");
-	  return;
-	}
+    if (missingIds.length > 0) {
+      const noun = missingIds.length === 1 ? "ερώτηση" : "ερωτήσεις";
+      showResult(`Απομένουν ${missingIds.length} ${noun} χωρίς απάντηση. Συμπλήρωσέ ${missingIds.length === 1 ? "την" : "τις"} και ξαναπάτησε «Έλεγχος δικαιώματος συμμετοχής».`, "unknown");
+      const firstMissing = document.getElementById(missingIds[0]);
+      if (firstMissing) firstMissing.focus();
+      return;
+    }
 
 	if (birthYear < 1900 || birthYear > referenceYear) {
 	  showResult(
@@ -350,13 +348,11 @@ function valueOf(id) {
     if (checkButton) checkButton.addEventListener("click", checkEligibility);
     if (resetButton) resetButton.addEventListener("click", resetForm);
 
-    updateProgress();
   }
 
   global.EligibilityGuideUI = Object.freeze({
     checkEligibility: checkEligibility,
-    resetForm: resetForm,
-    updateProgress: updateProgress
+    resetForm: resetForm
   });
 
   if (document.readyState === "loading") {
