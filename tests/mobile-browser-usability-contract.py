@@ -34,8 +34,8 @@ check('CSS does not hide horizontal overflow globally', not re.search(r'overflow
 # Main tools directory: reduce vertical fatigue while keeping all information.
 check('directory mobile cards remove desktop min-height', 'body.edu-ui.edu-tools-directory .tool-card{min-height:0;padding:17px}' in common)
 check('directory mobile grid tightens spacing', 'body.edu-ui.edu-tools-directory .tools-grid{grid-template-columns:1fr;gap:12px}' in common)
-check('directory filters become horizontal touch strip', 'flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding:1px 1px 6px;' in common)
-check('directory filter chips remain 44px touch targets', '.filter-btn{flex:0 0 auto;min-height:44px;white-space:nowrap' in common)
+check('directory removes duplicated mobile category-chip strip', '.filter-btn{' not in common and '.filters{' not in common)
+check('active category clear action remains a 44px mobile target', '.active-category-filter__clear{min-height:44px}' in common)
 check('directory hero has no obsolete action-button CSS', '.hero-action{' not in common and '.hero-actions{' not in common)
 
 # Heavy staffing workflow: tabs scroll instead of consuming multiple lines.

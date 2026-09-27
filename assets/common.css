@@ -2658,15 +2658,6 @@ body.edu-ui.edu-tools-directory #toolSearch{
 body.edu-ui.edu-tools-directory #toolSearch:focus{
   border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,111,235,.12)
 }
-body.edu-ui.edu-tools-directory .filters{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
-body.edu-ui.edu-tools-directory .filter-btn{
-  appearance:none;border:1px solid #d4dbe5;background:#fff;color:#465262;border-radius:999px;
-  padding:8px 13px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s ease
-}
-body.edu-ui.edu-tools-directory .filter-btn:hover,
-body.edu-ui.edu-tools-directory .filter-btn.active{
-  color:#fff;background:var(--blue);border-color:var(--blue)
-}
 body.edu-ui.edu-tools-directory .results-line{margin:17px 2px 0;color:var(--muted);font-size:14px}
 body.edu-ui.edu-tools-directory .tools-grid{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px
@@ -2788,6 +2779,9 @@ body.edu-ui.edu-tools-directory .category-card{
 body.edu-ui.edu-tools-directory .category-card:hover{
   transform:translateY(-2px);box-shadow:0 9px 22px rgba(28,39,55,.09);border-color:#c5d3e7;text-decoration:none
 }
+body.edu-ui.edu-tools-directory .category-card.is-active{
+  border-color:var(--category-accent);box-shadow:0 0 0 2px rgba(31,111,235,.10),0 9px 22px rgba(28,39,55,.08)
+}
 body.edu-ui.edu-tools-directory .category-card--green{--category-accent:var(--green)}
 body.edu-ui.edu-tools-directory .category-card--orange{--category-accent:var(--orange)}
 body.edu-ui.edu-tools-directory .category-card--purple{--category-accent:var(--purple)}
@@ -2810,6 +2804,16 @@ body.edu-ui.edu-tools-directory .deadline-shortcut{
   color:var(--blue-dark);text-decoration:none;font-size:13px;font-weight:800
 }
 body.edu-ui.edu-tools-directory .deadline-shortcut:hover{background:#dfeaff;text-decoration:none}
+body.edu-ui.edu-tools-directory .active-category-filter{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:9px 11px;
+  border:1px solid #d6e4ff;border-radius:10px;background:#f7faff;color:var(--blue-dark);font-size:13.5px;font-weight:800
+}
+body.edu-ui.edu-tools-directory .active-category-filter[hidden]{display:none!important}
+body.edu-ui.edu-tools-directory .active-category-filter__clear{
+  appearance:none;border:0;background:transparent;color:var(--blue-dark);padding:7px 8px;border-radius:8px;
+  font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:2px
+}
+body.edu-ui.edu-tools-directory .active-category-filter__clear:hover{background:#e8f0ff}
 body.edu-ui.edu-tools-directory .tool-groups{margin-top:20px}
 body.edu-ui.edu-tools-directory .tool-group{scroll-margin-top:18px;margin-top:30px}
 body.edu-ui.edu-tools-directory .tool-group:first-child{margin-top:0}
@@ -2842,12 +2846,8 @@ body.edu-ui.edu-tools-directory .tool-group .tools-grid{margin-top:0}
   body.edu-ui.edu-tools-directory .tool-card p{font-size:14px;line-height:1.45;margin-bottom:11px}
   body.edu-ui.edu-tools-directory .tool-card .button-like{margin-top:2px}
   body.edu-ui.edu-tools-directory .toolbar{padding:14px}
-  body.edu-ui.edu-tools-directory .filters{
-    flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding:1px 1px 6px;
-    -webkit-overflow-scrolling:touch;overscroll-behavior-inline:contain;scrollbar-width:thin
-  }
-  body.edu-ui.edu-tools-directory .filter-btn{flex:0 0 auto;min-height:44px;white-space:nowrap;padding:9px 13px}
   body.edu-ui.edu-tools-directory .deadline-shortcut{min-height:44px;display:inline-flex;align-items:center}
+  body.edu-ui.edu-tools-directory .active-category-filter__clear{min-height:44px}
   body.edu-ui.edu-tools-directory .directory-section__heading,
   body.edu-ui.edu-tools-directory .toolbar-heading,
   body.edu-ui.edu-tools-directory .tool-group__heading{align-items:flex-start;flex-direction:column;gap:7px}

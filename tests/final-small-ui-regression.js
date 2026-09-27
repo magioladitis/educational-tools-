@@ -5,20 +5,20 @@ let pass=0,fail=0;
 function ok(cond,msg,extra=''){if(cond){pass++;console.log('PASS',msg)}else{fail++;console.error('FAIL',msg,extra)}}
 function load(ctx,rel){vm.runInContext(fs.readFileSync(path.join(ROOT,rel),'utf8'),ctx,{filename:rel});}
 class CL{constructor(){this.s=new Set()} add(x){this.s.add(x)} remove(x){this.s.delete(x)} toggle(x,on){if(arguments.length===1){this.s.has(x)?this.s.delete(x):this.s.add(x)}else on?this.s.add(x):this.s.delete(x)} contains(x){return this.s.has(x)}}
-function el(attrs={}){return {attrs:{...attrs},value:'',textContent:'',innerHTML:'',style:{display:''},className:'',classList:new CL(),listeners:{},setAttribute(k,v){this.attrs[k]=String(v)},getAttribute(k){return this.attrs[k]??null},addEventListener(t,f){(this.listeners[t]??=[]).push(f)},scrollIntoView(){this.scrolled=true}}}
+function el(attrs={}){return {attrs:{...attrs},value:'',textContent:'',innerHTML:'',style:{display:''},className:'',classList:new CL(),listeners:{},hidden:false,setAttribute(k,v){this.attrs[k]=String(v)},getAttribute(k){return this.attrs[k]??null},removeAttribute(k){delete this.attrs[k]},addEventListener(t,f){(this.listeners[t]??=[]).push(f)},scrollIntoView(){this.scrolled=true},focus(){this.focused=true}}}
 
 // 1) Tools directory: search and category filter still operate after extraction.
-const toolbar=el({'data-initial-filter':'all'}), search=el(), results=el(), noResults=el();
+const toolbar=el({'data-initial-filter':'all'}), search=el(), results=el(), noResults=el(), activeCategory=el(), activeText=el(), clearCategory=el();
 const cards=[el({'data-group':'appointments','data-search':'ΑΣΕΠ μόρια'}),el({'data-group':'transfers','data-search':'μετάθεση αποσπάσεις'}),el({'data-group':'school','data-search':'ωρολόγιο πρόγραμμα'})];
 cards[0].textContent='Υπολογισμός μορίων';cards[1].textContent='Μεταθέσεις';cards[2].textContent='Ωρολόγιο';
 const groups=[el(),el(),el()]; groups.forEach((g,i)=>g.querySelector=()=>cards[i].classList.contains('hidden-card')?null:cards[i]);
-const buttons=[el({'data-filter':'all'}),el({'data-filter':'transfers'})];
-const links=[el({'data-directory-filter':'school'})];
-const dctx={console,document:{getElementById:id=>({"tools-directory":toolbar,toolSearch:search,resultsLine:results,noResults:noResults}[id]||null),querySelectorAll(sel){return sel==='.tool-card'?cards:sel==='.tool-group'?groups:sel==='.filter-btn'?buttons:sel==='[data-directory-filter]'?links:[]}},Array,Set};dctx.window=dctx;vm.createContext(dctx);load(dctx,'assets/tools-directory.js');
+const links=[el({'data-directory-filter':'transfers','data-directory-label':'Αποσπάσεις, Μεταθέσεις & Τοποθετήσεις'}),el({'data-directory-filter':'school','data-directory-label':'Σχολική Μονάδα & Υπηρεσιακά'})];
+const dctx={console,document:{getElementById:id=>({"tools-directory":toolbar,toolSearch:search,resultsLine:results,noResults:noResults,activeCategoryFilter:activeCategory,activeCategoryText:activeText,clearCategoryFilter:clearCategory}[id]||null),querySelectorAll(sel){return sel==='.tool-card'?cards:sel==='.tool-group'?groups:sel==='[data-directory-filter]'?links:[]}},Array,Set};dctx.window=dctx;dctx.matchMedia=()=>({matches:false});vm.createContext(dctx);load(dctx,'assets/tools-directory.js');
 ok(results.textContent.includes('3 εργαλεία'),'directory initial count preserved',results.textContent);
 search.value='μεταθεση';search.listeners.input[0]();ok(!cards[1].classList.contains('hidden-card')&&cards[0].classList.contains('hidden-card'),'directory Greek search still filters cards');
-search.value='';buttons[1].listeners.click[0]();ok(!cards[1].classList.contains('hidden-card')&&cards[2].classList.contains('hidden-card'),'directory category button still filters');
-let prevented=false;links[0].listeners.click[0]({preventDefault(){prevented=true}});ok(prevented&&!cards[2].classList.contains('hidden-card')&&toolbar.scrolled===true,'directory category link filters and scrolls');
+search.value='';let prevented=false;links[0].listeners.click[0]({preventDefault(){prevented=true}});ok(prevented&&!cards[1].classList.contains('hidden-card')&&cards[2].classList.contains('hidden-card')&&toolbar.scrolled===true,'directory category card is the single category filter and scrolls');
+ok(activeCategory.hidden===false&&activeText.textContent.includes('Αποσπάσεις, Μεταθέσεις & Τοποθετήσεις')&&activeText.textContent.includes('1 εργαλείο'),'active category summary names filter and count');
+clearCategory.listeners.click[0]();ok(activeCategory.hidden===true&&!cards[2].classList.contains('hidden-card')&&search.focused===true,'clear category returns to all tools and restores search focus');
 
 // 2) SAEK deputy eligibility: external buttons and decision flow.
 const ids=['saek','status','requiredDegree','experience','evaluationRefusal','unsuitable','retirement','result','checkEligibilityBtn','resetBtn'];

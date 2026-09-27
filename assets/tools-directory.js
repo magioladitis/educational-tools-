@@ -1,11 +1,12 @@
-
 (function () {
   var toolbar = document.getElementById('tools-directory');
   var searchInput = document.getElementById('toolSearch');
   var cards = Array.prototype.slice.call(document.querySelectorAll('.tool-card'));
   var groupSections = Array.prototype.slice.call(document.querySelectorAll('.tool-group'));
-  var filterButtons = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
   var categoryLinks = Array.prototype.slice.call(document.querySelectorAll('[data-directory-filter]'));
+  var activeCategory = document.getElementById('activeCategoryFilter');
+  var activeCategoryText = document.getElementById('activeCategoryText');
+  var clearCategoryButton = document.getElementById('clearCategoryFilter');
   var resultsLine = document.getElementById('resultsLine');
   var noResults = document.getElementById('noResults');
   var activeFilter = toolbar && toolbar.getAttribute('data-initial-filter') ? toolbar.getAttribute('data-initial-filter') : 'all';
@@ -18,15 +19,25 @@
       .replace(/ς/g, 'σ');
   }
 
-  function updateButtons() {
-    filterButtons.forEach(function (button) {
-      var isActive = button.getAttribute('data-filter') === activeFilter;
-      button.classList.toggle('active', isActive);
-      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  function categoryLabel(filter) {
+    var match = categoryLinks.find(function (link) {
+      return link.getAttribute('data-directory-filter') === filter;
+    });
+    return match ? (match.getAttribute('data-directory-label') || match.textContent.trim()) : '';
+  }
+
+  function updateCategoryLinks() {
+    categoryLinks.forEach(function (link) {
+      var isActive = activeFilter !== 'all' && link.getAttribute('data-directory-filter') === activeFilter;
+      link.classList.toggle('is-active', isActive);
+      if (isActive) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
     });
   }
 
   function updateCards() {
+    if (!searchInput || !resultsLine || !noResults) return;
+
     var query = normalizeGreek(searchInput.value.trim());
     var visible = 0;
 
@@ -38,9 +49,7 @@
       var show = matchesFilter && matchesSearch;
 
       card.classList.toggle('hidden-card', !show);
-      if (show) {
-        visible++;
-      }
+      if (show) visible++;
     });
 
     groupSections.forEach(function (section) {
@@ -48,28 +57,31 @@
       section.classList.toggle('hidden-group', !hasVisibleCard);
     });
 
-    resultsLine.textContent = visible === 1
-      ? 'Εμφανίζεται 1 εργαλείο.'
-      : 'Εμφανίζονται ' + visible + ' εργαλεία.';
+    var countText = visible === 1 ? '1 εργαλείο' : visible + ' εργαλεία';
+    if (activeFilter !== 'all' && activeCategory && activeCategoryText) {
+      activeCategory.hidden = false;
+      activeCategoryText.textContent = categoryLabel(activeFilter) + ' · ' + countText;
+      resultsLine.hidden = true;
+      resultsLine.textContent = 'Εμφανίζονται ' + countText + '.';
+    } else {
+      if (activeCategory) activeCategory.hidden = true;
+      resultsLine.hidden = false;
+      resultsLine.textContent = visible === 1 ? 'Εμφανίζεται 1 εργαλείο.' : 'Εμφανίζονται ' + visible + ' εργαλεία.';
+    }
 
     noResults.style.display = visible === 0 ? 'block' : 'none';
     noResults.setAttribute('aria-hidden', visible === 0 ? 'false' : 'true');
-    updateButtons();
+    updateCategoryLinks();
   }
 
   function setFilter(filter, shouldScroll) {
     activeFilter = filter || 'all';
     updateCards();
     if (shouldScroll && toolbar) {
-      toolbar.scrollIntoView({behavior: 'smooth', block: 'start'});
+      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      toolbar.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'start'});
     }
   }
-
-  filterButtons.forEach(function (button) {
-    button.addEventListener('click', function () {
-      setFilter(button.getAttribute('data-filter') || 'all', false);
-    });
-  });
 
   categoryLinks.forEach(function (link) {
     link.addEventListener('click', function (event) {
@@ -78,6 +90,13 @@
     });
   });
 
-  searchInput.addEventListener('input', updateCards);
+  if (clearCategoryButton) {
+    clearCategoryButton.addEventListener('click', function () {
+      setFilter('all', false);
+      if (searchInput) searchInput.focus();
+    });
+  }
+
+  if (searchInput) searchInput.addEventListener('input', updateCards);
   updateCards();
 })();

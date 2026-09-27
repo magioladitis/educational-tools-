@@ -61,9 +61,14 @@ for field in ('requiredDegree','experience','evaluationRefusal','unsuitable','re
         values=re.findall(r'<option value="([^"]*)">',m.group(1))
         check(values[:4] == ['', 'yes', 'no', 'unknown'], f'{field} uses consistent yes/no/unknown order')
 
+# Directory categories are the single filtering surface; redundant chips are gone.
+check('class="filters"' not in home and 'class="filter-btn' not in home, 'directory removes duplicated category filter chips and All button')
+check('data-directory-label' in home and 'activeCategoryFilter' in home and 'clearCategoryFilter' in home, 'category cards feed the active-filter summary and clear action')
+check('active-category-filter' in css and '.category-card.is-active' in css, 'active category has compact shared visual state')
+
 # Runtime version/cache alignment and syntax.
-check("define('EDU_TOOLS_VERSION', '3.22.18');" in config, 'runtime asset version bumped to 3.22.18')
-check("CACHE_NAME = CACHE_PREFIX + '3.22.18'" in sw, 'service-worker cache version matches runtime version')
+check("define('EDU_TOOLS_VERSION', '3.22.19');" in config, 'runtime asset version bumped to 3.22.19')
+check("CACHE_NAME = CACHE_PREFIX + '3.22.19'" in sw, 'service-worker cache version matches runtime version')
 check(subprocess.run(['node','--check',str(ROOT/'assets/app-experience.js')],capture_output=True).returncode==0, 'app-experience JS syntax')
 check(subprocess.run(['node','--check',str(ROOT/'includes/saek-deputy-eligibility-ui.js')],capture_output=True).returncode==0, 'SAEK JS syntax')
 check(subprocess.run(['php','-l',str(ROOT/'includes/header.php')],capture_output=True).returncode==0, 'header PHP syntax')

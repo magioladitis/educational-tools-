@@ -105,6 +105,7 @@ $h = function ($value) use ($flags) {
       <a
         class="category-card<?php echo isset($categoryToneClasses[$tone]) ? ' ' . $h($categoryToneClasses[$tone]) : ''; ?>"
         data-directory-filter="<?php echo $h($groupSlug); ?>"
+        data-directory-label="<?php echo $h($title); ?>"
         href="ergaleia.php?group=<?php echo rawurlencode($groupSlug); ?>#tools-directory"
       >
         <span class="category-card__icon" aria-hidden="true"><?php echo $h($short); ?></span>
@@ -128,11 +129,9 @@ $h = function ($value) use ($flags) {
     <div class="search-wrap">
       <input aria-label="Αναζήτηση εργαλείου" autocomplete="off" id="toolSearch" placeholder="Αναζήτηση π.χ. μόρια, παράβολο, ωράριο, απόσπαση..." type="search">
     </div>
-    <div aria-label="Βασικές κατηγορίες εργαλείων" class="filters" role="group">
-      <button aria-pressed="<?php echo $initialGroup === 'all' ? 'true' : 'false'; ?>" class="filter-btn<?php echo $initialGroup === 'all' ? ' active' : ''; ?>" data-filter="all" type="button">Όλα</button>
-      <?php foreach ($groups as $groupSlug => $groupConfig) { ?>
-        <button aria-pressed="<?php echo $initialGroup === $groupSlug ? 'true' : 'false'; ?>" class="filter-btn<?php echo $initialGroup === $groupSlug ? ' active' : ''; ?>" data-filter="<?php echo $h($groupSlug); ?>" type="button"><?php echo $h(isset($groupConfig['title']) ? $groupConfig['title'] : $groupSlug); ?></button>
-      <?php } ?>
+    <div class="active-category-filter" id="activeCategoryFilter" role="status" aria-live="polite" hidden>
+      <span id="activeCategoryText"></span>
+      <button class="active-category-filter__clear" id="clearCategoryFilter" type="button">Καθαρισμός</button>
     </div>
     <div aria-live="polite" class="results-line" id="resultsLine" role="status"></div>
   </section>
