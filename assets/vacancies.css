@@ -29,6 +29,7 @@ body.edu-vacancies .vacancy-kpis article{background:#fff;border:1px solid #dce4e
 body.edu-vacancies .vacancy-kpis span,body.edu-vacancies .vacancy-kpis small{display:block;color:#64748b}
 body.edu-vacancies .vacancy-kpis strong{display:block;font-size:30px;line-height:1.1;margin:6px 0}
 body.edu-vacancies .vacancy-table{width:100%;border-collapse:collapse}
+body.edu-vacancies .table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 body.edu-vacancies .vacancy-table th,body.edu-vacancies .vacancy-table td{padding:11px 10px;border-bottom:1px solid #e6ebf1;text-align:left;vertical-align:middle}
 body.edu-vacancies .vacancy-table th{font-size:13px;color:#526071;background:#f8fafc;position:sticky;top:0}
 body.edu-vacancies .vacancy-table td small{display:block;color:#7b8795;margin-top:2px}

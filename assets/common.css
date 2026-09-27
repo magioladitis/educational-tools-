@@ -1556,8 +1556,8 @@ body.edu-ui.edu-guide-standard .result.unknown {
   border: 1px solid #d5e4ff;
 }
 
-/* Compact e-Paravolo / proclamation helper. */
-body.edu-ui.edu-guide-paravolo .app-box.edu-modernized { max-width:520px; }
+/* e-Paravolo / proclamation helper: align with the other single-column guides. */
+body.edu-ui.edu-guide-paravolo .app-box.edu-modernized { max-width:880px; }
 body.edu-ui.edu-guide-paravolo .paravolo-rule {
   margin-top:18px; padding:12px 14px; border-radius:9px;
   background:var(--edu-primary-soft); border:1px solid #cbdaf5;
