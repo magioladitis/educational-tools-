@@ -14,11 +14,13 @@ checks = []
 def check(label, condition):
     checks.append((label, bool(condition)))
 
-check('release version bumped to 3.22.25', "define('EDU_TOOLS_VERSION', '3.22.25')" in config)
-check('service-worker cache matches release', "CACHE_NAME = CACHE_PREFIX + '3.22.25'" in worker)
+version_match = re.search(r"define\('EDU_TOOLS_VERSION', '([0-9.]+)'\)", config)
+worker_match = re.search(r"CACHE_NAME = CACHE_PREFIX \+ '([0-9.]+)'", worker)
+check('release remains at or beyond mobile UX phase 3', bool(version_match) and tuple(map(int, version_match.group(1).split('.'))) >= (3,22,25))
+check('service-worker cache matches release', bool(version_match and worker_match) and version_match.group(1) == worker_match.group(1))
 check('common JS syntax', subprocess.run(['node', '--check', str(ROOT / 'assets' / 'common.js')], capture_output=True).returncode == 0)
 check('mobile hero info disclosure installed', 'installMobileHeroInfoDisclosures(document)' in common_js)
-check('directory is excluded from tool info disclosure', "document.body.classList.contains('edu-tools-directory')" in common_js)
+check('directory uses the same hero info disclosure', "document.body.classList.contains('edu-tools-directory')" not in common_js)
 check('hero intro and meta nodes are disclosure content', ".hero-kicker, p, .intro, .subtitle, .meta, .hero-meta, .hero-tags" in common_js)
 check('info control has accessible expanded state', "button.setAttribute('aria-expanded', 'false')" in common_js and 'Πληροφορίες εργαλείου' in common_js)
 check('mobile hides hero supporting content until opened', "node.setAttribute('hidden', '')" in common_js and 'edu-mobile-hero-info-open' in common_js)

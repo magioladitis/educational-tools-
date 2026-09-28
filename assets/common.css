@@ -2857,28 +2857,32 @@ body.edu-ui.edu-tools-directory .tool-group .tools-grid{margin-top:0}
    ASEP mini tools hub
    -------------------------------------------------------------------------- */
 body.edu-ui.edu-asep-tools-hub{
-  font-family:Arial,sans-serif;background:#f5f5f5;margin:0;padding:30px;color:#222
+  font-family:Arial,sans-serif;background:#f4f7fb;margin:0;padding:30px 18px;color:#222
 }
 body.edu-ui.edu-asep-tools-hub .page-box{
-  max-width:980px;margin:auto;background:#fff;padding:28px;border-radius:16px;
-  box-shadow:0 4px 14px rgba(0,0,0,.12);min-width:0
+  max-width:980px;margin:auto;min-width:0
 }
-body.edu-ui.edu-asep-tools-hub h1{
-  text-align:center;font-size:28px;margin-bottom:10px;line-height:1.25
+body.edu-ui.edu-asep-tools-hub .hero{
+  margin:0 0 18px;padding:28px 30px;border-radius:18px;
+  background:linear-gradient(135deg,#174ea6 0%,#1f6feb 62%,#3b82f6 100%);
+  color:#fff;box-shadow:var(--edu-shadow);text-align:left
 }
-body.edu-ui.edu-asep-tools-hub .intro{
-  text-align:center;color:#555;font-size:16px;line-height:1.55;max-width:760px;margin:0 auto 28px
+body.edu-ui.edu-asep-tools-hub .hero h1{
+  margin:0 0 8px;color:#fff;text-align:left;font-size:clamp(25px,4vw,36px);line-height:1.15
+}
+body.edu-ui.edu-asep-tools-hub .hero .intro{
+  max-width:800px;margin:0;color:rgba(255,255,255,.92);text-align:left;font-size:16px;line-height:1.55
 }
 body.edu-ui.edu-asep-tools-hub .tools-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:24px
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:0
 }
 body.edu-ui.edu-asep-tools-hub .tool-card{
-  display:block;min-width:0;text-decoration:none;color:inherit;background:#fafafa;border:1px solid #ddd;
-  border-radius:14px;padding:20px;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;
-  min-height:210px
+  display:block;min-width:0;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--edu-border);
+  border-radius:16px;padding:20px;box-shadow:var(--edu-shadow-sm);
+  transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;min-height:210px
 }
 body.edu-ui.edu-asep-tools-hub .tool-card:hover{
-  transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.14);border-color:#1f6feb
+  transform:translateY(-3px);box-shadow:0 9px 22px rgba(28,39,55,.12);border-color:#a8c7fa
 }
 body.edu-ui.edu-asep-tools-hub .tool-number{
   display:inline-block;background:#1f6feb;color:#fff;font-weight:700;padding:6px 10px;
@@ -2890,23 +2894,17 @@ body.edu-ui.edu-asep-tools-hub .tool-card .button-like{
   display:inline-block;margin-top:8px;color:#1f6feb;font-weight:700;font-size:15px
 }
 body.edu-ui.edu-asep-tools-hub .notice{
-  margin-top:28px;padding:16px;border-radius:10px;background:#fff4e5;color:#8a5300;
+  margin-top:24px;padding:16px;border:1px solid #f0d4a8;border-radius:12px;background:#fff4e5;color:#8a5300;
   line-height:1.55;font-size:15px
 }
 body.edu-ui.edu-asep-tools-hub .notice strong{color:#6f4300}
-body.edu-ui.edu-asep-tools-hub .quick-links{
-  margin-top:24px;padding:16px;border-radius:10px;background:#eef4ff;color:#174ea6;line-height:1.6
-}
-body.edu-ui.edu-asep-tools-hub .quick-links h2{margin-top:0;font-size:18px}
-body.edu-ui.edu-asep-tools-hub .quick-links a{color:#1f6feb;font-weight:700;word-break:break-word}
 body.edu-ui.edu-asep-tools-hub .credits{
   margin-top:26px;text-align:center;font-size:13px;color:#777
 }
 @media(max-width:850px){
-  body.edu-ui.edu-asep-tools-hub .tools-grid{grid-template-columns:1fr}
-  body.edu-ui.edu-asep-tools-hub{padding:18px}
-  body.edu-ui.edu-asep-tools-hub .page-box{padding:22px}
-  body.edu-ui.edu-asep-tools-hub h1{font-size:24px}
+  body.edu-ui.edu-asep-tools-hub .tools-grid{grid-template-columns:1fr;gap:12px}
+  body.edu-ui.edu-asep-tools-hub{padding:18px 13px 34px}
+  body.edu-ui.edu-asep-tools-hub .tool-card{min-height:0;padding:17px}
 }
 
 /* ========================================================================== 
@@ -3196,11 +3194,7 @@ body.edu-ui.edu-deadlines-page .edu-deadlines-hero{
   margin-bottom:20px;padding:28px 30px;border:1px solid #d7e3f5;border-radius:18px;background:linear-gradient(135deg,#eef4ff,#fff);
   box-shadow:0 4px 18px rgba(28,39,55,.05)
 }
-body.edu-ui.edu-deadlines-page .edu-deadlines-kicker{
-  display:inline-block;margin-bottom:6px;color:#174ea6;font-size:11px;font-weight:900;letter-spacing:.08em
-}
 body.edu-ui.edu-deadlines-page .edu-deadlines-hero h1{margin:0 0 8px;font-size:clamp(28px,4vw,38px);color:#18202b}
-body.edu-ui.edu-deadlines-page .edu-deadlines-hero p{max-width:820px;margin:0;color:#5f6b7a}
 body.edu-ui.edu-deadlines-page .edu-deadlines-hero__actions{margin-top:15px}
 body.edu-ui.edu-deadlines-page .edu-deadlines-hero__actions a{
   display:inline-flex;padding:8px 11px;border-radius:9px;background:#174ea6;color:#fff;text-decoration:none;font-size:13px;font-weight:800
@@ -3644,35 +3638,35 @@ body.edu-ui .edu-mobile-sticky-action {
 @media (max-width: 700px) {
   /* The directory has its own compact home-page treatment; specialised
      staffing/vacancy flows do not opt in through common.js. */
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero,
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .app-box.edu-modernized > .edu-legacy-hero {
+  body.edu-mobile-ux-enabled .hero,
+  body.edu-mobile-ux-enabled .app-box.edu-modernized > .edu-legacy-hero {
     padding: 18px 16px !important;
     margin-bottom: 14px !important;
     border-radius: 16px !important;
   }
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero h1,
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .app-box.edu-modernized > .edu-legacy-hero h1 {
+  body.edu-mobile-ux-enabled .hero h1,
+  body.edu-mobile-ux-enabled .app-box.edu-modernized > .edu-legacy-hero h1 {
     margin-bottom: 6px !important;
     font-size: clamp(22px, 6.2vw, 28px) !important;
     line-height: 1.14 !important;
   }
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero .meta,
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero-meta {
+  body.edu-mobile-ux-enabled .hero .meta,
+  body.edu-mobile-ux-enabled .hero-meta {
     gap: 6px !important;
     margin-top: 10px !important;
   }
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero .meta span,
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero-meta span {
+  body.edu-mobile-ux-enabled .hero .meta span,
+  body.edu-mobile-ux-enabled .hero-meta span {
     padding: 5px 8px !important;
     font-size: 12px !important;
   }
 
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero,
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .app-box.edu-modernized > .edu-legacy-hero {
+  body.edu-mobile-ux-enabled .hero,
+  body.edu-mobile-ux-enabled .app-box.edu-modernized > .edu-legacy-hero {
     position: relative;
   }
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero h1,
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .app-box.edu-modernized > .edu-legacy-hero h1 {
+  body.edu-mobile-ux-enabled .hero h1,
+  body.edu-mobile-ux-enabled .app-box.edu-modernized > .edu-legacy-hero h1 {
     padding-right: 48px;
   }
   body.edu-ui .edu-mobile-hero-info-button {
@@ -3689,7 +3683,7 @@ body.edu-ui .edu-mobile-sticky-action {
     border: 0 !important;
     border-radius: 50%;
     background: transparent !important;
-    color: rgba(255,255,255,.96) !important;
+    color: inherit !important;
     box-shadow: none !important;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 20px;
@@ -3702,7 +3696,8 @@ body.edu-ui .edu-mobile-sticky-action {
     content: "";
     position: absolute;
     inset: 7px;
-    border: 1px solid rgba(255,255,255,.52);
+    border: 1px solid currentColor;
+    opacity: .58;
     border-radius: 50%;
     background: rgba(0,0,0,.08);
   }
@@ -3718,7 +3713,7 @@ body.edu-ui .edu-mobile-sticky-action {
   body.edu-ui .edu-mobile-hero-info-button[aria-expanded="true"]::before {
     background: rgba(0,0,0,.16);
   }
-  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .edu-mobile-hero-info-open [data-edu-mobile-hero-info-content="true"]:first-of-type {
+  body.edu-mobile-ux-enabled .edu-mobile-hero-info-open [data-edu-mobile-hero-info-content="true"]:first-of-type {
     margin-top: 8px;
   }
 

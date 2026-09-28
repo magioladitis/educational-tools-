@@ -39,7 +39,7 @@
 </div>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/saek-deputy-eligibility-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <?php sourceCardStart(); ?>
-<p><strong>Κ5/113585/01-09-2026</strong> — Πρόσκληση εκδήλωσης ενδιαφέροντος για την πλήρωση με επιλογή θέσεων Υποδιευθυντών δημόσιων Σ.Α.Ε.Κ. Η προθεσμία αιτήσεων είναι <strong>01/09/2026–10/09/2026</strong>.</p>
+<p><strong>Κ5/113585/01-09-2026</strong> — Πρόσκληση εκδήλωσης ενδιαφέροντος για την πλήρωση με επιλογή θέσεων Υποδιευθυντών δημόσιων Σ.Α.Ε.Κ. Η προθεσμία αιτήσεων ήταν <strong>01/09/2026–10/09/2026</strong>.</p>
 <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2026/%CE%A0%CF%81%CF%8C%CF%83%CE%BA%CE%BB%CE%B7%CF%83%CE%B7_%CE%A5%CF%80%CE%BF%CE%B4%CE%B9%CE%B5%CF%85%CE%B8%CF%85%CE%BD%CF%84%CF%8E%CE%BD_%CE%A3%CE%91%CE%95%CE%9A_2026.pdf', 'ΥΠΑΙΘΑ — επίσημη πρόσκληση ↗'); ?><?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

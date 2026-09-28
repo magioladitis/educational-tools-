@@ -31,8 +31,10 @@ function updateDeadlineStatus(){
   const box = document.getElementById('deadlineStatus');
   const btn = document.getElementById('guidanceBtn');
 
+  if(btn) btn.disabled = false;
+  if(!box) return;
+
   box.className = 'status';
-  btn.disabled = false;
 
   if(now < objectionStart){
     box.classList.add('before');
@@ -339,8 +341,10 @@ function init(){
   if(paravoloCode) paravoloCode.addEventListener('input', validateParavoloCode);
   if(guidanceBtn) guidanceBtn.addEventListener('click', showGuidance);
 
-  updateDeadlineStatus();
-  setInterval(updateDeadlineStatus, 1000);
+  if(document.getElementById('deadlineStatus')){
+    updateDeadlineStatus();
+    setInterval(updateDeadlineStatus, 1000);
+  }
   updateExtraQuestions();
   updateRecognitionDate();
   updateResubmissionInfo();

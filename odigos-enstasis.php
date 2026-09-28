@@ -10,17 +10,26 @@
 </head>
 <body class="edu-ui edu-guide-standard edu-guide-objection">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/components/deadline-card.php'; ?>
 <div class="app-box edu-modernized">
   <section class="hero edu-legacy-hero">
 <h1>Οδηγός ένστασης 1ΓΕ/2026 &amp; 2ΓΕ/2026</h1>
 <p class="intro">Γρήγορος, διαδραστικός οδηγός για την υποβολή ένστασης κατά των προσωρινών πινάκων εκπαιδευτικών.</p>
 </section>
 
+<?php
+// Η prominent κάρτα προθεσμίας παραμένει μόνο για 7 ημέρες μετά τη λήξη.
+// Ο οδηγός και οι ιστορικές πληροφορίες του παραμένουν διαθέσιμα χωρίς παλιό countdown.
+$objectionDeadlineEnd = strtotime('2026-08-21T14:00:00+03:00');
+$objectionDeadlineArchiveCutoff = time() - (7 * 86400);
+if ($objectionDeadlineEnd !== false && $objectionDeadlineEnd >= $objectionDeadlineArchiveCutoff) {
+?>
   <div class="deadline-card">
     <strong>📅 Προθεσμία ενστάσεων</strong>
     <div class="deadline-line">Από <b>Τετάρτη 12 Αυγούστου 2026, ώρα 08:00</b> έως και <b>Παρασκευή 21 Αυγούστου 2026, ώρα 14:00</b> (ώρα Ελλάδας).</div>
     <div id="deadlineStatus" class="status" role="status" aria-live="polite"></div>
   </div>
+<?php } ?>
 
   <div class="quick-card">
     <strong>📘 Επίσημες οδηγίες ΑΣΕΠ</strong>

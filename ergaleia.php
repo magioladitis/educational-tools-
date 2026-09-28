@@ -73,7 +73,6 @@ $h = function ($value) use ($flags) {
         <span class="section-kicker">ΓΡΗΓΟΡΗ ΠΡΟΣΒΑΣΗ</span>
         <h2 id="personalToolsTitle">Για σένα</h2>
       </div>
-      <p>Τα εργαλεία που χρησιμοποίησες πρόσφατα και όσα έχεις αποθηκεύσει ως αγαπημένα στη συγκεκριμένη συσκευή.</p>
     </div>
     <div class="edu-personal-tools__grid">
       <section class="edu-personal-tools__group" data-edu-personal-group="recent" aria-labelledby="recentToolsTitle" hidden>
@@ -137,7 +136,6 @@ $h = function ($value) use ($flags) {
   <div class="tool-groups" id="toolGroups">
     <?php foreach ($groups as $groupSlug => $groupConfig) {
         $title = isset($groupConfig['title']) ? $groupConfig['title'] : $groupSlug;
-        $description = isset($groupConfig['description']) ? $groupConfig['description'] : '';
         $groupTools = isset($toolsByGroup[$groupSlug]) ? $toolsByGroup[$groupSlug] : array();
         ?>
     <section class="tool-group" data-tool-group="<?php echo $h($groupSlug); ?>" id="group-<?php echo $h($groupSlug); ?>" aria-labelledby="groupTitle-<?php echo $h($groupSlug); ?>">

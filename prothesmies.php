@@ -15,9 +15,7 @@
 
 <main class="edu-deadlines-shell">
   <section class="edu-deadlines-hero">
-    <span class="edu-deadlines-kicker">ΞΕΧΩΡΙΣΤΗ ΕΝΟΤΗΤΑ</span>
     <h1>Προθεσμίες Εκπαιδευτικών</h1>
-    <p>Οι σημαντικές ενεργές και προσεχείς ημερομηνίες συγκεντρωμένες εδώ, χωρίς να επιβαρύνουν την κεντρική σελίδα των εργαλείων.</p>
     <div class="edu-deadlines-hero__actions">
       <a href="ergaleia.php">← Επιστροφή στα εργαλεία</a>
     </div>

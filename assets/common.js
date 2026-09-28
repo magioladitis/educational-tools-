@@ -287,11 +287,9 @@
   }
 
   function installMobileHeroInfoDisclosures(root) {
-    /* On phones, a tool hero should answer one thing first: what tool is this?
+    /* On phones, a page/tool hero should answer one thing first: what is this?
        Supporting copy and score/source badges remain available behind a small
        accessible information button instead of occupying the first viewport. */
-    if (document.body.classList.contains('edu-tools-directory')) return;
-
     var heroes = Array.prototype.slice.call((root || document).querySelectorAll('.hero, .edu-legacy-hero'));
     heroes.forEach(function (hero) {
       if (hero.getAttribute('data-edu-mobile-info') === 'off') return;

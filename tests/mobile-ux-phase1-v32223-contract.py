@@ -27,7 +27,7 @@ check('sticky action uses safe mobile CSS', '.edu-mobile-sticky-action' in commo
 check('sticky action avoids field focus/keyboard obstruction', "active.matches('input, select, textarea')" in common_js)
 check('result navigation installs edit-data return action', 'edu-mobile-edit-inputs' in common_js and 'Επεξεργασία στοιχείων ↑' in common_js)
 check('tool hero supporting copy uses mobile info disclosure', 'installMobileHeroInfoDisclosures(document)' in common_js and 'edu-mobile-hero-info-button' in common_css)
-check('directory hero is excluded from global compact treatment', 'not(.edu-tools-directory)' in common_css)
+check('directory hero participates in global compact treatment', 'not(.edu-tools-directory)' not in common_css)
 check('shared validation API exists', 'reportMissingFields: reportMissingFields' in common_js and 'edu-validation-summary' in common_css)
 check('eligibility guide adopts shared validation API', 'window.EduToolsUI.reportMissingFields' in eligibility_js and 'aria-invalid' in eligibility_js)
 check('SAEK guide adopts shared validation API', 'global.EduToolsUI.reportMissingFields' in saek_js and 'aria-invalid' in saek_js)
