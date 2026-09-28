@@ -3965,3 +3965,4 @@ body.edu-page-service-timeline .edu-source-card {max-width:none;margin-top:18px;
   body.edu-page-service-timeline .timeline-event-card {box-shadow:none;break-inside:avoid;}
   body.edu-page-service-timeline .timeline-history {display:block;}
 }
+.timeline-history-verified{display:inline-flex;align-items:center;justify-content:center;min-width:1.15rem;height:1.15rem;margin-left:.2rem;border-radius:999px;font-size:.72rem;font-weight:800;background:#e8f7ee;color:#176b3a;vertical-align:middle}.timeline-historical-sources{display:grid;gap:.42rem;margin-top:.8rem;padding:.75rem;border:1px solid var(--border-color,#dbe3ec);border-radius:.8rem;background:rgba(248,250,252,.72)}.timeline-historical-sources>strong{font-size:.84rem}.timeline-historical-sources a{font-size:.82rem;line-height:1.35;text-decoration:none}.timeline-historical-sources a span{display:inline-block;min-width:5.6rem;font-weight:700}

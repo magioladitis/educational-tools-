@@ -64,6 +64,8 @@ foreach ($events as $event) if (!empty($event['latest_verified'])) $verifiedCoun
       $verified = !empty($event['latest_verified']);
       $history = isset($event['history']) && is_array($event['history']) ? $event['history'] : array();
       $sources = isset($event['sources']) && is_array($event['sources']) ? $event['sources'] : array();
+      $historicalSources = isset($event['historical_sources']) && is_array($event['historical_sources']) ? $event['historical_sources'] : array();
+      $verifiedHistoryIndices = isset($event['verified_history_indices']) && is_array($event['verified_history_indices']) ? $event['verified_history_indices'] : array();
       $verificationLabel = isset($event['verification_label']) ? $event['verification_label'] : '';
       ?>
       <article class="timeline-event<?php echo $verified ? ' is-verified' : ' is-research'; ?>" data-timeline-event data-group="<?php echo $h($event['group']); ?>" data-verified="<?php echo $verified ? '1' : '0'; ?>">
@@ -95,11 +97,19 @@ foreach ($events as $event) if (!empty($event['latest_verified'])) $verifiedCoun
                 ?>
                 <div class="timeline-history-item">
                   <span><?php echo $h($year); ?></span>
-                  <strong><?php echo $h($value); ?></strong>
+                  <strong><?php echo $h($value); ?><?php if (in_array($index, $verifiedHistoryIndices, true)) { ?> <span class="timeline-history-verified" title="Ιστορική ημερομηνία διασταυρωμένη" aria-label="διασταυρωμένη">✓</span><?php } ?></strong>
                 </div>
               <?php } ?>
             </div>
-            <p class="timeline-history-disclaimer">Οι παλαιότερες ημερομηνίες προέρχονται από το ιστορικό αρχείο εργασίας και τεκμηριώνονται σταδιακά ανά έτος. Η πράσινη ένδειξη αφορά την τελευταία τιμή του κύκλου 2025–2026.</p>
+            <p class="timeline-history-disclaimer">Οι παλαιότερες ημερομηνίες προέρχονται από το ιστορικό αρχείο εργασίας και τεκμηριώνονται σταδιακά ανά έτος. Το ✓ δίπλα σε ιστορική ημερομηνία σημαίνει ότι έχει ήδη διασταυρωθεί σε επίσημη ή υπηρεσιακή πηγή. Η πράσινη ένδειξη της κάρτας αφορά την τελευταία τιμή του κύκλου 2025–2026.</p>
+            <?php if (!empty($historicalSources)) { ?>
+              <div class="timeline-historical-sources" aria-label="Ιστορικές πηγές">
+                <strong>Ιστορική τεκμηρίωση</strong>
+                <?php foreach ($historicalSources as $source) { ?>
+                  <a href="<?php echo $h($source['url']); ?>" target="_blank" rel="noopener noreferrer"><span><?php echo $h($source['year']); ?></span> <?php echo $h($source['label']); ?> ↗</a>
+                <?php } ?>
+              </div>
+            <?php } ?>
           </details>
 
           <?php if (!empty($sources)) { ?>
