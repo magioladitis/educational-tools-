@@ -142,13 +142,26 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('01–10/04/2020','17/02–10/03/2021','01–11/02/2022','01–13/02/2023','01–12/02/2024','01–11/02/2025','02–11/02/2026'),
+            'verified_history_indices' => array(0,1,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Υποβολή αιτήσεων παραίτησης 2025–2026 (11087/Ε3/29-01-2026)',
                     'url' => 'https://www.minedu.gov.gr/images/joomlart/PDFs/RT3TH46NKPD-YCH5.pdf',
                 ),
             ),
-            'note' => 'Η επίσημη εγκύκλιος επιτρέπει ηλεκτρονική υποβολή από 01/02/2026 (πρωτοκόλληση 02/02) και δια ζώσης από 02/02 έως 11/02/2026. Το ιστορικό κελί κρατά το υπηρεσιακό εύρος 02–11/02.',
+            'historical_sources' => array(
+                array(
+                    'year' => '2019-2020',
+                    'label' => 'ΥΠΑΙΘ — 41410/Ε3/30-03-2020: αιτήσεις 01–10/04/2020',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%9E__%CE%94%CE%99%CE%95%CE%A5%CE%9A%CE%A1%CE%99%CE%9D%CE%99%CE%A3%CE%95%CE%99%CE%A3_%CE%93%CE%99%CE%91_%CE%95%CE%9E_%CE%91%CE%A0%CE%9F%CE%A3%CE%A4%CE%91%CE%A3%CE%95%CE%A9%CE%A3_%CE%BA%CE%BB%CF%80_%CE%A5%CE%A0%CE%9F%CE%92%CE%9F%CE%9B%CE%97_%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%95%CE%A9%CE%9D_%CE%A0%CE%91%CE%A1%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%97%CE%A3_%CE%95%CE%9A%CE%A0_%CE%9A%CE%A9%CE%9D_%CE%91%CE%94%CE%91.pdf',
+                ),
+                array(
+                    'year' => '2020-2021',
+                    'label' => 'ΔΔΕ Λέσβου — αντίγραφο εγκυκλίου 19014/Ε3/18-02-2021: αιτήσεις 17/02–10/03/2021',
+                    'url' => 'https://ddelesvou.gr/wp-content/uploads/2023/02/19014_%CE%A4%CE%A1%CE%9F%CE%A0%CE%9F%CE%99%CE%97%CE%A3%CE%97_%CE%A0%CE%A1%CE%9F%CE%98%CE%95%CE%A3%CE%9C%CE%99%CE%A9%CE%9D_%CE%91%CE%99%CE%A4._%CE%A0%CE%91%CE%A1%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%97%CE%A3_%CE%9F%CE%94%CE%97%CE%93%CE%99%CE%95%CE%A3_%CE%93%CE%99%CE%91_%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%95%CE%99%CE%A3_%CE%A3%CE%A7._%CE%88%CE%A4._2020-21_%CE%A8%CE%9B%CE%95%CE%A146%CE%9C%CE%A4%CE%9B%CE%97-%CE%A95%CE%9A.pdf',
+                ),
+            ),
+            'note' => 'Η επίσημη εγκύκλιος επιτρέπει ηλεκτρονική υποβολή από 01/02/2026 (πρωτοκόλληση 02/02) και δια ζώσης από 02/02 έως 11/02/2026. Για το 2020 επιβεβαιώθηκε το εύρος 01–10/04 και για το 2021 το έκτακτο εύρος 17/02–10/03. Το ιστορικό κελί 2025–2026 κρατά το υπηρεσιακό εύρος 02–11/02.',
         ),
         array(
             'id' => 'organic-gaps-circular',
@@ -158,29 +171,65 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'official-reference',
             'history' => array('18/02/2020','02/03/2021','24/02/2022','02/02/2023','23/02/2024','04/03/2025','03/03/2026'),
+            'verified_history_indices' => array(0,1,2,3,6),
             'sources' => array(
                 array(
                     'label' => 'ΔΔΕ Αργολίδας — επίσημο έγγραφο που παραπέμπει στις εγκυκλίους 25616/Ε2 και 25644/Ε2/03-03-2026',
                     'url' => 'https://dide.arg.sch.gr/site/wp-content/uploads/2026/03/%CE%95%CE%9D%CE%97%CE%9C%CE%95%CE%A1%CE%A9%CE%A3%CE%97-%CE%93%CE%99%CE%91-%CE%A5%CE%A0%CE%95%CE%A1%CE%91%CE%A1%CE%99%CE%98%CE%9C%CE%99%CE%95%CE%A3-%CE%9A%CE%91%CE%99-%CE%9F%CE%A1%CE%93%CE%91%CE%9D%CE%99%CE%9A%CE%91-%CE%9A%CE%95%CE%9D%CE%91-2026.pdf',
                 ),
             ),
-            'note' => 'Η ημερομηνία και οι αριθμοί πρωτοκόλλου επιβεβαιώνονται από επίσημο υπηρεσιακό έγγραφο ΔΔΕ που εφαρμόζει τις εγκυκλίους ΥΠΑΙΘΑ. Δεν έχει ακόμη εντοπιστεί απευθείας κεντρικός σύνδεσμος των δύο εγκυκλίων.',
+            'historical_sources' => array(
+                array(
+                    'year' => '2019-2020',
+                    'label' => 'ΔΔΕ Φλώρινας — επίσημη απόφαση που παραπέμπει στην 23866/Ε2/18-02-2020',
+                    'url' => 'https://dide-new.flo.sch.gr/wp-content/uploads/2020/05/2020-05-28-%CE%94%CE%94%CE%95-%CE%A6%CE%9B%CE%A9-2740-%CE%A7%CE%91%CE%A1%CE%91%CE%9A%CE%A4%CE%97%CE%A1%CE%99%CE%A3%CE%9C%CE%9F%CE%A3-%CE%9F%CE%9D%CE%9F%CE%9C%CE%91%CE%A3%CE%A4%CE%99%CE%9A%CE%91-%CE%A5%CE%A0%CE%95%CE%A1%CE%91%CE%A1%CE%99%CE%98%CE%9C%CE%A9%CE%9D.pdf',
+                ),
+                array(
+                    'year' => '2020-2021',
+                    'label' => 'ΔΔΕ Αργολίδας — αντίγραφο εγκυκλίου 24321/Ε2/02-03-2021',
+                    'url' => 'https://dide.arg.sch.gr/site/wp-content/uploads/2021/03/24321%CE%952_02-03-2021_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%9A%CE%95%CE%9D%CE%A9%CE%9D-2021.pdf',
+                ),
+                array(
+                    'year' => '2021-2022',
+                    'label' => 'ΔΔΕ Φλώρινας — αντίγραφο εγκυκλίου 21020/Ε2/24-02-2022',
+                    'url' => 'https://dide-new.flo.sch.gr/wp-content/uploads/2022/02/2022_21020_%CE%952_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9A%CE%95%CE%9D%CE%A9%CE%9D_%CE%93%CE%95%CE%9D%CE%99%CE%9A%CE%97%CE%A3.pdf',
+                ),
+                array(
+                    'year' => '2022-2023',
+                    'label' => 'ΔΔΕ Κέρκυρας — επίσημη απόφαση που παραπέμπει στις 12458/Ε2 και 12377/Ε2/02-02-2023',
+                    'url' => 'https://blogs.sch.gr/dideker/files/2023/06/%CE%91%CE%A0%CE%9F%CE%A6%CE%91%CE%A3%CE%97_%CE%9F%CE%A1%CE%93%CE%91%CE%9D%CE%99%CE%9A%CE%95%CE%A3-%CE%A4%CE%9F%CE%A0%CE%9F%CE%98%CE%95%CE%A4%CE%97%CE%A3%CE%97%CE%A3-%CE%93%CE%A0-2023_13%CE%B7-%CE%A0%CE%A1%CE%91%CE%9E%CE%97-%CE%A0%CE%A5%CE%A3%CE%94%CE%95-6%CE%A7%CE%9D546%CE%9C%CE%A4%CE%9B%CE%97-896.pdf',
+                ),
+            ),
+            'note' => 'Η ημερομηνία 2026 και οι αριθμοί πρωτοκόλλου επιβεβαιώνονται από επίσημο υπηρεσιακό έγγραφο ΔΔΕ που εφαρμόζει τις εγκυκλίους ΥΠΑΙΘΑ. Για τη Γενική Δ.Ε. διασταυρώθηκαν επίσης οι εγκύκλιοι 23866/Ε2/18-02-2020, 24321/Ε2/02-03-2021, 21020/Ε2/24-02-2022 και 12458/Ε2/02-02-2023. Οι τιμές 2024–2025 παραμένουν προς ξεχωριστή ιστορική τεκμηρίωση.',
         ),
         array(
             'id' => 'resignation-withdrawal',
             'group' => 'paraitiseis',
             'title' => 'Ανάκληση αίτησης παραίτησης',
-            'latest' => 'Έως 1 μήνα από κάθε αίτηση · έως 11/03/2026 για αίτηση 11/02',
+            'latest' => 'Εντός 1 μήνα από την ημερομηνία κάθε αίτησης',
             'latest_verified' => true,
             'source_coverage' => 'latest',
-            'history' => array('10/05/2020','12/03/2021','13/03/2022','14/03/2023','13/03/2024','11/03/2025','11/03/2026'),
+            'history' => array('Εντός 1 μήνα από κάθε αίτηση','Εντός 1 μήνα από κάθε αίτηση','13/03/2022','14/03/2023','13/03/2024','11/03/2025','Εντός 1 μήνα από κάθε αίτηση'),
+            'verified_history_indices' => array(0,1,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Υποβολή αιτήσεων παραίτησης 2025–2026 (11087/Ε3/29-01-2026)',
                     'url' => 'https://www.minedu.gov.gr/images/joomlart/PDFs/RT3TH46NKPD-YCH5.pdf',
                 ),
             ),
-            'note' => 'Δεν υπάρχει μία κοινή ημερομηνία για όλους: η αποκλειστική προθεσμία ανάκλησης είναι ένας μήνας από την ημερομηνία της αρχικής αίτησης. Η 11/03 είναι η τελευταία δυνατή ημερομηνία για αίτηση που υποβλήθηκε 11/02.',
+            'historical_sources' => array(
+                array(
+                    'year' => '2019-2020',
+                    'label' => 'ΥΠΑΙΘ — 41410/Ε3/30-03-2020: ανάκληση εντός 1 μηνός από την αίτηση',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%9E__%CE%94%CE%99%CE%95%CE%A5%CE%9A%CE%A1%CE%99%CE%9D%CE%99%CE%A3%CE%95%CE%99%CE%A3_%CE%93%CE%99%CE%91_%CE%95%CE%9E_%CE%91%CE%A0%CE%9F%CE%A3%CE%A4%CE%91%CE%A3%CE%95%CE%A9%CE%A3_%CE%BA%CE%BB%CF%80_%CE%A5%CE%A0%CE%9F%CE%92%CE%9F%CE%9B%CE%97_%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%95%CE%A9%CE%9D_%CE%A0%CE%91%CE%A1%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%97%CE%A3_%CE%95%CE%9A%CE%A0_%CE%9A%CE%A9%CE%9D_%CE%91%CE%94%CE%91.pdf',
+                ),
+                array(
+                    'year' => '2020-2021',
+                    'label' => 'ΔΔΕ Λέσβου — αντίγραφο 19014/Ε3/18-02-2021: ανάκληση εντός 1 μηνός από την αίτηση',
+                    'url' => 'https://ddelesvou.gr/wp-content/uploads/2023/02/19014_%CE%A4%CE%A1%CE%9F%CE%A0%CE%9F%CE%99%CE%97%CE%A3%CE%97_%CE%A0%CE%A1%CE%9F%CE%98%CE%95%CE%A3%CE%9C%CE%99%CE%A9%CE%9D_%CE%91%CE%99%CE%A4._%CE%A0%CE%91%CE%A1%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%97%CE%A3_%CE%9F%CE%94%CE%97%CE%93%CE%99%CE%95%CE%A3_%CE%93%CE%99%CE%91_%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%95%CE%99%CE%A3_%CE%A3%CE%A7._%CE%88%CE%A4._2020-21_%CE%A8%CE%9B%CE%95%CE%A146%CE%9C%CE%A4%CE%9B%CE%97-%CE%A95%CE%9A.pdf',
+                ),
+            ),
+            'note' => 'Δεν υπάρχει μία κοινή καταληκτική ημερομηνία για όλους: η αποκλειστική προθεσμία ανάκλησης είναι ένας μήνας από την ημερομηνία της αρχικής αίτησης. Η εγκύκλιος 19014/Ε3/18-02-2021 δίνει ρητό παράδειγμα: αίτηση 22/02/2021 μπορεί να ανακληθεί έως 21/03/2021. Για αυτό δεν παράγεται τεχνητό ενιαίο deadline για τα επαληθευμένα έτη. Οι ακριβείς ημερομηνίες 2022–2025 παραμένουν τιμές του ιστορικού αρχείου μέχρι να ελεγχθούν χωριστά.',
         ),
         array(
             'id' => 'transfer-results',
