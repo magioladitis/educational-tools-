@@ -96,7 +96,7 @@
 
   <div id="paravoloValidator" class="question hidden">
     <label for="paravoloCode"><span class="question-number">4</span>Έλεγχος μορφής κωδικού e-Παραβόλου</label>
-    <input id="paravoloCode" type="text" inputmode="numeric" autocomplete="off" maxlength="32" placeholder="Π.χ. 12345678901234567890">
+    <input id="paravoloCode" type="text" data-edu-draft="off" inputmode="numeric" autocomplete="off" maxlength="32" placeholder="Π.χ. 12345678901234567890">
     <div class="field-hint">Επικόλλησε τον κωδικό που σκοπεύεις να καταχωρίσεις στην ένσταση. Το εργαλείο ελέγχει μόνο τη <strong>μορφή</strong> του κωδικού — όχι αν είναι έγκυρος ή πληρωμένος στο σύστημα του ΑΣΕΠ.</div>
     <div id="paravoloValidation" class="validation-message neutral" role="status" aria-live="polite">Ο σωστός κωδικός e-Παραβόλου έχει ακριβώς 20 ψηφία, χωρίς κενά.</div>
   </div>

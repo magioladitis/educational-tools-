@@ -98,7 +98,6 @@ $h = function ($value) use ($flags) {
     <div class="category-grid">
       <?php foreach ($groups as $groupSlug => $groupConfig) {
           $title = isset($groupConfig['title']) ? $groupConfig['title'] : $groupSlug;
-          $description = isset($groupConfig['description']) ? $groupConfig['description'] : '';
           $short = isset($groupConfig['short']) ? $groupConfig['short'] : '';
           $tone = isset($groupConfig['tone']) ? $groupConfig['tone'] : 'blue';
           ?>
@@ -111,7 +110,6 @@ $h = function ($value) use ($flags) {
         <span class="category-card__icon" aria-hidden="true"><?php echo $h($short); ?></span>
         <span class="category-card__body">
           <strong><?php echo $h($title); ?></strong>
-          <span><?php echo $h($description); ?></span>
         </span>
       </a>
       <?php } ?>
@@ -146,7 +144,6 @@ $h = function ($value) use ($flags) {
       <div class="tool-group__heading">
         <div>
           <h2 id="groupTitle-<?php echo $h($groupSlug); ?>"><?php echo $h($title); ?></h2>
-          <p><?php echo $h($description); ?></p>
         </div>
       </div>
       <div class="tools-grid">

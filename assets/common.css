@@ -2769,8 +2769,8 @@ body.edu-ui.edu-tools-directory .category-grid{
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px
 }
 body.edu-ui.edu-tools-directory .category-card{
-  --category-accent:var(--blue);display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;
-  min-width:0;padding:17px 18px;border:1px solid var(--border);border-left:4px solid var(--category-accent);
+  --category-accent:var(--blue);display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:14px;
+  min-width:0;padding:14px 16px;border:1px solid var(--border);border-left:4px solid var(--category-accent);
   border-radius:15px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 3px 13px rgba(28,39,55,.045);
   transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease
 }
@@ -2789,8 +2789,7 @@ body.edu-ui.edu-tools-directory .category-card__icon{
   background:#f3f6fb;color:var(--category-accent);font-size:13px;font-weight:900
 }
 body.edu-ui.edu-tools-directory .category-card__body{display:block;min-width:0}
-body.edu-ui.edu-tools-directory .category-card__body strong{display:block;margin-bottom:3px;font-size:16px;line-height:1.3}
-body.edu-ui.edu-tools-directory .category-card__body > span{display:block;color:var(--muted);font-size:13.5px;line-height:1.45}
+body.edu-ui.edu-tools-directory .category-card__body strong{display:block;font-size:16px;line-height:1.3}
 body.edu-ui.edu-tools-directory .category-card__count{
   white-space:nowrap;padding:5px 8px;border-radius:999px;background:#f5f7fa;color:#667085;font-size:12px;font-weight:800
 }
@@ -2819,7 +2818,6 @@ body.edu-ui.edu-tools-directory .tool-group__heading{
   align-items:center;margin-bottom:12px;padding:0 2px 10px;border-bottom:1px solid var(--border)
 }
 body.edu-ui.edu-tools-directory .tool-group__heading h2{font-size:23px}
-body.edu-ui.edu-tools-directory .tool-group__heading p{max-width:760px;margin:4px 0 0;color:var(--muted);font-size:14px}
 body.edu-ui.edu-tools-directory .tool-group__count{
   display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:30px;padding:0 8px;
   border-radius:999px;background:var(--blue-soft);color:var(--blue-dark);font-size:12px;font-weight:900
@@ -3635,7 +3633,7 @@ body.edu-ui .question.has-missing > label {
 body.edu-ui .edu-mobile-result-target {
   scroll-margin-top: 14px;
 }
-body.edu-ui .edu-mobile-intro-toggle,
+body.edu-ui .edu-mobile-hero-info-button,
 body.edu-ui .edu-mobile-edit-inputs {
   display: none;
 }
@@ -3669,27 +3667,59 @@ body.edu-ui .edu-mobile-sticky-action {
     font-size: 12px !important;
   }
 
-  body.edu-ui .edu-mobile-intro-clamp:not(.is-expanded) {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero,
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .app-box.edu-modernized > .edu-legacy-hero {
+    position: relative;
   }
-  body.edu-ui .edu-mobile-intro-toggle {
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero h1,
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .app-box.edu-modernized > .edu-legacy-hero h1 {
+    padding-right: 48px;
+  }
+  body.edu-ui .edu-mobile-hero-info-button {
+    position: absolute;
+    z-index: 6;
+    top: 12px;
+    right: 12px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
-    margin: 2px 0 -5px;
-    padding: 0 3px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     border: 0 !important;
+    border-radius: 50%;
     background: transparent !important;
-    box-shadow: none !important;
     color: rgba(255,255,255,.96) !important;
-    font-size: 13px;
-    font-weight: 800;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    box-shadow: none !important;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 20px;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1;
+    cursor: pointer;
+  }
+  body.edu-ui .edu-mobile-hero-info-button::before {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    border: 1px solid rgba(255,255,255,.52);
+    border-radius: 50%;
+    background: rgba(0,0,0,.08);
+  }
+  body.edu-ui .edu-mobile-hero-info-button:hover,
+  body.edu-ui .edu-mobile-hero-info-button:focus-visible,
+  body.edu-ui .edu-mobile-hero-info-button[aria-expanded="true"] {
+    background: rgba(255,255,255,.10) !important;
+  }
+  body.edu-ui .edu-mobile-hero-info-button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+  body.edu-ui .edu-mobile-hero-info-button[aria-expanded="true"]::before {
+    background: rgba(0,0,0,.16);
+  }
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .edu-mobile-hero-info-open [data-edu-mobile-hero-info-content="true"]:first-of-type {
+    margin-top: 8px;
   }
 
   body.edu-ui .edu-mobile-edit-inputs {
@@ -3763,11 +3793,99 @@ body.edu-ui .edu-mobile-sticky-action {
   }
 }
 
+
+/* ========================================================================== 
+   Mobile UX phase 2 — table discoverability, compact small tables and
+   keyboard/draft ergonomics.  Data remains in the browser only; draft
+   persistence is handled in common.js and expires automatically.
+   ========================================================================== */
+body.edu-ui .edu-mobile-table-hint {
+  display: none;
+}
+body.edu-ui .edu-mobile-table-scroll-region {
+  max-width: 100%;
+}
+
+@media (max-width: 700px) {
+  body.edu-ui .edu-mobile-table-scroll,
+  body.edu-ui .edu-mobile-table-scroll-region {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+  }
+  body.edu-ui .edu-mobile-table-scroll-region:focus-visible {
+    outline: 3px solid rgba(31,111,235,.34);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+  body.edu-ui .edu-mobile-table-hint {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 28px;
+    margin: 4px 0 5px;
+    color: var(--edu-muted, #5f6b7a);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  body.edu-ui .edu-mobile-table-hint[hidden] {
+    display: none !important;
+  }
+
+  /* Opt-in card treatment for genuinely small reference/result tables. */
+  body.edu-ui table.edu-mobile-table-stack,
+  body.edu-ui table.edu-mobile-table-stack tbody,
+  body.edu-ui table.edu-mobile-table-stack tr,
+  body.edu-ui table.edu-mobile-table-stack td {
+    display: block;
+    width: 100%;
+  }
+  body.edu-ui table.edu-mobile-table-stack {
+    border: 0 !important;
+    background: transparent !important;
+  }
+  body.edu-ui table.edu-mobile-table-stack thead,
+  body.edu-ui table.edu-mobile-table-stack .edu-mobile-table-header-row {
+    display: none !important;
+  }
+  body.edu-ui table.edu-mobile-table-stack tr:not(.edu-mobile-table-header-row) {
+    margin: 0 0 9px;
+    overflow: hidden;
+    border: 1px solid var(--edu-border, #dfe5ec);
+    border-radius: 11px;
+    background: var(--edu-surface, #fff);
+  }
+  body.edu-ui table.edu-mobile-table-stack td {
+    display: grid !important;
+    grid-template-columns: minmax(112px, 40%) minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    padding: 9px 10px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--edu-result-row-separator, #e8edf3) !important;
+    overflow-wrap: anywhere;
+  }
+  body.edu-ui table.edu-mobile-table-stack td:last-child {
+    border-bottom: 0 !important;
+  }
+  body.edu-ui table.edu-mobile-table-stack td::before {
+    content: attr(data-edu-label);
+    color: var(--edu-muted, #5f6b7a);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+}
+
 @media print {
   .edu-mobile-sticky-action,
-  .edu-mobile-intro-toggle,
+  .edu-mobile-hero-info-button,
   .edu-mobile-edit-inputs,
-  .edu-validation-summary {
+  .edu-validation-summary,
+  .edu-mobile-table-hint {
     display: none !important;
   }
 }

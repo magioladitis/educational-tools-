@@ -139,7 +139,7 @@ return array(
             'source_url' => 'https://diavgeia.gov.gr/doc/%CE%957%CE%98%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%9C%CE%98?inline=true',
             'source_label' => 'ΑΔΑ Ε7ΘΑ46ΝΚΠΔ-ΡΜΘ ↗',
             'tool_url' => 'ypologismos-morion-onaseia.php',
-            'tool_label' => 'Ωνάσεια →'
+            'tool_label' => 'ΔΗΜ.Ω.Σ. →'
         ),
         array(
             'title' => 'ΑΣΠΑΙΤΕ — ΕΠΠΑΙΚ 2026–2027',
@@ -158,7 +158,7 @@ return array(
             'source_url' => 'https://diavgeia.gov.gr/doc/%CE%A1%CE%A4%CE%91%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%932%CE%97?inline=true',
             'source_label' => 'ΑΔΑ ΡΤΑΧ46ΝΚΠΔ-Γ2Η ↗',
             'tool_url' => 'ypologismos-morion-onaseia.php',
-            'tool_label' => 'Ωνάσεια →'
+            'tool_label' => 'ΔΗΜ.Ω.Σ. →'
         ),
         array(
             'title' => 'ΑΣΠΑΙΤΕ — 1η πρόσκληση επιλαχόντων ΕΠΠΑΙΚ–ΠΕΣΥΠ 2026–2027',

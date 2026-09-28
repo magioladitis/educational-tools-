@@ -8,7 +8,7 @@ require_once __DIR__ . '/includes/teacher-specialties.php';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php require __DIR__ . '/includes/head-pwa.php'; ?>
-  <title>Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία 2026-2027</title>
+  <title>Μόρια Αναπληρωτή στα ΔΗΜ.Ω.Σ. — 2026-2027</title>
 <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-page-onaseia">
@@ -20,7 +20,7 @@ require_once __DIR__ . '/includes/teacher-specialties.php';
 <?php calculatorContainerStart(array('class' => 'app-box edu-modernized')); ?>
   <?php calculatorHero(array(
   'class' => 'hero edu-legacy-hero',
-  'title' => 'Υπολογισμός μορίων αναπληρωτών στα Δημόσια Ωνάσεια Σχολεία',
+  'title' => 'Μόρια Αναπληρωτή στα ΔΗΜ.Ω.Σ.',
   'intro_html' => 'Σχολικό έτος <strong>2026-2027</strong>. Ο υπολογισμός βασίζεται στα ακαδημαϊκά προσόντα του πίνακα Α.Σ.Ε.Π. και στην αναγνωρισμένη προϋπηρεσία σε Πρότυπα ή Πειραματικά Σχολεία.',
   'intro_attrs' => array('class' => 'intro')
 )); ?>

@@ -187,7 +187,7 @@
       'open' => true,
       'attrs' => array('data-mobile-collapsed' => 'true')
     )); ?>
-      <table class="mini-table">
+      <table class="mini-table" data-edu-mobile-table="stack">
         <tr><th>Χρόνος υπηρεσίας</th><th>Μοριοδότηση</th></tr>
         <tr><td>1 έως και 10 έτη</td><td>1 μονάδα ανά έτος</td></tr>
         <tr><td>Πάνω από 10 έως και 20 έτη</td><td>1,5 μονάδα ανά έτος</td></tr>

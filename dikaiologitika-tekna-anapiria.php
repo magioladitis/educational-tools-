@@ -9,7 +9,7 @@
 <title>Οδηγός δικαιολογητικών τέκνων και αναπηρίας</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
-<body class="edu-ui edu-guide-standard edu-guide-children-disability">
+<body data-edu-draft-persist="off" class="edu-ui edu-guide-standard edu-guide-children-disability">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <div class="app-box edu-modernized">
 <section class="hero edu-legacy-hero">

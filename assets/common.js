@@ -13,7 +13,7 @@
           button.classList.contains('edu-btn-primary') || button.classList.contains('edu-btn-secondary')) return;
 
       /* Stateful / component buttons keep their page-specific appearance. */
-      if (button.matches('.filter-btn, .add-row, .remove-row, .tab, .tab-btn, .mode-tab, .edu-tools-menu-action, .edu-install-help__close, .edu-mobile-intro-toggle, .edu-mobile-sticky-action__button, .edu-mobile-edit-inputs')) return;
+      if (button.matches('.filter-btn, .add-row, .remove-row, .tab, .tab-btn, .mode-tab, .edu-tools-menu-action, .edu-install-help__close, .edu-mobile-hero-info-button, .edu-mobile-sticky-action__button, .edu-mobile-edit-inputs')) return;
       if (button.closest('.filters, .mode-tabs, [role="tablist"], .segmented-choice')) return;
 
       var text = normaliseText(button.textContent);
@@ -286,31 +286,56 @@
     });
   }
 
-  function installMobileHeroCompaction(root) {
-    (root || document).querySelectorAll('.hero, .edu-legacy-hero').forEach(function (hero) {
-      if (hero.getAttribute('data-edu-mobile-compact') === 'off') return;
-      var paragraphs = Array.prototype.slice.call(hero.children).filter(function (child) {
-        return child.matches && child.matches('p, .intro, .subtitle');
+  function installMobileHeroInfoDisclosures(root) {
+    /* On phones, a tool hero should answer one thing first: what tool is this?
+       Supporting copy and score/source badges remain available behind a small
+       accessible information button instead of occupying the first viewport. */
+    if (document.body.classList.contains('edu-tools-directory')) return;
+
+    var heroes = Array.prototype.slice.call((root || document).querySelectorAll('.hero, .edu-legacy-hero'));
+    heroes.forEach(function (hero) {
+      if (hero.getAttribute('data-edu-mobile-info') === 'off') return;
+      if (hero.querySelector('.edu-mobile-hero-info-button')) return;
+
+      var infoNodes = Array.prototype.slice.call(hero.children).filter(function (child) {
+        return child.matches && child.matches('.hero-kicker, p, .intro, .subtitle, .meta, .hero-meta, .hero-tags');
+      });
+      if (!infoNodes.length) return;
+
+      infoNodes.forEach(function (node) {
+        node.setAttribute('data-edu-mobile-hero-info-content', 'true');
       });
 
-      paragraphs.forEach(function (paragraph) {
-        if (normaliseText(paragraph.textContent).length < 190) return;
-        if (paragraph.classList.contains('edu-mobile-intro-clamp')) return;
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'edu-mobile-hero-info-button';
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-label', 'Πληροφορίες εργαλείου');
+      button.setAttribute('title', 'Πληροφορίες εργαλείου');
+      button.textContent = 'i';
 
-        paragraph.classList.add('edu-mobile-intro-clamp');
-        var toggle = document.createElement('button');
-        toggle.type = 'button';
-        toggle.className = 'edu-mobile-intro-toggle';
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.textContent = 'Περισσότερα';
-        paragraph.insertAdjacentElement('afterend', toggle);
+      var title = hero.querySelector('h1');
+      if (title && title.nextSibling) title.parentNode.insertBefore(button, title.nextSibling);
+      else hero.appendChild(button);
 
-        toggle.addEventListener('click', function () {
-          var expanded = paragraph.classList.toggle('is-expanded');
-          toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-          toggle.textContent = expanded ? 'Λιγότερα' : 'Περισσότερα';
+      function sync() {
+        var mobile = isMobileUxViewport();
+        var open = hero.classList.contains('edu-mobile-hero-info-open');
+        infoNodes.forEach(function (node) {
+          if (mobile && !open) node.setAttribute('hidden', '');
+          else node.removeAttribute('hidden');
         });
+        button.setAttribute('aria-expanded', mobile && open ? 'true' : 'false');
+        button.setAttribute('aria-label', mobile && open ? 'Απόκρυψη πληροφοριών εργαλείου' : 'Πληροφορίες εργαλείου');
+        button.setAttribute('title', mobile && open ? 'Απόκρυψη πληροφοριών εργαλείου' : 'Πληροφορίες εργαλείου');
+      }
+
+      button.addEventListener('click', function () {
+        hero.classList.toggle('edu-mobile-hero-info-open');
+        sync();
       });
+      window.addEventListener('resize', sync);
+      sync();
     });
   }
 
@@ -459,6 +484,324 @@
     });
   }
 
+
+  /* Mobile UX phase 2 -------------------------------------------------------
+     - table discoverability / compact stacking for opted-in small tables
+     - mobile keyboard hints and decimal-comma assistance
+     - short-lived local draft recovery for ordinary calculator/guide fields
+     ---------------------------------------------------------------------- */
+  function showSharedToast(message) {
+    var toast = document.querySelector('.edu-app-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'edu-app-toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('is-visible');
+    window.clearTimeout(showSharedToast.timer);
+    showSharedToast.timer = window.setTimeout(function () { toast.classList.remove('is-visible'); }, 2800);
+  }
+
+  function inputUsesDecimalKeyboard(input) {
+    if (!input || input.tagName !== 'INPUT') return false;
+    if ((input.getAttribute('inputmode') || '').toLowerCase() === 'decimal') return true;
+    if ((input.type || '').toLowerCase() !== 'number') return false;
+    var step = (input.getAttribute('step') || '').trim().toLowerCase();
+    if (!step || step === '1') return false;
+    if (step === 'any') return true;
+    var parsed = Number(step);
+    return Number.isFinite(parsed) && Math.floor(parsed) !== parsed;
+  }
+
+  function installDecimalCommaAssist(input) {
+    if (!input || input.getAttribute('data-edu-decimal-comma-ready') === 'true') return;
+    if ((input.type || '').toLowerCase() !== 'number' || !inputUsesDecimalKeyboard(input)) return;
+    input.setAttribute('data-edu-decimal-comma-ready', 'true');
+
+    function handleDecimalInput(event) {
+      if (!event) return;
+      var comma = event.data === ',' || event.key === ',';
+      var current = String(input.value || '');
+      if (comma) {
+        if (current.indexOf('.') !== -1) {
+          event.preventDefault();
+          input.removeAttribute('data-edu-pending-decimal');
+          return;
+        }
+        /* A number input may reject an intermediate value such as "12.".
+           Remember the Greek comma briefly and commit a valid "12.5" when the
+           next digit arrives. */
+        if (current !== '' && /^-?\d+$/.test(current)) {
+          event.preventDefault();
+          input.setAttribute('data-edu-pending-decimal', 'true');
+        }
+        return;
+      }
+      if (event.type === 'beforeinput' && input.getAttribute('data-edu-pending-decimal') === 'true') {
+        if (/^\d$/.test(event.data || '')) {
+          event.preventDefault();
+          input.value = current + '.' + event.data;
+          input.removeAttribute('data-edu-pending-decimal');
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+        } else if (event.inputType && event.inputType.indexOf('delete') === 0) {
+          input.removeAttribute('data-edu-pending-decimal');
+        }
+      }
+      if (event.type === 'keydown' && (event.key === 'Escape' || event.key === 'Backspace' || event.key === 'Delete')) {
+        input.removeAttribute('data-edu-pending-decimal');
+      }
+    }
+
+    input.addEventListener('beforeinput', handleDecimalInput);
+    input.addEventListener('keydown', handleDecimalInput);
+    input.addEventListener('blur', function () { input.removeAttribute('data-edu-pending-decimal'); });
+  }
+
+  function installMobileInputHints(root) {
+    var scope = root || document;
+    var inputs = Array.prototype.slice.call(scope.querySelectorAll ? scope.querySelectorAll('input, textarea') : []);
+    if (scope.matches && scope.matches('input, textarea')) inputs.unshift(scope);
+
+    inputs.forEach(function (input) {
+      if (input.getAttribute('data-edu-mobile-input') === 'off') return;
+      var type = (input.type || '').toLowerCase();
+      if (type === 'number' && !input.hasAttribute('inputmode')) {
+        input.setAttribute('inputmode', inputUsesDecimalKeyboard(input) ? 'decimal' : 'numeric');
+      }
+      if (inputUsesDecimalKeyboard(input)) installDecimalCommaAssist(input);
+    });
+
+    /* enterkeyhint changes only the soft-keyboard label; it does not change
+       form submission or calculator logic. */
+    var enterScope = scope === document ? document : scope;
+    var editable = Array.prototype.slice.call(enterScope.querySelectorAll ? enterScope.querySelectorAll(
+      'input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([disabled]), textarea:not([disabled])'
+    ) : []);
+    if (scope.matches && scope.matches('input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([disabled]), textarea:not([disabled])')) editable.unshift(scope);
+    editable = editable.filter(visibleElement);
+    editable.forEach(function (input, index) {
+      if (input.hasAttribute('enterkeyhint') || input.getAttribute('data-edu-mobile-input') === 'off') return;
+      if ((input.type || '').toLowerCase() === 'search') input.setAttribute('enterkeyhint', 'search');
+      else input.setAttribute('enterkeyhint', index === editable.length - 1 ? 'done' : 'next');
+    });
+  }
+
+  function mobileTableHeading(table) {
+    var caption = table.querySelector('caption');
+    if (caption && normaliseText(caption.textContent)) return caption.textContent.trim();
+    var current = table.previousElementSibling;
+    while (current) {
+      if (current.matches && current.matches('h2, h3, h4, summary')) return current.textContent.trim();
+      current = current.previousElementSibling;
+    }
+    return 'Πίνακας δεδομένων';
+  }
+
+  function applyStackedTableLabels(table) {
+    if (table.getAttribute('data-edu-mobile-stack-ready') === 'true') return;
+    table.setAttribute('data-edu-mobile-stack-ready', 'true');
+    table.classList.add('edu-mobile-table-stack');
+
+    var headerCells = Array.prototype.slice.call(table.querySelectorAll('thead th'));
+    var headerRow = null;
+    if (!headerCells.length) {
+      var firstRow = table.querySelector('tr');
+      if (firstRow) {
+        headerCells = Array.prototype.slice.call(firstRow.querySelectorAll('th'));
+        if (headerCells.length) headerRow = firstRow;
+      }
+    }
+    if (!headerCells.length) return;
+    if (headerRow) headerRow.classList.add('edu-mobile-table-header-row');
+
+    var labels = headerCells.map(function (cell) { return cell.textContent.trim(); });
+    table.querySelectorAll('tbody tr, tr').forEach(function (row) {
+      if (row === headerRow || row.closest('thead')) return;
+      Array.prototype.slice.call(row.children).forEach(function (cell, index) {
+        if (cell.tagName !== 'TD' || cell.hasAttribute('data-edu-label')) return;
+        cell.setAttribute('data-edu-label', labels[index] || 'Τιμή');
+      });
+    });
+  }
+
+  function installMobileTableAssist(root) {
+    var scope = root || document;
+    var tables = Array.prototype.slice.call(scope.querySelectorAll ? scope.querySelectorAll('table') : []);
+    if (scope.matches && scope.matches('table')) tables.unshift(scope);
+
+    tables.forEach(function (table) {
+      if (table.getAttribute('data-edu-mobile-table') === 'off') return;
+      if (/\bprint[-_]/.test(table.className || '') || table.closest('.print-only, [data-print-only="true"]')) return;
+      if (table.getAttribute('data-edu-mobile-table') === 'stack') {
+        applyStackedTableLabels(table);
+        return;
+      }
+      if (table.getAttribute('data-edu-mobile-table-ready') === 'true') return;
+
+      var wrapper = table.closest('.table-wrap, .mapping-wrap, .matrix-wrap, .edu-overflow-x-auto, .edu-mobile-table-scroll');
+      if (!wrapper && isMobileUxViewport() && table.parentNode) {
+        wrapper = document.createElement('div');
+        wrapper.className = 'edu-mobile-table-scroll';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      }
+      if (!wrapper) return;
+      table.setAttribute('data-edu-mobile-table-ready', 'true');
+      wrapper.classList.add('edu-mobile-table-scroll-region');
+      if (!wrapper.hasAttribute('tabindex')) wrapper.setAttribute('tabindex', '0');
+      if (!wrapper.hasAttribute('role')) wrapper.setAttribute('role', 'region');
+      if (!wrapper.hasAttribute('aria-label')) wrapper.setAttribute('aria-label', mobileTableHeading(table));
+
+      var hint = document.createElement('div');
+      hint.className = 'edu-mobile-table-hint';
+      hint.setAttribute('aria-hidden', 'true');
+      hint.textContent = 'Σύρε οριζόντια για περισσότερες στήλες →';
+      wrapper.parentNode.insertBefore(hint, wrapper);
+
+      function updateHint() {
+        var overflow = isMobileUxViewport() && wrapper.scrollWidth > wrapper.clientWidth + 3;
+        hint.hidden = !overflow || wrapper.scrollLeft > 10;
+        wrapper.classList.toggle('has-horizontal-overflow', overflow);
+      }
+      wrapper.addEventListener('scroll', updateHint, { passive: true });
+      window.addEventListener('resize', updateHint);
+      var details = wrapper.closest('details');
+      if (details) details.addEventListener('toggle', function () { window.setTimeout(updateHint, 0); });
+      window.requestAnimationFrame(updateHint);
+    });
+  }
+
+  var DRAFT_TTL_MS = 12 * 60 * 60 * 1000;
+  var DRAFT_PREFIX = 'eduToolsDraftV1:';
+
+  function draftKey() {
+    return DRAFT_PREFIX + window.location.pathname;
+  }
+
+  function draftPersistenceEnabled() {
+    if (!document.querySelector('.edu-tools-global-header[data-edu-current-tool-href]')) return false;
+    if (document.body.getAttribute('data-edu-draft-persist') === 'off') return false;
+    if (document.body.matches('.edu-vacancies, .edu-page-staffing-simulator')) return false;
+    return true;
+  }
+
+  function draftFieldKey(field) {
+    if (field.id) return 'id:' + field.id;
+    if (!field.name) return '';
+    if ((field.type || '').toLowerCase() === 'radio') return 'radio:' + field.name + ':' + field.value;
+    return 'name:' + field.name;
+  }
+
+  function isSafeDraftField(field) {
+    if (!field || field.disabled || field.readOnly || !draftFieldKey(field)) return false;
+    if (field.getAttribute('data-edu-draft') === 'off' || field.closest('[data-edu-draft-persist="off"]')) return false;
+    var type = (field.type || '').toLowerCase();
+    if (['hidden', 'password', 'file', 'submit', 'button', 'reset', 'image', 'range'].indexOf(type) !== -1) return false;
+    var autocomplete = (field.getAttribute('autocomplete') || '').toLowerCase();
+    if (/name|email|tel|address|password|cc-|one-time-code/.test(autocomplete)) return false;
+    var identity = ((field.id || '') + ' ' + (field.name || '')).toLowerCase();
+    if (/(password|passwd|email|e-mail|phone|telephone|mobile|address|amka|afm|username|user_name|contact)/.test(identity)) return false;
+    return field.matches('input, select, textarea');
+  }
+
+  function readDraftState(field) {
+    var type = (field.type || '').toLowerCase();
+    if (type === 'checkbox' || type === 'radio') return { checked: !!field.checked };
+    var value = String(field.value == null ? '' : field.value);
+    if (value.length > 300) value = value.slice(0, 300);
+    return { value: value };
+  }
+
+  function installDraftPersistence(root) {
+    if (!draftPersistenceEnabled()) return;
+    var storage = null;
+    try { storage = window.localStorage; } catch (error) { storage = null; }
+    if (!storage) return;
+    var key = draftKey();
+    var restoring = false;
+    var ignoreSavesUntil = 0;
+    var saveTimer = null;
+
+    function fields() {
+      return Array.prototype.slice.call((root || document).querySelectorAll('input, select, textarea')).filter(isSafeDraftField);
+    }
+
+    function clearDraft() {
+      window.clearTimeout(saveTimer);
+      ignoreSavesUntil = Date.now() + 900;
+      try { storage.removeItem(key); } catch (error) {}
+    }
+
+    function saveDraft() {
+      if (restoring || Date.now() < ignoreSavesUntil) return;
+      var state = {};
+      fields().forEach(function (field) {
+        state[draftFieldKey(field)] = readDraftState(field);
+      });
+      try {
+        storage.setItem(key, JSON.stringify({ savedAt: Date.now(), state: state }));
+      } catch (error) {}
+    }
+
+    function scheduleSave() {
+      if (restoring || Date.now() < ignoreSavesUntil) return;
+      window.clearTimeout(saveTimer);
+      saveTimer = window.setTimeout(saveDraft, 450);
+    }
+
+    function restoreDraft() {
+      var payload = null;
+      try { payload = JSON.parse(storage.getItem(key) || 'null'); } catch (error) { payload = null; }
+      if (!payload || !payload.state || !payload.savedAt || Date.now() - payload.savedAt > DRAFT_TTL_MS) {
+        if (payload) clearDraft();
+        return;
+      }
+
+      restoring = true;
+      var restored = [];
+      fields().forEach(function (field) {
+        var saved = payload.state[draftFieldKey(field)];
+        if (!saved) return;
+        var type = (field.type || '').toLowerCase();
+        if (type === 'checkbox' || type === 'radio') {
+          if (field.checked !== !!saved.checked) {
+            field.checked = !!saved.checked;
+            restored.push(field);
+          }
+        } else if (Object.prototype.hasOwnProperty.call(saved, 'value') && field.value !== saved.value) {
+          field.value = saved.value;
+          restored.push(field);
+        }
+      });
+      restored.forEach(function (field) {
+        var type = (field.type || '').toLowerCase();
+        field.dispatchEvent(new Event(type === 'checkbox' || type === 'radio' || field.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true }));
+      });
+      restoring = false;
+      if (restored.length) showSharedToast('Επαναφέρθηκαν προσωρινά τα στοιχεία που είχες συμπληρώσει.');
+    }
+
+    document.addEventListener('input', function (event) {
+      if (isSafeDraftField(event.target)) scheduleSave();
+    });
+    document.addEventListener('change', function (event) {
+      if (isSafeDraftField(event.target)) scheduleSave();
+    });
+    document.addEventListener('click', function (event) {
+      var button = event.target && event.target.closest ? event.target.closest('button, input[type="reset"]') : null;
+      if (!button) return;
+      var label = normaliseText(button.textContent || button.value || '');
+      if (button.type === 'reset' || label.indexOf('καθαρισ') !== -1 || label.indexOf('μηδεν') !== -1) {
+        window.setTimeout(clearDraft, 0);
+      }
+    });
+    document.addEventListener('reset', function () { window.setTimeout(clearDraft, 0); }, true);
+    window.setTimeout(restoreDraft, 20);
+  }
+
   window.EduToolsUI = Object.freeze(Object.assign({}, window.EduToolsUI || {}, {
     markFieldInvalid: markFieldInvalid,
     clearValidationSummary: clearValidationSummary,
@@ -477,9 +820,13 @@
     enhanceResults(document);
     embedSourceCards();
     initialiseResponsiveSourceCards();
-    installMobileHeroCompaction(document);
+    installMobileHeroInfoDisclosures(document);
     installNativeValidationAssist(document);
     installMobilePrimaryActions(document);
+    installMobileInputHints(document);
+    installMobileTableAssist(document);
+    window.addEventListener('resize', function () { installMobileTableAssist(document); });
+    installDraftPersistence(document);
     installBackToTop();
     installDeadlineCountdowns(document);
 
@@ -490,6 +837,8 @@
           if (!(node instanceof Element)) return;
           enhanceButtons(node);
           enhanceResults(node);
+          installMobileInputHints(node);
+          installMobileTableAssist(node);
         });
       });
     });
