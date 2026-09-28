@@ -1,0 +1,75 @@
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+PAGE = (ROOT / 'xronodiagramma-ypiresiakon-metavolon.php').read_text(encoding='utf-8')
+DATA = (ROOT / 'includes' / 'service-timeline-data.php').read_text(encoding='utf-8')
+CATALOG = (ROOT / 'includes' / 'tools-catalog.php').read_text(encoding='utf-8')
+CSS = (ROOT / 'assets' / 'common.css').read_text(encoding='utf-8')
+JS = (ROOT / 'assets' / 'service-timeline.js').read_text(encoding='utf-8')
+CONFIG = (ROOT / 'includes' / 'config.php').read_text(encoding='utf-8')
+SW = (ROOT / 'service-worker.js').read_text(encoding='utf-8')
+
+def check(label, condition):
+    if not condition:
+        raise AssertionError(label)
+    print('OK:', label)
+
+check('timeline page added', 'Χρονοδιάγραμμα Εκπαιδευτικών' in PAGE)
+check('verified-only default exists', 'timelineVerifiedOnly' in PAGE and 'checked' in PAGE)
+check('historical source disclaimer exists', 'Οι παλαιότερες ημερομηνίες' in PAGE)
+check('user-confirmed 2024 detachment date corrected', "'history' => array('30/04–11/05/2020','20–27/04/2021','05–15/04/2022','06–18/04/2023','08–17/04/2024'" in DATA)
+check('2026 transfer circular corrected and sourced', "'30/04/2026'" in DATA and '52463%CE%952_30-04-2026' in DATA)
+check('metatakseis outcome split by category', "'metatakseis-to-eep'" in DATA and "'metatakseis-to-primary'" in DATA and "'metatakseis-to-secondary'" in DATA)
+check('official Ministry sources are present', DATA.count('https://www.minedu.gov.gr/') >= 18)
+check('catalog entry added', "'number' => 36" in CATALOG and "xronodiagramma-ypiresiakon-metavolon.php" in CATALOG)
+check('timeline JS loaded', 'service-timeline.js' in PAGE and 'data-timeline-filter' in JS)
+check('timeline CSS scoped', 'body.edu-page-service-timeline' in CSS)
+check('source expansion includes all working-sheet milestones', DATA.count("'id' =>") >= 32)
+check('resignation window sourced', "'resignation-withdrawal'" in DATA and "11/03/2026" in DATA)
+check('detachment withdrawal deadlines sourced', "'bodies-detachment-application-withdrawal'" in DATA and "'27/04/2026'" in DATA and "'detachment-application-withdrawal'" in DATA and "'20/05/2026'" in DATA)
+check('metataksi withdrawal sourced', "'metatakseis-application-withdrawal'" in DATA and "'27/05/2026'" in DATA)
+check('primary functional gaps circular documented', "'functional-gaps-primary-circular'" in DATA and "73719/Ε2" in DATA and "official-document-copy" in DATA)
+check('secondary functional gaps protocol verified', "'functional-gaps-secondary-circular'" in DATA and "05/06/2026 · 74045/Ε2" in DATA and "official-document-copy" in DATA and "αρ. πρωτ. υπό διασταύρωση" not in DATA)
+check('legacy functional gaps history preserved separately', "'functional-gaps-history'" in DATA and "Ιστορικό αρχείου" in DATA)
+check('transfer objections no longer presented as a 2026 fixed deadline', "Αιτήσεις θεραπείας / επανεξέτασης" in DATA and "δεν εντοπίστηκε ενιαία δημοσιευμένη προθεσμία" in DATA and "αμοιβαίες μεταθέσεις" in DATA)
+check('verification label override supported', 'verification_label' in DATA and 'verificationLabel' in PAGE)
+check('newly appointed application window verified', "'newly-appointed-detachment-applications'" in DATA and "'26/08–01/09/2026'" in DATA)
+check('version bumped', "EDU_TOOLS_VERSION', '3.22.34'" in CONFIG)
+check('cache bumped', "CACHE_PREFIX + '3.22.34'" in SW)
+
+check('historical verification markers supported', 'verified_history_indices' in DATA and 'verifiedHistoryIndices' in PAGE)
+check('2020 temporary points correction locked', "'14/12/2020'" in DATA and "'07/12/2020'" not in DATA)
+check('2024 temporary points correction locked', "'25/11/2024'" in DATA)
+check('2020 detachment circular correction locked', "'16/04/2020'" in DATA)
+check('2022 primary detachment announcement correction locked', "'07/07/2022'" in DATA)
+
+check('transfer applications history fully verified', "'id' => 'metatheseis-applications'" in DATA and "'verified_history_indices' => array(0,1,2,3,4,5,6)" in DATA and "12–25/11/2019" in DATA)
+check('2019-2020 transfer withdrawal corrected to January', "'31/01/2020'" in DATA and "'31/12/2019'" not in DATA and 'ανάκληση ήδη πραγματοποιημένης μετάθεσης δεν προβλέπεται' in DATA)
+check('2020 mutual transfer deadlines split by level', "Π.Ε. 22/04 · Δ.Ε. 11/05/2020" in DATA)
+check('2021 mutual transfer deadlines split by level', "Π.Ε. 08/04 · Δ.Ε. 09/04/2021" in DATA)
+check('2022 mutual transfer deadlines split by level', "Π.Ε. 02/04 · Δ.Ε. 04/04/2022" in DATA)
+check('mutual transfer derived-date methodology documented', 'Για Π.Ε. 2021 και 2022 η ημερομηνία προκύπτει από τον επίσημο κανόνα των 15 ημερών' in DATA)
+
+# v3.22.34 — historical detachment batch
+for event_id in [
+    'detachments-circular',
+    'detachments-applications',
+    'bodies-detachment-application-withdrawal',
+    'detachment-application-withdrawal',
+    'first-primary-detachments',
+    'first-secondary-detachments',
+]:
+    anchor = "'id' => '" + event_id + "'"
+    start = DATA.find(anchor)
+    check(event_id + ' exists', start >= 0)
+    next_event = DATA.find("\n        array(\n            'id' =>", start + len(anchor))
+    block = DATA[start: next_event if next_event >= 0 else len(DATA)]
+    check(event_id + ' all historical years verified', "'verified_history_indices' => array(0,1,2,3,4,5,6)" in block)
+    check(event_id + ' historical sources attached', "'historical_sources' => array(" in block)
+
+check('2024 detachment application correction remains locked', "'history' => array('30/04–11/05/2020','20–27/04/2021','05–15/04/2022','06–18/04/2023','08–17/04/2024'" in DATA)
+check('2024 PYSPE/PYSDE withdrawal deadline verified', "'17/05/2024'" in DATA)
+check('2020 body withdrawal deadline verified', "'12/05/2020'" in DATA)
+check('2021 body withdrawal deadline verified', "'31/05/2021'" in DATA)
+check('2024 first PYSDE announcement corrected to 28 June', "'28/06/2024'" in DATA and "'27/06/2024'" not in DATA)
+check('2022 first PYSDE nuance documented', 'πρώτη ανακοίνωση' in DATA and 'συνδυασμένη ανακοίνωση' in DATA and '07/07' in DATA)

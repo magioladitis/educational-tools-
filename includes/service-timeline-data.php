@@ -271,7 +271,7 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('16/04/2020','16/04/2021','04/04/2022','27/03/2023','04/04/2024','03/04/2025','02/04/2026'),
-            'verified_history_indices' => array(0,1,3,4,5,6),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Αποσπάσεις ΠΥΣΠΕ/ΠΥΣΔΕ 2026–2027',
@@ -282,9 +282,17 @@ return array(
                     'url' => 'https://www.minedu.gov.gr/site/64684-02-04-26-prosklisi-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-gia-ypovoli-aitiseon-apospaseon-se-ypiresies-kai-foreis-armodiotitas-tou-ypourgeiou-paideias-thriskevmaton-kai-athlitismoy-apo-to-sxoliko-etos-2026-2027-kai-me-monoeti-trieti-pentaeti-diarkeia-kata-periptosi',
                 ),
             ),
-            'note' => 'Την ίδια ημέρα εκδόθηκαν χωριστές προσκλήσεις για μετακινήσεις μεταξύ περιοχών/δομών και για υπηρεσίες/φορείς.',
-        ),
-        array(
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — πρόσκληση αποσπάσεων 16/04/2020', 'url' => 'https://www.minedu.gov.gr/site/44687-16-04-20-prosklisi-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-gia-ypovoli-aitiseon-apospaseon-apo-pyspe-pysde-se-pyspe-pysde-kesy-smeae-kai-eeeek-mousika-kallitexnika-kai-ekklisiastika-sxoleia-2020-2021'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — εγκύκλιος ΠΥΣΠΕ/ΠΥΣΔΕ 2021–2022', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2021-2022_6%CE%9D%CE%A5%CE%9B46%CE%9C%CE%A4%CE%9B%CE%97-4%CE%A4%CE%98.pdf'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — πρόσκληση/έγγραφο αποσπάσεων με ημερομηνία 04/04/2022', 'url' => 'https://www.minedu.gov.gr/site/51768-04-04-22-prosklisi-ekpaideftikon-avathmias-kai-vvathmias-gia-ypovoli-aitiseon-apospaseon-4'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — πρόσκληση αποσπάσεων 27/03/2023', 'url' => 'https://www.minedu.gov.gr/site/54962-27-03-23-prosklisi-ekpaideftikon-avathmias-kai-vvathmias-ekpaidefsis-se-sxoleia-kai-foreis'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — εγκύκλιος 34882/Ε2/04-04-2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2024-2025_%CE%A1%CE%9F%CE%A3%CE%A446%CE%9D%CE%9A%CE%A0%CE%94-%CE%9B%CE%931.pdf'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — εγκύκλιος 37426/Ε2/03-04-2025', 'url' => 'https://minedu.gov.gr/publications/docs2023/37426E2_03-04-2024_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2025-2026_%CE%A8%CE%A0%CE%96846%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%A5%CE%92.pdf'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — εγκύκλιος 41297/Ε2/02-04-2026', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf'),
+            ),
+            'note' => 'Η ιστορική σειρά 2020–2026 έχει πλέον διασταυρωθεί ανά έτος. Για το 2022 η ανάρτηση του Υπουργείου εμφανίζει στον τίτλο «05-04-22», ενώ η σελίδα και το υπηρεσιακό έγγραφο φέρουν ημερομηνία 04/04/2022· στο χρονοδιάγραμμα καταγράφεται η ημερομηνία του εγγράφου.',
+        ),        array(
             'id' => 'detachments-applications',
             'group' => 'apospaseis',
             'title' => 'Αιτήσεις απόσπασης εκπαιδευτικών',
@@ -292,6 +300,7 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('30/04–11/05/2020','20–27/04/2021','05–15/04/2022','06–18/04/2023','08–17/04/2024','07–23/04/2025','03–20/04/2026'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Πρόσκληση αποσπάσεων 02/04/2026',
@@ -299,12 +308,20 @@ return array(
                 ),
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος 41297/Ε2/02-04-2026 (PDF)',
-                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf',
                 ),
             ),
-            'note' => 'Διορθώθηκε το ιστορικό 2023–2024 από «08/0/2024» σε «08/04/2024». Για το 2026, η επίσημη εγκύκλιος 41297/Ε2/02-04-2026 ορίζει αιτήσεις από 03/04 έως 20/04/2026, ώρα 15:00.',
-        ),
-        array(
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — αιτήσεις 30/04–11/05/2020', 'url' => 'https://www.minedu.gov.gr/site/44687-16-04-20-prosklisi-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-gia-ypovoli-aitiseon-apospaseon-apo-pyspe-pysde-se-pyspe-pysde-kesy-smeae-kai-eeeek-mousika-kallitexnika-kai-ekklisiastika-sxoleia-2020-2021'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — αιτήσεις 20–27/04/2021', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2021-2022_6%CE%9D%CE%A5%CE%9B46%CE%9C%CE%A4%CE%9B%CE%97-4%CE%A4%CE%98.pdf'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — αιτήσεις 05–15/04/2022', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2022-23__6%CE%978%CE%A446%CE%9C%CE%A4%CE%9B%CE%97-8%CE%9C%CE%9C.pdf'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — αιτήσεις 06–18/04/2023', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2023_2024_%CE%91%CE%94%CE%91_%CE%A8%CE%99%CE%97%CE%A746%CE%9C%CE%A4%CE%9B%CE%97-%CE%9F6%CE%A4.pdf'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — αιτήσεις 08–17/04/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2024-2025_%CE%A1%CE%9F%CE%A3%CE%A446%CE%9D%CE%9A%CE%A0%CE%94-%CE%9B%CE%931.pdf'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — αιτήσεις 07–23/04/2025', 'url' => 'https://minedu.gov.gr/publications/docs2023/37426E2_03-04-2024_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2025-2026_%CE%A8%CE%A0%CE%96846%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%A5%CE%92.pdf'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — αιτήσεις 03–20/04/2026', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf'),
+            ),
+            'note' => 'Η ιστορική περίοδος αιτήσεων ΠΥΣΠΕ/ΠΥΣΔΕ έχει διασταυρωθεί για όλους τους κύκλους 2020–2026. Η διόρθωση 2023–2024 από «08/0/2024» σε «08/04/2024» επιβεβαιώνεται από την εγκύκλιο 34882/Ε2/04-04-2024.',
+        ),        array(
             'id' => 'eep-ebp-detachments',
             'group' => 'apospaseis',
             'title' => 'Αιτήσεις απόσπασης ΕΕΠ-ΕΒΠ',
@@ -360,15 +377,24 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('12/05/2020','31/05/2021','10/05/2022','25/04/2023','23/04/2024','30/04/2025','27/04/2026'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος αποσπάσεων σε υπηρεσίες/φορείς 41298/Ε2/02-04-2026',
-                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/41298E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A6%CE%9F%CE%A1%CE%95%CE%99%CE%A3_2026-2027_%CE%95%CE%A9%CE%95%CE%9946%CE%9D%CE%9A%CE%A0%CE%94-%CE%9D06.pdf',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/41298E2_02-04-2026_%CE%95%CE%93%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A6%CE%9F%CE%A1%CE%95%CE%99%CE%A3_2026-2027_%CE%95%CE%A9%CE%95%CE%9946%CE%9D%CE%9A%CE%A0%CE%94-%CE%9D06.pdf',
                 ),
             ),
-            'note' => 'Η εγκύκλιος ορίζει ότι η ανάκληση της αίτησης γίνεται μόνο μέσω ΟΠΣΥΔ, με απενεργοποίηση, έως τη Δευτέρα 27/04/2026.',
-        ),
-        array(
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — ανάκληση μέσω ΟΠΣΥΔ έως 12/05/2020', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A6%CE%9F%CE%A1%CE%95%CE%99%CE%A3_2020-21_%CE%A9%CE%91%CE%A7%CE%9C46%CE%9C%CE%A4%CE%9B%CE%97-8%CE%A8%CE%9A.PDF'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — ανάκληση μέσω ΟΠΣΥΔ έως 31/05/2021', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A6%CE%9F%CE%A1%CE%95%CE%99%CE%A3_2021-2022_%CE%A17%CE%9D%CE%9A46%CE%9C%CE%A4%CE%9B%CE%97-%CE%A00%CE%9A.pdf'),
+                array('year' => '2021-2022', 'label' => 'ΔΠΕ Α΄ Αθήνας — επίσημο αντίγραφο ΨΑΡΝ46ΜΤΛΗ-ΠΣΝ, ανάκληση έως 10/05/2022', 'url' => 'https://dipe-a-athin.att.sch.gr/images/upload/dioikitika/April_2022/%CE%A8%CE%91%CE%A1%CE%9D46%CE%9C%CE%A4%CE%9B%CE%97-%CE%A0%CE%A3%CE%9D_%CE%95%CE%B3%CE%BA%CF%85%CC%81%CE%BA%CE%BB%CE%B9%CE%BF%CF%82_%CE%B1%CF%80%CE%BF%CF%83%CF%80%CE%B1%CC%81%CF%83%CE%B5%CF%89%CE%BD_%CF%83%CE%B5_%CF%86%CE%BF%CF%81%CE%B5%CE%B9%CC%81%CF%82_22-23.pdf'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — ανάκληση μέσω ΟΠΣΥΔ έως 25/04/2023', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%A9%CE%9D%CE%9F%CE%A946%CE%9C%CE%A4%CE%9B%CE%97-%CE%A10%CE%9A-%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A3%CE%95_%CE%A6%CE%9F%CE%A1%CE%95%CE%99%CE%A3_%CE%91%CE%9D%CE%91%CE%9A%CE%9F%CE%99%CE%9D.pdf'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — ανάκληση με απενεργοποίηση έως 23/04/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A6%CE%9F%CE%A1%CE%95%CE%99%CE%A3_2024-25_9%CE%968%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-%CE%9A2%CE%A5.pdf'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — ανάκληση με απενεργοποίηση έως 30/04/2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/37430E2_03-04-2025_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A6%CE%9F%CE%A1%CE%95%CE%99%CE%A3_2025-2026_%CE%A89%CE%9C946%CE%9D%CE%9A%CE%A0%CE%94-%CE%977%CE%9F.pdf'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — ανάκληση με απενεργοποίηση έως 27/04/2026', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/41298E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A6%CE%9F%CE%A1%CE%95%CE%99%CE%A3_2026-2027_%CE%95%CE%A9%CE%95%CE%9946%CE%9D%CE%9A%CE%A0%CE%94-%CE%9D06.pdf'),
+            ),
+            'note' => 'Η σειρά αφορά την ανάκληση της αρχικής αίτησης απόσπασης σε υπηρεσία/φορέα πριν από τα αποτελέσματα. Δεν συγχέεται με μεταγενέστερη αίτηση ανάκλησης ήδη εγκεκριμένης απόσπασης.',
+        ),        array(
             'id' => 'metatakseis-circular',
             'group' => 'metatakseis',
             'title' => 'Εγκύκλιος μετατάξεων',
@@ -409,15 +435,24 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('25/05/2020','24/05/2021','10/06/2022','02/06/2023','17/05/2024','23/05/2025','20/05/2026'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος αποσπάσεων ΠΥΣΠΕ/ΠΥΣΔΕ 41297/Ε2/02-04-2026',
-                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf',
                 ),
             ),
-            'note' => 'Η ίδια η αίτηση μπορεί να απενεργοποιηθεί από τον εκπαιδευτικό έως 20/05/2026. Μετά την ανακοίνωση αποτελεσμάτων προβλέπεται ξεχωριστή διαδικασία επανεξέτασης/ανάκλησης εντός πέντε ημερών, η οποία δεν ταυτίζεται με αυτή τη γραμμή.',
-        ),
-        array(
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — εγκύκλιος αποσπάσεων 2020–2021, ανάκληση αίτησης έως 25/05/2020', 'url' => 'https://www.minedu.gov.gr/site/44687-16-04-20-prosklisi-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-gia-ypovoli-aitiseon-apospaseon-apo-pyspe-pysde-se-pyspe-pysde-kesy-smeae-kai-eeeek-mousika-kallitexnika-kai-ekklisiastika-sxoleia-2020-2021'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — ανάκληση αίτησης έως 24/05/2021', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2021-2022_6%CE%9D%CE%A5%CE%9B46%CE%9C%CE%A4%CE%9B%CE%97-4%CE%A4%CE%98.pdf'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — ανάκληση αίτησης έως 10/06/2022', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2022-23__6%CE%978%CE%A446%CE%9C%CE%A4%CE%9B%CE%97-8%CE%9C%CE%9C.pdf'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — ανάκληση αίτησης έως 02/06/2023', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2023_2024_%CE%91%CE%94%CE%91_%CE%A8%CE%99%CE%97%CE%A746%CE%9C%CE%A4%CE%9B%CE%97-%CE%9F6%CE%A4.pdf'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — ανάκληση αίτησης έως 17/05/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D_%CE%A3%CE%95_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2024-2025_%CE%A1%CE%9F%CE%A3%CE%A446%CE%9D%CE%9A%CE%A0%CE%94-%CE%9B%CE%931.pdf'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — ανάκληση αίτησης έως 23/05/2025', 'url' => 'https://minedu.gov.gr/publications/docs2023/37426E2_03-04-2024_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2025-2026_%CE%A8%CE%A0%CE%96846%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%A5%CE%92.pdf'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — ανάκληση αίτησης έως 20/05/2026', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf'),
+            ),
+            'note' => 'Η σειρά αφορά την απενεργοποίηση/ανάκληση της αίτησης πριν από την ανακοίνωση των αποτελεσμάτων. Μετά την ανακοίνωση των αποσπάσεων υπάρχει διαφορετική διαδικασία ένστασης, επανεξέτασης ή ανάκλησης της ήδη εγκριθείσας απόσπασης.',
+        ),        array(
             'id' => 'metatakseis-application-withdrawal',
             'group' => 'metatakseis',
             'title' => 'Ανάκληση αίτησης μετάταξης — λήξη',
@@ -514,33 +549,49 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('10/07/2020','30/06/2021','07/07/2022','20/07/2023','19/06/2024','19/06/2025','30/06/2026'),
-            'verified_history_indices' => array(0,1,2,5,6),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
-                    'label' => 'ΥΠΑΙΘΑ — Αποσπάσεις / Εγκύκλιοι & αποφάσεις',
+                    'label' => 'ΥΠΑΙΘΑ — επίσημη ενότητα αποσπάσεων (30/06/2026 ΠΥΣΠΕ→ΠΥΣΠΕ)',
                     'url' => 'https://www.minedu.gov.gr/kinitikotita/apospaseis-egkyklioi-proskliseis',
                 ),
             ),
-            'note' => 'Η επίσημη ενότητα του Υπουργείου καταγράφει την απόφαση ΠΥΣΠΕ→ΠΥΣΠΕ στις 30/06/2026.',
-        ),
-        array(
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — ΠΥΣΠΕ→ΠΥΣΠΕ 10/07/2020', 'url' => 'https://www.minedu.gov.gr/site/45724-10-07-20-apospaseis-ekpaideftikon-protovathmias-ekpaidefsis'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — ΠΥΣΠΕ→ΠΥΣΠΕ 30/06/2021', 'url' => 'https://www.minedu.gov.gr/site/49296-30-06-21-apospaseis-ekpaideftikon-protovathmias-ekpaidefsis-apo-pysde-se-pysde'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — ΠΥΣΠΕ→ΠΥΣΠΕ 07/07/2022', 'url' => 'https://www.minedu.gov.gr/site/52758-07-07-22-apospaseis-ekpaideftikon-protovathmias-ekpaidefsis-apo-pyspe-se-pyspe'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — ΠΥΣΠΕ→ΠΥΣΠΕ 20/07/2023', 'url' => 'https://www.minedu.gov.gr/site/56010-20-07-23-apospaseis-protovathmias-ekpaidefsis-se-foreis-kai-sxoleia'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — ΠΥΣΠΕ→ΠΥΣΠΕ 19/06/2024', 'url' => 'https://www.minedu.gov.gr/site/58650-19-06-24-apospaseis-ekpaideftikon-protovathmias-ekpaidefsis-apo-pyspe-se-pyspe-4'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — ΠΥΣΠΕ→ΠΥΣΠΕ 19/06/2025', 'url' => 'https://www.minedu.gov.gr/site/61854-19-06-25-apospaseis-ekpaideftikon-avathmias-ekpaidefsis-apo-pyspe-se-pyspe-kai-se-foreis'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — ΠΥΣΠΕ→ΠΥΣΠΕ 30/06/2026', 'url' => 'https://www.minedu.gov.gr/kinitikotita/apospaseis-egkyklioi-proskliseis'),
+            ),
+            'note' => 'Η σειρά αφορά την πρώτη επίσημη ανακοίνωση αποτελεσμάτων ΠΥΣΠΕ→ΠΥΣΠΕ ανά κύκλο και έχει διασταυρωθεί για όλα τα έτη 2020–2026.',
+        ),        array(
             'id' => 'first-secondary-detachments',
             'group' => 'apospaseis',
             'title' => 'Πρώτη ανακοίνωση αποσπάσεων ΠΥΣΔΕ',
             'latest' => '02/07/2026',
             'latest_verified' => true,
             'source_coverage' => 'latest',
-            'history' => array('16/07/2020','16/07/2021','06/07/2022','21/07/2023','27/06/2024','26/06/2025','02/07/2026'),
-            'verified_history_indices' => array(2,6),
+            'history' => array('16/07/2020','16/07/2021','06/07/2022','21/07/2023','28/06/2024','26/06/2025','02/07/2026'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Αποσπάσεις Δ.Ε. / ΠΥΣΔΕ 2026–2027',
                     'url' => 'https://www.minedu.gov.gr/site/70258-02-07-26-apospaseis-bbathmias-ekpaideuses-kedasy-smeae-scholeia-typhlon-kophon-mousika-kallitechnika-kai-apo-pysde-se-pysde',
                 ),
             ),
-            'note' => '',
-        ),
-        array(
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — ΠΥΣΔΕ→ΠΥΣΔΕ 16/07/2020', 'url' => 'https://www.minedu.gov.gr/site/45805-16-07-20-apospaseis-ekpaideftikon-vvathmias-ekpaidefsis-3'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — ΠΥΣΔΕ→ΠΥΣΔΕ 16/07/2021', 'url' => 'https://www.minedu.gov.gr/site/49516-16-07-21-apospaseis-ekpaideftikon-vvathmias-se-smeae-kesy-sxoleia-tyflon-kai-kofon-mousika-kallitexnika-kai-ekklisiastika-kai-apo-pysde-se-pysde'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — πρώτη συνδυασμένη ανακοίνωση με ΠΥΣΔΕ→ΠΥΣΔΕ 06/07/2022', 'url' => 'https://www.minedu.gov.gr/monimoi-metatakseis-metatheseis-apospaseis?start=640'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — ΠΥΣΔΕ→ΠΥΣΔΕ 21/07/2023', 'url' => 'https://www.minedu.gov.gr/site/56054-21-07-23-apospaseis-ekpaideftikon-defterovathmias-ekpaidefsis-se-kedasy-smeae-sxoleia-tyflon-kofon-se-mousika-sxoleia-se-kallitexnika-sxoleia-kai-apo-pysde-se-pysde-2023-24'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — ΠΥΣΔΕ→ΠΥΣΔΕ 28/06/2024', 'url' => 'https://www.minedu.gov.gr/site/58729-28-06-24-apospaseis-ekpaideftikon-vvathmias-ekpaidefsis-apo-pysde-se-pysde'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — ΠΥΣΔΕ→ΠΥΣΔΕ 26/06/2025', 'url' => 'https://www.minedu.gov.gr/site/61954-26-06-25-apospaseis'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — ΠΥΣΔΕ→ΠΥΣΔΕ 02/07/2026', 'url' => 'https://www.minedu.gov.gr/site/70258-02-07-26-apospaseis-bbathmias-ekpaideuses-kedasy-smeae-scholeia-typhlon-kophon-mousika-kallitechnika-kai-apo-pysde-se-pysde'),
+            ),
+            'note' => 'Διορθώθηκε το 2024 από 27/06 σε 28/06, βάσει της επίσημης ανακοίνωσης του ΥΠΑΙΘΑ. Για το 2022 κρατείται 06/07 ως «πρώτη ανακοίνωση», επειδή εκείνη την ημέρα αναρτήθηκε συνδυασμένη ανακοίνωση που περιλάμβανε και ΠΥΣΔΕ→ΠΥΣΔΕ· ακολούθησε ξεχωριστή ανάρτηση στις 07/07.',
+        ),        array(
             'id' => 'metatakseis-to-eep',
             'group' => 'metatakseis',
             'title' => 'Μετατάξεις προς κλάδους ΕΕΠ',
