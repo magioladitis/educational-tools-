@@ -402,12 +402,15 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('20/05/2020','07/05/2021','16/05/2022','29/03/2023','19/04/2024','29/04/2025','30/04/2026'),
-            'verified_history_indices' => array(0,2,3,4,5,6),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μετατάξεων 2026 (52463/Ε2/30-04-2026)',
                     'url' => 'https://www.minedu.gov.gr/publications/docs2023/52463%CE%952_30-04-2026_9%CE%A9%CE%93%CE%A346%CE%9D%CE%9A%CE%A0%CE%94-%CE%A5%CE%97%CE%92.pdf',
                 ),
+            ),
+            'historical_sources' => array(
+                array('year' => '2020-2021', 'label' => 'ΔΠΕ Ηρακλείου — επίσημο αντίγραφο 50923/Ε2/07-05-2021', 'url' => 'https://dipeira.gov.gr/wp-content/uploads/2021/05/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%93%CE%99%CE%91-%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%99%CE%A3-%CE%95%CE%9A%CE%A0%CE%91%CE%99%CE%94%CE%95%CE%A5%CE%A4%CE%99%CE%9A%CE%A9%CE%9D.pdf'),
             ),
             'note' => 'Στο αρχικό φύλλο το κελί του 2025–2026 έδειχνε 30/04/2025. Η επίσημη εγκύκλιος επιβεβαιώνει 30/04/2026.',
         ),
@@ -419,11 +422,15 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('21–29/05/2020','10–17/05/2021','17–26/05/2022','29/03–11/04/2023','22/04–01/05/2024','30/04–12/05/2025','04–15/05/2026'),
+            'verified_history_indices' => array(1,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μετατάξεων 2026',
                     'url' => 'https://www.minedu.gov.gr/publications/docs2023/52463%CE%952_30-04-2026_9%CE%A9%CE%93%CE%A346%CE%9D%CE%9A%CE%A0%CE%94-%CE%A5%CE%97%CE%92.pdf',
                 ),
+            ),
+            'historical_sources' => array(
+                array('year' => '2020-2021', 'label' => 'ΔΠΕ Ηρακλείου — 50923/Ε2/07-05-2021, αιτήσεις 10–17/05/2021', 'url' => 'https://dipeira.gov.gr/wp-content/uploads/2021/05/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%93%CE%99%CE%91-%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%99%CE%A3-%CE%95%CE%9A%CE%A0%CE%91%CE%99%CE%94%CE%95%CE%A5%CE%A4%CE%99%CE%9A%CE%A9%CE%9D.pdf'),
             ),
             'note' => 'Η εγκύκλιος αναφέρει αιτήσεις από Δευτέρα 04/05 έως Παρασκευή 15/05/2026.',
         ),
@@ -460,11 +467,15 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('15/06/2020','31/05/2021','10/06/2022','28/04/2023','15/05/2024','23/05/2025','27/05/2026'),
+            'verified_history_indices' => array(1,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μετατάξεων 52463/Ε2/30-04-2026',
                     'url' => 'https://www.minedu.gov.gr/publications/docs2023/52463%CE%952_30-04-2026_9%CE%A9%CE%93%CE%A346%CE%9D%CE%9A%CE%A0%CE%94-%CE%A5%CE%97%CE%92.pdf',
                 ),
+            ),
+            'historical_sources' => array(
+                array('year' => '2020-2021', 'label' => 'ΔΠΕ Ηρακλείου — 50923/Ε2/07-05-2021, ανάκληση έως 31/05/2021', 'url' => 'https://dipeira.gov.gr/wp-content/uploads/2021/05/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%93%CE%99%CE%91-%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%99%CE%A3-%CE%95%CE%9A%CE%A0%CE%91%CE%99%CE%94%CE%95%CE%A5%CE%A4%CE%99%CE%9A%CE%A9%CE%9D.pdf'),
             ),
             'note' => 'Η εγκύκλιος ορίζει ηλεκτρονική ανάκληση της αίτησης μετάταξης έως και την Τετάρτη 27/05/2026.',
         ),
@@ -657,15 +668,23 @@ return array(
             'latest' => '25/08/2026',
             'latest_verified' => true,
             'source_coverage' => 'latest',
-            'history' => array(null,'21/08/2021','17/08/2022','17/08/2023','21/08/2024','27/08/2025','25/08/2026'),
-            'verified_history_indices' => array(2,4,5,6),
+            'history' => array(null,'12/08/2021','17/08/2022','17/08/2023','21/08/2024','27/08/2025','25/08/2026'),
+            'verified_history_indices' => array(1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Πρόσκληση νεοδιοριζόμενων για απόσπαση 2026',
                     'url' => 'https://www.minedu.gov.gr/site/70699-25-08-26-prosklese-neodiorizomenon-ekpaideutikon-gia-ypobole-aiteseon-apospases',
                 ),
             ),
-            'note' => 'Αφορά νεοδιοριζόμενους Π.Ε./Δ.Ε. και τις προβλεπόμενες περιπτώσεις συζύγων/συμβιούντων.',
+            'historical_sources' => array(
+                array('year' => '2020-2021', 'label' => 'ΔΔΕ Μεσσηνίας — επίσημο αντίγραφο 100239/Ε2/12-08-2021', 'url' => 'https://dide.mes.sch.gr/2021/August/2021-08-12-apospasi-apo-pysde-se-pysde-neodioristwn-eidikis-katigorias.pdf'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — 101238/Ε2/17-08-2022', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%A8%CE%96%CE%A6246%CE%9C%CE%A4%CE%9B%CE%97-%CE%924%CE%96.pdf'),
+                array('year' => '2022-2023', 'label' => 'ΔΔΕ Λέσβου — επίσημο αντίγραφο 91225/Ε2/17-08-2023', 'url' => 'https://ddelesvou.gr/wp-content/uploads/2023/08/APOSPASEIS-NEODIORISTOI.pdf'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — 94121/Ε2/21-08-2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/94121%CE%952_21-08-2024_%CE%95%CE%9D%CE%97%CE%9C%CE%95%CE%A1%CE%A9%CE%A3%CE%97_%CE%9D%CE%95%CE%9F%CE%94%CE%99%CE%9F%CE%A1%CE%99%CE%A3%CE%A4%CE%A9%CE%9D_2024_6%CE%A6%CE%A5746%CE%9D%CE%9A%CE%A0%CE%94-5%CE%A86.pdf'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — 103036/Ε2/27-08-2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/103036%CE%952_27-08-2025_%CE%A0%CE%A1%CE%9F%CE%A3%CE%9A%CE%9B%CE%97%CE%A3%CE%97_%CE%9D%CE%95%CE%9F%CE%94%CE%99%CE%9F%CE%A1%CE%99%CE%A3%CE%A4%CE%A9%CE%9D_%CE%A80%CE%A0246%CE%9D%CE%9A%CE%A0%CE%94-%CE%9A%CE%A61.pdf'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — πρόσκληση νεοδιοριζόμενων 25/08/2026', 'url' => 'https://www.minedu.gov.gr/site/70699-25-08-26-prosklese-neodiorizomenon-ekpaideutikon-gia-ypobole-aiteseon-apospases'),
+            ),
+            'note' => 'Η ιστορική σειρά 2021–2026 έχει διασταυρωθεί ανά κύκλο. Για το 2021 διορθώθηκε η ημερομηνία από 21/08 σε 12/08/2021, δηλαδή την ημερομηνία του εγγράφου 100239/Ε2.',
         ),
         array(
             'id' => 'newly-appointed-detachment-applications',
@@ -674,7 +693,8 @@ return array(
             'latest' => '26/08–01/09/2026',
             'latest_verified' => true,
             'source_coverage' => 'latest',
-            'history' => array(null,'21–24/08/2021','19–23/08/2022','21–23/08/2023','28/08–04/09/2024','29/08–03/09/2025','26/08–01/09/2026'),
+            'history' => array(null,'έως 24/08/2021 15:00','19–23/08/2022 15:00','21–23/08/2023','28/08–04/09/2024','29/08–03/09/2025','26/08–01/09/2026'),
+            'verified_history_indices' => array(1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Πρόσκληση νεοδιοριζόμενων 25/08/2026',
@@ -685,7 +705,15 @@ return array(
                     'url' => 'https://kmaked.pde.sch.gr/2026/08/26/prosklisi-neodiorizomenon-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-kai-syzygon-symviounton-afton-gia-ypovoli-aitiseon-apospasis-apo-pyspe-pysde-se-pyspe-pysde-kai-se-domes-tis-eidik/',
                 ),
             ),
-            'note' => 'Η επίσημη περιφερειακή ανάρτηση της εγκυκλίου 110726/Ε2/25-08-2026 επιβεβαιώνει υποβολή αιτήσεων στο ΟΠΣΥΔ από 26/08 έως και 01/09/2026.',
+            'historical_sources' => array(
+                array('year' => '2020-2021', 'label' => 'ΔΔΕ Μεσσηνίας — 100239/Ε2/12-08-2021, λήξη 24/08/2021 15:00', 'url' => 'https://dide.mes.sch.gr/2021/August/2021-08-12-apospasi-apo-pysde-se-pysde-neodioristwn-eidikis-katigorias.pdf'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — 101238/Ε2/17-08-2022, αιτήσεις 19–23/08/2022 15:00', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%A8%CE%96%CE%A6246%CE%9C%CE%A4%CE%9B%CE%97-%CE%924%CE%96.pdf'),
+                array('year' => '2022-2023', 'label' => 'ΔΔΕ Λέσβου — 91225/Ε2/17-08-2023, αιτήσεις 21–23/08/2023', 'url' => 'https://ddelesvou.gr/wp-content/uploads/2023/08/APOSPASEIS-NEODIORISTOI.pdf'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — 94121/Ε2/21-08-2024, αιτήσεις 28/08–04/09/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/94121%CE%952_21-08-2024_%CE%95%CE%9D%CE%97%CE%9C%CE%95%CE%A1%CE%A9%CE%A3%CE%97_%CE%9D%CE%95%CE%9F%CE%94%CE%99%CE%9F%CE%A1%CE%99%CE%A3%CE%A4%CE%A9%CE%9D_2024_6%CE%A6%CE%A5746%CE%9D%CE%9A%CE%A0%CE%94-5%CE%A86.pdf'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — 103036/Ε2/27-08-2025, αιτήσεις 29/08–03/09/2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/103036%CE%952_27-08-2025_%CE%A0%CE%A1%CE%9F%CE%A3%CE%9A%CE%9B%CE%97%CE%A3%CE%97_%CE%9D%CE%95%CE%9F%CE%94%CE%99%CE%9F%CE%A1%CE%99%CE%A3%CE%A4%CE%A9%CE%9D_%CE%A80%CE%A0246%CE%9D%CE%9A%CE%A0%CE%94-%CE%9A%CE%A61.pdf'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — πρόσκληση 25/08/2026, αιτήσεις 26/08–01/09/2026', 'url' => 'https://www.minedu.gov.gr/site/70699-25-08-26-prosklese-neodiorizomenon-ekpaideutikon-gia-ypobole-aiteseon-apospases'),
+            ),
+            'note' => 'Οι περίοδοι 2021–2026 έχουν διασταυρωθεί στις αντίστοιχες προσκλήσεις. Για το 2021 το έγγραφο ορίζει μόνο καταληκτική ημερομηνία 24/08/2021 και ώρα 15:00, χωρίς ρητή ημερομηνία έναρξης· γι’ αυτό δεν εμφανίζεται πλασματικό εύρος.',
         ),
     ),
 );
