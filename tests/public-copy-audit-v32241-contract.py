@@ -74,10 +74,14 @@ for name, phrases in required.items():
 
 config = (ROOT / 'includes/config.php').read_text(encoding='utf-8')
 worker = (ROOT / 'service-worker.js').read_text(encoding='utf-8')
-if "define('EDU_TOOLS_VERSION', '3.22.41');" not in config:
-    failures.append('includes/config.php: EDU_TOOLS_VERSION is not 3.22.41')
-if "CACHE_PREFIX + '3.22.41'" not in worker:
-    failures.append('service-worker.js: cache is not 3.22.41')
+import re
+ver = re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'", config)
+cache = re.search(r"CACHE_PREFIX \+ '([0-9.]+)'", worker)
+def version_tuple(v): return tuple(int(x) for x in v.split('.'))
+if not ver or version_tuple(ver.group(1)) < (3,22,41):
+    failures.append('includes/config.php: EDU_TOOLS_VERSION is older than 3.22.41')
+if not cache or version_tuple(cache.group(1)) < (3,22,41):
+    failures.append('service-worker.js: cache is older than 3.22.41')
 
 if failures:
     raise SystemExit('\n'.join(failures))

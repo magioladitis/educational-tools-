@@ -47,3 +47,11 @@ After deploying a new version, reload once and confirm that `service-worker.js` 
 3. Μετά τον τελικό έλεγχο, το viewport μετακινείται στο αποτέλεσμα· το «Επεξεργασία στοιχείων ↑» επιστρέφει στο τελευταίο πεδίο.
 4. Σε ελλιπείς απαντήσεις eligibility, εμφανίζεται κοινή περίληψη validation, `aria-invalid=true` και focus στο πρώτο αναπάντητο πεδίο αντί για scroll στο αποτέλεσμα.
 5. Στο mobile hero εμφανίζεται μόνο ο τίτλος και το διακριτικό `i`. Με πάτημα στο `i` εμφανίζονται εισαγωγή/meta/badges, το `aria-expanded` ενημερώνεται σωστά και στο desktop όλο το περιεχόμενο παραμένει μόνιμα ορατό.
+
+## 2026-09-28 — Service timeline EEP-EVP detachment source completion (v3.22.43)
+
+- Completed per-year official-source coverage for `eep-ebp-detachments` across 2020–2026.
+- Corrected the 2024 central application window from the stale local-process value `15–17/07/2024` to the official central invitation window `22/04–01/05/2024` (41510/Ε4/19-04-2024).
+- Added the previously missing 2020 and 2021 central windows: `19–26/05/2020` and `20–27/05/2021`.
+- Added full `historical_sources` and `verified_history_indices` coverage and a regression guard preventing the stale July 2024 value from returning to this card.
+- Release/cache version: `3.22.43`.

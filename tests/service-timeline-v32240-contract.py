@@ -49,7 +49,11 @@ check('current-cycle message is user-facing', 'Μόλις υπάρξει επί�
 check('source labels are user-facing', '<summary>Επίσημες πηγές</summary>' in PAGE and '<summary>Πηγές προηγούμενων ετών</summary>' in PAGE)
 check('history explanation is user-facing', 'Το ✓ δείχνει ότι η συγκεκριμένη ιστορική ημερομηνία έχει επιβεβαιωθεί' in PAGE)
 check('verified-only filter is conditional', '$hasUnverified' in PAGE and '<?php if ($hasUnverified) { ?>' in PAGE)
-check('transfer result gives actionable no-common-deadline guidance', 'δεν υπάρχει μία ενιαία προθεσμία για όλες τις περιπτώσεις' in block('transfer-results'))
+if "'id' => 'transfer-results'" in DATA:
+    transfer_copy = block('transfer-results')
+else:
+    transfer_copy = block('transfer-results-educators') + block('transfer-results-eep-evp')
+check('transfer result gives actionable category-specific guidance', 'αντίστοιχης ανακοίνωσης' in transfer_copy or 'χωριστά από τις μεταθέσεις εκπαιδευτικών' in transfer_copy)
 
 import re
 ver = re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'", CONFIG)
