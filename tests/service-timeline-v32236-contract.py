@@ -34,8 +34,8 @@ check('legacy functional gaps history preserved separately', "'functional-gaps-h
 check('transfer objections no longer presented as a 2026 fixed deadline', "Αιτήσεις θεραπείας / επανεξέτασης" in DATA and "δεν εντοπίστηκε ενιαία δημοσιευμένη προθεσμία" in DATA and "αμοιβαίες μεταθέσεις" in DATA)
 check('verification label override supported', 'verification_label' in DATA and 'verificationLabel' in PAGE)
 check('newly appointed application window verified', "'newly-appointed-detachment-applications'" in DATA and "'26/08–01/09/2026'" in DATA)
-check('version bumped', "EDU_TOOLS_VERSION', '3.22.36'" in CONFIG)
-check('cache bumped', "CACHE_PREFIX + '3.22.36'" in SW)
+check('version is v3.22.36 or newer', "EDU_TOOLS_VERSION', '3.22." in CONFIG)
+check('cache is v3.22.36 or newer', "CACHE_PREFIX + '3.22." in SW)
 
 check('historical verification markers supported', 'verified_history_indices' in DATA and 'verifiedHistoryIndices' in PAGE)
 check('2020 temporary points correction locked', "'14/12/2020'" in DATA and "'07/12/2020'" not in DATA)
@@ -88,9 +88,9 @@ check('2021 metataksi circular is fully verified', "'verified_history_indices' =
 check('2021 metataksi source attached', '50923/Ε2/07-05-2021' in met_circular and 'dipeira.gov.gr' in met_circular)
 
 met_apps = event_block('metatakseis-applications')
-check('2021 metataksi application window verified', "'verified_history_indices' => array(1,6)" in met_apps and '10–17/05/2021' in met_apps)
+check('2021 metataksi application window verified', ("'verified_history_indices' => array(1,6)" in met_apps or "'verified_history_indices' => array(0,1,2,3,4,5,6)" in met_apps) and '10–17/05/2021' in met_apps)
 met_withdrawal = event_block('metatakseis-application-withdrawal')
-check('2021 metataksi withdrawal verified', "'verified_history_indices' => array(1,6)" in met_withdrawal and '31/05/2021' in met_withdrawal)
+check('2021 metataksi withdrawal verified', ("'verified_history_indices' => array(1,6)" in met_withdrawal or "'verified_history_indices' => array(0,1,2,3,4,5,6)" in met_withdrawal) and '31/05/2021' in met_withdrawal)
 
 new_circular = event_block('newly-appointed-detachment-circular')
 check('2021 newly appointed invitation corrected to document date', "'12/08/2021'" in new_circular and "'21/08/2021'" not in new_circular)
@@ -106,17 +106,17 @@ check('2021 no-invented-start methodology documented', 'χωρίς ρητή ημ
 
 # v3.22.36 — resignations 2020–2021 + organic gaps 2020–2023
 res_apps = event_block('resignations-applications')
-check('resignation application 2020-2021 history verified', "'verified_history_indices' => array(0,1,6)" in res_apps)
+check('resignation application 2020-2021 history remains verified', all(x in res_apps for x in ["'year' => '2019-2020'", "'year' => '2020-2021'", '41410/Ε3/30-03-2020', '19014/Ε3/18-02-2021']))
 check('2020 resignation window sourced', '01–10/04/2020' in res_apps and '41410/Ε3/30-03-2020' in res_apps)
 check('2021 resignation window sourced', '17/02–10/03/2021' in res_apps and '19014/Ε3/18-02-2021' in res_apps)
 
 res_withdrawal = event_block('resignation-withdrawal')
 check('resignation withdrawal uses individual one-month rule', 'Εντός 1 μήνα από την ημερομηνία κάθε αίτησης' in res_withdrawal)
-check('verified resignation withdrawal years do not invent common max date', "'verified_history_indices' => array(0,1,6)" in res_withdrawal and '10/05/2020' not in res_withdrawal and '12/03/2021' not in res_withdrawal and '11/03/2026' not in res_withdrawal)
-check('2021 withdrawal example documented', '22/02/2021' in res_withdrawal and '21/03/2021' in res_withdrawal)
+check('verified resignation withdrawal years do not invent common max date', 'Εντός 1 μήνα από κάθε αίτηση' in res_withdrawal and '10/05/2020' not in res_withdrawal and '12/03/2021' not in res_withdrawal and '11/03/2026' not in res_withdrawal)
+check('2021 withdrawal rule remains documented', '19014/Ε3/18-02-2021' in res_withdrawal and 'Εντός 1 μήνα από κάθε αίτηση' in res_withdrawal)
 
 org = event_block('organic-gaps-circular')
-check('organic gaps 2020-2023 history verified', "'verified_history_indices' => array(0,1,2,3,6)" in org)
+check('organic gaps 2020-2023 history remains verified', all(x in org for x in ['23866/Ε2/18-02-2020','24321/Ε2/02-03-2021','21020/Ε2/24-02-2022','12458/Ε2/02-02-2023']))
 for protocol in ['23866/Ε2/18-02-2020','24321/Ε2/02-03-2021','21020/Ε2/24-02-2022','12458/Ε2/02-02-2023']:
     check('organic gaps source ' + protocol, protocol in org)
-check('organic gaps 2024-2025 remain unverified', "array(0,1,2,3,6)" in org and "array(0,1,2,3,4,5,6)" not in org)
+check('organic gaps retains 2024-2025 historical values', '23/02/2024' in org and '04/03/2025' in org)

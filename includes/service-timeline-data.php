@@ -142,7 +142,7 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('01–10/04/2020','17/02–10/03/2021','01–11/02/2022','01–13/02/2023','01–12/02/2024','01–11/02/2025','02–11/02/2026'),
-            'verified_history_indices' => array(0,1,6),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Υποβολή αιτήσεων παραίτησης 2025–2026 (11087/Ε3/29-01-2026)',
@@ -160,8 +160,28 @@ return array(
                     'label' => 'ΔΔΕ Λέσβου — αντίγραφο εγκυκλίου 19014/Ε3/18-02-2021: αιτήσεις 17/02–10/03/2021',
                     'url' => 'https://ddelesvou.gr/wp-content/uploads/2023/02/19014_%CE%A4%CE%A1%CE%9F%CE%A0%CE%9F%CE%99%CE%97%CE%A3%CE%97_%CE%A0%CE%A1%CE%9F%CE%98%CE%95%CE%A3%CE%9C%CE%99%CE%A9%CE%9D_%CE%91%CE%99%CE%A4._%CE%A0%CE%91%CE%A1%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%97%CE%A3_%CE%9F%CE%94%CE%97%CE%93%CE%99%CE%95%CE%A3_%CE%93%CE%99%CE%91_%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%95%CE%99%CE%A3_%CE%A3%CE%A7._%CE%88%CE%A4._2020-21_%CE%A8%CE%9B%CE%95%CE%A146%CE%9C%CE%A4%CE%9B%CE%97-%CE%A95%CE%9A.pdf',
                 ),
+                array(
+                    'year' => '2021-2022',
+                    'label' => 'ΔΔΕ Ανατολικής Θεσσαλονίκης — 4696/Ε3/14-01-2022: αιτήσεις 01–11/02/2022',
+                    'url' => 'https://srv-dide-a.thess.sch.gr/portal2/index.php?Itemid=116&catid=307&id=9915%3A2022&option=com_content&view=article',
+                ),
+                array(
+                    'year' => '2022-2023',
+                    'label' => 'ΔΔΕ Αιτωλοακαρνανίας — 7297/Ε3/23-01-2023: αιτήσεις 01–13/02/2023',
+                    'url' => 'https://www.dide.ait.sch.gr/index.php/teachers/sintaxeis',
+                ),
+                array(
+                    'year' => '2023-2024',
+                    'label' => 'ΔΔΕ Λακωνίας — 5420/Ε3/18-01-2024: αιτήσεις 01–12/02/2024',
+                    'url' => 'https://dide.lak.sch.gr/2024/01/paraitiseis-ekpaideytikon-eep-ebp-2023-2024/',
+                ),
+                array(
+                    'year' => '2024-2025',
+                    'label' => 'ΔΠΕ Μεσσηνίας — 8298/Ε3/27-01-2025: αιτήσεις 01–11/02/2025',
+                    'url' => 'https://dipe.mes.sch.gr/?p=26725',
+                ),
             ),
-            'note' => 'Η επίσημη εγκύκλιος επιτρέπει ηλεκτρονική υποβολή από 01/02/2026 (πρωτοκόλληση 02/02) και δια ζώσης από 02/02 έως 11/02/2026. Για το 2020 επιβεβαιώθηκε το εύρος 01–10/04 και για το 2021 το έκτακτο εύρος 17/02–10/03. Το ιστορικό κελί 2025–2026 κρατά το υπηρεσιακό εύρος 02–11/02.',
+            'note' => 'Η ιστορική σειρά αιτήσεων παραίτησης 2020–2026 έχει πλέον διασταυρωθεί ανά κύκλο. Επιβεβαιώνονται 01–10/04/2020, 17/02–10/03/2021, 01–11/02/2022, 01–13/02/2023, 01–12/02/2024 και 01–11/02/2025. Για το 2026 η επίσημη εγκύκλιος επιτρέπει ηλεκτρονική υποβολή από 01/02 (πρωτοκόλληση 02/02) και δια ζώσης 02–11/02, ενώ το ιστορικό κελί κρατά το υπηρεσιακό εύρος 02–11/02.',
         ),
         array(
             'id' => 'organic-gaps-circular',
@@ -171,7 +191,7 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'official-reference',
             'history' => array('18/02/2020','02/03/2021','24/02/2022','02/02/2023','23/02/2024','04/03/2025','03/03/2026'),
-            'verified_history_indices' => array(0,1,2,3,6),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΔΔΕ Αργολίδας — επίσημο έγγραφο που παραπέμπει στις εγκυκλίους 25616/Ε2 και 25644/Ε2/03-03-2026',
@@ -199,8 +219,18 @@ return array(
                     'label' => 'ΔΔΕ Κέρκυρας — επίσημη απόφαση που παραπέμπει στις 12458/Ε2 και 12377/Ε2/02-02-2023',
                     'url' => 'https://blogs.sch.gr/dideker/files/2023/06/%CE%91%CE%A0%CE%9F%CE%A6%CE%91%CE%A3%CE%97_%CE%9F%CE%A1%CE%93%CE%91%CE%9D%CE%99%CE%9A%CE%95%CE%A3-%CE%A4%CE%9F%CE%A0%CE%9F%CE%98%CE%95%CE%A4%CE%97%CE%A3%CE%97%CE%A3-%CE%93%CE%A0-2023_13%CE%B7-%CE%A0%CE%A1%CE%91%CE%9E%CE%97-%CE%A0%CE%A5%CE%A3%CE%94%CE%95-6%CE%A7%CE%9D546%CE%9C%CE%A4%CE%9B%CE%97-896.pdf',
                 ),
+                array(
+                    'year' => '2023-2024',
+                    'label' => 'ΔΔΕ Κέρκυρας — επίσημη απόφαση που παραπέμπει στις 19644 και 19687/Ε2/23-02-2024',
+                    'url' => 'https://blogs.sch.gr/dideker/files/2024/06/2024-%CE%91%CE%A0%CE%9F%CE%A6%CE%91%CE%A3%CE%97_%CE%9F%CE%A1%CE%93%CE%91%CE%9D%CE%99%CE%9A%CE%95%CE%A3-%CE%A4%CE%9F%CE%A0%CE%9F%CE%98%CE%95%CE%A4%CE%97%CE%A3%CE%97%CE%A3-%CE%93%CE%A0_12%CE%B7-%CE%A0%CE%A1%CE%91%CE%9E%CE%97-%CE%9F%CF%81%CE%B8%CE%AE-%CE%95%CF%80%CE%B1%CE%BD%CE%AC%CE%BB%CE%B7%CF%88%CE%B7-%CE%A87%CE%9A%CE%9546%CE%9D%CE%9A%CE%A0%CE%94-6%CE%9A9-1.pdf',
+                ),
+                array(
+                    'year' => '2024-2025',
+                    'label' => 'ΔΔΕ Αργολίδας — επίσημο έγγραφο που παραπέμπει στις 24061/Ε2 και 24073/Ε2/04-03-2025',
+                    'url' => 'https://dide.arg.sch.gr/site/wp-content/uploads/2025/03/%CE%95%CE%9D%CE%97%CE%9C%CE%95%CE%A1%CE%A9%CE%A3%CE%97-%CE%93%CE%99%CE%91-%CE%A5%CE%A0%CE%95%CE%A1%CE%91%CE%A1%CE%99%CE%98%CE%9C%CE%99%CE%95%CE%A3-%CE%9A%CE%91%CE%99-%CE%9F%CE%A1%CE%93%CE%91%CE%9D%CE%99%CE%9A%CE%91-%CE%9A%CE%95%CE%9D%CE%91-2025.pdf',
+                ),
             ),
-            'note' => 'Η ημερομηνία 2026 και οι αριθμοί πρωτοκόλλου επιβεβαιώνονται από επίσημο υπηρεσιακό έγγραφο ΔΔΕ που εφαρμόζει τις εγκυκλίους ΥΠΑΙΘΑ. Για τη Γενική Δ.Ε. διασταυρώθηκαν επίσης οι εγκύκλιοι 23866/Ε2/18-02-2020, 24321/Ε2/02-03-2021, 21020/Ε2/24-02-2022 και 12458/Ε2/02-02-2023. Οι τιμές 2024–2025 παραμένουν προς ξεχωριστή ιστορική τεκμηρίωση.',
+            'note' => 'Η σειρά 2020–2026 έχει πλέον πλήρη ιστορική τεκμηρίωση για τη Γενική Δ.Ε.: 23866/Ε2/18-02-2020, 24321/Ε2/02-03-2021, 21020/Ε2/24-02-2022, 12458/Ε2/02-02-2023, 19644/23-02-2024, 24061/Ε2/04-03-2025 και 25616/Ε2/03-03-2026. Οι παράλληλες εγκύκλιοι ΕΑΕ/ΚΕΔΑΣΥ επιβεβαιώνουν τις ίδιες ημερομηνίες στους κύκλους 2024–2026.',
         ),
         array(
             'id' => 'resignation-withdrawal',
@@ -209,8 +239,8 @@ return array(
             'latest' => 'Εντός 1 μήνα από την ημερομηνία κάθε αίτησης',
             'latest_verified' => true,
             'source_coverage' => 'latest',
-            'history' => array('Εντός 1 μήνα από κάθε αίτηση','Εντός 1 μήνα από κάθε αίτηση','13/03/2022','14/03/2023','13/03/2024','11/03/2025','Εντός 1 μήνα από κάθε αίτηση'),
-            'verified_history_indices' => array(0,1,6),
+            'history' => array('Εντός 1 μήνα από κάθε αίτηση','Εντός 1 μήνα από κάθε αίτηση','Εντός 1 μήνα από κάθε αίτηση','Εντός 1 μήνα από κάθε αίτηση','Εντός 1 μήνα από κάθε αίτηση','Εντός 1 μήνα από κάθε αίτηση','Εντός 1 μήνα από κάθε αίτηση'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Υποβολή αιτήσεων παραίτησης 2025–2026 (11087/Ε3/29-01-2026)',
@@ -228,8 +258,28 @@ return array(
                     'label' => 'ΔΔΕ Λέσβου — αντίγραφο 19014/Ε3/18-02-2021: ανάκληση εντός 1 μηνός από την αίτηση',
                     'url' => 'https://ddelesvou.gr/wp-content/uploads/2023/02/19014_%CE%A4%CE%A1%CE%9F%CE%A0%CE%9F%CE%99%CE%97%CE%A3%CE%97_%CE%A0%CE%A1%CE%9F%CE%98%CE%95%CE%A3%CE%9C%CE%99%CE%A9%CE%9D_%CE%91%CE%99%CE%A4._%CE%A0%CE%91%CE%A1%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%97%CE%A3_%CE%9F%CE%94%CE%97%CE%93%CE%99%CE%95%CE%A3_%CE%93%CE%99%CE%91_%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%95%CE%99%CE%A3_%CE%A3%CE%A7._%CE%88%CE%A4._2020-21_%CE%A8%CE%9B%CE%95%CE%A146%CE%9C%CE%A4%CE%9B%CE%97-%CE%A95%CE%9A.pdf',
                 ),
+                array(
+                    'year' => '2021-2022',
+                    'label' => 'ΥΠΑΙΘ — 28597/Ε3/15-03-2022: επιβεβαίωση κανόνα ενός μήνα (έως 11/03 για αιτήσεις 11/02)',
+                    'url' => 'https://dide-new.flo.sch.gr/wp-content/uploads/2022/03/2022_28597_E3_%CE%9A%CE%91%CE%A4%CE%91%CE%A7%CE%A9%CE%A1%CE%99%CE%A3%CE%97_%CE%A3%CE%A4%CE%9F%CE%99%CE%A7%CE%95%CE%99%CE%A9%CE%9D_%CE%A3%CE%A4%CE%9F_MYSCHOOL.pdf',
+                ),
+                array(
+                    'year' => '2022-2023',
+                    'label' => 'ΔΔΕ Αιτωλοακαρνανίας — 7297/Ε3/23-01-2023: ανάκληση εντός ενός μήνα από κάθε αίτηση',
+                    'url' => 'https://www.dide.ait.sch.gr/index.php/teachers/sintaxeis',
+                ),
+                array(
+                    'year' => '2023-2024',
+                    'label' => 'ΔΠΕ Ηρακλείου — λήξη τελευταίας δυνατότητας ανάκλησης 12/03/2024, με κανόνα ενός μήνα',
+                    'url' => 'https://dipeira.gov.gr/syntaksiodotiseis-ekpaideftikon-a-thmias-ekpaidefsis-irakleiou-2024/',
+                ),
+                array(
+                    'year' => '2024-2025',
+                    'label' => 'ΔΠΕ Λασιθίου — πίνακας ανάκλησης ανά ημερομηνία αίτησης, έως 11/03/2025 για αίτηση 11/02',
+                    'url' => 'https://dipe.las.sch.gr/wp-content/uploads/2025/01/%CE%A0%CE%91%CE%A1%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%95%CE%99%CE%A3-%CE%95%CE%9A%CE%A0%CE%91%CE%99%CE%94%CE%95%CE%A5%CE%A4%CE%99%CE%9A%CE%A9%CE%9D-%CE%94%CE%99%CE%9A%CE%91%CE%99%CE%9F%CE%9B%CE%9F%CE%93%CE%97%CE%A4%CE%99%CE%9A%CE%91-%CE%A3%CE%A5%CE%9D%CE%A4%CE%91%CE%9E%CE%99%CE%9F%CE%94%CE%9F%CE%A4%CE%97%CE%A3%CE%97%CE%A3-2025ws.pdf',
+                ),
             ),
-            'note' => 'Δεν υπάρχει μία κοινή καταληκτική ημερομηνία για όλους: η αποκλειστική προθεσμία ανάκλησης είναι ένας μήνας από την ημερομηνία της αρχικής αίτησης. Η εγκύκλιος 19014/Ε3/18-02-2021 δίνει ρητό παράδειγμα: αίτηση 22/02/2021 μπορεί να ανακληθεί έως 21/03/2021. Για αυτό δεν παράγεται τεχνητό ενιαίο deadline για τα επαληθευμένα έτη. Οι ακριβείς ημερομηνίες 2022–2025 παραμένουν τιμές του ιστορικού αρχείου μέχρι να ελεγχθούν χωριστά.',
+            'note' => 'Η σειρά έχει πλέον ελεγχθεί για όλους τους κύκλους 2020–2026. Δεν υπάρχει μία κοινή καταληκτική ημερομηνία για όλους: η αποκλειστική προθεσμία είναι ένας μήνας από την ημερομηνία της κάθε αρχικής αίτησης. Για αυτό οι παλιές μονοήμερες τιμές 2022–2025 αφαιρέθηκαν από το ιστορικό ως παραπλανητικές γενικεύσεις. Ενδεικτικά, το ΥΠΑΙΘ επιβεβαίωσε ότι οι αιτήσεις της 11/02/2022 μπορούσαν να ανακληθούν έως 11/03/2022, ενώ το 2024 η τελευταία δυνατή ημερομηνία ήταν 12/03 και το 2025 η 11/03 μόνο για τις αιτήσεις που είχαν κατατεθεί την τελευταία αντίστοιχη ημέρα.',
         ),
         array(
             'id' => 'transfer-results',
@@ -459,9 +509,14 @@ return array(
                 ),
             ),
             'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — 59720/Ε2/20-05-2020', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/59720E2_20-05-2020_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_%CE%91%CE%94%CE%91_6%CE%9F8%CE%9246%CE%9C%CE%A4%CE%9B%CE%97-7%CE%94%CE%A1.pdf'),
                 array('year' => '2020-2021', 'label' => 'ΔΠΕ Ηρακλείου — επίσημο αντίγραφο 50923/Ε2/07-05-2021', 'url' => 'https://dipeira.gov.gr/wp-content/uploads/2021/05/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%93%CE%99%CE%91-%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%99%CE%A3-%CE%95%CE%9A%CE%A0%CE%91%CE%99%CE%94%CE%95%CE%A5%CE%A4%CE%99%CE%9A%CE%A9%CE%9D.pdf'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — 55292/Ε2/16-05-2022', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%A8%CE%A5%CE%A0%CE%A146%CE%9C%CE%A4%CE%9B%CE%97-%CE%A6%CE%A42_%CE%95%CE%B3%CE%BA%CF%8D%CE%BA%CE%BB%CE%B9%CE%BF%CF%82_%CE%BC%CE%B5%CF%84%CE%B1%CF%84%CE%AC%CE%BE%CE%B5%CF%89%CE%BD_2022.pdf'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — 36165/Ε2/29-03-2023', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%9A%CE%95%CE%94%CE%91%CE%A3%CE%A5_629%CE%A646%CE%9C%CE%A4%CE%9B%CE%97-%CE%94%CE%A3%CE%96_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_2023_2024.pdf'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — 41904/Ε2/19-04-2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%96%CE%A9%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%9E2%CE%9B_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_%CE%A3%CE%A7.%CE%95%CE%A4%CE%9F%CE%A5%CE%A3_2024-2025.pdf'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — 46071/Ε2/29-04-2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%9E5%CE%A946%CE%9D%CE%9A%CE%A0%CE%94-%CE%92%CE%91%CE%A9_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D.pdf'),
             ),
-            'note' => 'Στο αρχικό φύλλο το κελί του 2025–2026 έδειχνε 30/04/2025. Η επίσημη εγκύκλιος επιβεβαιώνει 30/04/2026.',
+            'note' => 'Η σειρά 2020–2026 έχει διασταυρωθεί ανά έτος με την αντίστοιχη εγκύκλιο. Στο αρχικό φύλλο το κελί του 2025–2026 έδειχνε 30/04/2025· η επίσημη εγκύκλιος επιβεβαιώνει 30/04/2026.',
         ),
         array(
             'id' => 'metatakseis-applications',
@@ -471,7 +526,7 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('21–29/05/2020','10–17/05/2021','17–26/05/2022','29/03–11/04/2023','22/04–01/05/2024','30/04–12/05/2025','04–15/05/2026'),
-            'verified_history_indices' => array(1,6),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μετατάξεων 2026',
@@ -479,9 +534,14 @@ return array(
                 ),
             ),
             'historical_sources' => array(
-                array('year' => '2020-2021', 'label' => 'ΔΠΕ Ηρακλείου — 50923/Ε2/07-05-2021, αιτήσεις 10–17/05/2021', 'url' => 'https://dipeira.gov.gr/wp-content/uploads/2021/05/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%93%CE%99%CE%91-%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%99%CE%A3-%CE%95%CE%9A%CE%A0%CE%91%CE%99%CE%94%CE%95%CE%A5%CE%A4%CE%99%CE%9A%CE%A9%CE%9D.pdf'),
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — 59720/Ε2, αιτήσεις 21–29/05/2020', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/59720E2_20-05-2020_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_%CE%91%CE%94%CE%91_6%CE%9F8%CE%9246%CE%9C%CE%A4%CE%9B%CE%97-7%CE%94%CE%A1.pdf'),
+                array('year' => '2020-2021', 'label' => 'ΔΠΕ Ηρακλείου — 50923/Ε2, αιτήσεις 10–17/05/2021', 'url' => 'https://dipeira.gov.gr/wp-content/uploads/2021/05/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%93%CE%99%CE%91-%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%99%CE%A3-%CE%95%CE%9A%CE%A0%CE%91%CE%99%CE%94%CE%95%CE%A5%CE%A4%CE%99%CE%9A%CE%A9%CE%9D.pdf'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — 55292/Ε2, αιτήσεις 17–26/05/2022', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%A8%CE%A5%CE%A0%CE%A146%CE%9C%CE%A4%CE%9B%CE%97-%CE%A6%CE%A42_%CE%95%CE%B3%CE%BA%CF%8D%CE%BA%CE%BB%CE%B9%CE%BF%CF%82_%CE%BC%CE%B5%CF%84%CE%B1%CF%84%CE%AC%CE%BE%CE%B5%CF%89%CE%BD_2022.pdf'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — 36165/Ε2, αιτήσεις 29/03–11/04/2023', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%9A%CE%95%CE%94%CE%91%CE%A3%CE%A5_629%CE%A646%CE%9C%CE%A4%CE%9B%CE%97-%CE%94%CE%A3%CE%96_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_2023_2024.pdf'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — 41904/Ε2, αιτήσεις 22/04–01/05/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%96%CE%A9%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%9E2%CE%9B_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_%CE%A3%CE%A7.%CE%95%CE%A4%CE%9F%CE%A5%CE%A3_2024-2025.pdf'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — 46071/Ε2, αιτήσεις 30/04–12/05/2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%9E5%CE%A946%CE%9D%CE%9A%CE%A0%CE%94-%CE%92%CE%91%CE%A9_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D.pdf'),
             ),
-            'note' => 'Η εγκύκλιος αναφέρει αιτήσεις από Δευτέρα 04/05 έως Παρασκευή 15/05/2026.',
+            'note' => 'Η περίοδος υποβολής αιτήσεων έχει διασταυρωθεί για όλους τους κύκλους 2020–2026 από τις αντίστοιχες εγκυκλίους μετατάξεων.',
         ),
         array(
             'id' => 'detachment-application-withdrawal',
@@ -516,7 +576,7 @@ return array(
             'latest_verified' => true,
             'source_coverage' => 'latest',
             'history' => array('15/06/2020','31/05/2021','10/06/2022','28/04/2023','15/05/2024','23/05/2025','27/05/2026'),
-            'verified_history_indices' => array(1,6),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μετατάξεων 52463/Ε2/30-04-2026',
@@ -524,9 +584,14 @@ return array(
                 ),
             ),
             'historical_sources' => array(
-                array('year' => '2020-2021', 'label' => 'ΔΠΕ Ηρακλείου — 50923/Ε2/07-05-2021, ανάκληση έως 31/05/2021', 'url' => 'https://dipeira.gov.gr/wp-content/uploads/2021/05/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%93%CE%99%CE%91-%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%99%CE%A3-%CE%95%CE%9A%CE%A0%CE%91%CE%99%CE%94%CE%95%CE%A5%CE%A4%CE%99%CE%9A%CE%A9%CE%9D.pdf'),
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — 59720/Ε2, ανάκληση έως 15/06/2020', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/59720E2_20-05-2020_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_%CE%91%CE%94%CE%91_6%CE%9F8%CE%9246%CE%9C%CE%A4%CE%9B%CE%97-7%CE%94%CE%A1.pdf'),
+                array('year' => '2020-2021', 'label' => 'ΔΠΕ Ηρακλείου — 50923/Ε2, ανάκληση έως 31/05/2021', 'url' => 'https://dipeira.gov.gr/wp-content/uploads/2021/05/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%93%CE%99%CE%91-%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%99%CE%A3-%CE%95%CE%9A%CE%A0%CE%91%CE%99%CE%94%CE%95%CE%A5%CE%A4%CE%99%CE%9A%CE%A9%CE%9D.pdf'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — 55292/Ε2, ανάκληση έως 10/06/2022', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%A8%CE%A5%CE%A0%CE%A146%CE%9C%CE%A4%CE%9B%CE%97-%CE%A6%CE%A42_%CE%95%CE%B3%CE%BA%CF%8D%CE%BA%CE%BB%CE%B9%CE%BF%CF%82_%CE%BC%CE%B5%CF%84%CE%B1%CF%84%CE%AC%CE%BE%CE%B5%CF%89%CE%BD_2022.pdf'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — 36165/Ε2, ανάκληση έως 28/04/2023', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%9A%CE%95%CE%94%CE%91%CE%A3%CE%A5_629%CE%A646%CE%9C%CE%A4%CE%9B%CE%97-%CE%94%CE%A3%CE%96_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_2023_2024.pdf'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — 41904/Ε2, ανάκληση έως 15/05/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%96%CE%A9%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%9E2%CE%9B_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_%CE%A3%CE%A7.%CE%95%CE%A4%CE%9F%CE%A5%CE%A3_2024-2025.pdf'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — 46071/Ε2, ανάκληση έως 23/05/2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%9E5%CE%A946%CE%9D%CE%9A%CE%A0%CE%94-%CE%92%CE%91%CE%A9_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D.pdf'),
             ),
-            'note' => 'Η εγκύκλιος ορίζει ηλεκτρονική ανάκληση της αίτησης μετάταξης έως και την Τετάρτη 27/05/2026.',
+            'note' => 'Οι καταληκτικές ημερομηνίες ηλεκτρονικής ανάκλησης έχουν διασταυρωθεί για όλους τους κύκλους 2020–2026 από τις αντίστοιχες εγκυκλίους.',
         ),
         array(
             'id' => 'first-bodies-detachments',
@@ -535,7 +600,8 @@ return array(
             'latest' => '15/06/2026',
             'latest_verified' => true,
             'source_coverage' => 'latest',
-            'history' => array('22/06/2020','09/07/2021','17/06/2022','07/07/2023','27/05/2024','06/06/2025','15/06/2026'),
+            'history' => array('22/06/2020','09/07/2021','16/06/2022','07/07/2023','27/05/2024','06/06/2025','15/06/2026'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — επίσημη ενότητα κινητικότητας (αναρτήσεις 15/06/2026)',
@@ -546,7 +612,15 @@ return array(
                     'url' => 'https://www.minedu.gov.gr/site/65238-15-06-26-apospasi-ekpaideftikon-p-e-sto-dimotiko-sxoleio-tis-israilitikis-koinotitas-athinas-gia-to-sxoliko-etos-2026-2028',
                 ),
             ),
-            'note' => 'Στις 15/06/2026 εμφανίζονται οι πρώτες επιμέρους επίσημες αναρτήσεις που εντοπίστηκαν για φορείς/σχολικές δομές. Δεν σημαίνει ότι όλες οι κατηγορίες αποσπάσεων σε φορείς ανακοινώθηκαν την ίδια ημέρα.',
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — πρώτη εντοπισμένη επίσημη ανάρτηση φορέων 22/06/2020', 'url' => 'https://www.minedu.gov.gr/site/45452-22-06-20-apospaseis-ekpaideftikon-kladou-pe86-pliroforikis-sto-ypaith-kentriki-ypiresia-gia-to-sxoliko-etos-2020-2021'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — αποσπάσεις Π.Ε./Δ.Ε. σε φορείς 09/07/2021', 'url' => 'https://www.minedu.gov.gr/site/49419-09-07-21-apospaseis-ekpaideftikon-p-e-kai-d-e-se-foreis-aei'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — αποσπάσεις Δ.Ε. σε φορείς 16/06/2022', 'url' => 'https://www.minedu.gov.gr/site/52433-16-06-22-apospaseis-ekpaideftikon-v-thmias-ekp-sis-se-foreis-tou-ypaith-2'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘΑ — αποσπάσεις Π.Ε. σε φορείς/υπηρεσίες 07/07/2023', 'url' => 'https://www.minedu.gov.gr/site/55900-07-07-23-apospaseis-ekp-kon-pe-se-foreis-ypiresies-ypaitha-2'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — αποσπάσεις Δ.Ε. σε φορείς/υπηρεσίες 27/05/2024', 'url' => 'https://www.minedu.gov.gr/site/58427-27-05-24-apospaseis-ekpaideftikon-defterovathmias-ekpaidefsis-se-foreis-kai-ypiresies-tou-ypourgeiou-paideias-thriskevmaton-athlitismoy'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — αποσπάσεις Δ.Ε. σε φορείς/υπηρεσίες 06/06/2025', 'url' => 'https://www.minedu.gov.gr/site/61733-06-06-25-apospaseis-ekp-kon-de-se-foreis-ypiresies-armodiotitas-ypaitha-2025-26'),
+            ),
+            'note' => 'Η σειρά καταγράφει την πρώτη επίσημη ανάρτηση που εντοπίζεται στην αντίστοιχη ενότητα του ΥΠΑΙΘΑ για αποσπάσεις σε υπηρεσίες/φορείς και όχι ημερομηνία κοινής ανακοίνωσης όλων των κατηγοριών. Για το 2022 διορθώθηκε 17/06 σε 16/06, επειδή στις 16/06/2022 είχε ήδη δημοσιευθεί επίσημη δέσμη αποσπάσεων Δ.Ε. σε φορείς.',
         ),
         array(
             'id' => 'functional-gaps-primary-circular',
