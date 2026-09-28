@@ -74,7 +74,7 @@ return array(
                 array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2023–2024 (16–31/10/2023)', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D_%CE%94%CE%95_2023-2024_%CE%91%CE%94%CE%91_99%CE%9A%CE%9546%CE%9D%CE%9A%CE%A0%CE%94-41%CE%A8.pdf'),
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2024–2025 (16–31/10/2024)', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%9C%CE%95%CE%A4%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D_%CE%94%CE%95_2024-2025__%CE%91%CE%94%CE%91_9%CE%974%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%A5%CE%9B%CE%A3.pdf'),
             ),
-            'note' => 'Η ιστορική σειρά 2019–2026 έχει πλέον ελεγχθεί έναντι των επίσημων εγκυκλίων. Από το 2022 και μετά η βασική περίοδος έχει σταθεροποιηθεί στις 16–31 Οκτωβρίου, ενώ τα προηγούμενα έτη ήταν Νοέμβριο.',
+            'note' => 'Από το 2022 η βασική περίοδος αιτήσεων είναι 16–31 Οκτωβρίου. Η ακριβής προθεσμία κάθε έτους ορίζεται από την αντίστοιχη εγκύκλιο.',
         ),
         array(
             'id' => 'temporary-transfer-points',
@@ -103,7 +103,7 @@ return array(
                 array('year' => '2023-2024', 'label' => 'ΔΠΕ Κορινθίας — προσωρινοί πίνακες 21/11/2023', 'url' => 'https://dipe.kor.sch.gr/category/ekpaideftikoi/metatheseis/page/4/'),
                 array('year' => '2024-2025', 'label' => 'ΔΠΕ Ηρακλείου — προσωρινοί πίνακες 25/11/2024', 'url' => 'https://dipeira.gov.gr/prosorinoi-pinakes-metatheseon-scholikou-etous-2024-2025/'),
             ),
-            'note' => 'Η εγκύκλιος Δ.Ε. ορίζει ανακοίνωση των πινάκων μοριοδότησης στις 24/11/2025 και αιτήματα διορθώσεων/παραλείψεων 24–28/11. Ο ιστορικός έλεγχος διόρθωσε δύο τιμές του αρχείου: 2020 → 14/12/2020 (όχι 07/12) και 2024 → 25/11/2024 (όχι 24/11).',
+            'note' => 'Για τον κύκλο 2025–2026 οι προσωρινοί πίνακες Δ.Ε. ανακοινώνονται στις 24/11/2025 και τα αιτήματα διόρθωσης ή παράλειψης υποβάλλονται 24–28/11/2025.',
         ),
         array(
             'id' => 'transfer-application-withdrawal',
@@ -132,7 +132,7 @@ return array(
                 array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος Δ.Ε. 2023–2024: ανάκληση έως 31/12/2023', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D_%CE%94%CE%95_2023-2024_%CE%91%CE%94%CE%91_99%CE%9A%CE%9546%CE%9D%CE%9A%CE%A0%CE%94-41%CE%A8.pdf'),
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος Δ.Ε. 2024–2025: ανάκληση έως 31/12/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%9C%CE%95%CE%A4%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D_%CE%94%CE%95_2024-2025__%CE%91%CE%94%CE%91_9%CE%974%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%A5%CE%9B%CE%A3.pdf'),
             ),
-            'note' => 'Ο ιστορικός έλεγχος διόρθωσε το 2019–2020: η προθεσμία ήταν 31/01/2020 και όχι 31/12/2019. Από τον κύκλο 2020–2021 και μετά οι επίσημες εγκύκλιοι ορίζουν λήξη στις 31/12. Πρόκειται για ανάκληση της αίτησης· ανάκληση ήδη πραγματοποιημένης μετάθεσης δεν προβλέπεται.',
+            'note' => 'Η προθεσμία αφορά ανάκληση της αίτησης μετάθεσης πριν ολοκληρωθεί η διαδικασία. Ανάκληση ήδη πραγματοποιημένης μετάθεσης δεν προβλέπεται.',
         ),
         array(
             'id' => 'resignations-applications',
@@ -181,7 +181,7 @@ return array(
                     'url' => 'https://dipe.mes.sch.gr/?p=26725',
                 ),
             ),
-            'note' => 'Η ιστορική σειρά αιτήσεων παραίτησης 2020–2026 έχει πλέον διασταυρωθεί ανά κύκλο. Επιβεβαιώνονται 01–10/04/2020, 17/02–10/03/2021, 01–11/02/2022, 01–13/02/2023, 01–12/02/2024 και 01–11/02/2025. Για το 2026 η επίσημη εγκύκλιος επιτρέπει ηλεκτρονική υποβολή από 01/02 (πρωτοκόλληση 02/02) και δια ζώσης 02–11/02, ενώ το ιστορικό κελί κρατά το υπηρεσιακό εύρος 02–11/02.',
+            'note' => 'Για το 2026 η ηλεκτρονική υποβολή ήταν διαθέσιμη από 01/02 και η δια ζώσης υποβολή από 02/02 έως 11/02.',
         ),
         array(
             'id' => 'organic-gaps-circular',
@@ -230,7 +230,7 @@ return array(
                     'url' => 'https://dide.arg.sch.gr/site/wp-content/uploads/2025/03/%CE%95%CE%9D%CE%97%CE%9C%CE%95%CE%A1%CE%A9%CE%A3%CE%97-%CE%93%CE%99%CE%91-%CE%A5%CE%A0%CE%95%CE%A1%CE%91%CE%A1%CE%99%CE%98%CE%9C%CE%99%CE%95%CE%A3-%CE%9A%CE%91%CE%99-%CE%9F%CE%A1%CE%93%CE%91%CE%9D%CE%99%CE%9A%CE%91-%CE%9A%CE%95%CE%9D%CE%91-2025.pdf',
                 ),
             ),
-            'note' => 'Η σειρά 2020–2026 έχει πλέον πλήρη ιστορική τεκμηρίωση για τη Γενική Δ.Ε.: 23866/Ε2/18-02-2020, 24321/Ε2/02-03-2021, 21020/Ε2/24-02-2022, 12458/Ε2/02-02-2023, 19644/23-02-2024, 24061/Ε2/04-03-2025 και 25616/Ε2/03-03-2026. Οι παράλληλες εγκύκλιοι ΕΑΕ/ΚΕΔΑΣΥ επιβεβαιώνουν τις ίδιες ημερομηνίες στους κύκλους 2024–2026.',
+            'note' => 'Η κάρτα αφορά τη Γενική Δ.Ε. Για ΕΑΕ/ΚΕΔΑΣΥ εκδίδονται παράλληλες εγκύκλιοι.',
         ),
         array(
             'id' => 'resignation-withdrawal',
@@ -279,7 +279,7 @@ return array(
                     'url' => 'https://dipe.las.sch.gr/wp-content/uploads/2025/01/%CE%A0%CE%91%CE%A1%CE%91%CE%99%CE%A4%CE%97%CE%A3%CE%95%CE%99%CE%A3-%CE%95%CE%9A%CE%A0%CE%91%CE%99%CE%94%CE%95%CE%A5%CE%A4%CE%99%CE%9A%CE%A9%CE%9D-%CE%94%CE%99%CE%9A%CE%91%CE%99%CE%9F%CE%9B%CE%9F%CE%93%CE%97%CE%A4%CE%99%CE%9A%CE%91-%CE%A3%CE%A5%CE%9D%CE%A4%CE%91%CE%9E%CE%99%CE%9F%CE%94%CE%9F%CE%A4%CE%97%CE%A3%CE%97%CE%A3-2025ws.pdf',
                 ),
             ),
-            'note' => 'Η σειρά έχει πλέον ελεγχθεί για όλους τους κύκλους 2020–2026. Δεν υπάρχει μία κοινή καταληκτική ημερομηνία για όλους: η αποκλειστική προθεσμία είναι ένας μήνας από την ημερομηνία της κάθε αρχικής αίτησης. Για αυτό οι παλιές μονοήμερες τιμές 2022–2025 αφαιρέθηκαν από το ιστορικό ως παραπλανητικές γενικεύσεις. Ενδεικτικά, το ΥΠΑΙΘ επιβεβαίωσε ότι οι αιτήσεις της 11/02/2022 μπορούσαν να ανακληθούν έως 11/03/2022, ενώ το 2024 η τελευταία δυνατή ημερομηνία ήταν 12/03 και το 2025 η 11/03 μόνο για τις αιτήσεις που είχαν κατατεθεί την τελευταία αντίστοιχη ημέρα.',
+            'note' => 'Η ανάκληση υποβάλλεται μέσα σε έναν μήνα από την ημερομηνία της αρχικής αίτησης. Δεν υπάρχει μία κοινή καταληκτική ημερομηνία για όλους.',
         ),
         array(
             'id' => 'transfer-results',
@@ -304,31 +304,7 @@ return array(
                     'url' => 'https://www.minedu.gov.gr/site/64693-03-04-26-ekdosi-ypourgikis-apofasis-metatheseon-melon-eep-evp-sxolikoy-etous-2025-2026',
                 ),
             ),
-            'note' => 'Στο εργαλείο οι τρεις κατηγορίες εμφανίζονται μαζί, αλλά κρατούν τις χωριστές ημερομηνίες και πηγές τους.',
-        ),
-        array(
-            'id' => 'transfer-objections',
-            'group' => 'metatheseis',
-            'title' => 'Αιτήσεις θεραπείας / επανεξέτασης μετά τις μεταθέσεις',
-            'latest' => '2026: δεν εντοπίστηκε ενιαία δημοσιευμένη προθεσμία',
-            'latest_verified' => false,
-            'source_coverage' => 'research',
-            'history' => array('25/04–09/05/2020','25/03–08/04/2021','19/03–02/04/2022','03/03–17/03/2023','28/03–11/04/2024','21/03–04/04/2025',null),
-            'sources' => array(
-                array(
-                    'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2025–2026 (15/10/2025)',
-                    'url' => 'https://www.minedu.gov.gr/site/63068-15-10-25-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-sxolikoy-etous-2025-2026',
-                ),
-                array(
-                    'label' => 'ΥΠΑΙΘΑ — Αμοιβαίες μεταθέσεις Δ.Ε.: 15ήμερη προθεσμία έως 07/04/2026',
-                    'url' => 'https://www.minedu.gov.gr/site/70026-24-03-26-aitiseis-gia-amoivaies-metatheseis-sti-vvathmia-ekpaidefsi',
-                ),
-                array(
-                    'label' => 'ΥΠΑΙΘΑ — Τροποποίηση απόφασης μεταθέσεων Δ.Ε. (08/06/2026)',
-                    'url' => 'https://www.minedu.gov.gr/site/65177-08-06-26-tropopoiisi-tis-ypo-36339-e2-23-03-2026-y-a-me-thema-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-etous-2027',
-                ),
-            ),
-            'note' => 'Η εγκύκλιος μεταθέσεων Δ.Ε. 2025–2026 προβλέπει ρητά προθεσμία 15 ημερών για τις αμοιβαίες μεταθέσεις, όχι όμως μία κοινή 15ήμερη περίοδο «ενστάσεων» μετά την ανακοίνωση των μεταθέσεων. Το ΥΠΑΙΘΑ δημοσίευσε αργότερα τροποποιήσεις αποφάσεων μεταθέσεων, άρα αιτήματα θεραπείας/επανεξέτασης πράγματι εξετάζονται κατά περίπτωση. Οι ιστορικές περίοδοι του αρχείου διατηρούνται, αλλά δεν παρουσιάζονται ως ισχύων κανόνας για το 2026 χωρίς πρωτογενή πηγή ανά έτος.',
+            'note' => 'Οι ημερομηνίες Π.Ε., Δ.Ε. και ΕΕΠ-ΕΒΠ μπορεί να διαφέρουν. Για επανεξέταση ή διόρθωση μετά τα αποτελέσματα, ακολουθήστε τις οδηγίες της αντίστοιχης ανακοίνωσης ή της αρμόδιας Διεύθυνσης Εκπαίδευσης· δεν υπάρχει μία ενιαία προθεσμία για όλες τις περιπτώσεις.',
         ),
         array(
             'id' => 'mutual-transfer-applications',
@@ -360,7 +336,7 @@ return array(
                 array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Π.Ε. και Δ.Ε. έως 11/04/2024', 'url' => 'https://www.minedu.gov.gr/ekpaideftikoi-eep-evp/epilogi-stelexon-ekpaidefsis?id=1183&start=1950&view=category'),
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — αμοιβαίες μεταθέσεις έως 04/04/2025', 'url' => 'https://www.minedu.gov.gr/en/grafeio-typoy-kai-dimosion-sxeseon/anakoinoseis?start=220'),
             ),
-            'note' => 'Ο ιστορικός έλεγχος έδειξε ότι η παλιά ενιαία τιμή έκρυβε διαφορετικές προθεσμίες Π.Ε./Δ.Ε. το 2020, 2021 και 2022. Για Π.Ε. 2021 και 2022 η ημερομηνία προκύπτει από τον επίσημο κανόνα των 15 ημερών σε συνδυασμό με την επίσημη ημερομηνία ανακοίνωσης των μεταθέσεων. Για το 2026 η Π.Ε. λήγει 03/04 και η Δ.Ε. 07/04· η μεταγενέστερη αποστολή της αίτησης στο πρωτόκολλο είναι ξεχωριστό στάδιο.',
+            'note' => 'Οι προθεσμίες Π.Ε. και Δ.Ε. μπορεί να διαφέρουν. Για το 2026 οι αιτήσεις λήγουν στις 03/04 για Π.Ε. και στις 07/04 για Δ.Ε.',
         ),
         array(
             'id' => 'detachments-circular',
@@ -390,7 +366,7 @@ return array(
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — εγκύκλιος 37426/Ε2/03-04-2025', 'url' => 'https://minedu.gov.gr/publications/docs2023/37426E2_03-04-2024_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2025-2026_%CE%A8%CE%A0%CE%96846%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%A5%CE%92.pdf'),
                 array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — εγκύκλιος 41297/Ε2/02-04-2026', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf'),
             ),
-            'note' => 'Η ιστορική σειρά 2020–2026 έχει πλέον διασταυρωθεί ανά έτος. Για το 2022 η ανάρτηση του Υπουργείου εμφανίζει στον τίτλο «05-04-22», ενώ η σελίδα και το υπηρεσιακό έγγραφο φέρουν ημερομηνία 04/04/2022· στο χρονοδιάγραμμα καταγράφεται η ημερομηνία του εγγράφου.',
+            'note' => 'Η ημερομηνία αφορά την επίσημη εγκύκλιο αποσπάσεων του αντίστοιχου κύκλου.',
         ),        array(
             'id' => 'detachments-applications',
             'group' => 'apospaseis',
@@ -419,7 +395,7 @@ return array(
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — αιτήσεις 07–23/04/2025', 'url' => 'https://minedu.gov.gr/publications/docs2023/37426E2_03-04-2024_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2025-2026_%CE%A8%CE%A0%CE%96846%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%A5%CE%92.pdf'),
                 array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — αιτήσεις 03–20/04/2026', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf'),
             ),
-            'note' => 'Η ιστορική περίοδος αιτήσεων ΠΥΣΠΕ/ΠΥΣΔΕ έχει διασταυρωθεί για όλους τους κύκλους 2020–2026. Η διόρθωση 2023–2024 από «08/0/2024» σε «08/04/2024» επιβεβαιώνεται από την εγκύκλιο 34882/Ε2/04-04-2024.',
+            'note' => 'Η περίοδος αφορά αιτήσεις απόσπασης ΠΥΣΠΕ/ΠΥΣΔΕ.',
         ),        array(
             'id' => 'eep-ebp-detachments',
             'group' => 'apospaseis',
@@ -434,7 +410,7 @@ return array(
                     'url' => 'https://www.minedu.gov.gr/site/64980-19-05-26-ekdosi-egkykliou-apospaseon-melon-eep-evp',
                 ),
             ),
-            'note' => 'Η επίσημη ανακοίνωση αναφέρει ρητά το διάστημα 19/05 έως 02/06/2026.',
+            'note' => 'Για το 2026 οι αιτήσεις υποβλήθηκαν από 19/05 έως 02/06.',
         ),
         array(
             'id' => 'mutual-transfer-primary-result',
@@ -492,7 +468,7 @@ return array(
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — ανάκληση με απενεργοποίηση έως 30/04/2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/37430E2_03-04-2025_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A6%CE%9F%CE%A1%CE%95%CE%99%CE%A3_2025-2026_%CE%A89%CE%9C946%CE%9D%CE%9A%CE%A0%CE%94-%CE%977%CE%9F.pdf'),
                 array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — ανάκληση με απενεργοποίηση έως 27/04/2026', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/41298E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A6%CE%9F%CE%A1%CE%95%CE%99%CE%A3_2026-2027_%CE%95%CE%A9%CE%95%CE%9946%CE%9D%CE%9A%CE%A0%CE%94-%CE%9D06.pdf'),
             ),
-            'note' => 'Η σειρά αφορά την ανάκληση της αρχικής αίτησης απόσπασης σε υπηρεσία/φορέα πριν από τα αποτελέσματα. Δεν συγχέεται με μεταγενέστερη αίτηση ανάκλησης ήδη εγκεκριμένης απόσπασης.',
+            'note' => 'Αφορά ανάκληση της αρχικής αίτησης πριν από την ανακοίνωση αποτελεσμάτων, όχι ανάκληση ήδη εγκεκριμένης απόσπασης.',
         ),        array(
             'id' => 'metatakseis-circular',
             'group' => 'metatakseis',
@@ -516,7 +492,7 @@ return array(
                 array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — 41904/Ε2/19-04-2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%96%CE%A9%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%9E2%CE%9B_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_%CE%A3%CE%A7.%CE%95%CE%A4%CE%9F%CE%A5%CE%A3_2024-2025.pdf'),
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — 46071/Ε2/29-04-2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%9E5%CE%A946%CE%9D%CE%9A%CE%A0%CE%94-%CE%92%CE%91%CE%A9_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D.pdf'),
             ),
-            'note' => 'Η σειρά 2020–2026 έχει διασταυρωθεί ανά έτος με την αντίστοιχη εγκύκλιο. Στο αρχικό φύλλο το κελί του 2025–2026 έδειχνε 30/04/2025· η επίσημη εγκύκλιος επιβεβαιώνει 30/04/2026.',
+            'note' => 'Η ημερομηνία αφορά την έκδοση της ετήσιας εγκυκλίου μετατάξεων.',
         ),
         array(
             'id' => 'metatakseis-applications',
@@ -541,7 +517,7 @@ return array(
                 array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — 41904/Ε2, αιτήσεις 22/04–01/05/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%96%CE%A9%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%9E2%CE%9B_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_%CE%A3%CE%A7.%CE%95%CE%A4%CE%9F%CE%A5%CE%A3_2024-2025.pdf'),
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — 46071/Ε2, αιτήσεις 30/04–12/05/2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%9E5%CE%A946%CE%9D%CE%9A%CE%A0%CE%94-%CE%92%CE%91%CE%A9_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D.pdf'),
             ),
-            'note' => 'Η περίοδος υποβολής αιτήσεων έχει διασταυρωθεί για όλους τους κύκλους 2020–2026 από τις αντίστοιχες εγκυκλίους μετατάξεων.',
+            'note' => 'Η περίοδος αφορά την υποβολή αιτήσεων μετάταξης του αντίστοιχου κύκλου.',
         ),
         array(
             'id' => 'detachment-application-withdrawal',
@@ -567,7 +543,7 @@ return array(
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — ανάκληση αίτησης έως 23/05/2025', 'url' => 'https://minedu.gov.gr/publications/docs2023/37426E2_03-04-2024_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2025-2026_%CE%A8%CE%A0%CE%96846%CE%9D%CE%9A%CE%A0%CE%94-%CE%A1%CE%A5%CE%92.pdf'),
                 array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — ανάκληση αίτησης έως 20/05/2026', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf'),
             ),
-            'note' => 'Η σειρά αφορά την απενεργοποίηση/ανάκληση της αίτησης πριν από την ανακοίνωση των αποτελεσμάτων. Μετά την ανακοίνωση των αποσπάσεων υπάρχει διαφορετική διαδικασία ένστασης, επανεξέτασης ή ανάκλησης της ήδη εγκριθείσας απόσπασης.',
+            'note' => 'Αφορά ανάκληση της αίτησης πριν από τα αποτελέσματα. Μετά την ανακοίνωση των αποσπάσεων εφαρμόζεται διαφορετική διαδικασία για ένσταση, επανεξέταση ή ανάκληση εγκεκριμένης απόσπασης.',
         ),        array(
             'id' => 'metatakseis-application-withdrawal',
             'group' => 'metatakseis',
@@ -591,7 +567,7 @@ return array(
                 array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — 41904/Ε2, ανάκληση έως 15/05/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%96%CE%A9%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%9E2%CE%9B_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D_%CE%A3%CE%A7.%CE%95%CE%A4%CE%9F%CE%A5%CE%A3_2024-2025.pdf'),
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — 46071/Ε2, ανάκληση έως 23/05/2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%A1%CE%9E5%CE%A946%CE%9D%CE%9A%CE%A0%CE%94-%CE%92%CE%91%CE%A9_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%A4%CE%91%CE%9E%CE%95%CE%A9%CE%9D.pdf'),
             ),
-            'note' => 'Οι καταληκτικές ημερομηνίες ηλεκτρονικής ανάκλησης έχουν διασταυρωθεί για όλους τους κύκλους 2020–2026 από τις αντίστοιχες εγκυκλίους.',
+            'note' => 'Αφορά την ηλεκτρονική ανάκληση της αίτησης μετάταξης πριν από την ανακοίνωση των αποτελεσμάτων.',
         ),
         array(
             'id' => 'first-bodies-detachments',
@@ -620,7 +596,7 @@ return array(
                 array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — αποσπάσεις Δ.Ε. σε φορείς/υπηρεσίες 27/05/2024', 'url' => 'https://www.minedu.gov.gr/site/58427-27-05-24-apospaseis-ekpaideftikon-defterovathmias-ekpaidefsis-se-foreis-kai-ypiresies-tou-ypourgeiou-paideias-thriskevmaton-athlitismoy'),
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — αποσπάσεις Δ.Ε. σε φορείς/υπηρεσίες 06/06/2025', 'url' => 'https://www.minedu.gov.gr/site/61733-06-06-25-apospaseis-ekp-kon-de-se-foreis-ypiresies-armodiotitas-ypaitha-2025-26'),
             ),
-            'note' => 'Η σειρά καταγράφει την πρώτη επίσημη ανάρτηση που εντοπίζεται στην αντίστοιχη ενότητα του ΥΠΑΙΘΑ για αποσπάσεις σε υπηρεσίες/φορείς και όχι ημερομηνία κοινής ανακοίνωσης όλων των κατηγοριών. Για το 2022 διορθώθηκε 17/06 σε 16/06, επειδή στις 16/06/2022 είχε ήδη δημοσιευθεί επίσημη δέσμη αποσπάσεων Δ.Ε. σε φορείς.',
+            'note' => 'Η ημερομηνία αφορά την πρώτη επίσημη ανακοίνωση αποσπάσεων σε υπηρεσίες ή φορείς. Οι επιμέρους κατηγορίες μπορεί να ανακοινωθούν σε διαφορετικές ημερομηνίες.',
         ),
         array(
             'id' => 'functional-gaps-primary-circular',
@@ -628,7 +604,6 @@ return array(
             'title' => 'Λειτουργικά κενά / πλεονάσματα για αποσπάσεις — Π.Ε.',
             'latest' => '05/06/2026 · 73719/Ε2',
             'latest_verified' => true,
-            'verification_label' => '✓ Η τελευταία εγκύκλιος και η ιστορική σειρά 2021–2026 έχουν διασταυρωθεί',
             'source_coverage' => 'official-document-copy',
             'history' => array(null,'10/06/2021 · 68239/Ε2','26/05/2022 · 62174/Ε2','07/07/2023 · 75625/Ε2','23/05/2024 · 53701/Ε2','06/06/2025 · 66707/Ε2','05/06/2026 · 73719/Ε2'),
             'verified_history_indices' => array(1,2,3,4,5,6),
@@ -665,7 +640,7 @@ return array(
                     'url' => 'https://www.takisroumpis.gr/wp-content/uploads/2025/06/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%9A%CE%95%CE%9D%CE%A9%CE%9D-%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D-2025-2026.pdf',
                 ),
             ),
-            'note' => 'Η παλιά κοινή ιστορική γραμμή διαχωρίστηκε ανά βαθμίδα. Για την Π.Ε. επιβεβαιώθηκαν οι εγκύκλιοι 68239/Ε2/10-06-2021, 62174/Ε2/26-05-2022, 75625/Ε2/07-07-2023, 53701/Ε2/23-05-2024, 66707/Ε2/06-06-2025 και 73719/Ε2/05-06-2026.',
+            'note' => '',
         ),
         array(
             'id' => 'functional-gaps-secondary-circular',
@@ -673,7 +648,6 @@ return array(
             'title' => 'Λειτουργικά κενά / πλεονάσματα για αποσπάσεις — Δ.Ε.',
             'latest' => '05/06/2026 · 74045/Ε2',
             'latest_verified' => true,
-            'verification_label' => '✓ Η τελευταία εγκύκλιος και η ιστορική σειρά 2021–2026 έχουν διασταυρωθεί',
             'source_coverage' => 'official-document-copy',
             'history' => array(null,'10/06/2021 · 68209/Ε2','02/06/2022 · 68172/Ε2','07/07/2023 · 75639/Ε2','23/05/2024 · 54074/Ε2','11/06/2025 · 68355/Ε2','05/06/2026 · 74045/Ε2'),
             'verified_history_indices' => array(1,2,3,4,5,6),
@@ -714,7 +688,7 @@ return array(
                     'url' => 'https://vaspapachristou.gr/%CE%B5%CE%B3%CE%BA%CF%8D%CE%BA%CE%BB%CE%B9%CE%BF%CF%82-%CE%BB%CE%B5%CE%B9%CF%84%CE%BF%CF%85%CF%81%CE%B3%CE%B9%CE%BA%CF%8E%CE%BD-%CE%BA%CE%B5%CE%BD%CF%8E%CE%BD-%CE%B4%CE%B5%CF%85%CF%84%CE%B5%CF%81-2/',
                 ),
             ),
-            'note' => 'Η παλιά κοινή ιστορική γραμμή διαχωρίστηκε ανά βαθμίδα. Για τη Δ.Ε. επιβεβαιώθηκαν οι εγκύκλιοι 68209/Ε2/10-06-2021, 68172/Ε2/02-06-2022, 75639/Ε2/07-07-2023, 54074/Ε2/23-05-2024, 68355/Ε2/11-06-2025 και 74045/Ε2/05-06-2026.',
+            'note' => '',
         ),
         array(
             'id' => 'first-primary-detachments',
@@ -740,7 +714,7 @@ return array(
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — ΠΥΣΠΕ→ΠΥΣΠΕ 19/06/2025', 'url' => 'https://www.minedu.gov.gr/site/61854-19-06-25-apospaseis-ekpaideftikon-avathmias-ekpaidefsis-apo-pyspe-se-pyspe-kai-se-foreis'),
                 array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — ΠΥΣΠΕ→ΠΥΣΠΕ 30/06/2026', 'url' => 'https://www.minedu.gov.gr/kinitikotita/apospaseis-egkyklioi-proskliseis'),
             ),
-            'note' => 'Η σειρά αφορά την πρώτη επίσημη ανακοίνωση αποτελεσμάτων ΠΥΣΠΕ→ΠΥΣΠΕ ανά κύκλο και έχει διασταυρωθεί για όλα τα έτη 2020–2026.',
+            'note' => 'Η ημερομηνία αφορά την πρώτη επίσημη ανακοίνωση αποτελεσμάτων ΠΥΣΠΕ→ΠΥΣΠΕ.',
         ),        array(
             'id' => 'first-secondary-detachments',
             'group' => 'apospaseis',
@@ -765,22 +739,30 @@ return array(
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — ΠΥΣΔΕ→ΠΥΣΔΕ 26/06/2025', 'url' => 'https://www.minedu.gov.gr/site/61954-26-06-25-apospaseis'),
                 array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — ΠΥΣΔΕ→ΠΥΣΔΕ 02/07/2026', 'url' => 'https://www.minedu.gov.gr/site/70258-02-07-26-apospaseis-bbathmias-ekpaideuses-kedasy-smeae-scholeia-typhlon-kophon-mousika-kallitechnika-kai-apo-pysde-se-pysde'),
             ),
-            'note' => 'Διορθώθηκε το 2024 από 27/06 σε 28/06, βάσει της επίσημης ανακοίνωσης του ΥΠΑΙΘΑ. Για το 2022 κρατείται 06/07 ως «πρώτη ανακοίνωση», επειδή εκείνη την ημέρα αναρτήθηκε συνδυασμένη ανακοίνωση που περιλάμβανε και ΠΥΣΔΕ→ΠΥΣΔΕ· ακολούθησε ξεχωριστή ανάρτηση στις 07/07.',
+            'note' => 'Για το 2022 ως πρώτη ανακοίνωση καταγράφεται η συνδυασμένη ανάρτηση της 06/07, η οποία περιλάμβανε και ΠΥΣΔΕ→ΠΥΣΔΕ.',
         ),        array(
             'id' => 'metatakseis-to-eep',
             'group' => 'metatakseis',
             'title' => 'Μετατάξεις προς κλάδους ΕΕΠ',
-            'latest' => 'Υ.Α. 13/08 · ανακοίνωση 19/08/2026',
+            'latest' => '19/08/2026',
             'latest_verified' => true,
-            'source_coverage' => 'latest',
-            'history' => array(null,null,null,null,null,'08/10/2025','Υ.Α. 13/08 · ανακοίνωση 19/08/2026'),
+            'source_coverage' => 'historical',
+            'history' => array(null,null,'29/07/2022','11/08/2023','06/08/2024','05/09/2025','19/08/2026'),
+            'verified_history_indices' => array(2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Μετατάξεις εκπαιδευτικών/ΕΒΠ προς κλάδους ΕΕΠ (19/08/2026)',
                     'url' => 'https://www.minedu.gov.gr/site/70661-19-08-26-metataxeis-ekpaideutikon-protobathmias-kai-deuterobathmias-ekpaideuses-kai-melon-eidikou-boethetikou-prosopikou-se-kladous-eidikou-ekpaideutikou-prosopikou',
                 ),
             ),
-            'note' => 'Η ανακοίνωση της 19/08 παραπέμπει στην Υ.Α. 107886/Ε4/13-08-2026, η οποία δημοσιεύθηκε σε ΦΕΚ στις 18/08. Έτσι εξηγείται η ημερομηνία 13/08 στο αρχικό φύλλο.',
+            'historical_sources' => array(
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — Μετατάξεις προς κλάδο ΕΕΠ 29/07/2022', 'url' => 'https://www.minedu.gov.gr/site/52934-29-07-2022-metatakseis-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-se-klado-eidikoy-ekpaideftikoy-prosopikoy-eep-kai-metataksi-melous-eep-se-allo-klado-eep'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — Μετατάξεις προς κλάδο ΕΕΠ 11/08/2023', 'url' => 'https://www.minedu.gov.gr/site/56179-11-08-23-metatakseis-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-se-klado-eidikoy-ekpaideftikoy-prosopikoy'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς κλάδους ΕΕΠ 06/08/2024', 'url' => 'https://www.minedu.gov.gr/site/59049-06-08-24-metatakseis-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-kai-melon-eep-evp-se-kladous-eidikoy-ekpaideftikoy-prosopikoy-2'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς κλάδους ΕΕΠ 05/09/2025', 'url' => 'https://www.minedu.gov.gr/panelladikes-eksetaseis-pistopoiitika/eksetaseis-gia-ta-mousika-tmimata-anakoinoseis?catid=1183&id=62596%3A05-09-25-metatakseis-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-kai-melon-eidikoy-voithitikoy-prosopikoy-evp-se-kladous-eidikoy-ekpaideftikoy-prosopikoy-eep&view=article'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς κλάδους ΕΕΠ 19/08/2026', 'url' => 'https://www.minedu.gov.gr/site/70661-19-08-26-metataxeis-ekpaideutikon-protobathmias-kai-deuterobathmias-ekpaideuses-kai-melon-eidikou-boethetikou-prosopikou-se-kladous-eidikou-ekpaideutikou-prosopikou'),
+            ),
+            'note' => 'Για το 2026 η υπουργική απόφαση έχει ημερομηνία 13/08, δημοσιεύθηκε σε ΦΕΚ στις 18/08 και ανακοινώθηκε από το ΥΠΑΙΘΑ στις 19/08.',
         ),
         array(
             'id' => 'metatakseis-to-primary',
@@ -788,15 +770,25 @@ return array(
             'title' => 'Μετατάξεις προς άλλους κλάδους Πρωτοβάθμιας / ΚΕΔΑΣΥ',
             'latest' => '20/08/2026',
             'latest_verified' => true,
-            'source_coverage' => 'latest',
-            'history' => array(null,null,null,null,null,null,'20/08/2026'),
+            'source_coverage' => 'historical',
+            'history' => array('15/09/2020','09/08/2021','18/07/2022','16/08/2023','02/08/2024','02/09/2025','20/08/2026'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς κλάδους Π.Ε./ΚΕΔΑΣΥ (20/08/2026)',
                     'url' => 'https://www.minedu.gov.gr/site/70666-20-08-26-metataxeis-ekpaideutikon-protobathmias-ekpaideuses-deuterobathmias-ekpaideuses-kai-melon-eidikou-boethetikou-prosopikou-eidikes-agoges-se-allous-kladous-tes-protobathmias-ekpaideuses-kai-se-ke-d-a-s-y-etous-2026',
                 ),
             ),
-            'note' => 'Από το 2026 εμφανίζεται ως διακριτή επίσημη ανακοίνωση. Δεν αποδίδουμε τις παλαιότερες συνοπτικές ημερομηνίες του αρχείου σε αυτή την ειδική κατηγορία χωρίς επιπλέον τεκμηρίωση.',
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — Μετατάξεις προς Π.Ε. 15/09/2020', 'url' => 'https://www.minedu.gov.gr/site/46349-15-09-20-metatakseis-ekpaideftikon-apo-klado-se-klado-tis-avathmias-ekpaidefsis-kai-apo-klado-tis-vvathmias-kai-tis-vvathmias-ekklisiastikis-ekpaidefsis-se-klado-tis-avathmias-ekpaidefsis'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — Μετατάξεις προς Π.Ε. 09/08/2021', 'url' => 'https://www.minedu.gov.gr/site/49695-09-08-21-metatakseis-ekpaideftikon-apo-klado-se-klado-tis-protovathmias-ekpaidefsis-kai-apo-kladous-tis-defterovathmias-se-kladous-tis-protovathmias-ekpaidefsis-gia-to-sxoliko-etos-2021-2022'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — Μετατάξεις προς Π.Ε. 18/07/2022', 'url' => 'https://www.minedu.gov.gr/site/52847-18-07-22-metatakseis-ekpaideftikon-apo-klado-se-klado-tis-protovathmias-ekpaidefsis-kai-apo-kladous-tis-defterovathmias-se-kladous-tis-protovathmias-ekpaidefsis-gia-to-sxoliko-etos-2022-2023'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — Μετατάξεις προς Π.Ε. 16/08/2023', 'url' => 'https://www.minedu.gov.gr/site/56202-16-08-23-metatakseis-ekpaideftikon-apo-klado-se-klado-tis-protovathmias-ekpaidefsis-kai-apo-kladous-tis-defterovathmias-se-kladous-tis-protovathmias-ekpaidefsis-gia-to-sxoliko-etos-2023-2025'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς Π.Ε. 02/08/2024', 'url' => 'https://www.minedu.gov.gr/site/59028-02-08-24-metatakseis-ekpaideftikon-apo-klado-se-klado-tis-a-thmias-ekpaidefsis-kai-apo-kladous-tis-v-thmias-se-kladous-tis-a-thmias-ekpaidefsis-gia-to-sxoliko-etos-2024-2025'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς Π.Ε. 02/09/2025', 'url' => 'https://www.minedu.gov.gr/site/62534-02-09-25-metatakseis-ekpaideftikon-apo-kladous-tis-protovathmias-kai-defterovathmias-ekpaidefsis-se-allous-kladous-tis-protovathmias-ekpaidefsis-kai-melon-eep-evp-se-kladous-tis-protovathmias-ekpaidefsis-gia-to-sx-etos-2025-2026'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς Π.Ε./ΚΕΔΑΣΥ 20/08/2026', 'url' => 'https://www.minedu.gov.gr/site/70666-20-08-26-metataxeis-ekpaideutikon-protobathmias-ekpaideuses-deuterobathmias-ekpaideuses-kai-melon-eidikou-boethetikou-prosopikou-eidikes-agoges-se-allous-kladous-tes-protobathmias-ekpaideuses-kai-se-ke-d-a-s-y-etous-2026'),
+            ),
+            'note' => 'Η ημερομηνία αφορά την πρώτη επίσημη ανακοίνωση αποτελεσμάτων της συγκεκριμένης κατηγορίας.',
         ),
         array(
             'id' => 'metatakseis-to-secondary',
@@ -804,26 +796,25 @@ return array(
             'title' => 'Μετατάξεις προς άλλους κλάδους Δευτεροβάθμιας / ΚΕΔΑΣΥ',
             'latest' => '21/08/2026',
             'latest_verified' => true,
-            'source_coverage' => 'latest',
-            'history' => array(null,null,null,null,null,null,'21/08/2026'),
+            'source_coverage' => 'historical',
+            'history' => array('10/09/2020','04/08/2021','18/07/2022','11/08/2023','02/08/2024','03/09/2025','21/08/2026'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς κλάδους Δ.Ε./ΚΕΔΑΣΥ (21/08/2026)',
                     'url' => 'https://www.minedu.gov.gr/site/70675-21-08-26-metataxeis-ekpaideutikon-athmias-ekpaideuses-bthmias-ekpaideuses-kai-melon-eep-ebp-tes-eidikes-agoges-se-allous-kladous-tes-bthmias-ekpaideuses-kai-se-ke-d-a-s-y-etous-2026',
                 ),
             ),
-            'note' => 'Από το 2026 εμφανίζεται ως διακριτή επίσημη ανακοίνωση. Δεν αποδίδουμε τις παλαιότερες συνοπτικές ημερομηνίες του αρχείου σε αυτή την ειδική κατηγορία χωρίς επιπλέον τεκμηρίωση.',
-        ),
-        array(
-            'id' => 'metatakseis-results-history',
-            'group' => 'metatakseis',
-            'title' => 'Μετατάξεις — ιστορική συνοπτική γραμμή αρχείου',
-            'latest' => 'Ιστορικό αρχείου (όχι ενιαίο γεγονός το 2026)',
-            'latest_verified' => false,
-            'source_coverage' => 'research',
-            'history' => array('16/07/2020','09/08/2021','18/07/2022','16/08/2023','01/08/2024','02/09/2025 · ΕΕΠ 08/10/2025','13/08/2026'),
-            'sources' => array(),
-            'note' => 'Διατηρείται μόνο για να μη χαθεί το ιστορικό του αρχικού φύλλου. Για το 2026 η μία ημερομηνία δεν επαρκεί: οι μετατάξεις ανακοινώθηκαν σε διαφορετικές ημερομηνίες ανά κατηγορία, όπως φαίνεται στις τρεις τεκμηριωμένες κάρτες.',
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — Μετατάξεις προς Δ.Ε. 10/09/2020', 'url' => 'https://www.minedu.gov.gr/site/46275-10-09-20-metatakseis-ekpaideftikon'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — Μετατάξεις προς Δ.Ε. 04/08/2021', 'url' => 'https://www.minedu.gov.gr/site/49681-04-08-21-metatakseis-ekpaideftikon-apo-klado-se-klado-tis-defterovathmias-ekpaidefsis-apo-kladous-tis-protovathmias-se-kladous-tis-d-thmias-ekpaidefsis-apo-kladous-tis-d-thmias-ekklisiastikis-se-kladous-tis-d-thmias-ekpaidefsis-kai-apo-melos-e-e-p-tis-eidikis-agogis-se-klado-tis-d-thmias-ekpaidefsis-gia-to-sxoliko-etos-2021-2024'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — Μετατάξεις προς Δ.Ε. 18/07/2022', 'url' => 'https://www.minedu.gov.gr/site/52839-18-07-22-metatakseis-ekpaideftikon-a-thmias-ekpaidefsis-v-thmias-ekpaidefsis-kai-eep-se-kladous-tis-v-thmias-ekpaidefsis-kai-se-ke-d-a-s-y-kai-metatakseis-ekpaideftikon-a-thmias-ekp-sis-kladon-pe79-mousikis-kai-pe91-theatrikis-agogis-se-mousika-kai-kallitexnika'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — Μετατάξεις προς Δ.Ε. 11/08/2023', 'url' => 'https://www.minedu.gov.gr/site/56180-11-08-23-metatakseis-ekpaideftikon-a-thmias-ekpaidefsis-v-thmias-ekpaidefsis-se-kladous-tis-v-thmias-ekpaidefsis-gia-to-sxoliko-etos-2023-2024'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς Δ.Ε. 02/08/2024', 'url' => 'https://www.minedu.gov.gr/site/59027-02-08-24-metatakseis-ekpaideftikon-a-thmias-kai-v-thmias-ekpaidefsis-se-kladous-tis-v-thmias-ekpaidefsis-gia-to-sxoliko-etos-2024-2025'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς Δ.Ε. 03/09/2025', 'url' => 'https://www.minedu.gov.gr/site/62546-03-09-25-metatakseis-ekpaideftikon-avathmias-ekpaidefsis-vvathmias-ekpaidefsis-melon-eep-evp-tis-eidikis-agogis-kai-ekpaideftikoy-tis-sivitanideiou-dimosias-sxolis-texnon-kai-epaggelmaton-se-allous-kladous-tis-vvathmias-ekpaidefsis-etous-2025'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — Μετατάξεις προς Δ.Ε./ΚΕΔΑΣΥ 21/08/2026', 'url' => 'https://www.minedu.gov.gr/site/70675-21-08-26-metataxeis-ekpaideutikon-athmias-ekpaideuses-bthmias-ekpaideuses-kai-melon-eep-ebp-tes-eidikes-agoges-se-allous-kladous-tes-bthmias-ekpaideuses-kai-se-ke-d-a-s-y-etous-2026'),
+            ),
+            'note' => 'Η ημερομηνία αφορά την πρώτη επίσημη ανακοίνωση αποτελεσμάτων της συγκεκριμένης κατηγορίας.',
         ),
         array(
             'id' => 'newly-appointed-detachment-circular',
@@ -848,7 +839,7 @@ return array(
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — 103036/Ε2/27-08-2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/103036%CE%952_27-08-2025_%CE%A0%CE%A1%CE%9F%CE%A3%CE%9A%CE%9B%CE%97%CE%A3%CE%97_%CE%9D%CE%95%CE%9F%CE%94%CE%99%CE%9F%CE%A1%CE%99%CE%A3%CE%A4%CE%A9%CE%9D_%CE%A80%CE%A0246%CE%9D%CE%9A%CE%A0%CE%94-%CE%9A%CE%A61.pdf'),
                 array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — πρόσκληση νεοδιοριζόμενων 25/08/2026', 'url' => 'https://www.minedu.gov.gr/site/70699-25-08-26-prosklese-neodiorizomenon-ekpaideutikon-gia-ypobole-aiteseon-apospases'),
             ),
-            'note' => 'Η ιστορική σειρά 2021–2026 έχει διασταυρωθεί ανά κύκλο. Για το 2021 διορθώθηκε η ημερομηνία από 21/08 σε 12/08/2021, δηλαδή την ημερομηνία του εγγράφου 100239/Ε2.',
+            'note' => '',
         ),
         array(
             'id' => 'newly-appointed-detachment-applications',
@@ -877,7 +868,7 @@ return array(
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — 103036/Ε2/27-08-2025, αιτήσεις 29/08–03/09/2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/103036%CE%952_27-08-2025_%CE%A0%CE%A1%CE%9F%CE%A3%CE%9A%CE%9B%CE%97%CE%A3%CE%97_%CE%9D%CE%95%CE%9F%CE%94%CE%99%CE%9F%CE%A1%CE%99%CE%A3%CE%A4%CE%A9%CE%9D_%CE%A80%CE%A0246%CE%9D%CE%9A%CE%A0%CE%94-%CE%9A%CE%A61.pdf'),
                 array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — πρόσκληση 25/08/2026, αιτήσεις 26/08–01/09/2026', 'url' => 'https://www.minedu.gov.gr/site/70699-25-08-26-prosklese-neodiorizomenon-ekpaideutikon-gia-ypobole-aiteseon-apospases'),
             ),
-            'note' => 'Οι περίοδοι 2021–2026 έχουν διασταυρωθεί στις αντίστοιχες προσκλήσεις. Για το 2021 το έγγραφο ορίζει μόνο καταληκτική ημερομηνία 24/08/2021 και ώρα 15:00, χωρίς ρητή ημερομηνία έναρξης· γι’ αυτό δεν εμφανίζεται πλασματικό εύρος.',
+            'note' => 'Για το 2021 η πρόσκληση ορίζει μόνο καταληκτική ημερομηνία 24/08/2021 στις 15:00 και όχι ξεχωριστή ημερομηνία έναρξης.',
         ),
     ),
 );

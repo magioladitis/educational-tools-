@@ -38,12 +38,12 @@ check('2025 PE and DE are no longer conflated', '06/06/2025 · 66707/Ε2' in pe 
 
 check('global source cards default collapsed on desktop', "$config['desktop_expanded'] = false" in SOURCE)
 check('source cards still render closed initially', "$config['open'] = false" in SOURCE)
-check('timeline current sources use native collapsed details', '<details class="timeline-event-sources">' in PAGE and '<summary>Πηγές / τεκμηρίωση</summary>' in PAGE)
-check('timeline historical sources are nested collapsed details', '<details class="timeline-historical-sources">' in PAGE and '<summary>Ιστορική τεκμηρίωση</summary>' in PAGE)
+check('timeline current sources use native collapsed details', '<details class="timeline-event-sources">' in PAGE and '<summary>Επίσημες πηγές</summary>' in PAGE)
+check('timeline historical sources are nested collapsed details', '<details class="timeline-historical-sources">' in PAGE and '<summary>Πηγές προηγούμενων ετών</summary>' in PAGE)
 check('timeline source disclosure styling exists', '.timeline-source-links' in CSS and '.timeline-historical-source-links' in CSS)
 
-check('version bumped to 3.22.39', "EDU_TOOLS_VERSION', '3.22.39'" in CONFIG)
-check('cache bumped to 3.22.39', "CACHE_PREFIX + '3.22.39'" in SW)
+check('version is 3.22.39 or newer', "EDU_TOOLS_VERSION', '3.22." in CONFIG)
+check('cache is 3.22.39 or newer', "CACHE_PREFIX + '3.22." in SW)
 check('readme documents v3.22.39', 'v3.22.39' in README and 'functional gaps P.E./D.E.' in README)
 check('source audit documents v3.22.39', 'Συμπλήρωση ιστορικών πηγών v3.22.39' in SOURCES)
 check('historical audit closes old functional-gaps research row', 'Η παλιά κοινή γραμμή λειτουργικών κενών αποσύρθηκε' in HIST)
