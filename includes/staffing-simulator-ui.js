@@ -625,7 +625,7 @@
   }
   function parseSchoolCsvFile(file){
     if(!file || !schoolCsvImporterSupportsRegistry()){
-      schoolCsvSetStatus('Δεν φορτώθηκε η έκδοση του CSV importer που υποστηρίζει το school_registry_v1. Κάνε ανανέωση της σελίδας και δοκίμασε ξανά.','error');
+      schoolCsvSetStatus('Η εισαγωγή σχολικών μονάδων από CSV δεν είναι διαθέσιμη αυτή τη στιγμή. Ανανέωσε τη σελίδα και δοκίμασε ξανά.','error');
       return;
     }
     const reader=new FileReader();
@@ -757,8 +757,8 @@
   }
   if(restoreSchoolCsvRegistry()){
     renderSchoolCsvRegistry();
-    if(schoolCsvMeta) schoolCsvMeta.textContent='Προσωρινό μητρώο browser · '+schoolCsvRegistry.length+' σχολικές μονάδες · school_registry_v1';
-    schoolCsvSetStatus('Το μητρώο αποκαταστάθηκε από την τρέχουσα καρτέλα του browser. Μπορείς να φορτώσεις άλλο σχολείο χωρίς να επιλέξεις ξανά το CSV.','success');
+    if(schoolCsvMeta) schoolCsvMeta.textContent='Φορτώθηκαν '+schoolCsvRegistry.length+' σχολικές μονάδες από το CSV';
+    schoolCsvSetStatus('Οι σχολικές μονάδες του CSV παραμένουν διαθέσιμες σε αυτή την καρτέλα. Μπορείς να επιλέξεις άλλο σχολείο χωρίς να φορτώσεις ξανά το αρχείο.','success');
   }
 
   function csvSpreadsheetSafeText(value){
@@ -1049,7 +1049,7 @@
       if(!window.PersonnelWorkloadCalculations){
         if(requiredInput) requiredInput.value='';
         if(availableEl) availableEl.textContent='—';
-        if(error){error.hidden=false;error.textContent='Δεν φορτώθηκε ο browser-side υπολογισμός ωραρίου προσωπικού.';}
+        if(error){error.hidden=false;error.textContent='Δεν ήταν δυνατό να ολοκληρωθεί ο έλεγχος ωραρίου προσωπικού. Ανανεώστε τη σελίδα και δοκιμάστε ξανά.';}
         return;
       }
       const directorSectionInfo=updateDirectorSectionInfo(row);
@@ -1274,7 +1274,7 @@
   function validatePersonnelCsvImport(){
     if(!personnelCsvImporterSupportsRegistry()){
       if(importPersonnelCsv) importPersonnelCsv.disabled=true;
-      personnelCsvSetStatus('Έχει φορτωθεί παλαιότερη cached έκδοση του CSV importer. Κάνε ανανέωση της σελίδας για να φορτωθεί η έκδοση που υποστηρίζει το portable μητρώο και τη 2η ειδικότητα.','error');
+      personnelCsvSetStatus('Χρειάζεται ανανέωση της σελίδας πριν από την εισαγωγή του CSV, ώστε να φορτωθεί η νεότερη λειτουργία εισαγωγής και η υποστήριξη 2ης ειδικότητας.','error');
       return;
     }
     const ready=!!(personnelCsvData && personnelCsvData.rows.length && personnelCsvMapping.specialty_code);
@@ -1307,7 +1307,7 @@
       reader.onload=function(){
         if(!window.EducationPersonnelCsv){ personnelCsvSetStatus('Δεν φορτώθηκε ο μηχανισμός ανάγνωσης CSV.','error'); return; }
         if(!personnelCsvImporterSupportsRegistry()){
-          personnelCsvSetStatus('Έχει φορτωθεί παλαιότερη cached έκδοση του CSV importer. Κάνε ανανέωση της σελίδας και επίλεξε ξανά το αρχείο.','error');
+          personnelCsvSetStatus('Χρειάζεται ανανέωση της σελίδας πριν από την εισαγωγή του CSV. Ανανέωσε και επίλεξε ξανά το αρχείο.','error');
           if(importPersonnelCsv) importPersonnelCsv.disabled=true;
           return;
         }
@@ -1342,7 +1342,7 @@
         const unique=mySchoolStaffRegistry.unique_people_count?(' · '+mySchoolStaffRegistry.unique_people_count+' μοναδικοί εκπαιδευτικοί'):'';
         mySchoolStaffMeta.textContent=(mySchoolStaffRegistry.source_file||'stat4_8')+' · '+mySchoolStaffRegistry.placement_count+' τοποθετήσεις'+unique+' · '+mySchoolStaffRegistry.school_count+' μονάδες'+(code?' · '+rows.length+' εγγραφές στο '+code:' · επίλεξε σχολείο με πραγματικό κωδικό');
       }else{
-        mySchoolStaffMeta.textContent='Φόρτωσε το αυθεντικό ZIP ή CSV του stat4_8. Το αρχείο επεξεργάζεται μόνο τοπικά στον browser.';
+        mySchoolStaffMeta.textContent='Φόρτωσε το αυθεντικό ZIP ή CSV του stat4_8. Το αρχείο επεξεργάζεται τοπικά στη συσκευή σου και δεν αποστέλλεται.';
       }
     }
     if(loadMySchoolStaffForSchool) loadMySchoolStaffForSchool.disabled=!mySchoolStaffRegistry||!code||!rows.length;
@@ -1359,7 +1359,7 @@
   if(mySchoolStaffFile){
     mySchoolStaffFile.addEventListener('change',function(){
       const file=mySchoolStaffFile.files&&mySchoolStaffFile.files[0]; if(!file) return;
-      if(!window.EducationMySchoolStaff){mySchoolStaffSetStatus('Δεν φορτώθηκε ο importer myschool stat4_8.','error');return;}
+      if(!window.EducationMySchoolStaff){mySchoolStaffSetStatus('Δεν ήταν δυνατό να διαβαστεί το αρχείο myschool stat4_8.','error');return;}
       const reader=new FileReader();
       reader.onload=async function(){
         try{
@@ -1418,7 +1418,7 @@
     importPersonnelCsv.addEventListener('click',function(){
       if(!personnelCsvData || !window.EducationPersonnelCsv) return;
       if(!personnelCsvImporterSupportsRegistry()){
-        personnelCsvSetStatus('Η εισαγωγή σταμάτησε επειδή ο browser έχει παλιότερη cached έκδοση του CSV importer. Ανανέωσε τη σελίδα και δοκίμασε ξανά.','error');
+        personnelCsvSetStatus('Η εισαγωγή δεν ολοκληρώθηκε. Ανανέωσε τη σελίδα και δοκίμασε ξανά με το ίδιο αρχείο.','error');
         return;
       }
       personnelCsvMapping=personnelCsvCurrentMapping();
@@ -1673,7 +1673,7 @@
     if(allocationWorkspace) allocationWorkspace.hidden=false;
     [allocationTab,vacanciesTab,specialtiesTab].forEach(function(tab){if(tab){tab.disabled=false;tab.title='';}});
     updateAllocationSummary();
-    personnelClientMessage('Ο έλεγχος ωραρίων ολοκληρώθηκε στον browser: '+roster.summary.resolved_count+' έγκυρες εγγραφές, '+roster.summary.general_available_here_hours+' διαθέσιμες ώρες Γενικής Εκπαίδευσης.'+(roster.summary.unresolved_count?' '+roster.summary.unresolved_count+' εγγραφή/ές χρειάζονται ακόμη συμπλήρωση και δεν συμμετέχουν στην κατανομή.':''),roster.summary.unresolved_count?'warning':'success');
+    personnelClientMessage('Ο έλεγχος ωραρίων ολοκληρώθηκε: '+roster.summary.resolved_count+' έγκυρες εγγραφές, '+roster.summary.general_available_here_hours+' διαθέσιμες ώρες Γενικής Εκπαίδευσης.'+(roster.summary.unresolved_count?' '+roster.summary.unresolved_count+' εγγραφή/ές χρειάζονται ακόμη συμπλήρωση και δεν συμμετέχουν στην κατανομή.':''),roster.summary.unresolved_count?'warning':'success');
     return true;
   }
   function allocationPriority(code,slot){
@@ -1943,7 +1943,7 @@
   if(pickStat51File&&stat51FileInput)pickStat51File.addEventListener('click',function(){stat51FileInput.click();});
   if(stat51FileInput)stat51FileInput.addEventListener('change',function(){
     const file=stat51FileInput.files&&stat51FileInput.files[0];if(!file)return;
-    if(!window.EducationMySchoolStat51){stat51SetStatus('Δεν φορτώθηκε ο importer myschool stat5_1.','error');return;}
+    if(!window.EducationMySchoolStat51){stat51SetStatus('Δεν ήταν δυνατό να διαβαστεί το αρχείο myschool stat5_1.','error');return;}
     stat51SetStatus('Ανάγνωση '+file.name+'…','');
     const reader=new FileReader();reader.onload=async function(){
       try{
@@ -1951,7 +1951,7 @@
         const saved=window.EducationMySchoolStat51.saveSession(registry);
         if(stat51Panel)stat51Panel.open=true;
         stat51RefreshFromCurrentAllocation();
-        if(!saved)stat51SetStatus(stat51Status.textContent+' Η σύγκριση λειτουργεί, αλλά το αρχείο είναι πολύ μεγάλο για προσωρινή αποθήκευση στη συνεδρία του browser.','warning');
+        if(!saved)stat51SetStatus(stat51Status.textContent+' Η σύγκριση λειτουργεί, αλλά το αρχείο είναι πολύ μεγάλο για προσωρινή αποθήκευση. Αν ανανεώσεις τη σελίδα, θα χρειαστεί να το φορτώσεις ξανά.','warning');
       }catch(error){stat51SetStatus('Αποτυχία ανάγνωσης stat5_1: '+(error&&error.message?error.message:'άγνωστο σφάλμα')+'.','error');}
       stat51FileInput.value='';
     };reader.onerror=function(){stat51SetStatus('Δεν ήταν δυνατή η ανάγνωση του αρχείου stat5_1.','error');};reader.readAsArrayBuffer(file);
@@ -1977,7 +1977,7 @@
     if(errors.indexOf('unknown_person')>=0) return 'Δεν έχει επιλεγεί έγκυρος εκπαιδευτικός.';
     if(errors.indexOf('positive_hours_required')>=0) return 'Οι ώρες πρέπει να είναι θετικές.';
     if(errors.indexOf('hours_exceed_slot_capacity')>=0) return 'Οι ώρες υπερβαίνουν τις '+((state.slot&&state.slot.capacity_hours)||0)+' ώρες του συγκεκριμένου τμήματος / ομάδας.';
-    if(errors.indexOf('atomic_slot_requires_full_hours')>=0) return 'Η ανάθεση στο συγκεκριμένο τμήμα / ομάδα είναι ατομική: πρέπει να δηλωθούν ακριβώς '+((state.slot&&state.slot.capacity_hours)||0)+' ώρες.';
+    if(errors.indexOf('atomic_slot_requires_full_hours')>=0) return 'Η ανάθεση στο συγκεκριμένο τμήμα / ομάδα πρέπει να δοθεί ολόκληρη: δήλωσε ακριβώς '+((state.slot&&state.slot.capacity_hours)||0)+' ώρες.';
     if(errors.indexOf('specialty_not_eligible')>=0){
       const person=state.person||{};
       return 'Οι ειδικότητες '+(person.specialty_code||'')+(person.secondary_specialty_code?' / '+person.secondary_specialty_code:'')+' δεν έχουν ανάθεση στο συγκεκριμένο μάθημα.';
@@ -2476,7 +2476,7 @@
       if(invalid.length){
         allocationClientMessage('Η κατανομή έχει '+invalid.length+' γραμμή/ές με σφάλμα. Διόρθωσέ τες πριν συνεχίσεις.',true);
         const focus=invalid[0].row&&((invalid[0].row.getElementsByClassName('allocation-slot')[0])||(invalid[0].row.getElementsByClassName('allocation-person')[0])||(invalid[0].row.getElementsByClassName('allocation-hours')[0])); if(focus) focus.focus();
-      }else allocationClientMessage('Ο έλεγχος κατανομής ολοκληρώθηκε στον browser: '+state.basicAssigned+' ώρες κατανεμημένες, '+state.unassigned+' ακάλυπτες.',false);
+      }else allocationClientMessage('Ο έλεγχος κατανομής ολοκληρώθηκε: '+state.basicAssigned+' ώρες κατανεμημένες, '+state.unassigned+' ακάλυπτες.',false);
       return true;
     }
     if(typeof W.optimizeRemaining!=='function') return false;
@@ -2516,7 +2516,7 @@
     const covered=optimized&&optimized.summary?(optimized.summary.auto_covered_hours||optimized.summary.covered_hours||0):0;
     const certified=!!(optimized&&optimized.summary&&optimized.summary.maximum_coverage_certified);
     if(proposed.length){
-      allocationClientMessage('Η αυτόματη πρόταση προστέθηκε στον browser: '+covered+' ώρες σε '+proposed.length+' αδιαίρετα μαθήματα/τμήματα.'+(certified?' Η μέγιστη κάλυψη πιστοποιήθηκε από τον optimizer.':' Η πρόταση είναι έγκυρη αλλά η μέγιστη κάλυψη δεν πιστοποιήθηκε εντός του ορίου αναζήτησης.'),!certified);
+      allocationClientMessage('Η αυτόματη πρόταση προστέθηκε: '+covered+' ώρες σε '+proposed.length+' αδιαίρετα μαθήματα/τμήματα.'+(certified?' Επιβεβαιώθηκε ότι δεν υπάρχει καλύτερη αυτόματη κάλυψη με τα διαθέσιμα στοιχεία.':' Η πρόταση είναι έγκυρη, αλλά χρειάζεται τελικός έλεγχος ως προς το αν επιτυγχάνει τη μέγιστη δυνατή κάλυψη.'),!certified);
     }else{
       allocationClientMessage('Δεν εντοπίστηκαν επιπλέον ώρες που να μπορούν να καλυφθούν αυτόματα από το διαθέσιμο προσωπικό.',false);
     }

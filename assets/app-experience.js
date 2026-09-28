@@ -186,7 +186,7 @@
     } else if (isAndroid) {
       content.innerHTML = '<ol><li>Άνοιξε τη σελίδα στο <strong>Chrome</strong>.</li><li>Πάτησε το μενού <strong>⋮</strong>.</li><li>Επίλεξε <strong>«Εγκατάσταση εφαρμογής»</strong> ή <strong>«Προσθήκη στην αρχική οθόνη»</strong>.</li><li>Επιβεβαίωσε την εγκατάσταση.</li></ol>';
     } else {
-      content.innerHTML = '<p>Αν ο browser σου υποστηρίζει εγκατάσταση εφαρμογών ιστού, αναζήτησε την επιλογή <strong>«Εγκατάσταση εφαρμογής»</strong> ή <strong>«Προσθήκη στην αρχική οθόνη»</strong> στο μενού του.</p>';
+      content.innerHTML = '<p>Αν το πρόγραμμα περιήγησής σου υποστηρίζει εγκατάσταση εφαρμογών, αναζήτησε την επιλογή <strong>«Εγκατάσταση εφαρμογής»</strong> ή <strong>«Προσθήκη στην αρχική οθόνη»</strong> στο μενού του.</p>';
     }
     overlay.hidden = false;
     var closeButton = overlay.querySelector('.edu-install-help__close');

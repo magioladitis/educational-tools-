@@ -821,7 +821,7 @@ $schoolProfileInputErrors = array();
 $postedBasicSectionTotal = $submitted ? staffingUiBasicSectionPostTotal($schoolType) : 0;
 if ($submitted && $postedBasicSectionTotal > STAFFING_UI_MAX_BASIC_SECTIONS) {
     $schoolProfileInputErrors[] = 'Το σύνολο των βασικών τμημάτων της σχολικής μονάδας είναι ' . $postedBasicSectionTotal
-        . ' και υπερβαίνει το τεχνικό όριο ασφαλείας των ' . STAFFING_UI_MAX_BASIC_SECTIONS . ' τμημάτων.';
+        . ' και υπερβαίνει το μέγιστο όριο καταχώρισης των ' . STAFFING_UI_MAX_BASIC_SECTIONS . ' τμημάτων.';
 }
 if ($submitted && $schoolType === 'protypo_ekklisiastiko_gymnasio_lykeio' && $selectedEcclesiasticalSchool === null) {
     $schoolProfileInputErrors[] = 'Επίλεξε μία από τις έξι ενεργές Πρότυπες Εκκλησιαστικές μονάδες Γυμνασίου – Λυκείου.';
@@ -897,7 +897,7 @@ if ($submitted && empty($schoolProfileInputErrors)) {
         } catch (Exception $e) {
             error_log('Staffing composite profile runtime error: ' . $e->getMessage());
             $profile = null;
-            $schoolProfileInputErrors[] = 'Δεν ήταν δυνατό να φορτωθεί το προφίλ «Γυμνάσιο με Λυκειακές Τάξεις». Βεβαιώσου ότι έχουν ενημερωθεί μαζί το κύριο αρχείο και τα includes της ίδιας έκδοσης.';
+            $schoolProfileInputErrors[] = 'Δεν ήταν δυνατό να φορτωθούν τα στοιχεία για «Γυμνάσιο με Λυκειακές Τάξεις». Δοκίμασε ξανά αργότερα.';
         }
     } elseif ($schoolType === 'protypo_ekklisiastiko_gymnasio_lykeio') {
         $profile = schoolProfileBuildEcclesiasticalGymnasiumLykeio2026(array(
@@ -1433,7 +1433,7 @@ staffingPerfEnd('specialty_labels');
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('class'=>'card staffing-panel','attrs'=>array('id'=>'staffingPanelSchool','data-staffing-panel'=>'school','role'=>'tabpanel','aria-labelledby'=>'staffingTabSchool','tabindex'=>'0') + ($activePanel !== 'school' ? array('hidden'=>true) : array()))); ?>
         <h2>1. Στοιχεία σχολικής μονάδας</h2>
-        <p class="cap">Η τρέχουσα έκδοση υποστηρίζει Ημερήσιο Γυμνάσιο, Εσπερινό Γυμνάσιο, Ημερήσιο ΓΕΛ, Εσπερινό ΓΕΛ, Γυμνάσιο με Λ.Τ., τις 6 ενιαίες μονάδες Πρότυπου Εκκλησιαστικού Γυμνασίου–Λυκείου και τα 2 αυτοτελή Πρότυπα Εκκλησιαστικά Λύκεια. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
+        <p class="cap">Το εργαλείο υποστηρίζει Ημερήσιο Γυμνάσιο, Εσπερινό Γυμνάσιο, Ημερήσιο ΓΕΛ, Εσπερινό ΓΕΛ, Γυμνάσιο με Λ.Τ., τις 6 ενιαίες μονάδες Πρότυπου Εκκλησιαστικού Γυμνασίου–Λυκείου και τα 2 αυτοτελή Πρότυπα Εκκλησιαστικά Λύκεια. Οι αριθμοί αφορούν πραγματικά τμήματα / ομάδες διδασκαλίας και όχι οργανικές θέσεις.</p>
         <div class="status-warn" id="schoolProfileStaleNotice" role="status" aria-live="polite" hidden><strong>Τα στοιχεία της σχολικής μονάδας άλλαξαν.</strong> Τα προηγούμενα αποτελέσματα, το προσωπικό, η κατανομή και τα κενά έχουν κλειδωθεί μέχρι να πατήσεις ξανά «Υπολόγισε διδακτικές ανάγκες».</div>
         <?php if (!empty($schoolProfileInputErrors)): ?>
           <div class="status-warn" role="alert"><strong>Ο υπολογισμός δεν εκτελέστηκε.</strong><ul><?php foreach ($schoolProfileInputErrors as $inputError): ?><li><?php echo staffingUiH($inputError); ?></li><?php endforeach; ?></ul></div>
@@ -1502,12 +1502,12 @@ staffingPerfEnd('specialty_labels');
             <button class="edu-btn-secondary" type="button" id="loadCorfuSchoolDirectory">Κατάλογος ΔΔΕ Κέρκυρας 2026-27</button>
             <input type="file" id="schoolCsvFile" accept=".csv,text/csv,text/plain" hidden>
           </div>
-          <div class="info-note school-registry-note"><strong>Πολλαπλές σχολικές μονάδες στο ίδιο CSV.</strong> Το portable schema <code>school_registry_v1</code> κρατά μία γραμμή ανά σχολείο. Στην τρέχουσα έκδοση μπορείς να φορτώνεις μία μονάδα κάθε φορά στην Καρτέλα 1· το μητρώο του CSV παραμένει διαθέσιμο στον browser ώστε να αλλάζεις σχολείο χωρίς νέο αρχείο. Οι τύποι που εμφανίζονται ως «προσεχώς» αναγνωρίζονται από το μητρώο αλλά δεν φορτώνονται ακόμη στον υπολογισμό. Ο ενσωματωμένος κατάλογος ΔΔΕ Κέρκυρας 2026-2027 περιέχει πραγματικούς κωδικούς και ονομασίες, βασικά τμήματα, χωρισμούς Πληροφορικής–Τεχνολογίας, ομάδες προσανατολισμού και τις πραγματικές ομάδες 2ης ξένης γλώσσας από το myschool stat3_10 της 06-09-2026 για τις υποστηριζόμενες μονάδες. Όσα ειδικότερα πεδία δεν έχουν ακόμη τεκμηριωθεί παραμένουν κενά για συμπλήρωση.</div>
+          <div class="info-note school-registry-note"><strong>Πολλαπλές σχολικές μονάδες στο ίδιο CSV.</strong> Κάθε γραμμή αντιστοιχεί σε ένα σχολείο. Αφού φορτώσεις το αρχείο, μπορείς να αλλάζεις σχολική μονάδα χωρίς να το επιλέγεις ξανά. Οι τύποι σχολείων που εμφανίζονται ως «προσεχώς» δεν συμμετέχουν ακόμη στον υπολογισμό. Ο κατάλογος ΔΔΕ Κέρκυρας 2026–2027 περιλαμβάνει τα διαθέσιμα στοιχεία για τις υποστηριζόμενες μονάδες· όσα πεδία λείπουν μπορούν να συμπληρωθούν χειροκίνητα.</div>
           <div class="personnel-csv-panel school-csv-panel" id="schoolCsvPanel" hidden>
             <div class="personnel-csv-head">
               <div>
                 <strong>Μητρώο σχολικών μονάδων από CSV</strong>
-                <div class="personnel-csv-meta" id="schoolCsvMeta">Επίλεξε αρχείο CSV. Η ανάγνωση γίνεται μόνο στον browser σου.</div>
+                <div class="personnel-csv-meta" id="schoolCsvMeta">Επίλεξε αρχείο CSV. Το αρχείο επεξεργάζεται τοπικά στη συσκευή σου και δεν αποστέλλεται.</div>
               </div>
               <div class="school-csv-head-actions">
                 <button type="button" class="edu-btn-secondary" id="chooseSchoolCsvFile">Επιλογή CSV</button>
@@ -1516,7 +1516,7 @@ staffingPerfEnd('specialty_labels');
                 <button type="button" class="edu-btn-secondary" id="closeSchoolCsv">Κλείσιμο</button>
               </div>
             </div>
-            <div class="info-note"><strong>Δεν γίνεται μεταφόρτωση στον διακομιστή.</strong> Υποστηρίζονται semicolon (;), κόμμα ή tab. Ελάχιστες στήλες: «Ονομασία σχολείου» και «Είδος σχολείου». Προαιρετικά μπορούν να υπάρχουν «Κωδικός Υπουργείου» και «Διεύθυνση σχολείου». Τα «Α τμήματα / Β τμήματα / Γ τμήματα» και τα ειδικότερα πεδία μπορούν να συμπληρώνονται στην ίδια γραμμή. Το άθροισμα των βασικών τμημάτων ανά σχολείο δεν μπορεί να υπερβαίνει τα 120.</div>
+            <div class="info-note"><strong>Το αρχείο παραμένει στη συσκευή σου.</strong> Υποστηρίζονται διαχωριστικά ελληνικό ερωτηματικό (;), κόμμα ή tab. Απαραίτητες στήλες είναι η «Ονομασία σχολείου» και το «Είδος σχολείου». Προαιρετικά μπορείς να προσθέσεις κωδικό, διεύθυνση, τμήματα και τα υπόλοιπα στοιχεία της σχολικής μονάδας. Το σύνολο των βασικών τμημάτων ανά σχολείο μπορεί να είναι έως 120.</div>
             <div class="field school-registry-search"><label for="schoolRegistrySearch">Αναζήτηση στο μητρώο</label><input type="search" id="schoolRegistrySearch" placeholder="π.χ. 2401020, 2ο Γυμνάσιο, Λευκίμμη"></div>
             <div class="personnel-csv-preview" id="schoolCsvPreview"><div class="empty-personnel">Δεν έχει επιλεγεί ακόμη CSV.</div></div>
             <div class="personnel-csv-status" id="schoolCsvStatus" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -1526,7 +1526,7 @@ staffingPerfEnd('specialty_labels');
           <div id="gymProfileFields"<?php echo in_array($schoolType, array('gymnasio','esperino_gymnasio','gymnasio_lt'), true) ? '' : ' hidden'; ?>>
             <section class="staffing-section">
               <h3><?php echo $schoolType === 'gymnasio_lt' ? 'Γυμνάσιο — κανονικά τμήματα ανά τάξη' : 'Κανονικά τμήματα ανά τάξη'; ?></h3>
-              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong><?php echo $schoolType === 'gymnasio_lt' ? ' στο άθροισμα Γυμνασίου + Λυκειακών Τάξεων' : ' (Α΄ + Β΄ + Γ΄)'; ?>, μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
+              <p class="help">Μέγιστο όριο καταχώρισης: <strong>120 βασικά τμήματα συνολικά</strong><?php echo $schoolType === 'gymnasio_lt' ? ' στο άθροισμα Γυμνασίου + Λυκειακών Τάξεων' : ' (Α΄ + Β΄ + Γ΄)'; ?>, μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
               <?php staffingUiRenderBasicSectionFields('gym'); ?>
               <small class="profile-validation-error" id="gymBasicSectionsError" data-basic-sections-error="gym" hidden></small>
             </section>
@@ -1562,7 +1562,7 @@ staffingPerfEnd('specialty_labels');
           <div id="gelProfileFields"<?php echo in_array($schoolType, array('gel','esperino_gel','gymnasio_lt'), true) ? '' : ' hidden'; ?>>
             <section class="staffing-section">
               <h3><?php echo $schoolType === 'gymnasio_lt' ? 'Λυκειακές Τάξεις — κανονικά τμήματα ανά τάξη' : 'Κανονικά τμήματα ανά τάξη'; ?></h3>
-              <p class="help">Τεχνικό όριο ασφαλείας: έως <strong>120 βασικά τμήματα συνολικά</strong><?php echo $schoolType === 'gymnasio_lt' ? ' στο άθροισμα Γυμνασίου + Λυκειακών Τάξεων' : ' (Α΄ + Β΄ + Γ΄)'; ?>, μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
+              <p class="help">Μέγιστο όριο καταχώρισης: <strong>120 βασικά τμήματα συνολικά</strong><?php echo $schoolType === 'gymnasio_lt' ? ' στο άθροισμα Γυμνασίου + Λυκειακών Τάξεων' : ' (Α΄ + Β΄ + Γ΄)'; ?>, μέγεθος που αντιστοιχεί περίπου σε 3.500 μαθητές και είναι πολύ πάνω από μια πραγματική σχολική μονάδα.</p>
               <?php staffingUiRenderBasicSectionFields('gel'); ?>
               <small class="profile-validation-error" id="gelBasicSectionsError" data-basic-sections-error="gel" hidden></small>
             </section>
@@ -1880,11 +1880,11 @@ staffingPerfEnd('specialty_labels');
               <div class="personnel-csv-head">
                 <div>
                   <strong>Μητρώο προσωπικού myschool · stat4_8</strong>
-                  <div class="personnel-csv-meta" id="mySchoolStaffMeta">Φόρτωσε το αυθεντικό ZIP ή CSV του stat4_8. Το αρχείο επεξεργάζεται μόνο τοπικά στον browser.</div>
+                  <div class="personnel-csv-meta" id="mySchoolStaffMeta">Φόρτωσε το αυθεντικό ZIP ή CSV του stat4_8. Το αρχείο επεξεργάζεται τοπικά στη συσκευή σου και δεν αποστέλλεται.</div>
                 </div>
                 <button class="personnel-remove" type="button" id="closeMySchoolStaff">Κλείσιμο</button>
               </div>
-              <div class="info-note"><strong>Δεν χρειάζεται προσαρμογή του export.</strong> Ο importer κρατά μόνο κωδικό σχολείου, ονοματεπώνυμο, κύρια/2η ειδικότητα, ρόλο και τα απολύτως απαραίτητα στοιχεία ωραρίου. Α.Μ., Α.Φ.Μ., τηλέφωνα, email, διευθύνσεις και πράξεις τοποθέτησης δεν αποθηκεύονται στο μητρώο της εφαρμογής. Το καθαρισμένο μητρώο παραμένει μόνο στο <code>sessionStorage</code>.</div>
+              <div class="info-note"><strong>Δεν χρειάζεται να τροποποιήσεις το αρχείο εξαγωγής.</strong> Χρησιμοποιούνται μόνο ο κωδικός σχολείου, το ονοματεπώνυμο, η κύρια/2η ειδικότητα, ο ρόλος και τα απαραίτητα στοιχεία ωραρίου. Α.Μ., Α.Φ.Μ., τηλέφωνα, email, διευθύνσεις και πράξεις τοποθέτησης δεν κρατούνται από την Εργαλειοθήκη. Τα στοιχεία παραμένουν προσωρινά μόνο στη συγκεκριμένη καρτέλα.</div>
               <div class="personnel-csv-actions">
                 <button class="edu-btn-secondary" type="button" id="pickMySchoolStaffFile">Επιλογή stat4_8 ZIP / CSV</button>
                 <button class="edu-btn-primary" type="button" id="loadMySchoolStaffForSchool" disabled>Φόρτωση προσωπικού τρέχοντος σχολείου</button>
@@ -1903,7 +1903,7 @@ staffingPerfEnd('specialty_labels');
                 </div>
                 <button class="personnel-remove" type="button" id="closePersonnelCsv">Κλείσιμο</button>
               </div>
-              <div class="info-note"><strong>Το αρχείο διαβάζεται μόνο στον browser σου.</strong> Δεν μεταφορτώνεται στον διακομιστή. Υποστηρίζονται CSV με ελληνικό ερωτηματικό/semicolon (;), κόμμα ή tab και γίνεται αυτόματη προσπάθεια αναγνώρισης των στηλών.</div>
+              <div class="info-note"><strong>Το αρχείο παραμένει στη συσκευή σου.</strong> Υποστηρίζονται CSV με ελληνικό ερωτηματικό (;), κόμμα ή tab και γίνεται αυτόματη αναγνώριση των στηλών όπου είναι δυνατό.</div>
               <details class="option-panel" open>
                 <summary>Αντιστοίχιση στηλών CSV</summary>
                 <div class="option-panel-body">
@@ -2065,7 +2065,7 @@ staffingPerfEnd('specialty_labels');
             <?php if ($allocationAutoProposal): ?>
               <?php if (isset($allocationAutoProposal['status']) && $allocationAutoProposal['status'] === 'ok'): ?>
                 <div class="info-note allocation-auto-result is-success"><strong>Η αυτόματη πρόταση δημιουργήθηκε.</strong> Προστέθηκαν <?php echo (int)$allocationAutoProposal['summary']['auto_covered_hours']; ?> ώρες πάνω στις ήδη ορισμένες <?php echo (int)$allocationAutoProposal['summary']['locked_hours']; ?> ώρες. Απομένουν <?php echo (int)$allocationAutoProposal['summary']['final_uncovered_hours']; ?> ακάλυπτες ώρες.</div>
-                <?php if (empty($allocationAutoProposal['optimizer_state']['summary']['maximum_coverage_certified'])): ?><div class="info-note allocation-auto-result is-warning"><strong>Χρειάζεται τελικός έλεγχος.</strong> Το component ήταν πολύ σύνθετο για πλήρη πιστοποίηση της μέγιστης κάλυψης εντός του ορίου ασφαλείας· εμφανίζεται η καλύτερη έγκυρη atomic πρόταση που βρέθηκε.</div><?php endif; ?>
+                <?php if (empty($allocationAutoProposal['optimizer_state']['summary']['maximum_coverage_certified'])): ?><div class="info-note allocation-auto-result is-warning"><strong>Χρειάζεται τελικός έλεγχος.</strong> Η συγκεκριμένη περίπτωση είναι πολύ σύνθετη για να επιβεβαιωθεί ότι η αυτόματη πρόταση δίνει τη μέγιστη δυνατή κάλυψη. Εμφανίζεται η καλύτερη έγκυρη πρόταση που βρέθηκε.</div><?php endif; ?>
               <?php else: ?>
                 <div class="info-note allocation-auto-result is-warning"><strong>Δεν δημιουργήθηκε αυτόματη πρόταση.</strong> <?php echo staffingUiH(isset($allocationAutoProposal['message']) ? $allocationAutoProposal['message'] : 'Χρειάζεται πρώτα διόρθωση της τρέχουσας κατανομής.'); ?></div>
               <?php endif; ?>
@@ -2232,7 +2232,7 @@ staffingPerfEnd('specialty_labels');
           <details class="stat51-compare-panel" id="stat51ComparePanel">
             <summary><strong>Προαιρετικός έλεγχος με stat5_1 myschool</strong> <span>σύγκριση των ακάλυπτων ωρών</span></summary>
             <div class="stat51-compare-body">
-              <p class="help">Φόρτωσε το αυθεντικό <code>stat5_1</code> σε ZIP ή CSV. Η ανάγνωση γίνεται μόνο στον browser σου και το αρχείο <strong>δεν αλλάζει</strong> την κατανομή ή τα κενά του εργαλείου. Η αντιστοίχιση του σχολείου γίνεται από τον κωδικό myschool της Καρτέλας 1.</p>
+              <p class="help">Φόρτωσε το αυθεντικό <code>stat5_1</code> σε ZIP ή CSV. Το αρχείο επεξεργάζεται τοπικά στη συσκευή σου και <strong>δεν αλλάζει</strong> την κατανομή ή τα κενά του εργαλείου. Η αντιστοίχιση του σχολείου γίνεται από τον κωδικό myschool της Καρτέλας 1.</p>
               <div class="stat51-actions">
                 <button type="button" class="edu-btn-secondary" id="pickStat51File">Επιλογή stat5_1 ZIP / CSV</button>
                 <button type="button" class="edu-btn-secondary" id="clearStat51File" hidden>Καθαρισμός σύγκρισης</button>
@@ -2294,7 +2294,7 @@ staffingPerfEnd('specialty_labels');
           <p class="cap">Μετατρέπει την εικόνα μαθημάτων και προσωπικού σε προτεινόμενη δήλωση ανά κλάδο. Πριν δημιουργήσει έλλειμμα, το εργαλείο ελέγχει αν οι ακάλυπτες ώρες μπορούν να απορροφηθούν από το υπάρχον προσωπικό μέσω Α΄/Β΄/Γ΄ ανάθεσης ή 2ης ειδικότητας.</p>
           <div class="info-note"><strong>«Έξυπνη» επιλογή κλάδου:</strong> όταν ένα ακάλυπτο μάθημα έχει περισσότερους από έναν ισότιμους κλάδους στην καλύτερη ανάθεση, προτείνεται ο κλάδος που μπορεί να καλύψει τις περισσότερες από τις συνολικά ακάλυπτες ώρες. Δεν επιλέγεται χαμηλότερη ανάθεση μόνο και μόνο για να βελτιωθεί η συγκέντρωση των κενών.</div>
           <?php if ($schoolType === 'gymnasio'): ?><div class="info-note"><strong>Υπόδειγμα ΔΔΕ Κέρκυρας:</strong> τα Εργαστήρια Δεξιοτήτων και η Τεχνολογία Γυμνασίου διατηρούνται ως ξεχωριστές γραμμές και δεν αποδίδονται τεχνητά σε έναν κλάδο.</div><?php endif; ?>
-          <?php if ($specialtyBalanceReport && empty($specialtyBalanceReport['summary']['maximum_coverage_certified'])): ?><div class="info-note is-warning"><strong>Χρειάζεται τελικός έλεγχος.</strong> Η εσωτερική εξισορρόπηση είναι έγκυρη και atomic, αλλά η μέγιστη κάλυψη δεν πιστοποιήθηκε πλήρως εντός του ορίου ασφαλείας του optimizer.</div><?php endif; ?>
+          <?php if ($specialtyBalanceReport && empty($specialtyBalanceReport['summary']['maximum_coverage_certified'])): ?><div class="info-note is-warning"><strong>Χρειάζεται τελικός έλεγχος.</strong> Η προτεινόμενη εξισορρόπηση είναι έγκυρη, αλλά δεν επιβεβαιώθηκε ότι δίνει τη μέγιστη δυνατή κάλυψη. Εξέτασε την πρόταση πριν από οποιαδήποτε υπηρεσιακή χρήση.</div><?php endif; ?>
 
           <div class="staffing-summary-grid" id="specialtyBalanceSummary">
             <div class="summary-chip"><strong data-specialty-manual-uncovered><?php echo $specialtyBalanceReport ? (int)$specialtyBalanceReport['summary']['manual_unassigned_hours'] : 0; ?></strong><span>ώρες χωρίς χειροκίνητη κατανομή</span></div>
@@ -2366,7 +2366,7 @@ staffingPerfEnd('specialty_labels');
             </div>
           </details>
 
-          <p class="help"><strong>Σημαντικό:</strong> η Καρτέλα 6 είναι προτεινόμενη υπηρεσιακή εικόνα για έλεγχο και αποστολή προς ΔΔΕ, όχι αυτόματη επίσημη πράξη. Το CSV χρησιμοποιεί portable schema <code>staffing_balance_v1</code> ώστε αργότερα να μπορούν να συγκεντρώνονται πολλαπλά σχολεία σε επίπεδο Διεύθυνσης Εκπαίδευσης.</p>
+          <p class="help"><strong>Σημαντικό:</strong> η Καρτέλα 6 είναι προτεινόμενη υπηρεσιακή εικόνα για έλεγχο και αποστολή προς ΔΔΕ, όχι αυτόματη επίσημη πράξη. Το αρχείο CSV έχει σχεδιαστεί ώστε να μπορεί να χρησιμοποιηθεί και για συγκέντρωση στοιχείων από περισσότερες σχολικές μονάδες.</p>
         <?php calculatorCardEnd(); ?>
       <?php endif; ?>
     <?php calculatorMainEnd(); ?>

@@ -145,7 +145,7 @@
     };
   }
   function parseText(text,meta){
-    if(!csv || !csv.parse) throw new Error('Δεν φορτώθηκε ο κοινός CSV parser.');
+    if(!csv || !csv.parse) throw new Error('Δεν ήταν δυνατό να διαβαστεί το CSV. Ανανέωσε τη σελίδα και δοκίμασε ξανά.');
     return buildRegistry(csv.parse(String(text||'')),meta||{});
   }
   function decodeBytes(bytes){
@@ -172,7 +172,7 @@
       if(cursor+46>view.byteLength || u32(view,cursor)!==0x02014b50) throw new Error('Μη έγκυρη εγγραφή ZIP.');
       var flags=u16(view,cursor+8),method=u16(view,cursor+10),compressedSize=u32(view,cursor+20),uncompressedSize=u32(view,cursor+24);
       var nameLen=u16(view,cursor+28),extraLen=u16(view,cursor+30),commentLen=u16(view,cursor+32),localOffset=u32(view,cursor+42);
-      if(compressedSize===0xffffffff || uncompressedSize===0xffffffff || localOffset===0xffffffff) throw new Error('ZIP64 δεν υποστηρίζεται από τον τοπικό importer.');
+      if(compressedSize===0xffffffff || uncompressedSize===0xffffffff || localOffset===0xffffffff) throw new Error('Το συγκεκριμένο ZIP χρησιμοποιεί μορφή ZIP64, η οποία δεν υποστηρίζεται. Εξήγαγε το CSV από το ZIP και επίλεξέ το απευθείας.');
       var nameBytes=new Uint8Array(buffer,cursor+46,nameLen);
       entries.push({name:decodeZipName(nameBytes,(flags&0x0800)!==0),flags:flags,method:method,compressedSize:compressedSize,uncompressedSize:uncompressedSize,localOffset:localOffset});
       cursor+=46+nameLen+extraLen+commentLen;
@@ -180,7 +180,7 @@
     return entries;
   }
   async function inflateRaw(bytes){
-    if(typeof DecompressionStream==='undefined') throw new Error('Ο browser δεν υποστηρίζει τοπική αποσυμπίεση ZIP. Χρησιμοποίησε το CSV μέσα στο ZIP.');
+    if(typeof DecompressionStream==='undefined') throw new Error('Δεν είναι δυνατή η αποσυμπίεση του ZIP στη συσκευή σου. Εξήγαγε το CSV από το ZIP και επίλεξέ το απευθείας.');
     var stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
     return new Uint8Array(await new Response(stream).arrayBuffer());
   }
@@ -189,16 +189,16 @@
     if(!entries.length) throw new Error('Δεν βρέθηκε CSV μέσα στο ZIP.');
     var entry=entries.find(function(e){return /stat5[_-]?1/i.test(e.name);}) || entries[0];
     if(entry.flags&1) throw new Error('Κρυπτογραφημένο ZIP δεν υποστηρίζεται.');
-    if(entry.uncompressedSize>MAX_ARCHIVE_BYTES) throw new Error('Το CSV μέσα στο ZIP είναι υπερβολικά μεγάλο για ασφαλή τοπική εισαγωγή.');
+    if(entry.uncompressedSize>MAX_ARCHIVE_BYTES) throw new Error('Το CSV μέσα στο ZIP είναι πολύ μεγάλο για επεξεργασία στη συσκευή.');
     var view=new DataView(buffer),off=entry.localOffset;
-    if(off+30>view.byteLength || u32(view,off)!==0x04034b50) throw new Error('Μη έγκυρη τοπική εγγραφή ZIP.');
+    if(off+30>view.byteLength || u32(view,off)!==0x04034b50) throw new Error('Το ZIP φαίνεται κατεστραμμένο ή μη έγκυρο.');
     var nameLen=u16(view,off+26),extraLen=u16(view,off+28),dataStart=off+30+nameLen+extraLen;
     if(dataStart+entry.compressedSize>view.byteLength) throw new Error('Το ZIP είναι ελλιπές.');
     var compressed=new Uint8Array(buffer,dataStart,entry.compressedSize),out;
     if(entry.method===0) out=new Uint8Array(compressed);
     else if(entry.method===8) out=await inflateRaw(compressed);
     else throw new Error('Μη υποστηριζόμενη μέθοδος συμπίεσης ZIP ('+entry.method+').');
-    if(out.byteLength>MAX_ARCHIVE_BYTES) throw new Error('Το αποσυμπιεσμένο CSV υπερβαίνει το όριο ασφαλείας.');
+    if(out.byteLength>MAX_ARCHIVE_BYTES) throw new Error('Το αποσυμπιεσμένο CSV είναι πολύ μεγάλο για επεξεργασία στη συσκευή.');
     return {bytes:out,filename:entry.name};
   }
   async function parseArrayBuffer(buffer,filename){

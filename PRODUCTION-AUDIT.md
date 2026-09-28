@@ -7,6 +7,7 @@ Use this checklist after each release that changes layout, PWA shell, service wo
 - `python3 tests/accessibility-production-contract.py`
 - `python3 tests/pwa-manifest-contract.py`
 - `bash tests/pre-pwa-regression.sh`
+- `python3 tests/public-copy-audit-v32241-contract.py` — ελέγχει ότι βασική developer/internal ορολογία δεν επανεμφανίζεται στο δημόσιο UI.
 
 The accessibility contract renders representative PHP pages and checks that visible form controls have an accessible name, the shared skip link is present, Greek document language is declared, focus styling is visible, reduced-motion is respected, and the PWA registration/update policy is intact.
 

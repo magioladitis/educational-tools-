@@ -51,8 +51,12 @@ check('history explanation is user-facing', 'Το ✓ δείχνει ότι η �
 check('verified-only filter is conditional', '$hasUnverified' in PAGE and '<?php if ($hasUnverified) { ?>' in PAGE)
 check('transfer result gives actionable no-common-deadline guidance', 'δεν υπάρχει μία ενιαία προθεσμία για όλες τις περιπτώσεις' in block('transfer-results'))
 
-check('version bumped to 3.22.40', "EDU_TOOLS_VERSION', '3.22.40'" in CONFIG)
-check('cache bumped to 3.22.40', "CACHE_PREFIX + '3.22.40'" in SW)
+import re
+ver = re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'", CONFIG)
+cache = re.search(r"CACHE_PREFIX \+ '([0-9.]+)'", SW)
+def version_tuple(v): return tuple(int(x) for x in v.split('.'))
+check('version is 3.22.40 or newer', bool(ver) and version_tuple(ver.group(1)) >= (3,22,40))
+check('cache is 3.22.40 or newer', bool(cache) and version_tuple(cache.group(1)) >= (3,22,40))
 check('README documents v3.22.40', 'v3.22.40' in README and 'end-user copy audit' in README)
 check('audit retains removed-row reasoning', 'Η σειρά `transfer-objections` αφαιρέθηκε' in AUDIT and 'Η σειρά `metatakseis-results-history` αφαιρέθηκε' in AUDIT)
 
