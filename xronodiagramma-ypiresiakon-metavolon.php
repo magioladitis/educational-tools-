@@ -27,7 +27,7 @@ foreach ($events as $event) if (!empty($event['latest_verified'])) $verifiedCoun
   <section class="timeline-hero">
     <span class="timeline-kicker">ΥΠΗΡΕΣΙΑΚΕΣ ΜΕΤΑΒΟΛΕΣ</span>
     <h1>Χρονοδιάγραμμα Εκπαιδευτικών</h1>
-    <p>Ιστορική εικόνα βασικών διαδικασιών — μεταθέσεις, αποσπάσεις, μετατάξεις και νεοδιόριστοι — με σαφή διάκριση ανάμεσα σε επιβεβαιωμένες επίσημες πηγές και στοιχεία που ακόμη τεκμηριώνονται.</p>
+    <p>Ιστορική εικόνα βασικών διαδικασιών — μεταθέσεις, αποσπάσεις, μετατάξεις και νεοδιόριστοι — με σαφή διάκριση ανάμεσα σε ελεγμένες πηγές και στοιχεία που ακόμη τεκμηριώνονται.</p>
     <div class="timeline-hero-meta" aria-label="Σύνοψη χρονοδιαγράμματος">
       <span>Ιστορικό 2019–2026</span>
       <span><?php echo (int) $verifiedCount; ?> γεγονότα με ελεγμένη τελευταία ημερομηνία</span>
@@ -64,6 +64,7 @@ foreach ($events as $event) if (!empty($event['latest_verified'])) $verifiedCoun
       $verified = !empty($event['latest_verified']);
       $history = isset($event['history']) && is_array($event['history']) ? $event['history'] : array();
       $sources = isset($event['sources']) && is_array($event['sources']) ? $event['sources'] : array();
+      $verificationLabel = isset($event['verification_label']) ? $event['verification_label'] : '';
       ?>
       <article class="timeline-event<?php echo $verified ? ' is-verified' : ' is-research'; ?>" data-timeline-event data-group="<?php echo $h($event['group']); ?>" data-verified="<?php echo $verified ? '1' : '0'; ?>">
         <div class="timeline-marker" aria-hidden="true"><span></span></div>
@@ -78,7 +79,7 @@ foreach ($events as $event) if (!empty($event['latest_verified'])) $verifiedCoun
 
           <div class="timeline-source-state <?php echo $verified ? 'timeline-source-state--verified' : 'timeline-source-state--research'; ?>">
             <?php if ($verified) { ?>
-              ✓ Τελευταία ημερομηνία ελεγμένη σε επίσημη πηγή
+              <?php echo $h($verificationLabel !== '' ? $verificationLabel : '✓ Τελευταία ημερομηνία ελεγμένη σε επίσημη πηγή'); ?>
             <?php } else { ?>
               ◌ Ιστορικό στοιχείο — τεκμηρίωση πηγής σε εξέλιξη
             <?php } ?>
@@ -116,7 +117,7 @@ foreach ($events as $event) if (!empty($event['latest_verified'])) $verifiedCoun
   <div class="timeline-empty" id="timelineEmpty" hidden>Δεν υπάρχουν γεγονότα που να ταιριάζουν στα επιλεγμένα φίλτρα.</div>
 
   <?php sourceCardStart(); ?>
-    <p><strong>Μεθοδολογία:</strong> το ιστορικό ξεκίνησε από την καρτέλα «ΧΡΟΝΟΔΙΑΓΡΑΜΜΑ» του αρχείου εργασίας. Για δημόσια χρήση, οι τελευταίες ημερομηνίες διασταυρώνονται μία-μία με επίσημες ανακοινώσεις ή έγγραφα του ΥΠΑΙΘΑ και των αρμόδιων εκπαιδευτικών αρχών. Όπου η τεκμηρίωση δεν είναι ακόμη πλήρης, το γεγονός παραμένει ρητά σε κατάσταση έρευνας. Δεν συμπληρώνουμε κενά με εκτιμήσεις.</p>
+    <p><strong>Μεθοδολογία:</strong> το ιστορικό ξεκίνησε από την καρτέλα «ΧΡΟΝΟΔΙΑΓΡΑΜΜΑ» του αρχείου εργασίας. Για δημόσια χρήση, οι τελευταίες ημερομηνίες διασταυρώνονται μία-μία με επίσημες ανακοινώσεις ή έγγραφα του ΥΠΑΙΘΑ και των αρμόδιων εκπαιδευτικών αρχών. Όταν το πρωτογενές URL δεν είναι διαθέσιμο αλλά έχει εντοπιστεί ψηφιακό αντίγραφο του ίδιου επίσημου εγγράφου, αυτό επισημαίνεται ρητά στην κάρτα. Όπου η τεκμηρίωση δεν είναι ακόμη πλήρης, το γεγονός παραμένει ρητά σε κατάσταση έρευνας. Δεν συμπληρώνουμε κενά με εκτιμήσεις.</p>
     <?php sourceCardLinksStart(); ?>
       <?php sourceCardLink('https://www.minedu.gov.gr/kinitikotita/metatheseis-egkyklioi-proskliseis', 'ΥΠΑΙΘΑ — Μεταθέσεις / Εγκύκλιοι & Προσκλήσεις ↗'); ?>
       <?php sourceCardLink('https://www.minedu.gov.gr/kinitikotita/apospaseis-egkyklioi-proskliseis', 'ΥΠΑΙΘΑ — Αποσπάσεις / Εγκύκλιοι & Προσκλήσεις ↗'); ?>
