@@ -3606,3 +3606,168 @@ a:focus-visible {
 @media (display-mode: standalone){
   [data-edu-install]{display:none!important}
 }
+
+/* ========================================================================== 
+   Mobile UX phase 1 — compact heroes, contextual primary action, result
+   navigation and shared validation. Progressive enhancement only: pages that
+   do not load common.js keep their existing layout/behaviour unchanged.
+   ========================================================================== */
+body.edu-ui .edu-validation-summary {
+  margin: 0 0 12px;
+  padding: 11px 12px;
+  border: 1px solid var(--edu-danger-border);
+  border-radius: 11px;
+  background: var(--edu-danger-soft);
+  color: var(--edu-danger);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+body.edu-ui .edu-field-invalid,
+body.edu-ui [aria-invalid="true"].edu-field-invalid {
+  border-color: var(--edu-danger) !important;
+  box-shadow: 0 0 0 3px rgba(179,38,30,.10) !important;
+}
+body.edu-ui .edu-has-invalid-field > label,
+body.edu-ui .question.has-missing > label {
+  color: var(--edu-danger);
+}
+body.edu-ui .edu-mobile-result-target {
+  scroll-margin-top: 14px;
+}
+body.edu-ui .edu-mobile-intro-toggle,
+body.edu-ui .edu-mobile-edit-inputs {
+  display: none;
+}
+body.edu-ui .edu-mobile-sticky-action {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  /* The directory has its own compact home-page treatment; specialised
+     staffing/vacancy flows do not opt in through common.js. */
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero,
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .app-box.edu-modernized > .edu-legacy-hero {
+    padding: 18px 16px !important;
+    margin-bottom: 14px !important;
+    border-radius: 16px !important;
+  }
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero h1,
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .app-box.edu-modernized > .edu-legacy-hero h1 {
+    margin-bottom: 6px !important;
+    font-size: clamp(22px, 6.2vw, 28px) !important;
+    line-height: 1.14 !important;
+  }
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero .meta,
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero-meta {
+    gap: 6px !important;
+    margin-top: 10px !important;
+  }
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero .meta span,
+  body.edu-mobile-ux-enabled:not(.edu-tools-directory) .hero-meta span {
+    padding: 5px 8px !important;
+    font-size: 12px !important;
+  }
+
+  body.edu-ui .edu-mobile-intro-clamp:not(.is-expanded) {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+  body.edu-ui .edu-mobile-intro-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin: 2px 0 -5px;
+    padding: 0 3px;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: rgba(255,255,255,.96) !important;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  body.edu-ui .edu-mobile-edit-inputs {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin: 0 0 12px;
+    padding: 8px 11px;
+    border: 1px solid #c9d8ee !important;
+    border-radius: 10px;
+    background: #fff !important;
+    color: var(--edu-primary-dark) !important;
+    box-shadow: none !important;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  body.edu-ui .edu-mobile-sticky-action {
+    position: fixed;
+    z-index: 920;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: block;
+    padding: 8px max(10px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+    border-top: 1px solid rgba(203,213,225,.92);
+    background: rgba(244,247,251,.94);
+    box-shadow: 0 -8px 26px rgba(28,39,55,.10);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 0;
+    transform: translateY(110%);
+    pointer-events: none;
+    transition: opacity .16s ease, transform .16s ease;
+  }
+  body.edu-ui .edu-mobile-sticky-action[hidden] {
+    display: none !important;
+  }
+  body.edu-ui .edu-mobile-sticky-action.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  body.edu-ui .edu-mobile-sticky-action__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(100%, 880px);
+    min-height: 48px;
+    margin: 0 auto;
+    padding: 11px 16px;
+    border: 0 !important;
+    border-radius: 12px;
+    background: var(--edu-page-accent, var(--edu-primary)) !important;
+    color: #fff !important;
+    box-shadow: 0 5px 16px rgba(23,78,166,.18) !important;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+  body.edu-ui.edu-mobile-sticky-action-visible {
+    padding-bottom: calc(68px + env(safe-area-inset-bottom));
+  }
+  body.edu-ui.edu-mobile-sticky-action-visible .edu-back-to-top {
+    bottom: max(82px, calc(76px + env(safe-area-inset-bottom)));
+  }
+
+  body.edu-ui .edu-validation-summary {
+    scroll-margin-top: 12px;
+  }
+}
+
+@media print {
+  .edu-mobile-sticky-action,
+  .edu-mobile-intro-toggle,
+  .edu-mobile-edit-inputs,
+  .edu-validation-summary {
+    display: none !important;
+  }
+}

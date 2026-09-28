@@ -38,3 +38,11 @@ The accessibility contract renders representative PHP pages and checks that visi
 ## Release-update smoke test
 
 After deploying a new version, reload once and confirm that `service-worker.js` and `manifest.webmanifest` revalidate. The worker is registered with `updateViaCache: none`; static asset cache names must match `EDU_TOOLS_VERSION`. Never cache PHP/navigation responses in the service worker without a separate explicit design review.
+
+## Mobile UX phase 1 smoke test
+
+1. Σε οδηγό με `data-edu-primary-action`, το sticky CTA δεν εμφανίζεται πριν ο χρήστης αλληλεπιδράσει/κάνει ουσιαστικό scroll και κρύβεται όταν το κανονικό κουμπί είναι ορατό.
+2. Με focus σε input/select/textarea το sticky CTA δεν πρέπει να καλύπτει το πληκτρολόγιο.
+3. Μετά τον τελικό έλεγχο, το viewport μετακινείται στο αποτέλεσμα· το «Επεξεργασία στοιχείων ↑» επιστρέφει στο τελευταίο πεδίο.
+4. Σε ελλιπείς απαντήσεις eligibility, εμφανίζεται κοινή περίληψη validation, `aria-invalid=true` και focus στο πρώτο αναπάντητο πεδίο αντί για scroll στο αποτέλεσμα.
+5. Σε hero με μεγάλη εισαγωγή, το «Περισσότερα / Λιγότερα» λειτουργεί μόνο στο mobile layout και δεν κρύβει περιεχόμενο στην εκτύπωση/desktop.

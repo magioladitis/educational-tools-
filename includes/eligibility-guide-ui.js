@@ -39,6 +39,14 @@ function valueOf(id) {
     const question = field.closest(".question");
     if (!question) return;
     question.classList.toggle("has-missing", Boolean(isMissing));
+    field.classList.toggle("edu-field-invalid", Boolean(isMissing));
+    if (isMissing) {
+      field.setAttribute("aria-invalid", "true");
+      field.setAttribute("data-edu-validation-owned", "true");
+    } else if (field.getAttribute("data-edu-validation-owned") === "true") {
+      field.removeAttribute("aria-invalid");
+      field.removeAttribute("data-edu-validation-owned");
+    }
   }
 
   const immediateImpediments = {
@@ -132,6 +140,10 @@ function valueOf(id) {
     const field = event.target;
     if (validationAttempted) {
       setMissingState(field, String(field.value).trim() === "");
+      const stillMissing = fieldIds.some(id => String(valueOf(id)).trim() === "");
+      if (!stillMissing && window.EduToolsUI && typeof window.EduToolsUI.clearValidationSummary === "function") {
+        window.EduToolsUI.clearValidationSummary(document.querySelector(".app-box"));
+      }
     }
     updateImmediateWarning(field);
 
@@ -153,6 +165,9 @@ function valueOf(id) {
     const result = document.getElementById("result");
     result.style.display = "none";
     result.innerHTML = "";
+    if (window.EduToolsUI && typeof window.EduToolsUI.clearValidationSummary === "function") {
+      window.EduToolsUI.clearValidationSummary(document.querySelector(".app-box"));
+    }
     document.getElementById("birthYear").focus();
   }
 
@@ -188,9 +203,17 @@ function valueOf(id) {
 
     if (missingIds.length > 0) {
       const noun = missingIds.length === 1 ? "ερώτηση" : "ερωτήσεις";
-      showResult(`Απομένουν ${missingIds.length} ${noun} χωρίς απάντηση. Συμπλήρωσέ ${missingIds.length === 1 ? "την" : "τις"} και ξαναπάτησε «Έλεγχος δικαιώματος συμμετοχής».`, "unknown");
-      const firstMissing = document.getElementById(missingIds[0]);
-      if (firstMissing) firstMissing.focus();
+      const message = `Απομένουν ${missingIds.length} ${noun} χωρίς απάντηση. Συμπλήρωσέ ${missingIds.length === 1 ? "την" : "τις"} και ξαναπάτησε «Έλεγχος δικαιώματος συμμετοχής».`;
+      showResult(message, "unknown");
+      if (window.EduToolsUI && typeof window.EduToolsUI.reportMissingFields === "function") {
+        window.EduToolsUI.reportMissingFields(missingIds, {
+          scope: document.querySelector(".app-box"),
+          message: message
+        });
+      } else {
+        const firstMissing = document.getElementById(missingIds[0]);
+        if (firstMissing) firstMissing.focus();
+      }
       return;
     }
 

@@ -168,7 +168,7 @@ renderDeadlineCard(array(
     </select>
   </div>
 
-  <button id="checkEparkeiaBtn" class="guide-submit" type="button">Έλεγχος Παιδαγωγικής και Διδακτικής Επάρκειας</button>
+  <button id="checkEparkeiaBtn" class="guide-submit" type="button" data-edu-primary-action="true" data-edu-result-target="#result">Έλεγχος Παιδαγωγικής και Διδακτικής Επάρκειας</button>
 
   <div id="result" class="result" role="status" aria-live="polite"></div>
 

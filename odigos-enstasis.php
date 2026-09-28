@@ -113,7 +113,7 @@
     </ul>
   </div>
 
-  <button class="guide-submit edu-mt-4" type="button" id="guidanceBtn">Εμφάνιση οδηγιών</button>
+  <button class="guide-submit edu-mt-4" type="button" id="guidanceBtn" data-edu-primary-action="true" data-edu-result-target="#result">Εμφάνιση οδηγιών</button>
   <div id="result" class="result" role="status" aria-live="polite"></div>
 
   <p class="small-note">Το εργαλείο παρέχει ενδεικτική καθοδήγηση για τις ενστάσεις των προσωρινών πινάκων 1ΓΕ/2026 και 2ΓΕ/2026. Για την υποβολή ισχύουν η επίσημη ανακοίνωση, οι προκηρύξεις και οι οδηγίες της ηλεκτρονικής πλατφόρμας του ΑΣΕΠ.</p>

@@ -167,7 +167,7 @@
     </div>
   </div>
 
-  <button id="showDocumentsBtn" type="button" class="guide-submit">Εμφάνιση δικαιολογητικών</button>
+  <button id="showDocumentsBtn" type="button" class="guide-submit" data-edu-primary-action="true" data-edu-result-target="#result">Εμφάνιση δικαιολογητικών</button>
 
   <div id="result" class="result" role="status" aria-live="polite"></div>
 

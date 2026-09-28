@@ -1,6 +1,6 @@
 # Αρχιτεκτονική — Εργαλειοθήκη Εκπαιδευτικού
 
-**Reference baseline:** v3.22.18 · 2026-09-27
+**Reference baseline:** v3.22.23 · 2026-09-28
 
 Το αρχείο αυτό είναι ο σύντομος οδηγός συντήρησης της Εργαλειοθήκης. Πριν από κάθε αλλαγή πρέπει να είναι σαφές:
 
@@ -71,6 +71,7 @@ staffing-simulator-ui.js
 | Optimizer policy | `personnelWorkloadOptimizerPolicy()` | Objective, ranks, B΄ limit, budgets, schemas. |
 | PWA/browser head | `includes/head-pwa.php` | Manifest/favicon/SW bootstrap μία φορά. |
 | Local app experience | `assets/app-experience.js` | Πρόσφατα/Αγαπημένα, Share και Install· μόνο client-side, χωρίς business rules. |
+| Mobile progressive UX | `assets/common.js` + `assets/common.css` | Compact hero, opt-in sticky primary action, result navigation και shared validation· ποτέ business rules. |
 | Release version | `includes/config.php` + `service-worker.js` | Coordinated version/cache bump όταν αλλάζουν runtime assets. |
 
 ---

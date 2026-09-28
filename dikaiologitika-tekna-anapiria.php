@@ -113,7 +113,7 @@
 </div>
 </div>
 
-<button type="button" class="guide-submit" id="showDocumentsBtn">Εμφάνιση ενδεικτικών δικαιολογητικών</button>
+<button type="button" class="guide-submit" id="showDocumentsBtn" data-edu-primary-action="true" data-edu-result-target="#result">Εμφάνιση ενδεικτικών δικαιολογητικών</button>
 <div id="result" class="result"></div>
 
 <p class="small-note">Το εργαλείο παρέχει ενδεικτική καθοδήγηση και δεν αντικαθιστά την επίσημη προκήρυξη, τις οδηγίες του Α.Σ.Ε.Π., τον έλεγχο του Ο.Π.ΣΥ.Δ. ή τον έλεγχο των αρμόδιων υπηρεσιών.</p>

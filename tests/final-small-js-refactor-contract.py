@@ -54,13 +54,13 @@ for php,(dep,ui) in checks.items():
 
 # Important interaction hooks remain in the external modules.
 key_tokens={
- 'assets/tools-directory.js':['searchInput.addEventListener(\'input\', updateCards)','setFilter(button.getAttribute(\'data-filter\') || \'all\'','normalizeGreek'],
+ 'assets/tools-directory.js':['searchInput.addEventListener(\'input\', updateCards)','setFilter(link.getAttribute(\'data-directory-filter\') || \'all\'','normalizeGreek'],
  'includes/european-schools-ui.js':["ids.forEach(id=>{const e=$(id);if(e){e.addEventListener('input',calculate)","$('copyBtn').addEventListener('click'","$('resetBtn').addEventListener('click'",'updatePositionUI'],
  'includes/asep-1gt-ui.js':["document.addEventListener('input',calc)","$('copyBtn').addEventListener('click'", "AsepTeAcademic.sync('asepTeAcademic')"],
  'includes/asep-3ea-ui.js':["document.addEventListener('input',render)","$('copyBtn').addEventListener('click'",'AsepPeAcademic.calculate'],
  'includes/asep-2ea-ui.js':["document.addEventListener('input',render)","$('copyBtn').addEventListener('click'",'syncEligibilityUI'],
  'includes/asep-1ea-ui.js':["document.addEventListener('input',render)","$('copyBtn').addEventListener('click'",'EducationCore.bindBoundedNumberInput'],
- 'includes/saek-deputy-eligibility-ui.js':["checkEligibilityBtn').addEventListener('click',checkEligibility)","resetBtn').addEventListener('click',resetForm)",'fieldIds'],
+ 'includes/saek-deputy-eligibility-ui.js':["checkButton.addEventListener('click', checkEligibility)","resetButton.addEventListener('click', resetForm)",'fieldIds'],
 }
 for js,tokens in key_tokens.items():
     s=(ROOT/js).read_text(encoding='utf-8')

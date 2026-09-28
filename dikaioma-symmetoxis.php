@@ -185,7 +185,7 @@
   </div>
 
   <div class="button-row">
-    <button type="button" id="eligibilityCheckBtn">Έλεγχος δικαιώματος συμμετοχής</button>
+    <button type="button" id="eligibilityCheckBtn" data-edu-primary-action="true" data-edu-result-target="#result">Έλεγχος δικαιώματος συμμετοχής</button>
     <button type="button" id="eligibilityResetBtn" class="reset-button">Καθαρισμός</button>
   </div>
 
