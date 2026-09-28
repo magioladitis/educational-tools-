@@ -17,16 +17,16 @@ if (!function_exists('sourceCardStart')) {
      * Default source card entry point.
      *
      * All legacy callers now inherit the responsive disclosure pattern:
-     * rendered closed by default (prevents mobile/iOS flash-open), expanded on
-     * desktop by shared JS, collapsed on touch/mobile, and expanded by print.
+     * rendered closed by default on every screen, so legal/source material stays
+     * available without dominating the tool. Print still expands disclosures.
      * Page code does not need to opt in individually.
      */
     function sourceCardStart($config = array())
     {
         $config = is_array($config) ? $config : array();
         if (!isset($config['mobile_collapsed'])) $config['mobile_collapsed'] = true;
-        if (!isset($config['desktop_expanded'])) $config['desktop_expanded'] = true;
-        /* Render closed first. Shared JS opens it only on desktop. */
+        if (!isset($config['desktop_expanded'])) $config['desktop_expanded'] = false;
+        /* Render closed by default. Explicit callers may opt into desktop expansion. */
         if (!isset($config['open'])) $config['open'] = false;
         sourceCardDisclosureStart($config);
     }
@@ -40,7 +40,7 @@ if (!function_exists('sourceCardDisclosureStart')) {
         $id = isset($config['title_id']) && $config['title_id'] !== '' ? (string) $config['title_id'] : 'sourcesTitle';
         $title = isset($config['title']) && $config['title'] !== '' ? (string) $config['title'] : 'Πηγές / Νομική βάση';
         $mobileCollapsed = !isset($config['mobile_collapsed']) || (bool) $config['mobile_collapsed'];
-        $desktopExpanded = !isset($config['desktop_expanded']) || (bool) $config['desktop_expanded'];
+        $desktopExpanded = isset($config['desktop_expanded']) && (bool) $config['desktop_expanded'];
         $open = isset($config['open']) && (bool) $config['open'];
 
         echo '<section class="edu-source-card edu-source-card--responsive" aria-labelledby="' . sourceCardEscape($id) . '"';

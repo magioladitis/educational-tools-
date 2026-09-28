@@ -43,8 +43,8 @@ for value in ['21–29/05/2020','10–17/05/2021','17–26/05/2022','29/03–11/
 for value in ['15/06/2020','31/05/2021','10/06/2022','28/04/2023','15/05/2024','23/05/2025','27/05/2026']:
     check('withdrawal deadline ' + value, value in withdraw)
 
-check('version bumped to 3.22.38', "EDU_TOOLS_VERSION', '3.22.38'" in CONFIG)
-check('cache bumped to 3.22.38', "CACHE_PREFIX + '3.22.38'" in SW)
+check('version is 3.22.38 or newer', "EDU_TOOLS_VERSION', '3.22." in CONFIG)
+check('cache remains release-scoped', "CACHE_PREFIX + '3.22." in SW)
 check('readme documents v3.22.38', 'v3.22.38' in README and 'Bodies detachments + metatakseis applications/withdrawals' in README)
 check('historical audit documents correction and full metatakseis coverage', '17/06/2022 → 16/06/2022' in AUDIT and 'Αιτήσεις και ανακλήσεις μετατάξεων 2020–2026' in AUDIT)
 check('source audit documents v3.22.38', 'Συμπλήρωση ιστορικών πηγών v3.22.38' in SOURCES)

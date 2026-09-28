@@ -72,8 +72,8 @@
       if (collapseForTouch) details.removeAttribute('open');
     });
 
-    /* Source cards render closed to avoid a flash-open state on iOS/PWA.
-       Desktop progressively expands them after capability/viewport detection. */
+    /* Source cards render closed by default on every screen.
+       Desktop expansion remains available only for explicit opt-in cards. */
     document.querySelectorAll('.edu-source-card[data-mobile-collapsed="true"] > .edu-source-card__details').forEach(function (details) {
       var card = details.parentElement;
       var desktopExpanded = card && card.getAttribute('data-desktop-expanded') === 'true';

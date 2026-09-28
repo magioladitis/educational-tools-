@@ -103,21 +103,26 @@ foreach ($events as $event) if (!empty($event['latest_verified'])) $verifiedCoun
             </div>
             <p class="timeline-history-disclaimer">Οι παλαιότερες ημερομηνίες προέρχονται από το ιστορικό αρχείο εργασίας και τεκμηριώνονται σταδιακά ανά έτος. Το ✓ δίπλα σε ιστορική ημερομηνία σημαίνει ότι έχει ήδη διασταυρωθεί σε επίσημη ή υπηρεσιακή πηγή. Η πράσινη ένδειξη της κάρτας αφορά την τελευταία τιμή του κύκλου 2025–2026.</p>
             <?php if (!empty($historicalSources)) { ?>
-              <div class="timeline-historical-sources" aria-label="Ιστορικές πηγές">
-                <strong>Ιστορική τεκμηρίωση</strong>
-                <?php foreach ($historicalSources as $source) { ?>
-                  <a href="<?php echo $h($source['url']); ?>" target="_blank" rel="noopener noreferrer"><span><?php echo $h($source['year']); ?></span> <?php echo $h($source['label']); ?> ↗</a>
-                <?php } ?>
-              </div>
+              <details class="timeline-historical-sources">
+                <summary>Ιστορική τεκμηρίωση</summary>
+                <div class="timeline-historical-source-links">
+                  <?php foreach ($historicalSources as $source) { ?>
+                    <a href="<?php echo $h($source['url']); ?>" target="_blank" rel="noopener noreferrer"><span><?php echo $h($source['year']); ?></span> <?php echo $h($source['label']); ?> ↗</a>
+                  <?php } ?>
+                </div>
+              </details>
             <?php } ?>
           </details>
 
           <?php if (!empty($sources)) { ?>
-            <div class="timeline-event-sources" aria-label="Πηγές και τεκμηρίωση">
-              <?php foreach ($sources as $source) { ?>
-                <a href="<?php echo $h($source['url']); ?>" target="_blank" rel="noopener noreferrer"><?php echo $h($source['label']); ?> ↗</a>
-              <?php } ?>
-            </div>
+            <details class="timeline-event-sources">
+              <summary>Πηγές / τεκμηρίωση</summary>
+              <div class="timeline-source-links">
+                <?php foreach ($sources as $source) { ?>
+                  <a href="<?php echo $h($source['url']); ?>" target="_blank" rel="noopener noreferrer"><?php echo $h($source['label']); ?> ↗</a>
+                <?php } ?>
+              </div>
+            </details>
           <?php } ?>
         </div>
       </article>

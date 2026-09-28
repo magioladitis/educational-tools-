@@ -628,16 +628,44 @@ return array(
             'title' => 'Λειτουργικά κενά / πλεονάσματα για αποσπάσεις — Π.Ε.',
             'latest' => '05/06/2026 · 73719/Ε2',
             'latest_verified' => true,
-            'verification_label' => '✓ Η ημερομηνία και ο αριθμός πρωτοκόλλου ελέγχθηκαν σε ψηφιακό αντίγραφο επίσημης εγκυκλίου ΥΠΑΙΘΑ',
+            'verification_label' => '✓ Η τελευταία εγκύκλιος και η ιστορική σειρά 2021–2026 έχουν διασταυρωθεί',
             'source_coverage' => 'official-document-copy',
-            'history' => array(null,null,null,null,null,null,'05/06/2026'),
+            'history' => array(null,'10/06/2021 · 68239/Ε2','26/05/2022 · 62174/Ε2','07/07/2023 · 75625/Ε2','23/05/2024 · 53701/Ε2','06/06/2025 · 66707/Ε2','05/06/2026 · 73719/Ε2'),
+            'verified_history_indices' => array(1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — 73719/Ε2/05-06-2026 (ψηφιακό αντίγραφο εγκυκλίου)',
                     'url' => 'https://www.alfavita.gr/sites/default/files/2026-06/egyklios-kenon-apospaseon-05.06.2026_1.pdf',
                 ),
             ),
-            'note' => 'Το ίδιο το έγγραφο φέρει ημερομηνία 05/06/2026 και αρ. πρωτ. 73719/Ε2 και αφορά τα λειτουργικά κενά/πλεονάσματα Πρωτοβάθμιας Εκπαίδευσης για τις αποσπάσεις 2026–2027. Το διαθέσιμο αντίγραφο είναι πιστό ψηφιακό αντίγραφο εγγράφου του ΥΠΑΙΘΑ, αλλά φιλοξενείται σε τρίτο ιστότοπο· δεν εντοπίστηκε ακόμη μόνιμος σύνδεσμος του ίδιου PDF στο minedu.gov.gr.',
+            'historical_sources' => array(
+                array(
+                    'year' => '2020-2021',
+                    'label' => 'ΔΠΕ Λασιθίου — υπηρεσιακή απόφαση που παραπέμπει στην 68239/Ε2/10-06-2021',
+                    'url' => 'https://dipe.las.sch.gr/wp-content/uploads/2022/09/5319-%CE%91%CE%9D%CE%91%CE%98%CE%95%CE%A3%CE%97-%CE%A3%CE%A5%CE%9C%CE%A0%CE%9B%CE%97%CE%A1%CE%A9%CE%A3%CE%97%CE%A3-%CE%9C%CE%9F%CE%9D%CE%99%CE%9C%CE%A9%CE%9D-%CE%A1%CE%A9%CE%A0046%CE%9C%CE%A4%CE%9B%CE%97-%CE%93%CE%9F7.pdf',
+                ),
+                array(
+                    'year' => '2021-2022',
+                    'label' => 'ΔΠΕ Λασιθίου — υπηρεσιακή απόφαση που παραπέμπει στην 62174/Ε2/26-05-2022',
+                    'url' => 'https://dipe.las.sch.gr/wp-content/uploads/2022/09/5319-%CE%91%CE%9D%CE%91%CE%98%CE%95%CE%A3%CE%97-%CE%A3%CE%A5%CE%9C%CE%A0%CE%9B%CE%97%CE%A1%CE%A9%CE%A3%CE%97%CE%A3-%CE%9C%CE%9F%CE%9D%CE%99%CE%9C%CE%A9%CE%9D-%CE%A1%CE%A9%CE%A0046%CE%9C%CE%A4%CE%9B%CE%97-%CE%93%CE%9F7.pdf',
+                ),
+                array(
+                    'year' => '2022-2023',
+                    'label' => 'ΥΠΑΙΘΑ — 75625/Ε2/07-07-2023 (ψηφιακό αντίγραφο επίσημης εγκυκλίου)',
+                    'url' => 'https://e-wall.net/wp-content/uploads/2023/07/%CE%95%CE%9E%CE%95-75625-2023-%CE%9B%CE%B5%CE%B9%CF%84%CE%BF%CF%85%CF%81%CE%B3%CE%B9%CE%BA%CE%AC-%CE%BA%CE%B5%CE%BD%CE%AC-%CF%80%CE%BB%CE%B5%CE%BF%CE%BD%CE%AC%CF%83%CE%BC%CE%B1%CF%84%CE%B1-%CE%B5%CE%BA%CF%80%CE%B1%CE%B9%CE%B4%CE%B5%CF%85%CF%84%CE%B9.%CE%BA%CE%BF%CF%8D-%CE%A0%CF%81%CF%89%CF%84%CE%BF%CE%B2%CE%AC%CE%B8%CE%BC%CE%B9%CE%B1%CF%82-%CE%95%CE%9A%CF%80%CE%B1%CE%AF%CE%B4%CE%B5%CF%85%CF%83%CE%B7%CF%82-%CE%B3%CE%B9%CE%B1-%CF%84%CE%BF-%CE%B4%CE%B9%CE%B4%CE%B1%CE%BA%CF%84%CE%B9%CE%BA%CF%8C-%CE%AD%CF%84%CE%BF%CF%82-2023-2024-%CF%83%CE%B5-%CE%9A%CE%95.%CE%94.%CE%91.%CE%A3.%CE%A5.-1-2.pdf',
+                ),
+                array(
+                    'year' => '2023-2024',
+                    'label' => 'ΥΠΑΙΘΑ — 53701/Ε2/23-05-2024 (ψηφιακό αντίγραφο επίσημης εγκυκλίου)',
+                    'url' => 'https://www.takisroumpis.gr/wp-content/uploads/2024/06/%CE%95%CE%B3%CE%BA%CF%8D%CE%BA%CE%BB%CE%B9%CE%BF%CF%82.pdf',
+                ),
+                array(
+                    'year' => '2024-2025',
+                    'label' => 'ΥΠΑΙΘΑ — 66707/Ε2/06-06-2025 (ψηφιακό αντίγραφο επίσημης εγκυκλίου)',
+                    'url' => 'https://www.takisroumpis.gr/wp-content/uploads/2025/06/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3-%CE%9A%CE%95%CE%9D%CE%A9%CE%9D-%CE%91%CE%A0%CE%9F%CE%A3%CE%A0%CE%91%CE%A3%CE%95%CE%A9%CE%9D-2025-2026.pdf',
+                ),
+            ),
+            'note' => 'Η παλιά κοινή ιστορική γραμμή διαχωρίστηκε ανά βαθμίδα. Για την Π.Ε. επιβεβαιώθηκαν οι εγκύκλιοι 68239/Ε2/10-06-2021, 62174/Ε2/26-05-2022, 75625/Ε2/07-07-2023, 53701/Ε2/23-05-2024, 66707/Ε2/06-06-2025 και 73719/Ε2/05-06-2026.',
         ),
         array(
             'id' => 'functional-gaps-secondary-circular',
@@ -645,14 +673,11 @@ return array(
             'title' => 'Λειτουργικά κενά / πλεονάσματα για αποσπάσεις — Δ.Ε.',
             'latest' => '05/06/2026 · 74045/Ε2',
             'latest_verified' => true,
-            'verification_label' => '✓ Η ημερομηνία και ο αριθμός πρωτοκόλλου ελέγχθηκαν σε αντίγραφο του επίσημου εγγράφου ΥΠΑΙΘΑ',
+            'verification_label' => '✓ Η τελευταία εγκύκλιος και η ιστορική σειρά 2021–2026 έχουν διασταυρωθεί',
             'source_coverage' => 'official-document-copy',
-            'history' => array(null,null,null,null,null,null,'05/06/2026'),
+            'history' => array(null,'10/06/2021 · 68209/Ε2','02/06/2022 · 68172/Ε2','07/07/2023 · 75639/Ε2','23/05/2024 · 54074/Ε2','11/06/2025 · 68355/Ε2','05/06/2026 · 74045/Ε2'),
+            'verified_history_indices' => array(1,2,3,4,5,6),
             'sources' => array(
-                array(
-                    'label' => 'especial.gr — αναφορά της εγκυκλίου 74045/Ε2/05-06-2026',
-                    'url' => 'https://www.especial.gr/na-anakoinothoun-oi-apospaseis-se-foreis-oste-na-prochorisoun-oi-apospaseis-se-pysde-eae-kedasy/',
-                ),
                 array(
                     'label' => 'ΠΥΣΔΕ Έβρου — εφαρμογή και ρητή αναφορά της 74045/Ε2/05-06-2026',
                     'url' => 'https://pysdeevrouenimerosi.blogspot.com/2026/06/65-66-20o-12-06-26-21-15-06-26-2025-26.html',
@@ -662,18 +687,34 @@ return array(
                     'url' => 'https://dide-peiraia.att.sch.gr/index.php/menu-pysde/menu-pysde-announcements?start=10',
                 ),
             ),
-            'note' => 'Ελέγχθηκε αντίγραφο του ίδιου του εγγράφου του ΥΠΑΙΘΑ: φέρει ημερομηνία 05/06/2026 και αρ. πρωτ. 74045/Ε2. Η παλαιότερη αναφορά σε 74047/Ε2 προερχόταν από δευτερογενή αναπαραγωγή και δεν χρησιμοποιείται πλέον ως αριθμός της εγκυκλίου.',
-        ),
-        array(
-            'id' => 'functional-gaps-history',
-            'group' => 'apospaseis',
-            'title' => 'Λειτουργικά κενά / πλεονάσματα — ιστορική συνοπτική γραμμή αρχείου',
-            'latest' => 'Ιστορικό αρχείου — απαιτεί διάκριση Π.Ε./Δ.Ε. ανά έτος',
-            'latest_verified' => false,
-            'source_coverage' => 'research',
-            'history' => array(null,'10/06/2021','26/05/2022','07/07/2023','23/05/2024','12/06/2025','05/06/2026'),
-            'sources' => array(),
-            'note' => 'Η αρχική καρτέλα είχε μία κοινή ιστορική γραμμή χωρίς διάκριση βαθμίδας. Τη διατηρούμε αυτούσια ως ερευνητικό ίχνος, αλλά δεν αποδίδουμε τις ημερομηνίες 2021–2025 ούτε στην Π.Ε. ούτε στη Δ.Ε. πριν βρεθούν οι αντίστοιχες πρωτογενείς πηγές.',
+            'historical_sources' => array(
+                array(
+                    'year' => '2020-2021',
+                    'label' => 'ΥΠΑΙΘ — επίσημη απόφαση που παραπέμπει στην 68209/Ε2/10-06-2021',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2020/86776E2_16-07-2021_A%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A3%CE%9C%CE%95%CE%91%CE%95.PDF',
+                ),
+                array(
+                    'year' => '2021-2022',
+                    'label' => 'ΥΠΑΙΘ — επίσημη απόφαση που παραπέμπει στην 68172/Ε2/02-06-2022',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2020/97078%CE%952_02-08-2022_%CE%A5%CE%91_%CE%A3%CE%9C%CE%95%CE%91%CE%95.pdf',
+                ),
+                array(
+                    'year' => '2022-2023',
+                    'label' => 'ΥΠΑΙΘΑ — 75639/Ε2/07-07-2023 (ψηφιακό αντίγραφο επίσημης εγκυκλίου)',
+                    'url' => 'https://e-wall.net/wp-content/uploads/2023/07/75639-A2-07.07.2023.pdf',
+                ),
+                array(
+                    'year' => '2023-2024',
+                    'label' => 'ΥΠΑΙΘΑ — 54074/Ε2/23-05-2024 (ψηφιακό αντίγραφο/αναπαραγωγή εγκυκλίου)',
+                    'url' => 'https://vaspapachristou.gr/%CE%BA%CE%B1%CF%84%CE%B1%CF%87%CF%8E%CF%81%CE%B7%CF%83%CE%B7-%CE%BB%CE%B5%CE%B9%CF%84%CE%BF%CF%85%CF%81%CE%B3%CE%B9%CE%BA%CF%8E%CE%BD-%CE%BA%CE%B5%CE%BD%CF%8E%CE%BD-%CE%B3%CE%B9%CE%B1-%CE%B1%CF%80/',
+                ),
+                array(
+                    'year' => '2024-2025',
+                    'label' => 'ΥΠΑΙΘΑ — 68355/Ε2/11-06-2025 (ψηφιακό αντίγραφο/αναπαραγωγή εγκυκλίου)',
+                    'url' => 'https://vaspapachristou.gr/%CE%B5%CE%B3%CE%BA%CF%8D%CE%BA%CE%BB%CE%B9%CE%BF%CF%82-%CE%BB%CE%B5%CE%B9%CF%84%CE%BF%CF%85%CF%81%CE%B3%CE%B9%CE%BA%CF%8E%CE%BD-%CE%BA%CE%B5%CE%BD%CF%8E%CE%BD-%CE%B4%CE%B5%CF%85%CF%84%CE%B5%CF%81-2/',
+                ),
+            ),
+            'note' => 'Η παλιά κοινή ιστορική γραμμή διαχωρίστηκε ανά βαθμίδα. Για τη Δ.Ε. επιβεβαιώθηκαν οι εγκύκλιοι 68209/Ε2/10-06-2021, 68172/Ε2/02-06-2022, 75639/Ε2/07-07-2023, 54074/Ε2/23-05-2024, 68355/Ε2/11-06-2025 και 74045/Ε2/05-06-2026.',
         ),
         array(
             'id' => 'first-primary-detachments',
