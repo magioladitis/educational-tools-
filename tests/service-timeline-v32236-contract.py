@@ -16,7 +16,7 @@ def check(label, condition):
 
 check('timeline page added', 'Χρονοδιάγραμμα Εκπαιδευτικών' in PAGE)
 check('verified-only default exists', 'timelineVerifiedOnly' in PAGE and 'checked' in PAGE)
-check('historical source disclaimer exists', 'timeline-history-disclaimer' in PAGE and 'Το ✓ δείχνει' in PAGE)
+check('historical sources remain accessible without per-year audit legend', '<summary>Πηγές προηγούμενων ετών</summary>' in PAGE)
 check('user-confirmed 2024 detachment date corrected', "'history' => array('30/04–11/05/2020','20–27/04/2021','05–15/04/2022','06–18/04/2023','08–17/04/2024'" in DATA)
 check('2026 transfer circular corrected and sourced', "'30/04/2026'" in DATA and '52463%CE%952_30-04-2026' in DATA)
 check('metatakseis outcome split by category', "'metatakseis-to-eep'" in DATA and "'metatakseis-to-primary'" in DATA and "'metatakseis-to-secondary'" in DATA)
@@ -25,14 +25,14 @@ check('catalog entry added', "'number' => 36" in CATALOG and "xronodiagramma-ypi
 check('timeline JS loaded', 'service-timeline.js' in PAGE and 'data-timeline-filter' in JS)
 check('timeline CSS scoped', 'body.edu-page-service-timeline' in CSS)
 check('timeline retains broad milestone coverage after removing misleading research rows', DATA.count("'id' =>") >= 29 and "'functional-gaps-primary-circular'" in DATA and "'functional-gaps-secondary-circular'" in DATA)
-check('resignation withdrawal rule sourced', "'resignation-withdrawal'" in DATA and 'Εντός 1 μήνα από την ημερομηνία κάθε αίτησης' in DATA and '11/03/2026' not in DATA)
+check('resignation withdrawal rule sourced', "'resignation-withdrawal'" in DATA and 'μέσα σε έναν μήνα από την ημερομηνία της αίτησης' in DATA and "'11/03/2026'" in DATA)
 check('detachment withdrawal deadlines sourced', "'bodies-detachment-application-withdrawal'" in DATA and "'27/04/2026'" in DATA and "'detachment-application-withdrawal'" in DATA and "'20/05/2026'" in DATA)
 check('metataksi withdrawal sourced', "'metatakseis-application-withdrawal'" in DATA and "'27/05/2026'" in DATA)
 check('primary functional gaps circular documented', "'functional-gaps-primary-circular'" in DATA and "73719/Ε2" in DATA and "official-document-copy" in DATA)
 check('secondary functional gaps protocol verified', "'functional-gaps-secondary-circular'" in DATA and "05/06/2026 · 74045/Ε2" in DATA and "official-document-copy" in DATA and "αρ. πρωτ. υπό διασταύρωση" not in DATA)
 check('functional gaps historical trail remains represented', ("'functional-gaps-history'" in DATA and "Ιστορικό αρχείου" in DATA) or ("'functional-gaps-primary-circular'" in DATA and "'functional-gaps-secondary-circular'" in DATA and '68239/Ε2' in DATA and '68209/Ε2' in DATA))
 check('non-standard transfer-objection row removed and guidance retained', "'id' => 'transfer-objections'" not in DATA and 'δεν υπάρχει μία ενιαία προθεσμία για όλες τις περιπτώσεις' in DATA)
-check('verification label override remains supported by page', 'verificationLabel' in PAGE)
+check('unverified current-date warning remains supported by page', 'Δεν έχει ανακοινωθεί επίσημη ημερομηνία' in PAGE)
 check('newly appointed application window verified', "'newly-appointed-detachment-applications'" in DATA and "'26/08–01/09/2026'" in DATA)
 check('version is v3.22.36 or newer', "EDU_TOOLS_VERSION', '3.22." in CONFIG)
 check('cache is v3.22.36 or newer', "CACHE_PREFIX + '3.22." in SW)
@@ -45,10 +45,10 @@ check('2022 primary detachment announcement correction locked', "'07/07/2022'" i
 
 check('transfer applications history fully verified', "'id' => 'metatheseis-applications'" in DATA and "'verified_history_indices' => array(0,1,2,3,4,5,6)" in DATA and "12–25/11/2019" in DATA)
 check('2019-2020 transfer withdrawal corrected to January', "'31/01/2020'" in DATA and "'31/12/2019'" not in DATA and 'ήδη πραγματοποιημένης μετάθεσης δεν προβλέπεται' in DATA)
-check('2020 mutual transfer deadlines split by level', "Π.Ε. 22/04 · Δ.Ε. 11/05/2020" in DATA)
-check('2021 mutual transfer deadlines split by level', "Π.Ε. 08/04 · Δ.Ε. 09/04/2021" in DATA)
-check('2022 mutual transfer deadlines split by level', "Π.Ε. 02/04 · Δ.Ε. 04/04/2022" in DATA)
-check('mutual transfer split deadlines retained', 'Π.Ε. 08/04 · Δ.Ε. 09/04/2021' in DATA and 'Π.Ε. 02/04 · Δ.Ε. 04/04/2022' in DATA)
+check('2020 mutual transfer deadlines split by level', "'22/04/2020'" in DATA and "'11/05/2020'" in DATA and 'mutual-transfer-applications-pe' in DATA and 'mutual-transfer-applications-de' in DATA)
+check('2021 mutual transfer deadlines split by level', "'08/04/2021'" in DATA and "'09/04/2021'" in DATA)
+check('2022 mutual transfer deadlines split by level', "'02/04/2022'" in DATA and "'04/04/2022'" in DATA)
+check('mutual transfer split deadlines retained', 'mutual-transfer-applications-pe' in DATA and 'mutual-transfer-applications-de' in DATA)
 
 # v3.22.34 — historical detachment batch retained
 for event_id in [
@@ -72,7 +72,7 @@ check('2024 PYSPE/PYSDE withdrawal deadline verified', "'17/05/2024'" in DATA)
 check('2020 body withdrawal deadline verified', "'12/05/2020'" in DATA)
 check('2021 body withdrawal deadline verified', "'31/05/2021'" in DATA)
 check('2024 first PYSDE announcement corrected to 28 June', "'28/06/2024'" in DATA and "'27/06/2024'" not in DATA)
-check('2022 first PYSDE nuance documented', 'πρώτη ανακοίνωση' in DATA and 'συνδυασμένη ανάρτηση' in DATA and '07/07' in DATA)
+check('2022 first PYSDE nuance retained in source trail', 'πρώτη συνδυασμένη ανακοίνωση με ΠΥΣΔΕ→ΠΥΣΔΕ 06/07/2022' in DATA and '07/07/2022' in DATA)
 
 
 # v3.22.35 — metataksi 2021 + newly appointed historical completion
@@ -111,9 +111,9 @@ check('2020 resignation window sourced', '01–10/04/2020' in res_apps and '4141
 check('2021 resignation window sourced', '17/02–10/03/2021' in res_apps and '19014/Ε3/18-02-2021' in res_apps)
 
 res_withdrawal = event_block('resignation-withdrawal')
-check('resignation withdrawal uses individual one-month rule', 'Εντός 1 μήνα από την ημερομηνία κάθε αίτησης' in res_withdrawal)
-check('verified resignation withdrawal years do not invent common max date', 'Εντός 1 μήνα από κάθε αίτηση' in res_withdrawal and '10/05/2020' not in res_withdrawal and '12/03/2021' not in res_withdrawal and '11/03/2026' not in res_withdrawal)
-check('2021 withdrawal rule remains documented', '19014/Ε3/18-02-2021' in res_withdrawal and 'Εντός 1 μήνα από κάθε αίτηση' in res_withdrawal)
+check('resignation withdrawal uses individual one-month rule', 'μέσα σε έναν μήνα από την ημερομηνία της αίτησης' in res_withdrawal)
+check('resignation withdrawal exposes derived latest horizon', '10/05/2020' in res_withdrawal and '10/04/2021' in res_withdrawal and '11/03/2026' in res_withdrawal and 'τελευταία δυνατή ανάκληση' in res_withdrawal)
+check('2021 withdrawal rule remains documented', '19014/Ε3/18-02-2021' in res_withdrawal and 'εντός 1 μηνός από την αίτηση' in res_withdrawal)
 
 org = event_block('organic-gaps-circular')
 check('organic gaps 2020-2023 history remains verified', all(x in org for x in ['23866/Ε2/18-02-2020','24321/Ε2/02-03-2021','21020/Ε2/24-02-2022','12458/Ε2','02-02-2023']))

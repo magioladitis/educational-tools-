@@ -1,3 +1,26 @@
+# v3.22.46 — Mutual-transfer application split + resignation withdrawal horizon
+
+- Date: 2026-09-29
+- Split the combined mutual-transfer application deadline into separate P.E. and D.E. timeline rows, with independent histories and source trails.
+- Current cycle: P.E. 03/04/2026, D.E. 07/04/2026. The P.E. card also records the Ministry's later 14/04/2026 protocol-submission date without changing the statutory 15-day deadline.
+- Restored the operational horizon for resignation-withdrawal: each year displays the latest possible withdrawal date for an application submitted on the final application day, while the note preserves the legal one-month-per-application rule.
+- XLS export automatically includes both new mutual-transfer rows and the derived resignation-withdrawal horizon.
+- Regression: all service-timeline contracts PASS including new v3.22.46; pre-PWA gate passed through the personnel workload section before the single-command timeout; the entire remaining optimizer/performance/staffing/legal-source/source-registry/PHP-lint tail passed separately with no failures.
+
+# v3.22.45 — Service timeline source completion + XLS export
+
+- Date: 2026-09-29
+- Completed the source trail for every stored mutual-transfer result date (P.E. and D.E.). Years with no stored result remain blank rather than inferred.
+- Removed the process-count pill from the service-timeline hero.
+- Added `Εξαγωγή σε XLS`, backed by `xronodiagramma-ypiresiakon-metavolon-export.php` and a dependency-free XLSX writer.
+- Export workbook contains `Χρονολόγιο` (matrix by school year) and `Πηγές` (row-wise source URLs), with frozen panes, filters, wrapping and bounded widths.
+- Exported workbook was opened with `artifact_tool`; key ranges were inspected and the formula/error scan returned no spreadsheet errors.
+- Regression: service-timeline v3.22.44 compatibility PASS; v3.22.45 export contract PASS; optimizer/performance/staffing PASS; legal-source registry PASS; source-registry audit 0 errors/0 warnings; top-level PHP syntax PASS. The full shell gate exceeded a single command time budget only during the optimizer section and was completed in subsequent chunks with no failures.
+
+## v3.22.44 — Service timeline final UX/content polish
+
+PASS target: remove repeated verification chrome while retaining source transparency; partial historical sourcing remains visible only as a single subtle card-level cue.
+
 # Production / Real-device audit
 
 Use this checklist after each release that changes layout, PWA shell, service worker, or major interactive workflows.

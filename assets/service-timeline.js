@@ -22,7 +22,9 @@
     });
 
     if (status) {
-      status.textContent = shown === 1 ? '1 διαδικασία' : shown + ' διαδικασίες';
+      var defaultView = activeFilter === 'all' && (!verifiedOnly || verifiedOnly.checked);
+      status.textContent = defaultView ? '' : (shown === 1 ? '1 διαδικασία' : shown + ' διαδικασίες');
+      status.hidden = defaultView;
     }
     if (empty) empty.hidden = shown !== 0;
   }

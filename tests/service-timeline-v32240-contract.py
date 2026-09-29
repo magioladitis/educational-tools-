@@ -45,9 +45,9 @@ check('old late EEP 08/10/2025 no longer used as first announcement', '08/10/202
 for phrase in ['έκδοση δεδομένων', 'ιστορικό αρχείο εργασίας', 'κατάσταση έρευνας', 'ιστορικός έλεγχος', 'παλιά κοινή ιστορική γραμμή', 'διορθώθηκε']:
     check('public copy excludes internal phrase: ' + phrase, phrase not in PAGE and phrase not in DATA)
 check('hero uses end-user language', 'Δείτε πότε πραγματοποιήθηκαν οι βασικές υπηρεσιακές διαδικασίες' in PAGE)
-check('current-cycle message is user-facing', 'Μόλις υπάρξει επίσημη ανακοίνωση, η ημερομηνία θα εμφανιστεί εδώ.' in PAGE)
+check('current-cycle message is user-facing', 'Όταν δημοσιευτεί, η ημερομηνία θα προστεθεί εδώ.' in PAGE)
 check('source labels are user-facing', '<summary>Επίσημες πηγές</summary>' in PAGE and '<summary>Πηγές προηγούμενων ετών</summary>' in PAGE)
-check('history explanation is user-facing', 'Το ✓ δείχνει ότι η συγκεκριμένη ιστορική ημερομηνία έχει επιβεβαιωθεί' in PAGE)
+check('technical history legend is absent', 'Το ✓ δείχνει' not in PAGE and 'timeline-history-disclaimer' not in PAGE)
 check('verified-only filter is conditional', '$hasUnverified' in PAGE and '<?php if ($hasUnverified) { ?>' in PAGE)
 if "'id' => 'transfer-results'" in DATA:
     transfer_copy = block('transfer-results')

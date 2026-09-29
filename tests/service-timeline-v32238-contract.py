@@ -28,7 +28,7 @@ for value in ['22/06/2020','09/07/2021','07/07/2023','27/05/2024','06/06/2025','
     check('bodies history retains ' + value, value in bodies)
 for marker in ['45452-22-06-20', '49419-09-07-21', '52433-16-06-22', '55900-07-07-23', '58427-27-05-24', '61733-06-06-25']:
     check('bodies historical source ' + marker, marker in bodies)
-check('bodies semantics remain first official announcement', 'πρώτη επίσημη ανακοίνωση αποσπάσεων σε υπηρεσίες ή φορείς' in bodies)
+check('bodies semantics remain first-announcement series', "'title' => 'Πρώτες ανακοινώσεις αποσπάσεων σε υπηρεσίες / φορείς'" in bodies)
 
 circ = event_block('metatakseis-circular')
 apps = event_block('metatakseis-applications')

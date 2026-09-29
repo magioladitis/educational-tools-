@@ -28,10 +28,10 @@ for protocol in ['4696/Ε3/14-01-2022','7297/Ε3/23-01-2023','5420/Ε3/18-01-202
 
 withdrawal = event_block('resignation-withdrawal')
 check('withdrawal history all years verified', "'verified_history_indices' => array(0,1,2,3,4,5,6)" in withdrawal)
-check('withdrawal history normalized to individual one-month rule', withdrawal.count('Εντός 1 μήνα από κάθε αίτηση') >= 7)
+check('withdrawal history exposes latest possible horizon', all(x in withdrawal for x in ['10/05/2020','10/04/2021','11/03/2022','13/03/2023','12/03/2024','11/03/2025','11/03/2026']))
 for stale in ['13/03/2022','14/03/2023','13/03/2024']:
-    check('stale common deadline removed ' + stale, stale not in withdrawal)
-check('2022 one-month-rule evidence attached', '28597/Ε3/15-03-2022' in withdrawal and 'έως 11/03 για αιτήσεις 11/02' in withdrawal)
+    check('incorrect historical horizon removed ' + stale, stale not in withdrawal)
+check('2022 one-month-rule evidence attached', '28597/Ε3/15-03-2022' in withdrawal and 'έως 11/03 για αίτηση της 11/02' in withdrawal)
 check('2024 last-possible date described only as example/evidence', '12/03/2024' in withdrawal)
 check('2025 last-possible date described only as example/evidence', '11/03/2025' in withdrawal)
 

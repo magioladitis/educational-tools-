@@ -27,8 +27,8 @@ for token in ['44996-18-05-20','48786-19-05-21','52310-03-06-22','55064-05-04-23
 check('public note scopes the process', 'κεντρική πρόσκληση' in eep and 'ΚΕ.Δ.Α.Σ.Υ.' in eep and 'Σ.Δ.Ε.Υ.' in eep)
 ver=re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'",CONFIG)
 cache=re.search(r"CACHE_PREFIX \+ '([0-9.]+)'",SW)
-check('version bumped to 3.22.43', bool(ver) and ver.group(1)=='3.22.43')
-check('cache bumped to 3.22.43', bool(cache) and cache.group(1)=='3.22.43')
+check('version is 3.22.43 or newer', bool(ver) and tuple(map(int,ver.group(1).split('.'))) >= (3,22,43))
+check('cache is 3.22.43 or newer', bool(cache) and tuple(map(int,cache.group(1).split('.'))) >= (3,22,43))
 proc=subprocess.run(['php','xronodiagramma-ypiresiakon-metavolon.php'],cwd=ROOT,text=True,capture_output=True)
 check('timeline PHP renders',proc.returncode==0)
 if proc.returncode==0:

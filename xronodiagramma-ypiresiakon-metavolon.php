@@ -31,7 +31,6 @@ $hasUnverified = $verifiedCount < count($events);
     <p>Δείτε πότε πραγματοποιήθηκαν οι βασικές υπηρεσιακές διαδικασίες τα προηγούμενα έτη και ποιες ημερομηνίες έχουν ήδη ανακοινωθεί για τον τρέχοντα κύκλο.</p>
     <div class="timeline-hero-meta" aria-label="Σύνοψη χρονοδιαγράμματος">
       <span>Ιστορικό 2019–2026</span>
-      <span><?php echo (int) $verifiedCount; ?> διαδικασίες με επιβεβαιωμένη ημερομηνία</span>
       <span>Ενημέρωση: <?php echo $h($data['updated_at']); ?></span>
     </div>
   </section>
@@ -40,7 +39,7 @@ $hasUnverified = $verifiedCount < count($events);
     <div>
       <span class="timeline-eyebrow">ΤΡΕΧΩΝ ΚΥΚΛΟΣ <?php echo $h($data['current_cycle']); ?></span>
       <h2 id="timelineNowTitle">Τι γνωρίζουμε τώρα</h2>
-      <p>Μέχρι την ενημέρωση της <?php echo $h($data['updated_at']); ?> δεν έχει ανακοινωθεί ακόμη η εγκύκλιος μεταθέσεων για τον κύκλο 2026–2027. Μόλις υπάρξει επίσημη ανακοίνωση, η ημερομηνία θα εμφανιστεί εδώ.</p>
+      <p>Η εγκύκλιος μεταθέσεων για τον κύκλο <?php echo $h($data['current_cycle']); ?> δεν έχει ακόμη ανακοινωθεί. Όταν δημοσιευτεί, η ημερομηνία θα προστεθεί εδώ.</p>
     </div>
     <a class="timeline-deadlines-link" href="prothesmies.php">Δες ενεργές προθεσμίες →</a>
   </section>
@@ -52,12 +51,15 @@ $hasUnverified = $verifiedCount < count($events);
         <button type="button" class="timeline-chip" data-timeline-filter="<?php echo $h($key); ?>"><?php echo $h($label); ?></button>
       <?php } ?>
     </div>
-    <?php if ($hasUnverified) { ?>
-      <label class="timeline-verified-toggle">
-        <input id="timelineVerifiedOnly" type="checkbox" checked>
-        <span>Μόνο επιβεβαιωμένες ημερομηνίες</span>
-      </label>
-    <?php } ?>
+    <div class="timeline-control-actions">
+      <?php if ($hasUnverified) { ?>
+        <label class="timeline-verified-toggle">
+          <input id="timelineVerifiedOnly" type="checkbox" checked>
+          <span>Μόνο επιβεβαιωμένες ημερομηνίες</span>
+        </label>
+      <?php } ?>
+      <a class="timeline-export-link" href="xronodiagramma-ypiresiakon-metavolon-export.php" aria-label="Εξαγωγή χρονοδιαγράμματος σε Excel">Εξαγωγή σε XLS</a>
+    </div>
   </section>
 
   <div class="timeline-status-line" id="timelineStatusLine" role="status" aria-live="polite"></div>
@@ -69,7 +71,13 @@ $hasUnverified = $verifiedCount < count($events);
       $sources = isset($event['sources']) && is_array($event['sources']) ? $event['sources'] : array();
       $historicalSources = isset($event['historical_sources']) && is_array($event['historical_sources']) ? $event['historical_sources'] : array();
       $verifiedHistoryIndices = isset($event['verified_history_indices']) && is_array($event['verified_history_indices']) ? $event['verified_history_indices'] : array();
-      $verificationLabel = isset($event['verification_label']) ? $event['verification_label'] : '';
+      $historyNeedsSources = false;
+      foreach ($history as $historyIndex => $historyValue) {
+        if ($historyValue !== null && $historyValue !== '' && !in_array($historyIndex, $verifiedHistoryIndices, true)) {
+          $historyNeedsSources = true;
+          break;
+        }
+      }
       ?>
       <article class="timeline-event<?php echo $verified ? ' is-verified' : ' is-research'; ?>" data-timeline-event data-group="<?php echo $h($event['group']); ?>" data-verified="<?php echo $verified ? '1' : '0'; ?>">
         <div class="timeline-marker" aria-hidden="true"><span></span></div>
@@ -82,29 +90,24 @@ $hasUnverified = $verifiedCount < count($events);
             <div class="timeline-event-date"><?php echo $h($event['latest']); ?></div>
           </div>
 
-          <div class="timeline-source-state <?php echo $verified ? 'timeline-source-state--verified' : 'timeline-source-state--research'; ?>">
-            <?php if ($verified) { ?>
-              <?php echo $h($verificationLabel !== '' ? $verificationLabel : '✓ Επιβεβαιωμένη από επίσημη πηγή'); ?>
-            <?php } else { ?>
-              Δεν υπάρχει ακόμη επιβεβαιωμένη ημερομηνία
-            <?php } ?>
-          </div>
+          <?php if (!$verified) { ?>
+            <div class="timeline-source-state timeline-source-state--research">Δεν έχει ανακοινωθεί επίσημη ημερομηνία</div>
+          <?php } ?>
 
           <?php if (!empty($event['note'])) { ?><p class="timeline-note"><?php echo $h($event['note']); ?></p><?php } ?>
 
           <details class="timeline-history">
-            <summary>Ιστορικό 2019–2026</summary>
+            <summary>Ιστορικό 2019–2026<?php if ($historyNeedsSources) { ?><span class="timeline-history-summary-note">Πηγές υπό συμπλήρωση</span><?php } ?></summary>
             <div class="timeline-history-grid">
               <?php foreach ($years as $index => $year) {
                 $value = isset($history[$index]) && $history[$index] !== null && $history[$index] !== '' ? $history[$index] : '—';
                 ?>
-                <div class="timeline-history-item">
+                <div class="timeline-history-item<?php echo $value === '—' ? ' is-empty' : ''; ?>">
                   <span><?php echo $h($year); ?></span>
-                  <strong><?php echo $h($value); ?><?php if (in_array($index, $verifiedHistoryIndices, true)) { ?> <span class="timeline-history-verified" title="Επιβεβαιωμένη ημερομηνία" aria-label="επιβεβαιωμένη ημερομηνία">✓</span><?php } ?></strong>
+                  <strong><?php echo $h($value); ?></strong>
                 </div>
               <?php } ?>
             </div>
-            <p class="timeline-history-disclaimer">Το ✓ δείχνει ότι η συγκεκριμένη ιστορική ημερομηνία έχει επιβεβαιωθεί από επίσημη ή υπηρεσιακή πηγή. Οι πηγές κάθε έτους είναι διαθέσιμες ακριβώς από κάτω.</p>
             <?php if (!empty($historicalSources)) { ?>
               <details class="timeline-historical-sources">
                 <summary>Πηγές προηγούμενων ετών</summary>
@@ -135,7 +138,7 @@ $hasUnverified = $verifiedCount < count($events);
   <div class="timeline-empty" id="timelineEmpty" hidden>Δεν υπάρχουν γεγονότα που να ταιριάζουν στα επιλεγμένα φίλτρα.</div>
 
   <?php sourceCardStart(); ?>
-    <p>Οι ημερομηνίες προέρχονται από ανακοινώσεις, εγκυκλίους και αποφάσεις του ΥΠΑΙΘΑ ή αρμόδιων εκπαιδευτικών αρχών. Όπου δεν υπάρχει επιβεβαιωμένη ημερομηνία, δεν εμφανίζεται εκτίμηση.</p>
+    <p>Οι ημερομηνίες βασίζονται σε επίσημες ανακοινώσεις, εγκυκλίους και αποφάσεις.</p>
     <?php sourceCardLinksStart(); ?>
       <?php sourceCardLink('https://www.minedu.gov.gr/kinitikotita/metatheseis-egkyklioi-proskliseis', 'ΥΠΑΙΘΑ — Μεταθέσεις / Εγκύκλιοι & Προσκλήσεις ↗'); ?>
       <?php sourceCardLink('https://www.minedu.gov.gr/kinitikotita/apospaseis-egkyklioi-proskliseis', 'ΥΠΑΙΘΑ — Αποσπάσεις / Εγκύκλιοι & Προσκλήσεις ↗'); ?>
