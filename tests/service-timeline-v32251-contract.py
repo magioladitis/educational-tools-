@@ -12,7 +12,7 @@ def check(label, cond):
 proc=subprocess.run(['php','-r','echo json_encode(require "includes/service-timeline-data.php", JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);'],cwd=ROOT,text=True,capture_output=True)
 check('timeline data loads',proc.returncode==0)
 data=json.loads(proc.stdout); events=data['events']; by={e['id']:e for e in events}
-check('40 events after EEP audit',len(events)==40)
+check('EEP audit baseline retained',len(events)>=40)
 check('EEP-EVP coverage expanded to 18',sum('eep-evp' in e['levels'] for e in events)==18)
 fg=by['eep-evp-detachment-functional-gaps']
 check('EEP detachment functional gaps complete',fg['history']==['27/05/2020','20/05/2021','16/06/2022','26/06/2023','06/06/2024','23/06/2025','19/06/2026'])

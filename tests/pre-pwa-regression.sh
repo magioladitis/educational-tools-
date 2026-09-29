@@ -32,6 +32,7 @@ run_py tests/service-timeline-v32245-export-contract.py
 run_py tests/service-timeline-v32248-contract.py
 run_py tests/service-timeline-v32250-contract.py
 run_py tests/service-timeline-v32251-contract.py
+run_py tests/service-timeline-v32252-contract.py
 run_py tests/public-copy-audit-v32241-contract.py
 run_py tests/vacancies-public-unavailable-contract.py
 run_py tests/php-inline-js-separation-contract.py

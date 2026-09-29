@@ -127,3 +127,18 @@ After deploying a new version, reload once and confirm that `service-worker.js` 
 - Added the previously missing 2020 and 2021 central windows: `19–26/05/2020` and `20–27/05/2021`.
 - Added full `historical_sources` and `verified_history_indices` coverage and a regression guard preventing the stale July 2024 value from returning to this card.
 - Release/cache version: `3.22.43`.
+
+
+## v3.22.52 — Newly appointed exceptional detachment results
+
+- Renamed the PE/DE newly-appointed invitation and application rows to explicitly state the exceptional-detachment scope.
+- Added separate PE and DE result/name-announcement rows for 2021–2026.
+- Kept result dates level-specific; no synthetic common result date is used.
+- Added regression coverage for the new rows and their complete historical source trail.
+
+### Regression status v3.22.52
+- Service-timeline contracts through v3.22.52: PASS.
+- Mobile/shared-hero, PWA/accessibility and layout regression chunks: PASS.
+- Allocation/optimizer parity, performance and staffing-action chunks: PASS.
+- Legal-source registry, source audit and PHP syntax: PASS.
+- XLS export smoke test: PASS (`Χρονολόγιο` + `Πηγές`, separate Π.Ε./Δ.Ε. result rows present).
