@@ -79,7 +79,7 @@ $hasUnverified = $verifiedCount < count($events);
         }
       }
       ?>
-      <article class="timeline-event<?php echo $verified ? ' is-verified' : ' is-research'; ?>" data-timeline-event data-group="<?php echo $h($event['group']); ?>" data-verified="<?php echo $verified ? '1' : '0'; ?>">
+      <article class="timeline-event<?php echo $verified ? ' is-verified' : ' is-research'; ?>" data-timeline-event data-group="<?php echo $h($event['group']); ?>" data-levels="<?php echo $h(isset($event['levels']) && is_array($event['levels']) ? implode(',', $event['levels']) : 'all'); ?>" data-verified="<?php echo $verified ? '1' : '0'; ?>">
         <div class="timeline-marker" aria-hidden="true"><span></span></div>
         <div class="timeline-event-card">
           <div class="timeline-event-head">

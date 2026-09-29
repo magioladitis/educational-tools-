@@ -30,8 +30,8 @@ check('PE/DE official 2026 sources separated', '64531-23-03-26' in pe and '70026
 
 ver = re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'", CONFIG)
 cache = re.search(r"CACHE_PREFIX \+ '([0-9.]+)'", SW)
-check('version 3.22.46', bool(ver) and ver.group(1) == '3.22.46')
-check('cache 3.22.46', bool(cache) and cache.group(1) == '3.22.46')
+check('version 3.22.46 or newer', bool(ver) and tuple(map(int, ver.group(1).split('.'))) >= (3,22,46))
+check('cache 3.22.46 or newer', bool(cache) and tuple(map(int, cache.group(1).split('.'))) >= (3,22,46))
 
 proc = subprocess.run(['php','xronodiagramma-ypiresiakon-metavolon-export.php'], cwd=ROOT, capture_output=True)
 check('xlsx export still executes', proc.returncode == 0 and proc.stdout.startswith(b'PK'))

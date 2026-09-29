@@ -49,10 +49,12 @@ check('current-cycle message is user-facing', 'Όταν δημοσιευτεί, 
 check('source labels are user-facing', '<summary>Επίσημες πηγές</summary>' in PAGE and '<summary>Πηγές προηγούμενων ετών</summary>' in PAGE)
 check('technical history legend is absent', 'Το ✓ δείχνει' not in PAGE and 'timeline-history-disclaimer' not in PAGE)
 check('verified-only filter is conditional', '$hasUnverified' in PAGE and '<?php if ($hasUnverified) { ?>' in PAGE)
-if "'id' => 'transfer-results'" in DATA:
-    transfer_copy = block('transfer-results')
-else:
+if "'id' => 'transfer-results-primary'" in DATA:
+    transfer_copy = block('transfer-results-primary') + block('transfer-results-secondary') + block('transfer-results-eep-evp')
+elif "'id' => 'transfer-results-educators'" in DATA:
     transfer_copy = block('transfer-results-educators') + block('transfer-results-eep-evp')
+else:
+    transfer_copy = block('transfer-results')
 check('transfer result gives actionable category-specific guidance', 'αντίστοιχης ανακοίνωσης' in transfer_copy or 'χωριστά από τις μεταθέσεις εκπαιδευτικών' in transfer_copy)
 
 import re

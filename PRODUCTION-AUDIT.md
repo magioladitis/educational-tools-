@@ -1,3 +1,9 @@
+# v3.22.47 — Transfer announcements PE/DE split + level metadata groundwork
+
+- Split educator transfer announcements into independent P.E. and D.E. timeline events with separate histories/sources.
+- Added optional `levels` metadata and rendered `data-levels` for clearly level-specific events, preparing a future P.E./D.E./EEP-EVP filter without changing current UI behavior.
+- XLS export inherits the split automatically from the timeline dataset.
+
 # v3.22.46 — Mutual-transfer application split + resignation withdrawal horizon
 
 - Date: 2026-09-29

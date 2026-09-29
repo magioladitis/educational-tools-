@@ -282,41 +282,61 @@ return array(
             'note' => 'Η ανάκληση γίνεται μέσα σε έναν μήνα από την ημερομηνία της αίτησης. Η ημερομηνία που εμφανίζεται είναι ενδεικτικά η τελευταία δυνατή ανάκληση, όταν η αίτηση έχει υποβληθεί την τελευταία ημέρα της περιόδου αιτήσεων.',
         ),
         array(
-            'id' => 'transfer-results-educators',
+            'id' => 'transfer-results-primary',
             'group' => 'metatheseis',
-            'title' => 'Ανακοινώσεις μεταθέσεων εκπαιδευτικών',
-            'latest' => 'Π.Ε. 19/03 · Δ.Ε. 23/03/2026',
+            'levels' => array('pe'),
+            'title' => 'Ανακοινώσεις μεταθέσεων Π.Ε.',
+            'latest' => '19/03/2026',
             'latest_verified' => true,
             'source_coverage' => 'latest',
-            'history' => array('Π.Ε. 07/04 · Δ.Ε. 24/04/2020','24/03/2021','18/03/2022','02/03/2023','27/03/2024','20/03/2025','Π.Ε. 19/03 · Δ.Ε. 23/03/2026'),
+            'history' => array('07/04/2020','24/03/2021','18/03/2022','02/03/2023','27/03/2024','20/03/2025','19/03/2026'),
             'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις εκπαιδευτικών Π.Ε. 2026',
                     'url' => 'https://www.minedu.gov.gr/site/64520-19-03-26-apo-to-ypourgeio-paideias-thriskevmaton-kai-athlitismoy-anakoinonontai-oi-metatheseis-ekpaideftikon-tis-protovathmias-ekpaidefsis-genikis-ekpaidefsis-kai-eidikis-agogis-etous-2026',
                 ),
+            ),
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Π.Ε. 07/04/2020', 'url' => 'https://www.minedu.gov.gr/site/44608-07-04-2020-metatheseis-ekpaideftikon-a-thmias-ekp-sis-apo-perioxi-se-perioxi-metathesis-etous-2020'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Π.Ε. 24/03/2021', 'url' => 'https://www.minedu.gov.gr/panelladikes-eksetaseis-pistopoiitika/stratiotikes-sxoles?id=1275&start=780&view=category'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Π.Ε. 18/03/2022', 'url' => 'https://www.minedu.gov.gr/site/51624-18-03-22-metatheseis-ekpaideftikon-tis-protovathmias-ekpaidefsis-genikis-ekpaidefsis-kai-eidikis-agogis-etous-2022'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Π.Ε. 02/03/2023', 'url' => 'https://www.minedu.gov.gr/grafeio-typoy-kai-dimosion-sxeseon/anakoinoseis?start=860'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις Π.Ε. 27/03/2024', 'url' => 'https://www.minedu.gov.gr/site/57991-27-03-24-2025'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις Π.Ε. 20/03/2025', 'url' => 'https://www.minedu.gov.gr/site/61028-20-03-25-metatheseis-ekpaideftikon-tis-protovathmias-ekpaidefsis-genikis-ekpaidefsis-kai-eidikis-agogis-etous-2026'),
+            ),
+            'note' => 'Για επανεξέταση ή διόρθωση μετά τα αποτελέσματα ακολουθούνται οι οδηγίες της αντίστοιχης ανακοίνωσης ή της αρμόδιας Διεύθυνσης Εκπαίδευσης· δεν υπάρχει μία ενιαία προθεσμία για όλες τις περιπτώσεις.',
+        ),
+        array(
+            'id' => 'transfer-results-secondary',
+            'group' => 'metatheseis',
+            'levels' => array('de'),
+            'title' => 'Ανακοινώσεις μεταθέσεων Δ.Ε.',
+            'latest' => '23/03/2026',
+            'latest_verified' => true,
+            'source_coverage' => 'latest',
+            'history' => array('24/04/2020','24/03/2021','18/03/2022','02/03/2023','27/03/2024','20/03/2025','23/03/2026'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
+            'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις εκπαιδευτικών Δ.Ε. 2026',
                     'url' => 'https://www.minedu.gov.gr/en/mixanografiko?catid=1183&id=70019%3A23-03-26-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-sti-geniki-ekpaidefsi-kai-tin-eidiki-agogi-kai-ekpaidefsi&view=article',
                 ),
             ),
             'historical_sources' => array(
-                array('year' => '2019-2020 · Π.Ε.', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Π.Ε. 07/04/2020', 'url' => 'https://www.minedu.gov.gr/site/44608-07-04-2020-metatheseis-ekpaideftikon-a-thmias-ekp-sis-apo-perioxi-se-perioxi-metathesis-etous-2020'),
-                array('year' => '2019-2020 · Δ.Ε.', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Δ.Ε. 24/04/2020', 'url' => 'https://www.minedu.gov.gr/en/deltia-typoy-2/44736-24-04-20-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-2-sp-676'),
-                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Π.Ε. και Δ.Ε. 24/03/2021', 'url' => 'https://www.minedu.gov.gr/panelladikes-eksetaseis-pistopoiitika/stratiotikes-sxoles?id=1275&start=780&view=category'),
-                array('year' => '2021-2022 · Π.Ε.', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Π.Ε. 18/03/2022', 'url' => 'https://www.minedu.gov.gr/site/51624-18-03-22-metatheseis-ekpaideftikon-tis-protovathmias-ekpaidefsis-genikis-ekpaidefsis-kai-eidikis-agogis-etous-2022'),
-                array('year' => '2021-2022 · Δ.Ε.', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Δ.Ε. 18/03/2022', 'url' => 'https://www.minedu.gov.gr/site/51625-18-03-22-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-etous-2022-sp-614'),
-                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Π.Ε. και Δ.Ε. 02/03/2023', 'url' => 'https://www.minedu.gov.gr/grafeio-typoy-kai-dimosion-sxeseon/anakoinoseis?start=860'),
-                array('year' => '2023-2024 · Π.Ε.', 'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις Π.Ε. 27/03/2024', 'url' => 'https://www.minedu.gov.gr/site/57991-27-03-24-2025'),
-                array('year' => '2023-2024 · Δ.Ε.', 'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις Δ.Ε. 27/03/2024', 'url' => 'https://www.minedu.gov.gr/en/mixanografiko?catid=1183&id=57990%3A27-03-24-2024&view=article'),
-                array('year' => '2024-2025 · Π.Ε.', 'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις Π.Ε. 20/03/2025', 'url' => 'https://www.minedu.gov.gr/site/61028-20-03-25-metatheseis-ekpaideftikon-tis-protovathmias-ekpaidefsis-genikis-ekpaidefsis-kai-eidikis-agogis-etous-2026'),
-                array('year' => '2024-2025 · Δ.Ε.', 'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις Δ.Ε. 20/03/2025', 'url' => 'https://www.minedu.gov.gr/site/61037-20-03-25-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-sti-geniki-ekpaidefsi-kai-tin-eidiki-agogi-kai-ekpaidefsi'),
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Δ.Ε. 24/04/2020', 'url' => 'https://www.minedu.gov.gr/en/deltia-typoy-2/44736-24-04-20-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-2-sp-676'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Δ.Ε. 24/03/2021', 'url' => 'https://www.minedu.gov.gr/panelladikes-eksetaseis-pistopoiitika/stratiotikes-sxoles?id=1275&start=780&view=category'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Δ.Ε. 18/03/2022', 'url' => 'https://www.minedu.gov.gr/site/51625-18-03-22-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-etous-2022-sp-614'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘ — Μεταθέσεις Δ.Ε. 02/03/2023', 'url' => 'https://www.minedu.gov.gr/grafeio-typoy-kai-dimosion-sxeseon/anakoinoseis?start=860'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις Δ.Ε. 27/03/2024', 'url' => 'https://www.minedu.gov.gr/en/mixanografiko?catid=1183&id=57990%3A27-03-24-2024&view=article'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις Δ.Ε. 20/03/2025', 'url' => 'https://www.minedu.gov.gr/site/61037-20-03-25-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-sti-geniki-ekpaidefsi-kai-tin-eidiki-agogi-kai-ekpaidefsi'),
             ),
-            'note' => 'Οι ανακοινώσεις Π.Ε. και Δ.Ε. δεν εκδίδονται πάντα την ίδια ημέρα. Για επανεξέταση ή διόρθωση μετά τα αποτελέσματα ακολουθούνται οι οδηγίες της αντίστοιχης ανακοίνωσης ή της αρμόδιας Διεύθυνσης Εκπαίδευσης· δεν υπάρχει μία ενιαία προθεσμία για όλες τις περιπτώσεις.',
+            'note' => 'Για επανεξέταση ή διόρθωση μετά τα αποτελέσματα ακολουθούνται οι οδηγίες της αντίστοιχης ανακοίνωσης ή της αρμόδιας Διεύθυνσης Εκπαίδευσης· δεν υπάρχει μία ενιαία προθεσμία για όλες τις περιπτώσεις.',
         ),
         array(
             'id' => 'transfer-results-eep-evp',
             'group' => 'metatheseis',
+            'levels' => array('eep-evp'),
             'title' => 'Ανακοινώσεις μεταθέσεων ΕΕΠ-ΕΒΠ',
             'latest' => '03/04/2026',
             'latest_verified' => true,
@@ -342,6 +362,7 @@ return array(
         array(
             'id' => 'mutual-transfer-applications-pe',
             'group' => 'metatheseis',
+            'levels' => array('pe'),
             'title' => 'Αμοιβαίες μεταθέσεις Π.Ε. — λήξη αιτήσεων',
             'latest' => '03/04/2026',
             'latest_verified' => true,
@@ -367,6 +388,7 @@ return array(
         array(
             'id' => 'mutual-transfer-applications-de',
             'group' => 'metatheseis',
+            'levels' => array('de'),
             'title' => 'Αμοιβαίες μεταθέσεις Δ.Ε. — λήξη αιτήσεων',
             'latest' => '07/04/2026',
             'latest_verified' => true,
@@ -450,6 +472,7 @@ return array(
         ),        array(
             'id' => 'eep-ebp-detachments',
             'group' => 'apospaseis',
+            'levels' => array('eep-evp'),
             'title' => 'Αιτήσεις απόσπασης ΕΕΠ-ΕΒΠ',
             'latest' => '19/05–02/06/2026',
             'latest_verified' => true,
@@ -476,6 +499,7 @@ return array(
         array(
             'id' => 'mutual-transfer-primary-result',
             'group' => 'metatheseis',
+            'levels' => array('pe'),
             'title' => 'Αμοιβαίες μεταθέσεις Π.Ε. — ανακοίνωση',
             'latest' => '05/05/2026',
             'latest_verified' => true,
@@ -499,6 +523,7 @@ return array(
         array(
             'id' => 'mutual-transfer-secondary-result',
             'group' => 'metatheseis',
+            'levels' => array('de'),
             'title' => 'Αμοιβαίες μεταθέσεις Δ.Ε. — ανακοίνωση',
             'latest' => '13/05/2026',
             'latest_verified' => true,
@@ -677,6 +702,7 @@ return array(
         array(
             'id' => 'functional-gaps-primary-circular',
             'group' => 'apospaseis',
+            'levels' => array('pe'),
             'title' => 'Λειτουργικά κενά / πλεονάσματα για αποσπάσεις — Π.Ε.',
             'latest' => '05/06/2026 · 73719/Ε2',
             'latest_verified' => true,
@@ -721,6 +747,7 @@ return array(
         array(
             'id' => 'functional-gaps-secondary-circular',
             'group' => 'apospaseis',
+            'levels' => array('de'),
             'title' => 'Λειτουργικά κενά / πλεονάσματα για αποσπάσεις — Δ.Ε.',
             'latest' => '05/06/2026 · 74045/Ε2',
             'latest_verified' => true,
@@ -769,6 +796,7 @@ return array(
         array(
             'id' => 'first-primary-detachments',
             'group' => 'apospaseis',
+            'levels' => array('pe'),
             'title' => 'Πρώτη ανακοίνωση αποσπάσεων ΠΥΣΠΕ',
             'latest' => '30/06/2026',
             'latest_verified' => true,
@@ -794,6 +822,7 @@ return array(
         ),        array(
             'id' => 'first-secondary-detachments',
             'group' => 'apospaseis',
+            'levels' => array('de'),
             'title' => 'Πρώτη ανακοίνωση αποσπάσεων ΠΥΣΔΕ',
             'latest' => '02/07/2026',
             'latest_verified' => true,
@@ -819,6 +848,7 @@ return array(
         ),        array(
             'id' => 'metatakseis-to-eep',
             'group' => 'metatakseis',
+            'levels' => array('eep-evp'),
             'title' => 'Μετατάξεις προς κλάδους ΕΕΠ',
             'latest' => '19/08/2026',
             'latest_verified' => true,
@@ -843,6 +873,7 @@ return array(
         array(
             'id' => 'metatakseis-to-primary',
             'group' => 'metatakseis',
+            'levels' => array('pe'),
             'title' => 'Μετατάξεις προς άλλους κλάδους Πρωτοβάθμιας / ΚΕΔΑΣΥ',
             'latest' => '20/08/2026',
             'latest_verified' => true,
@@ -869,6 +900,7 @@ return array(
         array(
             'id' => 'metatakseis-to-secondary',
             'group' => 'metatakseis',
+            'levels' => array('de'),
             'title' => 'Μετατάξεις προς άλλους κλάδους Δευτεροβάθμιας / ΚΕΔΑΣΥ',
             'latest' => '21/08/2026',
             'latest_verified' => true,
