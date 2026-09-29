@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/page-hero.php';
 /**
  * Shared structural helpers for calculator pages.
  *
@@ -98,54 +99,25 @@ if (!function_exists('calculatorInlineResult')) {
 if (!function_exists('calculatorHeroStart')) {
     function calculatorHeroStart($config = array()) {
         $config = is_array($config) ? $config : array();
-        $class = isset($config['class']) ? $config['class'] : 'hero';
-        $id = isset($config['id']) ? $config['id'] : null;
-        $attrs = isset($config['attrs']) ? $config['attrs'] : array();
-        $opened = calculatorLayoutOpenTag('section', $class, $id, $attrs);
-        calculatorLayoutStackPush('hero', array($opened));
+        eduPageHeroStart($config);
     }
 }
 
 if (!function_exists('calculatorHeroEnd')) {
     function calculatorHeroEnd() {
-        $tags = calculatorLayoutStackPop('hero');
-        foreach (array_reverse($tags) as $tag) echo '</' . $tag . '>';
+        eduPageHeroEnd();
     }
 }
 
 if (!function_exists('calculatorHero')) {
     function calculatorHero($config = array()) {
         $config = is_array($config) ? $config : array();
-        $class = isset($config['class']) ? $config['class'] : 'hero';
-        $id = isset($config['id']) ? $config['id'] : null;
-        $attrs = isset($config['attrs']) ? $config['attrs'] : array();
-        calculatorLayoutOpenTag('section', $class, $id, $attrs);
-
-        $title = calculatorLayoutTextOrHtml($config, 'title', 'title_html');
-        if ($title !== '') echo '<h1>' . $title . '</h1>';
-
-        $intro = calculatorLayoutTextOrHtml($config, 'intro', 'intro_html');
-        if ($intro !== '') {
-            $introAttrs = isset($config['intro_attrs']) && is_array($config['intro_attrs']) ? $config['intro_attrs'] : array();
-            echo '<p' . calculatorLayoutAttributes($introAttrs) . '>' . $intro . '</p>';
+        $hero = $config;
+        if (isset($config['badges']) && is_array($config['badges'])) {
+            $hero['meta'] = $config['badges'];
+            if (isset($config['meta_class'])) $hero['meta_class'] = $config['meta_class'];
         }
-
-        $badges = isset($config['badges']) && is_array($config['badges']) ? $config['badges'] : array();
-        if (count($badges) > 0) {
-            $metaClass = isset($config['meta_class']) ? $config['meta_class'] : 'meta';
-            echo '<div class="' . calculatorLayoutEscape($metaClass) . '">';
-            foreach ($badges as $badge) {
-                if (is_array($badge)) {
-                    $badgeAttrs = isset($badge['attrs']) ? $badge['attrs'] : array();
-                    $badgeHtml = isset($badge['html']) ? (string)$badge['html'] : calculatorLayoutEscape(isset($badge['text']) ? $badge['text'] : '');
-                    echo '<span' . calculatorLayoutAttributes($badgeAttrs) . '>' . $badgeHtml . '</span>';
-                } else {
-                    echo '<span>' . calculatorLayoutEscape($badge) . '</span>';
-                }
-            }
-            echo '</div>';
-        }
-        echo '</section>';
+        eduPageHero($hero);
     }
 }
 

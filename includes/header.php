@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/components/source-card.php';
+require_once __DIR__ . '/components/page-hero.php';
 /** Common header / navigation for Educational Tools — shared UI. */
 ?>
 <?php

@@ -25,15 +25,19 @@ $hasUnverified = $verifiedCount < count($events);
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
 <main class="timeline-shell">
-  <section class="timeline-hero">
-    <span class="timeline-kicker">ΥΠΗΡΕΣΙΑΚΕΣ ΜΕΤΑΒΟΛΕΣ</span>
-    <h1>Χρονοδιάγραμμα Εκπαιδευτικών</h1>
-    <p>Δείτε πότε πραγματοποιήθηκαν οι βασικές υπηρεσιακές διαδικασίες τα προηγούμενα έτη και ποιες ημερομηνίες έχουν ήδη ανακοινωθεί για τον τρέχοντα κύκλο.</p>
-    <div class="timeline-hero-meta" aria-label="Σύνοψη χρονοδιαγράμματος">
-      <span>Ιστορικό 2019–2026</span>
-      <span>Ενημέρωση: <?php echo $h($data['updated_at']); ?></span>
-    </div>
-  </section>
+  <?php eduPageHero(array(
+    'class' => 'timeline-hero',
+    'kicker' => 'ΥΠΗΡΕΣΙΑΚΕΣ ΜΕΤΑΒΟΛΕΣ',
+    'kicker_class' => 'timeline-kicker',
+    'title' => 'Χρονοδιάγραμμα Εκπαιδευτικών',
+    'intro' => 'Δείτε πότε πραγματοποιήθηκαν οι βασικές υπηρεσιακές διαδικασίες τα προηγούμενα έτη και ποιες ημερομηνίες έχουν ήδη ανακοινωθεί για τον τρέχοντα κύκλο.',
+    'meta' => array(
+      'Ιστορικό 2019–2026',
+      'Ενημέρωση: ' . $data['updated_at']
+    ),
+    'meta_class' => 'timeline-hero-meta',
+    'meta_attrs' => array('aria-label' => 'Σύνοψη χρονοδιαγράμματος')
+  )); ?>
 
   <section class="timeline-now edu-card" aria-labelledby="timelineNowTitle">
     <div>
@@ -45,11 +49,25 @@ $hasUnverified = $verifiedCount < count($events);
   </section>
 
   <section class="timeline-controls edu-card" aria-label="Φίλτρα χρονοδιαγράμματος">
-    <div class="timeline-filter-group" role="group" aria-label="Κατηγορία διαδικασίας">
-      <button type="button" class="timeline-chip is-active" data-timeline-filter="all">Όλα</button>
-      <?php foreach ($groups as $key => $label) { ?>
-        <button type="button" class="timeline-chip" data-timeline-filter="<?php echo $h($key); ?>"><?php echo $h($label); ?></button>
-      <?php } ?>
+    <div class="timeline-filter-stack">
+      <div class="timeline-filter-row">
+        <span class="timeline-filter-label">Κατηγορία</span>
+        <div class="timeline-filter-group" role="group" aria-label="Κατηγορία διαδικασίας">
+          <button type="button" class="timeline-chip is-active" data-timeline-filter="all">Όλα</button>
+          <?php foreach ($groups as $key => $label) { ?>
+            <button type="button" class="timeline-chip" data-timeline-filter="<?php echo $h($key); ?>"><?php echo $h($label); ?></button>
+          <?php } ?>
+        </div>
+      </div>
+      <div class="timeline-filter-row">
+        <span class="timeline-filter-label">Βαθμίδα / προσωπικό</span>
+        <div class="timeline-filter-group" role="group" aria-label="Βαθμίδα ή κατηγορία προσωπικού">
+          <button type="button" class="timeline-chip is-active" data-timeline-level="all">Όλα</button>
+          <button type="button" class="timeline-chip" data-timeline-level="pe">Π.Ε.</button>
+          <button type="button" class="timeline-chip" data-timeline-level="de">Δ.Ε.</button>
+          <button type="button" class="timeline-chip" data-timeline-level="eep-evp">ΕΕΠ-ΕΒΠ</button>
+        </div>
+      </div>
     </div>
     <div class="timeline-control-actions">
       <?php if ($hasUnverified) { ?>

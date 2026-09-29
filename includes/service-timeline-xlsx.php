@@ -65,12 +65,22 @@ function serviceTimelineXlsxStylesXml()
         .'</styleSheet>';
 }
 
+function serviceTimelineXlsxLevelLabel($event)
+{
+    $levels = isset($event['levels']) && is_array($event['levels']) ? $event['levels'] : array('all');
+    if (!$levels || in_array('all', $levels, true)) return 'Κοινό';
+    $map = array('pe' => 'Π.Ε.', 'de' => 'Δ.Ε.', 'eep-evp' => 'ΕΕΠ-ΕΒΠ');
+    $labels = array();
+    foreach ($levels as $level) $labels[] = isset($map[$level]) ? $map[$level] : $level;
+    return implode(' / ', $labels);
+}
+
 function serviceTimelineXlsxChronologySheetXml($data)
 {
     $years = isset($data['history_years']) && is_array($data['history_years']) ? $data['history_years'] : array();
     $groups = isset($data['groups']) && is_array($data['groups']) ? $data['groups'] : array();
     $events = isset($data['events']) && is_array($data['events']) ? $data['events'] : array();
-    $headers = array_merge(array('Κατηγορία', 'Διαδικασία'), $years, array('Τελευταία τιμή', 'Παρατηρήσεις'));
+    $headers = array_merge(array('Κατηγορία', 'Βαθμίδα / προσωπικό', 'Διαδικασία'), $years, array('Τελευταία τιμή', 'Παρατηρήσεις'));
     $lastCol = serviceTimelineXlsxColumnName(count($headers));
     $rows = array();
 
@@ -86,32 +96,34 @@ function serviceTimelineXlsxChronologySheetXml($data)
         $groupLabel = isset($groups[$groupKey]) ? $groups[$groupKey] : $groupKey;
         $history = isset($event['history']) && is_array($event['history']) ? $event['history'] : array();
         $cells = serviceTimelineXlsxStringCell('A'.$rowNo, $groupLabel, 2)
-            . serviceTimelineXlsxStringCell('B'.$rowNo, isset($event['title']) ? $event['title'] : '', 3);
+            . serviceTimelineXlsxStringCell('B'.$rowNo, serviceTimelineXlsxLevelLabel($event), 4)
+            . serviceTimelineXlsxStringCell('C'.$rowNo, isset($event['title']) ? $event['title'] : '', 3);
         foreach ($years as $idx => $year) {
-            $col = serviceTimelineXlsxColumnName($idx + 3);
+            $col = serviceTimelineXlsxColumnName($idx + 4);
             $value = isset($history[$idx]) && $history[$idx] !== null ? (string)$history[$idx] : '';
             $cells .= $value === '' ? serviceTimelineXlsxBlankCell($col.$rowNo, 4) : serviceTimelineXlsxStringCell($col.$rowNo, $value, 4);
         }
-        $lastValueCol = serviceTimelineXlsxColumnName(3 + count($years));
-        $noteCol = serviceTimelineXlsxColumnName(4 + count($years));
+        $lastValueCol = serviceTimelineXlsxColumnName(4 + count($years));
+        $noteCol = serviceTimelineXlsxColumnName(5 + count($years));
         $cells .= serviceTimelineXlsxStringCell($lastValueCol.$rowNo, isset($event['latest']) ? $event['latest'] : '', 4)
             . serviceTimelineXlsxStringCell($noteCol.$rowNo, isset($event['note']) ? $event['note'] : '', 3);
         $rows[] = '<row r="'.$rowNo.'" ht="28" customHeight="1">'.$cells.'</row>';
         $rowNo++;
     }
 
-    $yearStart = 3;
-    $yearEnd = 2 + count($years);
+    $yearStart = 4;
+    $yearEnd = 3 + count($years);
     $latestColNo = $yearEnd + 1;
     $notesColNo = $yearEnd + 2;
     return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         .'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
         .'<dimension ref="A1:'.$lastCol.max(1, $rowNo - 1).'"/>'
-        .'<sheetViews><sheetView workbookViewId="0"><pane xSplit="2" ySplit="1" topLeftCell="C2" activePane="bottomRight" state="frozen"/></sheetView></sheetViews>'
+        .'<sheetViews><sheetView workbookViewId="0"><pane xSplit="3" ySplit="1" topLeftCell="D2" activePane="bottomRight" state="frozen"/></sheetView></sheetViews>'
         .'<sheetFormatPr defaultRowHeight="18"/>'
         .'<cols>'
           .'<col min="1" max="1" width="18" customWidth="1"/>'
-          .'<col min="2" max="2" width="42" customWidth="1"/>'
+          .'<col min="2" max="2" width="20" customWidth="1"/>'
+          .'<col min="3" max="3" width="42" customWidth="1"/>'
           .'<col min="'.$yearStart.'" max="'.$yearEnd.'" width="16" customWidth="1"/>'
           .'<col min="'.$latestColNo.'" max="'.$latestColNo.'" width="24" customWidth="1"/>'
           .'<col min="'.$notesColNo.'" max="'.$notesColNo.'" width="62" customWidth="1"/>'
@@ -125,7 +137,7 @@ function serviceTimelineXlsxSourcesSheetXml($data)
 {
     $groups = isset($data['groups']) && is_array($data['groups']) ? $data['groups'] : array();
     $events = isset($data['events']) && is_array($data['events']) ? $data['events'] : array();
-    $headers = array('Κατηγορία', 'Διαδικασία', 'Έτος / κύκλος', 'Πηγή', 'Σύνδεσμος');
+    $headers = array('Κατηγορία', 'Βαθμίδα / προσωπικό', 'Διαδικασία', 'Έτος / κύκλος', 'Πηγή', 'Σύνδεσμος');
     $rows = array();
     $headerXml = '';
     foreach ($headers as $idx => $label) {
@@ -146,10 +158,11 @@ function serviceTimelineXlsxSourcesSheetXml($data)
             if (isset($seen[$key])) continue;
             $seen[$key] = true;
             $cells = serviceTimelineXlsxStringCell('A'.$rowNo, $groupLabel, 2)
-                .serviceTimelineXlsxStringCell('B'.$rowNo, $title, 3)
-                .serviceTimelineXlsxStringCell('C'.$rowNo, isset($source['year']) ? $source['year'] : '', 4)
-                .serviceTimelineXlsxStringCell('D'.$rowNo, isset($source['label']) ? $source['label'] : '', 3)
-                .serviceTimelineXlsxStringCell('E'.$rowNo, $url, 5);
+                .serviceTimelineXlsxStringCell('B'.$rowNo, serviceTimelineXlsxLevelLabel($event), 4)
+                .serviceTimelineXlsxStringCell('C'.$rowNo, $title, 3)
+                .serviceTimelineXlsxStringCell('D'.$rowNo, isset($source['year']) ? $source['year'] : '', 4)
+                .serviceTimelineXlsxStringCell('E'.$rowNo, isset($source['label']) ? $source['label'] : '', 3)
+                .serviceTimelineXlsxStringCell('F'.$rowNo, $url, 5);
             $rows[] = '<row r="'.$rowNo.'" ht="30" customHeight="1">'.$cells.'</row>';
             $rowNo++;
         }
@@ -160,10 +173,11 @@ function serviceTimelineXlsxSourcesSheetXml($data)
             if (isset($seen[$key])) continue;
             $seen[$key] = true;
             $cells = serviceTimelineXlsxStringCell('A'.$rowNo, $groupLabel, 2)
-                .serviceTimelineXlsxStringCell('B'.$rowNo, $title, 3)
-                .serviceTimelineXlsxStringCell('C'.$rowNo, 'Τελευταία διαθέσιμη', 4)
-                .serviceTimelineXlsxStringCell('D'.$rowNo, isset($source['label']) ? $source['label'] : '', 3)
-                .serviceTimelineXlsxStringCell('E'.$rowNo, $url, 5);
+                .serviceTimelineXlsxStringCell('B'.$rowNo, serviceTimelineXlsxLevelLabel($event), 4)
+                .serviceTimelineXlsxStringCell('C'.$rowNo, $title, 3)
+                .serviceTimelineXlsxStringCell('D'.$rowNo, 'Τελευταία διαθέσιμη', 4)
+                .serviceTimelineXlsxStringCell('E'.$rowNo, isset($source['label']) ? $source['label'] : '', 3)
+                .serviceTimelineXlsxStringCell('F'.$rowNo, $url, 5);
             $rows[] = '<row r="'.$rowNo.'" ht="30" customHeight="1">'.$cells.'</row>';
             $rowNo++;
         }
@@ -171,17 +185,18 @@ function serviceTimelineXlsxSourcesSheetXml($data)
 
     return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         .'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
-        .'<dimension ref="A1:E'.max(1, $rowNo - 1).'"/>'
+        .'<dimension ref="A1:F'.max(1, $rowNo - 1).'"/>'
         .'<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'
         .'<sheetFormatPr defaultRowHeight="18"/>'
         .'<cols>'
           .'<col min="1" max="1" width="18" customWidth="1"/>'
-          .'<col min="2" max="2" width="42" customWidth="1"/>'
-          .'<col min="3" max="3" width="22" customWidth="1"/>'
-          .'<col min="4" max="4" width="62" customWidth="1"/>'
-          .'<col min="5" max="5" width="95" customWidth="1"/>'
+          .'<col min="2" max="2" width="20" customWidth="1"/>'
+          .'<col min="3" max="3" width="42" customWidth="1"/>'
+          .'<col min="4" max="4" width="22" customWidth="1"/>'
+          .'<col min="5" max="5" width="62" customWidth="1"/>'
+          .'<col min="6" max="6" width="95" customWidth="1"/>'
         .'</cols>'
-        .'<sheetData>'.implode('', $rows).'</sheetData><autoFilter ref="A1:E'.max(1, $rowNo - 1).'"/>'
+        .'<sheetData>'.implode('', $rows).'</sheetData><autoFilter ref="A1:F'.max(1, $rowNo - 1).'"/>'
         .'</worksheet>';
 }
 

@@ -19,6 +19,7 @@ run_py tests/mobile-ux-phase1-v32223-contract.py
 run_py tests/mobile-ux-phase2-v32224-contract.py
 run_py tests/mobile-ux-phase3-v32225-contract.py
 run_py tests/ux-consistency-v32226-contract.py
+run_py tests/shared-page-hero-v32249-contract.py
 run_py tests/deadline-lifecycle-v32227-contract.py
 run_py tests/service-timeline-v32236-contract.py
 run_py tests/service-timeline-v32238-contract.py
@@ -28,6 +29,9 @@ run_py tests/service-timeline-v32242-contract.py
 run_py tests/service-timeline-v32243-contract.py
 run_py tests/service-timeline-v32244-contract.py
 run_py tests/service-timeline-v32245-export-contract.py
+run_py tests/service-timeline-v32248-contract.py
+run_py tests/service-timeline-v32250-contract.py
+run_py tests/service-timeline-v32251-contract.py
 run_py tests/public-copy-audit-v32241-contract.py
 run_py tests/vacancies-public-unavailable-contract.py
 run_py tests/php-inline-js-separation-contract.py

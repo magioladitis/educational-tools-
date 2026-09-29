@@ -72,6 +72,7 @@ staffing-simulator-ui.js
 | PWA/browser head | `includes/head-pwa.php` | Manifest/favicon/SW bootstrap μία φορά. |
 | Local app experience | `assets/app-experience.js` | Πρόσφατα/Αγαπημένα, Share και Install· μόνο client-side, χωρίς business rules. |
 | Mobile progressive UX | `assets/common.js` + `assets/common.css` | Mobile hero info disclosure, opt-in sticky primary action, result navigation, input/table assist και shared validation· ποτέ business rules. |
+| Shared page hero | `includes/components/page-hero.php` | Canonical hero markup και `data-edu-hero` / `data-edu-hero-info` contract για ενιαίο desktop/mobile behavior. Τα calculator hero helpers λειτουργούν ως compatibility wrappers. |
 | Release version | `includes/config.php` + `service-worker.js` | Coordinated version/cache bump όταν αλλάζουν runtime assets. |
 
 ---

@@ -26,8 +26,8 @@ check('page exposes data-levels groundwork', 'data-levels=' in PAGE and "implode
 for eid,level in [('mutual-transfer-applications-pe','pe'),('mutual-transfer-applications-de','de'),('mutual-transfer-primary-result','pe'),('mutual-transfer-secondary-result','de'),('functional-gaps-primary-circular','pe'),('functional-gaps-secondary-circular','de'),('first-primary-detachments','pe'),('first-secondary-detachments','de'),('transfer-results-eep-evp','eep-evp'),('eep-ebp-detachments','eep-evp')]:
     check(eid+' level metadata', "'levels' => array('"+level+"')" in block(eid))
 ver=re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'",CONFIG); cache=re.search(r"CACHE_PREFIX \+ '([0-9.]+)'",SW)
-check('version 3.22.47', bool(ver) and ver.group(1)=='3.22.47')
-check('cache 3.22.47', bool(cache) and cache.group(1)=='3.22.47')
+check('version 3.22.47 or newer', bool(ver) and tuple(map(int, ver.group(1).split('.'))) >= (3,22,47))
+check('cache matches version', bool(cache) and bool(ver) and cache.group(1)==ver.group(1))
 proc=subprocess.run(['php','xronodiagramma-ypiresiakon-metavolon.php'],cwd=ROOT,text=True,capture_output=True)
 check('timeline renders',proc.returncode==0)
 if proc.returncode==0:

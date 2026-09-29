@@ -1,3 +1,46 @@
+## v3.22.51 — EEP/EVP audit corrections
+
+- Regression verification: all service-timeline contracts PASS; shared/mobile/UI regression chunks PASS; optimizer/performance/staffing/legal-source/source-registry/PHP-lint tail PASS.
+- Added `eep-evp-detachment-functional-gaps` with verified 2020–2026 history.
+- Corrected level metadata for all three metataksi result destination cards (`to-primary`, `to-secondary`, `to-eep`).
+- Kept EEP/EVP services/bodies detachments out of the public recurring timeline: official evidence confirms a historical 2019–2023 process, but no equivalent recurring central call was identified for 2024–2026.
+- Added regression coverage for the new event, level semantics, and historical-only services/bodies decision.
+
+
+## v3.22.50 — EEP/EVP coverage pass
+
+- Προστέθηκαν ξεχωριστές σειρές για εγκύκλιο και αιτήσεις μεταθέσεων ΕΕΠ-ΕΒΠ, αμοιβαίες μεταθέσεις ΕΕΠ-ΕΒΠ, ανακοινώσεις αποσπάσεων ΕΕΠ-ΕΒΠ και κατ’ εξαίρεση αποσπάσεις νεοδιόριστων ΕΕΠ-ΕΒΠ.
+- Η κοινή σειρά «Αιτήσεις μετάθεσης εκπαιδευτικών» περιορίστηκε σωστά σε Π.Ε./Δ.Ε.
+- Η κάλυψη του φίλτρου ΕΕΠ-ΕΒΠ αυξήθηκε από 9 σε 15 διαδικασίες· σύνολο χρονοδιαγράμματος 39 διαδικασίες.
+- Η πιθανή ξεχωριστή σειρά αποσπάσεων ΕΕΠ-ΕΒΠ σε υπηρεσίες/φορείς παραμένει εκτός δημόσιου dataset μέχρι να τεκμηριωθεί ομοιόμορφη συνέχεια μετά το 2023.
+- Τα service-timeline contracts, shared hero, mobile/PWA, accessibility, optimizer/parity, performance, staffing, legal-source registry, source registry και PHP lint ολοκληρώθηκαν χωρίς αποτυχία σε διαδοχικά regression chunks.
+- Το πραγματικό XLS export επαληθεύτηκε με `artifact_tool`: φύλλα `Χρονολόγιο` (A1:L40) και `Πηγές` (A1:F285), οι νέες σειρές ΕΕΠ-ΕΒΠ είναι παρούσες και ο έλεγχος για formula errors επέστρεψε 0 ευρήματα.
+
+# v3.22.50 — EEP-EVP service-timeline coverage
+
+- Added dedicated EEP-EVP transfer circular/application cycles, mutual-transfer deadline rule, detachment results and newly-appointed exceptional-detachment stages.
+- EEP-EVP level-filter coverage: 15 events (previously 9); total timeline events: 39.
+- Educator transfer applications no longer incorrectly carry EEP-EVP historical dates.
+- Every newly stored date has a Ministry or official education-authority source; services/bodies detachments after 2023 remain intentionally unmodeled pending continuous evidence.
+
+# v3.22.49 — Shared page hero template / mobile info consistency
+
+- Canonical shared hero: `includes/components/page-hero.php`.
+- Timeline migrated from ad-hoc `.timeline-hero` markup to `eduPageHero()`.
+- Calculator hero API delegates to the same component.
+- Mobile disclosure contract: `data-edu-hero` + `data-edu-hero-info`, with resilient legacy/custom hero fallback.
+- Goal: no page-specific implementation is required to obtain the standard mobile `i` behaviour.
+
+# v3.22.48 — Level/personnel filters + complete level metadata audit
+
+- Regression: targeted v3.22.47 compatibility + v3.22.48 contract PASS; pre-PWA gate passed through the allocation optimizer section before the command timeout; the complete optimizer/performance/staffing/legal-source/source-registry/PHP-lint tail passed separately with no failures.
+
+- Added independent `Π.Ε. / Δ.Ε. / ΕΕΠ-ΕΒΠ` filtering, composed with the existing process-category filter.
+- All 32 service-timeline events now declare explicit canonical `levels`; no event relies on dataset fallback `all`.
+- Audit corrected `organic-gaps-circular` to D.E. and normalized educator-only, EEP-EVP-only and cross-personnel processes.
+- XLS export now includes the same level/personnel dimension in both `Χρονολόγιο` and `Πηγές`.
+- Added `SERVICE-TIMELINE-LEVEL-AUDIT-2026-09-29.md` and regression contract `service-timeline-v32248-contract.py`.
+
 # v3.22.47 — Transfer announcements PE/DE split + level metadata groundwork
 
 - Split educator transfer announcements into independent P.E. and D.E. timeline events with separate histories/sources.

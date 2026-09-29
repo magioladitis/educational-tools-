@@ -290,13 +290,13 @@
     /* On phones, a page/tool hero should answer one thing first: what is this?
        Supporting copy and score/source badges remain available behind a small
        accessible information button instead of occupying the first viewport. */
-    var heroes = Array.prototype.slice.call((root || document).querySelectorAll('.hero, .edu-legacy-hero'));
+    var heroes = Array.prototype.slice.call((root || document).querySelectorAll('[data-edu-hero="true"], section.hero, section.edu-legacy-hero, section[class*="-hero"]'));
     heroes.forEach(function (hero) {
       if (hero.getAttribute('data-edu-mobile-info') === 'off') return;
       if (hero.querySelector('.edu-mobile-hero-info-button')) return;
 
       var infoNodes = Array.prototype.slice.call(hero.children).filter(function (child) {
-        return child.matches && child.matches('.hero-kicker, p, .intro, .subtitle, .meta, .hero-meta, .hero-tags');
+        return child.matches && (child.getAttribute('data-edu-hero-info') === 'true' || child.matches('.hero-kicker, p, .intro, .subtitle, .meta, .hero-meta, .hero-tags, [class$="-kicker"], [class*="-kicker "], [class$="-hero-meta"], [class*="-hero-meta " ]'));
       });
       if (!infoNodes.length) return;
 
