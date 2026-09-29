@@ -630,9 +630,9 @@ return array(
             'levels' => array('eep-evp'),
             'latest' => '08/06/2026',
             'latest_verified' => true,
-            'source_coverage' => 'latest',
-            'history' => array(null,null,null,null,null,null,'08/06/2026'),
-            'verified_history_indices' => array(6),
+            'source_coverage' => 'historical',
+            'history' => array(null,null,'15/06/2022','02/06/2023','22/05/2024','03/06/2025','08/06/2026'),
+            'verified_history_indices' => array(2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Πρόσκληση αποσπάσεων ΕΕΠ-ΕΒΠ 2026–2027',
@@ -643,7 +643,14 @@ return array(
                     'url' => 'https://www.minedu.gov.gr/site/64980-19-05-26-ekdosi-egkykliou-apospaseon-melon-eep-evp',
                 ),
             ),
-            'note' => 'Μετά την οριστική υποβολή, η αίτηση μπορεί να ανακληθεί με απενεργοποίηση στο ΟΠΣΥΔ έως 08/06/2026. Μετά την απενεργοποίηση δεν μπορεί να ενεργοποιηθεί ή να υποβληθεί εκ νέου.',
+            'historical_sources' => array(
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — Εγκύκλιος αποσπάσεων ΕΕΠ-ΕΒΠ 2022–2023: ανάκληση έως 15/06/2022', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%B1%CF%80%CE%BF%CF%83%CF%80%CE%AC%CF%83%CE%B5%CF%89%CE%BD_%CE%95%CE%95%CE%A0-%CE%95%CE%92%CE%A0_2022_63%CE%A3446%CE%9C%CE%A4%CE%9B%CE%97-%CE%97%CE%95%CE%A4.pdf'),
+                array('year' => '2022-2023', 'label' => 'Διαύγεια — Ψ8ΛΔ46ΜΤΛΗ-ΜΦΠ: απενεργοποίηση έως 02/06/2023', 'url' => 'https://diavgeia.gov.gr/doc/%CE%A88%CE%9B%CE%9446%CE%9C%CE%A4%CE%9B%CE%97-%CE%9C%CE%A6%CE%A0?inline=true'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος αποσπάσεων ΕΕΠ-ΕΒΠ 2024–2025: απενεργοποίηση έως 22/05/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%B1%CF%80%CE%BF%CF%83%CF%80%CE%AC%CF%83%CE%B5%CF%89%CE%BD_%CE%95%CE%95%CE%A0-%CE%95%CE%92%CE%A0_%CE%A8%CE%977846%CE%9D%CE%9A%CE%A0%CE%94-%CE%A3%CE%A76.pdf'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος αποσπάσεων ΕΕΠ-ΕΒΠ 2025–2026: ανάκληση έως 03/06/2025', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%B1%CF%80%CE%BF%CF%83%CF%80%CE%AC%CF%83%CE%B5%CF%89%CE%BD_%CE%95%CE%95%CE%A0-%CE%95%CE%92%CE%A0_9%CE%A3%CE%91%CE%9346%CE%9D%CE%9A%CE%A0%CE%94-%CE%96%CE%A8%CE%A3.pdf'),
+                array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — Πρόσκληση αποσπάσεων ΕΕΠ-ΕΒΠ 2026–2027: ανάκληση έως 08/06/2026', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CF%80%CF%81%CE%BF%CF%83%CE%BA%CE%BB%CE%B7%CF%83%CE%B7_%CE%B5%CE%B5%CF%80-%CE%B5%CE%B2%CF%80.pdf'),
+            ),
+            'note' => 'Από το 2022, όταν οι αιτήσεις αποσπάσεων ΕΕΠ-ΕΒΠ υποβάλλονται ηλεκτρονικά στο ΟΠΣΥΔ, η εγκύκλιος ορίζει χωριστή καταληκτική ημερομηνία για ανάκληση/απενεργοποίηση της οριστικοποιημένης αίτησης. Για τα 2019–2020 και 2020–2021 οι αιτήσεις υποβάλλονταν μέσω των οικείων υπηρεσιών και οι αντίστοιχες εγκύκλιοι δεν ορίζουν αυτοτελή προθεσμία ανάκλησης αίτησης πριν από τα αποτελέσματα. Η ανάκληση εγκεκριμένης απόσπασης μετά τα αποτελέσματα αποτελεί διαφορετική διαδικασία.',
         ),
         array(
             'id' => 'eep-evp-detachment-functional-gaps',

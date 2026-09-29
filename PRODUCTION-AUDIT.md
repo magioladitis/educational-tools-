@@ -157,3 +157,10 @@ After deploying a new version, reload once and confirm that `service-worker.js` 
 - Preserved the actual historical rule changes: relative KYSSEEP deadline in 2019-20, 05/04/2021 in 2020-21, 08/03/2022 23:59 in 2021-22, then 31/12 15:00 from 2022-23 onward.
 - Marked all seven history indices verified and attached one source per year.
 - Release/cache version: `3.22.54`.
+
+## v3.22.55 — EEP-EVP detachment-application withdrawal history
+
+- Completed the source-backed history of `eep-evp-detachment-application-withdrawal` for the five years in which the central circular provides a distinct pre-results withdrawal/deactivation deadline: 15/06/2022, 02/06/2023, 22/05/2024, 03/06/2025 and 08/06/2026.
+- Kept 2019-20 and 2020-21 intentionally empty: those circulars used service/email submission and do not state an equivalent standalone pre-results application-withdrawal deadline.
+- Explicitly separated withdrawal/deactivation of the pending application from withdrawal of an already approved detachment after results.
+- Release/cache version: `3.22.55`.
