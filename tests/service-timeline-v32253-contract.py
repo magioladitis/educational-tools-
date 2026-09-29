@@ -18,7 +18,7 @@ pts=by['temporary-transfer-points-eep-evp']
 check('EEP-EVP points publication', pts['levels']==['eep-evp'] and pts['latest']=='08/12/2025' and pts['history'][6]=='08/12/2025')
 check('EEP-EVP points source official', pts['sources'] and all('minedu.gov.gr' in x['url'] for x in pts['sources']))
 tr=by['transfer-application-withdrawal-eep-evp']
-check('EEP-EVP transfer withdrawal deadline', tr['latest']=='31/12/2025 · 15:00' and tr['verified_history_indices']==[6])
+check('EEP-EVP transfer withdrawal deadline', tr['latest']=='31/12/2025 · 15:00' and 6 in tr['verified_history_indices'])
 det=by['eep-evp-detachment-application-withdrawal']
 check('EEP-EVP detachment withdrawal deadline', det['latest']=='08/06/2026' and det['levels']==['eep-evp'])
 post=by['detachment-post-results-five-day-actions']
@@ -36,6 +36,6 @@ check('DE functional gaps 2020 completed', gaps['history'][0]=='03/07/2020 · 85
 config=(ROOT/'includes/config.php').read_text(encoding='utf-8')
 sw=(ROOT/'service-worker.js').read_text(encoding='utf-8')
 ver=re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'", config); cache=re.search(r"CACHE_PREFIX \+ '([0-9.]+)'", sw)
-check('version 3.22.53', bool(ver) and ver.group(1)=='3.22.53')
-check('cache 3.22.53', bool(cache) and cache.group(1)=='3.22.53')
+check('version at least 3.22.53', bool(ver) and tuple(map(int,ver.group(1).split('.'))) >= (3,22,53))
+check('cache matches configured release', bool(cache) and bool(ver) and cache.group(1)==ver.group(1))
 print('RESULT: service timeline v3.22.53 completion audit contract PASS')

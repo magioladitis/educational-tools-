@@ -150,3 +150,10 @@ After deploying a new version, reload once and confirm that `service-worker.js` 
 - Filled four previously missing historical values with Ministry-backed evidence.
 - Preserved the semantic distinction between decision date (15/06/2020) and Ministry announcement date (16/06/2020) for DE mutual transfers 2020.
 - Release/cache version: `3.22.53`.
+
+## v3.22.54 — EEP-EVP transfer-withdrawal history completion
+
+- Completed all seven history slots for `transfer-application-withdrawal-eep-evp` from official Ministry/Diavgeia circulars.
+- Preserved the actual historical rule changes: relative KYSSEEP deadline in 2019-20, 05/04/2021 in 2020-21, 08/03/2022 23:59 in 2021-22, then 31/12 15:00 from 2022-23 onward.
+- Marked all seven history indices verified and attached one source per year.
+- Release/cache version: `3.22.54`.
