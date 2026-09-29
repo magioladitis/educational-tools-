@@ -153,6 +153,28 @@ return array(
             'note' => 'Για τον κύκλο 2025–2026 οι προσωρινοί πίνακες Δ.Ε. ανακοινώνονται στις 24/11/2025 και τα αιτήματα διόρθωσης ή παράλειψης υποβάλλονται 24–28/11/2025.',
         ),
         array(
+            'id' => 'temporary-transfer-points-eep-evp',
+            'group' => 'metatheseis',
+            'title' => 'Πίνακες μοριοδότησης μετάθεσης ΕΕΠ-ΕΒΠ',
+            'levels' => array('eep-evp'),
+            'latest' => '08/12/2025',
+            'latest_verified' => true,
+            'source_coverage' => 'latest',
+            'history' => array(null,null,null,null,null,null,'08/12/2025'),
+            'verified_history_indices' => array(6),
+            'sources' => array(
+                array(
+                    'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων ΕΕΠ-ΕΒΠ 2025–2026',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%95%CE%A0-%CE%95%CE%92%CE%A0_%CE%95%CE%B3%CE%BA%CF%8D%CE%BA%CE%BB%CE%B9%CE%BF%CF%82_%CE%BC%CE%B5%CF%84%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CF%89v_2025_%CE%A8%CE%910546%CE%9D%CE%9A%CE%A0%CE%94-%CE%9F%CE%9C%CE%A3.pdf',
+                ),
+                array(
+                    'label' => 'ΥΠΑΙΘΑ — Πρόσκληση μεταθέσεων ΕΕΠ-ΕΒΠ 2025–2026',
+                    'url' => 'https://www.minedu.gov.gr/site/63076-15-10-25-prosklisi-melon-eidikoy-ekpaideftikoy-prosopikoy-eep-kai-eidikoy-voithitikoy-prosopikoy-evp-gia-ypovoli-aitiseon-metathesis-sxolikoy-etous-2025-2026',
+                ),
+            ),
+            'note' => 'Για τον κύκλο 2025–2026 οι πίνακες μοριοδότησης ανακοινώνονται στις 08/12/2025. Αιτήματα διόρθωσης υποβάλλονται 08–11/12/2025· μετά τις 19/12/2025 διορθώσεις γίνονται μόνο από την αρμόδια κεντρική υπηρεσία.',
+        ),
+        array(
             'id' => 'transfer-application-withdrawal',
             'group' => 'metatheseis',
             'title' => 'Ανάκληση αίτησης μετάθεσης — λήξη',
@@ -181,6 +203,24 @@ return array(
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος Δ.Ε. 2024–2025: ανάκληση έως 31/12/2024', 'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%9C%CE%95%CE%A4%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D_%CE%94%CE%95_2024-2025__%CE%91%CE%94%CE%91_9%CE%974%CE%A746%CE%9D%CE%9A%CE%A0%CE%94-%CE%A5%CE%9B%CE%A3.pdf'),
             ),
             'note' => 'Η προθεσμία αφορά ανάκληση της αίτησης μετάθεσης πριν ολοκληρωθεί η διαδικασία. Ανάκληση ήδη πραγματοποιημένης μετάθεσης δεν προβλέπεται.',
+        ),
+        array(
+            'id' => 'transfer-application-withdrawal-eep-evp',
+            'group' => 'metatheseis',
+            'title' => 'Ανάκληση αίτησης μετάθεσης ΕΕΠ-ΕΒΠ — λήξη',
+            'levels' => array('eep-evp'),
+            'latest' => '31/12/2025 · 15:00',
+            'latest_verified' => true,
+            'source_coverage' => 'latest',
+            'history' => array(null,null,null,null,null,null,'31/12/2025 · 15:00'),
+            'verified_history_indices' => array(6),
+            'sources' => array(
+                array(
+                    'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων ΕΕΠ-ΕΒΠ 2025–2026',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%95%CE%A0-%CE%95%CE%92%CE%A0_%CE%95%CE%B3%CE%BA%CF%8D%CE%BA%CE%BB%CE%B9%CE%BF%CF%82_%CE%BC%CE%B5%CF%84%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CF%89v_2025_%CE%A8%CE%910546%CE%9D%CE%9A%CE%A0%CE%94-%CE%9F%CE%9C%CE%A3.pdf',
+                ),
+            ),
+            'note' => 'Η προθεσμία αφορά ανάκληση της αίτησης μετάθεσης μέσω του ηλεκτρονικού συστήματος. Μετά την ανάκληση η αίτηση καθίσταται ανενεργή και δεν μπορεί να ενεργοποιηθεί ή να υποβληθεί εκ νέου. Δεν αφορά ανάκληση ήδη πραγματοποιημένης μετάθεσης.',
         ),
         array(
             'id' => 'resignations-applications',
@@ -575,6 +615,28 @@ return array(
             'note' => 'Η κάρτα αφορά την κεντρική πρόσκληση για αποσπάσεις ΕΕΠ-ΕΒΠ σε περιοχές, ΚΕ.Δ.Α.Σ.Υ. και Σ.Δ.Ε.Υ.',
         ),
         array(
+            'id' => 'eep-evp-detachment-application-withdrawal',
+            'group' => 'apospaseis',
+            'title' => 'Ανάκληση αίτησης απόσπασης ΕΕΠ-ΕΒΠ — λήξη',
+            'levels' => array('eep-evp'),
+            'latest' => '08/06/2026',
+            'latest_verified' => true,
+            'source_coverage' => 'latest',
+            'history' => array(null,null,null,null,null,null,'08/06/2026'),
+            'verified_history_indices' => array(6),
+            'sources' => array(
+                array(
+                    'label' => 'ΥΠΑΙΘΑ — Πρόσκληση αποσπάσεων ΕΕΠ-ΕΒΠ 2026–2027',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CF%80%CF%81%CE%BF%CF%83%CE%BA%CE%BB%CE%B7%CF%83%CE%B7_%CE%B5%CE%B5%CF%80-%CE%B5%CE%B2%CF%80.pdf',
+                ),
+                array(
+                    'label' => 'ΥΠΑΙΘΑ — Ανακοίνωση εγκυκλίου αποσπάσεων ΕΕΠ-ΕΒΠ 19/05/2026',
+                    'url' => 'https://www.minedu.gov.gr/site/64980-19-05-26-ekdosi-egkykliou-apospaseon-melon-eep-evp',
+                ),
+            ),
+            'note' => 'Μετά την οριστική υποβολή, η αίτηση μπορεί να ανακληθεί με απενεργοποίηση στο ΟΠΣΥΔ έως 08/06/2026. Μετά την απενεργοποίηση δεν μπορεί να ενεργοποιηθεί ή να υποβληθεί εκ νέου.',
+        ),
+        array(
             'id' => 'eep-evp-detachment-functional-gaps',
             'group' => 'apospaseis',
             'title' => 'Λειτουργικά κενά ΕΕΠ-ΕΒΠ για αποσπάσεις',
@@ -626,6 +688,28 @@ return array(
             'note' => 'Αφορά τις κεντρικές ανακοινώσεις αποσπάσεων σε περιοχές, ΚΕ.Δ.Α.Σ.Υ. και, όπου προβλέπεται, Σ.Δ.Ε.Υ. των ΚΕ.Δ.Α.Σ.Υ.',
         ),
         array(
+            'id' => 'detachment-post-results-five-day-actions',
+            'group' => 'apospaseis',
+            'title' => 'Μετά τα αποτελέσματα αποσπάσεων — πενθήμερο ενεργειών',
+            'levels' => array('pe','de','eep-evp'),
+            'latest' => 'εντός 5 ημερών από την ανακοίνωση',
+            'latest_verified' => true,
+            'source_coverage' => 'latest',
+            'history' => array(null,null,null,null,null,null,'5 ημέρες από την ανακοίνωση'),
+            'verified_history_indices' => array(6),
+            'sources' => array(
+                array(
+                    'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος αποσπάσεων ΠΥΣΠΕ/ΠΥΣΔΕ 41297/Ε2/02-04-2026',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf',
+                ),
+                array(
+                    'label' => 'ΥΠΑΙΘΑ — Πρόσκληση αποσπάσεων ΕΕΠ-ΕΒΠ 2026–2027',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2023/%CF%80%CF%81%CE%BF%CF%83%CE%BA%CE%BB%CE%B7%CF%83%CE%B7_%CE%B5%CE%B5%CF%80-%CE%B5%CE%B2%CF%80.pdf',
+                ),
+            ),
+            'note' => 'Δεν αποδίδεται τεχνητή ενιαία ημερομηνία: η προθεσμία αρχίζει από την εκάστοτε ανακοίνωση αποτελεσμάτων. Για Π.Ε./Δ.Ε. καλύπτει επανεξέταση όταν δεν πραγματοποιήθηκε απόσπαση και αίτημα ανάκλησης εγκεκριμένης απόσπασης. Για ΕΕΠ-ΕΒΠ προβλέπεται αίτημα ανάκλησης της απόσπασης εντός του ίδιου αποκλειστικού πενθημέρου.',
+        ),
+        array(
             'id' => 'mutual-transfer-primary-result',
             'group' => 'metatheseis',
             'levels' => array('pe'),
@@ -633,8 +717,8 @@ return array(
             'latest' => '05/05/2026',
             'latest_verified' => true,
             'source_coverage' => 'historical',
-            'history' => array(null,null,null,'05/04/2023','31/05/2024','24/04/2025','05/05/2026'),
-            'verified_history_indices' => array(3,4,5,6),
+            'history' => array('27/05/2020',null,null,'05/04/2023','31/05/2024','24/04/2025','05/05/2026'),
+            'verified_history_indices' => array(0,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Αμοιβαίες μεταθέσεις Π.Ε. 2026',
@@ -642,6 +726,7 @@ return array(
                 ),
             ),
             'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — Αμοιβαίες μεταθέσεις Π.Ε. 27/05/2020', 'url' => 'https://www.minedu.gov.gr/site/45127-27-05-20-amoivaies-metatheseis-ekpaideftikon-a-thmias-ekpaidefsis-etous-2019-2022-sp-874'),
                 array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘΑ — Αμοιβαίες μεταθέσεις Π.Ε. 05/04/2023', 'url' => 'https://www.minedu.gov.gr/site/55534-05-04-23-amoivaies-metatheseis-ekpaideftikon-a-thmias-ekpaidefsis-etous-2023'),
                 array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Αμοιβαίες μεταθέσεις Π.Ε. 31/05/2024', 'url' => 'https://www.minedu.gov.gr/site/58489-31-05-24-amoivaies-metatheseis-ekpaideftikon-a-thmias-ekpaidefsis-etous-2024'),
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Αμοιβαίες μεταθέσεις Π.Ε. 24/04/2025', 'url' => 'https://www.minedu.gov.gr/site/61328-24-04-25-amoivaies-metatheseis-ekpaideftikon-a-thmias-ekpaidefsis-etous-2024-2025'),
@@ -657,8 +742,8 @@ return array(
             'latest' => '13/05/2026',
             'latest_verified' => true,
             'source_coverage' => 'historical',
-            'history' => array(null,null,'11/05/2022','20/04/2023','19/06/2024','30/05/2025','13/05/2026'),
-            'verified_history_indices' => array(2,3,4,5,6),
+            'history' => array('16/06/2020','06/05/2021','11/05/2022','20/04/2023','19/06/2024','30/05/2025','13/05/2026'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΥΠΑΙΘΑ — Αμοιβαίες μεταθέσεις Δ.Ε. 2026',
@@ -666,13 +751,15 @@ return array(
                 ),
             ),
             'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — Υ.Α. 73608/Ε2/15-06-2020, ανακοίνωση 16/06/2020', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/73608%CE%952_15-06-2020_%CE%A5.%CE%91._%CE%91%CE%9C%CE%9F%CE%99%CE%92%CE%91%CE%99%CE%A9%CE%9D_%CE%9C%CE%95%CE%A4%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D.pdf'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — Υ.Α. αμοιβαίων μεταθέσεων Δ.Ε. 06/05/2021', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/50293%CE%952_6-5-2021_%CE%A5%CE%91_%CE%91%CE%9C%CE%9F%CE%99%CE%92%CE%91%CE%99%CE%A9%CE%9D_%CE%A8%CE%977246%CE%9C%CE%A4%CE%9B%CE%97-%CE%A7%CE%A9%CE%9D.pdf'),
                 array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘ — Αμοιβαίες μεταθέσεις Δ.Ε. 11/05/2022', 'url' => 'https://www.minedu.gov.gr/site/52084-11-05-22-amoivaies-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-etous-2023'),
                 array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘΑ — Αμοιβαίες μεταθέσεις Δ.Ε. 20/04/2023', 'url' => 'https://www.minedu.gov.gr/site/55179-20-04-23-amoivaies-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-etous-2023'),
                 array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Αμοιβαίες μεταθέσεις Δ.Ε. 19/06/2024', 'url' => 'https://www.minedu.gov.gr/en/mixanografiko?catid=1183&id=58654%3A19-06-24-amoivaies-metatheseis-ekpaideftikon-3&view=article'),
                 array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Αμοιβαίες μεταθέσεις Δ.Ε. 30/05/2025', 'url' => 'https://www.minedu.gov.gr/site/61662-30-05-25-amoivaies-metatheseis-anaklisi-metathesis-sympliromatikes-metatheseis'),
                 array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — Αμοιβαίες μεταθέσεις Δ.Ε. 13/05/2026', 'url' => 'https://www.minedu.gov.gr/site/64931-13-05-26-amoivaies-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-etous-2028'),
             ),
-            'note' => '',
+            'note' => 'Για το 2020 η Υ.Α. 73608/Ε2 φέρει ημερομηνία 15/06/2020, ενώ η υπουργική ανακοίνωση δημοσιεύτηκε στις 16/06/2020. Επειδή η κάρτα αποτυπώνει την ανακοίνωση, στο ιστορικό χρησιμοποιείται η 16/06/2020.',
         ),
         array(
             'id' => 'bodies-detachment-application-withdrawal',
@@ -887,8 +974,8 @@ return array(
             'latest' => '05/06/2026 · 74045/Ε2',
             'latest_verified' => true,
             'source_coverage' => 'official-document-copy',
-            'history' => array(null,'10/06/2021 · 68209/Ε2','02/06/2022 · 68172/Ε2','07/07/2023 · 75639/Ε2','23/05/2024 · 54074/Ε2','11/06/2025 · 68355/Ε2','05/06/2026 · 74045/Ε2'),
-            'verified_history_indices' => array(1,2,3,4,5,6),
+            'history' => array('03/07/2020 · 85351/Ε2','10/06/2021 · 68209/Ε2','02/06/2022 · 68172/Ε2','07/07/2023 · 75639/Ε2','23/05/2024 · 54074/Ε2','11/06/2025 · 68355/Ε2','05/06/2026 · 74045/Ε2'),
+            'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array(
                     'label' => 'ΠΥΣΔΕ Έβρου — εφαρμογή και ρητή αναφορά της 74045/Ε2/05-06-2026',
@@ -900,6 +987,11 @@ return array(
                 ),
             ),
             'historical_sources' => array(
+                array(
+                    'year' => '2019-2020',
+                    'label' => 'ΥΠΑΙΘ — επίσημη απόφαση που παραπέμπει στην 85351/Ε2/03-07-2020 «Λειτουργικά κενά εκπαιδευτικού προσωπικού Δ.Ε.»',
+                    'url' => 'https://www.minedu.gov.gr/publications/docs2020/93868%CE%952_16-07-2020_%CE%A3%CE%9C%CE%95%CE%91%CE%95-%CE%9A%CE%95%CE%A3%CE%A5.pdf',
+                ),
                 array(
                     'year' => '2020-2021',
                     'label' => 'ΥΠΑΙΘ — επίσημη απόφαση που παραπέμπει στην 68209/Ε2/10-06-2021',

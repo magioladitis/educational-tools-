@@ -24,6 +24,6 @@ check('PE historical sources complete',len(pe['historical_sources'])==6 and pe['
 check('DE historical sources complete',len(de['historical_sources'])==6 and de['verified_history_indices']==[1,2,3,4,5,6])
 check('latest result source present',pe['sources'] and de['sources'])
 ver=re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'",CONFIG); cache=re.search(r"CACHE_PREFIX \+ '([0-9.]+)'",SW)
-check('version 3.22.52',bool(ver) and ver.group(1)=='3.22.52')
-check('cache matches release',bool(cache) and cache.group(1)=='3.22.52')
+check('version at least 3.22.52',bool(ver) and tuple(map(int,ver.group(1).split('.'))) >= (3,22,52))
+check('cache matches configured release',bool(cache) and bool(ver) and cache.group(1)==ver.group(1))
 print('RESULT: service timeline v3.22.52 newly-appointed exceptional results contract PASS')

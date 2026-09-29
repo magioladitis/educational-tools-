@@ -13,7 +13,7 @@ proc=subprocess.run(['php','-r','echo json_encode(require "includes/service-time
 check('timeline data loads',proc.returncode==0)
 data=json.loads(proc.stdout); events=data['events']; by={e['id']:e for e in events}
 check('EEP audit baseline retained',len(events)>=40)
-check('EEP-EVP coverage expanded to 18',sum('eep-evp' in e['levels'] for e in events)==18)
+check('EEP-EVP coverage remains at least 18',sum('eep-evp' in e['levels'] for e in events)>=18)
 fg=by['eep-evp-detachment-functional-gaps']
 check('EEP detachment functional gaps complete',fg['history']==['27/05/2020','20/05/2021','16/06/2022','26/06/2023','06/06/2024','23/06/2025','19/06/2026'])
 check('EEP functional gaps all verified',fg['verified_history_indices']==[0,1,2,3,4,5,6] and len(fg['historical_sources'])==7)

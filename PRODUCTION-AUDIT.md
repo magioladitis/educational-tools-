@@ -142,3 +142,11 @@ After deploying a new version, reload once and confirm that `service-worker.js` 
 - Allocation/optimizer parity, performance and staffing-action chunks: PASS.
 - Legal-source registry, source audit and PHP syntax: PASS.
 - XLS export smoke test: PASS (`Χρονολόγιο` + `Πηγές`, separate Π.Ε./Δ.Ε. result rows present).
+
+## v3.22.53 — Service timeline completion audit
+
+- Canonical timeline: 46 processes (Π.Ε. 26 / Δ.Ε. 27 / ΕΕΠ-ΕΒΠ 22).
+- Added three source-backed EEP-EVP milestones and one shared post-results five-day rule without inventing an absolute date.
+- Filled four previously missing historical values with Ministry-backed evidence.
+- Preserved the semantic distinction between decision date (15/06/2020) and Ministry announcement date (16/06/2020) for DE mutual transfers 2020.
+- Release/cache version: `3.22.53`.
