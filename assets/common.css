@@ -386,8 +386,27 @@ body.edu-ui ::selection {
 }
 
 .edu-tools-global-footer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
   padding-top: 15px;
   border-top: 1px solid var(--edu-border);
+}
+
+.edu-tools-global-footer__version {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 2px 8px;
+  border: 1px solid var(--edu-border);
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+  color: var(--edu-muted);
+  font-size: 11px;
+  line-height: 1.35;
+  letter-spacing: .01em;
+  white-space: nowrap;
 }
 
 

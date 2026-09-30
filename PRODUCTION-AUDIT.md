@@ -164,3 +164,11 @@ After deploying a new version, reload once and confirm that `service-worker.js` 
 - Kept 2019-20 and 2020-21 intentionally empty: those circulars used service/email submission and do not state an equivalent standalone pre-results application-withdrawal deadline.
 - Explicitly separated withdrawal/deactivation of the pending application from withdrawal of an already approved detachment after results.
 - Release/cache version: `3.22.55`.
+
+
+## v3.22.56 — Visible online version marker
+
+- Shared footer shows the current `EDU_TOOLS_VERSION` as a subtle release badge.
+- The same constant is exposed as `data-version` on the footer for lightweight diagnostics.
+- No independent hard-coded UI version is introduced.
+- Release/cache version: `3.22.56`.

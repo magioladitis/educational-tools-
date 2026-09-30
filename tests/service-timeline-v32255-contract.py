@@ -28,6 +28,6 @@ check('official source trail', all(('minedu.gov.gr' in x['url']) or ('diavgeia.g
 config=(ROOT/'includes/config.php').read_text(encoding='utf-8')
 sw=(ROOT/'service-worker.js').read_text(encoding='utf-8')
 ver=re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'", config); cache=re.search(r"CACHE_PREFIX \+ '([0-9.]+)'", sw)
-check('version 3.22.55', bool(ver) and ver.group(1)=='3.22.55')
-check('cache 3.22.55', bool(cache) and cache.group(1)=='3.22.55')
+check('version at least 3.22.55', bool(ver) and tuple(map(int, ver.group(1).split('.'))) >= (3,22,55))
+check('cache matches configured release', bool(ver) and bool(cache) and cache.group(1)==ver.group(1))
 print('RESULT: service timeline v3.22.55 EEP-EVP detachment withdrawal history contract PASS')
