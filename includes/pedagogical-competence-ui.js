@@ -10,6 +10,8 @@
   const WARNING = "warning";
   const NEGATIVE = "negative";
   const UNKNOWN = "unknown";
+  const MAX_CREDENTIALS = 6;
+  const ADD_CREDENTIAL_LABEL = "+ Προσθήκη άλλου τίτλου / αποδεικτικού";
 
   function readReferenceData() {
     if (global.PedagogicalCompetenceReference && global.PedagogicalCompetenceReference.appendix_named_programs) {
@@ -234,14 +236,40 @@
     showResult(aggregate.status, html);
   }
 
+  function reindexCredentialCards() {
+    const list = byId("credentialsList");
+    safeQsa(list, ".ped-credential").forEach(function(card, index){
+      if (typeof card.setAttribute === "function") card.setAttribute("data-credential-index", String(index));
+      const heading = safeQs(card, ".ped-credential-heading h3");
+      if (heading) heading.textContent = "Αποδεικτικό " + String(index + 1);
+    });
+  }
+
+  function updateCredentialControls() {
+    const list = byId("credentialsList");
+    const addButton = byId("addCredentialBtn");
+    if (!list || !addButton) return;
+    const count = safeQsa(list, ".ped-credential").length;
+    const atLimit = count >= MAX_CREDENTIALS;
+    addButton.disabled = atLimit;
+    addButton.setAttribute("aria-disabled", atLimit ? "true" : "false");
+    addButton.textContent = ADD_CREDENTIAL_LABEL;
+    if (atLimit) addButton.setAttribute("title", "Μέγιστος αριθμός: " + MAX_CREDENTIALS + " αποδεικτικά");
+    else addButton.removeAttribute("title");
+  }
+
   function addCredential() {
     const template = byId("credentialTemplate"), list = byId("credentialsList");
     if (!template || !list) return;
-    const next = safeQsa(list, ".ped-credential").length;
-    const html = template.innerHTML.replace(/__INDEX__/g, String(next)).replace(/__NUMBER__/g, String(next + 1));
+    const count = safeQsa(list, ".ped-credential").length;
+    if (count >= MAX_CREDENTIALS) { updateCredentialControls(); return; }
+    const html = template.innerHTML.replace(/__INDEX__/g, String(count)).replace(/__NUMBER__/g, String(count + 1));
     const holder = document.createElement("div"); holder.innerHTML = html.trim();
     const card = holder.firstElementChild; if (!card) return;
-    list.appendChild(card); syncCard(card);
+    list.appendChild(card);
+    reindexCredentialCards();
+    syncCard(card);
+    updateCredentialControls();
   }
 
   function init() {
@@ -262,8 +290,15 @@
     document.addEventListener("click", function(e){
       const btn = e.target && typeof e.target.closest === "function" ? e.target.closest('[data-action="removeCredential"]') : null;
       if (!btn) return;
-      const card = btn.closest(".ped-credential"); if (card) card.remove();
+      const card = btn.closest(".ped-credential");
+      if (card) {
+        card.remove();
+        reindexCredentialCards();
+        updateCredentialControls();
+      }
     });
+    reindexCredentialCards();
+    updateCredentialControls();
     updateVisibility();
   }
 
@@ -271,6 +306,7 @@
 
   global.PedagogicalCompetenceUI = Object.freeze({
     init, updateVisibility, checkEparkeia, addCredential,
-    evaluateCredentialValues, aggregateEvaluations
+    evaluateCredentialValues, aggregateEvaluations,
+    maxCredentials: MAX_CREDENTIALS
   });
 })(window);

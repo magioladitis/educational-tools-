@@ -1,3 +1,9 @@
+## v3.22.62 — Pedagogical competence credential cap / mobile touch target
+- Hard cap of 6 credential cards in `paidagogiki-eparkeia.php`; add action disables at the cap and re-enables after removal.
+- Credential cards are reindexed after add/remove to prevent duplicate numbering after deleting a middle card.
+- Mobile delete action uses a 44×44px touch target while preserving the 18px trash icon.
+- Release/cache version: `3.22.62`.
+
 ## v3.22.61 — Pedagogical competence UX / cross-call wording
 - Icon-only accessible delete action for additional credentials (`title` + `aria-label`, inline SVG only; no inline JS).
 - User-facing copy no longer presents “Παράρτημα Ε΄” as the universal scope of the checker.

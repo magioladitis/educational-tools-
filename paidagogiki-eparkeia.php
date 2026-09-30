@@ -84,9 +84,9 @@ renderDeadlineCard(array(
     <div class="ped-credentials-head">
       <div>
         <h2 id="credentialsTitle">Πτυχία και αποδεικτικά Π.Δ.Ε.</h2>
-        <p>Δήλωσε κάθε τίτλο ή αποδεικτικό χωριστά. Αν διαθέτεις περισσότερα από ένα, το εργαλείο ελέγχει <strong>όλες τις ανεξάρτητες διαδρομές</strong>.</p>
+        <p id="credentialsHelp">Δήλωσε κάθε τίτλο ή αποδεικτικό χωριστά. Αν διαθέτεις περισσότερα από ένα, το εργαλείο ελέγχει <strong>όλες τις ανεξάρτητες διαδρομές</strong>. Μπορείς να καταχωρίσεις έως <strong>6</strong> αποδεικτικά.</p>
       </div>
-      <button id="addCredentialBtn" class="ped-secondary-action" type="button">+ Προσθήκη άλλου τίτλου / αποδεικτικού</button>
+      <button id="addCredentialBtn" class="ped-secondary-action" type="button" aria-describedby="credentialsHelp">+ Προσθήκη άλλου τίτλου / αποδεικτικού</button>
     </div>
 
     <div id="credentialsList">
