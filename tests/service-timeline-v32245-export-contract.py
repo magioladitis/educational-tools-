@@ -26,7 +26,7 @@ for header in ['Κατηγορία','Διαδικασία','Τελευταία �
 check('PE mutual-result history fully sourced for stored years', "'verified_history_indices' => array(3,4,5,6)" in DATA and '58489-31-05-24' in DATA and '61328-24-04-25' in DATA)
 check('DE mutual-result history fully sourced for stored years', "'verified_history_indices' => array(2,3,4,5,6)" in DATA and '52084-11-05-22' in DATA and '58654%3A19-06-24' in DATA and '61662-30-05-25' in DATA)
 check('old remaining-source copy removed', 'παλαιότερα αποτελέσματα αμοιβαίων μεταθέσεων' not in PAGE)
-check('updated date bumped', "'updated_at' => '29/09/2026'" in DATA)
+check('updated date at least 29/09/2026', ("'updated_at' => '29/09/2026'" in DATA) or ("'updated_at' => '30/09/2026'" in DATA))
 ver = re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'", CONFIG)
 cache = re.search(r"CACHE_PREFIX \+ '([0-9.]+)'", SW)
 check('version remains at or beyond 3.22.45', bool(ver) and tuple(map(int, ver.group(1).split('.'))) >= (3,22,45))

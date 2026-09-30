@@ -172,3 +172,10 @@ After deploying a new version, reload once and confirm that `service-worker.js` 
 - The same constant is exposed as `data-version` on the footer for lightweight diagnostics.
 - No independent hard-coded UI version is introduced.
 - Release/cache version: `3.22.56`.
+## v3.22.57 — Timeline source consistency
+
+- Normalized the `metatheseis-circular` source model: current-cycle sources remain in `sources`, while 2019–2025 sources live in `historical_sources`.
+- UI now follows the same semantic pattern as the other timeline cards: «Επίσημες πηγές» = latest cycle, «Πηγές προηγούμενων ετών» = historical evidence.
+- Dataset audit found no other event with older-year labels misplaced in the primary `sources` array.
+- Release/cache version: `3.22.57`.
+

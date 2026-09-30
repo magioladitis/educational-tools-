@@ -9,7 +9,7 @@
  * until a primary or official education-authority source is identified.
  */
 return array(
-    'updated_at' => '29/09/2026',
+    'updated_at' => '30/09/2026',
     'current_cycle' => '2026-2027',
     'history_years' => array('2019-2020','2020-2021','2021-2022','2022-2023','2023-2024','2024-2025','2025-2026'),
     'groups' => array(
@@ -39,12 +39,14 @@ return array(
                     'label' => 'ΥΠΑΙΘΑ — Μεταθέσεις Π.Ε. 2025–2026',
                     'url' => 'https://www.minedu.gov.gr/site/63072-15-10-25-metatheseis-ekpaideftikon-protovathmias-ekpaidefsis-sxolikoy-etous-2025-2026',
                 ),
-                array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων 2024–2025', 'url' => 'https://www.minedu.gov.gr/site/59829-15-10-24-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-sxolikoy-etous-2024-2025'),
-                array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιοι μεταθέσεων 2023–2024', 'url' => 'https://www.minedu.gov.gr/site/56768-12-10-23-egkyklioi-metatheseon-ekpaideftikon-avathmias-kai-vvathmias-ekpaidefsis'),
-                array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Π.Ε. 2022–2023', 'url' => 'https://www.minedu.gov.gr/site/53722-14-10-22-metatheseis-ekpaideftikon-protovathmias-ekpaidefsis-sxolikoy-etous-2022-2024'),
-                array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Π.Ε. 2021–2022', 'url' => 'https://www.minedu.gov.gr/aei-9/nomothesia-aei/1183-grafeio-typou/news/50643-11-11-21-egkyklios-metatheseon-ekp-kon-protovathmias-ekpaidefsis-sx-etous-2021-2023'),
-                array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Π.Ε. 2020–2021', 'url' => 'https://www.minedu.gov.gr/site/46891-03-11-20-metatheseis-ekpaideftikon-protovathmias-ekpaidefsis-sxolikoy-etous-2020-2023'),
-                array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2019–2020', 'url' => 'https://www.minedu.gov.gr/site/43480-12-11-19-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-sxolikoy-etous-2019-2020'),
+            ),
+            'historical_sources' => array(
+                array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2019–2020', 'url' => 'https://www.minedu.gov.gr/site/43480-12-11-19-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-sxolikoy-etous-2019-2020'),
+                array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Π.Ε. 2020–2021', 'url' => 'https://www.minedu.gov.gr/site/46891-03-11-20-metatheseis-ekpaideftikon-protovathmias-ekpaidefsis-sxolikoy-etous-2020-2023'),
+                array('year' => '2021-2022', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Π.Ε. 2021–2022', 'url' => 'https://www.minedu.gov.gr/aei-9/nomothesia-aei/1183-grafeio-typou/news/50643-11-11-21-egkyklios-metatheseon-ekp-kon-protovathmias-ekpaidefsis-sx-etous-2021-2023'),
+                array('year' => '2022-2023', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Π.Ε. 2022–2023', 'url' => 'https://www.minedu.gov.gr/site/53722-14-10-22-metatheseis-ekpaideftikon-protovathmias-ekpaidefsis-sxolikoy-etous-2022-2024'),
+                array('year' => '2023-2024', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιοι μεταθέσεων 2023–2024', 'url' => 'https://www.minedu.gov.gr/site/56768-12-10-23-egkyklioi-metatheseon-ekpaideftikon-avathmias-kai-vvathmias-ekpaidefsis'),
+                array('year' => '2024-2025', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων 2024–2025', 'url' => 'https://www.minedu.gov.gr/site/59829-15-10-24-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-sxolikoy-etous-2024-2025'),
             ),
             'note' => 'Οι Π.Ε. και Δ.Ε. έχουν χωριστές επίσημες εγκυκλίους, με κοινή ημερομηνία έκδοσης.',
         ),
