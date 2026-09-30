@@ -4000,3 +4000,42 @@ body.edu-page-service-timeline .edu-source-card {max-width:none;margin-top:18px;
   body.edu-page-service-timeline .timeline-event-sources > .timeline-source-links,body.edu-page-service-timeline .timeline-historical-sources > .timeline-historical-source-links {display:flex!important;}
 }
 .timeline-history-summary-note{display:inline-flex;align-items:center;margin-left:.55rem;padding:.1rem .42rem;border-radius:999px;background:#f2f4f7;color:#667085;font-size:.7rem;font-weight:700;vertical-align:middle}.timeline-history-item.is-empty strong{color:#98a2b3;font-weight:650}.timeline-historical-sources{margin-top:.8rem;padding:.7rem .75rem;border:1px solid var(--border-color,#dbe3ec);border-radius:.8rem;background:rgba(248,250,252,.72)}.timeline-historical-source-links{display:grid;gap:.42rem;margin-top:.65rem}.timeline-historical-sources a{font-size:.82rem;line-height:1.35;text-decoration:none}.timeline-historical-sources a span{display:inline-block;min-width:5.6rem;font-weight:700}
+
+/* Pedagogical competence — multi-credential checker (v3.22.61) */
+body.edu-ui .ped-credentials { margin: 18px 0; }
+body.edu-ui .ped-credentials-head { display:flex; gap:16px; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+body.edu-ui .ped-credentials-head h2 { margin:0 0 6px; font-size:1.18rem; }
+body.edu-ui .ped-credentials-head p { margin:0; color:var(--edu-muted, #5f6b7a); line-height:1.5; }
+body.edu-ui .ped-secondary-action,
+body.edu-ui .ped-remove-credential { width:auto; margin:0; padding:9px 12px; font-size:.92rem; border-radius:8px; }
+body.edu-ui .ped-secondary-action { flex:0 0 auto; background:#eef4ff; color:#174ea6; border:1px solid #c9d8f4; }
+body.edu-ui .ped-remove-credential { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; padding:0; background:#fff; color:#8a2b2b; border:1px solid #e6c8c8; }
+body.edu-ui .ped-remove-credential svg { display:block; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+body.edu-ui .ped-remove-credential:hover { background:#fff5f5; border-color:#d9a8a8; }
+body.edu-ui .ped-remove-credential:focus-visible { outline:3px solid rgba(31,111,235,.24); outline-offset:2px; }
+body.edu-ui .ped-credential { margin:0 0 14px; padding:14px; border:1px solid #dfe5ec; border-radius:12px; background:#fbfcfe; }
+body.edu-ui .ped-credential-heading { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px; }
+body.edu-ui .ped-credential-heading h3 { margin:0; font-size:1.02rem; }
+body.edu-ui .ped-credential .question { margin-bottom:12px; }
+body.edu-ui .ped-credential .question:last-child { margin-bottom:0; }
+body.edu-ui .field-help { margin:7px 0 0; font-size:.88rem; color:#5f6b7a; line-height:1.45; }
+body.edu-ui .ped-opsyd-question { border-left:3px solid #a9bdd8; }
+@media (max-width:760px) {
+  body.edu-ui .ped-credentials-head { display:block; }
+  body.edu-ui .ped-secondary-action { width:100%; margin-top:12px; }
+  body.edu-ui .ped-credential { padding:12px; }
+}
+
+/* Pedagogical competence — named-program details (v3.22.61) */
+body.edu-ui .appendix-program-details {
+  margin: 2px 0 12px;
+  padding: 12px 14px;
+  border: 1px solid #d7e2f0;
+  border-radius: 10px;
+  background: #f7faff;
+  color: #344054;
+  font-size: .91rem;
+  line-height: 1.5;
+}
+body.edu-ui .appendix-program-details > strong { display:block; margin-bottom:5px; color:#174ea6; }
+body.edu-ui .appendix-program-details > div + div { margin-top:3px; }

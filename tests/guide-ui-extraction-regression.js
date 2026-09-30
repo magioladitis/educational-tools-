@@ -31,12 +31,13 @@ function makeElement(id, value) {
 // Pedagogical competence page.
 {
   global.window = global;
-  const ids = ['specialty','proofType','opsyd','pedagogicalDepartmentQuestions','epathQuestions','professorSchoolQuestions','checkEparkeiaBtn','result'];
+  const ids = ['specialty','proofType','opsyd','aeiCertificateEligibility','pedagogicalDepartmentQuestions','epathQuestions','professorSchoolQuestions','checkEparkeiaBtn','result'];
   const elements = {};
   ids.forEach(id => { elements[id] = makeElement(id); });
   elements.specialty.value = 'ΠΕ03';
   elements.proofType.value = 'aei_certificate';
   elements.opsyd.value = 'yes';
+  elements.aeiCertificateEligibility.value = 'yes';
   global.document = {
     readyState: 'complete',
     getElementById: id => elements[id] || null,

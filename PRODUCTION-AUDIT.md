@@ -1,3 +1,14 @@
+## v3.22.61 — Pedagogical competence UX / cross-call wording
+- Icon-only accessible delete action for additional credentials (`title` + `aria-label`, inline SVG only; no inline JS).
+- User-facing copy no longer presents “Παράρτημα Ε΄” as the universal scope of the checker.
+- The Appendix E / 2ΓΕ/2026 dataset remains explicitly identified only where provenance matters (named-program reference data and source card).
+- Release/cache version: `3.22.61`.
+
+## v3.22.60 — PHP 5.6 compatibility hotfix
+- Root cause του HTTP 500: χρήση του `??` (PHP 7+) στο `paidagogiki-eparkeia.php`.
+- Αντικαταστάθηκε με `isset(...) ? ... : ...`, συμβατό με PHP 5.6.
+- Τα νέα production αρχεία της Π.Δ.Ε. ελέγχονται με dedicated compatibility contract.
+
 ## v3.22.51 — EEP/EVP audit corrections
 
 - Regression verification: all service-timeline contracts PASS; shared/mobile/UI regression chunks PASS; optimizer/performance/staffing/legal-source/source-registry/PHP-lint tail PASS.
@@ -179,3 +190,19 @@ After deploying a new version, reload once and confirm that `service-worker.js` 
 - Dataset audit found no other event with older-year labels misplaced in the primary `sources` array.
 - Release/cache version: `3.22.57`.
 
+
+
+
+## v3.22.60 — Appendix E named-program exact-match audit
+- Transcribed Appendix E rows 14–52 into canonical structured data: `title`, `provider`, `legal_basis`, `fek`, `section`.
+- Replaced raw row-number selection with named-program selection and live source details.
+- Safety rule: a named-program row is positive only after explicit exact title + provider confirmation; changing the row resets that confirmation.
+- Dataset contract checks 39/39 contiguous rows (14–52) and required fields.
+- Release/cache version: `3.22.60`.
+
+## v3.22.58 — Pedagogical competence multi-credential audit
+- Multiple independent degrees/proofs are evaluated separately; any valid route can establish Π.Δ.Ε.
+- Target specialty is contextual only and can no longer invalidate a second degree/proof route.
+- OPSYD status is separated from substantive proof validity.
+- Appendix E 2ΓΕ/2026 structure and 2026 legal cutoffs centralized in `includes/pedagogical-competence-data.php`.
+- Release/cache version: `3.22.58`.
