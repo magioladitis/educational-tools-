@@ -4001,7 +4001,7 @@ body.edu-page-service-timeline .edu-source-card {max-width:none;margin-top:18px;
 }
 .timeline-history-summary-note{display:inline-flex;align-items:center;margin-left:.55rem;padding:.1rem .42rem;border-radius:999px;background:#f2f4f7;color:#667085;font-size:.7rem;font-weight:700;vertical-align:middle}.timeline-history-item.is-empty strong{color:#98a2b3;font-weight:650}.timeline-historical-sources{margin-top:.8rem;padding:.7rem .75rem;border:1px solid var(--border-color,#dbe3ec);border-radius:.8rem;background:rgba(248,250,252,.72)}.timeline-historical-source-links{display:grid;gap:.42rem;margin-top:.65rem}.timeline-historical-sources a{font-size:.82rem;line-height:1.35;text-decoration:none}.timeline-historical-sources a span{display:inline-block;min-width:5.6rem;font-weight:700}
 
-/* Pedagogical competence — multi-credential checker (v3.22.62) */
+/* Pedagogical competence — multi-credential checker (v3.22.65) */
 body.edu-ui .ped-credentials { margin: 18px 0; }
 body.edu-ui .ped-credentials-head { display:flex; gap:16px; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
 body.edu-ui .ped-credentials-head h2 { margin:0 0 6px; font-size:1.18rem; }
@@ -4029,7 +4029,7 @@ body.edu-ui .ped-opsyd-question { border-left:3px solid #a9bdd8; }
   body.edu-ui .ped-credential { padding:12px; }
 }
 
-/* Pedagogical competence — named-program details (v3.22.62) */
+/* Pedagogical competence — named-program details (v3.22.65) */
 body.edu-ui .appendix-program-details {
   margin: 2px 0 12px;
   padding: 12px 14px;
@@ -4042,3 +4042,72 @@ body.edu-ui .appendix-program-details {
 }
 body.edu-ui .appendix-program-details > strong { display:block; margin-bottom:5px; color:#174ea6; }
 body.edu-ui .appendix-program-details > div + div { margin-top:3px; }
+
+/* Pedagogical competence — legal/reference disclosures (v3.22.65) */
+body.edu-ui .ped-professor-school-help,
+body.edu-ui .ped-reference-help {
+  margin: 8px 0 10px;
+  border: 1px solid #d7e2f0;
+  border-radius: 10px;
+  background: #f8fbff;
+}
+body.edu-ui .ped-professor-school-help > summary,
+body.edu-ui .ped-reference-help > summary {
+  padding: 10px 12px;
+  color: var(--edu-primary-dark, #174ea6);
+  font-size: .91rem;
+  font-weight: 700;
+  line-height: 1.4;
+  cursor: pointer;
+}
+body.edu-ui .ped-professor-school-help__body,
+body.edu-ui .ped-reference-help .ped-professor-school-help__body {
+  padding: 0 12px 11px;
+  color: #344054;
+  font-size: .89rem;
+  line-height: 1.52;
+}
+body.edu-ui .ped-professor-school-help__body p,
+body.edu-ui .ped-reference-help .ped-professor-school-help__body p { margin: 8px 0 0; }
+body.edu-ui .ped-professor-school-help__body .field-help,
+body.edu-ui .ped-reference-help .ped-professor-school-help__body .field-help { margin-top: 9px; }
+body.edu-ui .ped-reference-help label { display:block; margin:10px 0 6px; font-size:.88rem; font-weight:700; }
+body.edu-ui .ped-reference-help select { margin-bottom:10px; }
+@media (max-width:760px) {
+  body.edu-ui .ped-professor-school-help > summary,
+body.edu-ui .ped-reference-help > summary { min-height: 44px; display:flex; align-items:center; }
+  body.edu-ui .ped-professor-school-help__body,
+body.edu-ui .ped-reference-help .ped-professor-school-help__body { padding: 0 11px 11px; }
+}
+
+/* Pedagogical competence — guided preconditions before named lists (v3.22.65) */
+body.edu-ui .ped-flow-guidance {
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border: 1px solid #d7e2f0;
+  border-radius: 10px;
+  background: #f7faff;
+  color: #344054;
+  font-size: .9rem;
+  line-height: 1.48;
+}
+body.edu-ui .ped-flow-guidance.is-positive {
+  border-color: #b9d8c4;
+  background: #f1f8f3;
+  color: #23613a;
+}
+body.edu-ui .ped-flow-guidance.is-warning {
+  border-color: #ead5aa;
+  background: #fff9ed;
+  color: #7a5511;
+}
+body.edu-ui .ped-flow-guidance.is-info {
+  border-color: #cbdcf3;
+  background: #f6f9ff;
+  color: #294d7a;
+}
+body.edu-ui .ped-program-search { margin: 0 0 10px; }
+body.edu-ui .ped-reference-help .question { margin: 10px 0 0; }
+@media (max-width:760px) {
+  body.edu-ui .ped-flow-guidance { padding: 10px 11px; }
+}

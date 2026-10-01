@@ -26,8 +26,8 @@ if (($programs[39]['provider'] ?? '') !== 'Οικονομικό Πανεπιστ
 if (($programs[52]['fek'] ?? '') !== '1173 Β΄/6-3-2022') {
     $errors[] = 'Row 52 FEK mismatch';
 }
-if (($data['rules']['appendix_named_program_requires_exact_match'] ?? false) !== true) {
-    $errors[] = 'Exact-match safety rule missing';
+if (($data['rules']['named_special_program_requires_exact_match'] ?? false) !== true) {
+    $errors[] = 'Named special-program exact-match safety rule missing';
 }
 
 if ($errors) {

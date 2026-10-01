@@ -1,3 +1,20 @@
+## v3.22.65 — Pedagogical competence guided preconditions
+
+- Guided branching precedes named-title lists to avoid unnecessary searching.
+- AEI transition conditions are sequential; professor-school graduation year is progressive.
+- Domestic MSc/PhD named-list lookup is fallback-only and exact-match protected.
+- Native search fields filter named postgraduate/special-program datasets.
+- Pedagogical targeted contracts: PASS; mobile browser 102/102; accessibility/PWA 29/29; manifest/PWA 59/59.
+- Full pre-PWA suite still stops at the pre-existing `service-timeline-v32239-contract.py` DE-history assertion, unchanged from the prior baseline.
+- Release/cache version: `3.22.65`.
+
+## v3.22.64 — Pedagogical competence professor-school definition
+
+- Added contextual `<details>` help for the legal meaning of «καθηγητική σχολή», rendered in both the initial credential card and dynamically added cards.
+- Legal copy is scoped to the specific degree, explicitly avoiding the false inference “target specialty ⇒ professor-school degree”.
+- Mobile disclosure target is at least 44px high; no new inline JavaScript was introduced.
+- Release/cache version: `3.22.64`.
+
 ## v3.22.62 — Pedagogical competence credential cap / mobile touch target
 - Hard cap of 6 credential cards in `paidagogiki-eparkeia.php`; add action disables at the cap and re-enables after removal.
 - Credential cards are reindexed after add/remove to prevent duplicate numbering after deleting a middle card.
