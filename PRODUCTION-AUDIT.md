@@ -1,3 +1,12 @@
+## v3.22.66 — Pedagogical competence definitive negatives / OPSYD gating
+
+- Definitive failed credential routes use `negative` instead of `warning` (including Ε.Π.Α.Θ. on/after 12/06/2018 and professor-school cases outside both transition windows).
+- OPSYD is a second-stage question and appears only after at least one credential evaluates positively; it is hidden and reset otherwise.
+- Negative credential routes are rendered explicitly with their reason in the result summary.
+- Targeted pedagogy regressions, mobile 102/102, accessibility/PWA 29/29 and manifest/PWA 59/59: PASS.
+- Full pre-PWA suite still stops at the same pre-existing `service-timeline-v32239-contract.py` DE-history assertion as the prior baseline.
+- Release/cache version: `3.22.66`.
+
 ## v3.22.65 — Pedagogical competence guided preconditions
 
 - Guided branching precedes named-title lists to avoid unnecessary searching.

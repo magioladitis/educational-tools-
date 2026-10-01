@@ -315,15 +315,15 @@ renderDeadlineCard(array(
     </article>
   </template>
 
-  <div class="question ped-opsyd-question">
-    <label for="opsyd">Κατάσταση σχετικού αποδεικτικού στον Ο.Π.ΣΥ.Δ.</label>
+  <div id="opsydQuestion" class="question ped-opsyd-question hidden">
+    <label for="opsyd">Κατάσταση θετικού αποδεικτικού στον Ο.Π.ΣΥ.Δ.</label>
     <select id="opsyd">
       <option value="">-- Δεν το έχω ελέγξει / δεν απαντώ --</option>
       <option value="yes">Εμφανίζεται / έχει καταχωριστεί</option>
       <option value="no">Δεν εμφανίζεται / δεν έχει καταχωριστεί</option>
       <option value="unknown">Δεν είμαι σίγουρος/η</option>
     </select>
-    <p class="field-help"><strong>Ξεχωριστός έλεγχος:</strong> η καταχώριση στον Ο.Π.ΣΥ.Δ. επηρεάζει τη χρήση του προσόντος στη διαδικασία, όχι το αν ο τίτλος σου αποτελεί από μόνος του αποδεικτικό Π.Δ.Ε.</p>
+    <p class="field-help"><strong>Ξεχωριστό δεύτερο στάδιο:</strong> εμφανίζεται μόνο όταν τουλάχιστον ένα δηλωμένο αποδεικτικό θεμελιώνει Π.Δ.Ε. Η καταχώριση στον Ο.Π.ΣΥ.Δ. αφορά τη χρήση του προσόντος στη διαδικασία, όχι την ίδια τη θεμελίωσή του.</p>
   </div>
 
   <button id="checkEparkeiaBtn" class="guide-submit" type="button" data-edu-primary-action="true" data-edu-result-target="#result">Έλεγχος Παιδαγωγικής και Διδακτικής Επάρκειας</button>

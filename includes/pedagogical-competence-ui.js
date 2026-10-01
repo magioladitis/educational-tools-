@@ -130,7 +130,7 @@
         if (!program) return result(UNKNOWN, "Η εγγραφή δεν βρέθηκε στο canonical dataset", "Δεν δίνεται αποτέλεσμα μέχρι να διασταυρωθεί ξανά η συγκεκριμένη εγγραφή με την επίσημη πηγή.");
         const referenceDetail = programReferenceText(v.namedSpecialProgramRow, program);
         if (v.namedSpecialProgramExactMatch === "yes") return result(POSITIVE, "Βεβαίωση / πιστοποιητικό από εγκεκριμένο πρόγραμμα Π.Δ.Ε.", referenceDetail + " Δήλωσες ότι τίτλος και φορέας ταυτίζονται ακριβώς.");
-        if (v.namedSpecialProgramExactMatch === "no") return result(WARNING, "Δεν υπάρχει ακριβής αντιστοίχιση με την επιλεγμένη εγγραφή", referenceDetail + " Αφού υπάρχει διαφορά στον τίτλο ή στον φορέα, η συγκεκριμένη επιλογή δεν χρησιμοποιείται ως θετική διαδρομή.");
+        if (v.namedSpecialProgramExactMatch === "no") return result(NEGATIVE, "Δεν υπάρχει ακριβής αντιστοίχιση με την επιλεγμένη εγγραφή", referenceDetail + " Αφού υπάρχει διαφορά στον τίτλο ή στον φορέα, η συγκεκριμένη επιλογή δεν θεμελιώνει Π.Δ.Ε.");
         return result(UNKNOWN, "Χρειάζεται επιβεβαίωση ακριβούς τίτλου και φορέα", referenceDetail + " Επιβεβαίωσε την ακριβή αντιστοίχιση πριν δοθεί θετικό αποτέλεσμα.");
       }
 
@@ -138,13 +138,13 @@
         /* New guided flow; aeiCertificateEligibility is kept as a backward-compatible fallback. */
         if (v.aeiEntryPeriod === "up_to_2026") {
           if (v.aeiCertifiedAtEntry === "yes") return result(POSITIVE, "Βεβαίωση Π.Δ.Ε. από Α.Ε.Ι.", "Δηλώθηκε εισαγωγή έως και το 2026–2027 και ότι το Τμήμα / η Σχολή χορηγούσε την πιστοποίηση Π.Δ.Ε. κατά τον χρόνο εισαγωγής.", {documents:["Βεβαίωση Παιδαγωγικής και Διδακτικής Επάρκειας Α.Ε.Ι."], notes:["Η χρονική προϋπόθεση προέρχεται από τη βάση 1ΓΕ/2026–2ΓΕ/2026. Σε άλλη διαδικασία ελέγχεται η αντίστοιχη προκήρυξη."]});
-          if (v.aeiCertifiedAtEntry === "no") return result(WARNING, "Βεβαίωση Α.Ε.Ι. — δεν πληρούται η δεύτερη μεταβατική προϋπόθεση", "Παρότι η εισαγωγή είναι έως και το 2026–2027, δήλωσες ότι το Τμήμα / η Σχολή δεν χορηγούσε την πιστοποίηση κατά τον χρόνο εισαγωγής. Έλεγξε άλλη διαδρομή ή τους ειδικούς όρους της διαδικασίας.");
+          if (v.aeiCertifiedAtEntry === "no") return result(NEGATIVE, "Βεβαίωση Α.Ε.Ι. — δεν πληρούται η δεύτερη μεταβατική προϋπόθεση", "Παρότι η εισαγωγή είναι έως και το 2026–2027, δήλωσες ότι το Τμήμα / η Σχολή δεν χορηγούσε την πιστοποίηση κατά τον χρόνο εισαγωγής. Η συγκεκριμένη διαδρομή δεν θεμελιώνει Π.Δ.Ε.· έλεγξε άλλο αποδεικτικό ή τους ειδικούς όρους της διαδικασίας.");
           return result(UNKNOWN, "Βεβαίωση Α.Ε.Ι. — χρειάζεται ακόμη μία επιβεβαίωση", "Η χρονική προϋπόθεση φαίνεται να καλύπτεται, αλλά πρέπει να επιβεβαιωθεί ότι το Τμήμα / η Σχολή χορηγούσε την πιστοποίηση κατά τον χρόνο εισαγωγής.");
         }
-        if (v.aeiEntryPeriod === "from_2027") return result(WARNING, "Βεβαίωση Α.Ε.Ι. — η συγκεκριμένη μεταβατική περίπτωση δεν καλύπτει την εισαγωγή", "Η διαθέσιμη βάση 1ΓΕ/2026–2ΓΕ/2026 θέτει ως χρονικό όριο την εισαγωγή έως και το 2026–2027. Έλεγξε αν διαθέτεις πιστοποιητικό άρθρου 99 ή άλλη προβλεπόμενη διαδρομή.");
+        if (v.aeiEntryPeriod === "from_2027") return result(NEGATIVE, "Βεβαίωση Α.Ε.Ι. — η συγκεκριμένη μεταβατική περίπτωση δεν καλύπτει την εισαγωγή", "Η διαθέσιμη βάση 1ΓΕ/2026–2ΓΕ/2026 θέτει ως χρονικό όριο την εισαγωγή έως και το 2026–2027. Η συγκεκριμένη διαδρομή δεν θεμελιώνει Π.Δ.Ε.· έλεγξε αν διαθέτεις πιστοποιητικό άρθρου 99 ή άλλο προβλεπόμενο αποδεικτικό.");
         if (v.aeiEntryPeriod === "unknown") return result(UNKNOWN, "Βεβαίωση Α.Ε.Ι. — χρειάζεται το έτος εισαγωγής", "Χωρίς το χρονικό στοιχείο δεν μπορεί να ελεγχθεί η μεταβατική περίπτωση της διαθέσιμης βάσης αναφοράς.");
         if (v.aeiCertificateEligibility === "yes") return result(POSITIVE, "Βεβαίωση Π.Δ.Ε. από Α.Ε.Ι.", "Δηλώθηκε ότι πληρούνται οι μεταβατικές προϋποθέσεις της διαθέσιμης βάσης αναφοράς.");
-        if (v.aeiCertificateEligibility === "no") return result(WARNING, "Βεβαίωση Α.Ε.Ι. — χρειάζεται έλεγχος της διαδικασίας", "Η δηλωμένη περίπτωση δεν φαίνεται να πληροί τη μεταβατική προϋπόθεση της διαθέσιμης βάσης αναφοράς.");
+        if (v.aeiCertificateEligibility === "no") return result(NEGATIVE, "Βεβαίωση Α.Ε.Ι. — δεν πληρούται η μεταβατική προϋπόθεση", "Η δηλωμένη περίπτωση δεν πληροί τη μεταβατική προϋπόθεση της διαθέσιμης βάσης αναφοράς και δεν θεμελιώνει Π.Δ.Ε. από αυτή τη διαδρομή.");
         return result(UNKNOWN, "Βεβαίωση Α.Ε.Ι. — λείπει κρίσιμο χρονικό στοιχείο", "Δήλωσε πρώτα πότε έγινε η εισαγωγή στο συγκεκριμένο Τμήμα / Σχολή.");
       }
 
@@ -158,7 +158,7 @@
         if (namedProgram) {
           const referenceDetail = programReferenceText(v.namedPostgraduateRow, namedProgram);
           if (v.namedPostgraduateExactMatch === "yes") return result(POSITIVE, "Παλαιότερο ονομαστικά εγκεκριμένο Π.Μ.Σ.", referenceDetail + " Δήλωσες ότι τίτλος και φορέας ταυτίζονται ακριβώς.");
-          if (v.namedPostgraduateExactMatch === "no") return result(WARNING, "Το επιλεγμένο Π.Μ.Σ. δεν ταυτίζεται ακριβώς", referenceDetail + " Η συγκεκριμένη εγγραφή δεν χρησιμοποιείται ως θετική διαδρομή επειδή υπάρχει διαφορά στον τίτλο ή στον φορέα.");
+          if (v.namedPostgraduateExactMatch === "no") return result(NEGATIVE, "Το επιλεγμένο Π.Μ.Σ. δεν ταυτίζεται ακριβώς", referenceDetail + " Η συγκεκριμένη εγγραφή δεν θεμελιώνει Π.Δ.Ε. επειδή υπάρχει διαφορά στον τίτλο ή στον φορέα.");
           return result(UNKNOWN, "Χρειάζεται επιβεβαίωση της ονομαστικής εγγραφής Π.Μ.Σ.", referenceDetail + " Επιβεβαίωσε ακριβή τίτλο και φορέα.");
         }
         if (v.domesticEducationEvidence === "no") return result(WARNING, "Μεταπτυχιακός / διδακτορικός τίτλος ημεδαπής — δεν τεκμηριώνεται από αυτή τη διαδρομή", "Δήλωσες ότι ο τίτλος δεν ανήκει στις επιστήμες της αγωγής. Αν πρόκειται για παλαιότερο εγκεκριμένο Π.Μ.Σ. με διαφορετική ονομασία, μπορείς να χρησιμοποιήσεις τον προαιρετικό ονομαστικό έλεγχο.");
@@ -187,7 +187,7 @@
 
     if (proofType === "epath") {
       if (v.epathDate === "before") return result(POSITIVE, "Πτυχίο Ε.Π.Α.Θ.", "Η δηλωμένη ημερομηνία κτήσης είναι πριν από 12/06/2018, όπως απαιτεί η σχετική περίπτωση.");
-      if (v.epathDate === "after") return result(WARNING, "Πτυχίο Ε.Π.Α.Θ. — δεν καλύπτεται από τη συγκεκριμένη χρονική περίπτωση", "Η ειδική χρονική περίπτωση της διαθέσιμης βάσης αναφοράς αφορά τίτλο με ημερομηνία κτήσης προγενέστερη της 12/06/2018.");
+      if (v.epathDate === "after") return result(NEGATIVE, "Πτυχίο Ε.Π.Α.Θ. — δεν καλύπτεται από τη συγκεκριμένη χρονική περίπτωση", "Η ειδική χρονική περίπτωση της διαθέσιμης βάσης αναφοράς αφορά τίτλο με ημερομηνία κτήσης προγενέστερη της 12/06/2018. Το συγκεκριμένο πτυχίο, με τη δηλωμένη ημερομηνία, δεν θεμελιώνει Π.Δ.Ε. από αυτή τη διαδρομή.");
       return result(UNKNOWN, "Πτυχίο Ε.Π.Α.Θ. — χρειάζεται ημερομηνία", "Δεν έχει επιβεβαιωθεί η κρίσιμη ημερομηνία κτήσης.");
     }
 
@@ -195,7 +195,7 @@
       if (v.entryYear === "up_to_2014") return result(POSITIVE, "Πτυχίο καθηγητικής σχολής — μεταβατική περίπτωση", "Η εισαγωγή έως και το 2014–2015 καλύπτει τη συγκεκριμένη χρονική περίπτωση, οπότε δεν απαιτείται δεύτερο χρονικό στοιχείο για αυτόν τον έλεγχο.");
       if (!v.entryYear) return result(UNKNOWN, "Καθηγητική σχολή — χρειάζεται πρώτα το έτος εισαγωγής", "Δήλωσε πρώτα το έτος εισαγωγής στο συγκεκριμένο Τμήμα. Μόνο αν χρειάζεται θα εμφανιστεί στη συνέχεια και το έτος κτήσης.");
       if (v.graduationYear === "up_to_2017") return result(POSITIVE, "Πτυχίο καθηγητικής σχολής — μεταβατική περίπτωση", "Η κτήση του πτυχίου έως και το 2017–2018 καλύπτει τη δεύτερη χρονική περίπτωση.");
-      if (v.entryYear === "from_2015" && v.graduationYear === "from_2018") return result(WARNING, "Το συγκεκριμένο πτυχίο καθηγητικής σχολής δεν θεμελιώνει a priori Π.Δ.Ε.", "Για εισαγωγή από 2015–2016 και κτήση από 2018–2019 και μετά απαιτείται άλλο αποδεικτικό. Άλλο πτυχίο του ίδιου προσώπου μπορεί όμως να θεμελιώνει Π.Δ.Ε.");
+      if (v.entryYear === "from_2015" && v.graduationYear === "from_2018") return result(NEGATIVE, "Το συγκεκριμένο πτυχίο καθηγητικής σχολής δεν θεμελιώνει Π.Δ.Ε. από τη μεταβατική αυτή διαδρομή", "Για εισαγωγή από 2015–2016 και κτήση από 2018–2019 και μετά απαιτείται άλλο αποδεικτικό. Άλλο πτυχίο του ίδιου προσώπου μπορεί όμως να θεμελιώνει Π.Δ.Ε.");
       if (v.entryYear === "from_2015" && !v.graduationYear) return result(UNKNOWN, "Καθηγητική σχολή — χρειάζεται τώρα το έτος κτήσης", "Επειδή η εισαγωγή είναι από 2015–2016 και μετά, χρειάζεται να δηλώσεις αν το πτυχίο αποκτήθηκε έως και το 2017–2018 ή από το 2018–2019 και μετά.");
       return result(UNKNOWN, "Καθηγητική σχολή — χρειάζεται ακόμη ένα χρονικό στοιχείο", "Με τα διαθέσιμα στοιχεία δεν προκύπτει ακόμη ασφαλές συμπέρασμα. Αν δεν γνωρίζεις το έτος εισαγωγής, το έτος κτήσης μπορεί να επιλύσει τη διαδρομή μόνο όταν είναι έως και το 2017–2018.");
     }
@@ -372,6 +372,7 @@
   function updateVisibility() {
     const cards = credentialCards();
     cards.forEach(syncCard);
+    refreshOpsydVisibility();
     const resultEl = byId("result");
     if (resultEl) resultEl.style.display = "none";
 
@@ -380,6 +381,19 @@
       [["pedagogicalDepartmentQuestions","pedagogical_department"],["epathQuestions","epath"],["professorSchoolQuestions","professor_school"],["aeiCertificateQuestions","aei_certificate"],["educationDegreeQuestions","education_msc_phd"]].forEach(pair => {
         const el = byId(pair[0]); if (el) toggleHidden(el, proofType !== pair[1]);
       });
+    }
+  }
+
+  function refreshOpsydVisibility() {
+    const question = byId("opsydQuestion");
+    if (!question) return;
+    const evaluations = credentialCards().map(function(card){ return evaluateCredentialValues(valuesFromCard(card)); });
+    const aggregate = aggregateEvaluations(evaluations);
+    const shouldShow = aggregate.positives.length > 0;
+    toggleHidden(question, !shouldShow);
+    if (!shouldShow) {
+      const select = byId("opsyd");
+      if (select) select.value = "";
     }
   }
 
@@ -422,7 +436,8 @@
     if (aggregate.positives.length) html += '<div class="note-box"><strong>Θετικές διαδρομές:</strong><ul>' + aggregate.positives.map(renderItem).join('') + '</ul></div>';
     const pending = aggregate.warnings.concat(aggregate.unknowns);
     if (pending.length) html += '<div class="note-box"><strong>Διαδρομές που χρειάζονται έλεγχο:</strong><ul>' + pending.map(renderItem).join('') + '</ul></div>';
-    html += opsydBlock(opsyd);
+    if (aggregate.negatives.length) html += '<div class="note-box"><strong>Διαδρομές που δεν θεμελιώνουν Π.Δ.Ε. με τα δηλωμένα στοιχεία:</strong><ul>' + aggregate.negatives.map(renderItem).join('') + '</ul></div>';
+    if (aggregate.positives.length) html += opsydBlock(opsyd);
     showResult(aggregate.status, html);
   }
 
@@ -460,6 +475,7 @@
     reindexCredentialCards();
     syncCard(card);
     updateCredentialControls();
+    refreshOpsydVisibility();
   }
 
   function init() {
@@ -480,7 +496,10 @@
         const exactPostgraduate = safeQs(card, '[data-role="namedPostgraduateExactMatch"]');
         if (exactPostgraduate) exactPostgraduate.value = "";
       }
-      if (card) syncCard(card);
+      if (card) {
+        syncCard(card);
+        refreshOpsydVisibility();
+      }
     });
     document.addEventListener("input", function(e){
       const card = e.target && typeof e.target.closest === "function" ? e.target.closest(".ped-credential") : null;
@@ -491,11 +510,13 @@
         const exact = safeQs(card, '[data-role="namedSpecialProgramExactMatch"]');
         if (exact) exact.value = "";
         syncCard(card);
+        refreshOpsydVisibility();
       } else if (role === "namedPostgraduateSearch") {
         repopulateProgramSelect(card, "postgraduate_prior", "namedPostgraduateSearch", "namedPostgraduateRow");
         const exactPostgraduate = safeQs(card, '[data-role="namedPostgraduateExactMatch"]');
         if (exactPostgraduate) exactPostgraduate.value = "";
         syncCard(card);
+        refreshOpsydVisibility();
       }
     });
     document.addEventListener("click", function(e){
@@ -506,6 +527,7 @@
         card.remove();
         reindexCredentialCards();
         updateCredentialControls();
+        refreshOpsydVisibility();
       }
     });
     reindexCredentialCards();
@@ -517,7 +539,7 @@
 
   global.PedagogicalCompetenceUI = Object.freeze({
     init, updateVisibility, checkEparkeia, addCredential,
-    evaluateCredentialValues, aggregateEvaluations,
+    evaluateCredentialValues, aggregateEvaluations, refreshOpsydVisibility,
     maxCredentials: MAX_CREDENTIALS
   });
 })(window);
