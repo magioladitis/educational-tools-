@@ -302,7 +302,13 @@ body.edu-ui.edu-page-leave-comparison .leave-compare-picker {
   background: #fff;
 }
 body.edu-ui.edu-page-leave-comparison .leave-compare-picker h2 { margin: 3px 0 14px; }
-body.edu-ui.edu-page-leave-comparison .leave-compare-picker__field { max-width: 620px; }
+body.edu-ui.edu-page-leave-comparison .leave-compare-picker__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(220px, .75fr);
+  gap: 12px;
+  max-width: 900px;
+}
+body.edu-ui.edu-page-leave-comparison .leave-compare-picker__field { max-width: none; }
 body.edu-ui.edu-page-leave-comparison .leave-compare-picker__note {
   margin: 12px 0 0;
   color: var(--edu-muted);
@@ -327,6 +333,14 @@ body.edu-ui.edu-page-leave-comparison .leave-compare-panel__header {
   background: #f7f9fc;
 }
 body.edu-ui.edu-page-leave-comparison .leave-compare-panel__header h2 { margin: 3px 0 0; }
+body.edu-ui.edu-page-leave-comparison .leave-compare-overall {
+  margin: 7px 0 0;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+body.edu-ui.edu-page-leave-comparison .leave-compare-overall.is-same { color: #176b3a; }
+body.edu-ui.edu-page-leave-comparison .leave-compare-overall.is-partial { color: #7c4a03; }
+body.edu-ui.edu-page-leave-comparison .leave-compare-overall.is-different { color: #8a2d2d; }
 body.edu-ui.edu-page-leave-comparison .leave-compare-summary {
   display: flex;
   flex-wrap: wrap;
@@ -381,6 +395,15 @@ body.edu-ui.edu-page-leave-comparison .leave-compare__duration {
   line-height: 1.4;
 }
 body.edu-ui.edu-page-leave-comparison .leave-compare__badges { justify-content: flex-start; }
+body.edu-ui.edu-page-leave-comparison .leave-compare__semantic-note {
+  margin-top: 10px;
+  border-left: 3px solid #d8e3f4;
+  padding: 7px 9px;
+  background: #f8faff;
+  color: #42526b;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
 body.edu-ui.edu-page-leave-comparison .leave-compare__block { margin-top: 16px; }
 body.edu-ui.edu-page-leave-comparison .leave-compare__block h4 { margin: 0 0 8px; font-size: 14px; }
 body.edu-ui.edu-page-leave-comparison .leave-compare__block ul { margin: 0; padding-left: 20px; }
@@ -403,6 +426,7 @@ body.edu-ui.edu-page-leave-hub .leave-hub__card--compare { grid-column: 1 / -1; 
     min-width: max-content;
     padding-inline: 14px;
   }
+  body.edu-ui.edu-page-leave-comparison .leave-compare-picker__grid { grid-template-columns: 1fr; }
   body.edu-ui.edu-page-leave-comparison .leave-compare-panel__header { display: grid; }
   body.edu-ui.edu-page-leave-comparison .leave-compare-summary { justify-content: flex-start; max-width: none; }
   body.edu-ui.edu-page-leave-comparison .leave-compare-grid { grid-template-columns: 1fr; }
