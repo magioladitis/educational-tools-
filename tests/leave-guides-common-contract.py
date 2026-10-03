@@ -19,6 +19,9 @@ for page, expected in [('adeies-anapliroton.php',25),('adeies-monimon.php',37)]:
     check(page+' audience switcher', 'leave-audience-switcher' in html)
     check(page+' no public audit jargon', 'Νομικό audit' not in html and '>audit<' not in html.lower())
 
+hub_src=(ROOT/'adeies-ekpaideutikon.php').read_text()
+check('hub leave counts are data-driven', '$permanentLeaveCount = count(' in hub_src and '$substituteLeaveCount = count(' in hub_src and '$h($permanentLeaveCount)' in hub_src and '$h($substituteLeaveCount)' in hub_src)
+
 hub=subprocess.run(['php', str(ROOT/'adeies-ekpaideutikon.php')], capture_output=True, text=True)
 check('hub renders', hub.returncode==0 and '<html' in hub.stdout)
 check('hub links permanent', 'href="adeies-monimon.php"' in hub.stdout)

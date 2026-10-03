@@ -44,6 +44,22 @@ $switches = isset($leaveGuideConfig['switches']) && is_array($leaveGuideConfig['
 $sourceCardText = isset($leaveGuideConfig['source_card_text']) ? $leaveGuideConfig['source_card_text'] : '';
 $sourceCardKeys = isset($leaveGuideConfig['source_card_keys']) && is_array($leaveGuideConfig['source_card_keys']) ? $leaveGuideConfig['source_card_keys'] : array();
 $disclaimer = isset($leaveGuideConfig['disclaimer']) ? $leaveGuideConfig['disclaimer'] : 'Το εργαλείο είναι πληροφοριακό και δεν υποκαθιστά την απόφαση της αρμόδιας υπηρεσίας ή άλλη ειδική υπηρεσιακή κρίση.';
+$audience = isset($leaveGuideConfig['audience']) ? $leaveGuideConfig['audience'] : '';
+$comparisonLinks = array();
+$comparisonMapFile = __DIR__ . '/leave-comparison-map.php';
+if ($audience !== '' && is_file($comparisonMapFile)) {
+    $comparisonMap = require $comparisonMapFile;
+    foreach ($comparisonMap as $comparison) {
+        $key = $audience === 'permanent' ? 'permanent' : 'substitute';
+        if (!empty($comparison[$key])) {
+            $comparisonLinks[$comparison[$key]] = array(
+                'id' => $comparison['id'],
+                'title' => $comparison['title']
+            );
+        }
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="el">
@@ -159,6 +175,11 @@ $disclaimer = isset($leaveGuideConfig['disclaimer']) ? $leaveGuideConfig['discla
         <?php foreach ($leave['related'] as $related): ?>
           <a href="#leave-<?php echo $h($related['id']); ?>" data-related-leave="<?php echo $h($related['id']); ?>"><?php echo $h($related['label']); ?></a>
         <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
+      <?php if (isset($comparisonLinks[$leave['id']])): ?>
+      <div class="leave-compare-link">
+        <a href="adeies-sygkrisi.php?leave=<?php echo $h($comparisonLinks[$leave['id']]['id']); ?>">Σύγκριση Μόνιμου ↔ Αναπληρωτή / ΙΔΟΧ →</a>
       </div>
       <?php endif; ?>
       <div class="leave-source-links" aria-label="Επίσημες πηγές για <?php echo $h($leave['title']); ?>">

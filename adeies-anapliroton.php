@@ -5,6 +5,7 @@ $leaveGuideConfig = array(
     'title' => 'Άδειες Αναπληρωτών Εκπαιδευτικών / ΕΕΠ–ΕΒΠ',
     'meta_description' => 'Διαδραστικός οδηγός αδειών αναπληρωτών εκπαιδευτικών, ΕΕΠ και ΕΒΠ με διάρκεια, προϋποθέσεις, αποδοχές, πραγματική υπηρεσία και επίσημες πηγές.',
     'body_class' => 'edu-page-substitute-leaves',
+    'audience' => 'substitute',
     'intro' => 'Βρες γρήγορα τη διάρκεια, τις βασικές προϋποθέσεις, τις αποδοχές και αν ο χρόνος προσμετράται ως πραγματική υπηρεσία. Κάθε άδεια έχει <strong>πραγματικά links στις επίσημες πηγές</strong>.',
     'update_title' => 'Επικαιροποίηση και επίσημες πηγές έως το 2026',
     'update_paragraphs' => array(
@@ -14,6 +15,7 @@ $leaveGuideConfig = array(
     'switches' => array(
         array('href' => 'adeies-monimon.php', 'label' => 'Μόνιμοι', 'active' => false),
         array('href' => 'adeies-anapliroton.php', 'label' => 'Αναπληρωτές / ΙΔΟΧ', 'active' => true),
+        array('href' => 'adeies-sygkrisi.php', 'label' => 'Σύγκριση', 'active' => false),
     ),
     'source_card_text' => 'Ο κατάλογος οργανώνει σε φιλικότερη μορφή τον επίσημο συγκεντρωτικό πίνακα αδειών αναπληρωτών εκπαιδευτικών, ΕΕΠ και ΕΒΠ του ΥΠΑΙΘΑ και τον συμπληρώνει με νεότερες επίσημες διευκρινίσεις. Οι σύνδεσμοι μέσα σε κάθε άδεια οδηγούν σε ΦΕΚ, εγκυκλίους ΥΠΕΣ/ΥΠΑΙΘΑ ή τρέχουσες οδηγίες ΔΥΠΑ.',
     'source_card_keys' => array('minedu_guide_page', 'minedu_guide_pdf', 'ypes_2020_idox_leaves', 'ypes_2023_leaves', 'dypa_parental'),

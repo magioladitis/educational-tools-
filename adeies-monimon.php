@@ -5,6 +5,7 @@ $leaveGuideConfig = array(
     'title' => 'Άδειες Μόνιμων Εκπαιδευτικών / ΕΕΠ–ΕΒΠ',
     'meta_description' => 'Διαδραστικός οδηγός αδειών μόνιμων εκπαιδευτικών, ΕΕΠ και ΕΒΠ με διάρκεια, προϋποθέσεις, αποδοχές, πραγματική υπηρεσία και επίσημες πηγές.',
     'body_class' => 'edu-page-permanent-leaves',
+    'audience' => 'permanent',
     'intro' => 'Βρες γρήγορα τη διάρκεια, τις βασικές προϋποθέσεις, τις αποδοχές και αν ο χρόνος προσμετράται ως πραγματική υπηρεσία. Οι κάρτες συνδέονται με <strong>επίσημες πηγές και ΦΕΚ</strong>.',
     'update_title' => 'Επικαιροποίηση και επίσημες πηγές',
     'update_paragraphs' => array(
@@ -14,6 +15,7 @@ $leaveGuideConfig = array(
     'switches' => array(
         array('href' => 'adeies-monimon.php', 'label' => 'Μόνιμοι', 'active' => true),
         array('href' => 'adeies-anapliroton.php', 'label' => 'Αναπληρωτές / ΙΔΟΧ', 'active' => false),
+        array('href' => 'adeies-sygkrisi.php', 'label' => 'Σύγκριση', 'active' => false),
     ),
     'source_card_text' => 'Η βασική πηγή είναι ο επίσημος πίνακας αδειών μονίμων του ΥΠΑΙΘΑ. Όπου υπάρχει νεότερη επιβεβαιωμένη ρύθμιση ή εγκύκλιος, εμφανίζεται στην αντίστοιχη κάρτα μαζί με σύνδεσμο προς την επίσημη πηγή.',
     'source_card_keys' => array('minedu_permanent_page', 'minedu_permanent_pdf', 'n3528_2007', 'n5043_2023', 'n5270_2026', 'ypes_2023_leaves'),

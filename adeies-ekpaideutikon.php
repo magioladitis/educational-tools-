@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
 $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); };
+$permanentGuide = require __DIR__ . '/includes/permanent-leaves-data.php';
+$substituteGuide = require __DIR__ . '/includes/substitute-leaves-data.php';
+$permanentLeaveCount = count($permanentGuide['leaves'] ?? array());
+$substituteLeaveCount = count($substituteGuide['leaves'] ?? array());
 ?>
 <!DOCTYPE html>
 <html lang="el">
@@ -18,7 +22,7 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
 <div class="app-box edu-modernized">
 <section class="hero edu-legacy-hero">
   <h1>Άδειες Εκπαιδευτικών</h1>
-  <p class="intro">Επίλεξε την κατηγορία προσωπικού για να δεις τις άδειες που σε αφορούν, με διάρκεια, βασικές προϋποθέσεις, αποδοχές, πραγματική υπηρεσία και <strong>επίσημες πηγές</strong>.</p>
+  <p class="intro">Επίλεξε την κατηγορία προσωπικού για να δεις τις άδειες που σε αφορούν ή άνοιξε τη <strong>σύγκριση Μόνιμου ↔ Αναπληρωτή / ΙΔΟΧ</strong>, με διάρκεια, προϋποθέσεις, αποδοχές, πραγματική υπηρεσία και επίσημες πηγές.</p>
 </section>
 
 <section class="leave-hub" aria-labelledby="leaveHubTitle">
@@ -28,14 +32,20 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
     <a class="leave-hub__card" href="adeies-monimon.php">
       <span class="leave-hub__eyebrow">ΜΟΝΙΜΟ ΠΡΟΣΩΠΙΚΟ</span>
       <strong>Μόνιμοι Εκπαιδευτικοί / ΕΕΠ–ΕΒΠ</strong>
-      <span>31 οργανωμένες άδειες και διευκολύνσεις, με βάση τον Υπαλληλικό Κώδικα, το ειδικό εκπαιδευτικό πλαίσιο και νεότερες επίσημες ρυθμίσεις.</span>
+      <span><?php echo $h($permanentLeaveCount); ?> οργανωμένες άδειες και διευκολύνσεις, με βάση τον Υπαλληλικό Κώδικα, το ειδικό εκπαιδευτικό πλαίσιο και νεότερες επίσημες ρυθμίσεις.</span>
       <span class="leave-hub__action">Άνοιγμα οδηγού →</span>
     </a>
     <a class="leave-hub__card" href="adeies-anapliroton.php">
       <span class="leave-hub__eyebrow">ΙΔΟΧ / ΑΝΑΠΛΗΡΩΤΕΣ</span>
       <strong>Αναπληρωτές Εκπαιδευτικοί / ΕΕΠ–ΕΒΠ</strong>
-      <span>25 άδειες και διευκολύνσεις με ειδική επισήμανση για αναλογικότητα σύμβασης, αποδοχές και εφαρμογή σε ΙΔΟΧ.</span>
+      <span><?php echo $h($substituteLeaveCount); ?> άδειες και διευκολύνσεις με ειδική επισήμανση για αναλογικότητα σύμβασης, αποδοχές και εφαρμογή σε ΙΔΟΧ.</span>
       <span class="leave-hub__action">Άνοιγμα οδηγού →</span>
+    </a>
+    <a class="leave-hub__card leave-hub__card--compare" href="adeies-sygkrisi.php">
+      <span class="leave-hub__eyebrow">ΜΟΝΙΜΟΣ ↔ ΑΝΑΠΛΗΡΩΤΗΣ / ΙΔΟΧ</span>
+      <strong>Σύγκριση της ίδιας άδειας</strong>
+      <span>Επίλεξε δικαίωμα και δες δίπλα-δίπλα διάρκεια, αποδοχές, πραγματική υπηρεσία, προϋποθέσεις και νομική βάση.</span>
+      <span class="leave-hub__action">Άνοιγμα σύγκρισης →</span>
     </a>
   </div>
 </section>
@@ -43,7 +53,7 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
 <details class="leave-update-note">
   <summary>Πώς είναι οργανωμένη η ενότητα</summary>
   <div class="leave-update-note__body">
-    <p>Οι δύο οδηγοί χρησιμοποιούν πλέον κοινό μηχανισμό εμφάνισης, αναζήτησης, φίλτρων και επίσημων πηγών. Τα δεδομένα παραμένουν χωριστά, ώστε οι διαφορετικές προϋποθέσεις μονίμων και αναπληρωτών να μην συγχέονται.</p>
+    <p>Οι δύο οδηγοί και η σύγκριση χρησιμοποιούν κοινό μηχανισμό εμφάνισης και επίσημων πηγών. Τα δεδομένα παραμένουν χωριστά, ώστε οι διαφορετικές προϋποθέσεις μονίμων και αναπληρωτών να μην συγχέονται.</p>
     <p>Αυτό επιτρέπει στο εξής να ενημερώνεται μία φορά το περιβάλλον χρήσης και να προστίθενται ξεχωριστά οι αλλαγές της νομοθεσίας για κάθε κατηγορία προσωπικού.</p>
   </div>
 </details>
