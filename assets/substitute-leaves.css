@@ -105,6 +105,16 @@ body.edu-ui.edu-page-substitute-leaves .leave-legal {
   background: #f7f9fc;
   font-size: 13.5px;
 }
+body.edu-ui.edu-page-substitute-leaves .leave-related {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--edu-accent, #174ea6);
+  background: #f7f9fc;
+  border-radius: 8px;
+  font-size: 13.5px;
+}
+body.edu-ui.edu-page-substitute-leaves .leave-related a { font-weight: 800; text-decoration: none; }
+body.edu-ui.edu-page-substitute-leaves .leave-related a:hover { text-decoration: underline; }
 body.edu-ui.edu-page-substitute-leaves .leave-source-links { margin-top: 14px; }
 body.edu-ui.edu-page-substitute-leaves .leave-source-links > strong { display: block; margin-bottom: 7px; font-size: 13.5px; }
 body.edu-ui.edu-page-substitute-leaves .leave-source-links__items { display: flex; flex-wrap: wrap; gap: 8px; }
