@@ -121,8 +121,9 @@
           '<div><strong>Προφίλ:</strong> ' + escapeHtml(net.profileLabel) + '</div>' +
           '<div><strong>Ασφαλιστική ιδιότητα:</strong> ' + escapeHtml(net.insuredStatusLabel) + '</div>' +
           '<div><strong>Βάσεις εισφορών:</strong> ' + escapeHtml(net.insuranceBasesLabel) + '</div>' +
+          '<div><strong>Τέκνα οικογενειακής παροχής:</strong> ' + escapeHtml(payroll.familyChildren) + '</div>' +
+          '<div><strong>Εξαρτώμενα τέκνα φορολογίας:</strong> ' + escapeHtml(net.children) + '</div>' +
           '<div><strong>Ηλικιακή κατηγορία:</strong> ' + escapeHtml(net.ageGroupLabel) + '</div>' +
-          '<div><strong>Εξαρτώμενα τέκνα:</strong> ' + escapeHtml(net.children) + '</div>' +
           '<div><strong>Αναπηρία — φορολογία:</strong> ' + escapeHtml(net.disabilityTaxTreatmentLabel) + '</div>' +
           '<div><strong>Μείωση μητρότητας:</strong> ' + (net.maternityPensionReduction ? 'Ναι' : 'Όχι') + '</div>' +
           '<div><strong>Ισχύς βασικού μισθού:</strong> ' + escapeHtml(result.basicSalaryEffectiveDate) + '</div>' +
@@ -188,8 +189,10 @@
     byId('categoryResult').textContent = categoryLabels[result.categoryCode] || categoryLabels[byId('category').value] || result.category || 'ΠΕ';
     byId('basicSalaryResult').textContent = formatEuro(result.basicGrossSalary);
 
-    const children = integer('dependentChildren', 20);
-    const familyAllowance = window.EducationSalaryNet.familyAllowanceMonthly(children);
+    const familyChildren = integer('dependentChildren', 20);
+    const separateTaxChildren = byId('taxChildrenDifferent').checked;
+    const taxChildren = separateTaxChildren ? integer('taxDependentChildren', 20) : familyChildren;
+    const familyAllowance = window.EducationSalaryNet.familyAllowanceMonthly(familyChildren);
     const positionKey = byId('positionAllowance').value;
     const positionAllowance = window.EducationSalaryNet.positionAllowanceMonthly(positionKey);
     const remoteAllowance = byId('remoteAreaAllowance').checked
@@ -214,7 +217,7 @@
       profile: byId('payrollProfile').value,
       insuredStatus: byId('insuredStatus').value,
       ageGroup: byId('ageGroup').value,
-      children: children,
+      children: taxChildren,
       disabilityTaxTreatment: byId('disabilityTaxTreatment').value,
       otherDeductions: otherDeductions,
       maternityPensionReduction: byId('maternityPensionReduction').checked
@@ -244,6 +247,7 @@
     byId('otherDeductionsBreakdownResult').textContent = activeOtherDeductions.length
       ? activeOtherDeductions.map(item => item[0] + ' ' + formatEuroCents(item[1])).join(' · ')
       : '—';
+    byId('taxChildrenResult').textContent = String(taxChildren) + (separateTaxChildren && taxChildren !== familyChildren ? ' (διαφορετικά από την οικογενειακή παροχή: ' + familyChildren + ')' : '');
     byId('taxableAnnualResult').textContent = formatEuroCents(net.taxableAnnual);
     byId('taxBeforeCreditResult').textContent = formatEuroCents(net.taxBeforeCredit);
     byId('taxCreditResult').textContent = net.taxCredit > 0 ? '−' + formatEuroCents(net.taxCredit) : '0,00 €';
@@ -274,6 +278,7 @@
     setResultRowVisible('monthlyTaxResult', net.monthlyTax > 0);
 
     renderPrintSheet(result, net, {
+      familyChildren: familyChildren,
       familyAllowance: familyAllowance,
       positionAllowance: positionAllowance,
       positionLabel: window.EducationSalaryNet.positionAllowanceLabel(positionKey),
@@ -363,6 +368,10 @@
     byId('ageGroup').value = 'over30';
     byId('disabilityTaxTreatment').value = 'none';
     byId('dependentChildren').value = '0';
+    byId('taxChildrenDifferent').checked = false;
+    byId('taxChildrenDifferent').setAttribute('aria-expanded', 'false');
+    byId('taxDependentChildren').value = '0';
+    byId('taxDependentChildrenField').hidden = true;
     byId('positionAllowance').value = 'none';
     byId('remoteAreaAllowance').checked = false;
     byId('personalDifference').value = '0';
@@ -382,7 +391,14 @@
       el.addEventListener(eventName, () => {
         if (el.id === 'serviceYears') clampBoundedIntegerInput(el, 50);
         if (el.id === 'serviceMonths') clampBoundedIntegerInput(el, 11);
-        if (el.id === 'dependentChildren') clampBoundedIntegerInput(el, 20);
+        if (el.id === 'dependentChildren' || el.id === 'taxDependentChildren') clampBoundedIntegerInput(el, 20);
+        if (el.id === 'taxChildrenDifferent') {
+          const field = byId('taxDependentChildrenField');
+          const expanded = el.checked;
+          field.hidden = !expanded;
+          el.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+          if (expanded) byId('taxDependentChildren').value = String(integer('dependentChildren', 20));
+        }
         if (el.id === 'suspendedYears' || el.id === 'suspendedMonths') clampSuspendedInputs();
         calculate();
       });

@@ -16,7 +16,7 @@ check('four children 220', 'if (c === 4) return 220;' in net)
 check('additional child 70', '220 + (c - 4) * 70' in net)
 check('family allowance result row', 'familyAllowanceResult' in page)
 check('gross includes family allowance', 'result.basicGrossSalary + familyAllowance + positionAllowance + remoteAllowance' in app)
-check('children reused for tax', 'children: children' in app)
+check('family and tax children are separated with linked default', 'familyAllowanceMonthly(familyChildren)' in app and 'children: taxChildren' in app and "const taxChildren = separateTaxChildren ? integer('taxDependentChildren', 20) : familyChildren;" in app)
 check('legal source note', 'άρθρο 15 του ν. 4354/2015' in page and 'ν. 5045/2023' in page)
 failed=[n for n,v in checks if not v]
 for n,v in checks: print(('PASS' if v else 'FAIL')+': '+n)

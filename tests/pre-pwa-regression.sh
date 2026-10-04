@@ -33,8 +33,13 @@ run_py tests/service-timeline-v32248-contract.py
 run_py tests/service-timeline-v32250-contract.py
 run_py tests/service-timeline-v32251-contract.py
 run_py tests/service-timeline-v32252-contract.py
+run_py tests/service-timeline-v32253-contract.py
+run_py tests/service-timeline-v32254-contract.py
+run_py tests/service-timeline-v32255-contract.py
 run_py tests/public-copy-audit-v32241-contract.py
 run_py tests/vacancies-public-unavailable-contract.py
+run_py tests/vacancies-last-login-contract.py
+run_py tests/php74-hosting-hardening-contract.py
 run_py tests/php-inline-js-separation-contract.py
 run_py tests/layout-phase4a-contract.py
 run_py tests/abroad-mobile-refactor-contract.py

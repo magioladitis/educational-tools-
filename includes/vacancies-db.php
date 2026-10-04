@@ -22,6 +22,7 @@ function vacanciesConfig()
 function vacanciesDb()
 {
     static $db = null;
+    if (!class_exists('mysqli')) return null;
     if ($db instanceof mysqli) return $db;
     $config = vacanciesConfig();
     if (!$config || !isset($config['db']) || !is_array($config['db'])) return null;

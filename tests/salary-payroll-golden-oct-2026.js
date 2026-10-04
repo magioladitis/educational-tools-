@@ -42,4 +42,30 @@ close('golden October statutory deductions', result.standardDeductions, 401.29, 
 close('golden October income tax', result.monthlyTax, 81.18, 0.01);
 close('golden October paid amount', result.estimatedNet, 1323.53, 0.01);
 
+// Second anonymised October 2026 payroll reference.
+// The payroll pays family allowance for 3 children (EUR 170), but applies
+// the 2026 withholding-tax rules for 2 tax-dependent children.
+const referenceBasic = 1881;
+const referenceFamilyChildren = 3;
+const referenceTaxChildren = 2;
+const referenceFamily = S.familyAllowanceMonthly(referenceFamilyChildren);
+const referenceRemote = S.REMOTE_AREA_ALLOWANCE_MONTHLY;
+const referenceGross = referenceBasic + referenceFamily + referenceRemote;
+const reference = S.calculate({
+  grossMonthly: referenceGross,
+  basicMonthly: referenceBasic,
+  familyAllowanceMonthly: referenceFamily,
+  remoteAllowanceMonthly: referenceRemote,
+  profile: 'permanent',
+  insuredStatus: 'new_efka',
+  ageGroup: 'over30',
+  children: referenceTaxChildren
+});
+
+close('separate-children reference family allowance', referenceFamily, 170, 0.0001);
+close('separate-children reference gross', referenceGross, 2151, 0.0001);
+close('separate-children reference statutory deductions', reference.standardDeductions, 477.95, 0.01);
+close('separate-children reference income tax', reference.monthlyTax, 129.86, 0.01);
+close('separate-children reference paid amount', reference.estimatedNet, 1543.19, 0.01);
+
 console.log(`Salary payroll golden Oct-2026: PASS ${checks}/${checks}`);

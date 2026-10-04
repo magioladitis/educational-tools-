@@ -46,7 +46,7 @@ checks = [
     ('no inline DOM event handlers', not handlers),
     ('no javascript: URLs', not js_urls),
     ('no DOM/JS API implementation left in PHP', not js_api_refs),
-    ('runtime JSON script is the only allowed inline script payload', data_scripts == ['ypologismos-didaktikon-anagkon.php']),
+    ('only approved runtime JSON data scripts are inline', sorted(data_scripts) == ['adeies-sygkrisi.php', 'ypologismos-didaktikon-anagkon.php']),
 ]
 
 failed = []

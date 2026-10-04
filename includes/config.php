@@ -3,6 +3,10 @@
  * Shared project configuration.
  * Keep site-wide labels and metadata in one place.
  */
+
+// Keep date/time behaviour deterministic across hosting environments.
+// The new sites.sch.gr environment does not define date.timezone globally.
+date_default_timezone_set('Europe/Athens');
 if (!defined('EDU_TOOLS_NAME')) {
     define('EDU_TOOLS_NAME', 'Εργαλειοθήκη Εκπαιδευτικού');
 }
@@ -20,7 +24,7 @@ if (!defined('EDU_TOOLS_YEAR')) {
 }
 
 if (!defined('EDU_TOOLS_VERSION')) {
-    define('EDU_TOOLS_VERSION', '3.22.76');
+    define('EDU_TOOLS_VERSION', '3.22.81');
 }
 if (!function_exists('edu_asset_url')) {
     function edu_asset_url($path)

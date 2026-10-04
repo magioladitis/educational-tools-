@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,8 +28,18 @@ def block(event_id):
 pe = block('functional-gaps-primary-circular')
 de = block('functional-gaps-secondary-circular')
 check('old common functional-gaps research card removed', "'id' => 'functional-gaps-history'" not in DATA)
-check('PE historical years 2021-2026 verified', "'verified_history_indices' => array(1,2,3,4,5,6)" in pe)
-check('DE historical years 2021-2026 verified', "'verified_history_indices' => array(1,2,3,4,5,6)" in de)
+def verified_history_indices(event_block):
+    match = re.search(r"'verified_history_indices'\s*=>\s*array\(([^)]*)\)", event_block)
+    check('verified_history_indices exists', match is not None)
+    return {int(value.strip()) for value in match.group(1).split(',') if value.strip()}
+
+# v3.22.39 established that 2021-2026 (indices 1-6) were verified.
+# Later releases may legitimately add older verified years (e.g. DE index 0 / 2020),
+# so this historical contract must assert the original guarantee as a subset,
+# rather than requiring the array to remain byte-for-byte identical forever.
+required_2021_2026 = {1, 2, 3, 4, 5, 6}
+check('PE historical years 2021-2026 verified', required_2021_2026.issubset(verified_history_indices(pe)))
+check('DE historical years 2021-2026 verified', required_2021_2026.issubset(verified_history_indices(de)))
 for marker in ['68239/Ε2','62174/Ε2','75625/Ε2','53701/Ε2','66707/Ε2','73719/Ε2']:
     check('PE source marker ' + marker, marker in pe)
 for marker in ['68209/Ε2','68172/Ε2','75639/Ε2','54074/Ε2','68355/Ε2','74045/Ε2']:

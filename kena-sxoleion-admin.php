@@ -79,10 +79,16 @@ $roundStatusLabels = array(
     <h1>Καταγραφή κενών σχολικών μονάδων</h1>
     <p>Ζωντανή εικόνα υποβολών, κενών και πλεονασμάτων.</p>
   </section>
+  <?php $adminActor = vacanciesActor(); ?>
   <div class="vacancies-top-actions">
-    <span class="vacancy-signed-in-as"><?php echo vacanciesH(vacanciesActorDisplayName()); ?></span>
+    <div class="vacancy-session-summary">
+      <span class="vacancy-signed-in-as"><?php echo vacanciesH(vacanciesActorDisplayName()); ?></span>
+      <?php if ($adminActor && isset($adminActor['auth_mode']) && $adminActor['auth_mode'] === 'account') { $previousLoginAt = vacanciesActorPreviousLoginAt(); ?>
+      <span class="vacancy-last-login"><?php echo $previousLoginAt ? 'Τελευταία επιτυχής σύνδεση: ' . vacanciesH(vacanciesFormatLoginDateTime($previousLoginAt)) : 'Πρώτη καταγεγραμμένη σύνδεση'; ?></span>
+      <?php } ?>
+    </div>
     <?php if (vacanciesAccountsReady()) { ?><a class="vacancy-top-action" href="kena-sxoleion-users.php" aria-label="Λογαριασμοί" title="Λογαριασμοί"><svg class="vacancy-top-action__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 1 0-3.46-6A4 4 0 0 0 16 11ZM8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm8 1c-1.08 0-2.12.18-3.08.5A7.3 7.3 0 0 1 16 19v1h7v-1c0-3.31-3.13-6-7-6ZM8 14c-4.42 0-8 2.69-8 6v1h16v-1c0-3.31-3.58-6-8-6Z"/></svg><span class="vacancy-top-action__label">Λογαριασμοί</span></a><?php } ?>
-    <?php $adminActor = vacanciesActor(); if ($adminActor && !empty($adminActor['user_id'])) { ?><a class="vacancy-top-action" href="kena-sxoleion-password.php" aria-label="Αλλαγή κωδικού" title="Αλλαγή κωδικού"><svg class="vacancy-top-action__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14a5 5 0 1 1 4.58-3H24v4h-2v2h-3v2h-4v-5h-3.42A5 5 0 0 1 7 14Zm0-3a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg><span class="vacancy-top-action__label">Αλλαγή κωδικού</span></a><?php } ?>
+    <?php if ($adminActor && !empty($adminActor['user_id'])) { ?><a class="vacancy-top-action" href="kena-sxoleion-password.php" aria-label="Αλλαγή κωδικού" title="Αλλαγή κωδικού"><svg class="vacancy-top-action__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14a5 5 0 1 1 4.58-3H24v4h-2v2h-3v2h-4v-5h-3.42A5 5 0 0 1 7 14Zm0-3a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg><span class="vacancy-top-action__label">Αλλαγή κωδικού</span></a><?php } ?>
     <a class="vacancy-top-action vacancy-top-action--logout" href="kena-sxoleion-login.php?logout=1" aria-label="Αποσύνδεση" title="Αποσύνδεση"><svg class="vacancy-top-action__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 2h2v10h-2V2Zm1 20a9 9 0 0 1-6.36-15.36l1.42 1.42A7 7 0 1 0 16.94 8.06l1.42-1.42A9 9 0 0 1 12 22Z"/></svg><span class="vacancy-top-action__label">Αποσύνδεση</span></a>
   </div>
 

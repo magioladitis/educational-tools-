@@ -16,6 +16,7 @@ check('Η εφαρμογή δεν είναι διαθέσιμη εδώ' in login
 check('λειτουργεί σε ξεχωριστό περιβάλλον' in login, 'public unavailable state explains availability without technical detail')
 check('Επιστροφή στα εργαλεία' in login and 'href="ergaleia.php"' in login, 'public unavailable state offers a safe return action')
 check('$serviceReady = is_file(vacanciesConfigPath()) && vacanciesDbReady();' in login, 'availability condition remains server-derived')
+check(not (ROOT/'includes/vacancies-config.php').exists(), 'release package omits private vacancies-config.php')
 check('Η υπηρεσία δεν είναι προσωρινά διαθέσιμη' in login, 'account-layer unavailable state is also non-technical')
 for forbidden in (
     'Δεν υπάρχει ακόμη το ιδιωτικό',

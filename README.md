@@ -1,3 +1,39 @@
+## 2026-10-04 — PHP 7.4 hosting cut-over hardening (v3.22.81)
+
+- Η εφαρμογή ορίζει πλέον ρητά `Europe/Athens` μέσω του shared `includes/config.php`, ώστε ημερομηνίες/ώρες να παραμένουν σταθερές και στο `mmagiolad.sites.sch.gr`, όπου το global `date.timezone` δεν είναι ορισμένο.
+- Οι authenticated sessions του module «Κενά σχολείων» ενεργοποιούν πριν από `session_start()` τα `session.use_strict_mode=1` και `session.cookie_httponly=1`. Το `session.cookie_secure` ενεργοποιείται αυτόματα όταν η αίτηση είναι HTTPS.
+- Διατηρείται το υπάρχον PHP-compatible `session_set_cookie_params(...)`, ώστε οι αλλαγές να μην εισάγουν PHP 8-only σύνταξη.
+- Προστέθηκε regression contract `tests/php74-hosting-hardening-contract.py`.
+- Έκδοση/cache busting: `EDU_TOOLS_VERSION = 3.22.81`.
+
+## 2026-10-04 — Ένδειξη προηγούμενης επιτυχούς σύνδεσης (v3.22.80)
+
+- Στο admin dashboard των «Κενών σχολείων» εμφανίζεται διακριτικά η **προηγούμενη επιτυχής σύνδεση** του λογαριασμού (ημερομηνία και ώρα).
+- Χρησιμοποιείται το ήδη υπάρχον `vacancy_users.last_login_at`: κατά το login αποθηκεύεται πρώτα η προηγούμενη τιμή στη session και κατόπιν ενημερώνεται το `last_login_at` σε `NOW()`. Έτσι η ένδειξη δεν δείχνει την τρέχουσα σύνδεση.
+- Στην πρώτη καταγεγραμμένη σύνδεση εμφανίζεται «Πρώτη καταγεγραμμένη σύνδεση».
+- Δεν απαιτείται migration βάσης δεδομένων.
+- Έκδοση/cache busting: `EDU_TOOLS_VERSION = 3.22.80`.
+
+## 2026-10-04 — Regression gate maintenance (v3.22.79)
+
+- Διορθώθηκε το ιστορικό contract `service-timeline-v32239-contract.py`: ελέγχει πλέον ότι τα verified indices 2021–2026 παραμένουν υποσύνολο της τρέχουσας λίστας και δεν αποτυγχάνει όταν νεότερη έκδοση προσθέτει παλαιότερο τεκμηριωμένο έτος (π.χ. Δ.Ε. 2020).
+- Το `pre-pwa-regression.sh` περιλαμβάνει πλέον και τα νεότερα service-timeline contracts v3.22.53–v3.22.55.
+- Έκδοση/cache busting: `EDU_TOOLS_VERSION = 3.22.79`.
+
+## v3.22.79 — 04/10/2026
+- Release hardening for the school-vacancies module: the private `includes/vacancies-config.php` is explicitly excluded from the distributable ZIP.
+- `vacanciesDb()` now degrades safely when the `mysqli` extension is unavailable instead of throwing a fatal error.
+- CLI/config-less rendering of `kena-sxoleion-login.php` no longer emits a `REQUEST_METHOD` warning.
+- `vacancies-public-unavailable-contract.py` now guards against accidentally packaging the private runtime config.
+
+## 2026-10-04 — Ξεχωριστά τέκνα οικογενειακής παροχής / φορολογίας (v3.22.77)
+
+- Στο `ypologismos-misthologikou-klimakiou.php` ο αριθμός τέκνων για την οικογενειακή παροχή είναι πλέον διακριτή παράμετρος από τα εξαρτώμενα τέκνα της φορολογίας.
+- Από προεπιλογή οι δύο αριθμοί παραμένουν ίδιοι, ώστε η συνηθισμένη χρήση να μη χρειάζεται επιπλέον πεδίο. Με προαιρετική επιλογή εμφανίζεται δεύτερο πεδίο μόνο όταν η μισθοδοσία χρησιμοποιεί διαφορετικό αριθμό τέκνων για τον Φ.Μ.Υ.
+- Η εκτύπωση εμφανίζει χωριστά «Τέκνα οικογενειακής παροχής» και «Εξαρτώμενα τέκνα φορολογίας».
+- Προστέθηκε anonymised golden regression από πραγματικό ενημερωτικό Οκτωβρίου 2026: βασικός 1.881 €, οικογενειακή παροχή 170 € (3 τέκνα), παραμεθόριο 100 €, φορολογία για 2 εξαρτώμενα τέκνα → κρατήσεις 477,95 €, Φ.Μ.Υ. 129,86 €, πληρωτέο 1.543,19 €.
+- Έκδοση/cache busting: `EDU_TOOLS_VERSION = 3.22.77`.
+
 ## 2026-10-01 — Ακριβές αρνητικό status & ΟΠΣΥΔ μόνο μετά από θετική Π.Δ.Ε. (v3.22.66)
 
 - Οι οριστικά αποτυχημένες διαδρομές (π.χ. Ε.Π.Α.Θ. από 12/06/2018 και μετά, καθηγητική σχολή εκτός μεταβατικών ορίων) χαρακτηρίζονται πλέον `negative` και όχι `warning`.

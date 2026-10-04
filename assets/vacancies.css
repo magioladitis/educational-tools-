@@ -101,6 +101,10 @@ body.edu-vacancies .vacancy-school-status-table td:nth-child(5){text-align:cente
 /* v1.5: authenticated school accounts + school profile */
 body.edu-vacancies .vacancies-top-actions{gap:14px;align-items:center;flex-wrap:wrap}
 body.edu-vacancies .vacancy-signed-in-as{margin-right:auto;color:#64748b;font-weight:700}
+
+body.edu-vacancies .vacancy-session-summary{margin-right:auto;display:flex;flex-direction:column;gap:2px;min-width:0}
+body.edu-vacancies .vacancy-session-summary .vacancy-signed-in-as{margin-right:0}
+body.edu-vacancies .vacancy-last-login{color:#94a3b8;font-size:.78rem;font-weight:600;line-height:1.25}
 body.edu-vacancies .vacancy-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;padding:6px;border:1px solid #dce4ee;border-radius:14px;background:#fff}
 body.edu-vacancies .vacancy-tabs a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 13px;border-radius:10px;text-decoration:none;font-weight:800;color:#475569}
 body.edu-vacancies .vacancy-tabs a:hover{background:#f1f5f9;color:#0f172a}
@@ -132,6 +136,7 @@ body.edu-vacancies .button-like{display:inline-flex;align-items:center;justify-c
   body.edu-vacancies .vacancy-credential-grid{grid-template-columns:1fr}
   body.edu-vacancies .vacancy-tabs{display:grid;grid-template-columns:1fr}
   body.edu-vacancies .vacancy-tabs a{width:100%}
+  body.edu-vacancies .vacancy-session-summary{width:100%;margin-right:0}
   body.edu-vacancies .vacancy-signed-in-as{width:100%;margin-right:0}
 }
 

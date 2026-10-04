@@ -5,6 +5,13 @@ function vacanciesSessionStart()
 {
     if (session_status() !== PHP_SESSION_NONE) return;
     $secure = !empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off';
+
+    // Harden authenticated vacancy sessions independently of the hosting php.ini.
+    // These settings must be applied before session_start().
+    @ini_set('session.use_strict_mode', '1');
+    @ini_set('session.cookie_httponly', '1');
+    @ini_set('session.cookie_secure', $secure ? '1' : '0');
+
     if (!headers_sent()) session_set_cookie_params(0, '/', '', $secure, true);
     session_start();
 }
@@ -95,12 +102,12 @@ function vacanciesAccountLogin($username, $password)
     $password = (string) $password;
     if ($username === '' || $password === '') return false;
 
-    $stmt = $db->prepare("SELECT id, username, password_hash, role, school_id, display_name, active, must_change_password FROM vacancy_users WHERE username=? LIMIT 1");
+    $stmt = $db->prepare("SELECT id, username, password_hash, role, school_id, display_name, active, must_change_password, last_login_at FROM vacancy_users WHERE username=? LIMIT 1");
     if (!$stmt) return false;
     $stmt->bind_param('s', $username);
     if (!$stmt->execute()) { $stmt->close(); return false; }
-    $id = 0; $dbUsername = ''; $hash = ''; $role = ''; $schoolId = null; $displayName = ''; $active = 0; $mustChange = 0;
-    $stmt->bind_result($id, $dbUsername, $hash, $role, $schoolId, $displayName, $active, $mustChange);
+    $id = 0; $dbUsername = ''; $hash = ''; $role = ''; $schoolId = null; $displayName = ''; $active = 0; $mustChange = 0; $lastLoginAt = null;
+    $stmt->bind_result($id, $dbUsername, $hash, $role, $schoolId, $displayName, $active, $mustChange, $lastLoginAt);
     $found = $stmt->fetch();
     $stmt->close();
     if (!$found || !$active || !password_verify($password, (string) $hash)) return false;
@@ -126,9 +133,28 @@ function vacanciesAccountLogin($username, $password)
         'school_id' => $user['role'] === 'school_director' ? (int) $user['school_id'] : null,
         'must_change_password' => !empty($user['must_change_password']) ? 1 : 0,
         'auth_mode' => 'account',
+        // Snapshot the previous successful login before last_login_at is advanced.
+        'previous_login_at' => $lastLoginAt !== null && $lastLoginAt !== '' ? (string) $lastLoginAt : null,
     );
     $db->query("UPDATE vacancy_users SET last_login_at=NOW() WHERE id=" . (int) $user['id']);
     return true;
+}
+
+
+function vacanciesActorPreviousLoginAt()
+{
+    $actor = vacanciesActor();
+    if (!$actor || !is_array($actor) || empty($actor['previous_login_at'])) return null;
+    return (string) $actor['previous_login_at'];
+}
+
+function vacanciesFormatLoginDateTime($value)
+{
+    $value = trim((string) $value);
+    if ($value === '') return '';
+    $timestamp = strtotime($value);
+    if ($timestamp === false) return $value;
+    return date('d/m/Y H:i', $timestamp);
 }
 
 function vacanciesGenerateTemporaryPassword($length)
