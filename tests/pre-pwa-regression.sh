@@ -79,3 +79,5 @@ for file in ./*.php; do
 done
 
 echo "PRE-PWA REGRESSION GATE: PASS"
+
+python3 tests/leave-scientific-scope-contract.py
