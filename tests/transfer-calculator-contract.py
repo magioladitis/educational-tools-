@@ -47,7 +47,7 @@ check('year input clamp capped at 50', "clampInput(target, 50);" in ui and "clam
 check('abroad and study leave fixed 5/5 UI', 'fixedFullWeek' in ui and "weekdaysInput.disabled = true" in ui and 'σταθερά 5/5' in ui)
 check('abroad and study leave fixed 5/5 engine', 'isFixedFullWeekType' in module and "isFixedFullWeekType(period.type) ? 5" in module)
 check('15 day rule UI', '15+ → 1 μήνας' in page)
-check('first version disclaimer', '<strong>Πρώτη έκδοση:</strong>' in page and 'ειδικές κατηγορίες' in page)
+check('scope disclaimer', '<strong>Τι περιλαμβάνει:</strong>' in page and 'ειδικές κατηγορίες' in page)
 check('official circular source', '129787/Ε2/15-10-2025' in page)
 check('module category map', all(token in module for token in ['A: 1','I: 10','IA: 11','IB: 12','IG: 14']))
 check('module 2.5 service', '2.5 / 12' in module)

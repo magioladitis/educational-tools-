@@ -176,7 +176,7 @@
 <?php sourceCardStart(); ?>
   <p>Ο υπολογισμός βασίζεται στις ισχύουσες ρυθμίσεις για το εβδομαδιαίο υποχρεωτικό διδακτικό ωράριο των εκπαιδευτικών και για το εβδομαδιαίο υποχρεωτικό ωράριο υποστηρικτικού έργου ΕΕΠ/ΕΒΠ. Στην Πρωτοβάθμια λαμβάνονται υπόψη η οργανικότητα, η ιδιότητα και ο χρόνος υπηρεσίας· στη Δευτεροβάθμια ο κλάδος, ο χρόνος υπηρεσίας και η διοικητική θέση· στο ΕΕΠ ο χρόνος υπηρεσίας.</p>
   <?php sourceCardLinksStart(); ?>
-    <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/egkuklios-upaith-141076-e3-4-11-2021.html', 'ΥΠΑΙΘ — Εγκύκλιος 141076/Ε3/04-11-2021 — ωράριο και υπερωριακή διδασκαλία ↗'); ?>
+    <?php sourceCardLink('https://diavgeia.gov.gr/doc/%CE%A9%CE%9C%CE%A5%CE%A846%CE%9C%CE%A4%CE%9B%CE%97-%CE%A814?inline=true', 'ΔΙΑΥΓΕΙΑ — 141076/Ε3/04-11-2021 (ΩΜΥΨ46ΜΤΛΗ-Ψ14) — ωράριο και υπερωριακή διδασκαλία ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/news/17496-25-01-16-orario-ekpaideftikon-se-protovathmia-kai-defterovathmia-ekpaidefsi', 'ΥΠΑΙΘΑ — Ωράριο εκπαιδευτικών ↗'); ?>
     <?php sourceCardLink('https://diavgeia.gov.gr/doc/4%CE%99%CE%9949-%CE%9F9?inline=true', 'ΥΠΑΙΘ — Εγκύκλιος Φ.361.23/12/123995/Δ1 (20-12-2010) — Προϋπηρεσία για μείωση ωραρίου ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2016/leitourgia__nhpio.pdf', 'ΥΠΑΙΘΑ — Ωράριο Νηπιαγωγών / λειτουργία Νηπιαγωγείων ↗'); ?>
@@ -186,7 +186,7 @@
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/n-2413-1996.html', 'Ν. 2413/1996, άρθρο 48 παρ. 3 — μείωση στα 20 έτη ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/deuterobathmia-ekpaideuse/upourgike-apophase-66079-d3-2018.html', 'Υ.Α. 66079/Δ3/2018 (Β΄ 1585) — ωράριο ΕΕΠ / ΕΒΠ ↗'); ?>
     <?php sourceCardLink('https://www.e-nomothesia.gr/kat-ekpaideuse/nomos-4386-2016-phek-83a-11-5-2016-ruthmiseis-gia-thn-ereyna.html', 'Ν. 4386/2016 — Εργαστήρια Ε.Κ./ΕΠΑ.Λ. ↗'); ?>
-    <?php sourceCardLink('https://edu.klimaka.gr/ekpaideytikoi/wrario-anatheseis/3687-orario-ypeythynoi-ergastiriwn-kai-sxolikwn-biblithikwn', 'ΥΠΑΙΘΑ — 132906/Ε3/06-11-2024 — εργαστήρια και σχολικές βιβλιοθήκες ↗'); ?>
+    <?php sourceCardLink('https://diavgeia.gov.gr/doc/6%CE%94%CE%99246%CE%9D%CE%9A%CE%A0%CE%94-29%CE%A4?inline=true', 'ΔΙΑΥΓΕΙΑ — 132906/Ε3/06-11-2024 (6ΔΙ246ΝΚΠΔ-29Τ) — εργαστήρια και σχολικές βιβλιοθήκες ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
   <?php sourceCardDisclaimerStart(); ?>Το αποτέλεσμα είναι ενημερωτικό και δεν υποκαθιστά υπηρεσιακή πράξη καθορισμού ωραρίου.<?php sourceCardDisclaimerEnd(); ?>
 <?php sourceCardEnd(); ?>

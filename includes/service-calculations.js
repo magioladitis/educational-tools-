@@ -2,9 +2,12 @@
  * Κοινή λογική υπολογισμού εκπαιδευτικής προϋπηρεσίας
  * για 1ΓΕ/2026, 2ΓΕ/2026, 1ΓΤ/2024 και 3ΕΑ/2025.
  *
- * Τρίμηνες συμβάσεις:
- * 2020-2021: έως 8 μήνες
- * 2021-2022: έως 7 μήνες
+ * Τρίμηνες συμβάσεις 2020-2021 και 2021-2022:
+ * 1,5 ή 3 μόρια ανά πλήρη μήνα, με ανώτατα όρια 10 ή 20 μορίων
+ * αντίστοιχα ανά σχολικό έτος. Επιπλέον εφαρμόζονται τα ιστορικά
+ * μέγιστα πραγματικά δυνατής υπηρεσίας (8 και 7 πλήρεις μήνες), επειδή
+ * οι συγκεκριμένες προσλήψεις δεν ξεκίνησαν από την αρχή των σχολικών ετών.
+ * Τα 8/7 είναι operational/history caps, όχι αυτοτελή statutory point caps.
  *
  * Ψηφιακό Φροντιστήριο:
  * Όλα τα όρια ανά σχολικό έτος και η μετατροπή υπολοίπων ημερών
@@ -18,12 +21,12 @@
     difficultMaxMonths: 60,
     privateMaxMonths: 600,
     totalMaxPoints: 120,
-    threeMonth2020MaxMonths: 8,
-    threeMonth2021MaxMonths: 7,
     threeMonthRegularRate: 1.5,
     threeMonthRegularMaxPoints: 10,
     threeMonthDifficultRate: 3,
     threeMonthDifficultMaxPoints: 20,
+    threeMonth2020MaxMonths: 8,
+    threeMonth2021MaxMonths: 7,
     publicRate: 1,
     difficultRate: 2,
     privateRate: 0.9,
@@ -220,6 +223,14 @@
       privateResult.months + (Number(digital.countedMonths) || 0);
 
     const warnings = Array.isArray(digital.warnings) ? digital.warnings.slice() : [];
+    if (nonNegativeInteger(options.threeMonthRegular2020) > RULES.threeMonth2020MaxMonths ||
+        nonNegativeInteger(options.threeMonthDifficult2020) > RULES.threeMonth2020MaxMonths) {
+      warnings.push("Για τις τρίμηνες συμβάσεις 2020–2021 εφαρμόστηκε το ιστορικό μέγιστο των 8 πλήρων μηνών υπηρεσίας.");
+    }
+    if (nonNegativeInteger(options.threeMonthRegular2021) > RULES.threeMonth2021MaxMonths ||
+        nonNegativeInteger(options.threeMonthDifficult2021) > RULES.threeMonth2021MaxMonths) {
+      warnings.push("Για τις τρίμηνες συμβάσεις 2021–2022 εφαρμόστηκε το ιστορικό μέγιστο των 7 πλήρων μηνών υπηρεσίας.");
+    }
     if (total.raw > RULES.totalMaxPoints) {
       warnings.push("Η μοριοδότηση προϋπηρεσίας περιορίστηκε στο ανώτατο όριο των 120 μορίων.");
     }

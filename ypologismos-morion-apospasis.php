@@ -424,7 +424,10 @@
 
   <?php sourceCardStart(); ?>
     <p><strong>Βάση υπολογισμού:</strong> Εγκύκλιος Υ.ΠΑΙ.Θ.Α. 41297/Ε2/02-04-2026 για τις αποσπάσεις εκπαιδευτικών του διδακτικού έτους 2026-2027. Ο υπολογιστής αφορά την <strong>Ενότητα Α – Αποσπάσεις με κριτήρια μοριοδότησης</strong>.</p>
-    <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://www.minedu.gov.gr/site/64683-02-04-26-prosklisi-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-gia-ypovoli-aitiseon-apospaseon-apo-pyspe-pysde-se-pyspe-pysde-se-domes-e-a-e-ke-d-a-s-y-mousika-kai-kallitexnika-sxoleia-gia-to-didaktiko-etos-2026-2027', 'Επίσημη πρόσκληση — Υ.ΠΑΙ.Θ.Α. ↗'); ?><?php sourceCardLinksEnd(); ?>
+    <?php sourceCardLinksStart(); ?>
+      <?php sourceCardLink('https://www.minedu.gov.gr/site/64683-02-04-26-prosklisi-ekpaideftikon-protovathmias-kai-defterovathmias-ekpaidefsis-gia-ypovoli-aitiseon-apospaseon-apo-pyspe-pysde-se-pyspe-pysde-se-domes-e-a-e-ke-d-a-s-y-mousika-kai-kallitexnika-sxoleia-gia-to-didaktiko-etos-2026-2027', 'Επίσημη πρόσκληση — Υ.ΠΑΙ.Θ.Α. ↗'); ?>
+      <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2023/41297E2_02-04-2026_%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%91%CE%A0%CE%9F%CE%A3%CE%A0_%CE%A0%CE%A5%CE%A3%CE%A0%CE%95_%CE%A0%CE%A5%CE%A3%CE%94%CE%95_2026-2027_9%CE%9F%CE%99%CE%9B46%CE%9D%CE%9A%CE%A0%CE%94-4%CE%936.pdf', 'Επίσημη εγκύκλιος 41297/Ε2/02-04-2026 (PDF) ↗'); ?>
+    <?php sourceCardLinksEnd(); ?>
     <?php sourceCardDisclaimerStart(); ?>Δεν υποκαθιστά τον επίσημο έλεγχο της αίτησης.<?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardEnd(); ?>
 

@@ -20,10 +20,10 @@ load('includes/social-calculations.js', core);
 
 let r = core.EducationService.calculateAsepService({regularMonths:10,difficultMonths:5});
 test('regular + difficult', approx(r.raw,20) && approx(r.points,20) && r.months===15);
-r = core.EducationService.calculateAsepService({threeMonthRegular2020:8});
-test('2020 regular three-month cap 10', approx(r.points,10) && r.parts.threeMonthRegular2020.months===8);
-r = core.EducationService.calculateAsepService({threeMonthDifficult2021:7});
-test('2021 difficult three-month cap 20', approx(r.points,20) && r.parts.threeMonthDifficult2021.months===7);
+r = core.EducationService.calculateAsepService({threeMonthRegular2020:12});
+test('2020 regular three-month historical max 8 and point cap 10', approx(r.points,10) && r.parts.threeMonthRegular2020.months===8 && r.warnings.some(x=>x.includes('8 πλήρων μηνών')));
+r = core.EducationService.calculateAsepService({threeMonthDifficult2021:12});
+test('2021 difficult three-month historical max 7 and point cap 20', approx(r.points,20) && r.parts.threeMonthDifficult2021.months===7 && r.warnings.some(x=>x.includes('7 πλήρων μηνών')));
 r = core.EducationService.calculateAsepService({privateMonths:10});
 test('private 0.9', approx(r.points,9));
 r = core.EducationService.calculateAsepService({regularMonths:100,difficultMonths:60});

@@ -14,7 +14,7 @@ check("legalAuditIsPubliclyVisible" in sc, "source card only exposes explicit au
 check("edu-source-audit" in css, "shared audit badge CSS exists")
 check("Χωρίς καταγραφή" in page and "δεν σημαίνει ότι ένα εργαλείο είναι λανθασμένο" in page, "dashboard explains pending semantics")
 check("nomiki-epikairotita.php" in footer, "footer links to legal freshness dashboard")
-check("3.22.86" in config, "version bumped to 3.22.86")
+check("3.22.88" in config, "version bumped to 3.22.88")
 for ok,msg in checks:
     print(("PASS" if ok else "FAIL")+": "+msg)
 raise SystemExit(0 if all(ok for ok,_ in checks) else 1)

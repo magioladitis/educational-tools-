@@ -128,6 +128,7 @@ renderAsepSocialCriteria(array(
     'mental_id' => 'candidateMentalCondition',
     'input_step' => '1',
     'child_points' => 3,
+    'children_note' => 'Επιλέξιμο είναι άγαμο τέκνο κάτω των 23 ετών ή, αν σπουδάζει σε Α.Ε.Ι./ομοταγές ίδρυμα ή εκπληρώνει στρατιωτικές υποχρεώσεις, κάτω των 25 ετών· απαιτείται γονική μέριμνα και επιμέλεια.',
     'min_disability_percent' => 50,
     'disability_rate' => '0,4',
     'spouse_min_marriage_years' => 4,
