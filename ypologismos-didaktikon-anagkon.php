@@ -2422,6 +2422,7 @@ staffingPerfEnd('specialty_labels');
     <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
     <?php $ecclesiasticalLegalLink = weeklyTimetableEcclesiasticalLegalLink('ecclesiastical_lykeio_timetable_2022', 'staffing'); ?>
     <?php if ($ecclesiasticalLegalLink): sourceCardLink($ecclesiasticalLegalLink['url'], $ecclesiasticalLegalLink['label']); endif; ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/protovathmia-defterovathmia/gymnasio?catid=1183&id=70804%3A10-09-26-enemerose-gia-te-leitourgia-ton-gymnasion-kai-genikon-lykeion-gia-to-sch-etos-2026-2027&view=article', 'ΥΠΑΙΘΑ 10-09-2026 — Λειτουργία Γυμνασίων / ΓΕΛ 2026–2027 ↗'); ?>
     <?php sourceCardLink(ethicsClassFormationPolicy()['source_url'], 'Υ.Α. 108070/Δ2/2026 — ΦΕΚ Β΄ 5231/2026 · Ηθική ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>

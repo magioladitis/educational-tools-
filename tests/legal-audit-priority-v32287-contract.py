@@ -51,7 +51,9 @@ check('Κρίσιμος χρόνος:' in eligibility and 'ούτε κατά τ�
 
 config = (ROOT / 'includes/config.php').read_text()
 sw = (ROOT / 'service-worker.js').read_text()
-check("3.22.88" in config and "3.22.88" in sw, 'version and service-worker cache are synchronized')
+version_match = re.search(r"define\('EDU_TOOLS_VERSION',\s*'([^']+)'\)", config)
+cache_match = re.search(r"CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*'([^']+)'", sw)
+check(bool(version_match and cache_match and version_match.group(1) == cache_match.group(1)), 'version and service-worker cache are synchronized')
 
 for ok, msg in checks:
     print(('PASS' if ok else 'FAIL') + ': ' + msg)

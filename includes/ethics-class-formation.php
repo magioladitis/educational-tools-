@@ -23,7 +23,7 @@ function ethicsClassFormationPolicy()
             'mousiko_gymnasio', 'mousiko_gel',
         ),
         'source_url' => 'https://www.minedu.gov.gr/publications/docs2026/108070_%CE%942_13_8_26_%CE%A5%CE%91_%CE%94%CE%99%CE%94%CE%91%CE%A3%CE%9A%CE%91%CE%9B%CE%99%CE%91_%CE%97%CE%98%CE%99%CE%9A%CE%97%CE%A3.pdf',
-        'fallback_rule' => 'περ. 3 άρθρου 22 Κ.Υ.Α. 102791/ΓΔ4/10-09-2024 (Β΄ 5130)',
+        'fallback_rule' => 'περ. 3 άρθρου 22 Κ.Υ.Α. 102791/ΓΔ4/10-09-2024 (Β΄ 5130), όπως ισχύει',
     );
 }
 

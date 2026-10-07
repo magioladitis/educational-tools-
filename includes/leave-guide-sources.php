@@ -13,6 +13,8 @@ return array(
     'ypes_2022_parental' => array('label' => 'ΥΠΕΣ — Διευκρινίσεις για άδεια άνευ αποδοχών ανατροφής τέκνου · ΔΙΔΑΔ/Φ.69/213/οικ.13594/26-08-2022', 'url' => 'https://www.ypes.gr/wp-content/uploads/2022/08/eggr13594-20220826.pdf'),
     'ypes_2020_idox_leaves' => array('label' => 'ΥΠΕΣ — Άδειες προσωπικού ΙΔΟΧ · ΔΙΔΑΔ/Φ.69/117/οικ.11102/28-05-2020 · ΑΔΑ 6ΣΦ146ΜΤΛ6-48Π', 'url' => 'https://www.ypes.gr/wp-content/uploads/2020/05/egk11102-28052020.pdf'),
     'dypa_parental' => array('label' => 'ΔΥΠΑ — Επίδομα Γονικής Άδειας (τρέχουσες οδηγίες)', 'url' => 'https://www2.dypa.gov.gr/epidoma-gonikis-adeias'),
+    'labor_ministry_leaves' => array('label' => 'Υπουργείο Εργασίας — Άδειες εργαζομένων (τρέχουσα επίσημη ενημέρωση)', 'url' => 'https://ypergasias.gov.gr/ergasiakes-scheseis/atomikes-ergasiakes-sxeseis/adeies-ergazomenon/'),
+    'labor_inspection_single_parent' => array('label' => 'Επιθεώρηση Εργασίας — Άδεια για μονογονεϊκές οικογένειες', 'url' => 'https://www.hli.gov.gr/ergasiakes-scheseis/nomothesia-ergasiakes-scheseis/adeies-ergasiakes-scheseis/adeies-gia-tin-prostasia-tis-oikogeneias/adeia-gia-monogoneikes-oikogeneies/'),
     'pd410_1988' => array('label' => 'Εθνικό Τυπογραφείο — Π.Δ. 410/1988 — ΦΕΚ Α΄ 191/30-08-1988', 'url' => 'https://ia37rg02wpsa01.blob.core.windows.net/fek/01/1988/19880100191.pdf'),
     'n1264_1982' => array('label' => 'Εθνικό Τυπογραφείο — Ν. 1264/1982 — ΦΕΚ Α΄ 79/01-07-1982', 'url' => 'https://ia37rg02wpsa01.blob.core.windows.net/fek/01/1982/19820100079.pdf'),
     'n1566_1985' => array('label' => 'Εθνικό Τυπογραφείο — Ν. 1566/1985 — ΦΕΚ Α΄ 167/30-09-1985', 'url' => 'https://ia37rg02wpsa01.blob.core.windows.net/fek/01/1985/19850100167.pdf'),

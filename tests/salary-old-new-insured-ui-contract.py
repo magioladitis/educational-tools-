@@ -39,5 +39,5 @@ check('official e-EFKA circular linked', 'Εγκ. 10/2020' in page and 'e-efka.g
 check('official MTPY Diavgeia circular linked', 'Ψ55ΘΗ-Φ0Α' in page and 'diavgeia.gov.gr/doc/' in page)
 check('official MTPY guide linked', 'ODIGOS_KRATISEON_IOYNIOS_2020' in page)
 check('official TEKA source linked', 'https://teka.gov.gr/ergodotes' in page and 'ίδιο ποσοστό και ίδια βάση' in page)
-check('article 31 linked', '4670/2020/arthro/31' in page)
+check('article 31 linked', 'https://api.et.gr/apiFEK/1/2020/43/pdf' in page and 'άρθρο 31 / Κλάδος Εφάπαξ Παροχών' in page)
 print(f'Salary old/new insured UI contract: PASS {checks}/{checks}')

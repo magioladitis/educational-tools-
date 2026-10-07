@@ -7,7 +7,8 @@
 $sources = require __DIR__ . '/leave-guide-sources.php';
 
 return array(
-    'updated_at' => '2026-10-03',
+    'updated_at' => '2026-10-07',
+    'audit_note' => 'Πλήρης legal-freshness audit έως 07-10-2026: baseline ΥΠΑΙΘΑ 2021, μεταγενέστερες τροποποιήσεις Υπαλληλικού Κώδικα και επίσημες διαδικασίες/διευκρινίσεις ΥΠΕΣ και Μίτος.',
     'source_baseline' => 'ΥΠΑΙΘΑ — συγκεντρωτικός πίνακας αδειών μονίμων εκπαιδευτικών, 16-12-2021',
     'sources' => $sources,
     'leaves' => array(
