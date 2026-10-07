@@ -194,7 +194,7 @@ renderEaeSensoryPriority(array(
 <?php calculatorColumnsEnd(); ?>
 
 <?php sourceCardStart(); ?>
-  <p>Προκήρυξη ΑΣΕΠ <strong>3ΕΑ/2025</strong> για εκπαιδευτικούς Ειδικής Αγωγής και Εκπαίδευσης κατηγορίας ΠΕ — <strong>ΦΕΚ 22/23.05.2025/τ. Α.Σ.Ε.Π.</strong> και <strong>ΦΕΚ 25/02.06.2025/τ. Α.Σ.Ε.Π.</strong>, ιδίως τα Κεφάλαια Β΄ και Γ΄.</p>
+  <p>Προκήρυξη ΑΣΕΠ <strong>3ΕΑ/2025</strong> για εκπαιδευτικούς Ειδικής Αγωγής και Εκπαίδευσης κατηγορίας ΠΕ — <strong>ΦΕΚ 22/23.05.2025/τ. Α.Σ.Ε.Π.</strong> και <strong>ΦΕΚ 25/02.06.2025/τ. Α.Σ.Ε.Π.</strong>, ιδίως τα Κεφάλαια Β΄ και Γ΄. Η διαδικασία έχει ολοκληρωθεί με τελικούς αξιολογικούς πίνακες στις <strong>30/06/2026</strong>.</p>
   <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/76185', 'Επίσημη σελίδα 3ΕΑ/2025 στο ΑΣΕΠ ↗'); ?><?php sourceCardLink('https://info.asep.gr/sites/default/files/2025-05/3%CE%95%CE%91_2025%20%CE%A4%CF%85%CF%80%CE%B9%CE%BA%CE%AC%20%CE%A0%CF%81%CE%BF%CF%83%CF%8C%CE%BD%CF%84%CE%B1%20%CE%88%CE%BD%CF%84%CE%B1%CE%BE%CE%B7%CF%82.pdf', 'Τυπικά Προσόντα Ένταξης 3ΕΑ/2025 ↗'); ?><?php sourceCardLinksEnd(); ?>
   <?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενημερωτικό και δεν υποκαθιστά τον επίσημο έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από το ΑΣΕΠ και τα αρμόδια όργανα.<?php sourceCardDisclaimerEnd(); ?>
 <?php sourceCardEnd(); ?>

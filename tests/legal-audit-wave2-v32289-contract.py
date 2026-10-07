@@ -48,7 +48,9 @@ check('όπως ισχύει' in ethics and '102791/ΓΔ4/10-09-2024' in ethics,
 
 config = (ROOT / 'includes/config.php').read_text()
 sw = (ROOT / 'service-worker.js').read_text()
-check("3.22.89" in config and "3.22.89" in sw, 'v3.22.89 version/cache bust synchronized')
+m_cfg = re.search(r"EDU_TOOLS_VERSION', '([0-9.]+)'", config)
+m_sw = re.search(r"CACHE_PREFIX \+ '([0-9.]+)'", sw)
+check(bool(m_cfg and m_sw and m_cfg.group(1) == m_sw.group(1)), 'current version/cache bust synchronized after wave 2')
 
 for ok, msg in checks:
     print(('PASS' if ok else 'FAIL') + ': ' + msg)

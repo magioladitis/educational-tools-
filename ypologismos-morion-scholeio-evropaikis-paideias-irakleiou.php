@@ -170,6 +170,7 @@
   <?php sourceCardStart(); ?>
     <p><strong>Βάση υπολογισμού:</strong> Πρόσκληση 69163/Η2/28-05-2026 για την πλήρωση θέσεων διδακτικού προσωπικού στο Σχολείο Ευρωπαϊκής Παιδείας Ηρακλείου για το σχολικό έτος 2026–2027. Η προθεσμία αιτήσεων ήταν 02/06/2026–09/06/2026, ώρα 15:00.</p>
     <?php sourceCardLinksStart(); ?>
+      <?php sourceCardLink('https://www.minedu.gov.gr/site/65085-28-05-26-prosklisi-ekdilosis-endiaferontos-gia-tin-plirosi-theseon-ekpaideftikon-ton-ellinofonon-kai-agglofonon-tmimaton-protovathmiou-kai-defterovathmiou-kyklou-tou-sxoleiou-evropaikis-paideias-irakleiou-gia-to-sxoliko-etos-2026-2028', 'ΥΠΑΙΘΑ — επίσημη ανακοίνωση πρόσκλησης ↗'); ?>
       <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2023/%CE%B7%CF%81%CE%AC%CE%BA%CE%BB%CE%B5%CE%B9%CE%BF_%CF%80%CF%81%CF%8C%CF%83%CE%BA%CE%BB%CE%B7%CF%83%CE%B7.pdf', 'ΥΠΑΙΘΑ — επίσημη πρόσκληση (PDF) ↗'); ?>
       <?php sourceCardLink('https://sepherapp.pdekritis.gr', 'Ηλεκτρονική εφαρμογή Σ.Ε.Π. Ηρακλείου ↗'); ?>
     <?php sourceCardLinksEnd(); ?>

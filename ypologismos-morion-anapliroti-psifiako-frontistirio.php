@@ -295,6 +295,7 @@ foreach ($digitalTutoringSubstituteSpecialties as $code) {
     <?php sourceCardStart(); ?>
       <p><strong>Πηγή:</strong> Πρόσκληση 126274/Δ7/24.09.2026 για πρόσληψη προσωρινών αναπληρωτών εκπαιδευτικών στο Ψηφιακό Φροντιστήριο για το σχολικό έτος 2026–2027.</p>
       <?php sourceCardLinksStart(); ?>
+        <?php sourceCardLink('https://www.minedu.gov.gr/ekpaideftikoi-eep-evp/proslipseis-eep-evp/70891-24-09-26-prosklese-prosorinon-anapleroton-ekpaideutikon-pros-ypobole-aiteseon-proslepses-sto-psephiako-phrontisterio-gia-te-paroche-psephiakes-ekpaideuses-gia-to-scholiko-etos-2026-2027', 'ΥΠΑΙΘΑ — επίσημη ανακοίνωση πρόσκλησης ↗'); ?>
         <?php sourceCardLink('https://secondment.eservices.iep.edu.gr/home', 'Ηλεκτρονική υποβολή αίτησης — ΙΕΠ ↗'); ?>
         <?php sourceCardLink('https://diavgeia.gov.gr/doc/%CE%A8%CE%A6%CE%9146%CE%9D%CE%9A%CE%A0%CE%94-%CE%98%CE%A66?inline=true', 'Πρόσκληση — Διαύγεια (ΑΔΑ ΨΦΑ446ΝΚΠΔ-ΘΦ6) ↗'); ?>
       <?php sourceCardLinksEnd(); ?>

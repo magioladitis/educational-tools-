@@ -246,7 +246,7 @@ renderAsepSocialCriteria(array(
   <?php calculatorColumnsEnd(); ?>
 
   <?php sourceCardStart(); ?>
-    <p>Προκήρυξη ΑΣΕΠ <strong>4ΕΑ/2025</strong>, <strong>ΦΕΚ Α.Σ.Ε.Π. 42/18.08.2025</strong>, ιδίως Κεφάλαια Β΄, Γ΄ και Δ΄.</p>
+    <p>Προκήρυξη ΑΣΕΠ <strong>4ΕΑ/2025</strong>, <strong>ΦΕΚ Α.Σ.Ε.Π. 42/18.08.2025</strong>, ιδίως Κεφάλαια Β΄, Γ΄ και Δ΄. Η διαδικασία έχει ολοκληρωθεί με τελικούς αξιολογικούς πίνακες στις <strong>29/04/2026</strong>.</p>
     <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/77020', 'Επίσημη σελίδα 4ΕΑ/2025 στο ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
     <?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενημερωτικό. Η τελική ένταξη σε πίνακα και η μοριοδότηση προκύπτουν από τον έλεγχο της αίτησης, του ΟΠΣΥΔ και των δικαιολογητικών από τα αρμόδια όργανα.<?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardEnd(); ?>

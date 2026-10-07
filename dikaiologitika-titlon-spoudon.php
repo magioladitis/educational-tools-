@@ -182,7 +182,7 @@
 
 <?php sourceCardStart(); ?>
   <p>Προκηρύξεις Α.Σ.Ε.Π. <strong>1ΓΕ/2026</strong> και <strong>2ΓΕ/2026</strong>, ιδίως τα κεφάλαια για τα απαιτούμενα δικαιολογητικά και τις προϋποθέσεις αναγνώρισης τίτλων σπουδών ημεδαπής και αλλοδαπής. Το εργαλείο είναι βοηθητικός οδηγός και δεν υποκαθιστά τον έλεγχο Ο.Π.ΣΥ.Δ./Α.Σ.Ε.Π.</p>
-  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/78700', '1ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLink('https://info.asep.gr/node/78701', '2ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
+  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/78700', '1ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLink('https://info.asep.gr/node/78701', '2ΓΕ/2026 — ΑΣΕΠ ↗'); ?><?php sourceCardLink('https://info.asep.gr/node/78799', 'Υποβολή αιτήσεων & δικαιολογητικών ΟΠΣΥΔ — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

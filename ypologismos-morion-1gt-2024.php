@@ -165,7 +165,7 @@ renderAsepSocialCriteria(array(
   <?php calculatorColumnsEnd(); ?>
 
   <?php sourceCardStart(); ?>
-    <p><strong>Πηγή:</strong> Προκήρυξη ΑΣΕΠ 1ΓΤ/2024, ΦΕΚ Α.Σ.Ε.Π. 25/10.07.2024, Κεφάλαιο Γ΄ «Κριτήρια Κατάταξης».</p>
+    <p><strong>Πηγή:</strong> Προκήρυξη ΑΣΕΠ 1ΓΤ/2024, ΦΕΚ Α.Σ.Ε.Π. <strong>25/10.07.2024</strong> και <strong>28/16.07.2024</strong>, Κεφάλαιο Γ΄ «Κριτήρια Κατάταξης». Η διαδικασία έχει ολοκληρωθεί με τελικούς αξιολογικούς πίνακες στις <strong>18/06/2025</strong>.</p>
     <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/73068', '1ΓΤ/2024 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
     <?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενημερωτικό. Η τελική μοριοδότηση προκύπτει από τον έλεγχο της αίτησης και των δικαιολογητικών από τα αρμόδια όργανα.<?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardEnd(); ?>

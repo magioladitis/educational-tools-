@@ -217,8 +217,8 @@
   <script src="<?php echo htmlspecialchars(edu_asset_url('includes/dimos-detachment-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 
 <?php sourceCardStart(); ?>
-  <p><strong>28/ΔΕΔΗΜΩΣ/26-06-2026</strong>, «Πρόσκληση εκδήλωσης ενδιαφέροντος για πλήρωση λειτουργικών κενών στα Δημόσια Ωνάσεια Σχολεία με απόσπαση μόνιμων εκπαιδευτικών Δ.Ε. διάρκειας ενός διδακτικού έτους, 2026-2027» (ΑΔΑ: Ρ0ΦΛ46ΝΚΠΔ-Σ02). Η διαδικασία παραπέμπει επίσης στις Υ.Α. 81473/Δ6/03-07-2025 (Β΄ 3528) και 169485/Δ6/30-12-2025 (Β΄ 7259), όπως ισχύουν.</p>
-  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://www.minedu.gov.gr/news/65393-29-06-26-prosklisi-apospaseon-sta-dimos', 'Επίσημη πρόσκληση — ΥΠΑΙΘΑ ↗'); ?><?php sourceCardLink('https://apps.espa.minedu.gov.gr/apospaseisdimos/', 'Επίσημη πλατφόρμα αιτήσεων ↗'); ?><?php sourceCardLinksEnd(); ?>
+  <p><strong>28/ΔΕΔΗΜΩΣ/26-06-2026</strong>, «Πρόσκληση εκδήλωσης ενδιαφέροντος για πλήρωση λειτουργικών κενών στα Δημόσια Ωνάσεια Σχολεία με απόσπαση μόνιμων εκπαιδευτικών Δ.Ε. διάρκειας ενός διδακτικού έτους, 2026-2027» (ΑΔΑ: Ρ0ΦΛ46ΝΚΠΔ-Σ02). Η πρόσκληση παραπέμπει στις Υ.Α. 71071/Δ6/19-06-2025 (Β΄ 3093), 81473/Δ6/03-07-2025 (Β΄ 3528) και στην τροποποιητική 9789/Δ6/27-01-2026 (Β΄ 315).</p>
+  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://www.minedu.gov.gr/site/65394-29-06-26-prosklisi-apospaseon-sta-dimos-2', 'Επίσημη ανακοίνωση / πρόσκληση — ΥΠΑΙΘΑ ↗'); ?><?php sourceCardLink('https://apps.espa.minedu.gov.gr/apospaseisdimos/', 'Επίσημη πλατφόρμα αιτήσεων ↗'); ?><?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

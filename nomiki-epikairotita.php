@@ -3,7 +3,7 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/legal-audit.php';
 $rows = legalAuditCatalogueRows();
 $counts = legalAuditSummaryCounts();
-$statusOrder = array('review_due' => 0, 'pending' => 1, 'partial' => 2, 'verified' => 3);
+$statusOrder = array('review_due' => 0, 'pending' => 1, 'partial' => 2, 'verified' => 3, 'not_applicable' => 4);
 usort($rows, function ($a, $b) use ($statusOrder) {
     $sa = isset($a['audit']['status']) ? $a['audit']['status'] : 'pending';
     $sb = isset($b['audit']['status']) ? $b['audit']['status'] : 'pending';
@@ -27,7 +27,7 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
     .legal-audit-hero{background:linear-gradient(135deg,#173b7a,#1f6feb);color:#fff;border-radius:18px;padding:28px;margin-bottom:18px;box-shadow:var(--edu-shadow)}
     .legal-audit-hero h1{margin:0 0 8px;color:#fff;font-size:clamp(25px,4vw,38px)}
     .legal-audit-hero p{margin:5px 0;color:#e9f1ff;line-height:1.55}
-    .legal-audit-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:18px}
+    .legal-audit-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:18px}
     .legal-audit-stat{padding:15px;border:1px solid var(--edu-border);border-radius:14px;background:var(--edu-surface);box-shadow:var(--edu-shadow-sm)}
     .legal-audit-stat strong{display:block;font-size:24px;color:var(--edu-text)}
     .legal-audit-stat span{color:var(--edu-muted);font-size:13px}
@@ -38,7 +38,7 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
     .legal-audit-row h2{margin:0;font-size:16px;line-height:1.35}
     .legal-audit-row h2 a{color:var(--edu-text);text-decoration:none}.legal-audit-row h2 a:hover{text-decoration:underline}
     .legal-audit-status{display:inline-flex;flex:0 0 auto;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;background:#eef2f6;color:#475569}
-    .legal-audit-status--verified{background:#e8f7ee;color:#166534}.legal-audit-status--partial{background:#fff4df;color:#7b4900}.legal-audit-status--review_due{background:#fff1f2;color:#9f1239}
+    .legal-audit-status--verified{background:#e8f7ee;color:#166534}.legal-audit-status--partial{background:#fff4df;color:#7b4900}.legal-audit-status--review_due{background:#fff1f2;color:#9f1239}.legal-audit-status--not_applicable{background:#eef2ff;color:#4338ca}
     .legal-audit-meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:9px;color:var(--edu-muted);font-size:13px}
     .legal-audit-scope,.legal-audit-trigger{margin:8px 0 0;line-height:1.5;font-size:13.5px}.legal-audit-trigger{color:var(--edu-muted)}
     @media(max-width:720px){.legal-audit-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.legal-audit-row__top{display:block}.legal-audit-status{margin-top:8px}}
@@ -57,9 +57,10 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
     <div class="legal-audit-stat"><strong><?php echo (int) $counts['partial']; ?></strong><span>στοχευμένοι έλεγχοι</span></div>
     <div class="legal-audit-stat"><strong><?php echo (int) $counts['review_due']; ?></strong><span>χρειάζονται επανέλεγχο</span></div>
     <div class="legal-audit-stat"><strong><?php echo (int) $counts['pending']; ?></strong><span>χωρίς καταγραφή στο νέο μητρώο</span></div>
+    <div class="legal-audit-stat"><strong><?php echo (int) $counts['not_applicable']; ?></strong><span>χωρίς αυτοτελή νομική λογική</span></div>
   </section>
 
-  <p class="legal-audit-note"><strong>Σημαντικό:</strong> «Χωρίς καταγραφή» δεν σημαίνει ότι ένα εργαλείο είναι λανθασμένο ή χωρίς πηγές. Σημαίνει ότι δεν έχει ακόμη μεταφερθεί στο νέο μητρώο freshness. Αντίστοιχα, «στοχευμένος έλεγχος» δηλώνει ακριβώς το πεδίο που επανελέγχθηκε και δεν παρουσιάζεται ως πλήρης επαλήθευση όλου του εργαλείου.</p>
+  <p class="legal-audit-note"><strong>Σημαντικό:</strong> «Χωρίς καταγραφή» δεν σημαίνει ότι ένα εργαλείο είναι λανθασμένο ή χωρίς πηγές. Σημαίνει ότι δεν έχει ακόμη μεταφερθεί στο νέο μητρώο freshness. Αντίστοιχα, «στοχευμένος έλεγχος» δηλώνει ακριβώς το πεδίο που επανελέγχθηκε και δεν παρουσιάζεται ως πλήρης επαλήθευση όλου του εργαλείου. Η ένδειξη «Δεν απαιτεί αυτοτελή νομικό έλεγχο» χρησιμοποιείται μόνο για τεχνικές/πλοηγικές σελίδες των οποίων οι κανόνες βρίσκονται σε άλλα ήδη ελεγμένα εργαλεία ή δεν περιέχουν κανονιστική λογική.</p>
 
   <section class="legal-audit-list" aria-label="Κατάσταση ανά εργαλείο">
   <?php foreach ($rows as $row): ?>
