@@ -255,6 +255,8 @@ if (!function_exists('legalSourcesRegistry')) {
                 'school_types' => array('kallitexniko_gymnasio', 'kallitexniko_gel'),
                 'topics' => array('teaching_assignments', 'art_schools'),
                 'amended_by' => array('kallitexnika_assignments_2024'),
+                'repealed_by' => 'kallitexnika_assignments_2026_5940',
+                'status' => 'historical',
             ),
             'kallitexnika_assignments_2024' => array(
                 'title' => 'Τροποποίηση αναθέσεων μαθημάτων καλλιτεχνικής παιδείας Καλλιτεχνικών Σχολείων',
@@ -271,6 +273,8 @@ if (!function_exists('legalSourcesRegistry')) {
                 'school_types' => array('kallitexniko_gymnasio', 'kallitexniko_gel'),
                 'topics' => array('teaching_assignments', 'art_schools'),
                 'amends' => array('kallitexnika_assignments_2018'),
+                'superseded_by' => 'kallitexnika_assignments_2026_5940',
+                'status' => 'historical',
             ),
             'kallitexnika_assignments_2026_5940' => array(
                 'title' => 'Αναθέσεις μαθημάτων καλλιτεχνικής παιδείας Καλλιτεχνικών Σχολείων',
@@ -282,6 +286,10 @@ if (!function_exists('legalSourcesRegistry')) {
                 'valid_from' => '2026-10-05',
                 'school_types' => array('kallitexniko_gymnasio', 'kallitexniko_gel'),
                 'topics' => array('teaching_assignments', 'art_schools'),
+                'status' => 'active',
+                'last_verified' => '2026-10-07',
+                'supersedes' => array('kallitexnika_assignments_2018', 'kallitexnika_assignments_2024'),
+                'repeals' => array('kallitexnika_assignments_2018'),
                 'link_label' => 'Υ.Α. 128468/Δ2/28-09-2026 — ΦΕΚ Β΄ 5940/05-10-2026 · Αναθέσεις Καλλιτεχνικών Σχολείων ↗',
             ),
             'kallitexnika_timetable_2026' => array(

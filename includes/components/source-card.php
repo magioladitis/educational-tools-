@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__) . '/legal-audit.php';
 /**
  * Shared presentation helpers for “Πηγές / Νομική βάση”.
  * Presentation only: page-specific legal/source content stays in each tool.
@@ -55,6 +56,19 @@ if (!function_exists('sourceCardDisclosureStart')) {
         echo '<span class="edu-disclosure__chevron" aria-hidden="true">›</span>';
         echo '</summary>';
         echo '<div class="edu-disclosure__body edu-source-card__body">';
+
+        $audit = legalAuditForPage(legalAuditCurrentPage());
+        if (legalAuditIsPubliclyVisible($audit)) {
+            $status = isset($audit['status']) ? (string) $audit['status'] : 'pending';
+            $date = !empty($audit['last_verified']) ? legalAuditFormatDate($audit['last_verified']) : '';
+            $label = $status === 'verified' ? 'Έλεγχος πηγών' : ($status === 'review_due' ? 'Επανέλεγχος πηγών' : 'Στοχευμένος έλεγχος');
+            echo '<div class="edu-source-audit edu-source-audit--' . sourceCardEscape($status) . '">';
+            echo '<span class="edu-source-audit__label">' . sourceCardEscape($label) . '</span>';
+            if ($date !== '') echo '<strong class="edu-source-audit__date">' . sourceCardEscape($date) . '</strong>';
+            if (!empty($audit['school_year'])) echo '<span class="edu-source-audit__scope">σχ. έτος ' . sourceCardEscape($audit['school_year']) . '</span>';
+            echo '<a class="edu-source-audit__details" href="nomiki-epikairotita.php#' . sourceCardEscape(str_replace('.', '-', $audit['page'])) . '">λεπτομέρειες</a>';
+            echo '</div>';
+        }
     }
 }
 
