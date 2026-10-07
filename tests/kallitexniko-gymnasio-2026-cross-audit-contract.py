@@ -74,7 +74,7 @@ assignment_page = render_php('anatheseis-mathimaton.php')
 for label, text in [('timetable page', timetable_page), ('assignment page', assignment_page)]:
     check(f'{label} cites FEK 2104/2026', '2104/2026' in text)
     check(f'{label} cites FEK 2583/2026', '2583/2026' in text)
-    check(f'{label} cites FEK 3418/2024', '3418/2024' in text)
+    check(f'{label} cites FEK 5940/2026', '5940/2026' in text)
 
 # Internal bridge metadata must never leak to the browser payload.
 public_php = r'''require "includes/weekly-timetable-data.php"; echo json_encode(weeklyTimetablePublicRows(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);'''

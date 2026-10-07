@@ -38,8 +38,8 @@ for needle in (
 
 check('FEK 5710 direct National Printing Office record', 'https://search.et.gr/el/fek/?fekId=805702' in LEGAL)
 check('FEK 5733 direct National Printing Office record', 'https://search.et.gr/el/fek/?fekId=805734' in LEGAL)
-check('version bumped to 3.22.28', "EDU_TOOLS_VERSION', '3.22.28'" in CONFIG)
-check('service worker cache bumped to 3.22.28', "CACHE_PREFIX + '3.22.28'" in SW)
+check('version bumped to 3.22.84', "EDU_TOOLS_VERSION', '3.22.84'" in CONFIG)
+check('service worker cache bumped to 3.22.84', "CACHE_PREFIX + '3.22.84'" in SW)
 
 failed=[n for n,ok in checks if not ok]
 for n,ok in checks:

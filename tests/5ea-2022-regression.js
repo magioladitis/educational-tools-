@@ -9,7 +9,7 @@ function load(files){
   for(const f of files) vm.runInContext(fs.readFileSync(path.join(ROOT,'includes',f),'utf8'),ctx,{filename:f});
   return ctx.window;
 }
-const w=load(['education-core.js','language-calculations.js','de-academic-calculations.js','eae-table-eligibility.js']);
+const w=load(['specialty-code-normalization.js','education-core.js','language-calculations.js','de-academic-calculations.js','eae-table-eligibility.js']);
 let r=w.DEAcademic.calculate({degreePresent:true,degreeGrade:20,workExperienceYears:5,languagePoints:20,computer:true,training:true});
 ok(r.rawPoints===120 && r.points===120,'academic maximum = 120');
 ok(r.degreePoints===50,'degree 20 x 2.5 = 50');

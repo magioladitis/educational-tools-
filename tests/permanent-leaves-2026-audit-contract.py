@@ -63,6 +63,13 @@ check('marriage leave uses marriage procedure source', 'mitos_marriage' in gamos
 check('marriage leave is not wired to electoral source', 'ypes_electoral_right' not in gamos.get('sources', []))
 check('electoral leave uses electoral source', 'ypes_electoral_right' in eklogiko.get('sources', []))
 
+diki = by_id.get('diki', {})
+diki_conditions = ' '.join(diki.get('conditions', []))
+check('trial leave states 200–400 km = 1 working day', '200–400 χλμ.' in diki_conditions and '1 εργάσιμη ημέρα' in diki_conditions)
+check('trial leave states >401 km road = 2 working days', 'πάνω από 401 χλμ.' in diki_conditions and 'εξ ολοκλήρου οδικώς' in diki_conditions and '2 εργάσιμες ημέρες' in diki_conditions)
+check('trial leave states island travel up to 3 days by Director of Education', 'σε/από νησιά' in diki_conditions and 'έως 3 εργάσιμες ημέρες' in diki_conditions and 'Διευθυντή Εκπαίδευσης' in diki_conditions)
+check('trial leave has structured 1–3 working-day duration', diki.get('comparison', {}).get('duration', {}).get('kind') == 'range' and diki.get('comparison', {}).get('duration', {}).get('min') == 1 and diki.get('comparison', {}).get('duration', {}).get('max') == 3)
+
 for leave_id in ('meiwmeno-anatrofis', 'enneamini-anatrofis'):
     leave = by_id.get(leave_id, {})
     check(leave_id + ' has educator-specific N2721/1999 source', 'n2721_1999' in leave.get('sources', []))

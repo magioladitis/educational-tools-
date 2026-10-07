@@ -22,7 +22,7 @@ ok(E.result.innerHTML.includes('μικρότερο από 50%'),'disability guid
 ok((E.criterion.listeners.change||[]).length===1 && (E.disabilityPerson.listeners.change||[]).length===1 && (E.showDocumentsBtn.listeners.click||[]).length===1,'children/disability handlers are externally bound');
 
 // 2) SDE registry scoring engine regression. Load canonical core/language dependencies.
-const sde={console};sde.window=sde;vm.createContext(sde);loadInto(sde,'includes/education-core.js');loadInto(sde,'includes/language-calculations.js');loadInto(sde,'includes/sde-registry-calculations.js');
+const sde={console};sde.window=sde;vm.createContext(sde);loadInto(sde,'includes/specialty-code-normalization.js');loadInto(sde,'includes/education-core.js');loadInto(sde,'includes/language-calculations.js');loadInto(sde,'includes/sde-registry-calculations.js');
 let r=sde.SDERegistryCalc.calculateAll({role:'educator',specialty:'ΠΕ03',phd:'target',master:'none',trainingSdeHours:100,trainingAdultHours:100,expSdeHours:400,expAdultHours:200,expFormalHours:200,language1:'english',languageLevel1:'C2',language2:'',languageLevel2:'none',computer:true,unemploymentMonths:10,unemploymentExtraDays:15,threeChildren:true});
 ok(r.eligibility.eligible===true && r.assignments.some(x=>x.literacy==='Μαθηματικά'),'SDE educator eligibility/assignments preserved');
 ok(r.education.total>0 && r.experience.total>0 && r.other.total>0 && r.final>r.base,'SDE educator scoring/social increase preserved',JSON.stringify(r));

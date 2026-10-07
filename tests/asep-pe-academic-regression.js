@@ -5,7 +5,7 @@ const root = path.resolve(__dirname, '..');
 const context = { console };
 context.globalThis = context;
 vm.createContext(context);
-for (const file of ['includes/education-core.js','includes/language-calculations.js','includes/academic-calculations.js','includes/onaseia-calculations.js']) {
+for (const file of ['includes/specialty-code-normalization.js','includes/education-core.js','includes/language-calculations.js','includes/academic-calculations.js','includes/onaseia-calculations.js']) {
   vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'), context, { filename:file });
 }
 const L=context.EducationLanguages, A=context.EducationAcademic, O=context.OnaseiaAcademic;

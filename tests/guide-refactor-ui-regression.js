@@ -1,7 +1,7 @@
 'use strict';
 function assert(label, ok){ console.log((ok?'PASS':'FAIL')+' | '+label); if(!ok) process.exitCode=1; }
 function classes(init=[]){ const s=new Set(init); return {add:(...x)=>x.forEach(v=>s.add(v)),remove:(...x)=>x.forEach(v=>s.delete(v)),toggle:(v,f)=>{if(f===undefined) f=!s.has(v); f?s.add(v):s.delete(v);},contains:v=>s.has(v)}; }
-function el(id,value='',tag='SELECT'){ const listeners={}; return {id,value,tagName:tag,style:{},innerHTML:'',textContent:'',className:'',disabled:false,listeners,classList:classes(['hidden']),addEventListener:(t,f)=>listeners[t]=f,focus:()=>{},scrollIntoView:()=>{},closest:()=>({classList:classes(),querySelector:()=>null,appendChild:()=>{}})}; }
+function el(id,value='',tag='SELECT'){ const listeners={},attrs={}; return {id,value,tagName:tag,style:{},innerHTML:'',textContent:'',className:'',disabled:false,listeners,classList:classes(['hidden']),setAttribute:(k,v)=>{attrs[k]=String(v);},removeAttribute:k=>{delete attrs[k];},getAttribute:k=>Object.prototype.hasOwnProperty.call(attrs,k)?attrs[k]:null,addEventListener:(t,f)=>listeners[t]=f,focus:()=>{},scrollIntoView:()=>{},closest:()=>({classList:classes(),querySelector:()=>null,appendChild:()=>{}})}; }
 
 // Eligibility
 {

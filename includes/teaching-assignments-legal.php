@@ -127,8 +127,7 @@ if (!function_exists('teachingAssignmentsLegalSourceKeysForSchools')) {
             $keys[] = 'eneegyl_assignments_2026_5733';
         }
         if ($usesArt) {
-            $keys[] = 'kallitexnika_assignments_2018';
-            $keys[] = 'kallitexnika_assignments_2024';
+            $keys[] = 'kallitexnika_assignments_2026_5940';
             $keys[] = 'kallitexnika_timetable_2026';
         }
         if ($usesMusic) {
@@ -184,27 +183,12 @@ if (!function_exists('teachingAssignmentsSpecialSchoolOverviewLinks')) {
     {
         $links = array();
 
-        $artCurrent = legalSourceByKey('kallitexnika_assignments_2024');
-        if ($artCurrent) {
-            $decision = legalSourceCompactDecision($artCurrent['decision']);
-            $fek = legalSourceCompactFek($artCurrent['fek']);
-            $ada = !empty($artCurrent['ada']) ? $artCurrent['ada'] : '';
-            $url = legalSourceUrl($artCurrent);
-            if ($url) {
-                $label = $decision . ' — ' . $fek;
-                if ($ada !== '') {
-                    $label .= ' (ΑΔΑ ' . $ada . ')';
-                }
-                $links[] = array('source_key'=>'kallitexnika_assignments_2024','url'=>$url,'label'=>$label . ' ↗');
-            }
-        }
-
-        $artBase = legalSourceByKey('kallitexnika_assignments_2018');
-        if ($artBase && ($url = legalSourceUrl($artBase))) {
+        $artCurrent = legalSourceByKey('kallitexnika_assignments_2026_5940');
+        if ($artCurrent && ($url = legalSourceUrl($artCurrent))) {
             $links[] = array(
-                'source_key'=>'kallitexnika_assignments_2018',
+                'source_key'=>'kallitexnika_assignments_2026_5940',
                 'url'=>$url,
-                'label'=>legalSourceCompactDecision($artBase['decision']) . ' — ' . legalSourceCompactFek($artBase['fek']) . ' (βασική απόφαση) ↗',
+                'label'=>legalSourceCompactDecision($artCurrent['decision']) . ' — ' . legalSourceCompactFek($artCurrent['fek']) . ' ↗',
             );
         }
 
@@ -215,15 +199,6 @@ if (!function_exists('teachingAssignmentsSpecialSchoolOverviewLinks')) {
                 'url'=>$url,
                 'label'=>legalSourceCompactFek($artTimetable['fek']) . ' — Ωρολόγιο Καλλιτεχνικών Σχολείων ↗',
             );
-        }
-
-        if ($artCurrent && ($url = legalSourceUrl($artCurrent, 'encoded_ada'))) {
-            $ada = !empty($artCurrent['ada']) ? $artCurrent['ada'] : '';
-            $label = legalSourceCompactDecision($artCurrent['decision']);
-            if ($ada !== '') {
-                $label .= ' — ΑΔΑ ' . $ada;
-            }
-            $links[] = array('source_key'=>'kallitexnika_assignments_2024','url'=>$url,'label'=>$label . ' ↗');
         }
 
         $musicAssignments = legalSourceByKey('mousika_assignments_2018');

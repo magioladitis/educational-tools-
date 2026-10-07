@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('fs'),vm=require('vm'),path=require('path');const root=path.resolve(__dirname,'..');
 const ctx={console};ctx.globalThis=ctx;ctx.window=ctx;vm.createContext(ctx);function load(f){vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),ctx,{filename:f});}
-['includes/education-core.js','includes/language-calculations.js','includes/academic-calculations.js','includes/eae-table-eligibility.js','includes/onaseia-calculations.js','includes/sde-calculations.js','includes/sde-registry-calculations.js','includes/eep-eligibility-calculations.js'].forEach(load);
+['includes/specialty-code-normalization.js','includes/education-core.js','includes/language-calculations.js','includes/academic-calculations.js','includes/eae-table-eligibility.js','includes/onaseia-calculations.js','includes/sde-calculations.js','includes/sde-registry-calculations.js','includes/eep-eligibility-calculations.js'].forEach(load);
 let pass=0,fail=0;function t(n,c,x=''){if(c){console.log('PASS',n);pass++;}else{console.log('FAIL',n,x);fail++;}}
 let r=ctx.EducationAcademic.calculate({profile:'eae',specialty:'PE61',degreeGrade:8,mscCount:0});t('EAE PE61 Latin gets 20 specialization',r.mscPoints===20,r.mscPoints);
 r=ctx.EducationAcademic.calculate({profile:'eae',specialty:'PE11',degreeGrade:8,eaePe11Specialization:true});t('EAE PE11 Latin gets +8',r.specialProfilePoints===8,r.specialProfilePoints);

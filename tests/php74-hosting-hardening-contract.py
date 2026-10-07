@@ -15,8 +15,8 @@ service_worker = (ROOT / 'service-worker.js').read_text(encoding='utf-8')
 
 check("date_default_timezone_set('Europe/Athens');" in config,
       'shared config pins Europe/Athens')
-check("define('EDU_TOOLS_VERSION', '3.22.82');" in config,
-      'release version is 3.22.82')
+check("define('EDU_TOOLS_VERSION', '3.22.84');" in config,
+      'release version is 3.22.84')
 check("session.use_strict_mode', '1'" in auth,
       'vacancy sessions enable strict mode')
 check("session.cookie_httponly', '1'" in auth,
@@ -27,8 +27,8 @@ check(auth.index("session.use_strict_mode") < auth.index('session_start();'),
       'strict mode configured before session_start')
 check(auth.index("session.cookie_httponly") < auth.index('session_start();'),
       'HttpOnly configured before session_start')
-check("CACHE_PREFIX + '3.22.82'" in service_worker,
-      'service worker cache bumped to 3.22.82')
+check("CACHE_PREFIX + '3.22.84'" in service_worker,
+      'service worker cache bumped to 3.22.84')
 
 php_code = r"""
 $_SERVER['HTTPS'] = 'on';

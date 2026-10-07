@@ -32,14 +32,12 @@ if (!function_exists('weeklyTimetableLegalSourceKeysForSchools')) {
             'kallitexniko_gymnasio' => array(
                 'kallitexnika_timetable_2026',
                 'gymnasio_gel_assignments_2026',
-                'kallitexnika_assignments_2018',
-                'kallitexnika_assignments_2024',
+                'kallitexnika_assignments_2026_5940',
             ),
             'kallitexniko_gel' => array(
                 'kallitexnika_timetable_2026',
                 'gymnasio_gel_assignments_2026',
-                'kallitexnika_assignments_2018',
-                'kallitexnika_assignments_2024',
+                'kallitexnika_assignments_2026_5940',
             ),
             'mousiko_gymnasio' => array(
                 'mousika_timetable_2026',
@@ -294,10 +292,10 @@ if (!function_exists('weeklyTimetableSpecialSchoolOverviewLinks')) {
                 );
             }
 
-            $artAssignments = legalSourceByKey('kallitexnika_assignments_2024');
+            $artAssignments = legalSourceByKey('kallitexnika_assignments_2026_5940');
             if ($artAssignments && ($url = legalSourceUrl($artAssignments))) {
                 $links[] = array(
-                    'source_key'=>'kallitexnika_assignments_2024',
+                    'source_key'=>'kallitexnika_assignments_2026_5940',
                     'url'=>$url,
                     'label'=>legalSourceCompactFek($artAssignments['fek']) . ' — Αναθέσεις καλλιτεχνικής παιδείας / διασταύρωση ↗',
                 );

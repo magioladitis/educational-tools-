@@ -21,6 +21,7 @@ global.AsepLanguageSelector={sync(){},calculate(){return{points:langPoints,accep
 global.AsepComputerProof={syncAll(){}}; global.TrainingProof={syncAll(){},summary(){return 'proof'},warning(){return ''}};
 const path=require('path');
 const fileRoot=path.resolve(__dirname,'..');
+vm.runInThisContext(fs.readFileSync(path.join(fileRoot,'includes/specialty-code-normalization.js'),'utf8'),{filename:'specialty-codes'});
 vm.runInThisContext(fs.readFileSync(path.join(fileRoot,'includes/education-core.js'),'utf8'),{filename:'core'});
 vm.runInThisContext(fs.readFileSync(path.join(fileRoot,'includes/te-academic-calculations.js'),'utf8'),{filename:'tecalc'});
 vm.runInThisContext(fs.readFileSync(path.join(fileRoot,'includes/language-calculations.js'),'utf8'),{filename:'languages'});

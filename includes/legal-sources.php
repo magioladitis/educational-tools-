@@ -272,6 +272,18 @@ if (!function_exists('legalSourcesRegistry')) {
                 'topics' => array('teaching_assignments', 'art_schools'),
                 'amends' => array('kallitexnika_assignments_2018'),
             ),
+            'kallitexnika_assignments_2026_5940' => array(
+                'title' => 'Αναθέσεις μαθημάτων καλλιτεχνικής παιδείας Καλλιτεχνικών Σχολείων',
+                'citation_title' => 'Αναθέσεις καλλιτεχνικής παιδείας',
+                'decision' => 'Υ.Α. 128468/Δ2/28-09-2026',
+                'fek' => 'ΦΕΚ Β΄ 5940/05-10-2026',
+                'date' => '2026-09-28',
+                'url' => 'https://www.et.gr/api/DownloadFekPdf?fek_pdf=2026/B/5940',
+                'valid_from' => '2026-10-05',
+                'school_types' => array('kallitexniko_gymnasio', 'kallitexniko_gel'),
+                'topics' => array('teaching_assignments', 'art_schools'),
+                'link_label' => 'Υ.Α. 128468/Δ2/28-09-2026 — ΦΕΚ Β΄ 5940/05-10-2026 · Αναθέσεις Καλλιτεχνικών Σχολείων ↗',
+            ),
             'kallitexnika_timetable_2026' => array(
                 'title' => 'Ωρολόγιο πρόγραμμα Καλλιτεχνικού Γυμνασίου και Γενικού Καλλιτεχνικού Λυκείου',
                 'citation_title' => 'Καλλιτεχνικά Σχολεία',
