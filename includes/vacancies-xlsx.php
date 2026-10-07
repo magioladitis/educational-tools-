@@ -258,3 +258,141 @@ function vacanciesXlsxBuild($data)
 
     return array(true, vacanciesXlsxZipBinary($files));
 }
+
+/** Numeric cell that preserves decimal hours for coverage-preview exports. */
+function vacanciesXlsxDecimalCell($ref, $value, $style)
+{
+    $number = (float) $value;
+    $serialized = rtrim(rtrim(number_format($number, 2, '.', ''), '0'), '.');
+    if ($serialized === '' || $serialized === '-0') $serialized = '0';
+    return '<c r="'.vacanciesXlsxEscape($ref).'" s="'.(int)$style.'"><v>'.$serialized.'</v></c>';
+}
+
+function vacanciesXlsxCoverageTeachersSheetXml($teachersData)
+{
+    $headers = array('Εκπαιδευτικός','Α.Μ.','Κύρια ειδικότητα','2η ειδικότητα','Υπόλοιπο ωρών','Σχολεία που υπηρετεί','Κωδικοί σχολείων');
+    $rows = array();
+    $headerXml = '';
+    foreach ($headers as $idx => $label) $headerXml .= vacanciesXlsxStringCell(vacanciesXlsxColumnName($idx+1).'1', $label, 1);
+    $rows[] = '<row r="1" ht="28" customHeight="1">'.$headerXml.'</row>';
+
+    $r = 2;
+    foreach ((array)$teachersData['teachers'] as $teacher) {
+        $schoolNames = array();
+        $schoolCodes = array();
+        foreach ((array)$teacher['placements'] as $placement) {
+            if (!empty($placement['school_name'])) $schoolNames[] = (string)$placement['school_name'];
+            if (!empty($placement['school_code'])) $schoolCodes[] = (string)$placement['school_code'];
+        }
+        $schoolNames = array_values(array_unique($schoolNames));
+        $schoolCodes = array_values(array_unique($schoolCodes));
+        $name = trim((string)$teacher['last_name'].' '.(string)$teacher['first_name']);
+        $cells = vacanciesXlsxStringCell('A'.$r, $name, 8)
+            .vacanciesXlsxStringCell('B'.$r, isset($teacher['am']) ? $teacher['am'] : '', 8)
+            .vacanciesXlsxStringCell('C'.$r, isset($teacher['primary_code']) ? $teacher['primary_code'] : '', 8)
+            .vacanciesXlsxStringCell('D'.$r, isset($teacher['secondary_code']) ? $teacher['secondary_code'] : '', 8)
+            .vacanciesXlsxDecimalCell('E'.$r, isset($teacher['remaining_hours']) ? $teacher['remaining_hours'] : 0, 5)
+            .vacanciesXlsxStringCell('F'.$r, implode(' · ', $schoolNames), 8)
+            .vacanciesXlsxStringCell('G'.$r, implode(' · ', $schoolCodes), 8);
+        $rows[] = '<row r="'.$r.'">'.$cells.'</row>';
+        $r++;
+    }
+    $lastRow = max(2, $r-1);
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+        .'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+        .'<dimension ref="A1:G'.$lastRow.'"/>'
+        .'<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'
+        .'<sheetFormatPr defaultRowHeight="18"/>'
+        .'<cols><col min="1" max="1" width="30" customWidth="1"/><col min="2" max="2" width="13" customWidth="1"/><col min="3" max="4" width="18" customWidth="1"/><col min="5" max="5" width="16" customWidth="1"/><col min="6" max="6" width="60" customWidth="1"/><col min="7" max="7" width="28" customWidth="1"/></cols>'
+        .'<sheetData>'.implode('', $rows).'</sheetData><autoFilter ref="A1:G'.$lastRow.'"/>'
+        .'</worksheet>';
+}
+
+function vacanciesXlsxCoverageMyschoolEstimateForVacancy($vacancy, $stat51)
+{
+    if (empty($stat51['school_scoped'])) return null;
+    $schoolCode = function_exists('vacanciesCoverageSchoolCode') ? vacanciesCoverageSchoolCode(isset($vacancy['ministry_code']) ? $vacancy['ministry_code'] : '') : trim((string)(isset($vacancy['ministry_code']) ? $vacancy['ministry_code'] : ''));
+    $vacancyCode = function_exists('vacanciesCoverageCanonicalSpecialty') ? vacanciesCoverageCanonicalSpecialty(isset($vacancy['code']) ? $vacancy['code'] : '') : trim((string)(isset($vacancy['code']) ? $vacancy['code'] : ''));
+    if ($schoolCode === '' || $vacancyCode === '') return null;
+    $sum = 0.0;
+    foreach ((array)(isset($stat51['myschool_deficits']) ? $stat51['myschool_deficits'] : array()) as $row) {
+        $rowSchool = function_exists('vacanciesCoverageSchoolCode') ? vacanciesCoverageSchoolCode(isset($row['school_code']) ? $row['school_code'] : '') : trim((string)(isset($row['school_code']) ? $row['school_code'] : ''));
+        if ($rowSchool !== $schoolCode) continue;
+        $eligible = false;
+        if (function_exists('vacanciesCoverageListMatchesCode')) {
+            $eligible = vacanciesCoverageListMatchesCode(isset($row['A']) ? $row['A'] : array(), $vacancyCode) || vacanciesCoverageListMatchesCode(isset($row['B']) ? $row['B'] : array(), $vacancyCode);
+        }
+        if ($eligible) $sum += isset($row['myschool_hours']) ? (float)$row['myschool_hours'] : 0.0;
+    }
+    return round($sum, 2);
+}
+
+function vacanciesXlsxCoverageVacanciesSheetXml($vacancyPreview, $stat51)
+{
+    $headers = array('Σχολείο','Κωδικός σχολείου','Ειδικότητα','Περιγραφή ειδικότητας','Ώρες κενού','Εκτίμηση Κενών από myschool','Σημείωση 5.1');
+    $rows = array();
+    $headerXml = '';
+    foreach ($headers as $idx => $label) $headerXml .= vacanciesXlsxStringCell(vacanciesXlsxColumnName($idx+1).'1', $label, 1);
+    $rows[] = '<row r="1" ht="28" customHeight="1">'.$headerXml.'</row>';
+
+    $r = 2;
+    foreach ((array)$vacancyPreview as $vacancy) {
+        $myschoolEstimate = vacanciesXlsxCoverageMyschoolEstimateForVacancy($vacancy, $stat51);
+        $note51 = empty($stat51['school_scoped'])
+            ? 'Το 5.1 δεν περιέχει σχολική μονάδα· δεν γίνεται ασφαλής αντιστοίχιση myschool ανά σχολείο.'
+            : 'Άθροισμα σχετιζόμενων μαθημάτων 5.1 όπου η ειδικότητα έχει Α΄ ή Β΄ ανάθεση.';
+        $cells = vacanciesXlsxStringCell('A'.$r, isset($vacancy['school_name']) ? $vacancy['school_name'] : '', 8)
+            .vacanciesXlsxStringCell('B'.$r, isset($vacancy['ministry_code']) ? $vacancy['ministry_code'] : '', 8)
+            .vacanciesXlsxStringCell('C'.$r, isset($vacancy['code']) ? $vacancy['code'] : '', 8)
+            .vacanciesXlsxStringCell('D'.$r, isset($vacancy['label']) ? $vacancy['label'] : '', 8)
+            .vacanciesXlsxDecimalCell('E'.$r, isset($vacancy['hours']) ? $vacancy['hours'] : 0, 5)
+            .($myschoolEstimate === null ? vacanciesXlsxStringCell('F'.$r, '—', 8) : vacanciesXlsxDecimalCell('F'.$r, $myschoolEstimate, 5))
+            .vacanciesXlsxStringCell('G'.$r, $note51, 8);
+        $rows[] = '<row r="'.$r.'">'.$cells.'</row>';
+        $r++;
+    }
+    $lastRow = max(2, $r-1);
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+        .'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+        .'<dimension ref="A1:G'.$lastRow.'"/>'
+        .'<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'
+        .'<sheetFormatPr defaultRowHeight="18"/>'
+        .'<cols><col min="1" max="1" width="38" customWidth="1"/><col min="2" max="2" width="17" customWidth="1"/><col min="3" max="3" width="16" customWidth="1"/><col min="4" max="4" width="28" customWidth="1"/><col min="5" max="6" width="24" customWidth="1"/><col min="7" max="7" width="62" customWidth="1"/></cols>'
+        .'<sheetData>'.implode('', $rows).'</sheetData><autoFilter ref="A1:G'.$lastRow.'"/>'
+        .'</worksheet>';
+}
+
+/** Build the two-sheet preview workbook shown before running the coverage matcher. */
+function vacanciesXlsxBuildCoveragePreview($round, $teachersData, $vacancyPreview, $stat51 = array())
+{
+    $created = gmdate('Y-m-d\\TH:i:s\\Z');
+    $title = is_array($round) && !empty($round['title']) ? (string)$round['title'] : 'Προεπισκόπηση κάλυψης κενών ΔΔΕ';
+    $files = array(
+        '[Content_Types].xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>',
+        '_rels/.rels' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>',
+        'docProps/core.xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>'.vacanciesXlsxEscape($title).'</dc:title><dc:creator>Προτάσεις κάλυψης κενών ΔΔΕ</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">'.$created.'</dcterms:created></cp:coreProperties>',
+        'docProps/app.xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>Προτάσεις κάλυψης κενών ΔΔΕ</Application></Properties>',
+        'xl/workbook.xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Εκπαιδευτικοί 4.8" sheetId="1" r:id="rId1"/><sheet name="Κενά ΔΔΕ" sheetId="2" r:id="rId2"/></sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>',
+        'xl/_rels/workbook.xml.rels' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>',
+        'xl/styles.xml' => vacanciesXlsxStylesXml(),
+        'xl/worksheets/sheet1.xml' => vacanciesXlsxCoverageTeachersSheetXml($teachersData),
+        'xl/worksheets/sheet2.xml' => vacanciesXlsxCoverageVacanciesSheetXml($vacancyPreview, $stat51),
+    );
+
+    if (class_exists('ZipArchive')) {
+        $tmp = tempnam(sys_get_temp_dir(), 'covxlsx_');
+        if (!$tmp) return array(false, 'Δεν δημιουργήθηκε προσωρινό αρχείο εξαγωγής.');
+        $zip = new ZipArchive();
+        if ($zip->open($tmp, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            @unlink($tmp);
+            return array(false, 'Δεν δημιουργήθηκε το αρχείο Excel.');
+        }
+        foreach ($files as $name => $contents) $zip->addFromString($name, $contents);
+        $zip->close();
+        $binary = @file_get_contents($tmp);
+        @unlink($tmp);
+        if ($binary === false) return array(false, 'Δεν διαβάστηκε το προσωρινό αρχείο Excel.');
+        return array(true, $binary);
+    }
+    return array(true, vacanciesXlsxZipBinary($files));
+}

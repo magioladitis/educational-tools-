@@ -20,8 +20,8 @@ assert "'not_applicable' => 'Δεν απαιτεί αυτοτελή νομικό
 assert "'not_applicable' => 0" in legal
 assert "χωρίς αυτοτελή νομική λογική" in page
 assert "legal-audit-status--not_applicable" in page
-assert "EDU_TOOLS_VERSION', '3.22.92'" in config
-assert "CACHE_PREFIX + '3.22.92'" in sw
+m=re.search(r"EDU_TOOLS_VERSION', '([^']+)'", config); assert m
+assert ("CACHE_PREFIX + '%s'" % m.group(1)) in sw
 # specific current rules preserved by the verified tools
 par=(ROOT/'posa-paravola.php').read_text(encoding='utf-8')
 parjs=(ROOT/'includes/paravola-ui.js').read_text(encoding='utf-8')

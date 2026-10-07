@@ -430,5 +430,6 @@ function vacanciesLogout()
     vacanciesSessionStart();
     unset($_SESSION['vacancies_actor']);
     unset($_SESSION['vacancies_csrf']);
+    unset($_SESSION['vacancies_coverage_preview']);
     session_regenerate_id(true);
 }

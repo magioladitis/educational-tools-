@@ -49,7 +49,7 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
 <main id="main-content" class="legal-audit-page">
   <section class="legal-audit-hero">
     <h1>Νομική επικαιρότητα εργαλείων</h1>
-    <p>Κεντρικό μητρώο του τελευταίου <strong>καταγεγραμμένου</strong> ελέγχου πηγών. Η ημερομηνία δεν προκύπτει αυτόματα από την έκδοση του κώδικα: καταχωρίζεται μόνο όταν έχει γίνει πραγματικός νομικός/πηγικός έλεγχος.</p>
+    <p>Κεντρικό μητρώο του τελευταίου <strong>καταγεγραμμένου</strong> ελέγχου πηγών. Η ημερομηνία δεν προκύπτει αυτόματα από την έκδοση του κώδικα: καταχωρίζεται μόνο όταν έχει γίνει πραγματικός νομικός/πηγικός έλεγχος. Για εργαλεία με ετήσιο ή σχολικό κύκλο υπάρχει επιπλέον <strong>εσωτερικό όριο προληπτικού επανελέγχου</strong>, ώστε να μετατρέπονται αυτόματα σε «Χρειάζεται επανέλεγχο» όταν πλησιάζει ο επόμενος κύκλος.</p>
   </section>
 
   <section class="legal-audit-summary" aria-label="Σύνοψη ελέγχων">
@@ -60,7 +60,7 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
     <div class="legal-audit-stat"><strong><?php echo (int) $counts['not_applicable']; ?></strong><span>χωρίς αυτοτελή νομική λογική</span></div>
   </section>
 
-  <p class="legal-audit-note"><strong>Σημαντικό:</strong> «Χωρίς καταγραφή» δεν σημαίνει ότι ένα εργαλείο είναι λανθασμένο ή χωρίς πηγές. Σημαίνει ότι δεν έχει ακόμη μεταφερθεί στο νέο μητρώο freshness. Αντίστοιχα, «στοχευμένος έλεγχος» δηλώνει ακριβώς το πεδίο που επανελέγχθηκε και δεν παρουσιάζεται ως πλήρης επαλήθευση όλου του εργαλείου. Η ένδειξη «Δεν απαιτεί αυτοτελή νομικό έλεγχο» χρησιμοποιείται μόνο για τεχνικές/πλοηγικές σελίδες των οποίων οι κανόνες βρίσκονται σε άλλα ήδη ελεγμένα εργαλεία ή δεν περιέχουν κανονιστική λογική.</p>
+  <p class="legal-audit-note"><strong>Σημαντικό:</strong> «Χωρίς καταγραφή» δεν σημαίνει ότι ένα εργαλείο είναι λανθασμένο ή χωρίς πηγές. Σημαίνει ότι δεν έχει ακόμη μεταφερθεί στο νέο μητρώο freshness. Αντίστοιχα, «στοχευμένος έλεγχος» δηλώνει ακριβώς το πεδίο που επανελέγχθηκε και δεν παρουσιάζεται ως πλήρης επαλήθευση όλου του εργαλείου. Η ένδειξη «Δεν απαιτεί αυτοτελή νομικό έλεγχο» χρησιμοποιείται μόνο για τεχνικές/πλοηγικές σελίδες των οποίων οι κανόνες βρίσκονται σε άλλα ήδη ελεγμένα εργαλεία ή δεν περιέχουν κανονιστική λογική. Τα αυτόματα όρια επανελέγχου είναι <strong>εσωτερικοί δείκτες συντήρησης</strong> και όχι επίσημες προθεσμίες έκδοσης νέων αποφάσεων.</p>
 
   <section class="legal-audit-list" aria-label="Κατάσταση ανά εργαλείο">
   <?php foreach ($rows as $row): ?>
@@ -78,9 +78,11 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
         <?php if ($date !== ''): ?><span><strong>Τελευταίος έλεγχος:</strong> <?php echo $h($date); ?></span><?php endif; ?>
         <?php if (!empty($a['school_year'])): ?><span><strong>Σχολικό έτος:</strong> <?php echo $h($a['school_year']); ?></span><?php endif; ?>
         <?php if (!empty($a['version'])): ?><span><strong>Έκδοση:</strong> v<?php echo $h($a['version']); ?></span><?php endif; ?>
+        <?php if (!empty($a['review_after'])): ?><span><strong>Προληπτικός επανέλεγχος από:</strong> <?php echo $h(legalAuditFormatDate($a['review_after'])); ?></span><?php endif; ?>
       </div>
       <?php if (!empty($a['scope'])): ?><p class="legal-audit-scope"><strong>Πεδίο ελέγχου:</strong> <?php echo $h($a['scope']); ?></p><?php endif; ?>
       <?php if (!empty($a['review_trigger'])): ?><p class="legal-audit-trigger"><strong>Νέος έλεγχος όταν:</strong> <?php echo $h($a['review_trigger']); ?></p><?php endif; ?>
+      <?php if (!empty($a['auto_review_due']) && !empty($a['review_due_reason'])): ?><p class="legal-audit-trigger"><strong>Αυτόματη ειδοποίηση:</strong> <?php echo $h($a['review_due_reason']); ?></p><?php endif; ?>
     </article>
   <?php endforeach; ?>
   </section>

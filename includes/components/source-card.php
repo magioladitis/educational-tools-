@@ -66,6 +66,7 @@ if (!function_exists('sourceCardDisclosureStart')) {
             echo '<span class="edu-source-audit__label">' . sourceCardEscape($label) . '</span>';
             if ($date !== '') echo '<strong class="edu-source-audit__date">' . sourceCardEscape($date) . '</strong>';
             if (!empty($audit['school_year'])) echo '<span class="edu-source-audit__scope">σχ. έτος ' . sourceCardEscape($audit['school_year']) . '</span>';
+            if (!empty($audit['auto_review_due'])) echo '<span class="edu-source-audit__scope">αυτόματη υπενθύμιση</span>';
             echo '<a class="edu-source-audit__details" href="nomiki-epikairotita.php#' . sourceCardEscape(str_replace('.', '-', $audit['page'])) . '">λεπτομέρειες</a>';
             echo '</div>';
         }

@@ -206,8 +206,13 @@ function vacanciesDashboardAllocation($roundId)
     if ($roundId <= 0) return $result;
 
     $latestSql = "SELECT school_id, MAX(revision_no) rev FROM vacancy_submissions WHERE round_id=".$roundId." AND education_scope='general' AND status='submitted' GROUP BY school_id";
+    // Older vacancy databases may predate the optional `address` column.
+    // Keep allocation/coverage usable without requiring a schema migration.
+    $addressSelect = "'' AS school_address";
+    $addressCheck = vacanciesQueryOne("SELECT COUNT(*) AS c FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='vacancy_schools' AND COLUMN_NAME='address'");
+    if ($addressCheck && !empty($addressCheck['c'])) $addressSelect = 'sc.address AS school_address';
     $rows = vacanciesQueryAll(
-        "SELECT sc.id AS school_id, sc.name AS school_name, sc.ministry_code, " .
+        "SELECT sc.id AS school_id, sc.name AS school_name, sc.ministry_code, " . $addressSelect . ", " .
         "sp.id AS specialty_id, sp.code, sp.label, sp.sort_order, " .
         "e.balance_type, e.hours, e.change_reason, e.change_note " .
         "FROM vacancy_submissions s " .
@@ -243,6 +248,7 @@ function vacanciesDashboardAllocation($roundId)
                 'id' => $schoolId,
                 'name' => $row['school_name'],
                 'ministry_code' => $row['ministry_code'],
+                'address' => isset($row['school_address']) ? $row['school_address'] : '',
                 'vacancies' => 0,
                 'surpluses' => 0,
                 'entries' => array(),
@@ -253,6 +259,7 @@ function vacanciesDashboardAllocation($roundId)
             'school_id' => $schoolId,
             'school_name' => $row['school_name'],
             'ministry_code' => $row['ministry_code'],
+            'school_address' => isset($row['school_address']) ? $row['school_address'] : '',
             'specialty_id' => $specialtyId,
             'code' => $row['code'],
             'label' => $row['label'],
