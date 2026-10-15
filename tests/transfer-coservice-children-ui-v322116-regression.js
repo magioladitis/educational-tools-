@@ -1,0 +1,36 @@
+'use strict';
+const fs=require('node:fs'), path=require('node:path'), vm=require('node:vm'),assert=require('node:assert/strict');
+const root=path.join(__dirname,'..');
+const p=fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
+const u=fs.readFileSync(path.join(root,'includes/transfer-ui.js'),'utf8');
+const d=fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf8');
+let n=0;function ok(x,s){assert.ok(x,s);n++;}
+ok(p.includes('id="transferGeneralOriginField"'),'independent origin selector');
+ok(p.includes('id="transferGeneralFromEaePanel" style="display:none;'),'specialized panel hidden server-side');
+ok(u.includes("origin!=='general'?'':'none'"),'general-origin bypass');
+ok(u.includes("mode==='region' && origin!=='general'"),'eae-only evaluation');
+ok(!u.includes('Όσοι προέρχονται από την ΕΑΕ ελέγχουν παρακάτω'),'generic banner no EAE alarming text');
+ok(p.includes('id="transferCoServiceCaseField" style="display:none;'),'spouse chooser hidden until needed');
+ok(d.includes('01/01/2009')&&d.includes('01/01/2002'),'correct year-of-transfer student and minor cutoffs');
+ok(d.includes('βεβαίωση σπουδών')&&d.includes('τελευταίο εξάμηνο/έτος'),'student certificate requirements');
+ok(d.includes('ΣΑΕΚ/Κολλέγια')&&d.includes('επίσημη ελληνική μετάφραση'),'exclusions/foreign docs');
+ok(d.includes('ΑΝΑΠΗΡΙΑ ΤΕΚΝΟΥ')&&d.includes('όχι αυτομάτως'),'disabled child criteria separated');
+ok(d.includes('ΔΕΝ αντικαθιστούν')&&d.includes('ασφαλιστικού φορέα'),'myAADE not alone');
+ok(d.includes('μηχανογραφικά δελτία ασφάλισης')&&d.includes('ΑΠΔ'),'private worker alternatives');
+ok(u.includes("byId('coService').checked && !syncCoService()"),'blocked statuses excluded from scoring');
+let elements={};function put(id,value,checked){elements[id]={value:value??'',checked:!!checked};}
+put('mode','local');put('serviceYears','0');put('serviceMonths','0');put('serviceDays','0');put('eligibleChildren','2');put('msdMode','direct');put('msdDirectPoints','0');put('familyStatusEligible','',false);put('coService','',true);put('locality','',false);put('transferCoServiceCase','teacher_disposal');
+const document={getElementById(id){if(!elements[id])throw new Error('Missing '+id);return elements[id];},querySelectorAll(){return []}};
+const window={};vm.runInNewContext(d,{window,document});const doc=window.EducationTransferDocuments;
+ok(doc.coServiceInfo('substitute_teacher','region').blocked,'substitute blocked');
+ok(doc.coServiceInfo('public_contract','region').blocked,'public contract without organic blocked');
+ok(doc.coServiceInfo('teacher_disposal','local').blocked,'disposal/local blocked');
+ok(!doc.coServiceInfo('teacher_disposal','region').blocked,'disposal/region allowed');
+ok(!doc.coServiceInfo('lawyer','region').blocked&&doc.coServiceInfo('lawyer').summary.includes('δεν απαιτείται διετία'),'lawyer no two-year minimum');
+ok(doc.coServiceInfo('remote_employee').detail.includes('ΕΡΓΑΝΗ'),'telework special case');
+let rows=doc.build();let child=rows.find(r=>r.id==='children-specific');let spouse=rows.find(r=>r.id==='coservice');
+ok(child&&child.detail.includes('επιμέλειας'),'children special guide');
+ok(spouse&&spouse.tag.includes('Δεν θεμελιώνεται'),'special spouse clearly denied');
+elements.mode.value='region';rows=doc.build();spouse=rows.find(r=>r.id==='coservice');ok(spouse&&!spouse.tag.includes('Δεν θεμελιώνεται'),'region eligible exception');
+elements.transferCoServiceCase.value='private_employee';rows=doc.build();spouse=rows.find(r=>r.id==='coservice');ok(spouse.detail.includes('δύο τελευταία χρόνια'),'private employee two-year rule');
+console.log('PASS '+n+' co-service / children / EAE UX checks');

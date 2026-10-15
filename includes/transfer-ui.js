@@ -146,7 +146,7 @@
       serviceDays: Number(byId('serviceDays').value) || 0,
       familyStatusEligible: byId('familyStatusEligible').checked,
       eligibleChildren: Number(byId('eligibleChildren').value) || 0,
-      coService: byId('coService').checked,
+      coService: byId('coService').checked && !syncCoService(),
       locality: byId('locality').checked,
       firstPreference: byId('firstPreference').checked,
       msdMode: byId('msdMode').value,
@@ -179,7 +179,8 @@
     var duration = result.serviceDuration;
     var durationText = duration.years + ' έτη, ' + duration.months + ' μήνες';
     if (duration.roundedDays) durationText += ' (οι ' + duration.roundedDays + ' ημέρες λογίστηκαν ως μήνας)';
-    byId('statusResult').textContent = result.msdInputValid ? ('Συνολική υπηρεσία: ' + durationText + '. Οι ειδικές κατηγορίες/προτεραιότητες δεν περιλαμβάνονται στο άθροισμα.') : 'Συμπληρώστε έγκυρες Μ.Σ.Δ. για να υπολογιστεί το συνολικό αποτέλεσμα.';
+    var excludedCoService=byId('coService').checked && !input.coService;
+    byId('statusResult').textContent = result.msdInputValid ? ('Συνολική υπηρεσία: ' + durationText + '. Οι ειδικές κατηγορίες/προτεραιότητες δεν περιλαμβάνονται στο άθροισμα.'+(excludedCoService?' Συνυπηρέτηση: 0 μόρια λόγω του επιλεγμένου μη επιλέξιμου εργασιακού καθεστώτος.':'')) : 'Συμπληρώστε έγκυρες Μ.Σ.Δ. για να υπολογιστεί το συνολικό αποτέλεσμα.';
   }
 
   function currentGeneralReturnInput(){
@@ -191,12 +192,13 @@
   }
   function syncGeneralReturn(){
     var mode=byId('mode').value;
-    byId('transferGeneralFromEaePanel').style.display=mode==='region'?'':'none';
     var origin=byId('transferGeneralOrigin').value;
+    byId('transferGeneralOriginField').style.display=mode==='region'?'':'none';
+    byId('transferGeneralFromEaePanel').style.display=mode==='region' && origin!=='general'?'':'none';
     byId('transferGeneralEaeAppointed').style.display=mode==='region'&&origin==='appointed_eae'?'':'none';
     byId('transferGeneralEaeTransferred').style.display=mode==='region'&&origin==='transferred_eae'?'':'none';
     var eligibility=global.EducationTransferEligibility;
-    if(eligibility&&eligibility.returnToGeneral){
+    if(eligibility&&eligibility.returnToGeneral && mode==='region' && origin!=='general'){
       var result=eligibility.returnToGeneral(currentGeneralReturnInput());
       var advice=byId('transferGeneralEaeAdvice');
       advice.textContent=result.status+(result.advice.length?' '+result.advice.join(' '):'');
@@ -206,6 +208,20 @@
       advice.classList.toggle('transfer-eligibility-met',result.verdict==='preliminary_met');
     }
   }
+  function syncCoService(){
+    var active=byId('coService').checked;
+    var field=byId('transferCoServiceCaseField');
+    if(field)field.style.display=active?'':'none';
+    var choice=byId('transferCoServiceCase').value;
+    var docEngine=global.EducationTransferDocuments;
+    var mode=byId('mode').value;
+    if(mode==='smeae' && byId('transferEaeArea').value==='same')mode='local';
+    var details=docEngine&&docEngine.coServiceInfo?docEngine.coServiceInfo(choice,mode):null;
+    var advice=byId('transferCoServiceAdvice');
+    if(advice)advice.textContent=active && details ? details.summary : '';
+    return !!(active && details && details.blocked);
+  }
+
   function syncMode() {
     var mode = byId('mode').value;
     var isLocal = mode === 'local' || (mode === 'smeae' && byId('transferEaeArea').value==='same');
@@ -232,6 +248,7 @@
       if(specialtyOption) specialtyOption.textContent=mode==='music'?'Μουσική παιδεία (ΠΕ79.01/ΤΕ16)':'Καλλιτεχνική εξειδίκευση';
     }
     syncGeneralReturn();
+    syncCoService();
     syncEligibilityDetails();
     if(global.EducationTransferDocuments) global.EducationTransferDocuments.render();
     if (mode === 'smeae') {
@@ -245,7 +262,7 @@
     } else if (isLocal) {
       guidance.textContent = 'Οριστική τοποθέτηση / βελτίωση: εξετάζονται οι δήμοι των συγκεκριμένων σχολείων και δεν ισχύουν μόρια πρώτης προτίμησης.';
     } else {
-      guidance.innerHTML = '<strong>Μετάθεση από περιοχή σε περιοχή — Γενική Εκπαίδευση:</strong> περιλαμβάνει τη Γενική/Επαγγελματική Εκπαίδευση, όχι οργανικές θέσεις ΕΑΕ. Όσοι προέρχονται από την ΕΑΕ ελέγχουν παρακάτω τις διαφορετικές προϋποθέσεις επιστροφής. Συνυπηρέτηση και εντοπιότητα αφορούν την περιοχή μετάθεσης· μόρια πρώτης προτίμησης όπου προβλέπονται.';
+      guidance.innerHTML = '<strong>Μετάθεση από περιοχή σε περιοχή — Γενική Εκπαίδευση:</strong> περιλαμβάνει τη Γενική/Επαγγελματική Εκπαίδευση, όχι οργανικές θέσεις ΕΑΕ. Συνυπηρέτηση και εντοπιότητα αφορούν την περιοχή μετάθεσης· μόρια πρώτης προτίμησης όπου προβλέπονται.';
     }
     calculate();
   }
@@ -366,6 +383,7 @@
     byId('transferInterculturalPreviousYear').value='none';
     byId('transferInterculturalNewDocuments').checked=false;
     document.querySelectorAll('[data-intercultural-qual]').forEach(function(el){el.checked=false;});
+    byId('transferCoServiceCase').value = 'unspecified';
     byId('msdMode').value = 'periods';
     byId('msdDirectPoints').value = '';
     syncMsdMode();

@@ -20,6 +20,28 @@ function dossierRow(kind,year,newElements){
    state&&state.skipResubmission?'Μη επανυποβολή φακέλου (βάση 2026–2027)':'Έλεγχος υποβολής');
 }
 var checked={};
+var FAMILY_SOURCE='Πηγή: εγκύκλιος 138014/Ε2/15-10-2026, Μέρος Δεύτερο, κεφ. Β΄, ενότητες Β. Συνυπηρέτηση (σελ. 18–20) και Γ. Οικογενειακοί λόγοι (σελ. 20–21).';
+/* The categories below are the 2026-27 secondary-education circular, not a blanket list of rights. */
+var COSERVICE_CASES={
+ unspecified:{summary:'Διαλέξτε καθεστώς εργασίας: τα δικαιολογητικά, η απαιτούμενη διετία και οι εξαιρέσεις διαφέρουν.',detail:'Για έγκυρο φάκελο καθορίστε αν πρόκειται για Δημόσιο με οργανική, ιδιωτικό τομέα, ελεύθερο επάγγελμα, δικηγόρο ή άλλη ειδική περίπτωση.'},
+ public_organic:{summary:'Δημόσιος υπάλληλος/λειτουργός με οργανική: δεν απαιτείται διετία.',detail:'Βεβαίωση της υπηρεσίας που πιστοποιεί την οργανική θέση και τον ακριβή τόπο υπηρεσίας — όχι τον τόπο προσωρινής απόσπασης. Δεν απαιτείται συμπλήρωση διετίας.'},
+ teacher_organic:{summary:'Μόνιμος εκπαιδευτικός: μετρά η οργανική θέση, όχι η απόσπαση/θητεία.',detail:'Βεβαίωση υπηρεσίας από την αρμόδια ΔΠΕ/ΔΔΕ με την οργανική θέση/περιοχή μετάθεσης. Για στελέχη εκπαίδευσης και θητεία σε Πρότυπα/Πειραματικά, μετρά η οργανική και όχι ο τόπος άσκησης καθηκόντων. Δεν απαιτείται διετία.'},
+ teacher_disposal:{summary:'Εκπαιδευτικός στη διάθεση ΠΥΣΠΕ/ΠΥΣΔΕ: μόνο για μεταθέσεις από περιοχή σε περιοχή.',detail:'Βεβαίωση ΔΠΕ/ΔΔΕ ότι ο/η σύζυγος βρίσκεται στη διάθεση συγκεκριμένου ΠΥΣΠΕ/ΠΥΣΔΕ και σε ποια περιοχή μετάθεσης ανήκει. Δεν χορηγούνται οι μονάδες στη βελτίωση/οριστική τοποθέτηση.',localBlocked:true},
+ private_employee:{summary:'Ιδιωτικός υπάλληλος: απαιτείται συμπληρωμένη διετία έως τη λήξη αιτήσεων.',detail:'Βεβαίωση ασφαλιστικού φορέα για τόπο εργασίας, ασφάλιση και τουλάχιστον δύο τελευταία χρόνια εργασίας έως 02/11/2026. Αν ο φορέας δεν εκδίδει βεβαίωση: βεβαίωση εργοδότη/-ών ΜΑΖΙ με μηχανογραφικά δελτία ασφάλισης· αν οι εισφορές δεν οριστικοποιήθηκαν, αποδεκτές οι υποβληθείσες ΑΠΔ.'},
+ self_employed:{summary:'Ελεύθερος επαγγελματίας: διετία και βεβαίωση ασφαλιστικού φορέα.',detail:'Βεβαίωση ασφαλιστικού φορέα που τεκμηριώνει ασφάλιση, τόπο επαγγελματικής δραστηριότητας και τη διετία έως 02/11/2026. Στοιχεία myAADE μπορούν να τεκμηριώνουν την ενεργή έδρα αλλά ΔΕΝ αντικαθιστούν τη βεβαίωση ασφαλιστικού φορέα. Ειδικές προβλέψεις για μη χορήγηση βεβαιώσεων λόγω οφειλών.'},
+ remote_employee:{summary:'Τηλεργασία: μόνο αποκλειστική, με έδρα τη ζητούμενη περιοχή και δήλωση στην ΕΡΓΑΝΗ.',detail:'Σύμβαση εργασίας ή τροποποίηση που τεκμηριώνει αποκλειστική τηλεργασία (όλο το ωράριο/όλες τις ημέρες) με έδρα τη ζητούμενη περιοχή και αντίστοιχη δήλωση στο Π.Σ. ΕΡΓΑΝΗ. Για ιδιωτικό υπάλληλο εξακολουθεί να ελέγχεται η διετία και η ασφαλιστική τεκμηρίωση.'},
+ lawyer:{summary:'Δικηγόρος: δεν απαιτείται διετία.',detail:'Τεκμηρίωση της ιδιότητας του δικηγόρου και του τόπου νόμιμης επαγγελματικής εγκατάστασης (π.χ. στοιχεία Δικηγορικού Συλλόγου). Εφόσον διατηρούνται νόμιμα γραφεία σε διαφορετικές περιοχές μετάθεσης, μοριοδοτείται μόνο μία περιοχή που επιλέγει ο ενδιαφερόμενος. Ως άμισθος δημόσιος λειτουργός δεν απαιτείται διετία.'},
+ private_doctor:{summary:'Ιατρός εκτός Δημοσίου: απαιτείται τεκμηρίωση ιδιωτικού τομέα/ελεύθερου επαγγέλματος.',detail:'Βεβαίωση ασφαλιστικού φορέα, τόπος άσκησης επαγγέλματος και απαιτούμενη διετία, κατά την παρ. 6β άρθρου 16 π.δ. 50/1996.'},
+ substitute_teacher:{summary:'Δεν αναγνωρίζονται μονάδες συνυπηρέτησης για σύζυγο αναπληρωτή εκπαιδευτικό.',detail:'Η εγκύκλιος 2026–2027 αποκλείει ρητά τη μοριοδότηση συνυπηρέτησης για σύζυγο αναπληρωτή (διευκρίνιση 6). Μην υπολογίζετε τα +4 μόρια μόνο από τη σύμβαση αναπληρωτή.',blocked:true},
+ public_contract:{summary:'Σύμβαση Δημοσίου χωρίς οργανική θέση: δεν αναγνωρίζονται μονάδες συνυπηρέτησης.',detail:'Η εγκύκλιος αποκλείει ρητά εργαζομένους του δημόσιου τομέα χωρίς οργανική θέση, με σύμβαση οποιουδήποτε είδους (διευκρίνιση 10). Δεν αρκεί βεβαίωση συμβασιούχου.',blocked:true},
+ other:{summary:'Άλλη περίπτωση: απαιτείται εξατομικευμένη επιβεβαίωση από τη ΔΔΕ.',detail:'Μην θεωρήσετε ότι η βεβαίωση εργασίας μόνη της τεκμηριώνει τη συνυπηρέτηση. Ισχύουν ειδικές ρυθμίσεις (π.χ. επιδοτούμενη ανεργία/κοινωφελής εργασία με ενεργή σύμβαση κατά την αίτηση), με την εγκύκλιο και την αρμόδια ΔΔΕ.'}
+};
+function coServiceInfo(value,mode){
+ var info=COSERVICE_CASES[value]||COSERVICE_CASES.unspecified;
+ if(info.localBlocked && mode==='local')return {summary:'Σύζυγος στη διάθεση ΠΥΣΠΕ/ΠΥΣΔΕ: δεν μοριοδοτείται για βελτίωση ή οριστική τοποθέτηση.',detail:info.detail,blocked:true};
+ return {summary:info.summary,detail:info.detail,blocked:!!info.blocked};
+}
+
 function entry(id,title,detail,tag){return {id:id,title:title,detail:detail,tag:tag};}
 function eaeDocuments(){
  var inp={origin:$('transferEaeOrigin').value,area:$('transferEaeArea').value,destination:$('transferEaeDestination').value,
@@ -121,11 +143,23 @@ function build(){
    a.push(entry('family','Πιστοποιητικό οικογενειακής κατάστασης — αυτεπάγγελτη αναζήτηση',
     'Το πιστοποιητικό από ελληνικό δημοτολόγιο αναζητείται ΥΠΟΧΡΕΩΤΙΚΑ αυτεπαγγέλτως από την αρμόδια δημόσια υπηρεσία (ΔΔΕ). Δεν χρειάζεται να το εκδώσετε ή να το προσκομίσετε για την αίτηση μετάθεσης. Ελέγξτε την ορθότητα των οικογενειακών/δημοτολογικών στοιχείων σας και ενημερώστε τη ΔΔΕ για τυχόν ασυμφωνίες. Σε τεχνική αδυναμία άντλησης, η υπηρεσία οφείλει να το αναζητήσει με άλλον πρόσφορο τρόπο. Νομική βάση: άρθρα 32 και 50 ν. 5099/2024, ΚΥΑ 19173/2025 (Β΄ 1783), εγκύκλιος ΥΠΕΣ ΔΙΔΔΔΗ/Φ.16/οικ.2923/18-02-2026.',
     'Αυτεπάγγελτα από ΔΔΕ — δεν προσκομίζεται'));
-   if(+$('eligibleChildren').value>0) a.push(entry('children-specific','Τέκνα — τυχόν πρόσθετα αποδεικτικά',
-    'Ελέγξτε αν, λόγω ηλικίας ή ιδιαίτερης ιδιότητας τέκνου, απαιτούνται ξεχωριστά αποδεικτικά (π.χ. βεβαίωση σπουδών, αναπηρίας ή επιμέλειας, εφόσον συντρέχει περίπτωση). Αυτά δεν ταυτίζονται με το πιστοποιητικό οικογενειακής κατάστασης που αναζητείται αυτεπαγγέλτως. Για έγγραφα αλλοδαπών αρχών ισχύουν οι ειδικές οδηγίες της εγκυκλίου.',
-    'Ειδικά δικαιολογητικά — μόνο εφόσον απαιτούνται'));
+   if(+$('eligibleChildren').value>0) a.push(entry('children-specific','Τέκνα — πότε απαιτούνται επιπλέον αποδεικτικά',
+    'ΑΝΗΛΙΚΑ (γέννηση από 01/01/2009): για την ηλικία/συγγένεια αρκούν τα στοιχεία οικογενειακής κατάστασης που αναζητεί αυτεπάγγελτα η ΔΔΕ· δεν απαιτείται βεβαίωση σπουδών.\n'+
+    'ΕΝΗΛΙΚΑ ΠΟΥ ΣΠΟΥΔΑΖΟΥΝ (γέννηση από 01/01/2002, μέχρι 25 ετών): απαιτείται πιστοποιητικό/βεβαίωση σπουδών της ανώτερης/ανώτατης δημόσιας σχολής εσωτερικού ή ισότιμης εξωτερικού, με στοιχεία φοίτησης ώστε να ελεγχθεί ότι δεν βρίσκεται στο τελευταίο εξάμηνο/έτος και δεν πρόκειται για δεύτερο πτυχίο ή μεταπτυχιακό. Αναστολή/διακοπή φοίτησης και ΣΑΕΚ/Κολλέγια δεν μοριοδοτούνται. Ξενόγλωσσοι τίτλοι: επίσημη ελληνική μετάφραση.\n'+
+    'ΑΓΑΜΟΣ/ΔΙΑΖΕΥΓΜΕΝΟΣ ΓΟΝΕΑΣ: εφόσον συντρέχει περίπτωση μορίων οικογενειακής κατάστασης λόγω επιμέλειας, απαιτούνται τα ειδικά αποδεικτικά/δηλώσεις που εξειδικεύει η εγκύκλιος. Για διαζευγμένους: δημόσιο έγγραφο ανάθεσης επιμέλειας· για άγαμους γονείς διαφοροποιούνται τα αποδεικτικά σύμφωνα με τη διευκρίνιση 1.\n'+
+    'ΑΝΑΠΗΡΙΑ ΤΕΚΝΟΥ: οι ιατρικές γνωματεύσεις αφορούν ενδεχόμενη ξεχωριστή ειδική κατηγορία/προτεραιότητα, όχι αυτομάτως τις συνήθεις μονάδες τέκνων. ΠΟΛΥΤΕΚΝΟΙ: ελέγξτε ειδικά ηλικιακά όρια του άρθρου 6 ν. 3454/2006.\n'+
+    'ΝΕΟΓΕΝΝΗΤΟ: κατ’ εξαίρεση η ληξιαρχική πράξη γέννησης μπορεί να υποβληθεί έως το τέλος Δεκεμβρίου 2026· για γέννηση στις 31/12 προβλέπεται ειδική άμεση δήλωση στη ΔΔΕ και μεταγενέστερη προσκόμιση ληξιαρχικής πράξης.\n'+
+    'Τα δικαιολογητικά οικογενειακών λόγων εκδίδονται κατά κανόνα στο τελευταίο τρίμηνο. Το πιστοποιητικό οικογενειακής κατάστασης ελληνικού δημοτολογίου αναζητείται αυτεπάγγελτα. Για έγγραφα αλλοδαπών αρχών ισχύουν οι ειδικές οδηγίες της εγκυκλίου. '+FAMILY_SOURCE,
+    'Πρόσθετα μόνο εφόσον απαιτούνται'));
   }
-  if($('coService').checked) a.push(entry('coservice','Συνυπηρέτηση','Ελέγξτε βεβαίωση εργασίας ή υπηρεσίας συζύγου/συμβίου, τόπο απασχόλησης και τυχόν διάρκεια ή πρόσθετα έγγραφα ανά καθεστώς.','Πιθανό δικαιολογητικό'));
+  if($('coService').checked){
+   var caseSelect=$('transferCoServiceCase');
+   var areaMode=mode==='smeae' && $('transferEaeArea').value==='same'?'local':mode;
+   var info=coServiceInfo(caseSelect?caseSelect.value:'unspecified',areaMode);
+   a.push(entry('coservice','Συνυπηρέτηση — δικαιολογητικά ανά καθεστώς',
+    info.summary+'\n'+info.detail+'\nΤα απαιτούμενα αποδεικτικά συνυπηρέτησης πρέπει να έχουν εκδοθεί στο τελευταίο τρίμηνο (με εξαίρεση βεβαιώσεις εργοδοτών για προγενέστερη εργασία που έπαυσε: τελευταία διετία). Η συνυπηρέτηση αφορά μία περιοχή μετάθεσης — όχι ολόκληρο τον νομό — ή τον δήμο σχολείου για βελτίωση/οριστική τοποθέτηση. '+FAMILY_SOURCE,
+    info.blocked?'Δεν θεμελιώνεται συνυπηρέτηση (+0)':'Δικαιολογητικά βάσει επιλογής'));
+  }
   if($('locality').checked) a.push(entry('locality','Εντοπιότητα','Ελέγξτε βεβαίωση δημοτικότητας, χρόνο κτήσης της και αντιστοίχιση με τη ζητούμενη περιοχή ή τον δήμο.','Πιθανό δικαιολογητικό'));
   if($('msdMode').value==='direct') a.push(entry('msd-direct','Μ.Σ.Δ. — απευθείας μεταφορά μορίων από το Μητρώο','Αντιγράψτε τον ακριβή συνολικό αριθμό Μ.Σ.Δ. από το https://teachers.minedu.gov.gr/. Δεν αθροίζονται ξανά οι αναλυτικές υπηρετήσεις.','Διασταύρωση με Μητρώο'));
   else if(document.querySelectorAll('.transfer-service-row').length) a.push(entry('msd','Μονάδες Συνθηκών Διαβίωσης','Ελέγξτε υπηρετήσεις ανά σχολείο/κατηγορία, αποσπάσεις, παράλληλη υπηρεσία και προσαυξήσεις με το Μητρώο στο https://teachers.minedu.gov.gr/.','Έλεγχος φακέλου'));
@@ -159,11 +193,11 @@ function portalLink(id){return ['submission','record','msd','msd-direct'].indexO
 function render(){
  var root=$('transferDocumentChecklist');if(!root)return;
  var rows=build();
- root.innerHTML=rows.map(function(d){return '<div style="margin-bottom:12px;padding:10px 0;border-bottom:1px solid #d9dfe6"><label style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" data-doc-id="'+escape(d.id)+'" '+(checked[d.id]?'checked':'')+' style="margin-top:5px"><span><strong>'+escape(d.title)+'</strong><small style="display:block;opacity:.8">'+escape(d.tag)+'</small><span style="display:block;margin-top:3px">'+escape(d.detail)+portalLink(d.id)+'</span></span></label>'+(d.id==='eae-basis'?eaeChoices(false):'')+'</div>';}).join('');
+ root.innerHTML=rows.map(function(d){return '<div style="margin-bottom:12px;padding:10px 0;border-bottom:1px solid #d9dfe6"><label style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" data-doc-id="'+escape(d.id)+'" '+(checked[d.id]?'checked':'')+' style="margin-top:5px"><span><strong>'+escape(d.title)+'</strong><small style="display:block;opacity:.8">'+escape(d.tag)+'</small><span style="display:block;margin-top:3px">'+escape(d.detail).replace(/\n/g,'<br>')+portalLink(d.id)+'</span></span></label>'+(d.id==='eae-basis'?eaeChoices(false):'')+'</div>';}).join('');
  root.querySelectorAll('[data-doc-id]').forEach(function(input){input.addEventListener('change',function(){checked[input.dataset.docId]=input.checked;});});
  root.querySelectorAll('input[name="eaeDocQualification"]').forEach(function(input){input.addEventListener('change',function(){if(!input.checked)return;var select=$('transferEaeQualification');select.value=input.value;select.dispatchEvent(new Event('change',{bubbles:true}));});});
 }
-function print(){var rows=build(),mode=$('mode').selectedOptions[0].textContent,html='<!doctype html><html lang="el"><meta charset="utf-8"><title>Λίστα δικαιολογητικών μετάθεσης</title><style>body{font:15px Arial;max-width:780px;margin:36px auto;line-height:1.5}li{margin-bottom:16px}small{color:#555}</style><h1>Έλεγχος δικαιολογητικών μετάθεσης</h1><p>'+escape(mode)+'</p><p><strong>Ενδεικτική λίστα — όχι βεβαίωση υποχρεωτικών εγγράφων.</strong> Επαληθεύστε τα πάντα με την εγκύκλιο της περιόδου και τη ΔΔΕ.</p><ul>'+rows.map(function(d){return '<li>'+(checked[d.id]?'☑':'☐')+' <strong>'+escape(d.title)+'</strong><br>'+escape(d.detail)+' <small>('+escape(d.tag)+')</small>'+(d.id==='eae-basis'?eaeChoices(true):'')+'</li>';}).join('')+'</ul></html>';var win=global.open('','_blank');if(win){win.document.write(html);win.document.close();win.focus();win.print();}}
+function print(){var rows=build(),mode=$('mode').selectedOptions[0].textContent,html='<!doctype html><html lang="el"><meta charset="utf-8"><title>Λίστα δικαιολογητικών μετάθεσης</title><style>body{font:15px Arial;max-width:780px;margin:36px auto;line-height:1.5}li{margin-bottom:16px}small{color:#555}</style><h1>Έλεγχος δικαιολογητικών μετάθεσης</h1><p>'+escape(mode)+'</p><p><strong>Ενδεικτική λίστα — όχι βεβαίωση υποχρεωτικών εγγράφων.</strong> Επαληθεύστε τα πάντα με την εγκύκλιο της περιόδου και τη ΔΔΕ.</p><ul>'+rows.map(function(d){return '<li>'+(checked[d.id]?'☑':'☐')+' <strong>'+escape(d.title)+'</strong><br>'+escape(d.detail).replace(/\n/g,'<br>')+' <small>('+escape(d.tag)+')</small>'+(d.id==='eae-basis'?eaeChoices(true):'')+'</li>';}).join('')+'</ul></html>';var win=global.open('','_blank');if(win){win.document.write(html);win.document.close();win.focus();win.print();}}
 function init(){var b=$('transferPrintChecklist');if(b)b.addEventListener('click',print);document.addEventListener('input',function(e){if(e.target.closest && e.target.closest('#transferDocumentChecklist'))return;if(e.target.closest && e.target.closest('.edu-page-transfer'))render();});document.addEventListener('change',function(e){if(e.target.closest && e.target.closest('#transferDocumentChecklist'))return;if(e.target.closest && e.target.closest('.edu-page-transfer'))render();});render();}
-global.EducationTransferDocuments=Object.freeze({init:init,render:render,build:build});
+global.EducationTransferDocuments=Object.freeze({init:init,render:render,build:build,coServiceInfo:coServiceInfo});
 })(window);

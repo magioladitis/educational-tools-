@@ -42,6 +42,6 @@ for eid,e in new_by.items():
 pe=next(x for x in new_by['primary-transfer-circular']['historical_sources'] if x['year']=='2024-2025')
 assert '59828' in pe['url'] and 'defterovathmias' not in pe['url'];checks+=1
 assert any(s['year']=='2019-2020' and ('2019-2020' in s['label'] or '2019–2020' in s['label']) for s in new_by['transfer-application-withdrawal']['historical_sources']);checks+=1
-assert "'3.22.115'" in (ROOT/'includes/config.php').read_text()
-assert "'3.22.115'" in (ROOT/'service-worker.js').read_text(); checks+=1
+assert "'3.22.116'" in (ROOT/'includes/config.php').read_text()
+assert "'3.22.116'" in (ROOT/'service-worker.js').read_text(); checks+=1
 print(f'{checks} source coverage checks PASS; 33 gaps resolved, 1 pending')

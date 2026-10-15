@@ -30,6 +30,6 @@ with zipfile.ZipFile(io.BytesIO(php('xronodiagramma-ypiresiakon-metavolon-export
     for value in ['23–27/11/2026','Έως 20/11/2026','Από 18/12/2026']:
         assert value in sheet,value
     assert 'ΨΚΩΦ46ΝΚΠΔ-63Κ' in sources
-assert '3.22.115' in (ROOT/'includes/config.php').read_text()
-assert '3.22.115' in (ROOT/'service-worker.js').read_text()
+assert '3.22.116' in (ROOT/'includes/config.php').read_text()
+assert '3.22.116' in (ROOT/'service-worker.js').read_text()
 print('PASS Secondary 2026-2027 timeline, deadline, historical separation, XLSX and version')

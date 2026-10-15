@@ -35,6 +35,6 @@ with zipfile.ZipFile(io.BytesIO(xlsx)) as z:
     sources=z.read('xl/worksheets/sheet2.xml').decode()
     for url in urls.values(): assert url in sources,('missing excel',url)
     for tag in ada.values(): assert tag in sources,('missing excel ADA',tag)
-assert "'3.22.115'" in (ROOT/'includes/config.php').read_text()
-assert "'3.22.115'" in (ROOT/'service-worker.js').read_text()
+assert "'3.22.116'" in (ROOT/'includes/config.php').read_text()
+assert "'3.22.116'" in (ROOT/'service-worker.js').read_text()
 print('PASS: official ΥΠΑΙΘΑ primary links + Diavgeia preserved in summary, events, XLSX; events',len(events),'covered',count)

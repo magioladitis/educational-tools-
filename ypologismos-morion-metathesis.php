@@ -36,20 +36,18 @@
           </div>
           <div class="field" id="transferModeGuidance" role="status" aria-live="polite" style="grid-column:1/-1; padding:12px; border:1px solid #b8c5d5; border-radius:8px;" >Επιλέξτε τύπο διαδικασίας για τις αντίστοιχες οδηγίες.</div>
         </div>
-        <section id="transferGeneralFromEaePanel" style="padding:14px; margin:14px 0; border:1px solid #b8c5d5; border-radius:10px;" aria-label="Προέλευση εκπαιδευτικού για μετάθεση στη Γενική Εκπαίδευση">
-          <h3 style="margin:0 0 8px">Προέλευση εκπαιδευτικού — μετάθεση στη Γενική Εκπαίδευση</h3>
-          <p class="small-note">Ο ειδικός έλεγχος αφορά όσους <strong>διορίστηκαν στην ΕΑΕ</strong> ή <strong>μετατέθηκαν στην ΕΑΕ από τη Γενική</strong>. Οι δύο περιπτώσεις έχουν διαφορετικές προϋποθέσεις· η πενταετία δεν ισχύει για όλους.</p>
-          <div class="field-grid">
-            <div class="field">
-              <label for="transferGeneralOrigin">Υπηρεσιακή προέλευση</label>
-              <select id="transferGeneralOrigin">
-                <option value="general">Γενική / Επαγγελματική Εκπαίδευση (δεν έχω μετατεθεί στην ΕΑΕ)</option>
-                <option value="appointed_eae">Διορίστηκα απευθείας στην Ειδική Αγωγή</option>
-                <option value="transferred_eae">Μετατέθηκα στην Ειδική Αγωγή από τη Γενική</option>
-                <option value="other">Άλλη περίπτωση / δεν είμαι βέβαιος</option>
-              </select>
-            </div>
-          </div>
+        <div id="transferGeneralOriginField" class="field" style="margin:14px 0;">
+          <label for="transferGeneralOrigin">Υπηρεσιακή προέλευση</label>
+          <select id="transferGeneralOrigin">
+            <option value="general">Υπηρετώ στη Γενική / Επαγγελματική Εκπαίδευση</option>
+            <option value="appointed_eae">Διορίστηκα απευθείας στην Ειδική Αγωγή</option>
+            <option value="transferred_eae">Μετατέθηκα στην Ειδική Αγωγή από τη Γενική</option>
+            <option value="other">Άλλη περίπτωση / δεν είμαι βέβαιος</option>
+          </select>
+        </div>
+        <section id="transferGeneralFromEaePanel" style="display:none;padding:14px; margin:14px 0; border:1px solid #b8c5d5; border-radius:10px;" aria-label="Ειδικός έλεγχος επιστροφής από ΕΑΕ στη Γενική Εκπαίδευση">
+          <h3 style="margin:0 0 8px">Ειδικός έλεγχος επιστροφής από ΕΑΕ στη Γενική Εκπαίδευση</h3>
+          <p class="small-note">Αφορά μόνο όσους <strong>διορίστηκαν στην ΕΑΕ</strong> ή <strong>μετατέθηκαν στην ΕΑΕ από τη Γενική</strong>. Οι προϋποθέσεις είναι διαφορετικές· δεν ισχύει πενταετία για όλους.</p>
           <div id="transferGeneralEaeAppointed" style="display:none">
             <div class="field-grid">
               <div class="field"><label for="transferGeneralEaeYears">Έτη υπηρεσίας σε σχολικές μονάδες ΕΑΕ από τον διορισμό</label>
@@ -91,6 +89,24 @@
 
         <div class="check-row"><label><input id="familyStatusEligible" type="checkbox"> Δικαιούμαι τις 4 μονάδες οικογενειακής κατάστασης (γάμος/σύμφωνο συμβίωσης ή προβλεπόμενη περίπτωση γονέα με επιμέλεια)</label></div>
         <div class="check-row"><label><input id="coService" type="checkbox"> Δικαιούμαι συνυπηρέτηση για την περιοχή/τον δήμο που εξετάζω (+4)</label></div>
+        <div class="field" id="transferCoServiceCaseField" style="display:none;margin:10px 0 14px 0;">
+          <label for="transferCoServiceCase">Καθεστώς εργασίας συζύγου / συμβίου</label>
+          <select id="transferCoServiceCase">
+            <option value="unspecified">Επιλέξτε την περίπτωση για τα αντίστοιχα δικαιολογητικά</option>
+            <option value="public_organic">Δημόσιος υπάλληλος / λειτουργός με οργανική θέση</option>
+            <option value="teacher_organic">Μόνιμος εκπαιδευτικός με οργανική θέση</option>
+            <option value="teacher_disposal">Μόνιμος εκπαιδευτικός στη διάθεση ΠΥΣΠΕ / ΠΥΣΔΕ</option>
+            <option value="private_employee">Ιδιωτικός υπάλληλος</option>
+            <option value="self_employed">Ελεύθερος επαγγελματίας / ατομική επιχείρηση</option>
+            <option value="remote_employee">Αποκλειστική τηλεργασία</option>
+            <option value="lawyer">Δικηγόρος</option>
+            <option value="private_doctor">Ιατρός εκτός Δημοσίου</option>
+            <option value="substitute_teacher">Αναπληρωτής εκπαιδευτικός</option>
+            <option value="public_contract">Εργαζόμενος στο Δημόσιο χωρίς οργανική θέση, με σύμβαση</option>
+            <option value="other">Άλλη / σύνθετη περίπτωση</option>
+          </select>
+          <div class="field-hint" id="transferCoServiceAdvice" role="status" aria-live="polite"></div>
+        </div>
         <div class="check-row"><label><input id="locality" type="checkbox"> Δικαιούμαι εντοπιότητα για την περιοχή/τον δήμο που εξετάζω (+4)</label></div>
         <div class="check-row" id="firstPreferenceRow"><label><input id="firstPreference" type="checkbox"> Η περιοχή είναι η πρώτη προτίμησή μου (+2)</label></div>
 
