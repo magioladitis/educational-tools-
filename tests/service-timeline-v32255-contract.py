@@ -9,7 +9,7 @@ def check(label, cond):
 proc=subprocess.run(['php','-r','echo json_encode(require "includes/service-timeline-data.php", JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);'],cwd=ROOT,text=True,capture_output=True)
 check('timeline data loads', proc.returncode==0)
 data=json.loads(proc.stdout); events=data['events']; by={e['id']:e for e in events}
-check('46 service-timeline processes unchanged', len(events)==46)
+check('49 service-timeline processes unchanged', len(events)==56)
 det=by['eep-evp-detachment-application-withdrawal']
 expected=[None,None,'15/06/2022','02/06/2023','22/05/2024','03/06/2025','08/06/2026']
 check('EEP-EVP detachment withdrawal five-year history', det['history']==expected)

@@ -3,12 +3,13 @@ const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict'),pat
 const source=fs.readFileSync(path.join(__dirname,'../includes/transfer-eligibility.js'),'utf8');
 const window={};vm.runInNewContext(source,{window});const rules=window.EducationTransferEligibility;
 const tests=[
- ['EAE 2024 prior filed skip',()=>rules.dossier({kind:'eae',year:'2024'}).skipResubmission],
+ ['EAE 2024 not retained this cycle',()=>!rules.dossier({kind:'eae',year:'2024'}).skipResubmission],
  ['EAE 2025 prior filed skip',()=>rules.dossier({kind:'eae',year:'2025'}).skipResubmission],
+ ['EAE 2026 prior filed skip',()=>rules.dossier({kind:'eae',year:'2026'}).skipResubmission],
  ['EAE 2023 does NOT skip',()=>!rules.dossier({kind:'eae',year:'2023'}).skipResubmission],
  ['EAE prior with new docs does NOT skip',()=>!rules.dossier({kind:'eae',year:'2025',newElements:true}).skipResubmission],
  ['EAE prior with new docs still needs new proof',()=>rules.dossier({kind:'eae',year:'2025',newElements:true}).needsNewDocuments],
- ...['2021','2022','2023','2024','2025'].map(yr=>['Art dossier retained '+yr,()=>rules.dossier({kind:'art',year:yr}).skipResubmission]),
+ ...['2021','2022','2023','2024','2025','2026'].map(yr=>['Art dossier retained '+yr,()=>rules.dossier({kind:'art',year:yr}).skipResubmission]),
  ['Art 2020 not retained',()=>!rules.dossier({kind:'art',year:'2020'}).skipResubmission],
  ['Art with new evidence not skipped',()=>!rules.dossier({kind:'art',year:'2024',newElements:true}).skipResubmission],
  ['Music uses arts prior years',()=>rules.dossier({kind:'music',year:'2021'}).skipResubmission],
@@ -25,7 +26,7 @@ const tests=[
  ['Art direct music exception for PE79 not falsely rejected',()=>!rules.art({branch:'pe79',organic:true,teachingYears:0,exceptionType:'direct_music',orientation:'other'}).advice.some(s=>s.includes('αποκλειστικά'))],
  ['Art primary transfer exception acknowledged',()=>!rules.art({branch:'general',organic:true,teachingYears:0,exceptionType:'primary_transfer'}).advice.some(s=>s.includes('5 έτη'))],
  ['Art special with no subject warns',()=>rules.art({branch:'pe08',organic:true,teachingYears:5}).advice.some(s=>s.includes('κατεύθυνση'))],
- ['Circular year clearly named',()=>rules.BASELINE_CIRCULAR.schoolYear==='2025–2026']
+ ['Circular year clearly named',()=>rules.BASELINE_CIRCULAR.schoolYear==='2026–2027']
 ];
 for(const [name,fn] of tests)assert.ok(fn(),name);
 console.log('PASS '+tests.length+' art/dossier regression cases');

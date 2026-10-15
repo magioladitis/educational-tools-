@@ -1,4 +1,4 @@
-/* Transfer-specific advice. Rule baseline: Circular 129787/E2/15-10-2025, pp.34–39.
+/* Transfer-specific advice. Rule baseline: Circular 138014/E2/15-10-2026, pp.35–42.
    Advisory only: NOT a legal decision or final eligibility verification. */
 (function(global){
   'use strict';
@@ -16,11 +16,10 @@
     instrument:{name:'Ευρωπαϊκό μουσικό όργανο',document:'Δίπλωμα ή πτυχίο μουσικού οργάνου και τεκμηριωμένη πενταετής ενασχόληση με τη διδασκαλία του.'},
     other:{name:'Άλλο αντικείμενο',document:'Ελέγξτε την ακριβή ειδικότητα και τα προβλεπόμενα τεκμήρια βάσει θέσης και ετήσιας εγκυκλίου.'}
   };
-  /* The retained-dossier exceptions are explicitly tied to the 2025–2026 circular.
-     Update after the circular for 2026–2027 is verified; never extrapolate the years. */
-  var BASELINE_CIRCULAR=Object.freeze({schoolYear:'2025–2026',reference:'129787/Ε2/15-10-2025',
-    eaePriorYears:Object.freeze(['2024','2025']),
-    artsPriorYears:Object.freeze(['2021','2022','2023','2024','2025'])});
+  /* Retained-dossier rules explicitly verified in circular 138014/E2/15-10-2026. */
+  var BASELINE_CIRCULAR=Object.freeze({schoolYear:'2026–2027',reference:'138014/Ε2/15-10-2026',
+    eaePriorYears:Object.freeze(['2025','2026']),
+    artsPriorYears:Object.freeze(['2021','2022','2023','2024','2025','2026'])});
   var ART_BRANCHES=Object.freeze({pe08:'ΠΕ08 — Εικαστικών',pe11:'ΠΕ11 — Φυσικής Αγωγής',
     pe79:'ΠΕ79.01 — Μουσικής Επιστήμης',pe9101:'ΠΕ91.01 — Θεατρικών Σπουδών',
     pe9102:'ΠΕ91.02 — Δραματικής Τέχνης'});
@@ -31,17 +30,17 @@
     var changed=!!a.newElements;
     return {matched:matched,needsNewDocuments:changed,
       skipResubmission:matched&&!changed,
-      status: matched&&!changed?'Προηγούμενος φάκελος — δεν απαιτείται εκ νέου αποστολή σύμφωνα με την εγκύκλιο 2025–2026.':
+      status: matched&&!changed?'Προηγούμενος φάκελος — δεν απαιτείται εκ νέου αποστολή σύμφωνα με την εγκύκλιο 2026–2027.':
         matched?'Υπάρχει προηγούμενος φάκελος, αλλά τα νέα στοιχεία/δικαιολογητικά πρέπει να σταλούν με την προβλεπόμενη διαδικασία.':
-        'Ελέγξτε την αρχική υποβολή του φακέλου προσόντων σύμφωνα με την εγκύκλιο 2025–2026.',
-      limitation:'Αφορά τον φάκελο προσόντων/βιογραφικού, όχι την ετήσια αίτηση, ούτε τυχόν νέα δικαιολογητικά μοριοδότησης. Ο κανόνας 2026–2027 εκκρεμεί.'};
+        'Ελέγξτε την αρχική υποβολή του φακέλου προσόντων σύμφωνα με την εγκύκλιο 2026–2027.',
+      limitation:'Αφορά τον φάκελο προσόντων/βιογραφικού, όχι την ετήσια αίτηση, ούτε τυχόν νέα δικαιολογητικά μοριοδότησης. Ισχύει μόνο για ήδη αποσταλμένο φάκελο στη συγκεκριμένη κατηγορία σχολείου ή στην ΕΑΕ, όχι για διαφορετικό τύπο αίτησης.'};
   }
   function art(a) {
     a=a||{};
     var notes=[],branch=a.branch||'general',ex=a.exceptionType||'none';
     var specialized=Object.prototype.hasOwnProperty.call(ART_BRANCHES,branch);
     if(!a.organic) notes.push('Ελέγξτε την υπηρέτηση οργανικής θέσης ή τυχόν ειδική νόμιμη εξαίρεση με τη ΔΔΕ.');
-    if(year(a.teachingYears)<5 && ex==='none') notes.push('Η εγκύκλιος 2025–2026 απαιτεί τουλάχιστον 5 έτη διδακτικής εμπειρίας σε σχολεία Δ.Ε. έως 31-08-2026.');
+    if(year(a.teachingYears)<5 && ex==='none') notes.push('Η εγκύκλιος 2026–2027 απαιτεί τουλάχιστον 5 έτη διδακτικής εμπειρίας σε σχολεία Δ.Ε. έως 31-08-2027.');
     if(ex==='direct_music'&&branch!=='pe79') notes.push('Η εξαίρεση απευθείας διορισμού σε Μουσικό αφορά αποκλειστικά εκπαιδευτικούς μουσικής παιδείας.');
     if(ex==='direct_music'||ex==='primary_transfer') notes.push('Ελέγξτε υπηρεσιακά τη συνδρομή της δηλωμένης εξαίρεσης από την πενταετία.');
     if(branch==='other') notes.push('Επαληθεύστε τον κλάδο/ειδικότητα και αν περιλαμβάνεται στην ομάδα καλλιτεχνικής παιδείας.');
@@ -68,7 +67,7 @@
       status:pending?'Χρειάζονται έλεγχοι/στοιχεία':'Δεν εντοπίστηκε προφανές κώλυμα στα δηλωμένα βασικά πεδία — απαιτείται έλεγχος ΔΔΕ'};
   }
   // Μετάβαση από ΕΑΕ στη Γενική: διαφορετικός κανόνας για διορισθέντες και μετατεθέντες.
-  // Κανόνες κύκλου 2025–2026, εγκύκλιος 129787/Ε2/15-10-2025, σελ. 11, §7.
+  // Κανόνες κύκλου 2026–2027, εγκύκλιος 138014/Ε2/15-10-2026, σελ. 35, §2.
   function returnToGeneral(a){
     a=a||{};
     var origin=a.origin||'general';
@@ -107,6 +106,37 @@
       needsReview:verdict==='needs_verification'||verdict==='not_established',
       unmetCriteria:unmet, advice:unmet.concat(review), status:status};
   }
+  /* Πειραματικά Σχολεία Διαπολιτισμικής Εκπαίδευσης — Κεφ. Ζ΄ σελ. 43–45. */
+  var INTERCULTURAL_QUALIFICATIONS=Object.freeze([
+    {id:'origin_language',title:'Επαρκής γνώση της γλώσσας προέλευσης της πλειονότητας των μαθητών',proof:'Τίτλος γλωσσομάθειας της συγκεκριμένης γλώσσας, σύμφωνα με τους κανόνες υποβολής/μετάφρασης της εγκυκλίου.'},
+    {id:'greek_second',title:'Διδασκαλία της Ελληνικής ως δεύτερης / ξένης γλώσσας',proof:'Τίτλος/πιστοποιητικό εξειδίκευσης που τεκμηριώνει το συγκεκριμένο γνωστικό αντικείμενο.'},
+    {id:'intercultural_studies',title:'Σπουδές Διαπολιτισμικής Αγωγής',proof:'Πτυχίο μετεκπαίδευσης ή μεταπτυχιακός τίτλος στο σχετικό πεδίο.'},
+    {id:'pedagogy_studies',title:'Σπουδές επιστημών της αγωγής',proof:'Τεκμήριο μετεκπαίδευσης ή μεταπτυχιακών σπουδών στις επιστήμες της αγωγής.'},
+    {id:'subject_studies',title:'Σπουδές στο διδακτικό αντικείμενο',proof:'Πτυχίο μετεκπαίδευσης ή μεταπτυχιακός τίτλος στο διδασκόμενο αντικείμενο.'},
+    {id:'school_experience',title:'Διδακτική εμπειρία σε Διαπολιτισμικό Σχολείο',proof:'Βεβαίωση υπηρεσίας/διδακτικής εμπειρίας στη συγκεκριμένη κατηγορία σχολείου.'},
+    {id:'reception_experience',title:'Διδακτική εμπειρία σε Τάξεις Υποδοχής / Φροντιστηριακά Τμήματα',proof:'Αναλυτική βεβαίωση διδακτικής υπηρεσίας στις αντίστοιχες δομές.'},
+    {id:'international_language',title:'Γνώση διεθνούς γλώσσας',proof:'Αποδεκτό πιστοποιητικό γνώσης Αγγλικών, Γαλλικών ή Γερμανικών.'},
+    {id:'seminars',title:'Επιμόρφωση σε Διαπολιτισμική Εκπαίδευση',proof:'Βεβαίωση παρακολούθησης σεμιναρίου ΥΠΑΙΘΑ ή συνεργαζόμενου φορέα.'}
+  ]);
+  function intercultural(a){
+    a=a||{};
+    var unmet=[], review=[];
+    var organic=a.organic||'unknown',current=a.current||'no',vacancy=a.vacancy||'unknown';
+    if(organic==='no') unmet.push('Δεν έχει δηλωθεί υπηρέτηση της κατεχόμενης οργανικής θέσης έως 31/08/2027.');
+    else if(organic!=='yes') review.push('Επιβεβαιώστε την υπηρέτηση οργανικής έως 31/08/2027.');
+    if(current==='yes'){
+      var y=Number(String(a.years==null?'':a.years).replace(',','.'));
+      if(String(a.years==null?'':a.years).trim()===''||!Number.isFinite(y)||y<0||y>50) review.push('Δηλώστε έγκυρα έτη υπηρεσίας στην οργανική του Διαπολιτισμικού Σχολείου.');
+      else if(y<2) unmet.push('Για ήδη οργανικά τοποθετημένους στα Διαπολιτισμικά απαιτούνται 2 έτη υπηρεσίας· με τα δηλωμένα στοιχεία υπολείπονται '+(Math.round((2-y)*100)/100)+' έτη.');
+    }else if(current==='unknown')review.push('Επιβεβαιώστε αν ισχύει ο ειδικός κανόνας διετίας για ήδη οργανικά τοποθετημένους.');
+    if(vacancy==='no')unmet.push('Δεν μπορεί να επιλεγεί σχολείο χωρίς προκηρυγμένο οργανικό κενό στον κλάδο/ειδικότητα.');
+    else if(vacancy!=='yes')review.push('Ελέγξτε την ύπαρξη οργανικού κενού στο συγκεκριμένο σχολείο/κλάδο στο teachers.minedu.gov.gr.');
+    if(a.languageCase==='unknown')review.push('Ελέγξτε τη γλώσσα προέλευσης της πλειονότητας των μαθητών και την ειδική εξαίρεση για σχολεία με πλειοψηφία Ρομά.');
+    var qualified=Array.isArray(a.qualifications)?a.qualifications.filter(function(x){return INTERCULTURAL_QUALIFICATIONS.some(function(q){return q.id===x;});}):[];
+    var verdict=unmet.length?'not_established':review.length?'needs_verification':'preliminary_met';
+    var status=verdict==='not_established'?'Με τα δηλωμένα στοιχεία δεν πληρούνται οι ελεγχόμενες προϋποθέσεις ή δεν επιτρέπεται η συγκεκριμένη προτίμηση.':verdict==='needs_verification'?'Χρειάζονται επιπλέον στοιχεία/υπηρεσιακή επαλήθευση.':'Οι βασικοί δηλωμένοι όροι φαίνεται να πληρούνται — απαιτείται τελικός έλεγχος ΔΔΕ.';
+    return {verdict:verdict,status:status,unmetCriteria:unmet,advice:unmet.concat(review),selectedQualifications:qualified,languageException:a.languageCase==='roma'};
+  }
   function music(a){
     a=a||{};var type=a.educationType||'general';var exception=a.exceptionType||'none';
     var notices=[];
@@ -118,7 +148,7 @@
     return {advice:notices,subjectInfo:MUSIC_SUBJECTS[a.subject]||null, type:type,
       status:notices.length?'Χρειάζονται έλεγχοι/στοιχεία':'Αρχικός έλεγχος συμπληρώθηκε — η κρίση προσόντων γίνεται από τα αρμόδια όργανα'};
   }
-  global.EducationTransferEligibility=Object.freeze({eae:eae,music:music,art:art,returnToGeneral:returnToGeneral,dossier:dossier,
+  global.EducationTransferEligibility=Object.freeze({eae:eae,music:music,art:art,intercultural:intercultural,returnToGeneral:returnToGeneral,dossier:dossier,
     BASELINE_CIRCULAR:BASELINE_CIRCULAR,ART_BRANCHES:ART_BRANCHES,
-    EAE_TITLES:Object.freeze(EAE_TITLES),MUSIC_SUBJECTS:Object.freeze(MUSIC_SUBJECTS)});
+    EAE_TITLES:Object.freeze(EAE_TITLES),MUSIC_SUBJECTS:Object.freeze(MUSIC_SUBJECTS),INTERCULTURAL_QUALIFICATIONS:INTERCULTURAL_QUALIFICATIONS});
 })(window);

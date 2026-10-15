@@ -9,16 +9,16 @@ def check(label, cond):
 proc=subprocess.run(['php','-r','echo json_encode(require "includes/service-timeline-data.php", JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);'],cwd=ROOT,text=True,capture_output=True)
 check('timeline data loads', proc.returncode==0)
 data=json.loads(proc.stdout); events=data['events']; by={e['id']:e for e in events}
-check('46 service-timeline processes', len(events)==46)
-check('PE process count 26', sum('pe' in e['levels'] for e in events)==26)
+check('49 service-timeline processes', len(events)==56)
+check('PE process count 31 after separate PE circular', sum('pe' in e['levels'] for e in events)==31)
 check('DE process count 27', sum('de' in e['levels'] for e in events)==27)
-check('EEP-EVP process count 22', sum('eep-evp' in e['levels'] for e in events)==22)
+check('EEP-EVP process count 25', sum('eep-evp' in e['levels'] for e in events)==25)
 
 pts=by['temporary-transfer-points-eep-evp']
-check('EEP-EVP points publication', pts['levels']==['eep-evp'] and pts['latest']=='08/12/2025' and pts['history'][6]=='08/12/2025')
-check('EEP-EVP points source official', pts['sources'] and all('minedu.gov.gr' in x['url'] for x in pts['sources']))
+check('EEP-EVP points publication', pts['levels']==['eep-evp'] and pts['latest']=='27/11/2026' and pts['history'][6]=='08/12/2025')
+check('EEP-EVP points source official', pts['sources'] and all(('minedu.gov.gr' in x['url']) or ('diavgeia.gov.gr' in x['url']) for x in pts['sources']))
 tr=by['transfer-application-withdrawal-eep-evp']
-check('EEP-EVP transfer withdrawal deadline', tr['latest']=='31/12/2025 · 15:00' and 6 in tr['verified_history_indices'])
+check('EEP-EVP transfer withdrawal deadline', tr['latest']=='31/12/2026 · 15:00' and 6 in tr['verified_history_indices'])
 det=by['eep-evp-detachment-application-withdrawal']
 check('EEP-EVP detachment withdrawal deadline', det['latest']=='08/06/2026' and det['levels']==['eep-evp'])
 post=by['detachment-post-results-five-day-actions']

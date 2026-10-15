@@ -4184,3 +4184,15 @@ body.edu-ui .edu-tools-global-footer__meta a:hover{text-decoration:underline}
     border:2px solid #9f1239 !important; color:#000; background:#fff;
   }
 }
+
+/* v3.22.114 — shared deadlines: one chronological event with personnel-specific guidance */
+body.edu-page-service-timeline .timeline-period[hidden],
+body.edu-page-service-timeline .timeline-event-part[hidden] {display:none!important;}
+body.edu-page-service-timeline .timeline-period-heading {margin:10px 0 16px;padding:8px 12px;border-left:3px solid #b45309;font-size:16px;color:#344054;background:#fff8ef;border-radius:0 8px 8px 0;}
+body.edu-page-service-timeline .timeline-shared-intro {margin:10px 0;color:#667085;font-size:13px;line-height:1.5;}
+body.edu-page-service-timeline .timeline-event-part--sub {margin-top:12px;padding:12px 14px;border:1px solid #e1e8ef;border-radius:12px;background:#f9fbfd;}
+body.edu-page-service-timeline .timeline-part-heading {display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;}
+body.edu-page-service-timeline .timeline-event-card .timeline-part-heading h3 {margin:0;font-size:15px;line-height:1.4;color:#173454;}
+body.edu-page-service-timeline .timeline-part-date {font-size:12px;color:#98510c;font-weight:750;font-variant-numeric:tabular-nums;}
+body.edu-page-service-timeline .timeline-event-part--sub .timeline-history {margin-top:12px;}
+@media(max-width:600px) {body.edu-page-service-timeline .timeline-event-part--sub {padding:10px;}}

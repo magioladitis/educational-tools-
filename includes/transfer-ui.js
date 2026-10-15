@@ -154,7 +154,7 @@
       msdPeriods: rows.map(readRow)
     };
     // Qualification-based procedures do not publish a comparative point ranking.
-    if (input.mode === 'music' || input.mode === 'art') {
+    if (input.mode === 'music' || input.mode === 'art' || input.mode === 'intercultural') {
       syncEligibilityDetails();
       if (global.EducationTransferDocuments) global.EducationTransferDocuments.render();
       return;
@@ -209,7 +209,7 @@
   function syncMode() {
     var mode = byId('mode').value;
     var isLocal = mode === 'local' || (mode === 'smeae' && byId('transferEaeArea').value==='same');
-    var qualifications = mode === 'music' || mode === 'art';
+    var qualifications = mode === 'music' || mode === 'art' || mode === 'intercultural';
     byId('firstPreferenceRow').classList.toggle('hidden', isLocal || qualifications);
     if (isLocal || qualifications) byId('firstPreference').checked = false;
     var calculateButton=byId('calculateBtn');
@@ -219,11 +219,12 @@
     if (scoreBlock) scoreBlock.style.display = qualifications ? 'none' : '';
     ['transferNumericalInputs','transferMsdCard'].forEach(function(id){ var e=byId(id); if(e) e.style.display=qualifications?'none':''; });
     var q=byId('transferQualificationPanel'); if(q) q.style.display=qualifications?'':'none';
-    var qt=byId('transferQualificationTitle'); if(qt) qt.textContent=mode==='music'?'Μετάθεση σε Μουσικό Σχολείο — Φάκελος προσόντων':'Μετάθεση σε Καλλιτεχνικό Σχολείο — Φάκελος προσόντων';
-    var qi=byId('transferQualificationIntro'); if(qi) qi.textContent=mode==='music'?'Γενική παιδεία: ελέγχονται τα κοινά προσόντα, χωρίς απαίτηση μουσικής εξειδίκευσης. Μουσική παιδεία: απαιτείται πρόσθετη τεκμηρίωση ανά μουσικό αντικείμενο.':'Για Καλλιτεχνικά: υπηρέτηση οργανικής, πενταετής διδακτική εμπειρία (με εξαιρέσεις), φάκελος προσόντων και ειδική κρίση για ΠΕ08, ΠΕ11, ΠΕ79.01, ΠΕ91.01, ΠΕ91.02. Δεν προβλέπεται αριθμητική κατάταξη.';
+    var qt=byId('transferQualificationTitle'); if(qt) qt.textContent=mode==='music'?'Μετάθεση σε Μουσικό Σχολείο — Φάκελος προσόντων':mode==='art'?'Μετάθεση σε Καλλιτεχνικό Σχολείο — Φάκελος προσόντων':'Μετάθεση σε Πειραματικό Σχολείο Διαπολιτισμικής Εκπαίδευσης — Φάκελος προσόντων';
+    var qi=byId('transferQualificationIntro'); if(qi) qi.textContent=mode==='music'?'Γενική παιδεία: ελέγχονται τα κοινά προσόντα, χωρίς απαίτηση μουσικής εξειδίκευσης. Μουσική παιδεία: απαιτείται πρόσθετη τεκμηρίωση ανά μουσικό αντικείμενο.':mode==='art'?'Για Καλλιτεχνικά: υπηρέτηση οργανικής, πενταετής διδακτική εμπειρία (με εξαιρέσεις), φάκελος προσόντων και ειδική κρίση για ΠΕ08, ΠΕ11, ΠΕ79.01, ΠΕ91.01, ΠΕ91.02. Δεν προβλέπεται αριθμητική κατάταξη.':'Για Πειραματικά Διαπολιτισμικής: θεμελίωση υπηρεσιακού δικαιώματος και συνεκτίμηση συγκεκριμένων προσόντων κατά σειρά προτεραιότητας, χωρίς μοριοδότηση ή ενιαία κατάταξη.';
     var eaePanel=byId('transferEaePanel');if(eaePanel)eaePanel.style.display=mode==='smeae'?'':'none';
     var musicPanel=byId('transferMusicEligibility');if(musicPanel)musicPanel.style.display=mode==='music'?'':'none';
     var artPanel=byId('transferArtEligibility');if(artPanel)artPanel.style.display=mode==='art'?'':'none';
+    var crossPanel=byId('transferInterculturalEligibility');if(crossPanel)crossPanel.style.display=mode==='intercultural'?'':'none';
     var typeField=byId('transferEducationTypeField');if(typeField)typeField.style.display=mode==='music'?'':'none';
     var footnote=byId('transferQualificationFootnote');if(footnote)footnote.style.display=mode==='music'?'':'none';
     var typeLabel=byId('transferEducationType');if(typeLabel){
@@ -238,7 +239,9 @@
     } else if (mode === 'music') {
       guidance.innerHTML = '<strong>Μουσικά Σχολεία — αξιολόγηση προσόντων, όχι μορίων.</strong> Δεν παρέχεται αριθμητική κατάταξη. Ελέγξτε τίτλους σπουδών, εξειδίκευση (ιδιαίτερα στις μουσικές ειδικότητες), προηγούμενη διδακτική εμπειρία, επιμόρφωση και τα αποδεικτικά που προβλέπει η οικεία εγκύκλιος. Μην υποβάλλετε άσχετα έγγραφα.';
     } else if (mode === 'art') {
-      guidance.innerHTML = '<strong>Καλλιτεχνικά Σχολεία — χωρίς πίνακα μορίων.</strong> Ελέγχονται η υπηρέτηση οργανικής, η πενταετία (εκτός ειδικών εξαιρέσεων), οι τίτλοι/εμπειρία και η συνάφεια προσόντων ανά κλάδο. Για ΠΕ08, ΠΕ11, ΠΕ79.01, ΠΕ91.01, ΠΕ91.02 υπάρχει εισήγηση της Επιστημονικής Επιτροπής Καλλιτεχνικής Παιδείας. Βάση: εγκύκλιος 2025–2026· αναμένεται επαλήθευση 2026–2027.';
+      guidance.innerHTML = '<strong>Καλλιτεχνικά Σχολεία — χωρίς πίνακα μορίων.</strong> Ελέγχονται η υπηρέτηση οργανικής, η πενταετία (εκτός ειδικών εξαιρέσεων), οι τίτλοι/εμπειρία και η συνάφεια προσόντων ανά κλάδο. Για ΠΕ08, ΠΕ11, ΠΕ79.01, ΠΕ91.01, ΠΕ91.02 υπάρχει εισήγηση της Επιστημονικής Επιτροπής Καλλιτεχνικής Παιδείας. Βάση: εγκύκλιος 138014/Ε2/15-10-2026, Κεφ. ΣΤ΄, σελ. 41–43.';
+    } else if (mode === 'intercultural') {
+      guidance.innerHTML = '<strong>Πειραματικά Σχολεία Διαπολιτισμικής Εκπαίδευσης:</strong> ειδική διαδικασία προσόντων χωρίς υπολογισμό μορίων. Ελέγχονται η οργανική θέση έως 31/08/2027, η διετία για ήδη υπηρετούντες, τα οργανικά κενά και τα πρόσθετα προσόντα με τη σειρά της εγκυκλίου 138014/Ε2/2026, Κεφ. Ζ΄. Ο έλεγχος δεν υποκαθιστά απόφαση ΔΔΕ.';
     } else if (isLocal) {
       guidance.textContent = 'Οριστική τοποθέτηση / βελτίωση: εξετάζονται οι δήμοι των συγκεκριμένων σχολείων και δεν ισχύουν μόρια πρώτης προτίμησης.';
     } else {
@@ -263,6 +266,14 @@
       organic:byId('transferArtOrganic').checked,teachingYears:byId('transferArtTeachingYears').value,
       exceptionType:byId('transferArtException').value};
   }
+  function currentInterculturalInput(){
+    return {organic:byId('transferInterculturalOrganic').value,
+      current:byId('transferInterculturalCurrent').value,
+      years:byId('transferInterculturalYears').value,
+      vacancy:byId('transferInterculturalVacancy').value,
+      languageCase:byId('transferInterculturalLanguageCase').value,
+      qualifications:Array.prototype.map.call(document.querySelectorAll('[data-intercultural-qual]:checked'),function(el){return el.getAttribute('data-intercultural-qual');})};
+  }
   function syncDossier(kind,selectId,changeId,outputId){
     var eligibility=global.EducationTransferEligibility;
     if(!eligibility || !eligibility.dossier)return;
@@ -273,7 +284,7 @@
     var mode=byId('mode').value, eae=mode==='smeae',music=mode==='music';
     var sameArea=eae&&byId('transferEaeArea').value==='same';
     var preferenceRow=byId('firstPreferenceRow');
-    if(preferenceRow)preferenceRow.classList.toggle('hidden',mode==='local'||sameArea||mode==='music'||mode==='art');
+    if(preferenceRow)preferenceRow.classList.toggle('hidden',mode==='local'||sameArea||mode==='music'||mode==='art'||mode==='intercultural');
     if(sameArea)byId('firstPreference').checked=false;
     var origin=byId('transferEaeOrigin').value, route=byId('transferEaeQualification').value;
     byId('transferEaeExperienceRow').style.display=eae&&route==='experience'?'':'none';
@@ -294,6 +305,17 @@
       var mr=elig.music(currentMusicInput());
       byId('transferMusicAdvice').textContent=mr.status+(mr.advice.length?' · '+mr.advice.join(' '):'');
       syncDossier('music','transferMusicPreviousYear','transferMusicNewDocuments','transferMusicDossierAdvice');
+    }
+    if(elig&&mode==='intercultural'){
+      byId('transferInterculturalYearsRow').style.display=byId('transferInterculturalCurrent').value==='yes'?'':'none';
+      var ic=elig.intercultural(currentInterculturalInput());
+      var message=byId('transferInterculturalAdvice');
+      message.textContent=ic.status+(ic.advice.length?' · '+ic.advice.join(' '):'')+(ic.languageException?' · Σχολείο με πλειοψηφία μαθητών Ρομά: δεν απαιτείται το πρόσθετο προσόν ξένης γλώσσας προέλευσης.':'');
+      message.setAttribute('data-eligibility-verdict',ic.verdict);
+      message.classList.toggle('transfer-eligibility-failed',ic.verdict==='not_established');
+      message.classList.toggle('transfer-eligibility-review',ic.verdict==='needs_verification');
+      message.classList.toggle('transfer-eligibility-met',ic.verdict==='preliminary_met');
+      syncDossier('intercultural','transferInterculturalPreviousYear','transferInterculturalNewDocuments','transferInterculturalDossierAdvice');
     }
     if(elig&&art){
       var ar=elig.art(currentArtInput());
@@ -338,6 +360,12 @@
     byId('transferArtOrganic').checked=false;
     byId('transferArtPreviousYear').value='none';
     byId('transferArtNewDocuments').checked=false;
+    ['transferInterculturalOrganic','transferInterculturalVacancy','transferInterculturalLanguageCase'].forEach(function(id){byId(id).value='unknown';});
+    byId('transferInterculturalCurrent').value='no';
+    byId('transferInterculturalYears').value='0';
+    byId('transferInterculturalPreviousYear').value='none';
+    byId('transferInterculturalNewDocuments').checked=false;
+    document.querySelectorAll('[data-intercultural-qual]').forEach(function(el){el.checked=false;});
     byId('msdMode').value = 'periods';
     byId('msdDirectPoints').value = '';
     syncMsdMode();

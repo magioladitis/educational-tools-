@@ -48,7 +48,7 @@ check('abroad and study leave fixed 5/5 UI', 'fixedFullWeek' in ui and "weekdays
 check('abroad and study leave fixed 5/5 engine', 'isFixedFullWeekType' in module and "isFixedFullWeekType(period.type) ? 5" in module)
 check('15 day rule UI', '15+ → 1 μήνας' in page)
 check('scope disclaimer', '<strong>Τι περιλαμβάνει:</strong>' in page and 'ειδικές κατηγορίες' in page)
-check('official circular source', '129787/Ε2/15-10-2025' in page)
+check('official circular source', '138014/Ε2/15-10-2026' in page)
 check('module category map', all(token in module for token in ['A: 1','I: 10','IA: 11','IB: 12','IG: 14']))
 check('module 2.5 service', '2.5 / 12' in module)
 check('module prison bonus', "type === 'prison'" in module and 'return 5' in module)

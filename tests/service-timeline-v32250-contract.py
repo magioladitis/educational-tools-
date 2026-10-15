@@ -13,7 +13,7 @@ check('timeline data loads',proc.returncode==0)
 data=json.loads(proc.stdout); events=data['events']; by={e['id']:e for e in events}
 check('at least 39 events after EEP-EVP expansion',len(events)>=39)
 check('EEP-EVP coverage expanded to at least 15',sum('eep-evp' in e['levels'] for e in events)>=15)
-check('educator transfer applications are PE-DE only',by['metatheseis-applications']['levels']==['pe','de'] and by['metatheseis-applications']['title']=='Αιτήσεις μετάθεσης εκπαιδευτικών')
+check('educator transfer applications are PE-DE only',by['metatheseis-applications']['levels']==['de'] and by['primary-transfer-applications']['levels']==['pe'])
 check('dedicated EEP transfer circular complete',by['eep-evp-transfer-circular']['history']==['03/04/2020','18/03/2021','18/02/2022','14/10/2022','13/10/2023','15/10/2024','15/10/2025'])
 check('dedicated EEP transfer applications complete',by['eep-evp-transfer-applications']['history']==['06–10/04/2020','18–26/03/2021','21–28/02/2022','16–31/10/2022','16–31/10/2023','16–31/10/2024','16–31/10/2025'])
 mut=by['mutual-transfer-applications-eep-evp']

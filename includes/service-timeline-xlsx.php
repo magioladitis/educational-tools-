@@ -1,5 +1,6 @@
 <?php
 /** Minimal XLSX writer for the service-change timeline. No external Composer dependency. */
+require_once __DIR__ . '/service-timeline-view.php';
 
 function serviceTimelineXlsxEscape($value)
 {
@@ -79,7 +80,7 @@ function serviceTimelineXlsxChronologySheetXml($data)
 {
     $years = isset($data['history_years']) && is_array($data['history_years']) ? $data['history_years'] : array();
     $groups = isset($data['groups']) && is_array($data['groups']) ? $data['groups'] : array();
-    $events = isset($data['events']) && is_array($data['events']) ? $data['events'] : array();
+    $events = serviceTimelineChronologicalRawEvents(isset($data['events']) && is_array($data['events']) ? $data['events'] : array());
     $headers = array_merge(array('Κατηγορία', 'Βαθμίδα / προσωπικό', 'Διαδικασία'), $years, array('Τελευταία τιμή', 'Παρατηρήσεις'));
     $lastCol = serviceTimelineXlsxColumnName(count($headers));
     $rows = array();
@@ -136,7 +137,7 @@ function serviceTimelineXlsxChronologySheetXml($data)
 function serviceTimelineXlsxSourcesSheetXml($data)
 {
     $groups = isset($data['groups']) && is_array($data['groups']) ? $data['groups'] : array();
-    $events = isset($data['events']) && is_array($data['events']) ? $data['events'] : array();
+    $events = serviceTimelineChronologicalRawEvents(isset($data['events']) && is_array($data['events']) ? $data['events'] : array());
     $headers = array('Κατηγορία', 'Βαθμίδα / προσωπικό', 'Διαδικασία', 'Έτος / κύκλος', 'Πηγή', 'Σύνδεσμος');
     $rows = array();
     $headerXml = '';

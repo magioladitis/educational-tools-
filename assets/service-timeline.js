@@ -23,7 +23,14 @@
       var verifiedMatch = !verifiedOnly || !verifiedOnly.checked || event.getAttribute('data-verified') === '1';
       var visible = groupMatch && levelMatch && verifiedMatch;
       event.hidden = !visible;
-      if (visible) shown += 1;
+      if (visible) {
+        // In a shared event, show only the selected personnel category, not irrelevant links.
+        Array.prototype.slice.call(event.querySelectorAll('[data-timeline-part]')).forEach(function (part) {
+          var partLevels = (part.getAttribute('data-levels') || '').split(',').map(function (value) { return value.trim(); });
+          part.hidden = activeLevel !== 'all' && partLevels.indexOf('all') === -1 && partLevels.indexOf(activeLevel) === -1;
+        });
+        shown += 1;
+      }
     });
 
     if (status) {
@@ -32,6 +39,9 @@
       status.hidden = defaultView;
     }
     if (empty) empty.hidden = shown !== 0;
+    Array.prototype.slice.call(document.querySelectorAll('[data-timeline-period]')).forEach(function (period) {
+      period.hidden = !period.querySelector('[data-timeline-event]:not([hidden])');
+    });
   }
 
   chips.forEach(function (chip) {

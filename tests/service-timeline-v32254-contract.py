@@ -9,7 +9,7 @@ def check(label, cond):
 proc=subprocess.run(['php','-r','echo json_encode(require "includes/service-timeline-data.php", JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);'],cwd=ROOT,text=True,capture_output=True)
 check('timeline data loads', proc.returncode==0)
 data=json.loads(proc.stdout); events=data['events']; by={e['id']:e for e in events}
-check('46 service-timeline processes unchanged', len(events)==46)
+check('49 service-timeline processes unchanged', len(events)==56)
 tr=by['transfer-application-withdrawal-eep-evp']
 expected=[
     'έως 2 ημέρες πριν από ΚΥΣΕΕΠ',
@@ -23,7 +23,7 @@ expected=[
 check('EEP-EVP withdrawal full seven-year history', tr['history']==expected)
 check('EEP-EVP withdrawal all years verified', tr['verified_history_indices']==[0,1,2,3,4,5,6])
 check('EEP-EVP withdrawal seven historical sources', len(tr.get('historical_sources',[]))==7)
-check('EEP-EVP withdrawal historical coverage flag', tr.get('source_coverage')=='historical')
+check('EEP-EVP withdrawal historical coverage flag', tr.get('source_coverage')=='latest')
 check('2019-20 relative KYSSEEP rule documented', 'δύο ημέρες πριν' in tr['note'] and 'ΚΥΣΕΕΠ' in tr['note'])
 check('2021-22 exceptional March deadline documented', '08/03/2022 23:59' in tr['note'])
 check('2022-23 onward Dec 31 pattern documented', '2022–2023' in tr['note'] and '31/12 15:00' in tr['note'])

@@ -16,7 +16,7 @@
   <?php calculatorHero(array(
     'title' => 'Μεταθέσεις Εκπαιδευτικών — Μόρια & Δικαιολογητικά',
     'intro_html' => 'Εργαλείο για εκπαιδευτικούς <strong>Δευτεροβάθμιας Εκπαίδευσης</strong>: ενδεικτική μοριοδότηση όπου εφαρμόζεται και προσωποποιημένος κατάλογος ελέγχου δικαιολογητικών ανά τύπο μετάθεσης.',
-    'badges' => array('Βάση: εγκύκλιος 2025–2026 (αναμένεται 2026–2027)', 'Μ.Σ.Δ.', 'Δυσπρόσιτα / ειδικές υπηρετήσεις')
+    'badges' => array('Βάση: εγκύκλιος 2026–2027 (138014/Ε2)', 'Μ.Σ.Δ.', 'Δυσπρόσιτα / ειδικές υπηρετήσεις')
   )); ?>
 
   <?php calculatorColumnsStart(); ?>
@@ -31,6 +31,7 @@
               <option value="smeae">Μετάθεση σε ΣΜΕΑΕ / ΕΕΕΕΚ (Ειδική Αγωγή)</option>
               <option value="music">Μετάθεση σε Μουσικό Σχολείο</option>
               <option value="art">Μετάθεση σε Καλλιτεχνικό Σχολείο</option>
+              <option value="intercultural">Μετάθεση σε Πειραματικό Σχολείο Διαπολιτισμικής Εκπαίδευσης</option>
             </select>
           </div>
           <div class="field" id="transferModeGuidance" role="status" aria-live="polite" style="grid-column:1/-1; padding:12px; border:1px solid #b8c5d5; border-radius:8px;" >Επιλέξτε τύπο διαδικασίας για τις αντίστοιχες οδηγίες.</div>
@@ -65,7 +66,7 @@
             <div class="check-row"><label><input id="transferGeneralEaeOrganic" type="checkbox"> Έχω υπηρετήσει την οργανική μου θέση στην ΕΑΕ για ένα έτος</label></div>
           </div>
           <div id="transferGeneralEaeAdvice" role="status" aria-live="polite" class="small-note" style="padding:10px; border-left:3px solid #687991; margin-top:12px;"></div>
-          <p class="small-note">Νομική βάση: εγκύκλιος <strong>129787/Ε2/15-10-2025</strong>, Μέρος Πρώτο, Κεφ. Γ΄ §7 (σελ. 11), άρθρο 48 §3 ν. 4415/2016 και άρθρο 62 §5α ν. 4589/2019. Για τον κύκλο 2026–2027 απαιτείται έλεγχος της νέας εγκυκλίου. Ο προέλεγχος δεν πιστοποιεί δικαίωμα μετάθεσης.</p>
+          <p class="small-note">Νομική βάση: εγκύκλιος <strong>138014/Ε2/15-10-2026</strong>, Μέρος Δεύτερο, Κεφ. Δ΄ (σελ. 35), άρθρο 48 §3 ν. 4415/2016 και άρθρο 62 §5α ν. 4589/2019. Ο προέλεγχος δεν πιστοποιεί δικαίωμα μετάθεσης ούτε καλύπτει όλες τις εξαιρέσεις.</p>
         </section>
         <div id="transferNumericalInputs">
         <div class="field-grid">
@@ -172,13 +173,13 @@
         <div class="field" id="transferEaeAreaYearsRow" style="display:none; margin-top:10px"><label for="transferEaeAreaYears">Έτη υπηρεσίας στην περιοχή διορισμού</label><input id="transferEaeAreaYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0"></div>
         <div class="field-grid" style="margin-top:14px">
           <div class="field"><label for="transferEaePreviousYear">Έχετε αποστείλει ηλεκτρονικό φάκελο ΕΑΕ σε προηγούμενο κύκλο;</label>
-            <select id="transferEaePreviousYear"><option value="none">Όχι / δεν γνωρίζω</option><option value="2024">Ναι, το 2024</option><option value="2025">Ναι, το 2025</option><option value="other">Ναι, σε άλλο έτος</option></select>
+            <select id="transferEaePreviousYear"><option value="none">Όχι / δεν γνωρίζω</option><option value="2025">Ναι, το 2025</option><option value="2026">Ναι, το 2026</option><option value="other">Ναι, σε άλλο έτος</option></select>
           </div>
         </div>
         <div class="check-row"><label><input type="checkbox" id="transferEaeNewDocuments"> Έχω νέα στοιχεία ή δικαιολογητικά στον φάκελο ΕΑΕ που δεν είχαν υποβληθεί.</label></div>
         <div id="transferEaeDossierAdvice" role="status" aria-live="polite" class="small-note" style="margin:10px 0"></div>
         <div id="transferEaeAdvice" role="status" aria-live="polite" style="padding:12px; border-left:3px solid #687991; background:rgba(109,127,160,.08); margin-top:14px;"></div>
-        <p class="small-note">Νομική βάση: εγκύκλιος 129787/Ε2/15-10-2025, Μέρος Γ΄, κεφάλαιο Δ΄, παρ. 2–5 (σελ. 34–37). Ελέγξτε την εγκύκλιο του έτους της αίτησης.</p>
+        <p class="small-note">Νομική βάση: εγκύκλιος 138014/Ε2/15-10-2026, Μέρος Δεύτερο, κεφάλαιο Δ΄ (σελ. 34–38). Προσόντα, πενταετής διαδρομή και ειδικοί όροι υπόκεινται σε υπηρεσιακό έλεγχο.</p>
       </section>
 
       <section id="transferQualificationPanel" class="calculator-card" style="display:none; padding:18px; border:1px solid #b8c5d5; border-radius:12px; margin-bottom:16px;">
@@ -206,7 +207,7 @@
             </select>
           </div>
           <div class="field-grid" style="margin-top:14px"><div class="field"><label for="transferMusicPreviousYear">Έχει υποβληθεί προηγούμενος ηλεκτρονικός φάκελος για Μουσικά;</label>
-            <select id="transferMusicPreviousYear"><option value="none">Όχι / δεν γνωρίζω</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="other">Άλλο έτος</option></select></div></div>
+            <select id="transferMusicPreviousYear"><option value="none">Όχι / δεν γνωρίζω</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="other">Άλλο έτος</option></select></div></div>
           <div class="check-row"><label><input id="transferMusicNewDocuments" type="checkbox"> Υπάρχουν νέα στοιχεία/δικαιολογητικά για τον φάκελο Μουσικών.</label></div>
           <div id="transferMusicDossierAdvice" role="status" aria-live="polite" class="small-note" style="margin:10px 0"></div>
           <div id="transferMusicAdvice" role="status" aria-live="polite" style="padding:12px; border-left:3px solid #687991; background:rgba(109,127,160,.08); margin-top:14px;"></div>
@@ -242,14 +243,48 @@
           <div class="field-grid" style="margin-top:14px"><div class="field"><label for="transferArtPreviousYear">Προηγούμενος ηλεκτρονικός φάκελος για Καλλιτεχνικά</label>
             <select id="transferArtPreviousYear"><option value="none">Όχι / δεν γνωρίζω</option>
               <option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option>
-              <option value="2024">2024</option><option value="2025">2025</option><option value="other">Άλλο έτος</option>
+              <option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="other">Άλλο έτος</option>
             </select></div></div>
           <div class="check-row"><label><input id="transferArtNewDocuments" type="checkbox"> Έχω νέα στοιχεία ή δικαιολογητικά που δεν είχαν συμπεριληφθεί στον παλαιότερο φάκελο.</label></div>
           <div id="transferArtDossierAdvice" role="status" aria-live="polite" class="small-note" style="margin:10px 0"></div>
           <div id="transferArtAdvice" role="status" aria-live="polite" style="padding:12px; border-left:3px solid #687991; background:rgba(109,127,160,.08); margin-top:14px;"></div>
-          <p class="small-note">Βάση αναφοράς: εγκύκλιος 129787/Ε2/15-10-2025, Μέρος Τρίτο, Κεφ. ΣΤ΄ (σελ. 40–42). Η ημερομηνία 31-08-2026 αφορά αποκλειστικά τον κύκλο 2025–2026. Ο τελικός έλεγχος γίνεται από τα αρμόδια όργανα.</p>
+          <p class="small-note">Βάση αναφοράς: εγκύκλιος 138014/Ε2/15-10-2026, Κεφ. ΣΤ΄ (σελ. 41–43). Οι όροι πενταετίας/οργανικής εξετάζονται έως 31/08/2027. Ο τελικός έλεγχος γίνεται από τα αρμόδια όργανα.</p>
         </div>
-        <p class="small-note" id="transferQualificationFootnote">Ο έλεγχος δεν αντικαθιστά την εξέταση από το αρμόδιο υπηρεσιακό συμβούλιο ή την Επιστημονική Επιτροπή Μουσικής Παιδείας. Εγκύκλιος 2025–2026, Μέρος Γ΄, κεφάλαιο Ε΄, σελ. 38–39.</p>
+        <div id="transferInterculturalEligibility" style="display:none">
+          <p class="small-note">Προέλεγχος του Κεφαλαίου Ζ΄ της εγκυκλίου 138014/Ε2/15-10-2026 (σελ. 43–45). Οι προϋποθέσεις υπηρέτησης οργανικής και τα δηλωμένα προσόντα ελέγχονται από τη ΔΔΕ. <strong>Δεν υπάρχει βαθμολογική κατάταξη προσόντων.</strong></p>
+          <div class="field-grid">
+            <div class="field"><label for="transferInterculturalOrganic">Έχει υπηρετηθεί η κατεχόμενη οργανική θέση έως 31/08/2027;</label>
+              <select id="transferInterculturalOrganic"><option value="unknown">Δεν έχει ελεγχθεί</option><option value="yes">Ναι, σύμφωνα με τα υπηρεσιακά στοιχεία</option><option value="no">Όχι</option></select></div>
+            <div class="field"><label for="transferInterculturalCurrent">Υπηρετείτε οργανικά ήδη σε Πειραματικό Σχολείο Διαπολιτισμικής Εκπαίδευσης;</label>
+              <select id="transferInterculturalCurrent"><option value="no">Όχι</option><option value="yes">Ναι</option><option value="unknown">Δεν είμαι βέβαιος/η</option></select></div>
+            <div class="field" id="transferInterculturalYearsRow" style="display:none"><label for="transferInterculturalYears">Συμπληρωμένα έτη πραγματικής υπηρεσίας στην οργανική αυτού του σχολείου</label>
+              <input id="transferInterculturalYears" type="number" min="0" max="50" step="0.1" value="0" inputmode="decimal"></div>
+            <div class="field"><label for="transferInterculturalVacancy">Έχετε διασταυρώσει οργανικό κενό για τον κλάδο/την ειδικότητα στο επιλεγμένο σχολείο;</label>
+              <select id="transferInterculturalVacancy"><option value="unknown">Δεν έχω ελέγξει</option><option value="yes">Ναι, υπάρχει προκηρυγμένο κενό</option><option value="no">Όχι, δεν υπάρχει προκηρυγμένο κενό</option></select></div>
+            <div class="field"><label for="transferInterculturalLanguageCase">Σύνθεση μαθητικού πληθυσμού στο σχολείο ενδιαφέροντος</label>
+              <select id="transferInterculturalLanguageCase"><option value="unknown">Δεν γνωρίζω / απαιτείται έλεγχος</option><option value="usual">Γενική περίπτωση (ελέγχεται γλώσσα προέλευσης)</option><option value="roma">Οι περισσότεροι μαθητές είναι Ρομά — ειδική εξαίρεση γλώσσας</option></select></div>
+            <div class="field"><label for="transferInterculturalPreviousYear">Υπάρχει προηγούμενος ηλεκτρονικός φάκελος διαπολιτισμικών;</label>
+              <select id="transferInterculturalPreviousYear"><option value="none">Όχι / δεν γνωρίζω</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="other">Άλλο έτος</option></select></div>
+          </div>
+          <div class="check-row"><label><input id="transferInterculturalNewDocuments" type="checkbox"> Έχω νέα στοιχεία/δικαιολογητικά που δεν περιλαμβάνονται στον προηγούμενο φάκελο.</label></div>
+          <h3 style="margin:18px 0 6px">Πρόσθετα προσόντα — κατά σειρά προτεραιότητας της εγκυκλίου</h3>
+          <p class="small-note">Σημειώστε μόνο όσα πράγματι διαθέτετε. Η σειρά αφορά την περιγραφή της εγκυκλίου, <strong>όχι αριθμητική βαθμολόγηση</strong>. Η γλωσσική εξαίρεση αφορά σχολεία με πλειοψηφία μαθητών Ρομά.</p>
+          <div id="transferInterculturalQualifications">
+            <div class="check-row"><label><input type="checkbox" data-intercultural-qual="origin_language"> α) Επαρκής γνώση της ξένης γλώσσας προέλευσης της πλειονότητας των μαθητών</label></div>
+            <div class="check-row"><label><input type="checkbox" data-intercultural-qual="greek_second"> β) Εξειδίκευση στη διδασκαλία Ελληνικής ως δεύτερης ή ξένης γλώσσας</label></div>
+            <div class="check-row"><label><input type="checkbox" data-intercultural-qual="intercultural_studies"> γ) Μετεκπαίδευση / μεταπτυχιακές σπουδές στη Διαπολιτισμική Αγωγή</label></div>
+            <div class="check-row"><label><input type="checkbox" data-intercultural-qual="pedagogy_studies"> δ) Μετεκπαίδευση / μεταπτυχιακές σπουδές στις επιστήμες της αγωγής</label></div>
+            <div class="check-row"><label><input type="checkbox" data-intercultural-qual="subject_studies"> ε) Μετεκπαίδευση / μεταπτυχιακές σπουδές στο αντικείμενο διδασκαλίας</label></div>
+            <div class="check-row"><label><input type="checkbox" data-intercultural-qual="school_experience"> στ) Διδακτική εμπειρία σε Σχολεία Διαπολιτισμικής Εκπαίδευσης</label></div>
+            <div class="check-row"><label><input type="checkbox" data-intercultural-qual="reception_experience"> ζ) Διδακτική εμπειρία σε Τάξεις Υποδοχής ή Φροντιστηριακά Τμήματα</label></div>
+            <div class="check-row"><label><input type="checkbox" data-intercultural-qual="international_language"> η) Επαρκής γνώση Αγγλικών, Γαλλικών ή Γερμανικών</label></div>
+            <div class="check-row"><label><input type="checkbox" data-intercultural-qual="seminars"> θ) Επιμορφωτικά σεμινάρια Διαπολιτισμικής Εκπαίδευσης από προβλεπόμενους φορείς</label></div>
+          </div>
+          <div id="transferInterculturalAdvice" role="status" aria-live="polite" style="padding:12px;border-left:3px solid #687991;margin-top:14px"></div>
+          <div id="transferInterculturalDossierAdvice" role="status" aria-live="polite" class="small-note" style="margin:10px 0"></div>
+          <p class="small-note">Οργανικές κενές θέσεις ανά κλάδο/ειδικότητα: <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a>. Αίτηση στο ίδιο σύστημα· όταν χρειάζεται νέος φάκελος, δικαιολογητικά μόνο μέσω <a href="https://mydocs.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">mydocs.minedu.gov.gr ↗</a>, σε μία αποστολή.</p>
+        </div>
+        <p class="small-note" id="transferQualificationFootnote">Ο έλεγχος δεν αντικαθιστά την εξέταση από το αρμόδιο υπηρεσιακό συμβούλιο ή την Επιστημονική Επιτροπή Μουσικής Παιδείας. Εγκύκλιος 2026–2027, Κεφ. Ε΄, σελ. 39–41.</p>
       </section>
 
       <?php calculatorActions(array(
@@ -265,7 +300,7 @@
       </section>
       <?php calculatorResultMessage(array(
         'variant' => 'disclaimer',
-        'html' => '<strong>Τι περιλαμβάνει:</strong> υπολογίζει πληροφοριακά τα βασικά μόρια και παρέχει <strong>προέλεγχο</strong> θεμελίωσης για ορισμένες περιπτώσεις ΕΑΕ/Μουσικών/Καλλιτεχνικών. Δεν πιστοποιεί δικαίωμα μετάθεσης, σειρά κατάταξης, όλες τις εξαιρέσεις ή ειδικές κατηγορίες προτεραιότητας. Οι υπηρεσιακές πράξεις και η νεότερη εγκύκλιος υπερισχύουν.'
+        'html' => '<strong>Τι περιλαμβάνει:</strong> υπολογίζει πληροφοριακά τα βασικά μόρια και παρέχει <strong>προέλεγχο</strong> θεμελίωσης για ορισμένες περιπτώσεις ΕΑΕ/Μουσικών/Καλλιτεχνικών/Διαπολιτισμικών. Δεν πιστοποιεί δικαίωμα μετάθεσης, σειρά κατάταξης, όλες τις εξαιρέσεις ή ειδικές κατηγορίες προτεραιότητας. Οι υπηρεσιακές πράξεις και η νεότερη εγκύκλιος υπερισχύουν.'
       )); ?>
     <?php calculatorMainEnd(); ?>
 
@@ -290,8 +325,9 @@
 <?php calculatorContainerEnd(); ?>
 
 <?php sourceCardStart(); ?>
-  <p>Οι λίστες δικαιολογητικών είναι οδηγός προετοιμασίας και απαιτούν επαλήθευση με την εγκύκλιο της αντίστοιχης περιόδου αιτήσεων. Ο υπολογισμός βασίζεται στην εγκύκλιο μεταθέσεων εκπαιδευτικών Δευτεροβάθμιας Εκπαίδευσης σχολικού έτους 2025–2026 (129787/Ε2/15-10-2025) και στο π.δ. 50/1996 όπως ισχύει.</p>
+  <p>Οι λίστες δικαιολογητικών είναι οδηγός προετοιμασίας και απαιτούν επαλήθευση με την εγκύκλιο της αντίστοιχης περιόδου αιτήσεων. Οι οδηγίες δικαιολογητικών και οι βασικές προϋποθέσεις επικαιροποιήθηκαν βάσει της εγκυκλίου μεταθέσεων Δ.Ε. 2026–2027 (138014/Ε2/15-10-2026). Ο αριθμητικός υπολογισμός παραμένει ο υφιστάμενος, βάσει του π.δ. 50/1996, και πρέπει να επιβεβαιώνεται με το επίσημο μητρώο.</p>
   <?php sourceCardLinksStart(); ?>
+    <?php sourceCardLink('https://diavgeia.gov.gr/doc/ΨΚΩΦ46ΝΚΠΔ-63Κ?inline=true', 'Διαύγεια — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2 ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D_%CE%94%CE%95_2025-2026_6%CE%94%CE%A7%CE%9F46%CE%9D%CE%9A%CE%A0%CE%94-%CE%A4%CE%954.pdf', 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2025–2026 ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/monimoi-metatakseis-metatheseis-apospaseis', 'ΥΠΑΙΘΑ — Νομοθεσία κινητικότητας / Π.Δ. 50/1996 ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/kinitikotita/metatheseis-egkyklioi-proskliseis', 'ΥΠΑΙΘΑ — Τρέχουσες εγκύκλιοι μεταθέσεων ↗'); ?>
