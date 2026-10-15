@@ -33,5 +33,5 @@ check('no DE in PE withdrawal', 'Δ.Ε.' not in str(withdraw['children'][0]['sou
 check('no misplaced grade in historical DE withdrawal',all('Π.Ε.' not in s['label'] for s in withdraw['children'][1]['historical_sources']))
 check('grade filters attached to shared pieces', 'data-timeline-part' in (ROOT/'xronodiagramma-ypiresiakon-metavolon.php').read_text())
 check('front end hides unrelated sources', 'part.hidden = activeLevel' in (ROOT/'assets/service-timeline.js').read_text())
-check('version consistent',"'3.22.114'" in (ROOT/'includes/config.php').read_text() and "'3.22.114'" in (ROOT/'service-worker.js').read_text())
+check('version consistent',"'3.22.115'" in (ROOT/'includes/config.php').read_text() and "'3.22.115'" in (ROOT/'service-worker.js').read_text())
 print(f'{checks} presentation checks PASS')

@@ -328,7 +328,7 @@
   <p>Οι λίστες δικαιολογητικών είναι οδηγός προετοιμασίας και απαιτούν επαλήθευση με την εγκύκλιο της αντίστοιχης περιόδου αιτήσεων. Οι οδηγίες δικαιολογητικών και οι βασικές προϋποθέσεις επικαιροποιήθηκαν βάσει της εγκυκλίου μεταθέσεων Δ.Ε. 2026–2027 (138014/Ε2/15-10-2026). Ο αριθμητικός υπολογισμός παραμένει ο υφιστάμενος, βάσει του π.δ. 50/1996, και πρέπει να επιβεβαιώνεται με το επίσημο μητρώο.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://diavgeia.gov.gr/doc/ΨΚΩΦ46ΝΚΠΔ-63Κ?inline=true', 'Διαύγεια — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2 ↗'); ?>
-    <?php sourceCardLink('https://www.minedu.gov.gr/publications/docs2023/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D_%CE%94%CE%95_2025-2026_6%CE%94%CE%A7%CE%9F46%CE%9D%CE%9A%CE%A0%CE%94-%CE%A4%CE%954.pdf', 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2025–2026 ↗'); ?>
+    <?php sourceCardLink('https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027', 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2 ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/monimoi-metatakseis-metatheseis-apospaseis', 'ΥΠΑΙΘΑ — Νομοθεσία κινητικότητας / Π.Δ. 50/1996 ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/kinitikotita/metatheseis-egkyklioi-proskliseis', 'ΥΠΑΙΘΑ — Τρέχουσες εγκύκλιοι μεταθέσεων ↗'); ?>
     <?php sourceCardLink('https://teachers.minedu.gov.gr/', 'Online Σύστημα Μητρώου & Αιτήσεων Μετάθεσης ↗'); ?>
