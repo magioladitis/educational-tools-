@@ -58,6 +58,7 @@
     if(q==='experience'&&year(a.eaeYears)<5)requirements.push('Η διαδρομή βασικού πτυχίου + προϋπηρεσίας απαιτεί τουλάχιστον πέντε αποδεδειγμένα έτη στην ΕΑΕ.');
     if(a.origin!=='eae'){
       if(year(a.teachingYears)<3)requirements.push('Για μετάβαση από Γενική/Επαγγελματική σε ΕΑΕ απαιτείται τριετής διδακτική υπηρεσία από τον διορισμό.');
+      if(a.newly&&(!Number.isFinite(Number(a.areaYears))||Number(a.areaYears)<0||Number(a.areaYears)>45))requirements.push('Τα έτη υπηρεσίας στην περιοχή διορισμού πρέπει να είναι από 0 έως 45.');
       if(a.newly&&year(a.areaYears)<2)requirements.push('Για νεοδιόριστους ελέγχονται δύο έτη στην περιοχή διορισμού, εντός της απαιτούμενης τριετίας.');
     } else requirements.push('Για μετακίνηση ΕΑΕ → ΕΑΕ ελέγξτε χωριστά υπηρέτηση οργανικής, περιοχή και τυχόν ειδικές υπηρεσιακές υποχρεώσεις.');
     if(a.destination==='deaf')requirements.push('Για Σχολείο Κωφών απαιτείται επιπλέον πιστοποιημένη γνώση Ελληνικής Νοηματικής Γλώσσας.');
@@ -82,6 +83,7 @@
     }
     if(origin==='appointed_eae'){
       var eaeYears=asYears(a.eaeYears),areaYears=asYears(a.areaYears);
+      if(areaYears!==null&&areaYears>45)areaYears=null;
       if(eaeYears===null||areaYears===null){
         review.push('Συμπληρώστε έγκυρα έτη υπηρεσίας στην ΕΑΕ και στην περιοχή διορισμού.');
       }else{

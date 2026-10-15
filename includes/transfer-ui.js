@@ -46,6 +46,15 @@
     el.value = String(Math.max(0, Math.min(max, Math.floor(n))));
   }
 
+  // Keep fractional years (0.1 precision); do not use the integer-only clampInput() here.
+  function clampAreaYears(el) {
+    if (!el || el.value === '') return;
+    var n = Number(el.value);
+    if (!Number.isFinite(n)) return;
+    if (n < 0) el.value = '0';
+    else if (n > 45) el.value = '45';
+  }
+
   function categoryOptionsHtml() {
     return CATEGORY_OPTIONS.map(function (x) { return '<option value="' + x[0] + '">' + x[1] + '</option>'; }).join('');
   }
@@ -162,10 +171,25 @@
     if (input.mode === 'smeae') input.mode = byId('transferEaeArea').value==='same'?'local':'region'; // Arithmetic depends on area; eligibility is separate.
     var result = global.EducationTransfer.calculate(input);
 
-    byId('totalResult').textContent = result.total === null ? '—' : formatPoints(result.total);
+    // When direct M.S.D. is missing, the full result is unknown. Show a clearly
+    // labelled provisional subtotal rather than the misleading bare dash.
+    // Never treat an absent M.S.D. amount as zero for the final calculation.
+    var missingMsd = !result.msdInputValid;
+    var provisional = global.EducationTransfer.truncate2(
+      result.servicePoints + result.coServicePoints + result.familyPoints +
+      result.localityPoints + result.firstPreferencePoints
+    );
+    byId('totalResult').textContent = formatPoints(missingMsd ? provisional : result.total);
+    var totalLabel = byId('transferTotalLabel');
+    if (totalLabel) totalLabel.textContent = missingMsd ? 'προσωρινές μονάδες (χωρίς Μ.Σ.Δ.)' : 'συνολικές μονάδες';
     byId('servicePointsResult').textContent = formatPoints(result.servicePoints);
     byId('msdPointsResult').textContent = result.msdPoints === null ? '—' : formatPoints(result.msdPoints);
-    byId('msdDirectStatus').textContent = input.msdMode === 'direct' ? (result.msdInputValid ? 'Οι Μ.Σ.Δ. μεταφέρθηκαν στο άθροισμα χωρίς προσθήκη των αναλυτικών υπηρετήσεων.' : 'Συμπληρώστε έναν μη αρνητικό αριθμό με έως δύο δεκαδικά, π.χ. 48,75.') : '';
+    // The static field hint already explains the entry format and the no-double-counting rule.
+    // Only give an inline message for a genuinely invalid, non-empty value.
+    var directValue = String(input.msdDirectPoints || '').trim();
+    var directInvalid = input.msdMode === 'direct' && directValue !== '' && !result.msdInputValid;
+    byId('msdDirectStatus').textContent = directInvalid ? 'Μη έγκυρη τιμή: δώστε μη αρνητικό αριθμό με έως δύο δεκαδικά.' : '';
+    byId('msdDirectPoints').setAttribute('aria-invalid', directInvalid ? 'true' : 'false');
     byId('coServiceResult').textContent = formatPoints(result.coServicePoints);
     byId('familyResult').textContent = formatPoints(result.familyPoints);
     byId('localityResult').textContent = formatPoints(result.localityPoints);
@@ -180,7 +204,7 @@
     var durationText = duration.years + ' έτη, ' + duration.months + ' μήνες';
     if (duration.roundedDays) durationText += ' (οι ' + duration.roundedDays + ' ημέρες λογίστηκαν ως μήνας)';
     var excludedCoService=byId('coService').checked && !input.coService;
-    byId('statusResult').textContent = result.msdInputValid ? ('Συνολική υπηρεσία: ' + durationText + '. Οι ειδικές κατηγορίες/προτεραιότητες δεν περιλαμβάνονται στο άθροισμα.'+(excludedCoService?' Συνυπηρέτηση: 0 μόρια λόγω του επιλεγμένου μη επιλέξιμου εργασιακού καθεστώτος.':'')) : 'Συμπληρώστε έγκυρες Μ.Σ.Δ. για να υπολογιστεί το συνολικό αποτέλεσμα.';
+    byId('statusResult').textContent = result.msdInputValid ? ('Συνολική υπηρεσία: ' + durationText + '. Οι ειδικές κατηγορίες/προτεραιότητες δεν περιλαμβάνονται στο άθροισμα.'+(excludedCoService?' Συνυπηρέτηση: 0 μόρια λόγω του επιλεγμένου μη επιλέξιμου εργασιακού καθεστώτος.':'')) : 'Το εμφανιζόμενο ποσό είναι προσωρινό και ΔΕΝ περιλαμβάνει Μ.Σ.Δ. Εισαγάγετε τον έγκυρο συνολικό αριθμό Μ.Σ.Δ. ή επιλέξτε υπολογισμό από υπηρετήσεις για την τελική βαθμολογία.';
   }
 
   function currentGeneralReturnInput(){
@@ -228,8 +252,6 @@
     var qualifications = mode === 'music' || mode === 'art' || mode === 'intercultural';
     byId('firstPreferenceRow').classList.toggle('hidden', isLocal || qualifications);
     if (isLocal || qualifications) byId('firstPreference').checked = false;
-    var calculateButton=byId('calculateBtn');
-    if(calculateButton)calculateButton.textContent=qualifications?'Ενημέρωση ελέγχου':'Υπολογισμός μορίων';
     var guidance = byId('transferModeGuidance');
     var scoreBlock = byId('transferScoringResults');
     if (scoreBlock) scoreBlock.style.display = qualifications ? 'none' : '';
@@ -260,7 +282,7 @@
     } else if (mode === 'intercultural') {
       guidance.innerHTML = '<strong>Πειραματικά Σχολεία Διαπολιτισμικής Εκπαίδευσης:</strong> ειδική διαδικασία προσόντων χωρίς υπολογισμό μορίων. Ελέγχονται η οργανική θέση έως 31/08/2027, η διετία για ήδη υπηρετούντες, τα οργανικά κενά και τα πρόσθετα προσόντα με τη σειρά της εγκυκλίου 138014/Ε2/2026, Κεφ. Ζ΄. Ο έλεγχος δεν υποκαθιστά απόφαση ΔΔΕ.';
     } else if (isLocal) {
-      guidance.textContent = 'Οριστική τοποθέτηση / βελτίωση: εξετάζονται οι δήμοι των συγκεκριμένων σχολείων και δεν ισχύουν μόρια πρώτης προτίμησης.';
+      guidance.innerHTML = '<strong>Οριστική τοποθέτηση / βελτίωση:</strong> εξετάζονται οι δήμοι των συγκεκριμένων σχολείων και δεν ισχύουν μόρια πρώτης προτίμησης.';
     } else {
       guidance.innerHTML = '<strong>Μετάθεση από περιοχή σε περιοχή — Γενική Εκπαίδευση:</strong> περιλαμβάνει τη Γενική/Επαγγελματική Εκπαίδευση, όχι οργανικές θέσεις ΕΑΕ. Συνυπηρέτηση και εντοπιότητα αφορούν την περιοχή μετάθεσης· μόρια πρώτης προτίμησης όπου προβλέπονται.';
     }
@@ -402,7 +424,6 @@
 
     byId('addMsdRow').addEventListener('click', function () { addRow(); });
     byId('msdMode').addEventListener('change', function () { syncMsdMode(); calculate(); });
-    byId('calculateBtn').addEventListener('click', calculate);
     byId('resetBtn').addEventListener('click', reset);
     byId('mode').addEventListener('change', syncMode);
     if(global.EducationTransferDocuments) global.EducationTransferDocuments.init();
@@ -411,6 +432,7 @@
       var target = event.target;
       if (!target) return;
       if (target.id === 'serviceYears' || target.classList.contains('msd-years')) clampInput(target, 50);
+      if (target.id === 'transferEaeAreaYears' || target.id === 'transferGeneralEaeAreaYears') clampAreaYears(target);
       if (target.id === 'serviceMonths' || target.classList.contains('msd-months')) clampInput(target, 11);
       if (target.id === 'serviceDays' || target.classList.contains('msd-days')) clampInput(target, 29);
       if (target.id === 'eligibleChildren') clampInput(target, 20);
@@ -424,6 +446,7 @@
     document.addEventListener('change', function (event) {
       var target = event.target;
       if (!target) return;
+      if (target.id === 'transferEaeAreaYears' || target.id === 'transferGeneralEaeAreaYears') clampAreaYears(target);
       var row = target.closest ? target.closest('.transfer-service-row') : null;
       if (row && (target.classList.contains('msd-type') || target.classList.contains('msd-category'))) syncRow(row);
       if (target.closest && target.closest('.edu-page-transfer')) {syncGeneralReturn();syncEligibilityDetails();calculate();}

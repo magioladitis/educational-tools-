@@ -4196,3 +4196,62 @@ body.edu-page-service-timeline .timeline-event-card .timeline-part-heading h3 {m
 body.edu-page-service-timeline .timeline-part-date {font-size:12px;color:#98510c;font-weight:750;font-variant-numeric:tabular-nums;}
 body.edu-page-service-timeline .timeline-event-part--sub .timeline-history {margin-top:12px;}
 @media(max-width:600px) {body.edu-page-service-timeline .timeline-event-part--sub {padding:10px;}}
+
+
+/* v3.22.117 — responsive documents checklist and subordinate legal/source typography. */
+body.edu-ui.edu-page-transfer #transferDocumentsPanel { min-width:0; }
+body.edu-ui.edu-page-transfer #transferDocumentsPanel > h2 { font-size:clamp(22px, 3vw, 26px); line-height:1.3; }
+body.edu-ui.edu-page-transfer #transferDocumentsPanel > .small-note { font-size:14px; line-height:1.55; font-weight:400; margin:0 0 16px; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__progress { font-size:13px; font-weight:650; color:var(--edu-muted); margin:6px 0 12px; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc { padding:13px 0; border-bottom:1px solid var(--edu-border); min-width:0; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc:first-child { border-top:1px solid var(--edu-border); }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__head { display:flex; gap:12px; align-items:flex-start; min-width:0; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__check { appearance:auto; inline-size:21px; block-size:21px; flex:0 0 21px; margin:4px 0 0; accent-color:var(--edu-primary); cursor:pointer; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__main { min-width:0; flex:1 1 auto; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__title { display:block; font-size:18px; line-height:1.35; font-weight:750; letter-spacing:0; margin:0; cursor:pointer; overflow-wrap:anywhere; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__category { margin-top:3px; color:var(--edu-muted); font-size:12.5px; font-weight:400; line-height:1.35; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__summary { margin:7px 0 4px; font-size:15px; line-height:1.5; font-weight:400; color:var(--edu-text); overflow-wrap:anywhere; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__portal { font-size:13.5px; line-height:1.45; font-weight:600; display:inline-block; overflow-wrap:anywhere; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__actions:empty { display:none; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__disclosure { border:0; margin:7px 0 0; padding:0; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__disclosure > summary { color:var(--edu-primary-dark); cursor:pointer; font-size:13px; line-height:1.4; font-weight:600; padding:9px 5px; display:list-item; list-style-position:inside; min-height:44px; box-sizing:border-box; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__disclosure > summary:hover { text-decoration:underline; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__disclosure > summary:focus-visible { outline:3px solid var(--edu-primary); outline-offset:2px; border-radius:6px; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__body { background:#f8fafc; border:1px solid var(--edu-border); border-radius:10px; padding:11px 13px; min-width:0; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__detail { color:var(--edu-text); font-size:14.5px; font-weight:400; line-height:1.55; overflow-wrap:anywhere; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__source { color:var(--edu-muted); border-top:1px solid var(--edu-border); padding-top:7px; margin:10px 0 0; font-size:12px; line-height:1.5; font-weight:400; overflow-wrap:anywhere; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc.is-complete .edu-transfer-doc__title { color:#38516a; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc.has-warning .edu-transfer-doc__summary { color:#8c2f25; font-weight:600; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__body .transfer-eae-options { margin:10px 0 0; }
+/* References support the decision; they should never compete visually with instructions. */
+body.edu-ui.edu-page-transfer .edu-source-card h2 { font-size:15px; line-height:1.4; }
+body.edu-ui.edu-page-transfer .edu-source-card p { font-size:12.5px; line-height:1.5; font-weight:400; }
+body.edu-ui.edu-page-transfer .edu-source-card .source-links a { font-size:12px; font-weight:600; }
+body.edu-ui.edu-page-transfer .edu-source-card .source-disclaimer { font-size:12px; }
+@media (max-width:650px) {
+ body.edu-ui.edu-page-transfer #transferDocumentsPanel { padding:12px !important; margin:12px 0 !important; }
+ body.edu-ui.edu-page-transfer .edu-transfer-doc__head { gap:10px; }
+ body.edu-ui.edu-page-transfer .edu-transfer-doc__title { font-size:17px; }
+ body.edu-ui.edu-page-transfer .edu-transfer-doc__summary { font-size:14.5px; }
+ body.edu-ui.edu-page-transfer .edu-transfer-doc__detail { font-size:14px; }
+ body.edu-ui.edu-page-transfer .edu-transfer-doc__body { padding:10px; }
+ body.edu-ui.edu-page-transfer .edu-source-card .source-links a { min-height:40px; }
+}
+@media print {
+ body.edu-ui.edu-page-transfer .edu-transfer-doc__disclosure { display:block; }
+ body.edu-ui.edu-page-transfer .edu-transfer-doc__body { display:block; }
+}
+
+/* v3.22.118 — locality requires only its heading and optional details. */
+body.edu-ui.edu-page-transfer .edu-transfer-doc.is-compact .edu-transfer-doc__disclosure { margin-top:2px; }
+
+/* v3.22.119 — compact EAE qualification cards reuse locality behavior;
+   match the children points hint with the existing service-days label hint. */
+body.edu-ui.edu-page-transfer #transferNumericalInputs label[for="eligibleChildren"] small {
+  display:block;
+  margin-top:3px;
+  color:var(--edu-muted);
+  font-size:13px;
+  font-weight:400;
+  line-height:1.35;
+}

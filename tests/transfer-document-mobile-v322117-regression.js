@@ -1,0 +1,26 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '..');
+const page = fs.readFileSync(path.join(root, 'ypologismos-morion-metathesis.php'),'utf8');
+const js = fs.readFileSync(path.join(root, 'includes/transfer-documents.js'),'utf8');
+const css = fs.readFileSync(path.join(root, 'assets/common.css'),'utf8');
+let checks = 0;
+function ok(value,label){assert.ok(value,label);checks++;}
+ok(page.includes('id="transferDocumentProgress"') && page.includes('aria-live="polite"'), 'only progress announces updates');
+ok(!page.includes('id="transferDocumentChecklist" aria-live="polite"'), 'the full list is not an unnecessary live region');
+ok(js.includes('data-doc-details=') && js.includes('Περισσότερες πληροφορίες'), 'native disclosure per document');
+ok(js.includes('openRows[details.getAttribute') && js.includes('data-doc-details'), 'expanded state preserved between form updates');
+ok(js.includes('checked[input.dataset.docId]') && js.includes('progress(root)'), 'checked-state and progress updated');
+ok(js.includes('isCritical(d)') && js.includes('Δεν θεμελιώνεται'), 'important warnings expanded initially');
+ok(js.includes("submission:'16/10–02/11/2026") && js.includes('ΔΕΝ ισοδυναμεί'), 'deadline and finalization warning remain visible');
+ok(js.includes('Διορθώσεις: 23–27/11/2026'), 'correction deadline remains visible');
+ok(js.includes('Νεογέννητα: ειδικές οδηγίες έως 31/12/2026'), 'newborn deadline remains visible');
+ok(js.includes('legalSeparation(d.detail)') && js.includes('edu-transfer-doc__source'), 'legal sources separated without dropping details');
+ok(css.includes('font-size:15px; line-height:1.5; font-weight:400') && css.includes('.edu-transfer-doc__detail { color:'), 'summary typography is regular weight');
+ok(css.includes('.edu-transfer-doc__source {') && css.includes('font-size:12px; line-height:1.5'), 'in-item sources remain visually secondary');
+ok(css.includes('.edu-source-card p { font-size:12.5px') && css.includes('.edu-source-card .source-links a { font-size:12px'), 'footer sources scoped to calculator and deliberately smaller');
+ok(css.includes('min-height:44px') && css.includes('.edu-transfer-doc__check {'), 'accessible touch controls');
+ok(js.includes("function print(){var rows=build()") && js.includes('escape(d.detail)'), 'full source details retained in printed list');
+console.log('PASS '+checks+' transfer document mobile v3.22.117 checks');

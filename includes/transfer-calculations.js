@@ -29,7 +29,10 @@
 
   function truncate2(value) {
     var n = number(value, 0);
-    return Math.trunc((n + Number.EPSILON) * 100) / 100;
+    // Avoid losing a cent to IEEE-754 representation (e.g. 138.2*100
+    // can be 13819.999999999998). Keep truncation, never ordinary rounding.
+    var scaled = n * 100;
+    return Math.trunc(scaled + Math.max(1e-9, 4 * Number.EPSILON * Math.abs(scaled))) / 100;
   }
 
   function normalizeDuration(years, months, days) {

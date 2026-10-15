@@ -1,0 +1,33 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),vm=require('node:vm');
+const root=path.join(__dirname,'..');
+const code=fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf8');
+const css=fs.readFileSync(path.join(root,'assets/common.css'),'utf8');
+const elements={};
+function v(key,value,checked){elements[key]={value:String(value||''),checked:!!checked};}
+v('mode','region');v('serviceYears',0);v('serviceMonths',0);v('serviceDays',0);v('eligibleChildren',0);
+v('msdMode','direct');v('familyStatusEligible','',false);v('coService','',false);v('locality','',true);
+v('transferGeneralOrigin','general');v('transferGeneralEaeYears',0);v('transferGeneralEaeAreaYears',0);v('transferGeneralEaeSinceTransfer',0);v('transferGeneralEaeOrganic','',false);
+const document={getElementById(id){assert.ok(elements[id],`missing ${id}`);return elements[id];},querySelectorAll(){return [];}};
+const window={};vm.runInNewContext(code,{window,document});
+const build=window.EducationTransferDocuments.build;
+let tests=0;function ok(cond,label){assert.ok(cond,label);tests++;}
+let rows=build();
+ok(rows.filter(x=>x.id==='record').length===1,'one record card');
+ok(rows.filter(x=>x.id==='msd'||x.id==='msd-direct').length===0,'never duplicated MSD');
+let record=rows.find(x=>x.id==='record');
+ok(record.title.includes('και Μ.Σ.Δ.'),'single combined title');
+ok(record.detail.includes('Οι αναλυτικές υπηρετήσεις δεν προστίθενται δεύτερη φορά'),'direct mode explained inside record');
+ok(rows.some(x=>x.id==='locality'),'locality check appears when selected');
+ok(code.includes("var compact=d.id==='locality'"),'locality declared as compact');
+ok(code.includes("(compact?'':'<p class=\"edu-transfer-doc__summary\">'"),'no visible locality summary');
+ok(css.includes('.edu-transfer-doc.is-compact .edu-transfer-doc__disclosure'),'compact layout CSS');
+elements.msdMode.value='periods';rows=build();record=rows.find(x=>x.id==='record');
+ok(rows.filter(x=>x.id==='msd'||x.id==='msd-direct').length===0,'periods mode also has no duplicate');
+ok(record.detail.includes('ανά σχολείο και κατηγορία'),'period-based cross check remains');
+ok(!record.detail.includes('δεύτερη φορά'),'direct-mode guide not shown for period mode');
+elements.mode.value='local';rows=build();
+ok(rows.some(x=>x.id==='record'&&x.title.includes('Μ.Σ.Δ.')),'combined card also local placements');
+elements.locality.checked=false;rows=build();
+ok(!rows.some(x=>x.id==='locality'),'locality hidden when not requested');
+console.log('PASS',tests,'transfer record / MSD merged / locality compact checks');

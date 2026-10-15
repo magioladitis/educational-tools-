@@ -53,7 +53,7 @@
               <div class="field"><label for="transferGeneralEaeYears">Έτη υπηρεσίας σε σχολικές μονάδες ΕΑΕ από τον διορισμό</label>
                 <input id="transferGeneralEaeYears" type="number" min="0" max="50" step="0.1" value="0" inputmode="decimal"></div>
               <div class="field"><label for="transferGeneralEaeAreaYears">Σχολικά έτη στην περιοχή διορισμού</label>
-                <input id="transferGeneralEaeAreaYears" type="number" min="0" max="50" step="0.1" value="0" inputmode="decimal"></div>
+                <input id="transferGeneralEaeAreaYears" type="number" min="0" max="45" step="0.1" value="0" inputmode="decimal"></div>
             </div>
           </div>
           <div id="transferGeneralEaeTransferred" style="display:none">
@@ -81,14 +81,13 @@
             <input id="serviceDays" type="number" min="0" max="29" step="1" value="0" inputmode="numeric">
           </div>
           <div class="field">
-            <label for="eligibleChildren">Τέκνα που μοριοδοτούνται</label>
+            <label for="eligibleChildren">Τέκνα που μοριοδοτούνται <small>1ο–2ο: 4 · 3ο: 6 · από το 4ο: 7 μόρια/τέκνο</small></label>
             <input id="eligibleChildren" type="number" min="0" max="20" step="1" value="0" inputmode="numeric">
-            <div class="field-hint">4 + 4 + 6 + 7 μόρια για κάθε επόμενο τέκνο.</div>
           </div>
         </div>
 
-        <div class="check-row"><label><input id="familyStatusEligible" type="checkbox"> Δικαιούμαι τις 4 μονάδες οικογενειακής κατάστασης (γάμος/σύμφωνο συμβίωσης ή προβλεπόμενη περίπτωση γονέα με επιμέλεια)</label></div>
-        <div class="check-row"><label><input id="coService" type="checkbox"> Δικαιούμαι συνυπηρέτηση για την περιοχή/τον δήμο που εξετάζω (+4)</label></div>
+        <div class="check-row"><label><input id="familyStatusEligible" type="checkbox"> Γάμος/Σύμφωνο Συμβίωσης/Γονέας με επιμέλεια (+4)</label></div>
+        <div class="check-row"><label><input id="coService" type="checkbox"> Συνυπηρέτηση στην περιοχή/το δήμο που εξετάζω (+4)</label></div>
         <div class="field" id="transferCoServiceCaseField" style="display:none;margin:10px 0 14px 0;">
           <label for="transferCoServiceCase">Καθεστώς εργασίας συζύγου / συμβίου</label>
           <select id="transferCoServiceCase">
@@ -107,7 +106,7 @@
           </select>
           <div class="field-hint" id="transferCoServiceAdvice" role="status" aria-live="polite"></div>
         </div>
-        <div class="check-row"><label><input id="locality" type="checkbox"> Δικαιούμαι εντοπιότητα για την περιοχή/τον δήμο που εξετάζω (+4)</label></div>
+        <div class="check-row"><label><input id="locality" type="checkbox"> Εντοπιότητα στην περιοχή/το δήμο που εξετάζω (+4)</label></div>
         <div class="check-row" id="firstPreferenceRow"><label><input id="firstPreference" type="checkbox"> Η περιοχή είναι η πρώτη προτίμησή μου (+2)</label></div>
 
         <?php calculatorDisclosure(array(
@@ -128,7 +127,11 @@
             <option value="periods">Υπολογισμός από τις υπηρετήσεις μου</option>
             <option value="direct">Απευθείας καταχώριση συνολικών μορίων Μ.Σ.Δ.</option>
           </select>
-          <div class="field-hint">Μπορείτε να δείτε τις υπηρετήσεις και τα ήδη καταχωρισμένα μόρια μετάθεσης στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a> (σύνδεση με λογαριασμό ΠΣΔ).</div>
+          <?php calculatorDisclosure(array(
+            'id' => 'msdRegistryHelp',
+            'summary' => 'Πού βλέπω τις υπηρετήσεις μου;',
+            'html' => 'Μπορείτε να δείτε τις υπηρετήσεις και τα ήδη καταχωρισμένα μόρια μετάθεσης στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a> (σύνδεση με λογαριασμό ΠΣΔ).'
+          )); ?>
         </div>
         <div id="msdPeriodsPanel">
           <p class="small-note">Πρόσθεσε μία γραμμή για κάθε διαφορετική υπηρέτηση/κατηγορία. Οι ημέρες ≥15 λογίζονται ως πλήρης μήνας. Για παράλληλη υπηρεσία μπορείς να δηλώσεις τις ημέρες ανά εβδομάδα (σύνολο 5/5).</p>
@@ -146,7 +149,7 @@
           <div class="field">
             <label for="msdDirectPoints">Συνολικές μονάδες συνθηκών διαβίωσης από το επίσημο μητρώο</label>
             <input id="msdDirectPoints" type="text" inputmode="decimal" autocomplete="off" placeholder="π.χ. 48,75" aria-describedby="msdDirectHelp msdDirectStatus">
-            <div class="field-hint" id="msdDirectHelp">Πληκτρολογήστε τον ακριβή αριθμό Μ.Σ.Δ. με έως δύο δεκαδικά (κόμμα ή τελεία). Οι υπηρετήσεις που συμπληρώθηκαν στην άλλη καρτέλα δεν θα προστεθούν.</div>
+            <div class="field-hint" id="msdDirectHelp">Δώστε τον ακριβή αριθμό Μ.Σ.Δ. με έως δύο δεκαδικά (κόμμα ή τελεία). π.χ. 48,75. Οι υπηρετήσεις που συμπληρώθηκαν στην άλλη καρτέλα δεν θα προστεθούν.</div>
             <div class="field-hint" id="msdDirectStatus" role="status" aria-live="polite"></div>
           </div>
         </div>
@@ -186,7 +189,7 @@
           <div class="field" id="transferEaeGeneralYearsRow"><label for="transferEaeTeachingYears">Διδακτικά έτη από διορισμό (Γενική → ΕΑΕ)</label><input id="transferEaeTeachingYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0"></div>
         </div>
         <div id="transferEaeNewlyRow" class="check-row"><label><input type="checkbox" id="transferEaeNewly"> Νεοδιόριστος: χρειάζεται έλεγχος διετίας στην περιοχή διορισμού</label></div>
-        <div class="field" id="transferEaeAreaYearsRow" style="display:none; margin-top:10px"><label for="transferEaeAreaYears">Έτη υπηρεσίας στην περιοχή διορισμού</label><input id="transferEaeAreaYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0"></div>
+        <div class="field" id="transferEaeAreaYearsRow" style="display:none; margin-top:10px"><label for="transferEaeAreaYears">Έτη υπηρεσίας στην περιοχή διορισμού</label><input id="transferEaeAreaYears" type="number" min="0" max="45" step="0.1" inputmode="decimal" value="0"></div>
         <div class="field-grid" style="margin-top:14px">
           <div class="field"><label for="transferEaePreviousYear">Έχετε αποστείλει ηλεκτρονικό φάκελο ΕΑΕ σε προηγούμενο κύκλο;</label>
             <select id="transferEaePreviousYear"><option value="none">Όχι / δεν γνωρίζω</option><option value="2025">Ναι, το 2025</option><option value="2026">Ναι, το 2026</option><option value="other">Ναι, σε άλλο έτος</option></select>
@@ -304,14 +307,20 @@
       </section>
 
       <?php calculatorActions(array(
-        array('id' => 'calculateBtn', 'class' => 'primary', 'label' => 'Υπολογισμός μορίων'),
         array('id' => 'resetBtn', 'class' => 'secondary', 'label' => 'Καθαρισμός')
+      )); ?>
+
+      <?php calculatorDisclosure(array(
+        'id' => 'transferSubmissionGuidance',
+        'summary' => 'Πού αποστέλλονται τα δικαιολογητικά;',
+        'html' => '<div id="transferSubmissionGuidanceBody" class="transfer-submission-content">Τα δικαιολογητικά μπορεί να αποστέλλονται σε διαφορετική υπηρεσία ανάλογα με τον τύπο μετάθεσης. Επιλέξτε διαδικασία για συγκεκριμένες οδηγίες.</div>'
       )); ?>
 
       <section id="transferDocumentsPanel" style="padding:16px; border:1px solid #b8c5d5; border-radius:12px; margin:16px 0;">
         <h2 style="margin-top:0">Γ. Σύμβουλος δικαιολογητικών</h2>
         <p class="small-note">Εξατομικευμένες οδηγίες προετοιμασίας με βάση τα δηλωμένα στοιχεία. Η <strong>ηλεκτρονική αίτηση μετάθεσης και η οριστικοποίησή της</strong> γίνονται στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a>. Τα δικαιολογητικά μπορεί να υποβάλλονται με διαφορετική διαδικασία, σύμφωνα με την εγκύκλιο. Καμία ένδειξη δεν υποκαθιστά τον έλεγχο της αρμόδιας ΔΔΕ.</p>
-        <div id="transferDocumentChecklist" aria-live="polite"></div>
+        <p id="transferDocumentProgress" class="edu-transfer-doc__progress" role="status" aria-live="polite" aria-atomic="true"></p>
+        <div id="transferDocumentChecklist" aria-label="Προσωποποιημένη λίστα ελέγχου δικαιολογητικών"></div>
         <button type="button" class="secondary" id="transferPrintChecklist">Εκτύπωση λίστας δικαιολογητικών</button>
       </section>
       <?php calculatorResultMessage(array(
@@ -326,6 +335,7 @@
         'value' => '0',
         'value_id' => 'totalResult',
         'label' => 'συνολικές μονάδες',
+        'label_id' => 'transferTotalLabel',
         'cap' => 'Ενδεικτική βαθμολογία μετάθεσης'
       )); ?>
       <?php calculatorResultRow(array('label' => 'Συνολική υπηρεσία', 'value' => '0', 'value_id' => 'servicePointsResult')); ?>

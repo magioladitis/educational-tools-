@@ -1,0 +1,32 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const calc = require('../includes/transfer-calculations.js');
+const root = path.join(__dirname, '..');
+const page = fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
+const ui = fs.readFileSync(path.join(root,'includes/transfer-ui.js'),'utf8');
+const docs = fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf8');
+let count=0;
+const ok=(cond,label)=>{assert.ok(cond,label);count++;};
+ok(/label for="eligibleChildren"[^>]*>[^<]*<small>1ο–2ο: 4/.test(page), 'child points in small label hint, not below input');
+ok(!page.includes('<div class="field-hint">4 + 4 + 6 + 7'), 'obsolete child hint removed');
+ok(ui.includes('guidance.innerHTML = \'<strong>Οριστική τοποθέτηση / βελτίωση:</strong>'), 'local heading bold');
+ok(page.includes("'label_id' => 'transferTotalLabel'"), 'result label changeable');
+ok(ui.includes("missingMsd ? 'προσωρινές μονάδες (χωρίς Μ.Σ.Δ.)' : 'συνολικές μονάδες'"), 'missing MSD labeled provisional');
+ok(ui.includes('global.EducationTransfer.truncate2('), 'subtotal follows calculator truncation');
+ok(ui.includes('ΔΕΝ περιλαμβάνει Μ.Σ.Δ.'), 'warning not mistaken for full total');
+for (const id of ['eae-doctorate','eae-masters','eae-two-year','eae-5year','eae-pe11']) {
+  ok(docs.includes("'"+id+"'"),id+' present in compact set');
+}
+ok(docs.includes("compact?'':'<p class=\"edu-transfer-doc__summary\">'"), 'compact suppresses duplicate summary');
+ok(docs.includes('<details class="edu-transfer-doc__disclosure"'), 'details stay available');
+ok(calc.truncate2(138.2)===138.2 && calc.truncate2(134.2)===134.2, 'no floating point loss at decimal cents');
+let input={mode:'local',serviceMonths:1,eligibleChildren:19,coService:true,locality:true,msdMode:'direct',msdDirectPoints:''};
+let result=calc.calculate(input);
+ok(result.total===null && result.msdPoints===null, 'invalid direct MSD never becomes final zero');
+let subtotal=calc.truncate2(result.servicePoints+result.coServicePoints+result.familyPoints+result.localityPoints+result.firstPreferencePoints);
+ok(subtotal>0, 'useful subtotal remains available');
+input.msdDirectPoints='6,5';result=calc.calculate(input);
+ok(result.msdInputValid && result.total===calc.truncate2(subtotal+6.5), 'complete total after valid MSD');
+console.log('PASS',count,'transfer v3.22.119 UX and scoring regressions');
