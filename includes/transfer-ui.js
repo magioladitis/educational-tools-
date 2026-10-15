@@ -130,6 +130,12 @@
     };
   }
 
+  function syncMsdMode() {
+    var direct = byId('msdMode').value === 'direct';
+    byId('msdPeriodsPanel').style.display = direct ? 'none' : '';
+    byId('msdDirectPanel').style.display = direct ? '' : 'none';
+  }
+
   function calculate() {
     if (!global.EducationTransfer) return;
     var rows = Array.prototype.slice.call(msdRows.querySelectorAll('.transfer-service-row'));
@@ -143,13 +149,23 @@
       coService: byId('coService').checked,
       locality: byId('locality').checked,
       firstPreference: byId('firstPreference').checked,
+      msdMode: byId('msdMode').value,
+      msdDirectPoints: byId('msdDirectPoints').value,
       msdPeriods: rows.map(readRow)
     };
+    // Qualification-based procedures do not publish a comparative point ranking.
+    if (input.mode === 'music' || input.mode === 'art') {
+      syncEligibilityDetails();
+      if (global.EducationTransferDocuments) global.EducationTransferDocuments.render();
+      return;
+    }
+    if (input.mode === 'smeae') input.mode = byId('transferEaeArea').value==='same'?'local':'region'; // Arithmetic depends on area; eligibility is separate.
     var result = global.EducationTransfer.calculate(input);
 
-    byId('totalResult').textContent = formatPoints(result.total);
+    byId('totalResult').textContent = result.total === null ? '—' : formatPoints(result.total);
     byId('servicePointsResult').textContent = formatPoints(result.servicePoints);
-    byId('msdPointsResult').textContent = formatPoints(result.msdPoints);
+    byId('msdPointsResult').textContent = result.msdPoints === null ? '—' : formatPoints(result.msdPoints);
+    byId('msdDirectStatus').textContent = input.msdMode === 'direct' ? (result.msdInputValid ? 'Οι Μ.Σ.Δ. μεταφέρθηκαν στο άθροισμα χωρίς προσθήκη των αναλυτικών υπηρετήσεων.' : 'Συμπληρώστε έναν μη αρνητικό αριθμό με έως δύο δεκαδικά, π.χ. 48,75.') : '';
     byId('coServiceResult').textContent = formatPoints(result.coServicePoints);
     byId('familyResult').textContent = formatPoints(result.familyPoints);
     byId('localityResult').textContent = formatPoints(result.localityPoints);
@@ -163,27 +179,173 @@
     var duration = result.serviceDuration;
     var durationText = duration.years + ' έτη, ' + duration.months + ' μήνες';
     if (duration.roundedDays) durationText += ' (οι ' + duration.roundedDays + ' ημέρες λογίστηκαν ως μήνας)';
-    byId('statusResult').textContent = 'Συνολική υπηρεσία: ' + durationText + '. Οι ειδικές κατηγορίες/προτεραιότητες δεν περιλαμβάνονται στο άθροισμα.';
+    byId('statusResult').textContent = result.msdInputValid ? ('Συνολική υπηρεσία: ' + durationText + '. Οι ειδικές κατηγορίες/προτεραιότητες δεν περιλαμβάνονται στο άθροισμα.') : 'Συμπληρώστε έγκυρες Μ.Σ.Δ. για να υπολογιστεί το συνολικό αποτέλεσμα.';
   }
 
+  function currentGeneralReturnInput(){
+    return {origin:byId('transferGeneralOrigin').value,
+      eaeYears:byId('transferGeneralEaeYears').value,
+      areaYears:byId('transferGeneralEaeAreaYears').value,
+      sinceTransferYears:byId('transferGeneralEaeSinceTransfer').value,
+      organicServed:byId('transferGeneralEaeOrganic').checked};
+  }
+  function syncGeneralReturn(){
+    var mode=byId('mode').value;
+    byId('transferGeneralFromEaePanel').style.display=mode==='region'?'':'none';
+    var origin=byId('transferGeneralOrigin').value;
+    byId('transferGeneralEaeAppointed').style.display=mode==='region'&&origin==='appointed_eae'?'':'none';
+    byId('transferGeneralEaeTransferred').style.display=mode==='region'&&origin==='transferred_eae'?'':'none';
+    var eligibility=global.EducationTransferEligibility;
+    if(eligibility&&eligibility.returnToGeneral){
+      var result=eligibility.returnToGeneral(currentGeneralReturnInput());
+      var advice=byId('transferGeneralEaeAdvice');
+      advice.textContent=result.status+(result.advice.length?' '+result.advice.join(' '):'');
+      advice.setAttribute('data-eligibility-verdict',result.verdict);
+      advice.classList.toggle('transfer-eligibility-failed',result.verdict==='not_established');
+      advice.classList.toggle('transfer-eligibility-review',result.verdict==='needs_verification');
+      advice.classList.toggle('transfer-eligibility-met',result.verdict==='preliminary_met');
+    }
+  }
   function syncMode() {
-    var local = byId('mode').value === 'local';
-    byId('firstPreferenceRow').classList.toggle('hidden', local);
-    if (local) byId('firstPreference').checked = false;
+    var mode = byId('mode').value;
+    var isLocal = mode === 'local' || (mode === 'smeae' && byId('transferEaeArea').value==='same');
+    var qualifications = mode === 'music' || mode === 'art';
+    byId('firstPreferenceRow').classList.toggle('hidden', isLocal || qualifications);
+    if (isLocal || qualifications) byId('firstPreference').checked = false;
+    var calculateButton=byId('calculateBtn');
+    if(calculateButton)calculateButton.textContent=qualifications?'Ενημέρωση ελέγχου':'Υπολογισμός μορίων';
+    var guidance = byId('transferModeGuidance');
+    var scoreBlock = byId('transferScoringResults');
+    if (scoreBlock) scoreBlock.style.display = qualifications ? 'none' : '';
+    ['transferNumericalInputs','transferMsdCard'].forEach(function(id){ var e=byId(id); if(e) e.style.display=qualifications?'none':''; });
+    var q=byId('transferQualificationPanel'); if(q) q.style.display=qualifications?'':'none';
+    var qt=byId('transferQualificationTitle'); if(qt) qt.textContent=mode==='music'?'Μετάθεση σε Μουσικό Σχολείο — Φάκελος προσόντων':'Μετάθεση σε Καλλιτεχνικό Σχολείο — Φάκελος προσόντων';
+    var qi=byId('transferQualificationIntro'); if(qi) qi.textContent=mode==='music'?'Γενική παιδεία: ελέγχονται τα κοινά προσόντα, χωρίς απαίτηση μουσικής εξειδίκευσης. Μουσική παιδεία: απαιτείται πρόσθετη τεκμηρίωση ανά μουσικό αντικείμενο.':'Για Καλλιτεχνικά: υπηρέτηση οργανικής, πενταετής διδακτική εμπειρία (με εξαιρέσεις), φάκελος προσόντων και ειδική κρίση για ΠΕ08, ΠΕ11, ΠΕ79.01, ΠΕ91.01, ΠΕ91.02. Δεν προβλέπεται αριθμητική κατάταξη.';
+    var eaePanel=byId('transferEaePanel');if(eaePanel)eaePanel.style.display=mode==='smeae'?'':'none';
+    var musicPanel=byId('transferMusicEligibility');if(musicPanel)musicPanel.style.display=mode==='music'?'':'none';
+    var artPanel=byId('transferArtEligibility');if(artPanel)artPanel.style.display=mode==='art'?'':'none';
+    var typeField=byId('transferEducationTypeField');if(typeField)typeField.style.display=mode==='music'?'':'none';
+    var footnote=byId('transferQualificationFootnote');if(footnote)footnote.style.display=mode==='music'?'':'none';
+    var typeLabel=byId('transferEducationType');if(typeLabel){
+      var specialtyOption=typeLabel.querySelector('option[value="specialized"]');
+      if(specialtyOption) specialtyOption.textContent=mode==='music'?'Μουσική παιδεία (ΠΕ79.01/ΤΕ16)':'Καλλιτεχνική εξειδίκευση';
+    }
+    syncGeneralReturn();
+    syncEligibilityDetails();
+    if(global.EducationTransferDocuments) global.EducationTransferDocuments.render();
+    if (mode === 'smeae') {
+      guidance.innerHTML = '<strong>ΣΜΕΑΕ / ΕΕΕΕΚ — ενδεικτικά μόρια:</strong> Πληροφοριακή μοριοδότηση με διαχωρισμό ίδιας/άλλης περιοχής. Ο προέλεγχος προσόντων και χρόνου υπηρεσίας <strong>δεν πιστοποιεί</strong> θεμελίωση δικαιώματος. Ελέγξτε τις υπηρεσιακές πράξεις, την εγκύκλιο και τη ΔΔΕ.';
+    } else if (mode === 'music') {
+      guidance.innerHTML = '<strong>Μουσικά Σχολεία — αξιολόγηση προσόντων, όχι μορίων.</strong> Δεν παρέχεται αριθμητική κατάταξη. Ελέγξτε τίτλους σπουδών, εξειδίκευση (ιδιαίτερα στις μουσικές ειδικότητες), προηγούμενη διδακτική εμπειρία, επιμόρφωση και τα αποδεικτικά που προβλέπει η οικεία εγκύκλιος. Μην υποβάλλετε άσχετα έγγραφα.';
+    } else if (mode === 'art') {
+      guidance.innerHTML = '<strong>Καλλιτεχνικά Σχολεία — χωρίς πίνακα μορίων.</strong> Ελέγχονται η υπηρέτηση οργανικής, η πενταετία (εκτός ειδικών εξαιρέσεων), οι τίτλοι/εμπειρία και η συνάφεια προσόντων ανά κλάδο. Για ΠΕ08, ΠΕ11, ΠΕ79.01, ΠΕ91.01, ΠΕ91.02 υπάρχει εισήγηση της Επιστημονικής Επιτροπής Καλλιτεχνικής Παιδείας. Βάση: εγκύκλιος 2025–2026· αναμένεται επαλήθευση 2026–2027.';
+    } else if (isLocal) {
+      guidance.textContent = 'Οριστική τοποθέτηση / βελτίωση: εξετάζονται οι δήμοι των συγκεκριμένων σχολείων και δεν ισχύουν μόρια πρώτης προτίμησης.';
+    } else {
+      guidance.innerHTML = '<strong>Μετάθεση από περιοχή σε περιοχή — Γενική Εκπαίδευση:</strong> περιλαμβάνει τη Γενική/Επαγγελματική Εκπαίδευση, όχι οργανικές θέσεις ΕΑΕ. Όσοι προέρχονται από την ΕΑΕ ελέγχουν παρακάτω τις διαφορετικές προϋποθέσεις επιστροφής. Συνυπηρέτηση και εντοπιότητα αφορούν την περιοχή μετάθεσης· μόρια πρώτης προτίμησης όπου προβλέπονται.';
+    }
     calculate();
+  }
+
+  function currentEaeInput() {
+    return {origin:byId('transferEaeOrigin').value,area:byId('transferEaeArea').value,destination:byId('transferEaeDestination').value,branch:byId('transferEaeBranch').value,
+      qualification:byId('transferEaeQualification').value,eaeYears:byId('transferEaeExperienceYears').value,
+      teachingYears:byId('transferEaeTeachingYears').value,newly:byId('transferEaeNewly').checked,
+      areaYears:byId('transferEaeAreaYears').value};
+  }
+  function currentMusicInput() {
+    return {educationType:byId('transferEducationType').value,organic:byId('transferMusicOrganic').checked,
+      teachingYears:byId('transferMusicTeachingYears').value,exceptionType:byId('transferMusicException').value,
+      subject:byId('transferMusicSubject').value};
+  }
+  function currentArtInput() {
+    return {branch:byId('transferArtBranch').value,orientation:byId('transferArtOrientation').value,
+      organic:byId('transferArtOrganic').checked,teachingYears:byId('transferArtTeachingYears').value,
+      exceptionType:byId('transferArtException').value};
+  }
+  function syncDossier(kind,selectId,changeId,outputId){
+    var eligibility=global.EducationTransferEligibility;
+    if(!eligibility || !eligibility.dossier)return;
+    var r=eligibility.dossier({kind:kind,year:byId(selectId).value,newElements:byId(changeId).checked});
+    byId(outputId).textContent=r.status+' '+r.limitation;
+  }
+  function syncEligibilityDetails() {
+    var mode=byId('mode').value, eae=mode==='smeae',music=mode==='music';
+    var sameArea=eae&&byId('transferEaeArea').value==='same';
+    var preferenceRow=byId('firstPreferenceRow');
+    if(preferenceRow)preferenceRow.classList.toggle('hidden',mode==='local'||sameArea||mode==='music'||mode==='art');
+    if(sameArea)byId('firstPreference').checked=false;
+    var origin=byId('transferEaeOrigin').value, route=byId('transferEaeQualification').value;
+    byId('transferEaeExperienceRow').style.display=eae&&route==='experience'?'':'none';
+    byId('transferEaeGeneralYearsRow').style.display=eae&&origin==='general'?'':'none';
+    byId('transferEaeNewlyRow').style.display=eae&&origin==='general'?'':'none';
+    byId('transferEaeAreaYearsRow').style.display=eae&&origin==='general'&&byId('transferEaeNewly').checked?'':'none';
+    byId('transferMusicSpecializationPanel').style.display=music&&byId('transferEducationType').value==='specialized'?'':'none';
+    var art=mode==='art',artBranch=byId('transferArtBranch').value;
+    var isArtSpecialized=['pe08','pe11','pe79','pe9101','pe9102'].indexOf(artBranch)!==-1;
+    byId('transferArtOrientationRow').style.display=art&&isArtSpecialized?'':'none';
+    var elig=global.EducationTransferEligibility;
+    if(elig&&eae){
+      var result=elig.eae(currentEaeInput());
+      byId('transferEaeAdvice').textContent=result.status+(result.advice.length?' · '+result.advice.join(' '):'');
+      syncDossier('eae','transferEaePreviousYear','transferEaeNewDocuments','transferEaeDossierAdvice');
+    }
+    if(elig&&music){
+      var mr=elig.music(currentMusicInput());
+      byId('transferMusicAdvice').textContent=mr.status+(mr.advice.length?' · '+mr.advice.join(' '):'');
+      syncDossier('music','transferMusicPreviousYear','transferMusicNewDocuments','transferMusicDossierAdvice');
+    }
+    if(elig&&art){
+      var ar=elig.art(currentArtInput());
+      byId('transferArtAdvice').textContent=ar.status+(ar.advice.length?' · '+ar.advice.join(' '):'');
+      syncDossier('art','transferArtPreviousYear','transferArtNewDocuments','transferArtDossierAdvice');
+    }
   }
 
   function reset() {
     byId('mode').value = 'region';
+    byId('transferGeneralOrigin').value='general';
+    ['transferGeneralEaeYears','transferGeneralEaeAreaYears','transferGeneralEaeSinceTransfer'].forEach(function(id){byId(id).value='0';});
+    byId('transferGeneralEaeOrganic').checked=false;
     byId('serviceYears').value = '0';
     byId('serviceMonths').value = '0';
     byId('serviceDays').value = '0';
     byId('eligibleChildren').value = '0';
     ['familyStatusEligible', 'coService', 'locality', 'firstPreference'].forEach(function (id) { byId(id).checked = false; });
+    byId('transferEaeOrigin').value='general';
+    byId('transferEaeArea').value='other';
+    byId('transferEaeDestination').value='smeae';
+    byId('transferEaeBranch').value='other';
+    byId('transferEaeQualification').value='none';
+    byId('transferEaeExperienceYears').value='0';
+    byId('transferEaeTeachingYears').value='0';
+    byId('transferEaeNewly').checked=false;
+    byId('transferEaeAreaYears').value='0';
+    byId('transferEaePreviousYear').value='none';
+    byId('transferEaeNewDocuments').checked=false;
+    byId('transferEducationType').value='general';
+    byId('transferSpecialty').value='';
+    byId('transferMusicTeachingYears').value='0';
+    byId('transferMusicException').value='none';
+    byId('transferMusicOrganic').checked=false;
+    byId('transferMusicSubject').value='unspecified';
+    byId('transferMusicPreviousYear').value='none';
+    byId('transferMusicNewDocuments').checked=false;
+    byId('transferArtBranch').value='general';
+    byId('transferArtOrientation').value='';
+    byId('transferArtTeachingYears').value='0';
+    byId('transferArtException').value='none';
+    byId('transferArtOrganic').checked=false;
+    byId('transferArtPreviousYear').value='none';
+    byId('transferArtNewDocuments').checked=false;
+    byId('msdMode').value = 'periods';
+    byId('msdDirectPoints').value = '';
+    syncMsdMode();
     msdRows.innerHTML = '';
     rowCounter = 0;
     addRow({ type: 'school', category: 'A' }, { silent: true });
     syncMode();
+    if(global.EducationTransferDocuments) global.EducationTransferDocuments.render();
   }
 
   function init() {
@@ -193,9 +355,11 @@
     if (!msdRows || !global.EducationTransfer) return;
 
     byId('addMsdRow').addEventListener('click', function () { addRow(); });
+    byId('msdMode').addEventListener('change', function () { syncMsdMode(); calculate(); });
     byId('calculateBtn').addEventListener('click', calculate);
     byId('resetBtn').addEventListener('click', reset);
     byId('mode').addEventListener('change', syncMode);
+    if(global.EducationTransferDocuments) global.EducationTransferDocuments.init();
 
     document.addEventListener('input', function (event) {
       var target = event.target;
@@ -208,7 +372,7 @@
         var n = Number(target.value);
         if (Number.isFinite(n)) target.value = String(Math.max(0, Math.min(5, n)));
       }
-      if (target.closest && target.closest('.edu-page-transfer')) calculate();
+      if (target.closest && target.closest('.edu-page-transfer')) {syncGeneralReturn();syncEligibilityDetails();calculate();}
     });
 
     document.addEventListener('change', function (event) {
@@ -216,7 +380,7 @@
       if (!target) return;
       var row = target.closest ? target.closest('.transfer-service-row') : null;
       if (row && (target.classList.contains('msd-type') || target.classList.contains('msd-category'))) syncRow(row);
-      if (target.closest && target.closest('.edu-page-transfer')) calculate();
+      if (target.closest && target.closest('.edu-page-transfer')) {syncGeneralReturn();syncEligibilityDetails();calculate();}
     });
 
     msdRows.addEventListener('click', function (event) {
@@ -229,6 +393,7 @@
     });
 
     addRow({ type: 'school', category: 'A' }, { silent: true });
+    syncMsdMode();
     syncMode();
   }
 

@@ -1,0 +1,54 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const root=path.join(__dirname,'..');
+const window={};
+vm.runInNewContext(fs.readFileSync(path.join(root,'includes/transfer-eligibility.js'),'utf8'),{window});
+const e=window.EducationTransferEligibility;
+const ok=(cond,m)=>{assert.ok(cond,m);count++;};let count=0;
+ok(e.returnToGeneral({origin:'general'}).applicable===false,'general not special');
+ok(e.returnToGeneral({origin:'appointed_eae',eaeYears:4.9,areaYears:2}).advice.some(x=>x.includes('5 έτη')),'appointed five years fail');
+ok(e.returnToGeneral({origin:'appointed_eae',eaeYears:5,areaYears:1.9}).advice.some(x=>x.includes('2 σχολικά έτη')),'appointed area fails');
+ok(e.returnToGeneral({origin:'appointed_eae',eaeYears:5,areaYears:2}).needsReview===false,'appointed baseline pass');
+ok(e.returnToGeneral({origin:'appointed_eae',eaeYears:5,areaYears:2}).status.includes('Απαιτείται επιβεβαίωση'),'not certified');
+ok(e.returnToGeneral({origin:'transferred_eae',sinceTransferYears:1.9,organicServed:true}).needsReview,'transferred two years fail');
+ok(e.returnToGeneral({origin:'transferred_eae',sinceTransferYears:2,organicServed:false}).advice.some(x=>x.includes('οργανικής')),'transferred organic fail');
+ok(e.returnToGeneral({origin:'transferred_eae',sinceTransferYears:2,organicServed:true}).needsReview===false,'transferred baseline pass');
+ok(!e.returnToGeneral({origin:'transferred_eae',sinceTransferYears:2,organicServed:true}).advice.some(x=>x.includes('5 έτη')),'no false 5y restriction');
+ok(e.returnToGeneral({origin:'other'}).needsReview,'other origin review');
+const php=fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
+const ui=fs.readFileSync(path.join(root,'includes/transfer-ui.js'),'utf8');
+const docs=fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf8');
+for(const id of ['transferGeneralFromEaePanel','transferGeneralOrigin','transferGeneralEaeAppointed','transferGeneralEaeTransferred','transferGeneralEaeYears','transferGeneralEaeAreaYears','transferGeneralEaeSinceTransfer','transferGeneralEaeOrganic','transferGeneralEaeAdvice']){
+ ok(php.includes('id="'+id+'"'),'php id '+id);
+}
+ok(php.includes('Μετάθεση από περιοχή σε περιοχή — Γενική Εκπαίδευση'),'label');
+ok(ui.includes('syncGeneralReturn();'),'sync');
+ok(ui.includes("mode==='region'"),'toggle');
+ok(docs.includes("'eae-to-general'"),'checklist');
+
+// Issue regression: 1 year EAE + 2 years area must be a clear negative verdict.
+let sample=e.returnToGeneral({origin:'appointed_eae',eaeYears:1,areaYears:2});
+ok(sample.verdict==='not_established','1+2 clearly not established');
+ok(sample.status.startsWith('Δεν θεμελιώνεται δικαίωμα μετάθεσης'), 'explicit negative message');
+ok(sample.advice.some(x=>x.includes('Υπολείπονται 4 έτη')),'four years missing');
+ok(sample.advice.every(x=>!x.includes('στην περιοχή διορισμού')),'already satisfied area requirement not falsely flagged');
+sample=e.returnToGeneral({origin:'appointed_eae',eaeYears:5,areaYears:1});
+ok(sample.verdict==='not_established','5+1 clearly not established');
+sample=e.returnToGeneral({origin:'appointed_eae',eaeYears:5,areaYears:2});
+ok(sample.verdict==='preliminary_met' && sample.meetsDeclaredConditions,'5+2 preliminary satisfied');
+sample=e.returnToGeneral({origin:'appointed_eae',eaeYears:'',areaYears:2});
+ok(sample.verdict==='needs_verification','blank field does not fabricate negative');
+sample=e.returnToGeneral({origin:'appointed_eae',eaeYears:'not a number',areaYears:2});
+ok(sample.verdict==='needs_verification','bad input not counted as 0');
+sample=e.returnToGeneral({origin:'transferred_eae',sinceTransferYears:1,organicServed:true});
+ok(sample.verdict==='not_established','transfer 1 year fails definitively');
+sample=e.returnToGeneral({origin:'transferred_eae',sinceTransferYears:2,organicServed:false});
+ok(sample.verdict==='not_established','organic false fails definitively');
+sample=e.returnToGeneral({origin:'transferred_eae',sinceTransferYears:2,organicServed:true});
+ok(sample.verdict==='preliminary_met','transferred 2+organic preliminary pass');
+sample=e.returnToGeneral({origin:'other'});
+ok(sample.verdict==='needs_verification','other origin requires review not negative verdict');
+console.log('PASS '+count+' general-return tests');

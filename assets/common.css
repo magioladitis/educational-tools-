@@ -4158,3 +4158,29 @@ body.edu-ui .edu-source-audit__details:hover { text-decoration:underline; }
 body.edu-ui .edu-tools-global-footer__meta{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap}
 body.edu-ui .edu-tools-global-footer__meta a{color:inherit;text-decoration:none;font-weight:700}
 body.edu-ui .edu-tools-global-footer__meta a:hover{text-decoration:underline}
+
+/* Transfer checklist: five alternative EAE qualification routes */
+.edu-page-transfer .transfer-eae-options { margin: 12px 0 2px 29px; padding: 12px; border: 1px solid #b8c5d5; border-radius: 9px; }
+.edu-page-transfer .transfer-eae-option { display: flex; gap: 10px; align-items: flex-start; padding: 5px 0; cursor: pointer; }
+.edu-page-transfer .transfer-eae-option input { margin-top: 4px; flex-shrink: 0; }
+.edu-page-transfer .transfer-eae-option span { flex: 1; }
+
+/* Transfer to General Education: immediate, unambiguous legal precheck feedback (v3.22.106). */
+.edu-page-transfer #transferGeneralEaeAdvice { border-radius:6px; line-height:1.5; }
+.edu-page-transfer #transferGeneralEaeAdvice.transfer-eligibility-failed {
+  background:#fff1f2; border:1px solid #fda4af; border-left:4px solid #be123c !important;
+  color:#881337; font-weight:650;
+}
+.edu-page-transfer #transferGeneralEaeAdvice.transfer-eligibility-review {
+  background:#fffbeb; border:1px solid #fcd34d; border-left:4px solid #b45309 !important;
+  color:#78350f;
+}
+.edu-page-transfer #transferGeneralEaeAdvice.transfer-eligibility-met {
+  background:#f0fdf4; border:1px solid #86efac; border-left:4px solid #15803d !important;
+  color:#14532d;
+}
+@media print {
+  .edu-page-transfer #transferGeneralEaeAdvice.transfer-eligibility-failed {
+    border:2px solid #9f1239 !important; color:#000; background:#fff;
+  }
+}

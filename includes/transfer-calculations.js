@@ -124,17 +124,31 @@
     };
   }
 
+  // Εισαγωγή Μ.Σ.Δ. από το επίσημο μητρώο (δεκαδικό κόμμα ή τελεία).
+  // Δεν μετατρέπουμε σιωπηρά μη έγκυρες τιμές σε μηδέν.
+  function parseDirectMsd(raw) {
+    var text = String(raw == null ? '' : raw).trim().replace(',', '.');
+    if (!/^\d+(?:\.\d{1,2})?$/.test(text)) return { valid: false, points: null };
+    var n = Number(text);
+    if (!Number.isFinite(n) || n > Number.MAX_SAFE_INTEGER) return { valid: false, points: null };
+    return { valid: true, points: truncate2(n) };
+  }
+
   function calculate(input) {
     input = input || {};
     var service = servicePoints(input.serviceYears, input.serviceMonths, input.serviceDays);
+    var manualMsd = input.msdMode === 'direct';
     var periods = Array.isArray(input.msdPeriods) ? input.msdPeriods : [];
-    var msdRows = periods.map(calculateMsdPeriod);
-    var msd = truncate2(msdRows.reduce(function (sum, row) { return sum + row.points; }, 0));
+    var msdRows = manualMsd ? [] : periods.map(calculateMsdPeriod);
+    var parsedMsd = manualMsd ? parseDirectMsd(input.msdDirectPoints) : null;
+    var msdValid = !manualMsd || parsedMsd.valid;
+    // Οι δύο τρόποι είναι εναλλακτικοί: ποτέ δεν προστίθενται μεταξύ τους.
+    var msd = manualMsd ? parsedMsd.points : truncate2(msdRows.reduce(function (sum, row) { return sum + row.points; }, 0));
     var coService = input.coService ? 4 : 0;
     var family = familyPoints(!!input.familyStatusEligible, input.eligibleChildren);
     var locality = input.locality ? 4 : 0;
     var firstPreference = input.mode === 'local' ? 0 : (input.firstPreference ? 2 : 0);
-    var total = truncate2(service.points + msd + coService + family + locality + firstPreference);
+    var total = msdValid ? truncate2(service.points + msd + coService + family + locality + firstPreference) : null;
 
     return {
       total: total,
@@ -142,6 +156,8 @@
       serviceDuration: service.duration,
       msdPoints: msd,
       msdRows: msdRows,
+      msdMode: manualMsd ? 'direct' : 'periods',
+      msdInputValid: msdValid,
       coServicePoints: coService,
       familyPoints: family,
       localityPoints: locality,
@@ -160,6 +176,7 @@
     familyPoints: familyPoints,
     isFixedFullWeekType: isFixedFullWeekType,
     calculateMsdPeriod: calculateMsdPeriod,
+    parseDirectMsd: parseDirectMsd,
     calculate: calculate
   };
 }));
