@@ -21,7 +21,7 @@
 
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
-      <?php calculatorCardStart(array('title' => 'Α. Τύπος διαδικασίας και βασικά κριτήρια')); ?>
+      <?php calculatorCardStart(array('title' => 'Α. Τύπος διαδικασίας και υπηρεσιακά στοιχεία')); ?>
         <div class="field-grid">
           <div class="field transfer-main-mode-field">
             <label for="mode">Τύπος διαδικασίας</label>
@@ -90,12 +90,56 @@
             <label for="serviceDays">Επιπλέον ημέρες <small>15+ → 1 μήνας</small></label>
             <input id="serviceDays" type="number" min="0" max="29" step="1" value="0" inputmode="numeric">
           </div>
+        </div>
+
+        </div>
+      <?php calculatorCardEnd(); ?>
+
+      <div id="transferMsdCard">
+      <?php calculatorCardStart(array('title' => 'Β. Μονάδες Συνθηκών Διαβίωσης (Μ.Σ.Δ.)')); ?>
+        <div class="field" style="margin-bottom:14px">
+          <label for="msdMode">Τρόπος καταχώρισης Μ.Σ.Δ.</label>
+          <select id="msdMode">
+            <option value="direct" selected>Απευθείας καταχώριση συνολικών μορίων Μ.Σ.Δ.</option>
+            <option value="periods">Υπολογισμός από τις υπηρετήσεις μου</option>
+          </select>
+          <?php calculatorDisclosure(array(
+            'id' => 'msdRegistryHelp',
+            'summary' => 'Πού βλέπω τις υπηρετήσεις μου;',
+            'html' => 'Μπορείτε να δείτε τις υπηρετήσεις και τα ήδη καταχωρισμένα μόρια μετάθεσης στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a> (σύνδεση με λογαριασμό ΠΣΔ).'
+          )); ?>
+        </div>
+        <div id="msdPeriodsPanel" style="display:none">
+          <p class="small-note">Πρόσθεσε μία γραμμή για κάθε διαφορετική υπηρέτηση/κατηγορία. Οι ημέρες ≥15 λογίζονται ως πλήρης μήνας. Για παράλληλη υπηρεσία μπορείς να δηλώσεις τις ημέρες ανά εβδομάδα (σύνολο 5/5).</p>
+          <div id="msdRows"></div>
+          <button class="add-row" id="addMsdRow" type="button">+ Προσθήκη υπηρέτησης</button>
+
+        <?php calculatorDisclosure(array(
+          'summary' => 'Πότε διπλασιάζονται οι Μ.Σ.Δ. απομακρυσμένων σχολείων;',
+          'html' => '<strong>Διπλασιασμός απομακρυσμένων:</strong> από το 2018–2019 αφορά πραγματική υπηρεσία σε σχολεία κατηγοριών Ι΄, ΙΑ΄, ΙΒ΄ και ΙΓ΄, όταν έχει συμπληρωθεί τουλάχιστον διετής συνεχόμενη υπηρεσία. Στον υπολογιστή ενεργοποίησέ τον μόνο όταν το δικαίωμα έχει πράγματι θεμελιωθεί.',
+          'open' => true,
+          'attrs' => array('data-mobile-collapsed' => 'true')
+        )); ?>
+        </div>
+        <div id="msdDirectPanel">
+          <div class="field">
+            <label for="msdDirectPoints">Συνολικές μονάδες συνθηκών διαβίωσης από το επίσημο μητρώο</label>
+            <input id="msdDirectPoints" type="text" inputmode="decimal" autocomplete="off" placeholder="π.χ. 48,75" aria-describedby="msdDirectHelp msdDirectStatus">
+            <div class="field-hint" id="msdDirectHelp">Δώστε τον ακριβή αριθμό Μ.Σ.Δ. με έως δύο δεκαδικά (κόμμα ή τελεία). π.χ. 48,75. Οι υπηρετήσεις που συμπληρώθηκαν στην άλλη καρτέλα δεν θα προστεθούν.</div>
+            <div class="field-hint" id="msdDirectStatus" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+      <?php calculatorCardEnd(); ?>
+      </div>
+
+      <div id="transferSocialCriteriaCard">
+      <?php calculatorCardStart(array('title' => 'Γ. Κοινωνικά κριτήρια')); ?>
+        <div class="field-grid">
           <div class="field">
             <label for="eligibleChildren">Τέκνα που μοριοδοτούνται <small>1ο–2ο: 4 · 3ο: 6 · από το 4ο: 7 μόρια/τέκνο</small></label>
             <input id="eligibleChildren" type="number" min="0" max="20" step="1" value="0" inputmode="numeric">
           </div>
         </div>
-
         <div class="check-row"><label><input id="familyStatusEligible" type="checkbox"> Γάμος/Σύμφωνο Συμβίωσης/Γονέας με επιμέλεια (+4)</label></div>
         <div class="check-row"><label><input id="coService" type="checkbox"> Συνυπηρέτηση στην περιοχή/το δήμο που εξετάζω (+4)</label></div>
         <div class="field" id="transferCoServiceCaseField" style="display:none;margin:10px 0 14px 0;">
@@ -126,43 +170,6 @@
           'open' => true,
           'attrs' => array('data-mobile-collapsed' => 'true')
         )); ?>
-        </div>
-      <?php calculatorCardEnd(); ?>
-
-      <div id="transferMsdCard">
-      <?php calculatorCardStart(array('title' => 'Β. Μονάδες Συνθηκών Διαβίωσης (Μ.Σ.Δ.)')); ?>
-        <div class="field" style="margin-bottom:14px">
-          <label for="msdMode">Τρόπος καταχώρισης Μ.Σ.Δ.</label>
-          <select id="msdMode">
-            <option value="periods">Υπολογισμός από τις υπηρετήσεις μου</option>
-            <option value="direct">Απευθείας καταχώριση συνολικών μορίων Μ.Σ.Δ.</option>
-          </select>
-          <?php calculatorDisclosure(array(
-            'id' => 'msdRegistryHelp',
-            'summary' => 'Πού βλέπω τις υπηρετήσεις μου;',
-            'html' => 'Μπορείτε να δείτε τις υπηρετήσεις και τα ήδη καταχωρισμένα μόρια μετάθεσης στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a> (σύνδεση με λογαριασμό ΠΣΔ).'
-          )); ?>
-        </div>
-        <div id="msdPeriodsPanel">
-          <p class="small-note">Πρόσθεσε μία γραμμή για κάθε διαφορετική υπηρέτηση/κατηγορία. Οι ημέρες ≥15 λογίζονται ως πλήρης μήνας. Για παράλληλη υπηρεσία μπορείς να δηλώσεις τις ημέρες ανά εβδομάδα (σύνολο 5/5).</p>
-          <div id="msdRows"></div>
-          <button class="add-row" id="addMsdRow" type="button">+ Προσθήκη υπηρέτησης</button>
-
-        <?php calculatorDisclosure(array(
-          'summary' => 'Πότε διπλασιάζονται οι Μ.Σ.Δ. απομακρυσμένων σχολείων;',
-          'html' => '<strong>Διπλασιασμός απομακρυσμένων:</strong> από το 2018–2019 αφορά πραγματική υπηρεσία σε σχολεία κατηγοριών Ι΄, ΙΑ΄, ΙΒ΄ και ΙΓ΄, όταν έχει συμπληρωθεί τουλάχιστον διετής συνεχόμενη υπηρεσία. Στον υπολογιστή ενεργοποίησέ τον μόνο όταν το δικαίωμα έχει πράγματι θεμελιωθεί.',
-          'open' => true,
-          'attrs' => array('data-mobile-collapsed' => 'true')
-        )); ?>
-        </div>
-        <div id="msdDirectPanel" style="display:none">
-          <div class="field">
-            <label for="msdDirectPoints">Συνολικές μονάδες συνθηκών διαβίωσης από το επίσημο μητρώο</label>
-            <input id="msdDirectPoints" type="text" inputmode="decimal" autocomplete="off" placeholder="π.χ. 48,75" aria-describedby="msdDirectHelp msdDirectStatus">
-            <div class="field-hint" id="msdDirectHelp">Δώστε τον ακριβή αριθμό Μ.Σ.Δ. με έως δύο δεκαδικά (κόμμα ή τελεία). π.χ. 48,75. Οι υπηρετήσεις που συμπληρώθηκαν στην άλλη καρτέλα δεν θα προστεθούν.</div>
-            <div class="field-hint" id="msdDirectStatus" role="status" aria-live="polite"></div>
-          </div>
-        </div>
       <?php calculatorCardEnd(); ?>
       </div>
 
@@ -334,7 +341,7 @@
       )); ?>
 
       <section id="transferDocumentsPanel" style="padding:16px; border:1px solid #b8c5d5; border-radius:12px; margin:16px 0;">
-        <h2 style="margin-top:0">Γ. Σύμβουλος δικαιολογητικών</h2>
+        <h2 style="margin-top:0">Δ. Σύμβουλος δικαιολογητικών</h2>
         <p class="small-note">Εξατομικευμένες οδηγίες προετοιμασίας με βάση τα δηλωμένα στοιχεία. Η <strong>ηλεκτρονική αίτηση μετάθεσης και η οριστικοποίησή της</strong> γίνονται στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a>. Τα δικαιολογητικά μπορεί να υποβάλλονται με διαφορετική διαδικασία, σύμφωνα με την εγκύκλιο. Καμία ένδειξη δεν υποκαθιστά τον έλεγχο της αρμόδιας ΔΔΕ.</p>
         <p id="transferDocumentProgress" class="edu-transfer-doc__progress" role="status" aria-live="polite" aria-atomic="true"></p>
         <div id="transferDocumentChecklist" aria-label="Προσωποποιημένη λίστα ελέγχου δικαιολογητικών"></div>

@@ -151,18 +151,25 @@ function build(){
     'ΑΝΗΛΙΚΑ (γέννηση από 01/01/2009): για την ηλικία/συγγένεια αρκούν τα στοιχεία οικογενειακής κατάστασης που αναζητεί αυτεπάγγελτα η ΔΔΕ· δεν απαιτείται βεβαίωση σπουδών.\n'+
     'ΕΝΗΛΙΚΑ ΠΟΥ ΣΠΟΥΔΑΖΟΥΝ (γέννηση από 01/01/2002, μέχρι 25 ετών): απαιτείται πιστοποιητικό/βεβαίωση σπουδών της ανώτερης/ανώτατης δημόσιας σχολής εσωτερικού ή ισότιμης εξωτερικού, με στοιχεία φοίτησης ώστε να ελεγχθεί ότι δεν βρίσκεται στο τελευταίο εξάμηνο/έτος και δεν πρόκειται για δεύτερο πτυχίο ή μεταπτυχιακό. Αναστολή/διακοπή φοίτησης και ΣΑΕΚ/Κολλέγια δεν μοριοδοτούνται. Ξενόγλωσσοι τίτλοι: επίσημη ελληνική μετάφραση.\n'+
     'ΑΓΑΜΟΣ/ΔΙΑΖΕΥΓΜΕΝΟΣ ΓΟΝΕΑΣ: εφόσον συντρέχει περίπτωση μορίων οικογενειακής κατάστασης λόγω επιμέλειας, απαιτούνται τα ειδικά αποδεικτικά/δηλώσεις που εξειδικεύει η εγκύκλιος. Για διαζευγμένους: δημόσιο έγγραφο ανάθεσης επιμέλειας· για άγαμους γονείς διαφοροποιούνται τα αποδεικτικά σύμφωνα με τη διευκρίνιση 1.\n'+
-    'ΑΝΑΠΗΡΙΑ ΤΕΚΝΟΥ: οι ιατρικές γνωματεύσεις αφορούν ενδεχόμενη ξεχωριστή ειδική κατηγορία/προτεραιότητα, όχι αυτομάτως τις συνήθεις μονάδες τέκνων. ΠΟΛΥΤΕΚΝΟΙ: ελέγξτε ειδικά ηλικιακά όρια του άρθρου 6 ν. 3454/2006.\n'+
+    'ΑΝΑΠΗΡΙΑ ΤΕΚΝΟΥ: οι ιατρικές γνωματεύσεις αφορούν ενδεχόμενη ξεχωριστή ειδική κατηγορία/προτεραιότητα, όχι αυτομάτως τις συνήθεις μονάδες τέκνων.\n'+
+    'ΠΟΛΥΤΕΚΝΙΑ (άρθρο 6 ν. 3454/2006): Για την απόκτηση της ιδιότητας συνυπολογίζονται άγαμα τέκνα που δεν έχουν συμπληρώσει τα 23 έτη· έως πριν από τα 25 έτη συνυπολογίζονται επίσης εφόσον σπουδάζουν σε αναγνωρισμένη τριτοβάθμια σχολή ή υπηρετούν τη στρατιωτική τους θητεία. Τέκνα με ισόβια αναπηρία 67% και άνω συνυπολογίζονται ανεξάρτητα από ηλικία και οικογενειακή κατάσταση.\n'+
+    'Κατά κανόνα απαιτούνται τέσσερα τέκνα. Ο νόμος προβλέπει ειδικές περιπτώσεις με τρία τέκνα (γονέας χωρίς σύζυγο με την προβλεπόμενη επιμέλεια και αποκλειστική υποχρέωση διατροφής ή γονέας με ισόβια αναπηρία 67% και άνω). Η πολυτεκνική ιδιότητα, αφού αποκτηθεί νόμιμα, διατηρείται ισοβίως.\n'+
+    'ΠΡΟΣΟΧΗ: Η ιδιότητα πολυτέκνου/ειδική κατηγορία δεν ταυτίζεται με τις μονάδες μετάθεσης λόγω τέκνων· τα τελευταία ελέγχονται με τους αυτοτελείς όρους της εγκυκλίου. Για απόδειξη σπουδών ή στρατιωτικής θητείας απαιτούνται κατά περίπτωση οι σχετικές βεβαιώσεις, σύμφωνα με τις οδηγίες αποστολής της εγκυκλίου.\n'+
     'ΝΕΟΓΕΝΝΗΤΟ: κατ’ εξαίρεση η ληξιαρχική πράξη γέννησης μπορεί να υποβληθεί έως το τέλος Δεκεμβρίου 2026· για γέννηση στις 31/12 προβλέπεται ειδική άμεση δήλωση στη ΔΔΕ και μεταγενέστερη προσκόμιση ληξιαρχικής πράξης.\n'+
     'Τα δικαιολογητικά οικογενειακών λόγων εκδίδονται κατά κανόνα στο τελευταίο τρίμηνο. Το πιστοποιητικό οικογενειακής κατάστασης ελληνικού δημοτολογίου αναζητείται αυτεπάγγελτα. Για έγγραφα αλλοδαπών αρχών ισχύουν οι ειδικές οδηγίες της εγκυκλίου. '+FAMILY_SOURCE,
     'Πρόσθετα μόνο εφόσον απαιτούνται'));
   }
-  if($('coService').checked){
-   var caseSelect=$('transferCoServiceCase');
-   var areaMode=eae && $('transferEaeArea').value==='same'?'local':mode;
-   var info=coServiceInfo(caseSelect?caseSelect.value:'unspecified',areaMode);
-   a.push(entry('coservice','Συνυπηρέτηση — δικαιολογητικά ανά καθεστώς',
+  var caseSelect=$('coService').checked ? $('transferCoServiceCase') : (document.querySelector?document.querySelector('#transferCoServiceCase'):null);
+  var caseValue=caseSelect?caseSelect.value:'unspecified';
+  var areaMode=eae && $('transferEaeArea').value==='same'?'local':mode;
+  var info=coServiceInfo(caseValue,areaMode);
+  // Show the documentation for a blocked status even though the scoring box is unchecked/disabled.
+  if($('coService').checked || (caseValue!=='unspecified' && info.blocked)){
+   var spouseDoc=entry('coservice','Δικαιολογητικά συνυπηρέτησης',
     info.summary+'\n'+info.detail+'\nΤα απαιτούμενα αποδεικτικά συνυπηρέτησης πρέπει να έχουν εκδοθεί στο τελευταίο τρίμηνο (με εξαίρεση βεβαιώσεις εργοδοτών για προγενέστερη εργασία που έπαυσε: τελευταία διετία). Η συνυπηρέτηση αφορά μία περιοχή μετάθεσης — όχι ολόκληρο τον νομό — ή τον δήμο σχολείου για βελτίωση/οριστική τοποθέτηση. '+FAMILY_SOURCE,
-    info.blocked?'Δεν θεμελιώνεται συνυπηρέτηση (+0)':'Δικαιολογητικά βάσει επιλογής'));
+    info.blocked?'Δεν θεμελιώνεται συνυπηρέτηση (+0)':'Δικαιολογητικά βάσει επιλογής');
+   spouseDoc.disabled=info.blocked;
+   a.push(spouseDoc);
   }
   if($('locality').checked) a.push(entry('locality','Εντοπιότητα','Ελέγξτε βεβαίωση δημοτικότητας, χρόνο κτήσης της και αντιστοίχιση με τη ζητούμενη περιοχή ή τον δήμο.','Πιθανό δικαιολογητικό'));
   // No separate MSD row: the record item above includes this check for either entry mode.
@@ -230,10 +237,10 @@ function isCritical(d){
 }
 function progress(root){
  var rows=root.querySelectorAll('[data-doc-id]');
- var complete=0;
- rows.forEach(function(input){if(input.checked)complete++;});
+ var complete=0,active=0;
+ rows.forEach(function(input){if(input.disabled)return;active++;if(input.checked)complete++;});
  var target=$('transferDocumentProgress');
- if(target)target.textContent='Έλεγχοι που σημειώθηκαν: '+complete+' από '+rows.length+'.';
+ if(target)target.textContent='Έλεγχοι που σημειώθηκαν: '+complete+' από '+active+'.';
 }
 /* v3.22.123 — one disclosure, not a checklist task, for all submission routes. */
 var SUBMISSION_GUIDANCE={
@@ -328,9 +335,10 @@ function render(){
   // Avoid repeating the same advice outside and inside its disclosure, including EAE service/routing.
   // v3.22.124: avoid duplicate previews for all five standard Artistic School supporting documents.
   var compact=d.id==='locality' || /-dossier$/.test(d.id) || ['eae-doctorate','eae-masters','eae-two-year','eae-5year','eae-pe11','eae-service','eae-kedasy','art-service','art-cv','art-inventory','art-degrees','art-publications'].indexOf(d.id)!==-1;
-  return '<article class="edu-transfer-doc'+(checked[d.id]?' is-complete':'')+(warning?' has-warning':'')+(compact?' is-compact':'')+'" data-doc-card="'+id+'">'+
+  if(d.disabled)checked[d.id]=false;
+  return '<article class="edu-transfer-doc'+(checked[d.id]?' is-complete':'')+(warning?' has-warning':'')+(compact?' is-compact':'')+(d.disabled?' is-unavailable':'')+'" data-doc-card="'+id+'">'+
    '<div class="edu-transfer-doc__head">'+
-    '<input class="edu-transfer-doc__check" type="checkbox" id="transferDocCheck-'+id+'" data-doc-id="'+id+'" '+(checked[d.id]?'checked':'')+' aria-label="Ολοκληρώθηκε: '+heading+'">'+
+    '<input class="edu-transfer-doc__check" type="checkbox" id="transferDocCheck-'+id+'" data-doc-id="'+id+'" '+(checked[d.id]?'checked':'')+(d.disabled?' disabled':'')+' aria-label="Ολοκληρώθηκε: '+heading+'">'+
     '<div class="edu-transfer-doc__main">'+
      '<label class="edu-transfer-doc__title" for="transferDocCheck-'+id+'">'+heading+'</label>'+
      (compact?'':'<div class="edu-transfer-doc__category">'+escape(d.tag)+'</div>')+
@@ -358,7 +366,7 @@ function render(){
  progress(root);
 }
 
-function print(){var rows=build(),mode=$('mode').selectedOptions[0].textContent,submission=submissionGuideData(),html='<!doctype html><html lang="el"><meta charset="utf-8"><title>Λίστα δικαιολογητικών μετάθεσης</title><style>body{font:14px Arial;max-width:780px;margin:36px auto;line-height:1.5}li{margin-bottom:14px}small{color:#555;font-size:11px}</style><h1>Έλεγχος δικαιολογητικών μετάθεσης</h1><p>'+escape(mode)+'</p>'+(($('mode').value==='intercultural')?'<h2>Σημειώσεις Διαπολιτισμικών</h2><p><strong>Αλληλεπίδραση με άλλες αιτήσεις.</strong> Σε περίπτωση ικανοποίησης μετάθεσης σε ΕΑΕ/ΚΕΔΑΣΥ, Μουσικό ή Καλλιτεχνικό, δεν εξετάζεται η αίτηση για Διαπολιτισμικό. Αν ικανοποιηθεί σε Διαπολιτισμικό, δεν λαμβάνονται υπόψη άλλες αιτήσεις.</p><p><strong>Μετάθεση προς Γενική μέσα στην ίδια περιοχή.</strong> Εκπαιδευτικός με οργανική σε Διαπολιτισμικό που ζητά σχολείο Γενικής στην ίδια περιοχή υποβάλλει αίτηση από περιοχή σε περιοχή, όχι βελτίωσης.</p>':'')+'<h2>Πού αποστέλλονται τα δικαιολογητικά;</h2><p><strong>'+escape(submission.title)+'</strong></p>'+submission.lines.map(function(t){return '<p>'+escape(t)+'</p>';}).join('')+'<p><strong>Ενδεικτική λίστα — όχι βεβαίωση υποχρεωτικών εγγράφων.</strong> Επαληθεύστε τα πάντα με την εγκύκλιο της περιόδου και τη ΔΔΕ.</p><ul>'+rows.map(function(d){return '<li>'+(checked[d.id]?'☑':'☐')+' <strong>'+escape(d.title)+'</strong><br>'+escape(d.detail).replace(/\n/g,'<br>')+' <small>('+escape(d.tag)+')</small>'+(d.id==='eae-basis'?eaeChoices(true):'')+'</li>';}).join('')+'</ul></html>';var win=global.open('','_blank');if(win){win.document.write(html);win.document.close();win.focus();win.print();}}
+function print(){var rows=build(),mode=$('mode').selectedOptions[0].textContent,submission=submissionGuideData(),html='<!doctype html><html lang="el"><meta charset="utf-8"><title>Λίστα δικαιολογητικών μετάθεσης</title><style>body{font:14px Arial;max-width:780px;margin:36px auto;line-height:1.5}li{margin-bottom:14px}small{color:#555;font-size:11px}</style><h1>Έλεγχος δικαιολογητικών μετάθεσης</h1><p>'+escape(mode)+'</p>'+(($('mode').value==='intercultural')?'<h2>Σημειώσεις Διαπολιτισμικών</h2><p><strong>Αλληλεπίδραση με άλλες αιτήσεις.</strong> Σε περίπτωση ικανοποίησης μετάθεσης σε ΕΑΕ/ΚΕΔΑΣΥ, Μουσικό ή Καλλιτεχνικό, δεν εξετάζεται η αίτηση για Διαπολιτισμικό. Αν ικανοποιηθεί σε Διαπολιτισμικό, δεν λαμβάνονται υπόψη άλλες αιτήσεις.</p><p><strong>Μετάθεση προς Γενική μέσα στην ίδια περιοχή.</strong> Εκπαιδευτικός με οργανική σε Διαπολιτισμικό που ζητά σχολείο Γενικής στην ίδια περιοχή υποβάλλει αίτηση από περιοχή σε περιοχή, όχι βελτίωσης.</p>':'')+'<h2>Πού αποστέλλονται τα δικαιολογητικά;</h2><p><strong>'+escape(submission.title)+'</strong></p>'+submission.lines.map(function(t){return '<p>'+escape(t)+'</p>';}).join('')+'<p><strong>Ενδεικτική λίστα — όχι βεβαίωση υποχρεωτικών εγγράφων.</strong> Επαληθεύστε τα πάντα με την εγκύκλιο της περιόδου και τη ΔΔΕ.</p><ul>'+rows.map(function(d){return '<li>'+(d.disabled?'— Δεν μοριοδοτείται':(checked[d.id]?'☑':'☐'))+' <strong>'+escape(d.title)+'</strong><br>'+escape(d.detail).replace(/\n/g,'<br>')+' <small>('+escape(d.tag)+')</small>'+(d.id==='eae-basis'?eaeChoices(true):'')+'</li>';}).join('')+'</ul></html>';var win=global.open('','_blank');if(win){win.document.write(html);win.document.close();win.focus();win.print();}}
 function init(){var b=$('transferPrintChecklist');if(b)b.addEventListener('click',print);document.addEventListener('input',function(e){if(e.target.closest && e.target.closest('#transferDocumentChecklist'))return;if(e.target.closest && e.target.closest('.edu-page-transfer'))render();});document.addEventListener('change',function(e){if(e.target.closest && e.target.closest('#transferDocumentChecklist'))return;if(e.target.closest && e.target.closest('.edu-page-transfer'))render();});render();}
 global.EducationTransferDocuments=Object.freeze({init:init,render:render,build:build,coServiceInfo:coServiceInfo,submissionGuideData:submissionGuideData,renderSubmissionGuidance:renderSubmissionGuidance});
 })(window);

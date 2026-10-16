@@ -17,7 +17,7 @@ ok(d.includes('ΣΑΕΚ/Κολλέγια')&&d.includes('επίσημη ελλη�
 ok(d.includes('ΑΝΑΠΗΡΙΑ ΤΕΚΝΟΥ')&&d.includes('όχι αυτομάτως'),'disabled child criteria separated');
 ok(d.includes('ΔΕΝ αντικαθιστούν')&&d.includes('ασφαλιστικού φορέα'),'myAADE not alone');
 ok(d.includes('μηχανογραφικά δελτία ασφάλισης')&&d.includes('ΑΠΔ'),'private worker alternatives');
-ok(u.includes("byId('coService').checked && !syncCoService()"),'blocked statuses excluded from scoring');
+ok(u.includes("!syncCoService() && byId('coService').checked"),'blocked statuses excluded from scoring');
 let elements={};function put(id,value,checked){elements[id]={value:value??'',checked:!!checked};}
 put('mode','local');put('serviceYears','0');put('serviceMonths','0');put('serviceDays','0');put('eligibleChildren','2');put('msdMode','direct');put('msdDirectPoints','0');put('familyStatusEligible','',false);put('coService','',true);put('locality','',false);put('transferCoServiceCase','teacher_disposal');
 const document={getElementById(id){if(!elements[id])throw new Error('Missing '+id);return elements[id];},querySelectorAll(){return []}};

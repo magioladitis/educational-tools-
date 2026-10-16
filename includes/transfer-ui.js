@@ -156,7 +156,7 @@
       serviceDays: Number(byId('serviceDays').value) || 0,
       familyStatusEligible: byId('familyStatusEligible').checked,
       eligibleChildren: Number(byId('eligibleChildren').value) || 0,
-      coService: byId('coService').checked && !syncCoService(),
+      coService: !syncCoService() && byId('coService').checked,
       locality: byId('locality').checked,
       firstPreference: byId('firstPreference').checked,
       msdMode: byId('msdMode').value,
@@ -234,17 +234,25 @@
     }
   }
   function syncCoService(){
-    var active=byId('coService').checked;
-    var field=byId('transferCoServiceCaseField');
-    if(field)field.style.display=active?'':'none';
+    var checkbox=byId('coService');
     var choice=byId('transferCoServiceCase').value;
     var docEngine=global.EducationTransferDocuments;
     var mode=byId('mode').value;
     if(isEaeMode(mode) && byId('transferEaeArea').value==='same')mode='local';
     var details=docEngine&&docEngine.coServiceInfo?docEngine.coServiceInfo(choice,mode):null;
+    var blocked=!!(details && details.blocked);
+    // A blocked case must never look selected or contribute four points.
+    // Keep the selector accessible to allow choosing a different case.
+    if(blocked)checkbox.checked=false;
+    checkbox.disabled=blocked;
+    var field=byId('transferCoServiceCaseField');
+    if(field)field.style.display=(checkbox.checked || choice!=='unspecified')?'':'none';
     var advice=byId('transferCoServiceAdvice');
-    if(advice)advice.textContent=active && details ? details.summary : '';
-    return !!(active && details && details.blocked);
+    if(advice)advice.textContent=(checkbox.checked || choice!=='unspecified') && details ? details.summary : '';
+    checkbox.setAttribute('aria-describedby',blocked?'transferCoServiceAdvice':'');
+    var row=checkbox.closest('.check-row');
+    if(row)row.classList.toggle('transfer-criterion-unavailable',blocked);
+    return blocked;
   }
 
   function syncEaeApplicationRoute(mode) {
@@ -274,7 +282,7 @@
     var guidance = byId('transferModeGuidance');
     var scoreBlock = byId('transferScoringResults');
     if (scoreBlock) scoreBlock.style.display = qualifications ? 'none' : '';
-    ['transferNumericalInputs','transferMsdCard'].forEach(function(id){ var e=byId(id); if(e) e.style.display=qualifications?'none':''; });
+    ['transferNumericalInputs','transferMsdCard','transferSocialCriteriaCard'].forEach(function(id){ var e=byId(id); if(e) e.style.display=qualifications?'none':''; });
     var q=byId('transferQualificationPanel'); if(q) q.style.display=qualifications?'':'none';
     var qt=byId('transferQualificationTitle'); if(qt) qt.textContent=mode==='music'?'Μετάθεση σε Μουσικό Σχολείο — Φάκελος προσόντων':mode==='art'?'Μετάθεση σε Καλλιτεχνικό Σχολείο — Φάκελος προσόντων':'Μετάθεση σε Πειραματικό Σχολείο Διαπολιτισμικής Εκπαίδευσης — Φάκελος προσόντων';
     var qi=byId('transferQualificationIntro'); if(qi) qi.textContent=mode==='music'?'Γενική παιδεία: ελέγχονται τα κοινά προσόντα, χωρίς απαίτηση μουσικής εξειδίκευσης. Μουσική παιδεία: απαιτείται πρόσθετη τεκμηρίωση ανά μουσικό αντικείμενο.':mode==='art'?'Για Καλλιτεχνικά: υπηρέτηση οργανικής, πενταετής διδακτική εμπειρία (με εξαιρέσεις), φάκελος προσόντων και ειδική κρίση για ΠΕ08, ΠΕ11, ΠΕ79.01, ΠΕ91.01, ΠΕ91.02. Δεν προβλέπεται αριθμητική κατάταξη.':'Για Πειραματικά Διαπολιτισμικής: θεμελίωση υπηρεσιακού δικαιώματος και συνεκτίμηση συγκεκριμένων προσόντων κατά σειρά προτεραιότητας, χωρίς μοριοδότηση ή ενιαία κατάταξη.';
@@ -431,7 +439,7 @@
     byId('transferInterculturalNewDocuments').checked=false;
     document.querySelectorAll('[data-intercultural-qual]').forEach(function(el){el.checked=false;});
     byId('transferCoServiceCase').value = 'unspecified';
-    byId('msdMode').value = 'periods';
+    byId('msdMode').value = 'direct';
     byId('msdDirectPoints').value = '';
     syncMsdMode();
     msdRows.innerHTML = '';
@@ -474,7 +482,7 @@
       if (target.id === 'transferEaeAreaYears' || target.id === 'transferGeneralEaeAreaYears') clampAreaYears(target);
       var row = target.closest ? target.closest('.transfer-service-row') : null;
       if (row && (target.classList.contains('msd-type') || target.classList.contains('msd-category'))) syncRow(row);
-      if (target.closest && target.closest('.edu-page-transfer')) {syncGeneralReturn();syncEligibilityDetails();calculate();}
+      if (target.closest && target.closest('.edu-page-transfer')) {syncGeneralReturn();syncEligibilityDetails();calculate();if(target.id==='transferCoServiceCase' && global.EducationTransferDocuments)global.EducationTransferDocuments.render();}
     });
 
     msdRows.addEventListener('click', function (event) {
