@@ -61,6 +61,8 @@
       if(a.newly&&(!Number.isFinite(Number(a.areaYears))||Number(a.areaYears)<0||Number(a.areaYears)>45))requirements.push('Τα έτη υπηρεσίας στην περιοχή διορισμού πρέπει να είναι από 0 έως 45.');
       if(a.newly&&year(a.areaYears)<2)requirements.push('Για νεοδιόριστους ελέγχονται δύο έτη στην περιοχή διορισμού, εντός της απαιτούμενης τριετίας.');
     } else requirements.push('Για μετακίνηση ΕΑΕ → ΕΑΕ ελέγξτε χωριστά υπηρέτηση οργανικής, περιοχή και τυχόν ειδικές υπηρεσιακές υποχρεώσεις.');
+    if(a.destination==='kedasy' && ['pe02','pe03','pe04'].indexOf(branch)===-1)requirements.push('Για ΚΕΔΑΣΥ ελέγχεται κλάδος ΠΕ02, ΠΕ03 ή ΠΕ04 και ύπαρξη αντίστοιχης κενής οργανικής θέσης.');
+    if(a.destination==='kedasy' && ['pe02','pe03','pe04'].indexOf(branch)!==-1)requirements.push('Για ΚΕΔΑΣΥ επιβεβαιώστε την προβλεπόμενη οργανική θέση του κλάδου στο οικείο οργανόγραμμα.');
     if(a.destination==='deaf')requirements.push('Για Σχολείο Κωφών απαιτείται επιπλέον πιστοποιημένη γνώση Ελληνικής Νοηματικής Γλώσσας.');
     if(a.destination==='blind')requirements.push('Για Σχολείο Τυφλών απαιτείται επιπλέον πιστοποιημένη γνώση γραφής Braille.');
     var pending=requirements.length>0;

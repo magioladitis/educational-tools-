@@ -7,6 +7,7 @@
   'use strict';
   var byId = function (id) { return document.getElementById(id); };
   var initialized = false;
+  function isEaeMode(mode){ return ['smeae','eae_sensory','kedasy'].indexOf(mode)!==-1; }
   var rowCounter = 0;
   var msdRows = null;
 
@@ -168,7 +169,7 @@
       if (global.EducationTransferDocuments) global.EducationTransferDocuments.render();
       return;
     }
-    if (input.mode === 'smeae') input.mode = byId('transferEaeArea').value==='same'?'local':'region'; // Arithmetic depends on area; eligibility is separate.
+    if (isEaeMode(input.mode)) input.mode = byId('transferEaeArea').value==='same'?'local':'region'; // Arithmetic depends on area; eligibility is separate.
     var result = global.EducationTransfer.calculate(input);
 
     // When direct M.S.D. is missing, the full result is unknown. Show a clearly
@@ -239,16 +240,34 @@
     var choice=byId('transferCoServiceCase').value;
     var docEngine=global.EducationTransferDocuments;
     var mode=byId('mode').value;
-    if(mode==='smeae' && byId('transferEaeArea').value==='same')mode='local';
+    if(isEaeMode(mode) && byId('transferEaeArea').value==='same')mode='local';
     var details=docEngine&&docEngine.coServiceInfo?docEngine.coServiceInfo(choice,mode):null;
     var advice=byId('transferCoServiceAdvice');
     if(advice)advice.textContent=active && details ? details.summary : '';
     return !!(active && details && details.blocked);
   }
 
+  function syncEaeApplicationRoute(mode) {
+    var dest=byId('transferEaeDestination'), branch=byId('transferEaeBranch');
+    if(!dest || !branch)return;
+    var sensory=mode==='eae_sensory', kedasy=mode==='kedasy', smeae=mode==='smeae';
+    var field=byId('transferEaeDestinationField'), note=byId('transferEaeRouteNote');
+    Array.prototype.forEach.call(dest.options,function(opt){opt.hidden=sensory?(['deaf','blind'].indexOf(opt.value)===-1):!(smeae&&opt.value==='smeae');});
+    if(sensory && ['deaf','blind'].indexOf(dest.value)===-1)dest.value='deaf';
+    if(kedasy)dest.value='kedasy';
+    if(smeae)dest.value='smeae';
+    if(field)field.style.display=sensory?'':'none';
+    Array.prototype.forEach.call(branch.options,function(opt){opt.hidden=kedasy && ['other','pe02','pe03','pe04'].indexOf(opt.value)===-1;});
+    if(kedasy && ['other','pe02','pe03','pe04'].indexOf(branch.value)===-1)branch.value='other';
+    if(note)note.textContent=sensory?'Επιλέξτε Σχολείο Κωφών (ΕΝΓ) ή Τυφλών (Braille). Απαιτείται επιπλέον η αντίστοιχη πιστοποιημένη γνώση.':kedasy?'Για ΚΕΔΑΣΥ επιτρέπονται μόνο ΠΕ02, ΠΕ03 ή ΠΕ04, εφόσον προβλέπεται αντίστοιχη οργανική θέση και πληρούνται τα προσόντα ΕΑΕ.':smeae?'Η αίτηση αυτή αφορά ΣΜΕΑΕ/ΕΕΕΕΚ· Κωφών/Τυφλών και ΚΕΔΑΣΥ έχουν ξεχωριστούς κωδικούς αίτησης.':'';
+    var pe11Qual=byId('transferEaeQualification').querySelector('option[value="pe11"]');
+    if(pe11Qual)pe11Qual.hidden=kedasy;
+    if(kedasy && byId('transferEaeQualification').value==='pe11')byId('transferEaeQualification').value='none';
+  }
+
   function syncMode() {
     var mode = byId('mode').value;
-    var isLocal = mode === 'local' || (mode === 'smeae' && byId('transferEaeArea').value==='same');
+    var isLocal = mode === 'local' || (isEaeMode(mode) && byId('transferEaeArea').value==='same');
     var qualifications = mode === 'music' || mode === 'art' || mode === 'intercultural';
     byId('firstPreferenceRow').classList.toggle('hidden', isLocal || qualifications);
     if (isLocal || qualifications) byId('firstPreference').checked = false;
@@ -259,10 +278,12 @@
     var q=byId('transferQualificationPanel'); if(q) q.style.display=qualifications?'':'none';
     var qt=byId('transferQualificationTitle'); if(qt) qt.textContent=mode==='music'?'Μετάθεση σε Μουσικό Σχολείο — Φάκελος προσόντων':mode==='art'?'Μετάθεση σε Καλλιτεχνικό Σχολείο — Φάκελος προσόντων':'Μετάθεση σε Πειραματικό Σχολείο Διαπολιτισμικής Εκπαίδευσης — Φάκελος προσόντων';
     var qi=byId('transferQualificationIntro'); if(qi) qi.textContent=mode==='music'?'Γενική παιδεία: ελέγχονται τα κοινά προσόντα, χωρίς απαίτηση μουσικής εξειδίκευσης. Μουσική παιδεία: απαιτείται πρόσθετη τεκμηρίωση ανά μουσικό αντικείμενο.':mode==='art'?'Για Καλλιτεχνικά: υπηρέτηση οργανικής, πενταετής διδακτική εμπειρία (με εξαιρέσεις), φάκελος προσόντων και ειδική κρίση για ΠΕ08, ΠΕ11, ΠΕ79.01, ΠΕ91.01, ΠΕ91.02. Δεν προβλέπεται αριθμητική κατάταξη.':'Για Πειραματικά Διαπολιτισμικής: θεμελίωση υπηρεσιακού δικαιώματος και συνεκτίμηση συγκεκριμένων προσόντων κατά σειρά προτεραιότητας, χωρίς μοριοδότηση ή ενιαία κατάταξη.';
-    var eaePanel=byId('transferEaePanel');if(eaePanel)eaePanel.style.display=mode==='smeae'?'':'none';
+    var eaePanel=byId('transferEaePanel');if(eaePanel)eaePanel.style.display=isEaeMode(mode)?'':'none';
+    syncEaeApplicationRoute(mode);
     var musicPanel=byId('transferMusicEligibility');if(musicPanel)musicPanel.style.display=mode==='music'?'':'none';
     var artPanel=byId('transferArtEligibility');if(artPanel)artPanel.style.display=mode==='art'?'':'none';
     var crossPanel=byId('transferInterculturalEligibility');if(crossPanel)crossPanel.style.display=mode==='intercultural'?'':'none';
+    var crossNotes=byId('transferInterculturalNotes');if(crossNotes)crossNotes.style.display=mode==='intercultural'?'':'none';
     var typeField=byId('transferEducationTypeField');if(typeField)typeField.style.display=mode==='music'?'':'none';
     var footnote=byId('transferQualificationFootnote');if(footnote)footnote.style.display=mode==='music'?'':'none';
     var typeLabel=byId('transferEducationType');if(typeLabel){
@@ -273,7 +294,7 @@
     syncCoService();
     syncEligibilityDetails();
     if(global.EducationTransferDocuments) global.EducationTransferDocuments.render();
-    if (mode === 'smeae') {
+    if (isEaeMode(mode)) {
       guidance.innerHTML = '<strong>ΣΜΕΑΕ / ΕΕΕΕΚ — ενδεικτικά μόρια:</strong> Πληροφοριακή μοριοδότηση με διαχωρισμό ίδιας/άλλης περιοχής. Ο προέλεγχος προσόντων και χρόνου υπηρεσίας <strong>δεν πιστοποιεί</strong> θεμελίωση δικαιώματος. Ελέγξτε τις υπηρεσιακές πράξεις, την εγκύκλιο και τη ΔΔΕ.';
     } else if (mode === 'music') {
       guidance.innerHTML = '<strong>Μουσικά Σχολεία — αξιολόγηση προσόντων, όχι μορίων.</strong> Δεν παρέχεται αριθμητική κατάταξη. Ελέγξτε τίτλους σπουδών, εξειδίκευση (ιδιαίτερα στις μουσικές ειδικότητες), προηγούμενη διδακτική εμπειρία, επιμόρφωση και τα αποδεικτικά που προβλέπει η οικεία εγκύκλιος. Μην υποβάλλετε άσχετα έγγραφα.';
@@ -320,7 +341,7 @@
     byId(outputId).textContent=r.status+' '+r.limitation;
   }
   function syncEligibilityDetails() {
-    var mode=byId('mode').value, eae=mode==='smeae',music=mode==='music';
+    var mode=byId('mode').value, eae=isEaeMode(mode),music=mode==='music';
     var sameArea=eae&&byId('transferEaeArea').value==='same';
     var preferenceRow=byId('firstPreferenceRow');
     if(preferenceRow)preferenceRow.classList.toggle('hidden',mode==='local'||sameArea||mode==='music'||mode==='art'||mode==='intercultural');

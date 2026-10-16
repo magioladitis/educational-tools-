@@ -26,12 +26,14 @@
           <div class="field">
             <label for="mode">Τύπος διαδικασίας</label>
             <select id="mode">
-              <option value="region">Μετάθεση από περιοχή σε περιοχή — Γενική Εκπαίδευση</option>
-              <option value="local">Οριστική τοποθέτηση / βελτίωση εντός περιοχής</option>
-              <option value="smeae">Μετάθεση σε ΣΜΕΑΕ / ΕΕΕΕΚ (Ειδική Αγωγή)</option>
-              <option value="music">Μετάθεση σε Μουσικό Σχολείο</option>
-              <option value="art">Μετάθεση σε Καλλιτεχνικό Σχολείο</option>
-              <option value="intercultural">Μετάθεση σε Πειραματικό Σχολείο Διαπολιτισμικής Εκπαίδευσης</option>
+              <option value="region">Από περιοχή σε περιοχή — Γενική [001.ΔΕ001]</option>
+              <option value="music">Μουσικά Σχολεία [002.ΜΟΥΣ001]</option>
+              <option value="art">Καλλιτεχνικά Σχολεία [002.ΚΑΛ001]</option>
+              <option value="intercultural">Σχολεία Διαπολιτισμικής Εκπαίδευσης [002.ΔΙΑΠ002]</option>
+              <option value="local">Οριστική τοποθέτηση / βελτίωση [003.ΔΕΒ01]</option>
+              <option value="smeae">ΣΜΕΑΕ / ΕΕΕΕΚ [001.ΔΕΣΚΕ]</option>
+              <option value="eae_sensory">Σχολεία Κωφών / Τυφλών — ΕΝΓ / Braille [001.ΔΕΚΤ]</option>
+              <option value="kedasy">ΚΕΔΑΣΥ [001.ΔΕΣΚΕ.ΚΔΣ]</option>
             </select>
           </div>
           <div class="field" id="transferModeGuidance" role="status" aria-live="polite" style="grid-column:1/-1; padding:12px; border:1px solid #b8c5d5; border-radius:8px;" >Επιλέξτε τύπο διαδικασίας για τις αντίστοιχες οδηγίες.</div>
@@ -169,11 +171,11 @@
           <div class="field"><label for="transferEaeArea">Περιοχή της μετάθεσης</label>
             <select id="transferEaeArea"><option value="other">Άλλη περιοχή μετάθεσης</option><option value="same">Ίδια περιοχή μετάθεσης / βελτίωση</option></select>
           </div>
-          <div class="field"><label for="transferEaeDestination">Δομή προορισμού</label>
-            <select id="transferEaeDestination"><option value="smeae">ΣΜΕΑΕ / ΕΕΕΕΚ</option><option value="deaf">Σχολείο Κωφών</option><option value="blind">Σχολείο Τυφλών</option></select>
+          <div class="field" id="transferEaeDestinationField"><label for="transferEaeDestination">Δομή προορισμού</label>
+            <select id="transferEaeDestination"><option value="smeae">ΣΜΕΑΕ / ΕΕΕΕΚ</option><option value="deaf">Σχολείο Κωφών (ΕΝΓ)</option><option value="blind">Σχολείο Τυφλών (Braille)</option><option value="kedasy">ΚΕΔΑΣΥ</option></select>
           </div>
           <div class="field"><label for="transferEaeBranch">Κλάδος</label>
-            <select id="transferEaeBranch"><option value="other">Άλλος κλάδος Δ.Ε.</option><option value="pe11">ΠΕ11 Φυσικής Αγωγής</option></select>
+            <select id="transferEaeBranch"><option value="other">Άλλος κλάδος Δ.Ε. / δεν έχω επιλέξει</option><option value="pe02">ΠΕ02 Φιλολόγων</option><option value="pe03">ΠΕ03 Μαθηματικών</option><option value="pe04">ΠΕ04 Φυσικών Επιστημών</option><option value="pe11">ΠΕ11 Φυσικής Αγωγής</option></select>
           </div>
           <div class="field"><label for="transferEaeQualification">Βασικό αποδεικτικό εξειδίκευσης στην ΕΑΕ</label>
             <select id="transferEaeQualification">
@@ -185,6 +187,7 @@
               <option value="pe11">ΠΕ11: κύρια ειδικότητα ΤΕΦΑΑ στην Ειδική/Προσαρμοσμένη Φυσική Αγωγή</option>
             </select>
           </div>
+          <p class="small-note" id="transferEaeRouteNote" style="grid-column:1/-1"></p>
           <div class="field" id="transferEaeExperienceRow" style="display:none"><label for="transferEaeExperienceYears">Αποδεδειγμένα έτη διδακτικής υπηρεσίας στην ΕΑΕ</label><input id="transferEaeExperienceYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0"></div>
           <div class="field" id="transferEaeGeneralYearsRow"><label for="transferEaeTeachingYears">Διδακτικά έτη από διορισμό (Γενική → ΕΑΕ)</label><input id="transferEaeTeachingYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0"></div>
         </div>
@@ -305,6 +308,12 @@
         </div>
         <p class="small-note" id="transferQualificationFootnote">Ο έλεγχος δεν αντικαθιστά την εξέταση από το αρμόδιο υπηρεσιακό συμβούλιο ή την Επιστημονική Επιτροπή Μουσικής Παιδείας. Εγκύκλιος 2026–2027, Κεφ. Ε΄, σελ. 39–41.</p>
       </section>
+
+      <aside id="transferInterculturalNotes" class="calculator-card" style="display:none; padding:16px; border:1px solid #b8c5d5; border-radius:12px; margin:14px 0" aria-label="Σημειώσεις Διαπολιτισμικής Εκπαίδευσης">
+        <h3 style="margin:0 0 8px">Χρήσιμες σημειώσεις για Διαπολιτισμικά</h3>
+        <p class="small-note"><strong>Αλληλεπίδραση με άλλες αιτήσεις.</strong> Σε περίπτωση ικανοποίησης μετάθεσης σε ΕΑΕ/ΚΕΔΑΣΥ, Μουσικό ή Καλλιτεχνικό Σχολείο, δεν εξετάζεται η αίτηση για Διαπολιτισμικό. Αν ικανοποιηθεί αίτηση σε Διαπολιτισμικό, δεν λαμβάνονται υπόψη οι άλλες αιτήσεις.</p>
+        <p class="small-note"><strong>Μετάθεση προς Γενική μέσα στην ίδια περιοχή.</strong> Εκπαιδευτικός με οργανική σε Διαπολιτισμικό που ζητά σχολείο Γενικής στην ίδια περιοχή υποβάλλει αίτηση «από περιοχή σε περιοχή» και όχι βελτίωσης.</p>
+      </aside>
 
       <?php calculatorActions(array(
         array('id' => 'resetBtn', 'class' => 'secondary', 'label' => 'Καθαρισμός')

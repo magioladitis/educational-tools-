@@ -36,5 +36,5 @@ for(const [mode,id] of [['smeae','eae-dossier'],['music','music-dossier'],['art'
  n+=6;
 }
 assert.ok(js.includes('function print(){var rows=build()') && js.includes('escape(d.detail)'), 'printing not truncated');n++;
-assert.ok(fs.readFileSync(path.join(root,'includes/config.php'),'utf8').includes("'3.22.124'"));n++;
+assert.ok(fs.readFileSync(path.join(root,'includes/config.php'),'utf8').includes("'3.22.125'"));n++;
 console.log(`PASS ${n} checks — three labels, four dossier modes and complete details`);

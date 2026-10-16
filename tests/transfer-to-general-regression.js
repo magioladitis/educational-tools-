@@ -24,7 +24,7 @@ const docs=fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf
 for(const id of ['transferGeneralFromEaePanel','transferGeneralOrigin','transferGeneralEaeAppointed','transferGeneralEaeTransferred','transferGeneralEaeYears','transferGeneralEaeAreaYears','transferGeneralEaeSinceTransfer','transferGeneralEaeOrganic','transferGeneralEaeAdvice']){
  ok(php.includes('id="'+id+'"'),'php id '+id);
 }
-ok(php.includes('Μετάθεση από περιοχή σε περιοχή — Γενική Εκπαίδευση'),'label');
+ok(php.includes('Από περιοχή σε περιοχή — Γενική [001.ΔΕ001]'),'label');
 ok(ui.includes('syncGeneralReturn();'),'sync');
 ok(ui.includes("mode==='region'"),'toggle');
 ok(docs.includes("'eae-to-general'"),'checklist');
