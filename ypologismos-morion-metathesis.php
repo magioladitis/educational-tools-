@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php require __DIR__ . '/includes/head-pwa.php'; ?>
-  <title>Μόρια Μετάθεσης</title>
+  <title>Μεταθέσεις μόνιμων εκπαιδευτικών Δ.Ε.</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-transfer">
@@ -14,7 +14,7 @@
 
 <?php calculatorContainerStart(array('class' => 'app')); ?>
   <?php calculatorHero(array(
-    'title' => 'Μεταθέσεις Εκπαιδευτικών — Μόρια & Δικαιολογητικά',
+    'title' => 'Μεταθέσεις μόνιμων εκπαιδευτικών Δ.Ε.',
     'intro_html' => 'Εργαλείο για εκπαιδευτικούς <strong>Δευτεροβάθμιας Εκπαίδευσης</strong>: ενδεικτική μοριοδότηση όπου εφαρμόζεται και προσωποποιημένος κατάλογος ελέγχου δικαιολογητικών ανά τύπο μετάθεσης.',
     'badges' => array('Βάση: εγκύκλιος 2026–2027 (138014/Ε2)', 'Μ.Σ.Δ.', 'Δυσπρόσιτα / ειδικές υπηρετήσεις')
   )); ?>
@@ -23,7 +23,7 @@
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('title' => 'Α. Τύπος διαδικασίας και βασικά κριτήρια')); ?>
         <div class="field-grid">
-          <div class="field">
+          <div class="field transfer-main-mode-field">
             <label for="mode">Τύπος διαδικασίας</label>
             <select id="mode">
               <option value="region">Από περιοχή σε περιοχή — Γενική [001.ΔΕ001]</option>
@@ -38,6 +38,14 @@
           </div>
           <div class="field" id="transferModeGuidance" role="status" aria-live="polite" style="grid-column:1/-1; padding:12px; border:1px solid #b8c5d5; border-radius:8px;" >Επιλέξτε τύπο διαδικασίας για τις αντίστοιχες οδηγίες.</div>
         </div>
+        <?php calculatorDisclosure(array(
+          'id' => 'transferMultipleApplicationsHelp',
+          'summary' => 'Μπορώ να υποβάλω περισσότερες από μία αιτήσεις μετάθεσης;',
+          'html' => '<p><strong>Ναι</strong>, εφόσον πληροίτε τις προϋποθέσεις κάθε τύπου αίτησης. Μπορείτε να υποβάλετε χωριστές αιτήσεις, για παράδειγμα για ΕΑΕ/ΚΕΔΑΣΥ, Μουσικά, Καλλιτεχνικά, Διαπολιτισμικά ή μετάθεση από περιοχή σε περιοχή.</p>'
+            . '<p>Οι μεταθέσεις εξετάζονται με την εξής σειρά: <strong>ΕΑΕ/ΚΕΔΑΣΥ → Μουσικά → Καλλιτεχνικά → Διαπολιτισμικά → από περιοχή σε περιοχή → αμοιβαίες</strong>. Εάν ικανοποιηθεί αίτηση σε προηγούμενη κατηγορία, δεν εξετάζονται οι επόμενες αιτήσεις μετάθεσης.</p>'
+            . '<p><strong>Προσοχή:</strong> Η οριστική τοποθέτηση/βελτίωση αποτελεί διαφορετικό τύπο αίτησης. Ειδικά όποιος έχει οργανική θέση σε ΕΑΕ, Μουσικό, Καλλιτεχνικό ή Διαπολιτισμικό σχολείο και ζητά μετάθεση στη Γενική της περιοχής όπου ανήκει το σχολείο, υποβάλλει αίτηση «από περιοχή σε περιοχή» και όχι αίτηση βελτίωσης.</p>'
+            . '<p class="small-note">Πηγή: <a href="https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027" target="_blank" rel="noopener noreferrer">Εγκύκλιος Δ.Ε. 138014/Ε2/15-10-2026 ↗</a>, Μέρος Τρίτο, Κεφ. Η΄, παρ. 5–6.</p>'
+        )); ?>
         <div id="transferGeneralOriginField" class="field" style="margin:14px 0;">
           <label for="transferGeneralOrigin">Υπηρεσιακή προέλευση</label>
           <select id="transferGeneralOrigin">

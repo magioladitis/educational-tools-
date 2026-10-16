@@ -4255,3 +4255,15 @@ body.edu-ui.edu-page-transfer #transferNumericalInputs label[for="eligibleChildr
   font-weight:400;
   line-height:1.35;
 }
+
+/* v3.22.127 — transfer form desktop ergonomics; phone layout unchanged. */
+@media (min-width: 651px) {
+  body.edu-ui.edu-page-transfer .transfer-main-mode-field {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+  body.edu-ui.edu-page-transfer #mode { width: 100%; max-width: 100%; }
+  body.edu-ui.edu-page-transfer .actions:has(#resetBtn) {
+    grid-template-columns: minmax(240px, 60%);
+  }
+}

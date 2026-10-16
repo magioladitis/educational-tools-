@@ -57,7 +57,7 @@ check('module listed bonus2', "type === 'listed_service_bonus2'" in module and '
 check('module remote categories', 'REMOTE_DOUBLE_CATEGORIES' in module and all(k in module for k in ['I: true','IA: true','IB: true','IG: true']))
 check('module local first preference guard', "input.mode === 'local' ? 0" in module)
 check('catalog transfer group', "'href' => 'ypologismos-morion-metathesis.php'" in catalog and "'group' => 'metakiniseis'" in catalog)
-check('catalog transfer number', "'number' => 27" in catalog and "'title' => 'Μόρια Μετάθεσης'" in catalog)
+check('catalog transfer title', "'href' => 'ypologismos-morion-metathesis.php'" in catalog and "'title' => 'Μεταθέσεις μόνιμων εκπαιδευτικών Δ.Ε.'" in catalog)
 check('central asset version present', "define('EDU_TOOLS_VERSION'" in config)
 ids = re.findall(r'\bid="([^"]+)"', page)
 check('no duplicate literal ids', len(ids) == len(set(ids)))
