@@ -101,7 +101,6 @@ function artDocuments(){
     'Εξατομικευμένη υπενθύμιση'));
  }
  if(result&&result.advice.length)rows.push(entry('art-warnings','Εκκρεμότητες προελέγχου',result.advice.join(' '),'Υπηρεσιακή επαλήθευση'));
- rows.push(entry('art-no-scoring','Αξιολόγηση προσόντων χωρίς μόρια','Δεν προβλέπεται μοριοδότηση των συνεκτιμώμενων προσόντων ούτε κατάταξη όλων των αιτούντων σε ενιαίο αξιολογικό πίνακα.','Σημαντική επισήμανση'));
  return rows;
 }
 function interculturalDocuments(){
@@ -313,7 +312,8 @@ function render(){
   var warning=isCritical(d),heading=escape(d.title),detail=escape(full.body).replace(/\n/g,'<br>');
   if(d.id==='record')detail=detail.replace('Μονάδες Συνθηκών Διαβίωσης (Μ.Σ.Δ.):','<strong>Μονάδες Συνθηκών Διαβίωσης (Μ.Σ.Δ.):</strong>');
   // Avoid repeating the same advice outside and inside its disclosure, including EAE service/routing.
-  var compact=d.id==='locality' || /-dossier$/.test(d.id) || ['eae-doctorate','eae-masters','eae-two-year','eae-5year','eae-pe11','eae-service'].indexOf(d.id)!==-1;
+  // v3.22.124: avoid duplicate previews for all five standard Artistic School supporting documents.
+  var compact=d.id==='locality' || /-dossier$/.test(d.id) || ['eae-doctorate','eae-masters','eae-two-year','eae-5year','eae-pe11','eae-service','art-service','art-cv','art-inventory','art-degrees','art-publications'].indexOf(d.id)!==-1;
   return '<article class="edu-transfer-doc'+(checked[d.id]?' is-complete':'')+(warning?' has-warning':'')+(compact?' is-compact':'')+'" data-doc-card="'+id+'">'+
    '<div class="edu-transfer-doc__head">'+
     '<input class="edu-transfer-doc__check" type="checkbox" id="transferDocCheck-'+id+'" data-doc-id="'+id+'" '+(checked[d.id]?'checked':'')+' aria-label="Ολοκληρώθηκε: '+heading+'">'+
