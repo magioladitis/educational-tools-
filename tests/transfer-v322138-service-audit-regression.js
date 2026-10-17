@@ -4,7 +4,7 @@ const fs = require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.join(__dirname,'..');
 const calc=require('../includes/transfer-calculations.js');
 const ui=fs.readFileSync(path.join(root,'includes/transfer-ui.js'),'utf8');
-const html=fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
+const html=require('node:child_process').execFileSync('php',[path.join(root,'ypologismos-morion-metathesis.php')],{encoding:'utf8'}) + '\n' + fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
 const docsCode=fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf8');
 let total=0;
 function eq(actual,expected,msg){assert.equal(actual,expected,msg);total++;}

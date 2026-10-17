@@ -29,6 +29,7 @@ foreach ($primaryTransferBranchCodes as $code) {
 <body class="edu-ui edu-calc-standard edu-page-transfer">
 <?php require __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php require_once __DIR__ . '/includes/components/transfer-social-criteria.php'; ?>
 <?php calculatorContainerStart(array('class'=>'app')); ?>
   <?php calculatorHero(array(
     'title'=>'Μεταθέσεις μόνιμων εκπαιδευτικών Πρωτοβάθμιας',
@@ -212,18 +213,17 @@ foreach ($primaryTransferBranchCodes as $code) {
           <input id="primaryMsd" type="text" inputmode="decimal" maxlength="7" autocomplete="off" placeholder="π.χ. 48,75">
           <div class="field-hint">Έως δύο δεκαδικά. Τεχνικό όριο προστασίας 1.000 μορίων, όχι νομοθετικό.</div>
         </div>
-        <div class="field-grid"><div class="field"><label for="primaryChildren">Τέκνα που μοριοδοτούνται</label><input id="primaryChildren" type="number" min="0" max="20" step="1" value="0"></div></div>
-        <div class="check-row"><label><input type="checkbox" id="primaryFamily"> Γάμος / σύμφωνο συμβίωσης / μοριοδοτούμενη οικογενειακή περίπτωση (+4)</label></div>
-        <div class="check-row"><label><input type="checkbox" id="primaryChildrenExtra"> Χρειάζεται να αποστείλω πρόσθετο αποδεικτικό για τέκνο (ειδική περίπτωση)</label></div>
-        <div class="check-row"><label><input type="checkbox" id="primaryCoservice"> Δικαιούμαι συνυπηρέτηση στην εξεταζόμενη περιοχή (+4)</label></div>
-        <div class="check-row"><label><input type="checkbox" id="primaryLocality"> Δικαιούμαι εντοπιότητα στην εξεταζόμενη περιοχή (+4)</label></div>
-        <div class="check-row"><label><input type="checkbox" id="primaryFirst"> Πρόκειται για την περιοχή πρώτης προτίμησης (+2)</label></div>
-        <p id="primaryKedasyGeoNote" class="primary-transfer-notice" hidden><strong>Ειδικά για ΚΕΔΑΣΥ:</strong> η εντοπιότητα και η συνυπηρέτηση κρίνονται αποκλειστικά για τον <strong>δήμο όπου ανήκει το ΚΕΔΑΣΥ</strong>, όχι γενικά για ολόκληρη την περιοχή μετάθεσης (Εγκύκλιος 138023/Ε2, Μέρος Γ΄, Κεφ. ΣΤ΄, παρ. 7στ).</p>
-        <details><summary>Οδηγίες για τα κριτήρια</summary><p>Συνυπηρέτηση: ελέγξτε τον τύπο απασχόλησης συζύγου και τις ειδικές εξαιρέσεις της εγκυκλίου, πριν επιλέξετε το κριτήριο. Εντοπιότητα: απαιτείται η νόμιμη διετία δημοτικότητας· η απλή κατοικία δεν αρκεί. Τα οικογενειακά μόρια εξαρτώνται από τις ακριβείς περιπτώσεις που προβλέπει το ισχύον πλαίσιο.</p></details>
         <p id="primaryValidation" role="status" aria-live="polite" class="field-hint"></p>
       <?php calculatorCardEnd(); ?>
       </div>
-      <?php calculatorCardStart(array('title'=>'Γ. Προσωπική λίστα δικαιολογητικών')); ?>
+      <div id="primarySocialCriteriaCard">
+        <?php transferSocialCriteriaCard('primary', <<<'SOCIAL_PRIMARY_EXTRAS'
+
+<p id="primaryKedasyGeoNote" class="primary-transfer-notice" hidden><strong>Ειδικά για ΚΕΔΑΣΥ:</strong> η εντοπιότητα και η συνυπηρέτηση κρίνονται αποκλειστικά για τον <strong>δήμο όπου ανήκει το ΚΕΔΑΣΥ</strong>, όχι γενικά για ολόκληρη την περιοχή μετάθεσης (Εγκύκλιος 138023/Ε2, Μέρος Γ΄, Κεφ. ΣΤ΄, παρ. 7στ).</p>
+SOCIAL_PRIMARY_EXTRAS
+        ); ?>
+      </div>
+      <?php calculatorCardStart(array('title'=>'Δ. Προσωπική λίστα δικαιολογητικών')); ?>
         <p class="small-note">Οι υπηρεσιακοί και αυτεπάγγελτοι έλεγχοι εμφανίζονται ενημερωτικά· checkbox έχουν μόνο ενέργειες προετοιμασίας. Οι τίτλοι ΕΑΕ και τα προσόντα Διαπολιτισμικών υποβάλλονται μέσω mydocs μόνο όταν απαιτείται νέος ή συμπληρωματικός φάκελος.</p>
         <div id="primaryChecklist" aria-live="polite"></div>
         <p id="primaryChecklistProgress" role="status" aria-live="polite"></p>

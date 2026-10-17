@@ -14,6 +14,41 @@
   function action(id,title,desc) { return {id:id, title:title,desc:desc,channel:'email',action:true}; }
   function info(id,title,desc) { return {id:id, title:title,desc:desc,channel:'check',action:false}; }
   function mydocs(id,title,desc) { return {id:id, title:title,desc:desc,channel:'mydocs',action:true}; }
+  // Shared social-criteria UI; grade-specific evidence and eligibility remain here.
+  var spouseRules = {
+    unspecified:{summary:'Επιλέξτε καθεστώς εργασίας για έλεγχο των +4 μορίων.',review:true},
+    public_organic:{summary:'Δημόσιος υπάλληλος με οργανική θέση: δεν απαιτείται διετία.'},
+    teacher_organic:{summary:'Μόνιμος εκπαιδευτικός: λαμβάνεται υπόψη η οργανική θέση, όχι η απόσπαση.'},
+    teacher_disposal:{summary:'Στη διάθεση ΠΥΣΠΕ/ΠΥΣΔΕ: μόνο για μετάθεση από περιοχή σε περιοχή.'},
+    private_employee:{summary:'Ιδιωτικός υπάλληλος: συμπληρωμένη διετία και ασφαλιστικά στοιχεία.'},
+    self_employed:{summary:'Ελεύθερος επαγγελματίας: διετία, ασφαλιστική βεβαίωση και έδρα.'},
+    remote_employee:{summary:'Τηλεργασία: αποκλειστική, με έδρα τη ζητούμενη περιοχή και δήλωση στην ΕΡΓΑΝΗ.'},
+    lawyer:{summary:'Δικηγόρος: δεν απαιτείται διετής υπηρεσία.'},
+    private_doctor:{summary:'Ιατρός εκτός Δημοσίου: απαιτείται τεκμηρίωση ιδιωτικού τομέα και διετία.'},
+    substitute_teacher:{summary:'Σύζυγος αναπληρωτής: δεν χορηγούνται μονάδες συνυπηρέτησης.',blocked:true},
+    public_contract:{summary:'Εργαζόμενος Δημοσίου χωρίς οργανική, με σύμβαση: δεν χορηγούνται +4.',blocked:true},
+    other:{summary:'Σύνθετη περίπτωση: απαιτείται επαλήθευση από τη ΔΠΕ.',review:true}
+  };
+  function syncPrimaryCoService(){
+    var check=$('primaryCoservice'), choice=$('primaryCoServiceCase');
+    if(!check || !choice)return false;
+    var data=spouseRules[choice.value]||spouseRules.unspecified;
+    // A spouse merely placed at the disposal of a service has no established
+    // organic municipality for the KEDASY-specific municipal criterion.
+    var municipalDisposal=choice.value==='teacher_disposal' && $('primaryMode').value==='kedasy';
+    if(municipalDisposal)data={summary:'Στα ΚΕΔΑΣΥ η συνυπηρέτηση εξετάζεται στον δήμο του ΚΕΔΑΣΥ. Η διάθεση σε ΠΥΣΠΕ/ΠΥΣΔΕ δεν τεκμηριώνει οργανική θέση στον συγκεκριμένο δήμο.',blocked:true};
+    var blocked=!!data.blocked, review=!!data.review;
+    if(blocked)check.checked=false;
+    check.disabled=blocked;
+    var field=$('primaryCoServiceCaseField');
+    if(field)field.style.display=(check.checked || choice.value!=='unspecified')?'':'none';
+    var note=$('primaryCoServiceAdvice');
+    if(note)note.textContent=(check.checked || choice.value!=='unspecified')?(data.summary + (review?' Τα +4 μόρια δεν προστίθενται μέχρι επαλήθευσης.':'')):'';
+    check.setAttribute('aria-describedby',blocked||review?'primaryCoServiceAdvice':'');
+    var row=check.closest && check.closest('.check-row');
+    if(row)row.classList.toggle('transfer-criterion-unavailable',blocked);
+    return blocked || review;
+  }
   function buildDocuments() {
     var mode=$('primaryMode').value;
     var docs=mode==='intercultural'?[]:[info('registry','Υπηρεσιακό μητρώο και μονάδες','Έλεγχος στο επίσημο μητρώο — χωρίς αποστολή')];
@@ -21,7 +56,13 @@
       docs.push(info('family','Πιστοποιητικό οικογενειακής κατάστασης','Αυτεπάγγελτα από ΔΠΕ — δεν το προσκομίζετε'));
     }
     if(mode!=='intercultural' && $('primaryChildrenExtra').checked && Number($('primaryChildren').value)>0) docs.push(action('children','Συμπληρωματικά στοιχεία τέκνων','Email στη ΔΠΕ οργανικής — μόνο όπου δεν επαρκεί η αυτεπάγγελτη αναζήτηση / απαιτείται ειδικό αποδεικτικό'));
-    if(mode!=='intercultural' && $('primaryCoservice').checked) docs.push(action('coservice','Δικαιολογητικά συνυπηρέτησης','Αποστολή με email στη ΔΠΕ οργανικής — όπου απαιτούνται αποδεικτικά'));
+    if(mode!=='intercultural' && $('primaryCoservice').checked && !syncPrimaryCoService()) docs.push(action('coservice','Δικαιολογητικά συνυπηρέτησης','Αποστολή με email στη ΔΠΕ οργανικής — όπου απαιτούνται αποδεικτικά'));
+    if(mode==='region' && $('primarySpecialCase') && $('primarySpecialCase').value!=='none') {
+      var special=$('primarySpecialCase').value;
+      if(special==='health_committee') docs.push(info('health-committee','Ειδική κατηγορία υγείας — γνωμάτευση υγειονομικής επιτροπής','Κλειστός φυσικός φάκελος προς ΥΠΑΙΘΑ με ένδειξη εμπιστευτικού πρωτοκόλλου· δεν αποστέλλεται με κοινό email. Εγκύκλιος Π.Ε. §2.2.3.'));
+      if(special==='health_kepa') docs.push(info('health-kepa','Ειδική κατηγορία υγείας — ΚΕΠΑ','Καταχώριση Αριθμού Επιτροπής και Αριθμού Μητρώου ΚΕΠΑ στο επίσημο σύστημα, χωρίς αποστολή γνωμάτευσης. Εγκύκλιος Π.Ε. §2.2.3.'));
+      if(special==='judicial_spouse') docs.push(mydocs('judicial-spouse','Σύζυγος δικαστικού λειτουργού — κατά προτεραιότητα','Μέσω mydocs: βεβαίωση εργασίας και έγγραφο περιφέρειας αρμοδιότητας του δικαστηρίου. Πιστοποιητικό οικογενειακής κατάστασης αυτεπάγγελτα. Εγκύκλιος Π.Ε. §2.2.4.'));
+    }
     if(mode!=='intercultural' && $('primaryLocality').checked) docs.push(info('locality','Εντοπιότητα','Αυτεπάγγελτη αναζήτηση πιστοποιητικού δημοτικότητας/γέννησης από ΔΠΕ, όπου περιέχεται η ημερομηνία κτήσης δημοτικότητας· επιβεβαιώστε τα στοιχεία'));
     if(mode==='intercultural'){
       var existing=$('primaryInterDossier').value;
@@ -180,7 +221,14 @@
     updateIntercultural();
     var interculturalMode=$('primaryMode').value==='intercultural';
     $('primaryScoringCard').hidden=interculturalMode;
-    $('primaryChecklist').closest('section.card').querySelector('h2').textContent=(interculturalMode?'Β.':'Γ.')+' Προσωπική λίστα δικαιολογητικών';
+    $('primarySocialCriteriaCard').hidden=interculturalMode;
+    var special=$('primarySpecialCaseField');
+    if(special){ special.style.display=$('primaryMode').value==='region'?'':'none';
+      if($('primaryMode').value!=='region')$('primarySpecialCase').value='none'; }
+    var firstRow=$('primaryFirstPreferenceRow');
+    if(firstRow){ firstRow.classList.toggle('hidden',interculturalMode); if(interculturalMode)$('primaryFirst').checked=false; }
+    var invalidSpouse=syncPrimaryCoService();
+    $('primaryChecklist').closest('section.card').querySelector('h2').textContent=(interculturalMode?'Β.':'Δ.')+' Προσωπική λίστα δικαιολογητικών';
     $('primaryScoreHeading').textContent=interculturalMode?'Κρίση βάσει προσόντων':'Ενδεικτική μοριοδότηση';
     var mode=$('primaryServiceMode').value;
     $('primaryServicePointsPanel').hidden=mode!=='points';
@@ -191,7 +239,7 @@
     var numericValid=[children,years,months,days].every(function(v){return v!==null;});
     var raw={mode:'region',serviceMode:mode,serviceDirectPoints:$('primaryServicePoints').value,
       serviceYears:years,serviceMonths:months,serviceDays:days,msdMode:'direct',msdDirectPoints:$('primaryMsd').value,
-      eligibleChildren:children,familyStatusEligible:$('primaryFamily').checked,coService:$('primaryCoservice').checked,
+      eligibleChildren:children,familyStatusEligible:$('primaryFamily').checked,coService:$('primaryCoservice').checked && !invalidSpouse,
       locality:$('primaryLocality').checked,firstPreference:$('primaryFirst').checked};
     // No empty-as-zero interpretation for official-register inputs.
     if (!$('primaryMsd').value.trim() || (mode==='points' && !$('primaryServicePoints').value.trim())) numericValid=false;

@@ -24,6 +24,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
 <body class="edu-ui edu-calc-standard edu-page-transfer">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
+<?php require_once __DIR__ . '/includes/components/transfer-social-criteria.php'; ?>
 
 <?php calculatorContainerStart(array('class' => 'app')); ?>
   <?php calculatorHero(array(
@@ -180,54 +181,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
       </div>
 
       <div id="transferSocialCriteriaCard">
-      <?php calculatorCardStart(array('title' => 'Γ. Κοινωνικά κριτήρια')); ?>
-        <div class="field-grid">
-          <div class="field">
-            <label for="eligibleChildren">Τέκνα που μοριοδοτούνται <small>1ο–2ο: 4 · 3ο: 6 · από το 4ο: 7 μόρια/τέκνο</small></label>
-            <input id="eligibleChildren" type="number" min="0" max="20" step="1" value="0" inputmode="numeric">
-          </div>
-        </div>
-        <div class="check-row"><label><input id="familyStatusEligible" type="checkbox"> Γάμος/Σύμφωνο Συμβίωσης/Γονέας με επιμέλεια (+4)</label></div>
-        <div class="check-row"><label><input id="coService" type="checkbox"> Συνυπηρέτηση στην περιοχή/το δήμο που εξετάζω (+4)</label></div>
-        <div class="field" id="transferCoServiceCaseField" style="display:none;margin:10px 0 14px 0;">
-          <label for="transferCoServiceCase">Καθεστώς εργασίας συζύγου / συμβίου</label>
-          <select id="transferCoServiceCase">
-            <option value="unspecified">Επιλέξτε την περίπτωση για τα αντίστοιχα δικαιολογητικά</option>
-            <option value="public_organic">Δημόσιος υπάλληλος / λειτουργός με οργανική θέση</option>
-            <option value="teacher_organic">Μόνιμος εκπαιδευτικός με οργανική θέση</option>
-            <option value="teacher_disposal">Μόνιμος εκπαιδευτικός στη διάθεση ΠΥΣΠΕ / ΠΥΣΔΕ</option>
-            <option value="private_employee">Ιδιωτικός υπάλληλος</option>
-            <option value="self_employed">Ελεύθερος επαγγελματίας / ατομική επιχείρηση</option>
-            <option value="remote_employee">Αποκλειστική τηλεργασία</option>
-            <option value="lawyer">Δικηγόρος</option>
-            <option value="private_doctor">Ιατρός εκτός Δημοσίου</option>
-            <option value="substitute_teacher">Αναπληρωτής εκπαιδευτικός</option>
-            <option value="public_contract">Εργαζόμενος στο Δημόσιο χωρίς οργανική θέση, με σύμβαση</option>
-            <option value="other">Άλλη / σύνθετη περίπτωση</option>
-          </select>
-          <div class="field-hint" id="transferCoServiceAdvice" role="status" aria-live="polite"></div>
-        </div>
-        <div class="field" id="transferSpecialCaseField" style="margin:12px 0">
-          <label for="transferSpecialCase">Χρειάζομαι οδηγίες για ειδική κατηγορία ή προτεραιότητα; (χωρίς αυτόματη μοριοδότηση)</label>
-          <select id="transferSpecialCase">
-            <option value="none">Όχι / δεν έχω επιλέξει</option>
-            <option value="health_committee">Ειδική κατηγορία υγείας — γνωμάτευση Β/θμιας ή Ανώτατης Υγειονομικής Επιτροπής</option>
-            <option value="health_kepa">Ειδική κατηγορία υγείας — πιστοποίηση ΚΕΠΑ</option>
-            <option value="judicial_spouse">Κατά προτεραιότητα μετάθεση συζύγου δικαστικού λειτουργού</option>
-          </select>
-          <div class="field-hint">Για μετάθεση από περιοχή σε περιοχή. Η επιλογή δείχνει μόνο τις ιδιαίτερες οδηγίες δικαιολογητικών· η αρμόδια υπηρεσία κρίνει αν συντρέχουν οι νόμιμες προϋποθέσεις.</div>
-        </div>
-        <div class="check-row"><label><input id="locality" type="checkbox"> Εντοπιότητα στην περιοχή/το δήμο που εξετάζω (+4)</label></div>
-        <div class="check-row" id="firstPreferenceRow"><label><input id="firstPreference" type="checkbox"> Η περιοχή είναι η πρώτη προτίμησή μου (+2)</label></div>
-
-        <?php calculatorDisclosure(array(
-          'id' => 'modeNote',
-          'summary' => 'Πώς αλλάζουν συνυπηρέτηση, εντοπιότητα και πρώτη προτίμηση;',
-          'html' => 'Στη μετάθεση από περιοχή σε περιοχή, συνυπηρέτηση και εντοπιότητα εξετάζονται για την <strong>περιοχή μετάθεσης</strong>. Στην οριστική τοποθέτηση/βελτίωση συνδέονται με τον <strong>συγκεκριμένο Δήμο</strong> όπου βρίσκεται το σχολείο. Η πρώτη προτίμηση μοριοδοτείται μόνο στη μετάθεση από περιοχή σε περιοχή.',
-          'open' => true,
-          'attrs' => array('data-mobile-collapsed' => 'true')
-        )); ?>
-      <?php calculatorCardEnd(); ?>
+        <?php transferSocialCriteriaCard('secondary'); ?>
       </div>
 
       <section id="transferEaePanel" class="calculator-card" style="display:none; padding:18px; border:1px solid #b8c5d5; border-radius:12px; margin-bottom:16px;">

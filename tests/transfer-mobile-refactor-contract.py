@@ -27,7 +27,7 @@ check('UI calls independent calculation engine', 'global.EducationTransfer.calcu
 check('dynamic MSD rows remain in UI controller', 'transfer-service-row' in ui and 'msdRows.appendChild(row)' in ui)
 check('service year UI clamp remains 50', 'clampInput(target, 50)' in ui)
 check('abroad/study leave fixed 5/5 remains', 'fixedFullWeek' in ui and "weekdaysInput.disabled = true" in ui and 'σταθερά 5/5' in ui)
-check('mode explanation uses shared disclosure', "'id' => 'modeNote'" in page and "'data-mobile-collapsed' => 'true'" in page)
+check('mode explanation uses shared disclosure', ("'id' => 'modeNote'" in (page + (ROOT / "includes/components/transfer-social-criteria.php").read_text(encoding="utf-8")) or "'primaryModeNote' : 'modeNote'" in (ROOT / "includes/components/transfer-social-criteria.php").read_text(encoding="utf-8")) and "'data-mobile-collapsed' => 'true'" in (page + (ROOT / "includes/components/transfer-social-criteria.php").read_text(encoding="utf-8")))
 check('remote-double explanation uses shared disclosure', 'Πότε διπλασιάζονται οι Μ.Σ.Δ. απομακρυσμένων σχολείων;' in page)
 check('critical transfer limitation remains visible', '<strong>Τι περιλαμβάνει:</strong>' in page and 'Δεν πιστοποιεί δικαίωμα μετάθεσης' in page)
 check('source card uses global responsive component', 'sourceCardStart();' in page and 'sourceCardDisclosureStart' not in page)

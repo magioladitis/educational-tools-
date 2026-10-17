@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'), path=require('node:path'), vm=require('node:vm'),assert=require('node:assert/strict');
 const root=path.join(__dirname,'..');
-const p=fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
+const p=require('node:child_process').execFileSync('php',[path.join(root,'ypologismos-morion-metathesis.php')],{encoding:'utf8'}) + '\n' + fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
 const u=fs.readFileSync(path.join(root,'includes/transfer-ui.js'),'utf8');
 const d=fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf8');
 let n=0;function ok(x,s){assert.ok(x,s);n++;}

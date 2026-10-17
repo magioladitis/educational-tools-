@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..');
-const php=fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
+const php=require('node:child_process').execFileSync('php',[path.join(root,'ypologismos-morion-metathesis.php')],{encoding:'utf8'}) + '\n' + fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
 const expected={
  familyStatusEligible:'Γάμος/Σύμφωνο Συμβίωσης/Γονέας με επιμέλεια (+4)',
  coService:'Συνυπηρέτηση στην περιοχή/το δήμο που εξετάζω (+4)',
