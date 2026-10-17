@@ -1,0 +1,25 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('fs');
+const vm=require('vm');
+const path=require('path');
+const root=path.resolve(__dirname,'..');
+const read=(p)=>fs.readFileSync(path.join(root,p),'utf8');
+const php=read('ypologismos-morion-metathesis.php');
+const ui=read('includes/transfer-ui.js');
+const docs=read('includes/transfer-documents.js');
+const elg=read('includes/transfer-eligibility.js');
+// Both markup/business logic and typing/paste UX enforce the upper bound.
+assert.match(php,/id="transferInterculturalYears"[^>]*max="50"/);
+assert.match(ui,/function clampInterculturalYears\(el\)[\s\S]*?n > 50\) el.value = '50'/);
+assert.match(ui,/target.id === 'transferInterculturalYears'\) clampInterculturalYears\(target\)/);
+let ev=vm.runInNewContext(elg+'\nwindow.EducationTransferEligibility;', {window:{},document:{},Number,String,Math,Array,Object});
+let base={organic:'yes',current:'yes',vacancy:'yes',years:'50',languageCase:'usual'};
+assert.equal(ev.intercultural(base).verdict,'preliminary_met');
+assert.equal(ev.intercultural({...base,years:'50.01'}).verdict,'needs_verification');
+assert.equal(ev.intercultural({...base,years:'2.5'}).verdict,'preliminary_met');
+assert.ok(!docs.includes("entry('ic-vacancies'"),'no duplicated vacancy checklist entry');
+assert.ok(docs.includes("'ic-foreign'].indexOf(d.id)!==-1"),'foreign title detail collapsible compact card');
+assert.ok(docs.includes("entry('ic-foreign'"),'full foreign documents retained');
+assert.ok(docs.includes("var rows=build()"),'the print function still uses the full checklist');
+console.log('PASS 3.22.137 Intercultural years, no duplicate vacancy checkbox, compact foreign documents');

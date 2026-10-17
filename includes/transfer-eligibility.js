@@ -39,6 +39,19 @@
     a=a||{};
     var notes=[],branch=a.branch||'general',ex=a.exceptionType||'none';
     var specialized=Object.prototype.hasOwnProperty.call(ART_BRANCHES,branch);
+    var register=global.EducationArtisticVacancies;
+    if(register&&Object.prototype.hasOwnProperty.call(a,'branchCode')){
+      if(!a.branchCode)notes.push('Επιλέξτε κλάδο με προκηρυγμένο οργανικό κενό 2026–2027.');
+      else if(!register.hasBranch(a.branchCode))notes.push('Δεν έχει προκηρυχθεί οργανικό κενό για τον επιλεγμένο κλάδο.');
+      else if(!a.school)notes.push('Επιλέξτε Καλλιτεχνικό σχολείο με προκηρυγμένο οργανικό κενό στον κλάδο.');
+      else {
+        var options=register.specializations(a.branchCode,a.school);
+        if(!options.length)notes.push('Το επιλεγμένο σχολείο δεν διαθέτει προκηρυγμένο κενό στον κλάδο.');
+        else if(options.length>1&&a.specialization===null)notes.push('Επιλέξτε την προκηρυγμένη ειδίκευση της θέσης.');
+        else if(a.specialization!==null&&!register.count(a.branchCode,a.school,a.specialization))notes.push('Η συγκεκριμένη ειδίκευση δεν περιλαμβάνεται στα προκηρυγμένα κενά του σχολείου.');
+      }
+      if(a.branchCode===register.musicGroup)notes.push('Προσοχή: η προκήρυξη αναγράφει κοινή κατηγορία Μουσικής ΠΕ79–ΤΕ16. Δεν είναι δύο ανεξάρτητα σύνολα κενών· ελέγξτε την ακριβή επιλεξιμότητα στο επίσημο σύστημα.');
+    }
     if(!a.organic) notes.push('Ελέγξτε την υπηρέτηση οργανικής θέσης ή τυχόν ειδική νόμιμη εξαίρεση με τη ΔΔΕ.');
     if(year(a.teachingYears)<5 && ex==='none') notes.push('Η εγκύκλιος 2026–2027 απαιτεί τουλάχιστον 5 έτη διδακτικής εμπειρίας σε σχολεία Δ.Ε. έως 31-08-2027.');
     if(ex==='direct_music'&&branch!=='pe79') notes.push('Η εξαίρεση απευθείας διορισμού σε Μουσικό αφορά αποκλειστικά εκπαιδευτικούς μουσικής παιδείας.');
@@ -133,6 +146,13 @@
       if(String(a.years==null?'':a.years).trim()===''||!Number.isFinite(y)||y<0||y>50) review.push('Δηλώστε έγκυρα έτη υπηρεσίας στην οργανική του Διαπολιτισμικού Σχολείου.');
       else if(y<2) unmet.push('Για ήδη οργανικά τοποθετημένους στα Διαπολιτισμικά απαιτούνται 2 έτη υπηρεσίας· με τα δηλωμένα στοιχεία υπολείπονται '+(Math.round((2-y)*100)/100)+' έτη.');
     }else if(current==='unknown')review.push('Επιβεβαιώστε αν ισχύει ο ειδικός κανόνας διετίας για ήδη οργανικά τοποθετημένους.');
+    var vacancyRegister=global.EducationInterculturalVacancies;
+    if(vacancyRegister && (Object.prototype.hasOwnProperty.call(a,'branch')||Object.prototype.hasOwnProperty.call(a,'school'))){
+      if(!a.branch)review.push('Επιλέξτε κλάδο Δευτεροβάθμιας με προκηρυγμένο οργανικό κενό.');
+      else if(!vacancyRegister.hasBranch(a.branch))unmet.push('Ο δηλωμένος κλάδος δεν περιλαμβάνεται στους κλάδους με προκηρυγμένο οργανικό κενό Δ.Ε. 2026–2027.');
+      if(a.branch&&!a.school)review.push('Επιλέξτε σχολείο στο οποίο προκηρύσσεται οργανικό κενό του συγκεκριμένου κλάδου.');
+      else if(a.branch&&a.school&&!vacancyRegister.count(a.branch,a.school))unmet.push('Ο επιλεγμένος συνδυασμός κλάδου και σχολείου δεν εμφανίζεται στα προκηρυγμένα κενά.');
+    }
     if(vacancy==='no')unmet.push('Δεν μπορεί να επιλεγεί σχολείο χωρίς προκηρυγμένο οργανικό κενό στον κλάδο/ειδικότητα.');
     else if(vacancy!=='yes')review.push('Ελέγξτε την ύπαρξη οργανικού κενού στο συγκεκριμένο σχολείο/κλάδο στο teachers.minedu.gov.gr.');
     if(a.languageCase==='unknown')review.push('Ελέγξτε τη γλώσσα προέλευσης της πλειονότητας των μαθητών και την ειδική εξαίρεση για σχολεία με πλειοψηφία Ρομά.');

@@ -24,3 +24,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Generated analytics (protected runtime data)
+data/_private_analytics/

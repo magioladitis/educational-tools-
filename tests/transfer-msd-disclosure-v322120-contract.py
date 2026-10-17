@@ -11,5 +11,5 @@ assert 'Πληκτρολογήστε τον ακριβή αριθμό Μ.Σ.Δ.'
 assert "Συμπληρώστε έναν μη αρνητικό αριθμό με έως δύο δεκαδικά, π.χ. 48,75." not in js
 assert "var directInvalid =" in js
 assert "aria-invalid" in js
-assert "'3.22.125'" in (root / 'includes/config.php').read_text(encoding='utf-8')
+assert "define('EDU_TOOLS_VERSION', '3.22." in (root / 'includes/config.php').read_text(encoding='utf-8')
 print('OK: M.S.D. compact help and conditional validation in 3.22.120')

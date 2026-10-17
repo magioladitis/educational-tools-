@@ -56,6 +56,16 @@
     else if (n > 45) el.value = '45';
   }
 
+  // v3.22.137: the HTML max attribute alone does not prevent typing/pasting >50.
+  // Preserve decimal years (e.g. 2.5); unlike service-year fields, do not floor.
+  function clampInterculturalYears(el) {
+    if (!el || el.value === '') return;
+    var n = Number(el.value);
+    if (!Number.isFinite(n)) { el.value = ''; return; }
+    if (n < 0) el.value = '0';
+    else if (n > 50) el.value = '50';
+  }
+
   function categoryOptionsHtml() {
     return CATEGORY_OPTIONS.map(function (x) { return '<option value="' + x[0] + '">' + x[1] + '</option>'; }).join('');
   }
@@ -333,13 +343,113 @@
       teachingYears:byId('transferMusicTeachingYears').value,exceptionType:byId('transferMusicException').value,
       subject:byId('transferMusicSubject').value};
   }
+  // Legacy branch classifications are still used for substantive qualification advice.
+  // Vacancy filtering always operates on the full official specialty code.
+  function artLegacyBranch(code){
+    if(code==='ΠΕ08')return 'pe08';
+    if(code==='ΠΕ11')return 'pe11';
+    if(code==='ΠΕ79–ΤΕ16'||code==='ΠΕ79'||code==='ΠΕ79.01'||code==='ΤΕ16')return 'pe79';
+    if(code==='ΠΕ91.01')return 'pe9101';
+    if(code==='ΠΕ91.02')return 'pe9102';
+    return code?'general':'other';
+  }
   function currentArtInput() {
-    return {branch:byId('transferArtBranch').value,orientation:byId('transferArtOrientation').value,
+    var branchCode=byId('transferArtBranch').value;
+    return {branch:artLegacyBranch(branchCode),branchCode:branchCode,
+      school:byId('transferArtSchool').value,
+      specialization:byId('transferArtSpecializationRow').style.display==='none'?null:byId('transferArtSpecialization').value,
+      orientation:byId('transferArtOrientation').value,
       organic:byId('transferArtOrganic').checked,teachingYears:byId('transferArtTeachingYears').value,
       exceptionType:byId('transferArtException').value};
   }
+  function syncArtVacancies(){
+    var register=global.EducationArtisticVacancies;
+    var branch=byId('transferArtBranch'),school=byId('transferArtSchool'),spec=byId('transferArtSpecialization');
+    if(!register||!branch||!school||!spec)return;
+    if(branch.options.length<=1){
+      register.branches().forEach(function(item){
+        var option=document.createElement('option'); option.value=item.code;
+        option.textContent=item.code+(item.label?' — '+item.label:'')+' ('+item.positions+' '+(item.positions===1?'κενό':'κενά')+')';
+        branch.appendChild(option);
+      });
+    }
+    if(school.getAttribute('data-filter-branch')!==branch.value){
+      school.innerHTML='';
+      var placeholder=document.createElement('option');placeholder.value='';placeholder.textContent=branch.value?'— Επιλέξτε σχολείο —':'— Επιλέξτε πρώτα κλάδο —';school.appendChild(placeholder);
+      register.schools(branch.value).forEach(function(item){
+        var option=document.createElement('option');option.value=item.school;
+        option.textContent=item.school+' — '+item.directorate+' ('+item.vacancies+' '+(item.vacancies===1?'κενό':'κενά')+')';
+        school.appendChild(option);
+      });
+      school.setAttribute('data-filter-branch',branch.value);
+      spec.setAttribute('data-filter-key','');
+    }
+    school.disabled=!branch.value;
+    var specItems=register.specializations(branch.value,school.value);
+    var key=branch.value+'|'+school.value;
+    if(spec.getAttribute('data-filter-key')!==key){
+      spec.innerHTML='';
+      var empty=document.createElement('option');empty.value='';empty.textContent='— Επιλέξτε ειδίκευση —';spec.appendChild(empty);
+      specItems.forEach(function(item){
+        var opt=document.createElement('option');opt.value=item.name;
+        opt.textContent=(item.name||'Χωρίς ειδικότερη εξειδίκευση')+' ('+item.vacancies+' '+(item.vacancies===1?'κενό':'κενά')+')';spec.appendChild(opt);
+      });
+      if(specItems.length===1)spec.selectedIndex=1;
+      spec.setAttribute('data-filter-key',key);
+    }
+    var row=byId('transferArtSpecializationRow');
+    row.style.display=specItems.length>1||specItems.some(function(item){return !!item.name;})?'':'none';
+    if(row.style.display==='none'&&specItems.length===1)spec.selectedIndex=1;
+    var selected=row.style.display==='none'?null:(spec.selectedIndex>0?spec.value:null);
+    var matches=selected===null&&row.style.display!=='none'?0:register.count(branch.value,school.value,selected);
+    var msg=byId('transferArtAvailabilitySummary');
+    msg.textContent=matches>0?'Δηλωμένα οργανικά κενά: '+matches+' στον επιλεγμένο κλάδο, σχολείο'+(selected?' και αντικείμενο '+selected:'')+'. Η τελική διαθεσιμότητα επιβεβαιώνεται στο επίσημο σύστημα.':
+      !branch.value?'Επιλέξτε κλάδο Δ.Ε. με προκηρυγμένα κενά 2026–2027.':
+      !school.value?'Επιλέξτε σχολείο με οργανικό κενό για τον κλάδο.':'Επιλέξτε την ακριβή προκηρυγμένη ειδίκευση.';
+  }
+  // Annual vacancy table: choose a branch, then a school with a corresponding published vacancy.
+  function syncInterculturalVacancies() {
+    var register=global.EducationInterculturalVacancies;
+    var branch=byId('transferInterculturalBranch'),school=byId('transferInterculturalSchool');
+    var flag=byId('transferInterculturalVacancy'),summary=byId('transferInterculturalAvailabilitySummary');
+    if(!register||!branch||!school||!flag)return;
+    if(branch.options && branch.options.length<=1) {
+      var oldBranch=branch.value;
+      register.availableBranches().forEach(function(item){
+        var option=document.createElement('option');
+        option.value=item.code;
+        option.textContent=item.code+(item.label?' — '+item.label:'')+' ('+item.positions+' '+(item.positions===1?'κενό':'κενά')+')';
+        branch.appendChild(option);
+      });
+      if(register.hasBranch(oldBranch))branch.value=oldBranch;
+    }
+    var oldSchool=school.value,available=register.schoolsForBranch(branch.value);
+    if(school.getAttribute('data-filter-branch')!==branch.value){
+      school.innerHTML='';
+      var placeholder=document.createElement('option');
+      placeholder.value='';
+      placeholder.textContent=branch.value?'— Επιλέξτε σχολείο —':'— Επιλέξτε πρώτα κλάδο —';
+      school.appendChild(placeholder);
+      available.forEach(function(v){
+        var option=document.createElement('option');
+        option.value=v.school;
+        option.textContent=v.school+' — '+v.directorate+' ('+v.vacancies+' '+(v.vacancies===1?'κενό':'κενά')+')';
+        school.appendChild(option);
+      });
+      school.setAttribute('data-filter-branch',branch.value);
+      if(available.some(function(v){return v.school===oldSchool;}))school.value=oldSchool;
+    }
+    school.disabled=!branch.value;
+    var positions=register.count(branch.value,school.value);
+    flag.value=(!branch.value||!school.value)?'unknown':positions>0?'yes':'no';
+    if(summary)summary.textContent=positions>0
+      ?'Δηλωμένα οργανικά κενά: '+positions+' — '+branch.value+', '+school.value+'. Η τελική διαθεσιμότητα επιβεβαιώνεται στο teachers.minedu.gov.gr.'
+      :branch.value?'Επιλέξτε σχολείο από τις διαθέσιμες θέσεις του κλάδου '+branch.value+'.':'Επιλέξτε κλάδο Δ.Ε. με προκηρυγμένο οργανικό κενό 2026–2027.';
+  }
+
   function currentInterculturalInput(){
-    return {organic:byId('transferInterculturalOrganic').value,
+    return {branch:byId('transferInterculturalBranch').value,school:byId('transferInterculturalSchool').value,
+      organic:byId('transferInterculturalOrganic').value,
       current:byId('transferInterculturalCurrent').value,
       years:byId('transferInterculturalYears').value,
       vacancy:byId('transferInterculturalVacancy').value,
@@ -364,7 +474,9 @@
     byId('transferEaeNewlyRow').style.display=eae&&origin==='general'?'':'none';
     byId('transferEaeAreaYearsRow').style.display=eae&&origin==='general'&&byId('transferEaeNewly').checked?'':'none';
     byId('transferMusicSpecializationPanel').style.display=music&&byId('transferEducationType').value==='specialized'?'':'none';
-    var art=mode==='art',artBranch=byId('transferArtBranch').value;
+    var art=mode==='art';
+    if(art)syncArtVacancies();
+    var artBranch=artLegacyBranch(byId('transferArtBranch').value);
     var isArtSpecialized=['pe08','pe11','pe79','pe9101','pe9102'].indexOf(artBranch)!==-1;
     byId('transferArtOrientationRow').style.display=art&&isArtSpecialized?'':'none';
     var elig=global.EducationTransferEligibility;
@@ -379,6 +491,7 @@
       syncDossier('music','transferMusicPreviousYear','transferMusicNewDocuments','transferMusicDossierAdvice');
     }
     if(elig&&mode==='intercultural'){
+      syncInterculturalVacancies();
       byId('transferInterculturalYearsRow').style.display=byId('transferInterculturalCurrent').value==='yes'?'':'none';
       var ic=elig.intercultural(currentInterculturalInput());
       var message=byId('transferInterculturalAdvice');
@@ -418,14 +531,15 @@
     byId('transferEaePreviousYear').value='none';
     byId('transferEaeNewDocuments').checked=false;
     byId('transferEducationType').value='general';
-    byId('transferSpecialty').value='';
     byId('transferMusicTeachingYears').value='0';
     byId('transferMusicException').value='none';
     byId('transferMusicOrganic').checked=false;
     byId('transferMusicSubject').value='unspecified';
     byId('transferMusicPreviousYear').value='none';
     byId('transferMusicNewDocuments').checked=false;
-    byId('transferArtBranch').value='general';
+    byId('transferArtBranch').value='';
+    byId('transferArtSchool').value='';
+    byId('transferArtSpecialization').value='';
     byId('transferArtOrientation').value='';
     byId('transferArtTeachingYears').value='0';
     byId('transferArtException').value='none';
@@ -433,6 +547,8 @@
     byId('transferArtPreviousYear').value='none';
     byId('transferArtNewDocuments').checked=false;
     ['transferInterculturalOrganic','transferInterculturalVacancy','transferInterculturalLanguageCase'].forEach(function(id){byId(id).value='unknown';});
+    byId('transferInterculturalBranch').value='';
+    byId('transferInterculturalSchool').value='';
     byId('transferInterculturalCurrent').value='no';
     byId('transferInterculturalYears').value='0';
     byId('transferInterculturalPreviousYear').value='none';
@@ -465,6 +581,7 @@
       var target = event.target;
       if (!target) return;
       if (target.id === 'serviceYears' || target.classList.contains('msd-years')) clampInput(target, 50);
+      if (target.id === 'transferInterculturalYears') clampInterculturalYears(target);
       if (target.id === 'transferEaeAreaYears' || target.id === 'transferGeneralEaeAreaYears') clampAreaYears(target);
       if (target.id === 'serviceMonths' || target.classList.contains('msd-months')) clampInput(target, 11);
       if (target.id === 'serviceDays' || target.classList.contains('msd-days')) clampInput(target, 29);
@@ -480,6 +597,7 @@
       var target = event.target;
       if (!target) return;
       if (target.id === 'transferEaeAreaYears' || target.id === 'transferGeneralEaeAreaYears') clampAreaYears(target);
+      if (target.id === 'transferInterculturalYears') clampInterculturalYears(target);
       var row = target.closest ? target.closest('.transfer-service-row') : null;
       if (row && (target.classList.contains('msd-type') || target.classList.contains('msd-category'))) syncRow(row);
       if (target.closest && target.closest('.edu-page-transfer')) {syncGeneralReturn();syncEligibilityDetails();calculate();if(target.id==='transferCoServiceCase' && global.EducationTransferDocuments)global.EducationTransferDocuments.render();}

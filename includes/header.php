@@ -22,6 +22,16 @@ if (isset($eduToolsCatalog['tools']) && is_array($eduToolsCatalog['tools'])) {
 }
 $eduCurrentToolHref = $eduCurrentTool && isset($eduCurrentTool['href']) ? (string) $eduCurrentTool['href'] : '';
 $eduCurrentToolTitle = $eduCurrentTool && isset($eduCurrentTool['title']) ? (string) $eduCurrentTool['title'] : '';
+// Aggregate only recognized tools; no visitor identifiers are collected.
+$eduAnalyticsAllowed = $eduCurrentTool
+    && empty($_COOKIE['edu_analytics_off'])
+    && (!isset($_SERVER['HTTP_DNT']) || (string)$_SERVER['HTTP_DNT'] !== '1')
+    && (!isset($_SERVER['HTTP_SEC_GPC']) || (string)$_SERVER['HTTP_SEC_GPC'] !== '1');
+if ($eduAnalyticsAllowed) {
+    require_once __DIR__ . '/analytics-store.php';
+    eduAnalyticsRecord($eduCurrentPage, 'view', 0);
+}
+
 $eduHeaderFlags = ENT_QUOTES;
 if (defined('ENT_SUBSTITUTE')) $eduHeaderFlags = $eduHeaderFlags | ENT_SUBSTITUTE;
 $eduHeaderEscape = function ($value) use ($eduHeaderFlags) {
@@ -33,6 +43,9 @@ $eduHeaderEscape = function ($value) use ($eduHeaderFlags) {
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/education-core.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/education-print.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script defer src="<?php echo htmlspecialchars(edu_asset_url('assets/app-experience.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<?php if ($eduAnalyticsAllowed) { ?>
+<script defer src="<?php echo $eduHeaderEscape(edu_asset_url('assets/analytics.js')); ?>" data-edu-analytics-tool="<?php echo $eduHeaderEscape($eduCurrentPage); ?>"></script>
+<?php } ?>
 <header class="edu-tools-global-header" aria-label="Πλοήγηση Εργαλειοθήκης Εκπαιδευτικού"<?php if ($eduCurrentToolHref !== '') { ?> data-edu-current-tool-href="<?php echo $eduHeaderEscape($eduCurrentToolHref); ?>" data-edu-current-tool-title="<?php echo $eduHeaderEscape($eduCurrentToolTitle); ?>"<?php } ?>>
   <div class="edu-tools-global-header__inner">
     <a class="edu-tools-global-header__back" href="ergaleia.php"<?php echo $eduHomeCurrent; ?> aria-label="Αρχική Εργαλειοθήκης" title="Αρχική Εργαλειοθήκης">
