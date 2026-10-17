@@ -59,6 +59,15 @@
     };
   }
 
+
+  function parseDirectServicePoints(raw) {
+    var text = String(raw == null ? '' : raw).trim().replace(',', '.');
+    if (!/^\d+(?:\.\d{1,2})?$/.test(text)) return { valid: false, points: null };
+    var n = Number(text);
+    if (!Number.isFinite(n) || n < 0 || n > 125) return { valid: false, points: null };
+    return { valid: true, points: truncate2(n) };
+  }
+
   function childPoints(count) {
     var n = integer(count, 0, 20);
     var total = 0;
@@ -137,9 +146,43 @@
     return { valid: true, points: truncate2(n) };
   }
 
+  // Independent alternative to direct total-service entry. Durations must not
+  // overlap; aggregate day remainders before applying the 15-day rule.
+  function serviceFromPeriods(periods) {
+    var list = Array.isArray(periods) ? periods : [];
+    var totalMonths = 0;
+    var totalDays = 0;
+    var valid = list.length > 0;
+    list.forEach(function(period) {
+      period = period || {};
+      [['years',50],['months',11],['days',29]].forEach(function(pair) {
+        var raw = period[pair[0]];
+        var numeric = Number(raw);
+        if (raw === '' || raw == null || !Number.isInteger(numeric) || numeric < 0 || numeric > pair[1]) valid = false;
+      });
+      totalMonths += Number(period.years || 0) * 12 + Number(period.months || 0);
+      totalDays += Number(period.days || 0);
+    });
+    totalMonths += Math.floor(totalDays / 30);
+    var remainingDays = totalDays % 30;
+    if (remainingDays >= 15) totalMonths += 1;
+    if (totalMonths > 600) valid = false;
+    return { valid: valid, duration: normalizeDuration(Math.floor(totalMonths/12),totalMonths%12,remainingDays),
+      years: Math.floor(totalMonths/12), months: totalMonths%12, days: 0, totalMonths: totalMonths };
+  }
+
   function calculate(input) {
     input = input || {};
-    var service = servicePoints(input.serviceYears, input.serviceMonths, input.serviceDays);
+    var serviceMode = input.serviceMode === 'periods' ? 'periods' : (input.serviceMode === 'direct' ? 'direct' : 'points');
+    var detailedService = serviceMode === 'periods';
+    var directDurationService = serviceMode === 'direct';
+    var directPointsService = serviceMode === 'points';
+    var breakdown = detailedService ? serviceFromPeriods(input.servicePeriods) : null;
+    var parsedServicePoints = directPointsService ? parseDirectServicePoints(input.serviceDirectPoints) : null;
+    var service = directPointsService
+      ? { duration: null, points: parsedServicePoints.points }
+      : (detailedService ? servicePoints(breakdown.years,breakdown.months,0) : servicePoints(input.serviceYears, input.serviceMonths, input.serviceDays));
+    var serviceValid = directPointsService ? parsedServicePoints.valid : (!detailedService || breakdown.valid);
     var manualMsd = input.msdMode === 'direct';
     var periods = Array.isArray(input.msdPeriods) ? input.msdPeriods : [];
     var msdRows = manualMsd ? [] : periods.map(calculateMsdPeriod);
@@ -151,12 +194,16 @@
     var family = familyPoints(!!input.familyStatusEligible, input.eligibleChildren);
     var locality = input.locality ? 4 : 0;
     var firstPreference = input.mode === 'local' ? 0 : (input.firstPreference ? 2 : 0);
-    var total = msdValid ? truncate2(service.points + msd + coService + family + locality + firstPreference) : null;
+    var total = msdValid && serviceValid ? truncate2(service.points + msd + coService + family + locality + firstPreference) : null;
 
     return {
       total: total,
       servicePoints: service.points,
       serviceDuration: service.duration,
+      serviceDurationKnown: !directPointsService,
+      serviceMode: serviceMode,
+      serviceDirectPoints: directPointsService ? parsedServicePoints.points : null,
+      serviceInputValid: serviceValid,
       msdPoints: msd,
       msdRows: msdRows,
       msdMode: manualMsd ? 'direct' : 'periods',
@@ -175,6 +222,8 @@
     truncate2: truncate2,
     normalizeDuration: normalizeDuration,
     servicePoints: servicePoints,
+    parseDirectServicePoints: parseDirectServicePoints,
+    serviceFromPeriods: serviceFromPeriods,
     childPoints: childPoints,
     familyPoints: familyPoints,
     isFixedFullWeekType: isFixedFullWeekType,

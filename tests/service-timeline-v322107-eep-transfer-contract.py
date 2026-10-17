@@ -39,5 +39,5 @@ assert export.returncode==0 and export.stdout.startswith(b'PK'),export.stderr
 with zipfile.ZipFile(io.BytesIO(export.stdout)) as z:
     xml=z.read('xl/worksheets/sheet1.xml').decode()
     assert '27/11–04/12/2026' in xml and '16/10–02/11/2026' in xml
-assert '3.22.116' in (ROOT/'includes/config.php').read_text()
+assert "define('EDU_TOOLS_VERSION', '3.22.139')" in (ROOT/'includes/config.php').read_text()
 print('PASS: ΕΕΠ–ΕΒΠ timeline 2026–2027, deadlines, historical protection, Excel')

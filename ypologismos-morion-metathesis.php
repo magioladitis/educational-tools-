@@ -55,6 +55,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           'html' => '<p><strong>Ναι</strong>, εφόσον πληροίτε τις προϋποθέσεις κάθε τύπου αίτησης. Μπορείτε να υποβάλετε χωριστές αιτήσεις, για παράδειγμα για ΕΑΕ/ΚΕΔΑΣΥ, Μουσικά, Καλλιτεχνικά, Διαπολιτισμικά ή μετάθεση από περιοχή σε περιοχή.</p>'
             . '<p>Οι μεταθέσεις εξετάζονται με την εξής σειρά: <strong>ΕΑΕ/ΚΕΔΑΣΥ → Μουσικά → Καλλιτεχνικά → Διαπολιτισμικά → από περιοχή σε περιοχή → αμοιβαίες</strong>. Εάν ικανοποιηθεί αίτηση σε προηγούμενη κατηγορία, δεν εξετάζονται οι επόμενες αιτήσεις μετάθεσης.</p>'
             . '<p><strong>Προσοχή:</strong> Η οριστική τοποθέτηση/βελτίωση αποτελεί διαφορετικό τύπο αίτησης. Ειδικά όποιος έχει οργανική θέση σε ΕΑΕ, Μουσικό, Καλλιτεχνικό ή Διαπολιτισμικό σχολείο και ζητά μετάθεση στη Γενική της περιοχής όπου ανήκει το σχολείο, υποβάλλει αίτηση «από περιοχή σε περιοχή» και όχι αίτηση βελτίωσης.</p>'
+            . '<p><strong>Αμοιβαίες μεταθέσεις:</strong> αποτελούν χωριστή διαδικασία. Η αίτηση γίνεται εντός <strong>15 ημερών από την ανακοίνωση των μεταθέσεων</strong> και δεν αποτελεί μέρος του αριθμητικού προελέγχου της παρούσας φόρμας. Ελέγξτε τις ειδικές προϋποθέσεις, την ίδια ειδικότητα και την υπηρεσιακή επιβεβαίωση στην εγκύκλιο.</p>'
             . '<p class="small-note">Πηγή: <a href="https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027" target="_blank" rel="noopener noreferrer">Εγκύκλιος Δ.Ε. 138014/Ε2/15-10-2026 ↗</a>, Μέρος Τρίτο, Κεφ. Η΄, παρ. 5–6.</p>'
         )); ?>
         <div id="transferGeneralOriginField" class="field" style="margin:14px 0;">
@@ -88,6 +89,29 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           <p class="small-note">Νομική βάση: εγκύκλιος <strong>138014/Ε2/15-10-2026</strong>, Μέρος Δεύτερο, Κεφ. Δ΄ (σελ. 35), άρθρο 48 §3 ν. 4415/2016 και άρθρο 62 §5α ν. 4589/2019. Ο προέλεγχος δεν πιστοποιεί δικαίωμα μετάθεσης ούτε καλύπτει όλες τις εξαιρέσεις.</p>
         </section>
         <div id="transferNumericalInputs">
+        <div class="field" style="margin-bottom:12px">
+          <label for="serviceMode">Τρόπος καταχώρισης μορίων προϋπηρεσίας / συνολικής αναγνωρισμένης υπηρεσίας</label>
+          <select id="serviceMode">
+            <option value="points" selected>Απευθείας καταχώριση μορίων προϋπηρεσίας (προεπιλογή)</option>
+            <option value="direct">Απευθείας καταχώριση ετών, μηνών, ημερών</option>
+            <option value="periods">Υπολογισμός από επιμέρους περιόδους υπηρεσίας</option>
+          </select>
+          <p class="field-hint">Η προϋπηρεσία και οι Μ.Σ.Δ. καταχωρίζονται ξεχωριστά, όπως και στο επίσημο σύστημα. Επιλέγεται <strong>ένας</strong> τρόπος καταχώρισης για την προϋπηρεσία — οι τιμές δεν προστίθενται μεταξύ τους.</p>
+          <?php calculatorDisclosure(array(
+            'id' => 'serviceRegistryHelp',
+            'summary' => 'Πού βλέπω τα μόρια προϋπηρεσίας και τις υπηρετήσεις μου;',
+            'html' => 'Μπορείτε να δείτε τα καταχωρισμένα <strong>μόρια συνολικής υπηρεσίας</strong> και τις υπηρετήσεις σας στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a> (σύνδεση με λογαριασμό ΠΣΔ). Αν θέλετε απλώς να αντιγράψετε το έτοιμο άθροισμα, χρησιμοποιήστε την προεπιλεγμένη καταχώριση μορίων προϋπηρεσίας.'
+          )); ?>
+        </div>
+        <div id="servicePointsDirectPanel">
+          <div class="field">
+            <label for="serviceDirectPoints">Μόρια προϋπηρεσίας από το επίσημο μητρώο</label>
+            <input id="serviceDirectPoints" type="text" inputmode="decimal" autocomplete="off" placeholder="π.χ. 21,04" aria-describedby="serviceDirectHelp serviceDirectStatus">
+            <div class="field-hint" id="serviceDirectHelp">Δώστε τον ακριβή αριθμό μορίων προϋπηρεσίας με έως δύο δεκαδικά (κόμμα ή τελεία). π.χ. 21,04.</div>
+            <div class="field-hint" id="serviceDirectStatus" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+        <div id="serviceDirectPanel" style="display:none">
         <div class="field-grid">
           <div class="field">
             <label for="serviceYears">Συνολική αναγνωρισμένη υπηρεσία — έτη</label>
@@ -102,7 +126,13 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
             <input id="serviceDays" type="number" min="0" max="29" step="1" value="0" inputmode="numeric">
           </div>
         </div>
-
+        </div>
+        <div id="servicePeriodsPanel" style="display:none">
+          <p class="small-note">Προσθέστε τις <strong>διακριτές, μη επικαλυπτόμενες</strong> περιόδους που αναγνωρίζονται για συνολική υπηρεσία. Μην καταχωρίζετε ξανά παράλληλη υπηρέτηση για τις ίδιες ημερομηνίες. Επιβεβαιώστε το αποτέλεσμα από το υπηρεσιακό μητρώο.</p>
+          <div id="servicePeriodRows"></div>
+          <button type="button" class="add-row" id="addServicePeriod">+ Προσθήκη περιόδου υπηρεσίας</button>
+          <p id="servicePeriodStatus" class="field-hint" role="status" aria-live="polite"></p>
+        </div>
         </div>
       <?php calculatorCardEnd(); ?>
 
@@ -121,7 +151,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           )); ?>
         </div>
         <div id="msdPeriodsPanel" style="display:none">
-          <p class="small-note">Πρόσθεσε μία γραμμή για κάθε διαφορετική υπηρέτηση/κατηγορία. Οι ημέρες ≥15 λογίζονται ως πλήρης μήνας. Για παράλληλη υπηρεσία μπορείς να δηλώσεις τις ημέρες ανά εβδομάδα (σύνολο 5/5).</p>
+          <p class="small-note">Προσθέστε μία γραμμή για κάθε διαφορετική υπηρέτηση/κατηγορία. Οι ημέρες ≥15 λογίζονται ως πλήρης μήνας. Σε παράλληλη υπηρεσία μοιράστε τις ημέρες ανά εβδομάδα (άθροισμα έως 5/5 <em>στην ίδια χρονική περίοδο</em>). Μην προσθέτετε δύο πλήρεις πενθήμερες υπηρετήσεις για τις ίδιες ημέρες. Αν την ίδια ημέρα υπηρετήσατε σε δύο σχολεία, λαμβάνεται υπόψη το σχολείο με τις περισσότερες μονάδες. Για σύνθετα επικαλυπτόμενα διαστήματα προτιμήστε τα επίσημα συνολικά Μ.Σ.Δ. του Μητρώου.</p>
           <div id="msdRows"></div>
           <button class="add-row" id="addMsdRow" type="button">+ Προσθήκη υπηρέτησης</button>
 
@@ -170,6 +200,16 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
             <option value="other">Άλλη / σύνθετη περίπτωση</option>
           </select>
           <div class="field-hint" id="transferCoServiceAdvice" role="status" aria-live="polite"></div>
+        </div>
+        <div class="field" id="transferSpecialCaseField" style="margin:12px 0">
+          <label for="transferSpecialCase">Χρειάζομαι οδηγίες για ειδική κατηγορία ή προτεραιότητα; (χωρίς αυτόματη μοριοδότηση)</label>
+          <select id="transferSpecialCase">
+            <option value="none">Όχι / δεν έχω επιλέξει</option>
+            <option value="health_committee">Ειδική κατηγορία υγείας — γνωμάτευση Β/θμιας ή Ανώτατης Υγειονομικής Επιτροπής</option>
+            <option value="health_kepa">Ειδική κατηγορία υγείας — πιστοποίηση ΚΕΠΑ</option>
+            <option value="judicial_spouse">Κατά προτεραιότητα μετάθεση συζύγου δικαστικού λειτουργού</option>
+          </select>
+          <div class="field-hint">Για μετάθεση από περιοχή σε περιοχή. Η επιλογή δείχνει μόνο τις ιδιαίτερες οδηγίες δικαιολογητικών· η αρμόδια υπηρεσία κρίνει αν συντρέχουν οι νόμιμες προϋποθέσεις.</div>
         </div>
         <div class="check-row"><label><input id="locality" type="checkbox"> Εντοπιότητα στην περιοχή/το δήμο που εξετάζω (+4)</label></div>
         <div class="check-row" id="firstPreferenceRow"><label><input id="firstPreference" type="checkbox"> Η περιοχή είναι η πρώτη προτίμησή μου (+2)</label></div>
@@ -351,6 +391,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
       <?php calculatorActions(array(
         array('id' => 'resetBtn', 'class' => 'secondary', 'label' => 'Καθαρισμός')
       )); ?>
+      <div class="transfer-deadlines" role="note"><strong>Σημαντικές προθεσμίες:</strong> Ηλεκτρονική αίτηση: <strong>16/10–02/11/2026</strong>. Ανάκληση <strong>αίτησης</strong> στο teachers.minedu.gov.gr έως <strong>31/12/2026, ώρα 15:00</strong>· η αίτηση ακυρώνεται οριστικά και δεν ενεργοποιείται/υποβάλλεται εκ νέου. <strong>Ανάκληση ήδη πραγματοποιημένης μετάθεσης δεν προβλέπεται.</strong> Οι αμοιβαίες μεταθέσεις έχουν διαφορετική προθεσμία: εντός 15 ημερών από την ανακοίνωση των μεταθέσεων.</div>
 
       <?php calculatorDisclosure(array(
         'id' => 'transferSubmissionGuidance',
@@ -359,7 +400,8 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
       )); ?>
 
       <section id="transferDocumentsPanel" style="padding:16px; border:1px solid #b8c5d5; border-radius:12px; margin:16px 0;">
-        <h2 style="margin-top:0">Δ. Σύμβουλος δικαιολογητικών</h2>
+        <h2 style="margin-top:0">Δ. Σύμβουλος δικαιολογητικών — Τι πρέπει να ετοιμάσω;</h2>
+        <div id="transferDocumentActionSummary" class="transfer-doc-action-summary" aria-live="polite"></div>
         <p class="small-note">Εξατομικευμένες οδηγίες προετοιμασίας με βάση τα δηλωμένα στοιχεία. Η <strong>ηλεκτρονική αίτηση μετάθεσης και η οριστικοποίησή της</strong> γίνονται στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a>. Ανάλογα με την περίπτωση, τα δικαιολογητικά αποστέλλονται με email στην αρμόδια ΔΔΕ ή υποβάλλονται μέσω mydocs.minedu.gov.gr, όπως ορίζει η εγκύκλιος. Καμία ένδειξη δεν υποκαθιστά τον έλεγχο της αρμόδιας ΔΔΕ.</p>
         <p id="transferDocumentProgress" class="edu-transfer-doc__progress" role="status" aria-live="polite" aria-atomic="true"></p>
         <div id="transferDocumentChecklist" aria-label="Προσωποποιημένη λίστα ελέγχου δικαιολογητικών"></div>
@@ -380,7 +422,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         'label_id' => 'transferTotalLabel',
         'cap' => 'Ενδεικτική βαθμολογία μετάθεσης'
       )); ?>
-      <?php calculatorResultRow(array('label' => 'Συνολική υπηρεσία', 'value' => '0', 'value_id' => 'servicePointsResult')); ?>
+      <?php calculatorResultRow(array('label' => 'Μόρια προϋπηρεσίας', 'value' => '0', 'value_id' => 'servicePointsResult')); ?>
       <?php calculatorResultRow(array('label' => 'Μ.Σ.Δ.', 'value' => '0', 'value_id' => 'msdPointsResult')); ?>
       <?php calculatorResultRow(array('label' => 'Συνυπηρέτηση', 'value' => '0', 'value_id' => 'coServiceResult')); ?>
       <?php calculatorResultRow(array('label' => 'Οικογενειακοί λόγοι', 'value' => '0', 'value_id' => 'familyResult')); ?>
@@ -395,7 +437,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
 <?php sourceCardStart(); ?>
   <p>Οι λίστες δικαιολογητικών είναι οδηγός προετοιμασίας και απαιτούν επαλήθευση με την εγκύκλιο της αντίστοιχης περιόδου αιτήσεων. Οι οδηγίες δικαιολογητικών και οι βασικές προϋποθέσεις επικαιροποιήθηκαν βάσει της εγκυκλίου μεταθέσεων Δ.Ε. 2026–2027 (138014/Ε2/15-10-2026). Ο αριθμητικός υπολογισμός παραμένει ο υφιστάμενος, βάσει του π.δ. 50/1996, και πρέπει να επιβεβαιώνεται με το επίσημο μητρώο.</p>
   <?php sourceCardLinksStart(); ?>
-    <?php sourceCardLink('https://diavgeia.gov.gr/doc/ΨΚΩΦ46ΝΚΠΔ-63Κ?inline=true', 'Διαύγεια — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2 ↗'); ?>
+    <?php sourceCardLink('https://diavgeia.gov.gr/doc/ΨΚΩΖ46ΝΚΠΔ-63Κ?inline=true', 'Διαύγεια — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2 ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027', 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2 ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/monimoi-metatakseis-metatheseis-apospaseis', 'ΥΠΑΙΘΑ — Νομοθεσία κινητικότητας / Π.Δ. 50/1996 ↗'); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/kinitikotita/metatheseis-egkyklioi-proskliseis', 'ΥΠΑΙΘΑ — Τρέχουσες εγκύκλιοι μεταθέσεων ↗'); ?>

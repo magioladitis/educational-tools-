@@ -2,6 +2,8 @@
 (function(global){
 'use strict';
 var $=function(id){return document.getElementById(id);};
+// Tolerate legacy test stubs that expose only the original form fields.
+function optionalElement(id){try{return document.getElementById(id);}catch(err){return null;}}
 var base=[
  ['submission','Οριστικοποίηση ηλεκτρονικής αίτησης','Η αίτηση υποβάλλεται και οριστικοποιείται στο https://teachers.minedu.gov.gr/ από 16/10 έως 02/11/2026. Προσωρινή αποθήκευση ΔΕΝ ισοδυναμεί με υποβολή. Αποθηκεύστε το PDF της οριστικοποιημένης αίτησης με αριθμό πρωτοκόλλου.','Έλεγχος διαδικασίας'],
  ['record','Υπηρεσιακό μητρώο και χρόνος υπηρεσίας','Δείτε υπηρετήσεις και μόρια στο https://teachers.minedu.gov.gr/. Πίνακες Δ.Ε.: 23/11/2026· αιτήματα διορθώσεων 23–27/11/2026 (μεταθέσεις από περιοχή σε περιοχή). Αντιπαραβάλετε το μητρώο και επικοινωνήστε με τη ΔΔΕ για σφάλματα.','Έλεγχος φακέλου']
@@ -142,6 +144,9 @@ function build(){
    // Recognition acts are checked here, never as an extra checkbox when service is entered.
    record.detail+='\nΕλέγξτε ότι τυχόν πράξεις αναγνώρισης υπηρεσίας και σχετικές βεβαιώσεις έχουν καταχωριστεί σωστά στο Μητρώο.';
    record.detail+='\nΜονάδες Συνθηκών Διαβίωσης (Μ.Σ.Δ.): ';
+   record.detail+='\nΣυνολική υπηρεσία: ';
+   if(optionalElement('serviceMode') && optionalElement('serviceMode').value==='periods')record.detail+='Διασταυρώστε τις διακριτές, μη επικαλυπτόμενες περιόδους προϋπηρεσίας με το επίσημο Μητρώο.';
+   else record.detail+='Ελέγξτε τον συνολικό χρόνο σε έτη, μήνες και ημέρες όπως εμφανίζεται στο επίσημο Μητρώο.';
    if($('msdMode').value==='direct'){
     record.detail+='Αντιγράψτε τον ακριβή συνολικό αριθμό μορίων Μ.Σ.Δ. από το επίσημο Μητρώο. Οι αναλυτικές υπηρετήσεις δεν προστίθενται δεύτερη φορά.';
    }else{
@@ -172,7 +177,7 @@ function build(){
   if($('coService').checked || (caseValue!=='unspecified' && info.blocked)){
    var spouseDoc=entry('coservice','Δικαιολογητικά συνυπηρέτησης',
     info.summary+'\n'+info.detail+'\nΤα απαιτούμενα αποδεικτικά συνυπηρέτησης πρέπει να έχουν εκδοθεί στο τελευταίο τρίμηνο (με εξαίρεση βεβαιώσεις εργοδοτών για προγενέστερη εργασία που έπαυσε: τελευταία διετία). Η συνυπηρέτηση αφορά μία περιοχή μετάθεσης — όχι ολόκληρο τον νομό — ή τον δήμο σχολείου για βελτίωση/οριστική τοποθέτηση. '+FAMILY_SOURCE,
-    info.blocked?'Δεν θεμελιώνεται συνυπηρέτηση (+0)':'Δικαιολογητικά βάσει επιλογής');
+    info.blocked?'Δεν θεμελιώνεται συνυπηρέτηση (+0)':(caseValue==='unspecified'||caseValue==='other'?'Υπό επιβεβαίωση — δεν προστίθενται +4':'Δικαιολογητικά βάσει επιλογής'));
    spouseDoc.disabled=info.blocked;
    a.push(spouseDoc);
   }
@@ -192,6 +197,18 @@ function build(){
  if(mode==='music') a=a.concat(musicDocuments());
  if(mode==='art') a=a.concat(artDocuments());
  if(mode==='intercultural') a=a.concat(interculturalDocuments());
+ if(!qual && optionalElement('transferSpecialCase') && optionalElement('transferSpecialCase').value!=='none'){
+  var specialCase=optionalElement('transferSpecialCase').value;
+  if(specialCase==='health_committee')a.push(entry('health-committee','Ειδική κατηγορία υγείας — γνωμάτευση Υγειονομικής Επιτροπής',
+   'Για γνωμάτευση Β/θμιας Υγειονομικής Επιτροπής ή ΑΣΥΕ/ΑΝΥΕ/ΑΑΥΕ (αφορά υγεία ιδίου, συζύγου ή τέκνου, όχι γονέων/αδελφών, όπου συντρέχουν οι όροι): αποστολή σε ΚΛΕΙΣΤΟ φάκελο με ένδειξη «εμπιστευτικό πρωτόκολλο» στο ΥΠΑΙΘΑ, Ανδρέα Παπανδρέου 37, 15180 Μαρούσι. Συνυποβάλλεται απλή αίτηση με ονοματεπώνυμο, Α.Μ. και αριθμό πρωτοκόλλου αίτησης μετάθεσης. Δεν αντικαθίσταται από απλό email/mydocs. Η βεβαίωση και το δικαίωμα κρίνονται υπηρεσιακά. Εγκύκλιος 138014/Ε2, Μέρος Πρώτο, Κεφ. Α, §2.2.2.',
+   'Κλειστός φυσικός φάκελος — ειδική διαδρομή'));
+  if(specialCase==='health_kepa')a.push(entry('health-kepa','Ειδική κατηγορία υγείας — στοιχεία ΚΕΠΑ',
+   'Στην ηλεκτρονική αίτηση επιλέξτε «Ειδική κατηγορία» και καταχωρίστε «Αριθμ. Επιτροπής» και «Αριθμ. Μητρώου ΚΕΠΑ» χωρίς καθέτους, παύλες, κενά ή ημερομηνία. Η γνωμάτευση ΚΕΠΑ ΔΕΝ αποστέλλεται. Αν δεν έχει εκδοθεί εμπρόθεσμα, ισχύουν ειδικές οδηγίες υπεύθυνης δήλωσης και ενημέρωσης πριν από την εξέταση από ΚΥΣΔΕ. Δεν προκύπτει αυτόματη αποδοχή προτεραιότητας. Εγκύκλιος 138014/Ε2, Μέρος Πρώτο, Κεφ. Α, §2.2.2, Μέρος Τρίτο, κεφ. Γ.',
+   'Ηλεκτρονικά στοιχεία — όχι αποστολή γνωμάτευσης'));
+  if(specialCase==='judicial_spouse')a.push(entry('judicial-spouse','Σύζυγος δικαστικού λειτουργού — ειδικός φάκελος',
+   'Για κατά προτεραιότητα μετάθεση συζύγου δικαστικού λειτουργού: υποβάλλονται στο mydocs.minedu.gov.gr πιστοποιητικό οικογενειακής κατάστασης, βεβαίωση εργασίας και έγγραφο από το οποίο προκύπτει η περιφέρεια αρμοδιότητας του δικαστηρίου του/της συζύγου. Διαδικασία διακριτή από τα συνήθη δικαιολογητικά μοριοδότησης. Η υπηρεσία ελέγχει τις προϋποθέσεις. Εγκύκλιος 138014/Ε2, Μέρος Πρώτο, Κεφ. Α, §2.2.3.',
+   'mydocs — ειδική διαδρομή'));
+ }
  return a;
 }
 function escape(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -238,7 +255,7 @@ function shortText(d){
 }
 function isCritical(d){
  return d.id==='eae-warnings' ||
-   (d.id==='coservice' && d.tag.indexOf('Δεν θεμελιώνεται')!==-1);
+   (d.id==='coservice' && (d.tag.indexOf('Δεν θεμελιώνεται')!==-1 || d.tag.indexOf('Υπό επιβεβαίωση')!==-1));
 }
 function progress(root){
  var rows=root.querySelectorAll('[data-doc-id]');
@@ -482,6 +499,17 @@ function render(){
   openRows[details.getAttribute('data-doc-details')]=details.open;
  });
  var rows=build();
+ var summary=optionalElement('transferDocumentActionSummary');
+ if(summary){
+  var route=submissionGuideData();
+  var exceptional=rows.filter(function(d){return ['health-committee','health-kepa','judicial-spouse'].indexOf(d.id)!==-1;});
+  var conditional=rows.filter(function(d){return ['coservice','children-specific','locality','eae-basis','music-common','art-cv','ic-cv'].indexOf(d.id)!==-1 && !d.disabled;});
+  summary.innerHTML='<p><strong>1. Αίτηση:</strong> Οριστικοποιήστε στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a> (16/10–02/11/2026).</p>'+
+   '<p><strong>2. Υποβολή εγγράφων:</strong> '+escape(route.title)+'. '+escape(route.lines[0]||'')+'</p>'+
+   '<p><strong>3. Τι χρειάζεται από εσάς:</strong> '+(conditional.length?'Ελέγξτε ειδικά '+conditional.map(function(d){return escape(d.title);}).join(' · ')+'.':'Ελέγξτε την ορθότητα του μητρώου και τα στοιχεία της αίτησης.')+'</p>'+
+   (exceptional.length?'<p class="transfer-docs-warning"><strong>Ειδική διαδρομή:</strong> '+exceptional.map(function(d){return escape(d.title)+' ('+escape(d.tag)+')';}).join(' · ')+'. Δεν αρκούν οι γενικές οδηγίες email/mydocs.</p>':'')+
+   '<p class="small-note"><strong>Προσοχή:</strong> οι έλεγχοι μητρώου και τα αυτεπαγγέλτως αναζητούμενα πιστοποιητικά δεν είναι έγγραφα που οπωσδήποτε υποβάλλετε εσείς. Αναπτύξτε τις παρακάτω εγγραφές για τις ακριβείς προϋποθέσεις.</p>';
+ }
  root.innerHTML=rows.map(function(d){
   var id=escape(d.id),full=legalSeparation(d.detail),open=Object.prototype.hasOwnProperty.call(openRows,d.id)?openRows[d.id]:isCritical(d);
   var warning=isCritical(d),heading=escape(d.title),detail=escape(full.body).replace(/\n/g,'<br>');

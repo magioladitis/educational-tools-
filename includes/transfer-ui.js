@@ -10,6 +10,8 @@
   function isEaeMode(mode){ return ['smeae','eae_sensory','kedasy'].indexOf(mode)!==-1; }
   var rowCounter = 0;
   var msdRows = null;
+  var serviceRows = null;
+  var serviceRowCounter = 0;
 
   var TYPE_LABELS = {
     school: 'Σχολική μονάδα / οργανική / προσωρινή τοποθέτηση',
@@ -66,6 +68,36 @@
     else if (n > 50) el.value = '50';
   }
 
+  function addServicePeriod(initial,options) {
+    options = options || {};
+    serviceRowCounter += 1;
+    var index = serviceRowCounter;
+    var row = document.createElement('section');
+    row.className = 'transfer-service-period';
+    row.innerHTML = '<div class="transfer-service-row-head"><strong>Περίοδος #' + index + '</strong><button type="button" class="remove-row remove-service-period">Αφαίρεση</button></div>' +
+      '<div class="field"><label for="service-period-description-' + index + '">Περιγραφή (προαιρετική)</label><input type="text" maxlength="120" id="service-period-description-' + index + '" placeholder="π.χ. Σχολείο ή αναγνωρισμένη προϋπηρεσία"></div>' +
+      '<div class="field-grid transfer-service-grid">' +
+      '<div class="field"><label for="service-period-years-' + index + '">Έτη</label><input type="number" class="service-period-years" id="service-period-years-' + index + '" min="0" max="50" step="1" value="0"></div>' +
+      '<div class="field"><label for="service-period-months-' + index + '">Μήνες</label><input type="number" class="service-period-months" id="service-period-months-' + index + '" min="0" max="11" step="1" value="0"></div>' +
+      '<div class="field"><label for="service-period-days-' + index + '">Ημέρες</label><input type="number" class="service-period-days" id="service-period-days-' + index + '" min="0" max="29" step="1" value="0"></div></div>';
+    serviceRows.appendChild(row);
+    if(initial){['years','months','days'].forEach(function(key){if(initial[key]!=null)row.querySelector('.service-period-' + key).value=String(initial[key]);});}
+    if(!options.silent)calculate();
+  }
+
+  function readServicePeriod(row) {
+    return { years:row.querySelector('.service-period-years').value,
+      months:row.querySelector('.service-period-months').value,
+      days:row.querySelector('.service-period-days').value };
+  }
+
+  function syncServiceMode() {
+    var mode = byId('serviceMode').value;
+    byId('servicePointsDirectPanel').style.display = mode === 'points' ? '' : 'none';
+    byId('serviceDirectPanel').style.display = mode === 'direct' ? '' : 'none';
+    byId('servicePeriodsPanel').style.display = mode === 'periods' ? '' : 'none';
+  }
+
   function categoryOptionsHtml() {
     return CATEGORY_OPTIONS.map(function (x) { return '<option value="' + x[0] + '">' + x[1] + '</option>'; }).join('');
   }
@@ -95,6 +127,15 @@
       '<div class="transfer-service-actions"><span class="field-hint transfer-row-note"></span><button class="remove-row" type="button">Αφαίρεση</button></div>';
 
     msdRows.appendChild(row);
+    // Associate each dynamic label with its own control for keyboard and screen readers.
+    row.querySelectorAll('.field').forEach(function(field,fieldNumber){
+      var label=field.querySelector('label'),control=field.querySelector('input,select');
+      if(!label||!control)return;
+      var fieldId='msd-row-' + rowCounter + '-field-' + fieldNumber;
+      control.id=fieldId;
+      label.htmlFor=fieldId;
+    });
+    row.setAttribute('aria-label','Υπηρέτηση ΜΣΔ ' + rowCounter);
     if (initial.type) row.querySelector('.msd-type').value = initial.type;
     if (initial.category) row.querySelector('.msd-category').value = initial.category;
     syncRow(row);
@@ -161,6 +202,9 @@
     var rows = Array.prototype.slice.call(msdRows.querySelectorAll('.transfer-service-row'));
     var input = {
       mode: byId('mode').value,
+      serviceMode: byId('serviceMode').value,
+      servicePeriods: Array.prototype.slice.call(serviceRows.querySelectorAll('.transfer-service-period')).map(readServicePeriod),
+      serviceDirectPoints: byId('serviceDirectPoints').value,
       serviceYears: Number(byId('serviceYears').value) || 0,
       serviceMonths: Number(byId('serviceMonths').value) || 0,
       serviceDays: Number(byId('serviceDays').value) || 0,
@@ -186,14 +230,25 @@
     // labelled provisional subtotal rather than the misleading bare dash.
     // Never treat an absent M.S.D. amount as zero for the final calculation.
     var missingMsd = !result.msdInputValid;
+    var invalidService = !result.serviceInputValid;
     var provisional = global.EducationTransfer.truncate2(
       result.servicePoints + result.coServicePoints + result.familyPoints +
       result.localityPoints + result.firstPreferencePoints
     );
-    byId('totalResult').textContent = formatPoints(missingMsd ? provisional : result.total);
+    byId('totalResult').textContent = invalidService ? '—' : formatPoints(missingMsd ? provisional : result.total);
+    var serviceMode = result.serviceMode;
+    var serviceStatus = '';
+    if (serviceMode === 'periods') {
+      serviceStatus = invalidService ? 'Οι περίοδοι δεν είναι έγκυρες ή υπερβαίνουν συνολικά τα 50 έτη. Ελέγξτε κάθε πεδίο και το υπηρεσιακό μητρώο.' : 'Υπολογίστηκαν ' + result.serviceDuration.years + ' έτη και ' + result.serviceDuration.months + ' μήνες από τις δηλωμένες περιόδους (χωρίς επικάλυψη).';
+    }
+    byId('servicePeriodStatus').textContent = serviceStatus;
+    var serviceDirectValue = String(input.serviceDirectPoints || '').trim();
+    var serviceDirectInvalid = serviceMode === 'points' && serviceDirectValue !== '' && !result.serviceInputValid;
+    byId('serviceDirectStatus').textContent = serviceDirectInvalid ? 'Μη έγκυρη τιμή: δώστε μη αρνητικό αριθμό με έως δύο δεκαδικά (έως 125,00).' : '';
+    byId('serviceDirectPoints').setAttribute('aria-invalid', serviceDirectInvalid ? 'true' : 'false');
     var totalLabel = byId('transferTotalLabel');
-    if (totalLabel) totalLabel.textContent = missingMsd ? 'προσωρινές μονάδες (χωρίς Μ.Σ.Δ.)' : 'συνολικές μονάδες';
-    byId('servicePointsResult').textContent = formatPoints(result.servicePoints);
+    if (totalLabel) totalLabel.textContent = invalidService ? 'μη έγκυρα μόρια προϋπηρεσίας' : missingMsd ? 'προσωρινές μονάδες (χωρίς Μ.Σ.Δ.)' : 'συνολικές μονάδες';
+    byId('servicePointsResult').textContent = invalidService ? '—' : formatPoints(result.servicePoints);
     byId('msdPointsResult').textContent = result.msdPoints === null ? '—' : formatPoints(result.msdPoints);
     // The static field hint already explains the entry format and the no-double-counting rule.
     // Only give an inline message for a genuinely invalid, non-empty value.
@@ -212,10 +267,23 @@
     });
 
     var duration = result.serviceDuration;
-    var durationText = duration.years + ' έτη, ' + duration.months + ' μήνες';
-    if (duration.roundedDays) durationText += ' (οι ' + duration.roundedDays + ' ημέρες λογίστηκαν ως μήνας)';
-    var excludedCoService=byId('coService').checked && !input.coService;
-    byId('statusResult').textContent = result.msdInputValid ? ('Συνολική υπηρεσία: ' + durationText + '. Οι ειδικές κατηγορίες/προτεραιότητες δεν περιλαμβάνονται στο άθροισμα.'+(excludedCoService?' Συνυπηρέτηση: 0 μόρια λόγω του επιλεγμένου μη επιλέξιμου εργασιακού καθεστώτος.':'')) : 'Το εμφανιζόμενο ποσό είναι προσωρινό και ΔΕΝ περιλαμβάνει Μ.Σ.Δ. Εισαγάγετε τον έγκυρο συνολικό αριθμό Μ.Σ.Δ. ή επιλέξτε υπολογισμό από υπηρετήσεις για την τελική βαθμολογία.';
+    var durationText = '';
+    if (result.serviceDurationKnown && duration) {
+      durationText = duration.years + ' έτη, ' + duration.months + ' μήνες';
+      if (duration.roundedDays) durationText += ' (οι ' + duration.roundedDays + ' ημέρες λογίστηκαν ως μήνας)';
+    }
+    var serviceSummary = result.serviceMode === 'points'
+      ? 'Μόρια προϋπηρεσίας: ' + formatPoints(result.servicePoints) + ' (απευθείας καταχώριση από το επίσημο μητρώο).'
+      : 'Συνολική υπηρεσία: ' + durationText + '.';
+    var invalidServiceMessage = result.serviceMode === 'points'
+      ? 'Ο υπολογισμός δεν είναι έγκυρος μέχρι να δοθούν έγκυρα μόρια προϋπηρεσίας.'
+      : (result.serviceMode === 'direct'
+          ? 'Ο υπολογισμός δεν είναι έγκυρος μέχρι να διορθωθούν τα έτη, οι μήνες ή οι ημέρες της συνολικής υπηρεσίας.'
+          : 'Ο υπολογισμός δεν είναι έγκυρος μέχρι να διορθωθούν οι περίοδοι συνολικής υπηρεσίας.');
+    var unconfirmedCoService=byId('coService').checked && !input.coService;
+    var coChoice=byId('transferCoServiceCase').value;
+    var coWarning=unconfirmedCoService?(coChoice==='unspecified'||coChoice==='other'?' Η συνυπηρέτηση δεν έχει επιβεβαιωθεί: +0 μέχρι να επιλεγεί επιλέξιμη περίπτωση/να ελεγχθεί από ΔΔΕ.':' Συνυπηρέτηση: 0 μόρια λόγω μη επιλέξιμου εργασιακού καθεστώτος.'):'';
+    byId('statusResult').textContent = invalidService ? invalidServiceMessage : result.msdInputValid ? (serviceSummary + ' Οι ειδικές κατηγορίες/προτεραιότητες δεν περιλαμβάνονται στο άθροισμα.'+coWarning) : 'Το εμφανιζόμενο ποσό είναι προσωρινό και ΔΕΝ περιλαμβάνει Μ.Σ.Δ. ' + serviceSummary + ' Εισαγάγετε τον έγκυρο συνολικό αριθμό Μ.Σ.Δ. ή επιλέξτε υπολογισμό από υπηρετήσεις για την τελική βαθμολογία.'+coWarning;
   }
 
   function currentGeneralReturnInput(){
@@ -251,18 +319,19 @@
     if(isEaeMode(mode) && byId('transferEaeArea').value==='same')mode='local';
     var details=docEngine&&docEngine.coServiceInfo?docEngine.coServiceInfo(choice,mode):null;
     var blocked=!!(details && details.blocked);
-    // A blocked case must never look selected or contribute four points.
-    // Keep the selector accessible to allow choosing a different case.
+    var needsReview=choice==='unspecified' || choice==='other';
+    // Unspecified/other stays selectable to keep the detail picker visible;
+    // it never yields the four points until an eligible status is selected.
     if(blocked)checkbox.checked=false;
     checkbox.disabled=blocked;
     var field=byId('transferCoServiceCaseField');
     if(field)field.style.display=(checkbox.checked || choice!=='unspecified')?'':'none';
     var advice=byId('transferCoServiceAdvice');
-    if(advice)advice.textContent=(checkbox.checked || choice!=='unspecified') && details ? details.summary : '';
-    checkbox.setAttribute('aria-describedby',blocked?'transferCoServiceAdvice':'');
+    if(advice)advice.textContent=(checkbox.checked || choice!=='unspecified') && details ? details.summary + (needsReview?' Τα +4 μόρια δεν προστίθενται χωρίς επαλήθευση.':'') : '';
+    checkbox.setAttribute('aria-describedby',(blocked||needsReview)?'transferCoServiceAdvice':'');
     var row=checkbox.closest('.check-row');
     if(row)row.classList.toggle('transfer-criterion-unavailable',blocked);
-    return blocked;
+    return blocked || needsReview;
   }
 
   function syncEaeApplicationRoute(mode) {
@@ -292,6 +361,8 @@
     var guidance = byId('transferModeGuidance');
     var scoreBlock = byId('transferScoringResults');
     if (scoreBlock) scoreBlock.style.display = qualifications ? 'none' : '';
+    var specialCaseField=byId('transferSpecialCaseField');if(specialCaseField)specialCaseField.style.display=(!qualifications&&!isLocal)?'':'none';
+    if(isLocal || qualifications)byId('transferSpecialCase').value='none';
     ['transferNumericalInputs','transferMsdCard','transferSocialCriteriaCard'].forEach(function(id){ var e=byId(id); if(e) e.style.display=qualifications?'none':''; });
     var q=byId('transferQualificationPanel'); if(q) q.style.display=qualifications?'':'none';
     var qt=byId('transferQualificationTitle'); if(qt) qt.textContent=mode==='music'?'Μετάθεση σε Μουσικό Σχολείο — Φάκελος προσόντων':mode==='art'?'Μετάθεση σε Καλλιτεχνικό Σχολείο — Φάκελος προσόντων':'Μετάθεση σε Πειραματικό Σχολείο Διαπολιτισμικής Εκπαίδευσης — Φάκελος προσόντων';
@@ -514,6 +585,13 @@
     byId('transferGeneralOrigin').value='general';
     ['transferGeneralEaeYears','transferGeneralEaeAreaYears','transferGeneralEaeSinceTransfer'].forEach(function(id){byId(id).value='0';});
     byId('transferGeneralEaeOrganic').checked=false;
+    byId('serviceMode').value = 'points';
+    syncServiceMode();
+    serviceRows.innerHTML='';
+    serviceRowCounter=0;
+    addServicePeriod(null,{silent:true});
+    byId('transferSpecialCase').value='none';
+    byId('serviceDirectPoints').value = '';
     byId('serviceYears').value = '0';
     byId('serviceMonths').value = '0';
     byId('serviceDays').value = '0';
@@ -569,9 +647,20 @@
     if (initialized) return;
     initialized = true;
     msdRows = byId('msdRows');
+    serviceRows = byId('servicePeriodRows');
     if (!msdRows || !global.EducationTransfer) return;
 
     byId('addMsdRow').addEventListener('click', function () { addRow(); });
+    byId('addServicePeriod').addEventListener('click',function(){addServicePeriod();});
+    byId('serviceMode').addEventListener('change',function(){syncServiceMode();calculate();});
+    serviceRows.addEventListener('click',function(event){
+      var remove=event.target.closest&&event.target.closest('.remove-service-period');
+      if(!remove)return;
+      var period=remove.closest('.transfer-service-period');
+      if(period)period.remove();
+      if(!serviceRows.querySelector('.transfer-service-period'))addServicePeriod(null,{silent:true});
+      calculate();
+    });
     byId('msdMode').addEventListener('change', function () { syncMsdMode(); calculate(); });
     byId('resetBtn').addEventListener('click', reset);
     byId('mode').addEventListener('change', syncMode);
@@ -580,11 +669,11 @@
     document.addEventListener('input', function (event) {
       var target = event.target;
       if (!target) return;
-      if (target.id === 'serviceYears' || target.classList.contains('msd-years')) clampInput(target, 50);
+      if (target.id === 'serviceYears' || target.classList.contains('msd-years') || target.classList.contains('service-period-years')) clampInput(target, 50);
       if (target.id === 'transferInterculturalYears') clampInterculturalYears(target);
       if (target.id === 'transferEaeAreaYears' || target.id === 'transferGeneralEaeAreaYears') clampAreaYears(target);
-      if (target.id === 'serviceMonths' || target.classList.contains('msd-months')) clampInput(target, 11);
-      if (target.id === 'serviceDays' || target.classList.contains('msd-days')) clampInput(target, 29);
+      if (target.id === 'serviceMonths' || target.classList.contains('msd-months') || target.classList.contains('service-period-months')) clampInput(target, 11);
+      if (target.id === 'serviceDays' || target.classList.contains('msd-days') || target.classList.contains('service-period-days')) clampInput(target, 29);
       if (target.id === 'eligibleChildren') clampInput(target, 20);
       if (target.classList.contains('msd-weekdays') && target.value !== '') {
         var n = Number(target.value);
@@ -613,6 +702,8 @@
     });
 
     addRow({ type: 'school', category: 'A' }, { silent: true });
+    addServicePeriod(null,{silent:true});
+    syncServiceMode();
     syncMsdMode();
     syncMode();
   }

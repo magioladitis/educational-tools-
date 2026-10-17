@@ -4301,3 +4301,14 @@ body.edu-ui.edu-page-transfer .transfer-submission-template__field input { box-s
 body.edu-ui.edu-page-transfer .transfer-submission-template__field input:focus-visible { outline:2px solid var(--edu-primary); outline-offset:1px; }
 body.edu-ui.edu-page-transfer .transfer-submission-template__clear { margin-top:12px; min-height:40px; font-size:13px; }
 @media(max-width:560px) { body.edu-ui.edu-page-transfer .transfer-submission-template__fields { grid-template-columns:minmax(0,1fr); } }
+
+/* v3.22.138 — direct service first, compact document-first navigation */
+body.edu-page-transfer .transfer-service-period {margin:12px 0;padding:13px;border:1px solid var(--edu-border,#d8e0e7);border-radius:12px;background:var(--edu-surface,#fbfcfe)}
+body.edu-page-transfer .transfer-docs-jump {margin:13px 0 0;padding:12px 14px;border-radius:10px;border:1px solid var(--edu-border,#cbd5e1);line-height:1.5}
+body.edu-page-transfer .transfer-docs-jump a {font-weight:700;display:inline-block}
+body.edu-page-transfer .transfer-docs-jump .small-note {margin:5px 0 0}
+body.edu-page-transfer .transfer-deadlines {margin:14px 0;padding:13px;border-left:3px solid var(--edu-primary,#526e91);line-height:1.55}
+body.edu-page-transfer .transfer-doc-action-summary {padding:12px 14px;border:1px solid var(--edu-border,#cbd5e1);border-radius:10px;margin-bottom:15px;line-height:1.55}
+body.edu-page-transfer .transfer-doc-action-summary p {margin:5px 0 10px}
+body.edu-page-transfer .transfer-docs-warning {font-weight:600}
+@media(max-width:650px) {body.edu-page-transfer .transfer-docs-jump,body.edu-page-transfer .transfer-doc-action-summary {padding:10px 11px}}
