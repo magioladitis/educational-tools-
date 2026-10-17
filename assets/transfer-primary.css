@@ -30,3 +30,7 @@
 #primaryScoringCard[hidden], #primaryInterculturalFields[hidden], #primaryInterCurrentYearsField[hidden], #primaryInterEaeQualificationField[hidden] {display:none!important;}
 
 #primaryInterVacancySchoolField[hidden] {display:none!important;}
+
+/* Do not draw an empty service-eligibility notice before JS populates it. */
+#primaryEligibility:empty { display:none; }
+#primaryChildrenHint[data-invalid="true"] {color:#a32318; font-weight:700;}

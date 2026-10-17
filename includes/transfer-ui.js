@@ -709,7 +709,7 @@
       if (target.id === 'transferEaeAreaYears' || target.id === 'transferGeneralEaeAreaYears') clampAreaYears(target);
       if (target.id === 'serviceMonths' || target.classList.contains('msd-months') || target.classList.contains('service-period-months')) clampInput(target, 11);
       if (target.id === 'serviceDays' || target.classList.contains('msd-days') || target.classList.contains('service-period-days')) clampInput(target, 29);
-      if (target.id === 'eligibleChildren') clampInput(target, 20);
+      if (target.id === 'eligibleChildren') global.EducationTransferSocialInput.clampChildren(target);
       if (target.classList.contains('msd-weekdays') && target.value !== '') {
         var n = Number(target.value);
         if (Number.isFinite(n)) target.value = String(Math.max(0, Math.min(5, n)));

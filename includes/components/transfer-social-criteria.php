@@ -60,6 +60,12 @@ function transferSocialCriteriaCard($grade, $extraHtml = '') {
             $html = str_replace('id="'.$old.'"', 'id="'.$new.'"', $html);
             $html = str_replace('for="'.$old.'"', 'for="'.$new.'"', $html);
         }
+        // A primary-only validation cue; do not change the Secondary HTML baseline.
+        $html = str_replace(
+            '<input id="primaryChildren" type="number" min="0" max="20" step="1" value="0" inputmode="numeric">',
+            '<input id="primaryChildren" type="number" min="0" max="20" step="1" value="0" inputmode="numeric" aria-describedby="primaryChildrenHint"><small id="primaryChildrenHint" class="field-hint">Επιτρεπτές τιμές: 0–20 τέκνα.</small>',
+            $html
+        );
         // Additional evidence toggle is specific to the Primary document workflow;
         // keep it beside children, not among unrelated social criteria.
         $html = str_replace(

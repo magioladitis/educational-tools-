@@ -234,6 +234,10 @@
     $('primaryServicePointsPanel').hidden=mode!=='points';
     $('primaryServiceDurationPanel').hidden=mode!=='direct';
     var children=numeric($('primaryChildren'),20),years=numeric($('primaryYears'),50), months=numeric($('primaryMonths'),11), days=numeric($('primaryDays'),29);
+    var childHint=$('primaryChildrenHint'), childField=$('primaryChildren');
+    var childOutOfRange=children===null;
+    if(childHint){ childHint.textContent=childOutOfRange?'⚠ Εισαγάγετε ακέραιο αριθμό τέκνων από 0 έως 20.':'Επιτρεπτές τιμές: 0–20 τέκνα.'; childHint.setAttribute('data-invalid',String(childOutOfRange)); }
+    childField.setAttribute('aria-invalid',String(childOutOfRange));
     if (children === 0) { $('primaryChildrenExtra').checked = false; $('primaryChildrenExtra').disabled = true; }
     else $('primaryChildrenExtra').disabled = false;
     var numericValid=[children,years,months,days].every(function(v){return v!==null;});
@@ -343,7 +347,10 @@
   });
   document.querySelectorAll('input,select').forEach(function(el){
     if(el.closest('#primaryEmailDetails'))return;
-    el.addEventListener('input',update);
+    el.addEventListener('input',function(){
+      if(el.id==='primaryChildren') global.EducationTransferSocialInput.clampChildren(el);
+      update();
+    });
     el.addEventListener('change',update);
   });
   if(global.EducationTransferEmailComponent&&global.EducationTransferEmailComponent.fillSpecialtyDropdown){

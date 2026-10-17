@@ -1,0 +1,11 @@
+'use strict';
+const fs=require('fs'), assert=require('assert');
+const path=require('path'); const root=path.join(__dirname,'..');
+const comp=fs.readFileSync(path.join(root,'includes/components/transfer-social-criteria.php'),'utf8');
+const js=fs.readFileSync(path.join(root,'includes/transfer-primary.js'),'utf8');
+const css=fs.readFileSync(path.join(root,'assets/transfer-primary.css'),'utf8');
+assert(comp.includes('max="20" step="1" value="0" inputmode="numeric" aria-describedby="primaryChildrenHint"'));
+assert(js.includes("var children=numeric($('primaryChildren'),20)"));
+assert(js.includes("childField.setAttribute('aria-invalid',String(childOutOfRange))"));
+assert(css.includes('#primaryEligibility:empty { display:none; }'));
+console.log('Primary children and empty notice guard OK');
