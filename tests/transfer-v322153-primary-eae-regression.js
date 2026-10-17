@@ -1,0 +1,38 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.join(__dirname,'..');
+const html=fs.readFileSync(path.join(root,'ypologismos-morion-metathesis-protovathmia.php'),'utf8');
+const js=fs.readFileSync(path.join(root,'includes/transfer-primary.js'),'utf8');
+const rules=require('../includes/transfer-primary-eae.js');
+const core=require('../includes/transfer-calculations.js');
+let checks=0;
+function test(value,what){assert.ok(value,what);checks++;}
+function check(data,status,what){test(rules.evaluate(data).status===status,what);}
+const fields=['primaryEaeBranch','primaryEaeOrigin','primaryEaeOrganic','primaryEaeGeneralYears','primaryEaeAppointmentYears','primaryEaeExperience','primaryEaeYears','primaryEaePhd','primaryEaeMasters','primaryEaeRetraining','primaryEaePe11','primaryEaeDossier'];
+for(const f of fields) test(html.includes('id="'+f+'"'),f+' field exists');
+for(const m of ['value="region"','value="eae"','value="kedasy"']) test(html.includes(m),'mode '+m);
+test(html.includes('includes/transfer-primary-eae.js') && html.indexOf('transfer-primary-eae.js')<html.indexOf('transfer-primary.js'), 'pure rules loaded before controller');
+test(!html.includes('includes/transfer-eligibility.js')&&!html.includes('includes/transfer-documents.js')&&!html.includes('includes/transfer-ui.js'),'Secondary rules not imported');
+test(js.includes('d.channel===\'email\'') && js.includes("d.channel==='mydocs'"),'separate email and mydocs');
+test(js.includes('mydocs.minedu.gov.gr'),'official channel');
+test(!js.includes('localStorage')&&!js.includes('fetch('),'no personal data persistence or upload');
+for(const branch of ['ΠΕ60','ΠΕ61','ΠΕ70','ΠΕ71'])test(rules.permittedKedasy.includes(branch),'KEDASY permits '+branch);
+for(const branch of ['ΠΕ11','ΠΕ06','ΠΕ86','ΠΕ79.01'])check({mode:'kedasy',branch,origin:'general',generalYears:5,organic:'yes',qualifications:{masters:true}},'problem','KEDASY excludes '+branch);
+check({mode:'eae',branch:'ΠΕ60',origin:'general',generalYears:'2.99',organic:'yes',qualifications:{masters:true}},'problem','PE60 general->EAE three years required');
+check({mode:'eae',branch:'ΠΕ70',origin:'general',generalYears:3,organic:'yes',qualifications:{masters:true}},'review','PE70 legitimate qualification subject to file review');
+check({mode:'eae',branch:'ΠΕ70',origin:'general',generalYears:3,organic:'no',qualifications:{masters:true}},'problem','served organic prerequisite');
+check({mode:'kedasy',branch:'ΠΕ61',origin:'appointed-eae',appointmentAreaYears:1.99,organic:'yes'},'problem','PE61 appointment area two years required');
+check({mode:'kedasy',branch:'ΠΕ71',origin:'appointed-eae',appointmentAreaYears:2,organic:'yes'},'review','PE71 appointment served review at KEDASY');
+check({mode:'eae',branch:'ΠΕ70',origin:'general',generalYears:3,organic:'yes',qualifications:{experience:true},eaeYears:4},'problem','four years insufficient for experience-only route');
+check({mode:'eae',branch:'ΠΕ70',origin:'general',generalYears:3,organic:'yes',qualifications:{experience:true,masters:true},eaeYears:4},'review','one valid qualification prevents false rejection');
+check({mode:'eae',branch:'ΠΕ11',origin:'general',generalYears:5,organic:'yes',qualifications:{pe11:true}},'review','PE11 route accepted for EAE but needs official review');
+check({mode:'kedasy',branch:'ΠΕ11',origin:'general',generalYears:5,organic:'yes',qualifications:{pe11:true}},'problem','PE11 EAE qualification does not allow KEDASY primary');
+check({mode:'eae',branch:'ΠΕ60',origin:'unknown',qualifications:{}},'review','unknown is warning not rejection');
+test(rules.finiteYears('51')===null&&rules.finiteYears('50')===50&&rules.finiteYears('-1')===null,'50 year cap');
+const inputs={mode:'region',serviceMode:'points',serviceDirectPoints:'21,04',msdMode:'direct',msdDirectPoints:'28,52'};
+const pe60=core.calculate({...inputs,eligibleChildren:2});
+const pe70=core.calculate({...inputs,eligibleChildren:0});
+test(pe60.total===57.56 && pe70.total===49.56,'representative PE60 and PE70 scoring examples unchanged');
+console.log('PASS '+checks+' primary EAE/KEDASY isolation, legal guardrails, PE60/PE70 cases');

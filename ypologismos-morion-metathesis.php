@@ -30,6 +30,12 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
     'badges' => array('Βάση: εγκύκλιος 2026–2027 (138014/Ε2)', 'Μ.Σ.Δ.', 'Δυσπρόσιτα / ειδικές υπηρετήσεις')
   )); ?>
 
+  <!-- Only the grade switch is new on the stabilized Secondary page.
+       All Secondary form fields, data and calculations remain unchanged. -->
+  <nav aria-label="Βαθμίδα εκπαίδευσης" style="margin:12px 0 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <strong aria-current="page">Δευτεροβάθμια</strong>
+    <a href="ypologismos-morion-metathesis-protovathmia.php" style="display:inline-block;padding:9px 12px;border-radius:8px;border:1px solid #769abd">Πρωτοβάθμια — γενικές μεταθέσεις ↗</a>
+  </nav>
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('title' => 'Α. Τύπος διαδικασίας και υπηρεσιακά στοιχεία')); ?>
