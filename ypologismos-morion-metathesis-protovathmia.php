@@ -21,7 +21,7 @@ foreach ($primaryTransferBranchCodes as $code) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php require __DIR__ . '/includes/head-pwa.php'; ?>
-  <title>Μεταθέσεις εκπαιδευτικών Πρωτοβάθμιας — Γενική και ΕΑΕ</title>
+  <title>Μεταθέσεις εκπαιδευτικών Πρωτοβάθμιας — Γενική, ΕΑΕ και Διαπολιτισμικά</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-primary.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-level-switch.css'), ENT_QUOTES, 'UTF-8'); ?>">
@@ -32,14 +32,14 @@ foreach ($primaryTransferBranchCodes as $code) {
 <?php calculatorContainerStart(array('class'=>'app')); ?>
   <?php calculatorHero(array(
     'title'=>'Μεταθέσεις μόνιμων εκπαιδευτικών Πρωτοβάθμιας',
-    'intro_html'=>'Πιλοτική επέκταση για <strong>γενικές μεταθέσεις, ΕΑΕ/ΚΕΔΑΣΥ και ειδικές δομές ΕΑΕ</strong>. Κοινή μοριοδότηση και απομονωμένοι κανόνες Πρωτοβάθμιας.',
-    'badges'=>array('Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026', 'Πιλοτική Γενική + ΕΑΕ/ΚΕΔΑΣΥ + ειδικές δομές')
+    'intro_html'=>'Πιλοτική επέκταση για <strong>γενικές μεταθέσεις, ΕΑΕ/ΚΕΔΑΣΥ και Διαπολιτισμικά</strong>. Κοινός υπολογισμός όπου προβλέπεται μοριοδότηση και απομονωμένοι κανόνες Πρωτοβάθμιας.',
+    'badges'=>array('Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026', 'Πιλοτική Γενική + ΕΑΕ/ΚΕΔΑΣΥ + Διαπολιτισμικά')
   )); ?>
   <nav class="transfer-level-switch" aria-label="Επιλογή βαθμίδας">
     <strong aria-current="page">Πρωτοβάθμια</strong>
     <a href="ypologismos-morion-metathesis.php">Δευτεροβάθμια</a>
   </nav>
-  <p class="primary-transfer-notice"><strong>Σταδιακή επέκταση:</strong> υποστηρίζονται γενικές μεταθέσεις και <strong>προκαταρκτικός</strong> έλεγχος για ΕΑΕ, ΚΕΔΑΣΥ, ΕΕΕΕΚ και Σχολεία Κωφών/Τυφλών. Διαπολιτισμικά, Μειονοτικά, αμοιβαίες, όλες οι ειδικές εξαιρέσεις και οι πλήρεις υπηρεσιακές διαδικασίες <strong>δεν καλύπτονται ακόμη</strong>. Συμβουλευτείτε την εγκύκλιο και τη ΔΠΕ οργανικής.</p>
+  <p class="primary-transfer-notice"><strong>Σταδιακή επέκταση:</strong> υποστηρίζονται γενικές μεταθέσεις και <strong>προκαταρκτικός</strong> έλεγχος για ΕΑΕ, ΚΕΔΑΣΥ, ΕΕΕΕΚ και Σχολεία Κωφών/Τυφλών. Μειονοτικά, αμοιβαίες, όλες οι ειδικές εξαιρέσεις και οι πλήρεις υπηρεσιακές διαδικασίες <strong>δεν καλύπτονται ακόμη</strong>. Συμβουλευτείτε την εγκύκλιο και τη ΔΠΕ οργανικής.</p>
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('title'=>'Α. Διαδικασία και υπηρεσιακός προέλεγχος')); ?>
@@ -47,6 +47,7 @@ foreach ($primaryTransferBranchCodes as $code) {
           <select id="primaryMode">
             <option value="region" data-official-code="001.ΠΕ001">Γενική από περιοχή σε περιοχή [001.ΠΕ001]</option>
             <option value="eae" data-official-code="001.ΣΜΚΔ001">ΣΜΕΑΕ–ΕΕΕΕΚ [001.ΣΜΚΔ001] — προέλεγχος ΣΜΕΑΕ</option>
+            <option value="intercultural" data-official-code="002.ΔΙΑΠ001">Διαπολιτισμικά Σχολεία [002.ΔΙΑΠ001]</option>
             <option value="kedasy" data-official-code="001.ΣΜΚΔ001.ΚΔΣ">ΚΕΔΑΣΥ [001.ΣΜΚΔ001.ΚΔΣ]</option>
             <option value="eeeek" data-official-code="001.ΣΜΚΔ001">ΣΜΕΑΕ–ΕΕΕΕΚ [001.ΣΜΚΔ001] — προέλεγχος ΕΕΕΕΚ</option>
             <option value="deaf" data-official-code="001.ΣΜΕΑ003">ΕΝΓ/Braille [001.ΣΜΕΑ003] — Σχολείο Κωφών</option>
@@ -54,6 +55,15 @@ foreach ($primaryTransferBranchCodes as $code) {
           </select>
         </div>
         <p class="field-hint">Οι κωδικοί εμφανίζονται δίπλα στον τύπο, όπως στο επίσημο σύστημα. Οι ξεχωριστές επιλογές ΕΕΕΕΚ / Κωφών / Τυφλών είναι προέλεγχοι προορισμού, όχι πρόσθετοι αυτοτελείς τύποι ηλεκτρονικών αιτήσεων.</p>
+        <?php calculatorDisclosure(array(
+          'id' => 'primaryMultipleApplicationsHelp',
+          'summary' => 'Μπορώ να υποβάλω περισσότερες από μία αιτήσεις μετάθεσης;',
+          'html' => '<p><strong>Ναι</strong>, εφόσον πληροίτε τις προϋποθέσεις κάθε διαδικασίας. Μπορείτε να υποβάλετε χωριστές αιτήσεις, για παράδειγμα για ΕΑΕ/ΚΕΔΑΣΥ, Διαπολιτισμικά ή μετάθεση από περιοχή σε περιοχή.</p>'
+            . '<p>Οι μεταθέσεις εξετάζονται με τη σειρά: <strong>ΚΕΔΑΣΥ και περιοχές ΕΑΕ → Διαπολιτισμικά → από περιοχή σε περιοχή → αμοιβαίες</strong>. Αν ικανοποιηθεί αίτηση προηγούμενης κατηγορίας, η αίτηση επόμενης κατηγορίας δεν εξετάζεται.</p>'
+            . '<p><strong>Προσοχή:</strong> Η οριστική τοποθέτηση/βελτίωση είναι διαφορετικός τύπος αίτησης. Εκπαιδευτικοί με οργανική σε ΕΑΕ ή Διαπολιτισμικό Σχολείο που ζητούν μετάθεση σε σχολείο Γενικής της ίδιας περιοχής υποβάλλουν αίτηση <strong>«από περιοχή σε περιοχή»</strong> και όχι βελτίωσης, με τις προβλεπόμενες υπηρεσιακές προϋποθέσεις.</p>'
+            . '<p><strong>Αμοιβαίες μεταθέσεις:</strong> πρόκειται για χωριστή διαδικασία, με αίτηση μέσα σε <strong>15 ημέρες από την ανακοίνωση των μεταθέσεων</strong>. Τα Μειονοτικά Σχολεία ΠΕ73 έχουν ιδιαίτερη διαδικασία, η οποία δεν καλύπτεται ακόμη από την παρούσα φόρμα.</p>'
+            . '<p class="small-note">Πηγή: <a href="https://www.minedu.gov.gr/site/71034-15-10-26-metatheseis-ekpaideutikon-protobathmias-ekpaideuses-scholikou-etous-2026-2027" target="_blank" rel="noopener noreferrer">Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026 ↗</a>, Μέρος Α΄ Κεφ. Α΄ §1.1 και Μέρος Γ΄ Κεφ. Δ΄ §4, Κεφ. Ζ΄ §9.</p>'
+        )); ?>
         <div id="primaryGeneralOrganicField" class="field"><label for="primaryOrganic">Υπηρέτηση οργανικής θέσης έως 31/08/2027</label>
           <select id="primaryOrganic">
             <option value="unknown">Δεν γνωρίζω / απαιτείται έλεγχος</option>
@@ -135,11 +145,56 @@ foreach ($primaryTransferBranchCodes as $code) {
             <p>Για ΚΕΔΑΣΥ Πρωτοβάθμιας προβλέπονται ΠΕ60, ΠΕ61, ΠΕ70, ΠΕ71· για ΕΕΕΕΚ ΠΕ71 και ΠΕ70 με εξειδίκευση ΕΑΕ. Στα Σχολεία Κωφών απαιτείται πιστοποιημένη ΕΝΓ και στα Σχολεία Τυφλών πιστοποιημένη γραφή Braille (παρ. 3–5). Ο προέλεγχος δεν αποφασίζει για αναγνώριση τίτλων, συνάφεια, υπολογισμό ημερών ή εξαιρέσεις.</p>
           </details>
         </div>
+        <div id="primaryInterculturalFields" hidden>
+          <h3>Β.2 Προέλεγχος μετάθεσης σε Διαπολιτισμικό Σχολείο</h3>
+          <p class="small-note">Εγκύκλιος 138023/Ε2/15-10-2026, Μέρος Τρίτο, Κεφ. Δ΄. Η επιλογή γίνεται βάσει προσόντων και οργανικών κενών, <strong>όχι μορίων μετάθεσης</strong>.</p>
+          <div class="field"><label for="primaryInterVacancyBranch">Κλάδος / ειδικότητα — οργανικά κενά Π.Ε. 2026–2027</label>
+            <select id="primaryInterVacancyBranch"><option value="">Επιλέξτε κλάδο με προκηρυγμένη οργανική θέση</option></select>
+          </div>
+          <div id="primaryInterVacancySchoolField" class="field" hidden><label for="primaryInterVacancySchool">Σχολείο με οργανικό κενό στον κλάδο</label>
+            <select id="primaryInterVacancySchool"><option value="">Επιλέξτε σχολείο</option></select>
+          </div>
+          <p id="primaryInterVacancySummary" class="small-note" role="status" aria-live="polite">Επιλέξτε κλάδο και σχολείο από τα οργανικά κενά Διαπολιτισμικών Πρωτοβάθμιας.</p>
+          <p class="small-note">Πηγή: «ΟΡΓΑΝΙΚΑ ΚΕΝΑ ΔΙΑΠΟΛΙΤΙΣΜΙΚΑ ΠΕ 2026–2027» (συνημμένος πίνακας): <strong>16 κενά σε 6 σχολικές μονάδες</strong>. Η κοινή γραμμή <strong>ΠΕ70+ΠΕ71 (13 κενά)</strong> δεν αθροίζεται χωριστά για κάθε κλάδο. Η γλώσσα του αρχείου είναι πληροφοριακή, όχι αυτόματη πιστοποίηση γλωσσικού προσόντος. Επαληθεύστε τυχόν μεταβολές στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">επίσημο σύστημα ↗</a>.</p>
+          <div class="field"><label for="primaryInterOrganic">Υπηρέτηση οργανικής θέσης έως 31/08/2027</label>
+            <select id="primaryInterOrganic"><option value="unknown">Χρειάζεται έλεγχος</option><option value="yes">Συμπληρώνω ένα έτος</option><option value="no">Δεν συμπληρώνω ένα έτος</option></select>
+          </div>
+          <div class="field"><label for="primaryInterCurrent">Ήδη υπηρετώ σε Διαπολιτισμικό Σχολείο και ζητώ άλλο</label>
+            <select id="primaryInterCurrent"><option value="no">Όχι</option><option value="yes">Ναι</option></select>
+          </div>
+          <div class="field" id="primaryInterCurrentYearsField" hidden><label for="primaryInterCurrentYears">Έτη υπηρεσίας στο Διαπολιτισμικό (0–50)</label><input id="primaryInterCurrentYears" type="number" min="0" max="50" step="0.01" placeholder="π.χ. 2"></div>
+          <div class="field"><label for="primaryInterInclusion">Η προκηρυχθείσα θέση αφορά Τμήμα Ένταξης;</label>
+            <select id="primaryInterInclusion"><option value="no">Όχι</option><option value="yes">Ναι</option><option value="unknown">Δεν γνωρίζω</option></select>
+          </div>
+          <div class="field" id="primaryInterEaeQualificationField" hidden><label for="primaryInterEaeQualification">Προσόντα ΕΑΕ για Τμήμα Ένταξης</label>
+            <select id="primaryInterEaeQualification"><option value="unknown">Δεν έχει ακόμη επιβεβαιωθεί</option><option value="yes">Διαθέτω προβλεπόμενη εξειδίκευση ΕΑΕ (προς επαλήθευση)</option><option value="no">Δεν διαθέτω προβλεπόμενη εξειδίκευση</option></select>
+          </div>
+          <fieldset class="primary-eae-qualifications" id="primaryInterQualFieldset"><legend><strong>Πρόσθετα προσόντα προτεραιότητας</strong> — δηλώστε μόνο όσα τεκμηριώνονται</legend>
+            <label><input type="checkbox" data-primary-inter-qual="origin-language"> Γλώσσα προέλευσης πλειονότητας μαθητών (με ειδική εξαίρεση)</label>
+            <label><input type="checkbox" data-primary-inter-qual="greek-second"> Διδασκαλία ελληνικής ως δεύτερης/ξένης γλώσσας</label>
+            <label><input type="checkbox" data-primary-inter-qual="inter-studies"> Μετεκπαίδευση ή μεταπτυχιακές σπουδές Διαπολιτισμικής Αγωγής</label>
+            <label><input type="checkbox" data-primary-inter-qual="education-studies"> Σπουδές επιστημών αγωγής</label>
+            <label><input type="checkbox" data-primary-inter-qual="subject-studies"> Σπουδές στο διδακτικό αντικείμενο</label>
+            <label><input type="checkbox" data-primary-inter-qual="inter-experience"> Διδακτική εμπειρία σε Διαπολιτισμικά Σχολεία</label>
+            <label><input type="checkbox" data-primary-inter-qual="reception-experience"> Διδακτική εμπειρία σε Τάξεις Υποδοχής/Φροντιστηριακά Τμήματα</label>
+            <label><input type="checkbox" data-primary-inter-qual="international-language"> Διεθνής γλώσσα (Αγγλικά, Γαλλικά, Γερμανικά)</label>
+            <label><input type="checkbox" data-primary-inter-qual="seminars"> Προβλεπόμενα σεμινάρια Διαπολιτισμικής Εκπαίδευσης</label>
+          </fieldset>
+          <div class="field"><label for="primaryInterDossier">Φάκελος προσόντων για Διαπολιτισμικά</label>
+            <select id="primaryInterDossier"><option value="unknown">Δεν γνωρίζω αν χρειάζεται συμπληρωματική υποβολή</option><option value="previous">Έχει ήδη υποβληθεί φάκελος 2025–26 χωρίς νέα στοιχεία</option><option value="new">Πρώτη υποβολή ή υπάρχουν νέα/συμπληρωματικά στοιχεία</option></select>
+          </div>
+          <div class="primary-eae-status" id="primaryInterStatus" data-status="review" role="status" aria-live="polite"></div>
+          <details><summary>Νομική βάση, σειρά προσόντων και αποδεικτικά</summary>
+            <p>Η εγκύκλιος απαριθμεί τα πρόσθετα προσόντα κατά σειρά προτεραιότητας. Η δήλωσή τους δεν αποτελεί αυτόματη θεμελίωση ή κατάταξη. Για σχολεία με πλειονότητα μαθητών Ρομά δεν απαιτείται γνώση ξένης γλώσσας βάσει της ειδικής εξαίρεσης. Για θέση Τμήματος Ένταξης απαιτούνται και οι προβλεπόμενες προϋποθέσεις ΕΑΕ.</p>
+            <p>Για ξενόγλωσσους τίτλους: αναγνώριση και επίσημη μετάφραση. Για διδακτορικό: περίληψη διατριβής. Για μεταπτυχιακό: αναλυτική βαθμολογία και περίληψη εργασίας, εφόσον υπάρχει. Για δημοσιεύσεις: εξώφυλλο και πρώτη σελίδα. <strong>Δεν προσκομίζεται βιογραφικό σημείωμα.</strong> Ελέγξτε τα διαθέσιμα οργανικά κενά.</p>
+          </details>
+        </div>
         <details><summary>Σημαντικές προθεσμίες και εξαιρέσεις</summary>
           <p>Ηλεκτρονική αίτηση: <strong>16/10 έως 02/11/2026</strong> στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">επίσημο μητρώο</a>. Μέχρι την ίδια ημερομηνία αποστέλλονται τα συνήθη δικαιολογητικά.</p>
           <p>Ανάκληση αίτησης έως 31/12/2026. Οι αμοιβαίες μεταθέσεις ακολουθούν ξεχωριστή προθεσμία 15 ημερών από την ανακοίνωση των μεταθέσεων. Εξαιρέσεις για νεογέννητα και ειδικές κατηγορίες περιγράφονται στην εγκύκλιο.</p>
         </details>
       <?php calculatorCardEnd(); ?>
+      <div id="primaryScoringCard">
       <?php calculatorCardStart(array('title'=>'Β. Μονάδες μετάθεσης')); ?>
         <p class="small-note">Τα μόρια προϋπηρεσίας και οι Μ.Σ.Δ. καταχωρίζονται χωριστά όπως στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">επίσημο μητρώο</a>. Δεν αθροίζονται διπλά οι υπηρετήσεις.</p>
         <div class="field"><label for="primaryServiceMode">Καταχώριση συνολικής υπηρεσίας</label>
@@ -167,8 +222,9 @@ foreach ($primaryTransferBranchCodes as $code) {
         <details><summary>Οδηγίες για τα κριτήρια</summary><p>Συνυπηρέτηση: ελέγξτε τον τύπο απασχόλησης συζύγου και τις ειδικές εξαιρέσεις της εγκυκλίου, πριν επιλέξετε το κριτήριο. Εντοπιότητα: απαιτείται η νόμιμη διετία δημοτικότητας· η απλή κατοικία δεν αρκεί. Τα οικογενειακά μόρια εξαρτώνται από τις ακριβείς περιπτώσεις που προβλέπει το ισχύον πλαίσιο.</p></details>
         <p id="primaryValidation" role="status" aria-live="polite" class="field-hint"></p>
       <?php calculatorCardEnd(); ?>
+      </div>
       <?php calculatorCardStart(array('title'=>'Γ. Προσωπική λίστα δικαιολογητικών')); ?>
-        <p class="small-note">Οι υπηρεσιακοί και αυτεπάγγελτοι έλεγχοι εμφανίζονται ενημερωτικά· checkbox έχουν μόνο ενέργειες προετοιμασίας. Οι τίτλοι ΕΑΕ υποβάλλονται μέσω mydocs, μόνο όταν απαιτείται νέος ή συμπληρωματικός φάκελος.</p>
+        <p class="small-note">Οι υπηρεσιακοί και αυτεπάγγελτοι έλεγχοι εμφανίζονται ενημερωτικά· checkbox έχουν μόνο ενέργειες προετοιμασίας. Οι τίτλοι ΕΑΕ και τα προσόντα Διαπολιτισμικών υποβάλλονται μέσω mydocs μόνο όταν απαιτείται νέος ή συμπληρωματικός φάκελος.</p>
         <div id="primaryChecklist" aria-live="polite"></div>
         <p id="primaryChecklistProgress" role="status" aria-live="polite"></p>
       <?php calculatorCardEnd(); ?>
@@ -212,7 +268,7 @@ foreach ($primaryTransferBranchCodes as $code) {
       <p class="primary-transfer-notice"><strong>Προκαταρκτικός οδηγός:</strong> η Εργαλειοθήκη δεν υποκαθιστά το ΥΠΑΙΘΑ, τη ΔΠΕ ή τη νομοθεσία και δεν ελέγχει ακόμη όλες τις ειδικές κατηγορίες ή υπηρεσιακές εξαιρέσεις. Οι μονάδες στο επίσημο μητρώο υπερισχύουν.</p>
     <?php calculatorMainEnd(); ?>
     <?php calculatorResultsStart(array('aria_live'=>'polite')); ?>
-      <div class="primary-score-section"><h2>Ενδεικτική μοριοδότηση</h2><div class="primary-total" id="primaryTotal">—</div>
+      <div class="primary-score-section" id="primaryScoreResults"><h2 id="primaryScoreHeading">Ενδεικτική μοριοδότηση</h2><div class="primary-total" id="primaryTotal">—</div>
         <p id="primaryTotalStatus" role="status" aria-live="polite">Συμπληρώστε τα μόρια από το μητρώο.</p>
         <div id="primaryBreakdown"></div></div>
     <?php calculatorResultsEnd(); ?>
@@ -232,6 +288,8 @@ window.EducationTransferPrimarySpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-eae.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-email-component.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-intercultural.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-intercultural-vacancies.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

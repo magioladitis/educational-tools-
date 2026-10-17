@@ -26,3 +26,7 @@
 
 /* The actionable email row is displayed only when an email submission is appropriate. */
 #primaryMailAction[hidden], #primaryDpeField[hidden] { display: none !important; }
+
+#primaryScoringCard[hidden], #primaryInterculturalFields[hidden], #primaryInterCurrentYearsField[hidden], #primaryInterEaeQualificationField[hidden] {display:none!important;}
+
+#primaryInterVacancySchoolField[hidden] {display:none!important;}

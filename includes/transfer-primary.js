@@ -3,7 +3,9 @@
   'use strict';
   var scoring = global.EducationTransfer;
   var eae = global.EducationTransferPrimaryEae;
-  if (!scoring || !eae) return;
+  var intercultural = global.EducationTransferPrimaryIntercultural;
+  var interVacancies = global.EducationTransferPrimaryInterculturalVacancies;
+  if (!scoring || !eae || !intercultural || !interVacancies) return;
   var $ = function (id) { return document.getElementById(id); };
   if (!$('primaryMode')) return;
   var checkedDocs = {};
@@ -14,13 +16,21 @@
   function mydocs(id,title,desc) { return {id:id, title:title,desc:desc,channel:'mydocs',action:true}; }
   function buildDocuments() {
     var mode=$('primaryMode').value;
-    var docs=[info('registry','Υπηρεσιακό μητρώο και μονάδες','Έλεγχος στο επίσημο μητρώο — χωρίς αποστολή')];
-    if (Number($('primaryChildren').value)>0 || $('primaryFamily').checked) {
+    var docs=mode==='intercultural'?[]:[info('registry','Υπηρεσιακό μητρώο και μονάδες','Έλεγχος στο επίσημο μητρώο — χωρίς αποστολή')];
+    if (mode!=='intercultural' && (Number($('primaryChildren').value)>0 || $('primaryFamily').checked)) {
       docs.push(info('family','Πιστοποιητικό οικογενειακής κατάστασης','Αυτεπάγγελτα από ΔΠΕ — δεν το προσκομίζετε'));
     }
-    if ($('primaryChildrenExtra').checked && Number($('primaryChildren').value)>0) docs.push(action('children','Συμπληρωματικά στοιχεία τέκνων','Email στη ΔΠΕ οργανικής — μόνο όπου δεν επαρκεί η αυτεπάγγελτη αναζήτηση / απαιτείται ειδικό αποδεικτικό'));
-    if ($('primaryCoservice').checked) docs.push(action('coservice','Δικαιολογητικά συνυπηρέτησης','Αποστολή με email στη ΔΠΕ οργανικής — όπου απαιτούνται αποδεικτικά'));
-    if ($('primaryLocality').checked) docs.push(info('locality','Εντοπιότητα','Αυτεπάγγελτη αναζήτηση πιστοποιητικού δημοτικότητας/γέννησης από ΔΠΕ, όπου περιέχεται η ημερομηνία κτήσης δημοτικότητας· επιβεβαιώστε τα στοιχεία'));
+    if(mode!=='intercultural' && $('primaryChildrenExtra').checked && Number($('primaryChildren').value)>0) docs.push(action('children','Συμπληρωματικά στοιχεία τέκνων','Email στη ΔΠΕ οργανικής — μόνο όπου δεν επαρκεί η αυτεπάγγελτη αναζήτηση / απαιτείται ειδικό αποδεικτικό'));
+    if(mode!=='intercultural' && $('primaryCoservice').checked) docs.push(action('coservice','Δικαιολογητικά συνυπηρέτησης','Αποστολή με email στη ΔΠΕ οργανικής — όπου απαιτούνται αποδεικτικά'));
+    if(mode!=='intercultural' && $('primaryLocality').checked) docs.push(info('locality','Εντοπιότητα','Αυτεπάγγελτη αναζήτηση πιστοποιητικού δημοτικότητας/γέννησης από ΔΠΕ, όπου περιέχεται η ημερομηνία κτήσης δημοτικότητας· επιβεβαιώστε τα στοιχεία'));
+    if(mode==='intercultural'){
+      var existing=$('primaryInterDossier').value;
+      var chosenQuals=interQualifications();
+      if(existing==='unknown' && chosenQuals.length)docs.push(info('inter-dossier-review','Προηγούμενος φάκελος Διαπολιτισμικών','Ελέγξτε εάν απαιτείται νέα ή συμπληρωματική υποβολή.'));
+      if(existing==='new')chosenQuals.forEach(function(k){docs.push(mydocs('inter-'+k,intercultural.qualificationNames[k],'Υποβολή μέσω mydocs — μόνο για νέα ή συμπληρωματικά αποδεικτικά προσόντων.'));});
+      if($('primaryInterInclusion').value==='yes' && $('primaryInterEaeQualification').value==='yes')docs.push(info('inter-inclusion-eae','Προσόντα ΕΑΕ για Τμήμα Ένταξης','Επαληθεύστε εάν ο σχετικός φάκελος ΕΑΕ απαιτεί συμπλήρωση.'));
+      return docs;
+    }
     if(mode!=='region') {
       var origin=$('primaryEaeOrigin').value;
       var dossier=$('primaryEaeDossier').value;
@@ -81,13 +91,14 @@
     if(!Number.isFinite(n)|| n<0 || n>max || !Number.isInteger(n))return null;
     return n;
   }
+  function interQualifications(){return Array.from(document.querySelectorAll('[data-primary-inter-qual]:checked')).map(function(el){return el.getAttribute('data-primary-inter-qual');});}
   function qualifications(){
     return {phd:$('primaryEaePhd').checked,masters:$('primaryEaeMasters').checked,
       retraining:$('primaryEaeRetraining').checked,experience:$('primaryEaeExperience').checked,pe11:$('primaryEaePe11').checked};
   }
   function updateEaePrecheck(){
     var mode=$('primaryMode').value;
-    $('primaryEaeFields').hidden=mode==='region';
+    $('primaryEaeFields').hidden=mode==='region'||mode==='intercultural';
     $('primaryGeneralOrganicField').hidden=mode!=='region';
     $('primaryEligibility').hidden=mode!=='region';
     $('primaryKedasyGeoNote').hidden=mode!=='kedasy';
@@ -95,7 +106,7 @@
     $('primaryEaeCertificationField').hidden=!isCertificate;
     $('primaryEaeCertificationDossierField').hidden=!isCertificate || $('primaryEaeCertification').value!=='yes';
     $('primaryEaeCertificationLabel').textContent=mode==='deaf'?'Πιστοποιημένη γνώση Ελληνικής Νοηματικής Γλώσσας (ΕΝΓ)':'Πιστοποιημένη γνώση γραφής Braille';
-    if(mode==='region')return;
+    if(mode==='region'||mode==='intercultural')return;
     var origin=$('primaryEaeOrigin').value;
     $('primaryEaeGeneralYearsField').hidden=origin!=='general';
     $('primaryEaeAppointmentYearsField').hidden=origin!=='appointed-eae';
@@ -113,11 +124,64 @@
     $('primaryEaeEligibility').innerHTML='<strong>'+escapeText(labels[outcome.status])+'</strong>'+
       (list.length?'<ul>'+list.map(function(x){return '<li>'+escapeText(x)+'</li>';}).join('')+'</ul>':'');
   }
+  function updateInterculturalVacancies(){
+    var branchSelect=$('primaryInterVacancyBranch');
+    var schoolSelect=$('primaryInterVacancySchool');
+    if(!branchSelect.dataset.initialized){
+      var names=global.EducationTransferPrimarySpecialtyLabels||{};
+      interVacancies.branches().forEach(function(item){
+        var opt=document.createElement('option');opt.value=item.code;
+        var title=names[item.code] || (item.code==='ΠΕ70'?'Δάσκαλοι':item.code==='ΠΕ71'?'Δάσκαλοι ΕΑΕ':'');
+        opt.textContent=item.code+(title?' — '+title:'')+' ('+item.positions+(item.shared?' κοινά κενά ΠΕ70+ΠΕ71':' κενά')+')';
+        branchSelect.appendChild(opt);
+      });
+      branchSelect.dataset.initialized='yes';
+    }
+    var branch=branchSelect.value;
+    var entries=interVacancies.schoolsForBranch(branch);
+    if(schoolSelect.dataset.branch!==branch){
+      schoolSelect.replaceChildren(new Option('Επιλέξτε σχολείο',''));
+      entries.forEach(function(item){schoolSelect.add(new Option(item.school+' ('+item.vacancies+' θέσ'+(item.vacancies===1?'η':'εις')+')',item.school));});
+      schoolSelect.dataset.branch=branch;
+    }
+    $('primaryInterVacancySchoolField').hidden=!branch;
+    var selected=entries.find(function(row){return row.school===schoolSelect.value;});
+    var summary=$('primaryInterVacancySummary');
+    if(!branch){summary.textContent='Επιλέξτε κλάδο και σχολείο από τις 16 καταγεγραμμένες οργανικές θέσεις Διαπολιτισμικών Π.Ε. 2026–2027.';return;}
+    if(!entries.length){summary.textContent='Δεν καταγράφεται οργανικό κενό για τον επιλεγμένο κλάδο στον παρεχόμενο πίνακα.';return;}
+    var total=entries.reduce(function(sum,row){return sum+row.vacancies;},0);
+    var shared=branch==='ΠΕ70'||branch==='ΠΕ71';
+    summary.textContent=selected?
+      selected.school+' — '+selected.directorate+' · '+selected.vacancies+' '+(selected.vacancies===1?'οργανικό κενό':'οργανικά κενά')+
+      ' · Γλώσσα σχολείου στον πίνακα: '+selected.language+(shared?' · Κοινή κατηγορία ΠΕ70+ΠΕ71.':''):
+      entries.length+' σχολεία · '+total+(shared?' ΚΟΙΝΑ κενά για ΠΕ70+ΠΕ71 — όχι '+total+' ανά κλάδο.':' οργανικά κενά στον κλάδο.')+' Επιλέξτε σχολείο.';
+  }
+  function updateIntercultural(){
+    var active=$('primaryMode').value==='intercultural';
+    $('primaryInterculturalFields').hidden=!active;
+    if(!active)return;
+    updateInterculturalVacancies();
+    $('primaryInterCurrentYearsField').hidden=$('primaryInterCurrent').value!=='yes';
+    $('primaryInterEaeQualificationField').hidden=$('primaryInterInclusion').value!=='yes';
+    var outcome=intercultural.evaluate({organic:$('primaryInterOrganic').value,
+      current:$('primaryInterCurrent').value,currentYears:$('primaryInterCurrentYears').value,
+      inclusion:$('primaryInterInclusion').value,eaeQualification:$('primaryInterEaeQualification').value,
+      qualifications:interQualifications()});
+    var label={problem:'⚠ Προϋπόθεση που δεν πληρούται',review:'ⓘ Απαιτείται επαλήθευση',positive:'✓ Θετικός προκαταρκτικός έλεγχος'};
+    $('primaryInterStatus').setAttribute('data-status',outcome.status);
+    $('primaryInterStatus').innerHTML='<strong>'+escapeText(label[outcome.status])+'</strong><ul>'+
+      outcome.problems.concat(outcome.checks).map(function(x){return '<li>'+escapeText(x)+'</li>';}).join('')+'</ul>';
+  }
   function update() {
     // Official application codes from the Primary Education application list.
     // EEEEK shares the SΜΚΔ application with SΜΕΑΕ; Deaf/Blind shares the language-specialization application.
     // This is a UI reference, NOT an alternate electronic filing path.
     updateEaePrecheck();
+    updateIntercultural();
+    var interculturalMode=$('primaryMode').value==='intercultural';
+    $('primaryScoringCard').hidden=interculturalMode;
+    $('primaryChecklist').closest('section.card').querySelector('h2').textContent=(interculturalMode?'Β.':'Γ.')+' Προσωπική λίστα δικαιολογητικών';
+    $('primaryScoreHeading').textContent=interculturalMode?'Κρίση βάσει προσόντων':'Ενδεικτική μοριοδότηση';
     var mode=$('primaryServiceMode').value;
     $('primaryServicePointsPanel').hidden=mode!=='points';
     $('primaryServiceDurationPanel').hidden=mode!=='direct';
@@ -133,10 +197,10 @@
     if (!$('primaryMsd').value.trim() || (mode==='points' && !$('primaryServicePoints').value.trim())) numericValid=false;
     var result=numericValid?scoring.calculate(raw):null;
     var valid=!!result && result.serviceInputValid && result.msdInputValid;
-    $('primaryTotal').textContent=valid?format(result.total):'—';
-    $('primaryTotalStatus').textContent=valid?'Πληροφοριακό αποτέλεσμα — ελέγξτε τα κριτήρια και το επίσημο μητρώο.':'Συμπληρώστε έγκυρα στοιχεία (έως 2 δεκαδικά, Μ.Σ.Δ. έως 1.000 και προϋπηρεσία έως 125).';
-    $('primaryValidation').textContent=!valid?'Δεν εμφανίζεται σύνολο όσο λείπουν ή είναι άκυρα βασικά αριθμητικά πεδία.':'';
-    $('primaryBreakdown').innerHTML=valid?[
+    $('primaryTotal').textContent=interculturalMode?'—':valid?format(result.total):'—';
+    $('primaryTotalStatus').textContent=interculturalMode?'Δεν εφαρμόζεται μοριοδότηση. Η μετάθεση εξετάζεται βάσει προσόντων και διαθέσιμων οργανικών κενών.':valid?'Πληροφοριακό αποτέλεσμα — ελέγξτε τα κριτήρια και το επίσημο μητρώο.':'Συμπληρώστε έγκυρα στοιχεία (έως 2 δεκαδικά, Μ.Σ.Δ. έως 1.000 και προϋπηρεσία έως 125).';
+    $('primaryValidation').textContent=interculturalMode?'':!valid?'Δεν εμφανίζεται σύνολο όσο λείπουν ή είναι άκυρα βασικά αριθμητικά πεδία.':'';
+    $('primaryBreakdown').innerHTML=!interculturalMode&&valid?[
       ['Συνολική υπηρεσία',result.servicePoints],['Μονάδες συνθηκών διαβίωσης',result.msdPoints],
       ['Συνυπηρέτηση',result.coServicePoints],['Οικογενειακοί λόγοι',result.familyPoints],
       ['Εντοπιότητα',result.localityPoints],['Πρώτη προτίμηση',result.firstPreferencePoints]
@@ -166,7 +230,8 @@
       kedasy:'μετάθεση σε ΚΕΔΑΣΥ',
       eeeek:'μετάθεση σε ΣΜΕΑΕ–ΕΕΕΕΚ',
       deaf:'μετάθεση με εξειδίκευση στην ΕΝΓ',
-      blind:'μετάθεση με εξειδίκευση στη γραφή Braille'
+      blind:'μετάθεση με εξειδίκευση στη γραφή Braille',
+      intercultural:'μετάθεση σε Διαπολιτισμικό Σχολείο'
     };
     var typ=labels[$('primaryMode').value]||labels.region;
     return {
@@ -180,23 +245,25 @@
     var email=messageParts(docs);
     var hasActions=email.actions.length>0;
     var mydocActions=docs.filter(function(d){return d.action && d.channel==='mydocs';});
+    var isIntercultural=$('primaryMode').value==='intercultural';
     var special=!email.general;
     var hasMydocs=mydocActions.length>0;
     $('primaryMydocsLink').hidden=!special;
+    $('primaryMydocsLink').innerHTML='<a href="https://mydocs.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">mydocs ΥΠΑΙΘΑ ↗</a> — για προσόντα '+(isIntercultural?'Διαπολιτισμικών':'ΕΑΕ')+' όταν απαιτείται νέος/συμπληρωματικός φάκελος.';
     $('primaryMydocsNotice').hidden=!hasMydocs;
-    $('primaryMydocsNotice').textContent=hasMydocs?'Έχετε '+mydocActions.length+' δικαιολογητικό/ά προσόντων ΕΑΕ για υποβολή στο mydocs.minedu.gov.gr (όχι με email). Δεν επανυποβάλλονται ήδη κατατεθειμένα στοιχεία.':'';
+    $('primaryMydocsNotice').textContent=hasMydocs?'Έχετε '+mydocActions.length+' δικαιολογητικό/ά προσόντων '+(isIntercultural?'Διαπολιτισμικών':'ΕΑΕ')+' για υποβολή στο mydocs.minedu.gov.gr (όχι με email). Δεν επανυποβάλλονται ήδη κατατεθειμένα στοιχεία.':'';
     var sharedState=global.EducationTransferEmailComponent?global.EducationTransferEmailComponent.stateCopy(hasActions?'email':hasMydocs?'mydocs':'optional'):null;
     $('primaryEmailHeading').textContent=sharedState?sharedState.title:hasActions?'Έτοιμο email υποβολής δικαιολογητικών':hasMydocs?'Έτοιμο υπόδειγμα υποβολής μέσω mydocs':'Υπόδειγμα μηνύματος — αν χρειαστεί';
-    $('primaryEmailLead').textContent=hasActions?'Δημιουργήστε θέμα και σώμα μηνύματος για τα δικαιολογητικά μοριοδότησης που αποστέλλονται στη ΔΠΕ οργανικής.':hasMydocs?'Τα προσόντα ΕΑΕ υποβάλλονται μέσω mydocs όταν απαιτείται νέος ή συμπληρωματικός φάκελος — όχι με email.':'Δεν προκύπτει αυτή τη στιγμή δικαιολογητικό για αποστολή με email. Το υπόδειγμα παραμένει διαθέσιμο για προεπισκόπηση.';
+    $('primaryEmailLead').textContent=isIntercultural?'Τα προσόντα Διαπολιτισμικών υποβάλλονται μέσω mydocs, όταν απαιτείται νέος/συμπληρωματικός φάκελος. Δεν αποστέλλονται δικαιολογητικά μοριοδότησης.':hasActions?'Δημιουργήστε θέμα και σώμα μηνύματος για τα δικαιολογητικά μοριοδότησης που αποστέλλονται στη ΔΠΕ οργανικής.':hasMydocs?'Τα προσόντα ΕΑΕ υποβάλλονται μέσω mydocs όταν απαιτείται νέος ή συμπληρωματικός φάκελος — όχι με email.':'Δεν προκύπτει αυτή τη στιγμή δικαιολογητικό για αποστολή με email. Το υπόδειγμα παραμένει διαθέσιμο για προεπισκόπηση.';
     $('primaryEmailOpen').textContent=sharedState?sharedState.button:hasActions?'Δημιουργία email υποβολής':hasMydocs?'Προετοιμασία κειμένου για mydocs':'Προβολή προαιρετικού υποδείγματος';
-    $('primarySubmissionInstruction').textContent=email.general?'Γενική μετάθεση: δικαιολογητικά μέσω email στη ΔΠΕ οργανικής, εφόσον απαιτούνται.':'ΕΑΕ: τα αποδεικτικά μοριοδότησης αποστέλλονται με email στη ΔΠΕ οργανικής, ενώ τα αποδεικτικά προσόντων υποβάλλονται στο mydocs μόνο όπου απαιτείται νέα/συμπληρωματική υποβολή.';
-    $('primaryTemplateNote').textContent=email.general?'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.1.':'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.5. Στο mydocs το σώμα μπορεί να χρησιμοποιηθεί ως κείμενο «Αιτούμαι».';
+    $('primarySubmissionInstruction').textContent=isIntercultural?'Διαπολιτισμικά: μόνο τα δικαιολογητικά προσόντων μέσω mydocs, όταν απαιτείται νέος/συμπληρωματικός φάκελος· όχι μοριοδότηση και όχι email.':email.general?'Γενική μετάθεση: δικαιολογητικά μέσω email στη ΔΠΕ οργανικής, εφόσον απαιτούνται.':'ΕΑΕ: τα αποδεικτικά μοριοδότησης αποστέλλονται με email στη ΔΠΕ οργανικής, ενώ τα αποδεικτικά προσόντων υποβάλλονται στο mydocs μόνο όπου απαιτείται νέα/συμπληρωματική υποβολή.';
+    $('primaryTemplateNote').textContent=isIntercultural?'Το θέμα και το σώμα ακολουθούν τη σειρά της §2.2.5 για υποβολή μέσω mydocs.':email.general?'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.1.':'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.5. Στο mydocs το σώμα μπορεί να χρησιμοποιηθεί ως κείμενο «Αιτούμαι».';
     $('primaryEmailSource').textContent='Πηγή: εγκύκλιος μεταθέσεων Π.Ε. 138023/Ε2/15-10-2026, §'+(email.general?'2.2.1':'2.2.5')+'. Το υπόδειγμα δεν αντικαθιστά ειδικές διαδικασίες ή προηγούμενο φάκελο.';
     $('primaryDpeField').hidden=email.general;
     $('primaryEmailSubject').textContent=email.subject;
     $('primaryEmailBody').textContent=email.body;
-    $('primaryMailAction').hidden=!hasActions;
-    $('primaryOpenMail').href=hasActions?(global.EducationTransferEmailComponent?global.EducationTransferEmailComponent.mailto(email):'mailto:?subject='+encodeURIComponent(email.subject)+'&body='+encodeURIComponent(email.body)):'#';
+    $('primaryMailAction').hidden=!hasActions || isIntercultural;
+    $('primaryOpenMail').href=hasActions&&!isIntercultural?(global.EducationTransferEmailComponent?global.EducationTransferEmailComponent.mailto(email):'mailto:?subject='+encodeURIComponent(email.subject)+'&body='+encodeURIComponent(email.body)):'#';
   }
   function legacyCopy(text){
     var node=document.createElement('textarea');node.value=text;node.setAttribute('readonly','');
