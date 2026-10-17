@@ -8,7 +8,7 @@ let checks=0; const ok=(value,name)=>{assert.ok(value,name);checks++;};
 ok(!docs.includes("['submission','Οριστικοποίηση ηλεκτρονικής αίτησης'"),'submission no longer a checklist item');
 ok(!docs.includes('SUMMARIES={\n submission:'),'submission summary not maintained');
 ok(page.includes('Σημαντικές προθεσμίες:') && /η προσωρινή αποθήκευση δεν είναι οριστικοποίηση/i.test(page) && page.includes('PDF της οριστικοποιημένης αίτησης'), 'deadline and critical finalization warning preserved once');
-ok(page.includes("'summary' => 'Πού αποστέλλονται τα δικαιολογητικά;'"),'submission guidance disclosure retained');
+ok(page.includes("'summary' => 'Πού αποστέλλονται τα δικαιολογητικά; — Οδηγίες και υπόδειγμα'"),'submission guidance disclosure retained');
 ok(!docs.includes('<strong>1. Αίτηση:</strong>') && !docs.includes('<strong>2. Υποβολή εγγράφων:</strong>') && !docs.includes('<strong>3. Τι χρειάζεται από εσάς:</strong>'),'triple summary removed');
 ok(!page.includes('Εξατομικευμένες οδηγίες προετοιμασίας με βάση τα δηλωμένα στοιχεία'),'redundant counselor preface removed');
 ok(page.includes('id="transferDocumentActionSummary"') && page.includes('class="transfer-doc-action-summary" role="note" hidden'),'special warning hidden by default');

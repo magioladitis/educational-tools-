@@ -20,7 +20,7 @@ check(ui.includes("'transferSocialCriteriaCard'") && ui.includes('qualifications
 check(ui.includes('checkbox.disabled=blocked') && ui.includes('if(blocked)checkbox.checked=false'),'blocked case disables and clears main checkbox');
 check(docs.includes('Δικαιολογητικά συνυπηρέτησης'),'new document heading');
 check(docs.includes('spouseDoc.disabled=info.blocked'),'disabled doc based on status');
-check(docs.includes("(d.disabled?' disabled':'')"),'render disabled docs checkbox');
+check(docs.includes('edu-transfer-doc__info-icon'),'non-actionable blocked doc uses informational icon instead of checkbox');
 check(docs.includes('if(input.disabled)return;active++'),'progress excludes disabled docs');
 check(docs.includes('d.disabled?\'— Δεν μοριοδοτείται\''),'print label for unavailable');
 let elements={};

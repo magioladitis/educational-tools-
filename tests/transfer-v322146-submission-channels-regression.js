@@ -19,11 +19,10 @@ route('coservice','check',/χωρίς αποστολή/,'',true);
 route('locality','email',/email.*ΔΔΕ/);
 for(const id of ['eae-doctorate','eae-masters','eae-two-year','eae-pe11','eae-sign','eae-braille'])route(id,'mydocs',/mydocs.*νέος\/συμπληρωματικός/);
 route('eae-5year','check',/ΔΔΕ.*mydocs/);
-route('eae-kedasy','check',/όχι αυτοτελής αποστολή/);
-route('eae-dossier','check',/Παλαιός φάκελος/,'Μη επανυποβολή φακέλου');
-route('eae-dossier','mydocs',/μόνο εφόσον απαιτείται/,'Έλεγχος υποβολής');
+// The KEDASY, dossier and service prechecks live next to their related inputs,
+// not in the list of documents to prepare.
 for(const id of ['music-common','music-specialist','music-subject','art-cv','art-inventory','art-degrees','art-publications','ic-cv','ic-qual-foreign_language','ic-foreign'])route(id,'mydocs',/mydocs.*νέος\/συμπληρωματικός/);
-for(const id of ['music-service','art-service','ic-basis','ic-service-record','eae-to-general'])route(id,'check',/όχι αυτοτελής αποστολή/);
+for(const id of ['music-appointment','music-subject-missing'])route(id,'check',/όχι αυτοτελής αποστολή/);
 route('health-committee','special',/Κλειστός φυσικός φάκελος/);
 route('health-kepa','special',/δεν αποστέλλεται.*ΚΕΠΑ/);
 route('judicial-spouse','mydocs',/mydocs.*ειδική/);

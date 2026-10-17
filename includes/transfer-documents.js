@@ -12,13 +12,6 @@ var EAE_SOURCE='Εγκύκλιος 138014/Ε2/15-10-2026, κεφάλαιο Δ΄,
 var MUSIC_SOURCE='Εγκύκλιος 138014/Ε2/15-10-2026, κεφάλαιο Ε΄, σελ. 39–41.';
 var ART_SOURCE='Εγκύκλιος 138014/Ε2/15-10-2026, κεφάλαιο ΣΤ΄, σελ. 41–43.';
 var IC_SOURCE='Εγκύκλιος 138014/Ε2/15-10-2026, κεφάλαιο Ζ΄, σελ. 43–45.';
-function dossierRow(kind,year,newElements){
- var calc=global.EducationTransferEligibility;
- var state=calc&&calc.dossier?calc.dossier({kind:kind,year:year,newElements:newElements}):null;
- return entry(kind+'-dossier','Έλεγχος προηγούμενου ηλεκτρονικού φακέλου',
-   state?state.status+' '+state.limitation:'Ελέγξτε τον φάκελο με την εγκύκλιο του έτους υποβολής.',
-   state&&state.skipResubmission?'Μη επανυποβολή φακέλου (βάση 2026–2027)':'Έλεγχος υποβολής');
-}
 var checked={};
 var FAMILY_SOURCE='Πηγή: εγκύκλιος 138014/Ε2/15-10-2026, Μέρος Δεύτερο, κεφ. Β΄, ενότητες Β. Συνυπηρέτηση (σελ. 18–20) και Γ. Οικογενειακοί λόγοι (σελ. 20–21).';
 /* The categories below are the 2026-27 secondary-education circular, not a blanket list of rights. */
@@ -60,19 +53,15 @@ function eaeDocuments(){
  if(chosen.indexOf('two_year')!==-1)rows.push(entry('eae-two-year','Πτυχίο διετούς μετεκπαίδευσης στην ΕΑΕ','Ελέγξτε τον τίτλο διετούς μετεκπαίδευσης των Διδασκαλείων ή τη νόμιμη αναγνώριση ισότιμου τίτλου αλλοδαπής.','Αποδεικτικό εξειδίκευσης'));
  if(chosen.indexOf('experience')!==-1)rows.push(entry('eae-5year','Πενταετής αποδεδειγμένη προϋπηρεσία ΕΑΕ','Ελέγξτε υπηρετήσεις αναλυτικά ανά φορέα, χρονικό διάστημα και δομή ΕΑΕ: ΣΜΕΑΕ, ΕΕΕΕΚ, Τμήμα Ένταξης, παράλληλη στήριξη, ΚΕΔΑΣΥ κ.λπ. Η ΔΔΕ/ΥΠΑΙΘΑ επιβεβαιώνει τη συνδρομή της προϋπόθεσης.','Βεβαιώσεις και μητρώο'));
  if(chosen.indexOf('pe11')!==-1)rows.push(entry('eae-pe11','ΠΕ11 — κύρια ειδικότητα ΤΕΦΑΑ','Ελέγξτε ότι το βασικό πτυχίο ΤΕΦΑΑ αποτυπώνει μία από τις κύριες ειδικότητες που απαριθμεί η εγκύκλιος. Δεν αρκεί μεμονωμένη επιμόρφωση.','Τίτλος και ειδικότητα'));
- if(inp.destination==='kedasy')rows.push(entry('eae-kedasy','ΚΕΔΑΣΥ — κλάδος και προβλεπόμενη οργανική θέση','Επιτρέπονται μόνο οι κλάδοι ΠΕ02, ΠΕ03, ΠΕ04 εφόσον υπάρχουν αντίστοιχες κενές οργανικές θέσεις στο οικείο οργανόγραμμα. Απαιτείται μία αναγνωρισμένη διαδρομή προσόντων ΕΑΕ και υπηρεσιακή επιβεβαίωση. '+EAE_SOURCE,'Πρόσθετη προϋπόθεση ΚΕΔΑΣΥ'));
  if(inp.destination==='deaf')rows.push(entry('eae-sign','Σχολείο Κωφών — πιστοποίηση ΕΝΓ',(inp.sensoryCertification==='yes'?'Επαληθεύστε τον φορέα έκδοσης και την καταχώριση της δηλωμένης πιστοποίησης. ':'Δεν έχει επαληθευτεί η απαιτούμενη πιστοποίηση. ' )+'Απαιτείται πιστοποιημένη επάρκεια στην Ελληνική Νοηματική Γλώσσα από αποδεκτό φορέα κατά την εγκύκλιο· απλή παρακολούθηση δεν αρκεί.','Ειδικό αποδεικτικό'));
  if(inp.destination==='blind')rows.push(entry('eae-braille','Σχολείο Τυφλών — πιστοποίηση Braille',(inp.sensoryCertification==='yes'?'Επαληθεύστε τον φορέα έκδοσης και την καταχώριση της δηλωμένης πιστοποίησης. ':'Δεν έχει επαληθευτεί η απαιτούμενη πιστοποίηση. ' )+'Απαιτείται πιστοποιημένη γνώση γραφής Braille από αποδεκτό φορέα κατά την εγκύκλιο· απλή παρακολούθηση δεν αρκεί.','Ειδικό αποδεικτικό'));
- rows.push(dossierRow('eae',$('transferEaePreviousYear').value,$('transferEaeNewDocuments').checked));
  return rows;
 }
 function musicDocuments(){
  var type=$('transferEducationType').value, exception=$('transferMusicException').value,subject=$('transferMusicSubject').value;
  var m=global.EducationTransferEligibility?global.EducationTransferEligibility.music({educationType:type,organic:$('transferMusicOrganic').checked,teachingYears:$('transferMusicTeachingYears').value,exceptionType:exception,subject:subject}):null;
  var rows=[
- entry('music-common','Γενικός φάκελος (αφορά και τη Γενική παιδεία)','Αναλυτικό βιογραφικό, πίνακας δικαιολογητικών και διαθέσιμα πιστοποιητικά που τεκμηριώνουν επιμόρφωση, μετεκπαίδευση, διδακτική εμπειρία σε Μουσικά, μεταπτυχιακούς τίτλους και επιστημονικό έργο. Δεν απαιτείται μουσική εξειδίκευση για κλάδους Γενικής παιδείας. '+MUSIC_SOURCE,'Φάκελος κρίσης'),
- entry('music-service','Προϋποθέσεις υπηρεσίας και οργανικής','Ελέγξτε υπηρέτηση οργανικής, πενταετή διδακτική εμπειρία έως την ημερομηνία αναφοράς και, αν δηλώθηκε, τη συγκεκριμένη εξαίρεση από την πενταετία.','Έλεγχος ΔΔΕ'),
-dossierRow('music',$('transferMusicPreviousYear').value,$('transferMusicNewDocuments').checked)
+ entry('music-common','Γενικός φάκελος (αφορά και τη Γενική παιδεία)','Αναλυτικό βιογραφικό, πίνακας δικαιολογητικών και διαθέσιμα πιστοποιητικά που τεκμηριώνουν επιμόρφωση, μετεκπαίδευση, διδακτική εμπειρία σε Μουσικά, μεταπτυχιακούς τίτλους και επιστημονικό έργο. Δεν απαιτείται μουσική εξειδίκευση για κλάδους Γενικής παιδείας. '+MUSIC_SOURCE,'Φάκελος κρίσης')
  ];
  if(type==='specialized'){
   rows.push(entry('music-specialist','Μουσική παιδεία — πρόσθετη εξειδίκευση','Ελέγξτε τα αποδεικτικά απόλυτης εξειδίκευσης για την ειδικότητα ΠΕ79.01/ΤΕ16. Τίτλοι μουσικών ιδρυμάτων, κατάλληλη αναγνώριση και τεκμηριωμένη ενασχόληση.','Μόνο μουσική παιδεία'));
@@ -80,7 +69,7 @@ dossierRow('music',$('transferMusicPreviousYear').value,$('transferMusicNewDocum
   if(subject==='unspecified')rows.push(entry('music-subject-missing','Επιλογή συγκεκριμένου μουσικού αντικειμένου','Επιλέξτε Θεωρητικά, Παραδοσιακή Μουσική, Σύνολα, Όργανο ή Άλλο ώστε να εμφανιστούν τα ειδικά τεκμήρια.','Συμπληρώστε στοιχεία'));
   rows.push(entry('music-appointment','Περιορισμός διορισμού σε Μουσικά','Ελέγξτε την αρχική πράξη διορισμού: για ορισμένες παλαιές μουσικές κατηγορίες επιτρέπονται μεταθέσεις μόνο σε Μουσικά Σχολεία.','Έλεγχος κλάδου'));
  }
- if(m&&m.advice.length)rows.push(entry('music-warnings','Εκκρεμή σημεία προελέγχου',m.advice.join(' '),'Προέλεγχος — όχι απόφαση'));
+ // Eligibility findings are already presented above in the dedicated Musical School precheck.
  return rows;
 }
 function artDocuments(){
@@ -96,12 +85,10 @@ function artDocuments(){
  }
  var engine=global.EducationTransferEligibility,result=engine?engine.art(input):null;
  var rows=[
-  entry('art-service','Πενταετής εμπειρία και υπηρέτηση οργανικής','Συμπλήρωση υπηρεσιακών προϋποθέσεων έως 31-08-2027. Ελέγξτε τυχόν νόμιμη εξαίρεση από την πενταετία και την υπηρεσιακή καταχώριση μέσω ΔΔΕ.','Προέλεγχος δικαιώματος'),
   entry('art-cv','Αναλυτικό βιογραφικό','Προετοιμάστε πλήρες βιογραφικό που τεκμηριώνει επιμόρφωση, μετεκπαίδευση, διδακτική εμπειρία σε Καλλιτεχνικά, μεταπτυχιακές σπουδές, επιστημονικό έργο και συναφή προσόντα. '+ART_SOURCE,'Φάκελος κρίσης'),
   entry('art-inventory','Πίνακας δικαιολογητικών','Καταγράψτε σε πίνακα τους τίτλους, βεβαιώσεις και λοιπά αποδεικτικά που τεκμηριώνουν τα συνεκτιμώμενα προσόντα· μην περιλάβετε άσχετα έγγραφα.','Σύμφωνα με εγκύκλιο'),
   entry('art-degrees','Τίτλοι σπουδών, επιμόρφωση και διδακτική εμπειρία','Συγκεντρώστε μόνο τα σχετικά τεκμήρια. Για αλλοδαπούς τίτλους σπουδών ελέγξτε αναγνώριση ΔΟΑΤΑΠ/ΔΙΚΑΤΣΑ και, όπου απαιτείται, επίσημη μετάφραση. Η ΔΔΕ ελέγχει τα υπηρεσιακά στοιχεία.','Έλεγχος τίτλων'),
-  entry('art-publications','Δημοσιεύσεις, βιβλία και επιστημονικό έργο','Εφόσον δηλώνονται δημοσιεύσεις ή βιβλία, η εγκύκλιος 2026–2027 δέχεται εξώφυλλο και πρώτη σελίδα ή σύνδεσμο της ηλεκτρονικής έκδοσης.','Εφόσον υπάρχουν'),
-  dossierRow('art',$('transferArtPreviousYear').value,$('transferArtNewDocuments').checked)
+  entry('art-publications','Δημοσιεύσεις, βιβλία και επιστημονικό έργο','Εφόσον δηλώνονται δημοσιεύσεις ή βιβλία, η εγκύκλιος 2026–2027 δέχεται εξώφυλλο και πρώτη σελίδα ή σύνδεσμο της ηλεκτρονικής έκδοσης.','Εφόσον υπάρχουν')
  ];
  if(result&&result.specialized){
   rows.push(entry('art-committee','Ειδική κρίση για κλάδο καλλιτεχνικής παιδείας',
@@ -111,7 +98,6 @@ function artDocuments(){
     'Δηλώθηκε '+$('transferArtOrientation').selectedOptions[0].textContent+'. Τεκμηριώστε μόνο τη συνάφεια τίτλων, διδακτικού ή καλλιτεχνικού έργου με την προκηρυγμένη ειδικότητα, σύμφωνα με όσα γίνονται δεκτά. Η κατεύθυνση από μόνη της δεν αποδεικνύει δικαίωμα.',
     'Εξατομικευμένη υπενθύμιση'));
  }
- if(result&&result.advice.length)rows.push(entry('art-warnings','Εκκρεμότητες προελέγχου',result.advice.join(' '),'Υπηρεσιακή επαλήθευση'));
  return rows;
 }
 function interculturalDocuments(){
@@ -121,18 +107,13 @@ function interculturalDocuments(){
    years:$('transferInterculturalYears').value,vacancy:$('transferInterculturalVacancy').value,
    languageCase:$('transferInterculturalLanguageCase').value,qualifications:chosen});
  var rows=[
-   entry('ic-basis','Προέλεγχος υπηρεσιακών προϋποθέσεων',state?state.status+' '+state.advice.join(' ')+' '+IC_SOURCE:IC_SOURCE,'Θεμελίωση — έλεγχος ΔΔΕ'),
-   entry('ic-service-record','Υπηρέτηση οργανικής θέσης','Ελέγξτε τις πράξεις τοποθέτησης, τις πραγματικές υπηρετήσεις και τον ειδικό κανόνα διετίας όταν ήδη κατέχετε οργανική σε Πειραματικό Διαπολιτισμικής.','Έλεγχος μητρώου'),
    entry('ic-cv','Αναλυτικό βιογραφικό σημείωμα','Πλήρες βιογραφικό, πίνακας δικαιολογητικών και πιστοποιητικά/τίτλοι που αποδεικνύουν τα πραγματικά δηλωμένα προσόντα. Αποφύγετε άσχετα έγγραφα.','Φάκελος προσόντων')
  ];
- if(state&&state.languageException)rows.push(entry('ic-roma','Εξαίρεση από τη γνώση γλώσσας προέλευσης','Για σχολεία στα οποία φοιτούν κατά πλειοψηφία μαθητές Ρομά δεν απαιτείται η γνώση της ξένης γλώσσας προέλευσης που αναφέρει η πρώτη προτίμηση προσόντων.','Ειδική περίπτωση'));
  chosen.forEach(function(id){
    var q=qs.find(function(x){return x.id===id;});
    if(q)rows.push(entry('ic-qual-'+id,'Τεκμηρίωση: '+q.title,q.proof,'Επιλεγμένο πρόσθετο προσόν'));
  });
- if(!chosen.length)rows.push(entry('ic-none','Δεν επιλέχθηκαν πρόσθετα προσόντα','Ελέγξτε αν διαθέτετε κάποιο από τα εννέα προτιμώμενα προσόντα· δεν αποτελούν εννέα υποχρεωτικά δικαιολογητικά για όλους.','Προσωπικός έλεγχος'));
  rows.push(entry('ic-foreign','Ξενόγλωσσοι τίτλοι και δημοσιεύσεις','Για τίτλους αλλοδαπής ελέγξτε αναγνώριση ΔΟΑΤΑΠ/ΔΙΚΑΤΣΑ και επίσημη μετάφραση όπου απαιτείται. Για δημοσιεύσεις/βιβλία αρκεί αντίγραφο εξωφύλλου και πρώτης σελίδας. Η εγκύκλιος εξαιρεί τίτλους γλωσσομάθειας συγκεκριμένων γλωσσών από την απαίτηση μετάφρασης.','Ανά περίπτωση'));
- rows.push(dossierRow('intercultural',$('transferInterculturalPreviousYear').value,$('transferInterculturalNewDocuments').checked));
  return rows;
 }
 function build(){
@@ -181,22 +162,14 @@ function build(){
   if($('coService').checked || (caseValue!=='unspecified' && info.blocked)){
    var spouseDoc=entry('coservice','Δικαιολογητικά συνυπηρέτησης',
     info.summary+'\n'+info.detail+'\nΤα απαιτούμενα αποδεικτικά συνυπηρέτησης πρέπει να έχουν εκδοθεί στο τελευταίο τρίμηνο (με εξαίρεση βεβαιώσεις εργοδοτών για προγενέστερη εργασία που έπαυσε: τελευταία διετία). Η συνυπηρέτηση αφορά μία περιοχή μετάθεσης — όχι ολόκληρο τον νομό — ή τον δήμο σχολείου για βελτίωση/οριστική τοποθέτηση. '+FAMILY_SOURCE,
-    info.blocked?'Δεν θεμελιώνεται συνυπηρέτηση (+0)':(caseValue==='unspecified'||caseValue==='other'?'Υπό επιβεβαίωση — δεν προστίθενται +4':'Δικαιολογητικά βάσει επιλογής'));
+    info.blocked?'Δεν θεμελιώνεται συνυπηρέτηση (+0)':(caseValue==='unspecified'||caseValue==='other'?'Υπό επιβεβαίωση — δεν προστίθενται +4':''));
    spouseDoc.disabled=info.blocked;
    a.push(spouseDoc);
   }
   if($('locality').checked) a.push(entry('locality','Εντοπιότητα','Ελέγξτε βεβαίωση δημοτικότητας, χρόνο κτήσης της και αντιστοίχιση με τη ζητούμενη περιοχή ή τον δήμο.','Πιθανό δικαιολογητικό'));
   // No separate MSD row: the record item above includes this check for either entry mode.
  }
- if(mode==='region' && global.EducationTransferEligibility && global.EducationTransferEligibility.returnToGeneral){
-  var rr=global.EducationTransferEligibility.returnToGeneral({
-   origin:$('transferGeneralOrigin').value,eaeYears:$('transferGeneralEaeYears').value,
-   areaYears:$('transferGeneralEaeAreaYears').value,sinceTransferYears:$('transferGeneralEaeSinceTransfer').value,
-   organicServed:$('transferGeneralEaeOrganic').checked});
-  if(rr.applicable) a.push(entry('eae-to-general','Ειδική Αγωγή → Γενική: θεμελίωση δικαιώματος',
-    rr.status+' '+(rr.advice.length?rr.advice.join(' '):'Ελέγξτε τις υπηρετήσεις και την οργανική με τη ΔΔΕ.')+' Βάση: εγκύκλιος 138014/Ε2/15-10-2026, σελ. 35, ενότητα ΕΑΕ. Απαιτείται υπηρεσιακή επιβεβαίωση.',
-    'Προέλεγχος δικαιώματος'));
- }
+ // The EAE-to-General eligibility verdict is already displayed above the checklist.
  if(eae) a=a.concat(eaeDocuments());
  if(mode==='music') a=a.concat(musicDocuments());
  if(mode==='art') a=a.concat(artDocuments());
@@ -225,8 +198,7 @@ function submissionChannel(d){
  var id=d.id;
  if(id==='family')return {kind:'automatic',text:'Αυτεπάγγελτα από ΔΔΕ — δεν το προσκομίζετε'};
  if(id==='record')return {kind:'check',text:'Έλεγχος στο επίσημο μητρώο — χωρίς αποστολή'};
- if(id==='eae-to-general'||id==='eae-kedasy'||id==='music-service'||id==='music-appointment'||id==='music-warnings'||
-    id==='art-service'||id==='art-warnings'||id==='ic-basis'||id==='ic-service-record'||id==='ic-roma'||id==='ic-none'||id==='music-subject-missing'){
+ if(id==='music-appointment'||id==='music-subject-missing'){
   return {kind:'check',text:'Έλεγχος στοιχείων / θεμελίωσης — όχι αυτοτελής αποστολή'};
  }
  if(id==='health-committee')return {kind:'special',text:'Κλειστός φυσικός φάκελος στο ΥΠΑΙΘΑ — όχι email/mydocs'};
@@ -235,10 +207,6 @@ function submissionChannel(d){
  if(id==='coservice' && d.disabled)return {kind:'check',text:'Δεν θεμελιώνεται μοριοδότηση — χωρίς αποστολή για το κριτήριο'};
  if(id==='coservice'||id==='locality'||id==='children-specific'){
   return {kind:'email',text:'Αποστολή με email στη ΔΔΕ οργανικής — όπου απαιτούνται αποδεικτικά'};
- }
- if(/-dossier$/.test(id)){
-  if(d.tag.indexOf('Μη επανυποβολή')!==-1)return {kind:'check',text:'Παλαιός φάκελος — χωρίς επανυποβολή αν δεν υπάρχουν νέα στοιχεία'};
-  return {kind:'mydocs',text:'Έλεγχος φακέλου · mydocs μόνο εφόσον απαιτείται υποβολή'};
  }
  if(id==='eae-5year')return {kind:'check',text:'Διασταύρωση υπηρεσίας από ΔΔΕ · mydocs μόνο για τυχόν πρόσθετα αποδεικτικά'};
  if(/^eae-/.test(id)||/^music-/.test(id)||/^art-/.test(id)||/^ic-/.test(id)){
@@ -253,9 +221,7 @@ function portalLink(id){return id==='record'?' <a class="edu-transfer-doc__porta
 var openRows={};
 var SUMMARIES={
  record:'Ελέγξτε υπηρετήσεις και μόρια. Πίνακες Δ.Ε.: 23/11/2026 · Διορθώσεις: 23–27/11/2026.',
- family:'Το ελληνικό πιστοποιητικό οικογενειακής κατάστασης αναζητείται αυτεπαγγέλτως από τη ΔΔΕ — δεν το προσκομίζετε.',
  'children-specific':'Ανήλικα: χωρίς βεβαίωση σπουδών. Ενήλικα που σπουδάζουν: βεβαίωση φοίτησης όπου απαιτείται. Νεογέννητα: ειδικές οδηγίες έως 31/12/2026.',
- 'eae-to-general':'Ελέγξτε τις ειδικές προϋποθέσεις επιστροφής στη Γενική Εκπαίδευση με τη ΔΔΕ.',
  'ic-submit':'Αν απαιτείται νέος φάκελος, η αποστολή γίνεται αποκλειστικά μέσω mydocs.minedu.gov.gr, σε μία αποστολή.'
 };
 function legalSeparation(detail){
@@ -280,12 +246,18 @@ function shortText(d){
 function isCritical(d){
  return (d.id==='coservice' && (d.tag.indexOf('Δεν θεμελιώνεται')!==-1 || d.tag.indexOf('Υπό επιβεβαίωση')!==-1));
 }
+function documentTaskType(doc,channel){
+ if(doc.disabled || channel.kind==='automatic')return 'info';
+ if(channel.kind==='check')return 'verify';
+ // Email/mydocs/special routes require some preparation or application input.
+ return 'action';
+}
 function progress(root){
  var rows=root.querySelectorAll('[data-doc-id]');
  var complete=0,active=0;
  rows.forEach(function(input){if(input.disabled)return;active++;if(input.checked)complete++;});
  var target=$('transferDocumentProgress');
- if(target)target.textContent='Έλεγχοι που σημειώθηκαν: '+complete+' από '+active+'.';
+ if(target)target.textContent=active?'Δικαιολογητικά/ενέργειες που ετοιμάστηκαν: '+complete+' από '+active+'.':'Δεν προκύπτουν δικαιολογητικά προς προετοιμασία από τις επιλογές σας.';
 }
 /* v3.22.123 — one disclosure, not a checklist task, for all submission routes. */
 var SUBMISSION_GUIDANCE={
@@ -353,6 +325,51 @@ function submissionGuideData(){
  var mode=$('mode')?$('mode').value:'region';
  return SUBMISSION_GUIDANCE[mode]||SUBMISSION_GUIDANCE.region;
 }
+/* 3.22.151 — prominent, route-aware entry to the existing message composer.
+ * Only genuinely actionable documents determine the visible email/mydocs callout.
+ * An official check or exceptional physical route must never be called email.
+ */
+function submissionFeatureState(rows,mode){
+ mode=mode||($('mode')?$('mode').value:'region');
+ rows=rows||build();
+ var channels=rows.filter(function(d){return documentTaskType(d,submissionChannel(d))==='action';})
+  .map(function(d){return submissionChannel(d).kind;});
+ var email=channels.indexOf('email')!==-1, mydocs=channels.indexOf('mydocs')!==-1;
+ var special=channels.indexOf('special')!==-1;
+ if(special&&!email&&!mydocs)return {
+  title:'Ειδικές οδηγίες υποβολής δικαιολογητικών',
+  lead:'Η επιλογή σας απαιτεί ειδική διαδικασία. Ελέγξτε πού υποβάλλονται τα στοιχεία πριν χρησιμοποιήσετε οποιοδήποτε υπόδειγμα.',
+  button:'Προβολή ειδικών οδηγιών υποβολής',email:false,specialOnly:true};
+ if(email&&mydocs)return {
+  title:'Έτοιμο email και υπόδειγμα mydocs',
+  lead:'Για τη μοριοδότηση ετοιμάζετε email στη ΔΔΕ οργανικής· ο φάκελος προσόντων υποβάλλεται χωριστά στο mydocs μόνο όπου απαιτείται.',
+  button:'Προετοιμασία μηνύματος υποβολής',email:true};
+ if(email)return {
+  title:'Έτοιμο email υποβολής δικαιολογητικών',
+  lead:'Δημιουργήστε θέμα και σώμα email για τα αποδεικτικά που πρέπει να αποστείλετε στη ΔΔΕ οργανικής.',
+  button:'Δημιουργία email υποβολής',email:true};
+ if(mydocs)return {
+  title:'Έτοιμο υπόδειγμα υποβολής μέσω mydocs',
+  lead:'Η συγκεκριμένη διαδρομή αφορά mydocs, μόνο εφόσον απαιτείται νέος ή συμπληρωματικός φάκελος· δεν αντικαθίσταται με email.',
+  button:'Προετοιμασία κειμένου για mydocs',email:false};
+ return {
+  title:'Υπόδειγμα μηνύματος — αν χρειαστεί',
+  lead:'Δεν προκύπτει αυτή τη στιγμή δικαιολογητικό προς αποστολή από τις επιλογές σας. Το υπόδειγμα παραμένει διαθέσιμο για ενδεχόμενη μεταβολή.',
+  button:'Προβολή προαιρετικού υποδείγματος',email:false};
+}
+function updateSubmissionFeature(state){
+ var card=document.querySelector?document.querySelector('#transferEmailFeature'):null;
+ if(!card)return;
+ var title=card.querySelector('#transferEmailFeatureTitle'),lead=card.querySelector('#transferEmailFeatureLead'),button=card.querySelector('#transferEmailFeatureOpen');
+ if(title)title.textContent=state.title;
+ if(lead)lead.textContent=state.lead;
+ if(button)button.textContent=state.button;
+ card.classList.toggle('is-optional',!state.email&&state.title.indexOf('αν χρειαστεί')!==-1);
+}
+function submissionMailto(tpl){
+ // No guessed recipient and no automatic sending or attachments.
+ return 'mailto:?subject='+encodeURIComponent(tpl.subject)+'&body='+encodeURIComponent(tpl.body);
+}
 /* v3.22.131 — optional, entirely client-side personalization of the official
    message templates (circular §2.2.1 / §2.2.4 / §2.2.5). All values remain
    only in JS memory until reset/navigation: no cookies, storage or requests. */
@@ -408,7 +425,7 @@ function personalField(key,label,placeholder,wide){
   '<span>'+escape(label)+'</span><input type="text" id="transferPersonal-'+key+'" data-transfer-personal-field="'+key+'" name="transfer-personal-'+key+'" '+
   'value="'+escape(submissionPersonal[key])+'" placeholder="'+escape(placeholder)+'" maxlength="'+max+'" autocomplete="off" spellcheck="false"></label>';
 }
-function submissionMessageHtml(data,expanded){
+function submissionMessageHtml(data,expanded,allowEmail){
  var tpl=submissionMessageTemplate(data.mode,submissionPersonal);
  return '<section class="transfer-submission-template" aria-label="Υπόδειγμα θέματος και σώματος αποστολής">'+
   '<h4>Θέμα και σώμα μηνύματος — υπόδειγμα</h4>'+
@@ -427,6 +444,7 @@ function submissionMessageHtml(data,expanded){
   '</div><button type="button" class="secondary transfer-submission-template__clear" data-transfer-personal-clear>Καθαρισμός πεδίων</button></div></details>'+
   '<div class="transfer-submission-template__item"><div class="transfer-submission-template__bar"><strong>Θέμα:</strong><button type="button" class="secondary" data-transfer-copy-template="subject" aria-label="Αντιγραφή θέματος">Αντιγραφή</button></div><p class="transfer-submission-template__value" data-transfer-template-value="subject">'+escape(tpl.subject)+'</p></div>'+
   '<div class="transfer-submission-template__item"><div class="transfer-submission-template__bar"><strong>Σώμα κειμένου:</strong><button type="button" class="secondary" data-transfer-copy-template="body" aria-label="Αντιγραφή σώματος κειμένου">Αντιγραφή</button></div><p class="transfer-submission-template__value" data-transfer-template-value="body">'+escape(tpl.body)+'</p></div>'+
+  (allowEmail?'<p class="transfer-submission-template__email-action"><a class="transfer-email-feature__mail-link" data-transfer-mailto href="'+escape(submissionMailto(tpl))+'">Άνοιγμα στο email μου ↗</a> <span>Ο παραλήπτης δεν συμπληρώνεται αυτόματα· προσθέστε εσείς τα συνημμένα. Δεν πραγματοποιείται αποστολή.</span></p>':'')+
   '<p class="transfer-submission-template__source">Πηγή: εγκύκλιος μεταθέσεων Δ.Ε. 138014/Ε2/15-10-2026, §'+escape(tpl.circular)+'. Το υπόδειγμα αφορά ηλεκτρονική υποβολή όπου προβλέπεται· ειδικά δικαιολογητικά (π.χ. ορισμένες υγειονομικές γνωματεύσεις) μπορεί να έχουν διαφορετική διαδικασία.</p>'+
   '<p class="transfer-submission-template__feedback" id="transferSubmissionCopyFeedback" role="status" aria-live="polite"></p></section>';
 }
@@ -438,6 +456,8 @@ function refreshSubmissionTemplate(){
   var el=root.querySelector('[data-transfer-template-value="'+key+'"]');
   if(el)el.textContent=tpl[key];
  });
+ var mailLink=root.querySelector('[data-transfer-mailto]');
+ if(mailLink)mailLink.setAttribute('href',submissionMailto(tpl));
  var feedback=root.querySelector('#transferSubmissionCopyFeedback');
  if(feedback)feedback.textContent='';
 }
@@ -499,26 +519,39 @@ function copySubmissionTemplate(event){
   feedback.textContent=legacyCopySubmission(copied)?'Το κείμενο αντιγράφηκε.':'Επιλέξτε το κείμενο και αντιγράψτε το χειροκίνητα.';
  }
 }
-function renderSubmissionGuidance(){
+function renderSubmissionGuidance(rows){
  var target=$('transferSubmissionGuidanceBody');
  if(!target)return;
  var details=target.querySelector&&target.querySelector('[data-transfer-personalize]');
  var expanded=!!(details&&details.open);
  var data=submissionGuideData();
  data.mode=$('mode')?$('mode').value:'region';
+ var feature=submissionFeatureState(rows,data.mode);
+ var specialEntries=(rows||build()).filter(function(d){return submissionChannel(d).kind==='special';});
+ var specialNote=specialEntries.length?'<p class="transfer-submission-special-note"><strong>Προσοχή — ειδική διαδρομή:</strong> '+specialEntries.map(function(d){return escape(d.title)+': '+escape(submissionChannel(d).text);}).join(' · ')+' Δείτε την αντίστοιχη εγγραφή δικαιολογητικών για λεπτομέρειες.</p>':'';
+ updateSubmissionFeature(feature);
  target.innerHTML='<p><strong>'+escape(data.title)+'</strong></p>'+data.lines.map(function(line){
   return '<p>'+escape(line).replace(/(teachers\.minedu\.gov\.gr|mydocs\.minedu\.gov\.gr)/g,function(host){
    return '<a href="https://'+host+'/" target="_blank" rel="noopener noreferrer">'+host+' ↗</a>';
   })+'</p>';
- }).join('')+submissionMessageHtml(data,expanded);
+ }).join('')+specialNote+(feature.specialOnly?'':submissionMessageHtml(data,expanded,feature.email));
+}
+function openSubmissionComposer(){
+ var disclosure=$('transferSubmissionGuidance');
+ if(!disclosure)return;
+ disclosure.open=true;
+ var personalize=disclosure.querySelector('[data-transfer-personalize]');
+ if(personalize)personalize.open=true;
+ var button=$('transferEmailFeatureOpen');if(button)button.setAttribute('aria-expanded','true');
+ if(disclosure.scrollIntoView)disclosure.scrollIntoView({block:'start',behavior:'smooth'});
 }
 function render(){
- renderSubmissionGuidance();
  var root=$('transferDocumentChecklist');if(!root)return;
  root.querySelectorAll('details[data-doc-details]').forEach(function(details){
   openRows[details.getAttribute('data-doc-details')]=details.open;
  });
  var rows=build();
+ renderSubmissionGuidance(rows);
  var summary=optionalElement('transferDocumentActionSummary');
  if(summary){
   // General deadlines and submission channels are explained once, above this panel.
@@ -534,15 +567,16 @@ function render(){
   if(d.id==='record')detail=detail.replace('Μονάδες Συνθηκών Διαβίωσης (Μ.Σ.Δ.):','<strong>Μονάδες Συνθηκών Διαβίωσης (Μ.Σ.Δ.):</strong>');
   // Avoid repeating the same advice outside and inside its disclosure, including EAE qualification evidence.
   // v3.22.124: avoid duplicate previews for all five standard Artistic School supporting documents.
-  var compact=d.id==='locality' || /-dossier$/.test(d.id) || ['eae-doctorate','eae-masters','eae-two-year','eae-5year','eae-pe11','eae-kedasy','art-service','art-cv','art-inventory','art-degrees','art-publications','ic-foreign'].indexOf(d.id)!==-1;
-  if(d.disabled)checked[d.id]=false;
-  return '<article class="edu-transfer-doc'+(checked[d.id]?' is-complete':'')+(warning?' has-warning':'')+(compact?' is-compact':'')+(d.disabled?' is-unavailable':'')+'" data-doc-card="'+id+'">'+
+  var compact=d.id==='locality' || ['family','record','music-common','eae-doctorate','eae-masters','eae-two-year','eae-5year','eae-pe11','art-cv','art-inventory','art-degrees','art-publications','ic-foreign'].indexOf(d.id)!==-1;
+  var taskType=documentTaskType(d,channel),actionable=taskType==='action';
+  if(!actionable)delete checked[d.id];
+  return '<article class="edu-transfer-doc'+(actionable&&checked[d.id]?' is-complete':'')+(warning?' has-warning':'')+(compact?' is-compact':'')+(d.disabled?' is-unavailable':'')+(!actionable?' is-informational':'')+'" data-doc-card="'+id+'">'+
    '<div class="edu-transfer-doc__head">'+
-    '<input class="edu-transfer-doc__check" type="checkbox" id="transferDocCheck-'+id+'" data-doc-id="'+id+'" '+(checked[d.id]?'checked':'')+(d.disabled?' disabled':'')+' aria-label="Ολοκληρώθηκε: '+heading+'">'+
+    (actionable?'<input class="edu-transfer-doc__check" type="checkbox" id="transferDocCheck-'+id+'" data-doc-id="'+id+'" '+(checked[d.id]?'checked':'')+' aria-label="Ετοιμάστηκε: '+heading+'">':'<span class="edu-transfer-doc__info-icon" aria-hidden="true">ⓘ</span>')+
     '<div class="edu-transfer-doc__main">'+
-     '<label class="edu-transfer-doc__title" for="transferDocCheck-'+id+'">'+heading+'</label>'+
+     (actionable?'<label class="edu-transfer-doc__title" for="transferDocCheck-'+id+'">'+heading+'</label>':'<div class="edu-transfer-doc__title">'+heading+'</div>')+
      '<div class="edu-transfer-doc__channel edu-transfer-doc__channel--'+escape(channel.kind)+'">'+escape(channel.text)+'</div>'+
-     (compact||d.id==='family'||!d.tag?'':'<div class="edu-transfer-doc__category">'+escape(d.tag)+'</div>')+
+     (compact||!d.tag?'':'<div class="edu-transfer-doc__category">'+escape(d.tag)+'</div>')+
      (compact?'':'<p class="edu-transfer-doc__summary">'+escape(shortText(d))+'</p>')+
      '<div class="edu-transfer-doc__actions">'+portalLink(d.id)+'</div>'+
      '<details class="edu-transfer-doc__disclosure" data-doc-details="'+id+'" '+(open?'open':'')+'>'+
@@ -565,7 +599,10 @@ function render(){
  progress(root);
 }
 
-function print(){var rows=build(),mode=$('mode').selectedOptions[0].textContent,submission=submissionGuideData(),html='<!doctype html><html lang="el"><meta charset="utf-8"><title>Λίστα δικαιολογητικών μετάθεσης</title><style>body{font:14px Arial;max-width:780px;margin:36px auto;line-height:1.5}li{margin-bottom:14px}small{color:#555;font-size:11px}</style><h1>Έλεγχος δικαιολογητικών μετάθεσης</h1><p>'+escape(mode)+'</p>'+(($('mode').value==='intercultural')?'<h2>Σημειώσεις Διαπολιτισμικών</h2><p><strong>Αλληλεπίδραση με άλλες αιτήσεις.</strong> Σε περίπτωση ικανοποίησης μετάθεσης σε ΕΑΕ/ΚΕΔΑΣΥ, Μουσικό ή Καλλιτεχνικό, δεν εξετάζεται η αίτηση για Διαπολιτισμικό. Αν ικανοποιηθεί σε Διαπολιτισμικό, δεν λαμβάνονται υπόψη άλλες αιτήσεις.</p><p><strong>Μετάθεση προς Γενική μέσα στην ίδια περιοχή.</strong> Εκπαιδευτικός με οργανική σε Διαπολιτισμικό που ζητά σχολείο Γενικής στην ίδια περιοχή υποβάλλει αίτηση από περιοχή σε περιοχή, όχι βελτίωσης.</p>':'')+'<h2>Πού αποστέλλονται τα δικαιολογητικά;</h2><p><strong>'+escape(submission.title)+'</strong></p>'+submission.lines.map(function(t){return '<p>'+escape(t)+'</p>';}).join('')+'<h3>Θέμα και σώμα μηνύματος — υπόδειγμα</h3><p>Αντικαταστήστε τα πεδία στις αγκύλες με τα στοιχεία της οριστικοποιημένης αίτησης.</p><p><strong>Θέμα:</strong> '+escape(submissionMessageTemplate().subject)+'</p><p><strong>Σώμα κειμένου:</strong> '+escape(submissionMessageTemplate().body)+'</p><p><small>Εγκύκλιος 138014/Ε2/15-10-2026, §'+escape(submissionMessageTemplate().circular)+'</small></p>'+'<p><strong>Ενδεικτική λίστα — όχι βεβαίωση υποχρεωτικών εγγράφων.</strong> Επαληθεύστε τα πάντα με την εγκύκλιο της περιόδου και τη ΔΔΕ.</p><ul>'+rows.map(function(d){return '<li>'+(d.disabled?'— Δεν μοριοδοτείται':(checked[d.id]?'☑':'☐'))+' <strong>'+escape(d.title)+'</strong><br>'+escape(d.detail).replace(/\n/g,'<br>')+(d.tag?' <small>('+escape(d.tag)+')</small>':'')+'<br><small>'+escape(submissionChannel(d).text)+'</small>'+'</li>';}).join('')+'</ul></html>';var win=global.open('','_blank');if(win){win.document.write(html);win.document.close();win.focus();win.print();}}
-function init(){var b=$('transferPrintChecklist');if(b)b.addEventListener('click',print);document.addEventListener('click',copySubmissionTemplate);document.addEventListener('input',function(e){if(onSubmissionPersonalInput(e))return;if(e.target.closest && e.target.closest('#transferDocumentChecklist'))return;if(e.target.closest && e.target.closest('.edu-page-transfer'))render();});document.addEventListener('change',function(e){if(onSubmissionPersonalInput(e))return;if(e.target.closest && e.target.closest('#transferDocumentChecklist'))return;if(e.target.closest && e.target.closest('.edu-page-transfer'))render();});render();}
-global.EducationTransferDocuments=Object.freeze({init:init,render:render,build:build,submissionChannel:submissionChannel,coServiceInfo:coServiceInfo,submissionGuideData:submissionGuideData,renderSubmissionGuidance:renderSubmissionGuidance,submissionMessageTemplate:submissionMessageTemplate});
+function print(){var rows=build(),mode=$('mode').selectedOptions[0].textContent,submission=submissionGuideData(),html='<!doctype html><html lang="el"><meta charset="utf-8"><title>Λίστα δικαιολογητικών μετάθεσης</title><style>body{font:14px Arial;max-width:780px;margin:36px auto;line-height:1.5}li{margin-bottom:14px}small{color:#555;font-size:11px}</style><h1>Έλεγχος δικαιολογητικών μετάθεσης</h1><p>'+escape(mode)+'</p>'+(($('mode').value==='intercultural')?'<h2>Σημειώσεις Διαπολιτισμικών</h2><p><strong>Αλληλεπίδραση με άλλες αιτήσεις.</strong> Σε περίπτωση ικανοποίησης μετάθεσης σε ΕΑΕ/ΚΕΔΑΣΥ, Μουσικό ή Καλλιτεχνικό, δεν εξετάζεται η αίτηση για Διαπολιτισμικό. Αν ικανοποιηθεί σε Διαπολιτισμικό, δεν λαμβάνονται υπόψη άλλες αιτήσεις.</p><p><strong>Μετάθεση προς Γενική μέσα στην ίδια περιοχή.</strong> Εκπαιδευτικός με οργανική σε Διαπολιτισμικό που ζητά σχολείο Γενικής στην ίδια περιοχή υποβάλλει αίτηση από περιοχή σε περιοχή, όχι βελτίωσης.</p>':'')+'<h2>Πού αποστέλλονται τα δικαιολογητικά;</h2><p><strong>'+escape(submission.title)+'</strong></p>'+submission.lines.map(function(t){return '<p>'+escape(t)+'</p>';}).join('')+'<h3>Θέμα και σώμα μηνύματος — υπόδειγμα</h3><p>Αντικαταστήστε τα πεδία στις αγκύλες με τα στοιχεία της οριστικοποιημένης αίτησης.</p><p><strong>Θέμα:</strong> '+escape(submissionMessageTemplate().subject)+'</p><p><strong>Σώμα κειμένου:</strong> '+escape(submissionMessageTemplate().body)+'</p><p><small>Εγκύκλιος 138014/Ε2/15-10-2026, §'+escape(submissionMessageTemplate().circular)+'</small></p>'+'<p><strong>Ενδεικτική λίστα — όχι βεβαίωση υποχρεωτικών εγγράφων.</strong> Επαληθεύστε τα πάντα με την εγκύκλιο της περιόδου και τη ΔΔΕ.</p><ul>'+rows.map(function(d){return '<li>'+(d.disabled?'— Δεν μοριοδοτείται':(documentTaskType(d,submissionChannel(d))==='action'?(checked[d.id]?'☑':'☐'):'ⓘ'))+' <strong>'+escape(d.title)+'</strong><br>'+escape(d.detail).replace(/\n/g,'<br>')+(d.tag && ['family','music-common'].indexOf(d.id)===-1?' <small>('+escape(d.tag)+')</small>':'')+'<br><small>'+escape(submissionChannel(d).text)+'</small>'+'</li>';}).join('')+'</ul></html>';var win=global.open('','_blank');if(win){win.document.write(html);win.document.close();win.focus();win.print();}}
+function init(){var b=$('transferPrintChecklist');if(b)b.addEventListener('click',print);
+ var launch=$('transferEmailFeatureOpen');if(launch)launch.addEventListener('click',openSubmissionComposer);
+ var disclosure=$('transferSubmissionGuidance');if(disclosure)disclosure.addEventListener('toggle',function(){var btn=$('transferEmailFeatureOpen');if(btn)btn.setAttribute('aria-expanded',disclosure.open?'true':'false');});
+ document.addEventListener('click',copySubmissionTemplate);document.addEventListener('input',function(e){if(onSubmissionPersonalInput(e))return;if(e.target.closest && e.target.closest('#transferDocumentChecklist'))return;if(e.target.closest && e.target.closest('.edu-page-transfer'))render();});document.addEventListener('change',function(e){if(onSubmissionPersonalInput(e))return;if(e.target.closest && e.target.closest('#transferDocumentChecklist'))return;if(e.target.closest && e.target.closest('.edu-page-transfer'))render();});render();}
+global.EducationTransferDocuments=Object.freeze({init:init,render:render,build:build,submissionChannel:submissionChannel,coServiceInfo:coServiceInfo,submissionGuideData:submissionGuideData,renderSubmissionGuidance:renderSubmissionGuidance,submissionMessageTemplate:submissionMessageTemplate,submissionFeatureState:submissionFeatureState,submissionMailto:submissionMailto});
 })(window);

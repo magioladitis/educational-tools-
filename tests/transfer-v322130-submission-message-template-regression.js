@@ -37,7 +37,7 @@ for(const mode of types){
  test(body.innerHTML.includes('data-transfer-copy-template="subject"')&&body.innerHTML.includes('data-transfer-copy-template="body"'),'copy buttons '+mode);
  test(body.innerHTML.includes('Αριθμός πρωτοκόλλου'),'template injected '+mode);
 }
-test(page.includes('transferSubmissionGuidance')&&page.includes('Πού αποστέλλονται τα δικαιολογητικά;'),'template inside existing disclosure');
+test(page.includes('transferSubmissionGuidance')&&page.includes('Πού αποστέλλονται τα δικαιολογητικά; — Οδηγίες και υπόδειγμα'),'template inside one routing disclosure');
 test(code.includes("'<h3>Θέμα και σώμα μηνύματος — υπόδειγμα</h3>"),'print includes template');
 test(!page.includes('data-transfer-copy-template'),'template not duplicated statically');
 console.log('PASS v3.22.130 8 routes, circular §2.2.1 / §2.2.4 / §2.2.5, dynamic copy templates, printing');

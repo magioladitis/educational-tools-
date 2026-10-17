@@ -1,0 +1,44 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const path=require('node:path');
+const base=path.resolve(__dirname,'..');
+const php=fs.readFileSync(path.join(base,'ypologismos-morion-metathesis.php'),'utf8');
+const code=fs.readFileSync(path.join(base,'includes/transfer-documents.js'),'utf8');
+const css=fs.readFileSync(path.join(base,'assets/common.css'),'utf8');
+const data={mode:'region'};
+const document={getElementById(id){return id==='mode'?{value:data.mode}:null;},querySelectorAll(){return[];}};
+const sandbox={window:{},document};
+vm.runInNewContext(code,sandbox);
+const {submissionFeatureState:state,submissionMailto:mailto,submissionMessageTemplate:template}=sandbox.window.EducationTransferDocuments;
+const record={id:'record'},family={id:'family'};
+const email={id:'locality'},emailBlocked={id:'coservice',disabled:true};
+const mydocs={id:'eae-masters'},special={id:'health-committee'};
+let count=0;
+function test(yes,reason){assert.ok(yes,reason);count++;}
+test(php.indexOf('<section id="transferDocumentsPanel"')<php.indexOf('id="transferEmailFeature"'),'feature after checklist');
+test(php.indexOf('id="transferEmailFeature"')<php.indexOf("'id' => 'transferSubmissionGuidance'"),'single disclosure inside new feature');
+test((php.match(/'id' => 'transferSubmissionGuidance'/g)||[]).length===1,'no duplicate disclosure');
+test(php.includes('aria-controls="transferSubmissionGuidance"')&&php.includes('id="transferEmailFeatureOpen"'),'visible CTA controls disclosure');
+test(css.includes('.transfer-email-feature__cta')&&css.includes('@media(max-width:480px)'), 'responsive CTA styles');
+test(!state([],'region').email&&state([],'region').title.includes('αν χρειαστεί'),'no-attachment mode does not compel sending');
+test(!state([record,family],'region').email, 'official/automatic checks do not trigger email');
+test(state([email],'region').email&&state([email],'region').title.includes('email'),'email evidence enables email composer');
+test(!state([emailBlocked],'region').email,'ineligible evidence does not trigger email');
+test(!state([mydocs],'music').email&&state([mydocs],'music').title.includes('mydocs'),'mydocs cannot masquerade as email');
+test(state([email,mydocs],'smeae').email&&state([email,mydocs],'smeae').title.includes('mydocs'),'mixed route explicitly distinguishes email from mydocs');
+test(state([special],'region').specialOnly&&!state([special],'region').email,'exceptional physical file suppresses email');
+test(state([email,special],'region').email&&!state([email,special],'region').specialOnly,'mixed exceptional+email preserves only real email work');
+for(const mode of ['region','local','smeae','eae_sensory','kedasy','music','art','intercultural']){
+ const t=template(mode,{name:'Δοκιμή',branch:'ΠΕ03',protocol:'11',registry:'22',home:'ΔΔΕ Κέρκυρας'});
+ test(t.subject&&t.body,'existing template unchanged in '+mode);
+ const href=mailto(t);
+ test(href.startsWith('mailto:?subject=')&&href.includes('&body=')&&!href.includes('mailto:%40'), 'mailto without guessed recipient for '+mode);
+ test(href.includes(encodeURIComponent('Δοκιμή')),'mailto uses live personal values '+mode);
+}
+test(code.includes("'[data-transfer-mailto]'")&&code.includes('setAttribute(\'href\',submissionMailto(tpl))'), 'personal input refresh updates mailto');
+test(code.includes("feature.specialOnly?'':submissionMessageHtml"),'special-only routes suppress composer');
+test(code.includes('openSubmissionComposer')&&code.includes("addEventListener('click',openSubmissionComposer)"),'CTA opens existing functional composer');
+test(!code.includes('localStorage.')&&!code.includes('sessionStorage.')&&!code.includes('fetch('),'composer stores no data remotely or persistently');
+console.log('PASS',count,'v3.22.151 feature regression checks');

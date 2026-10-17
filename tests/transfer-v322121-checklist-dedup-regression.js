@@ -45,12 +45,9 @@ ok(!generated.includes('data-doc-card="eae-service"'),'redundant EAE eligibility
 ok(!generated.includes('Ελέγξτε την τριετή διδακτική υπηρεσία'),'EAE service precheck copy no longer repeated in checklist');
 ok(!generated.includes('data-doc-card="eae-routing"'),'EAE channel removed from checklist');
 ok(!generated.includes('data-doc-card="service"'),'no extra recognition checkbox');
-ok(progress.textContent.startsWith('Έλεγχοι που σημειώθηκαν:'),'progress maintained');
+ok(progress.textContent.includes('Δικαιολογητικά/ενέργειες') || progress.textContent.includes('Δεν προκύπτουν δικαιολογητικά'),'progress counts preparation only');
 elements.mode.value='art';rows=guide.build();
-for(const id of ['art-service']){
- const d=rows.find(x=>x.id===id);
- ok(d && !d.detail.includes('Για τον κύκλο'),id+' no redundant date preface');
-}
+ok(!rows.some(x=>x.id==='art-service'),'art eligibility stays in dedicated verdict instead of checklist');
 // Source supports print path despite collapsed UI; keep printed instructions.
 elements.mode.value='smeae';guide.print; // print is intentionally not exported; the full details are in build rows.
 ok(rows.length>0 && code.includes('escape(d.detail).replace(/\\n/g'), 'print path still uses complete detail');

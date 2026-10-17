@@ -18,11 +18,12 @@ const engine=window.EducationTransferDocuments;
 let rows=engine.build();
 for(const id of ['ic-qual-order','ic-order','ic-same-area'])assert.equal(rows.some(x=>x.id===id),false,`${id} must not be a checklist task`);
 assert.ok(rows.some(x=>x.id==='ic-cv'),'Core checklist remains');
-for(const [mode,destination,expectedId] of [['smeae','smeae',null],['eae_sensory','deaf','eae-sign'],['eae_sensory','blind','eae-braille'],['kedasy','kedasy','eae-kedasy']]){
+for(const [mode,destination,expectedId] of [['smeae','smeae',null],['eae_sensory','deaf','eae-sign'],['eae_sensory','blind','eae-braille'],['kedasy','kedasy',null]]){
  el('mode').value=mode;el('transferEaeDestination').value=destination;
  rows=engine.build();if(expectedId)assert.ok(rows.some(x=>x.id===expectedId),`Specialized EAE route ${mode}/${destination}`);
  assert.equal(rows.some(x=>x.id==='eae-service'),false,`No duplicate EAE service checklist for ${mode}/${destination}`);
- if(mode==='smeae')assert.ok(rows.some(x=>x.id==='eae-masters'),'Relevant EAE qualification evidence remains in checklist');
+ if(mode==='smeae' || mode==='kedasy')assert.ok(rows.some(x=>x.id==='eae-masters'),'Relevant EAE qualification evidence remains in checklist');
+ if(mode==='kedasy')assert.equal(rows.some(x=>x.id==='eae-kedasy'),false,'No redundant KEDASY eligibility checklist item');
  assert.equal(rows.some(x=>x.id==='ic-qual-order'),false);
  assert.ok(engine.submissionGuideData().title.includes(mode==='kedasy'?'ΚΕΔΑΣΥ':mode==='eae_sensory'?'Κωφών/Τυφλών':'ΣΜΕΑΕ'));
 }

@@ -23,7 +23,7 @@ const window={open:()=>({document:{write(s){printed=s;},close(){}},focus(){},pri
 vm.runInNewContext(fs.readFileSync(path.join(root,'includes/transfer-eligibility.js'),'utf8'),{document,window});
 vm.runInNewContext(code,{document,window});
 const guide=window.EducationTransferDocuments;
-const idsCompact=['art-service','art-cv','art-inventory','art-degrees','art-publications'];
+const idsCompact=['art-cv','art-inventory','art-degrees','art-publications'];
 const rows=guide.build();
 assert.equal(rows.filter(x=>x.id==='art-no-scoring').length,0,'duplicate art scoring advisory removed as a checklist task');
 for(const id of idsCompact){assert.ok(rows.some(x=>x.id===id),'full row still exists '+id);}

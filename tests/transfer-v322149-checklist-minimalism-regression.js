@@ -1,0 +1,32 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const path = require('node:path');
+const code = fs.readFileSync(path.join(__dirname,'../includes/transfer-documents.js'),'utf8');
+const fake={};
+function element(id){return fake[id] || (fake[id]={value:'',checked:false,selectedOptions:[{textContent:'Τρέχουσα αίτηση'}]});}
+Object.entries({mode:'region',serviceMode:'points',msdMode:'direct',eligibleChildren:'2',transferMusicPreviousYear:'none',transferMusicException:'none',transferMusicSubject:'unspecified',transferEducationType:'general',transferArtPreviousYear:'none',transferCoServiceCase:'unspecified',transferGeneralOrigin:'general'}).forEach(([k,v])=>element(k).value=v);
+const document={getElementById:element,querySelectorAll(){return [];}};
+const window={};
+vm.runInNewContext(code,{document,window});
+const api=window.EducationTransferDocuments;
+let count=0;
+function check(c,msg){assert.ok(c,msg);count++;}
+const rows=api.build();
+const family=rows.find(r=>r.id==='family');
+check(!!family,'family row remains');
+check(api.submissionChannel(family).text==='Αυτεπάγγελτα από ΔΔΕ — δεν το προσκομίζετε','only visible family message remains');
+check(/αναζητείται ΥΠΟΧΡΕΩΤΙΚΑ αυτεπαγγέλτως/.test(family.detail),'full legal explanatory text remains in disclosure');
+check(!code.includes("family:'Το ελληνικό πιστοποιητικό"),'duplicate family outside-summary removed');
+check(code.includes("['family','record','music-common','eae-doctorate'"),'compact cards hide duplicated metadata outside disclosure');
+check(code.includes("['family','music-common'].indexOf(d.id)===-1"),'print hides the duplicate category for these cards');
+element('mode').value='music';
+const musicRows=api.build();
+check(musicRows.some(r=>r.id==='music-common'),'music dossier preserved');
+check(!musicRows.some(r=>r.id==='music-service'),'redundant music service document removed');
+check(!musicRows.some(r=>r.id==='music-warnings'),'redundant precheck row removed');
+check(!code.includes("entry('music-warnings'"),'redundant precheck not generated');
+check(musicRows.find(r=>r.id==='music-common').detail.includes('Αναλυτικό βιογραφικό'),'disclosure dossier details preserved');
+check(fs.readFileSync(path.join(__dirname,'../includes/transfer-ui.js'),'utf8').includes('transferMusicAdvice'),'music service verdict remains above the checklist');
+console.log(`PASS ${count} v3.22.149 checklist minimization checks`);

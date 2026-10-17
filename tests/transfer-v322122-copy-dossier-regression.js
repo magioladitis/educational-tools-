@@ -23,17 +23,12 @@ const document={getElementById(id){return id==='transferDocumentChecklist'?check
 const window={};
 vm.runInNewContext(js,{window,document});
 const guide=window.EducationTransferDocuments;
-for(const [mode,id] of [['smeae','eae-dossier'],['music','music-dossier'],['art','art-dossier'],['intercultural','intercultural-dossier']]){
+for(const [mode,id,statusId] of [['smeae','eae-dossier','transferEaeDossierAdvice'],['music','music-dossier','transferMusicDossierAdvice'],['art','art-dossier','transferArtDossierAdvice'],['intercultural','intercultural-dossier','transferInterculturalDossierAdvice']]){
  el('mode').value=mode;
  guide.render();
- const m=html.match(new RegExp('<article class="([^"]+)" data-doc-card="'+id+'">([\\s\\S]*?)<\\/article>'));
- assert.ok(m,`${id} checklist item exists`);
- assert.ok(m[1].includes('is-compact'),`${id} is compact`);
- assert.ok(!m[2].includes('edu-transfer-doc__summary'),`${id} has no outside summary`);
- assert.ok(m[2].includes('<summary>Περισσότερες πληροφορίες</summary>'),`${id} disclosure retained`);
- assert.ok(m[2].includes('edu-transfer-doc__detail'),`${id} detail retained`);
- assert.ok(guide.build().find(x=>x.id===id).detail,`${id} full print data retained`);
- n+=6;
+ assert.ok(!html.includes('data-doc-card="'+id+'"'),`${id} is not repeated as a checklist item`);
+ assert.ok(php.includes('id="'+statusId+'"'),`${id} live status remains by its input`);
+ n+=2;
 }
 assert.ok(js.includes('function print(){var rows=build()') && js.includes('escape(d.detail)'), 'printing not truncated');n++;
 assert.match(fs.readFileSync(path.join(root,'includes/config.php'),'utf8'),/EDU_TOOLS_VERSION', '3\.22\.\d+'/);n++;

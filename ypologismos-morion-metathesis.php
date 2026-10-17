@@ -409,19 +409,25 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           . '<p><strong>Αμοιβαίες μεταθέσεις:</strong> αίτηση εντός 15 ημερών από την ανακοίνωση των μεταθέσεων.</p>'
       )); ?>
 
-      <?php calculatorDisclosure(array(
-        'id' => 'transferSubmissionGuidance',
-        'summary' => 'Πού αποστέλλονται τα δικαιολογητικά;',
-        'html' => '<div id="transferSubmissionGuidanceBody" class="transfer-submission-content">Για την αποστολή δικαιολογητικών προβλέπονται email προς την αρμόδια ΔΔΕ ή υποβολή μέσω mydocs.minedu.gov.gr. Ο σωστός τρόπος καθορίζεται από το είδος της αίτησης και των δικαιολογητικών.</div>'
-      )); ?>
-
       <section id="transferDocumentsPanel" style="padding:16px; border:1px solid #b8c5d5; border-radius:12px; margin:16px 0;">
         <h2 style="margin-top:0">Δ. Σύμβουλος δικαιολογητικών — Τι πρέπει να ετοιμάσω;</h2>
         <div id="transferDocumentActionSummary" class="transfer-doc-action-summary" role="note" hidden></div>
-        <p class="small-note">Η λίστα προσαρμόζεται στις επιλογές σας. Περιλαμβάνει και <strong>ελέγχους μητρώου ή αυτεπαγγέλτως αναζητούμενα πιστοποιητικά</strong>, τα οποία δεν υποβάλλετε απαραίτητα εσείς. Για τον τρόπο αποστολής των δικαιολογητικών δείτε την προηγούμενη ενότητα.</p>
+        <p class="small-note">Η λίστα προσαρμόζεται στις επιλογές σας. Μόνο οι ενέργειες που πρέπει να ετοιμάσετε έχουν checkbox· οι υπηρεσιακοί έλεγχοι και τα αυτεπαγγέλτως αναζητούμενα εμφανίζονται ενημερωτικά.</p>
         <p id="transferDocumentProgress" class="edu-transfer-doc__progress" role="status" aria-live="polite" aria-atomic="true"></p>
         <div id="transferDocumentChecklist" aria-label="Προσωποποιημένη λίστα ελέγχου δικαιολογητικών"></div>
         <button type="button" class="secondary" id="transferPrintChecklist">Εκτύπωση λίστας δικαιολογητικών</button>
+      </section>
+      <section class="transfer-email-feature" id="transferEmailFeature" aria-labelledby="transferEmailFeatureTitle">
+        <h3 id="transferEmailFeatureTitle">Έτοιμο email υποβολής δικαιολογητικών</h3>
+        <p class="transfer-email-feature__lead" id="transferEmailFeatureLead">Ετοιμάστε θέμα και κείμενο μηνύματος για τα δικαιολογητικά που απαιτούν αποστολή. Ο τρόπος υποβολής προσαρμόζεται στην αίτησή σας.</p>
+        <button type="button" id="transferEmailFeatureOpen" class="transfer-email-feature__cta" aria-controls="transferSubmissionGuidance" aria-expanded="false">Δημιουργία μηνύματος υποβολής ↓</button>
+        <p class="transfer-email-feature__helper" id="transferEmailFeatureHelper">Το μήνυμα δημιουργείται στη συσκευή σας· δεν αποστέλλεται από την Εργαλειοθήκη.</p>
+        <?php calculatorDisclosure(array(
+          'id' => 'transferSubmissionGuidance',
+          'class' => 'transfer-email-feature__disclosure',
+          'summary' => 'Πού αποστέλλονται τα δικαιολογητικά; — Οδηγίες και υπόδειγμα',
+          'html' => '<div id="transferSubmissionGuidanceBody" class="transfer-submission-content">Η διαδρομή email ή mydocs εξαρτάται από τον τύπο αίτησης και το δικαιολογητικό. Δείτε τις προσωπικές οδηγίες και το υπόδειγμα μηνύματος.</div>'
+        )); ?>
       </section>
       <?php calculatorResultMessage(array(
         'variant' => 'disclaimer',

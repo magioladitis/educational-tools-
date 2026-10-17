@@ -27,7 +27,7 @@ for(const id of ['transferGeneralFromEaePanel','transferGeneralOrigin','transfer
 ok(php.includes('Από περιοχή σε περιοχή — Γενική [001.ΔΕ001]'),'label');
 ok(ui.includes('syncGeneralReturn();'),'sync');
 ok(ui.includes("mode==='region'"),'toggle');
-ok(docs.includes("'eae-to-general'"),'checklist');
+ok(!docs.includes("entry('eae-to-general'"),'no duplicate eligibility document; status stays above');
 
 // Issue regression: 1 year EAE + 2 years area must be a clear negative verdict.
 let sample=e.returnToGeneral({origin:'appointed_eae',eaeYears:1,areaYears:2});
