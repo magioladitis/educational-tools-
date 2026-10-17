@@ -41,7 +41,7 @@
     if(blocked)check.checked=false;
     check.disabled=blocked;
     var field=$('primaryCoServiceCaseField');
-    if(field)field.style.display=(check.checked || choice.value!=='unspecified')?'':'none';
+    global.EducationTransferSocialInput.syncCoServiceField(check, field, choice);
     var note=$('primaryCoServiceAdvice');
     if(note)note.textContent=(check.checked || choice.value!=='unspecified')?(data.summary + (review?' Τα +4 μόρια δεν προστίθενται μέχρι επαλήθευσης.':'')):'';
     check.setAttribute('aria-describedby',blocked||review?'primaryCoServiceAdvice':'');
@@ -234,9 +234,8 @@
     $('primaryServicePointsPanel').hidden=mode!=='points';
     $('primaryServiceDurationPanel').hidden=mode!=='direct';
     var children=numeric($('primaryChildren'),20),years=numeric($('primaryYears'),50), months=numeric($('primaryMonths'),11), days=numeric($('primaryDays'),29);
-    var childHint=$('primaryChildrenHint'), childField=$('primaryChildren');
+    var childField=$('primaryChildren');
     var childOutOfRange=children===null;
-    if(childHint){ childHint.textContent=childOutOfRange?'⚠ Εισαγάγετε ακέραιο αριθμό τέκνων από 0 έως 20.':'Επιτρεπτές τιμές: 0–20 τέκνα.'; childHint.setAttribute('data-invalid',String(childOutOfRange)); }
     childField.setAttribute('aria-invalid',String(childOutOfRange));
     if (children === 0) { $('primaryChildrenExtra').checked = false; $('primaryChildrenExtra').disabled = true; }
     else $('primaryChildrenExtra').disabled = false;
@@ -345,6 +344,7 @@
       update();
     }
   });
+  global.EducationTransferSocialInput.bindCoServiceField($('primaryCoservice'), $('primaryCoServiceCaseField'), $('primaryCoServiceCase'));
   document.querySelectorAll('input,select').forEach(function(el){
     if(el.closest('#primaryEmailDetails'))return;
     el.addEventListener('input',function(){

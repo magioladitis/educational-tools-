@@ -10,5 +10,32 @@
     if (!Number.isFinite(n)) { input.value = ''; return; }
     input.value = String(Math.max(0, Math.min(20, Math.floor(n))));
   }
-  global.EducationTransferSocialInput = Object.freeze({clampChildren: clampChildren});
+  // A single visibility rule for the spouse-employment dropdown on both grades.
+  // Grade-specific eligibility rules remain in their respective controllers.
+  function syncCoServiceField(checkbox, field, choice) {
+    if (!checkbox || !field || !choice) return false;
+    var visible = checkbox.checked || choice.value !== 'unspecified';
+    field.style.display = visible ? 'block' : 'none';
+    if (typeof field.setAttribute === 'function') field.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    return visible;
+  }
+  function bindCoServiceField(checkbox, field, choice) {
+    if (!checkbox || !field || !choice) return;
+    // Direct input handling keeps the dropdown responsive even when another
+    // unrelated numeric field prevents a complete recalculation.
+    ['input', 'change'].forEach(function (eventName) {
+      checkbox.addEventListener(eventName, function () {
+        syncCoServiceField(checkbox, field, choice);
+      });
+      choice.addEventListener(eventName, function () {
+        syncCoServiceField(checkbox, field, choice);
+      });
+    });
+    syncCoServiceField(checkbox, field, choice);
+  }
+  global.EducationTransferSocialInput = Object.freeze({
+    clampChildren: clampChildren,
+    syncCoServiceField: syncCoServiceField,
+    bindCoServiceField: bindCoServiceField
+  });
 })(typeof window !== 'undefined' ? window : globalThis);

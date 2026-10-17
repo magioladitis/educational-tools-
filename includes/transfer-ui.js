@@ -340,7 +340,7 @@
     if(blocked)checkbox.checked=false;
     checkbox.disabled=blocked;
     var field=byId('transferCoServiceCaseField');
-    if(field)field.style.display=(checkbox.checked || choice!=='unspecified')?'':'none';
+    global.EducationTransferSocialInput.syncCoServiceField(checkbox, field, byId('transferCoServiceCase'));
     var advice=byId('transferCoServiceAdvice');
     if(advice)advice.textContent=(checkbox.checked || choice!=='unspecified') && details ? details.summary + (needsReview?' Τα +4 μόρια δεν προστίθενται χωρίς επαλήθευση.':'') : '';
     checkbox.setAttribute('aria-describedby',(blocked||needsReview)?'transferCoServiceAdvice':'');
@@ -699,6 +699,7 @@
     byId('resetBtn').addEventListener('click', reset);
     byId('mode').addEventListener('change', syncMode);
     if(global.EducationTransferDocuments) global.EducationTransferDocuments.init();
+    global.EducationTransferSocialInput.bindCoServiceField(byId('coService'), byId('transferCoServiceCaseField'), byId('transferCoServiceCase'));
 
     document.addEventListener('input', function (event) {
       var target = event.target;
