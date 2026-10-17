@@ -329,6 +329,7 @@ function submissionGuideData(){
  * Only genuinely actionable documents determine the visible email/mydocs callout.
  * An official check or exceptional physical route must never be called email.
  */
+function submissionUiText(key,defaultText){return global.EducationTransferEmailComponent&&global.EducationTransferEmailComponent.label(key)||defaultText;}
 function submissionFeatureState(rows,mode){
  mode=mode||($('mode')?$('mode').value:'region');
  rows=rows||build();
@@ -341,21 +342,21 @@ function submissionFeatureState(rows,mode){
   lead:'Η επιλογή σας απαιτεί ειδική διαδικασία. Ελέγξτε πού υποβάλλονται τα στοιχεία πριν χρησιμοποιήσετε οποιοδήποτε υπόδειγμα.',
   button:'Προβολή ειδικών οδηγιών υποβολής',email:false,specialOnly:true};
  if(email&&mydocs)return {
-  title:'Έτοιμο email και υπόδειγμα mydocs',
+  title:submissionUiText('mixedTitle','Έτοιμο email και υπόδειγμα mydocs'),
   lead:'Για τη μοριοδότηση ετοιμάζετε email στη ΔΔΕ οργανικής· ο φάκελος προσόντων υποβάλλεται χωριστά στο mydocs μόνο όπου απαιτείται.',
-  button:'Προετοιμασία μηνύματος υποβολής',email:true};
+  button:submissionUiText('mixedButton','Προετοιμασία μηνύματος υποβολής'),email:true};
  if(email)return {
-  title:'Έτοιμο email υποβολής δικαιολογητικών',
+  title:submissionUiText('emailTitle','Έτοιμο email υποβολής δικαιολογητικών'),
   lead:'Δημιουργήστε θέμα και σώμα email για τα αποδεικτικά που πρέπει να αποστείλετε στη ΔΔΕ οργανικής.',
-  button:'Δημιουργία email υποβολής',email:true};
+  button:submissionUiText('emailButton','Δημιουργία email υποβολής'),email:true};
  if(mydocs)return {
-  title:'Έτοιμο υπόδειγμα υποβολής μέσω mydocs',
+  title:submissionUiText('mydocsTitle','Έτοιμο υπόδειγμα υποβολής μέσω mydocs'),
   lead:'Η συγκεκριμένη διαδρομή αφορά mydocs, μόνο εφόσον απαιτείται νέος ή συμπληρωματικός φάκελος· δεν αντικαθίσταται με email.',
-  button:'Προετοιμασία κειμένου για mydocs',email:false};
+  button:submissionUiText('mydocsButton','Προετοιμασία κειμένου για mydocs'),email:false};
  return {
-  title:'Υπόδειγμα μηνύματος — αν χρειαστεί',
+  title:submissionUiText('optionalTitle','Υπόδειγμα μηνύματος — αν χρειαστεί'),
   lead:'Δεν προκύπτει αυτή τη στιγμή δικαιολογητικό προς αποστολή από τις επιλογές σας. Το υπόδειγμα παραμένει διαθέσιμο για ενδεχόμενη μεταβολή.',
-  button:'Προβολή προαιρετικού υποδείγματος',email:false};
+  button:submissionUiText('optionalButton','Προβολή προαιρετικού υποδείγματος'),email:false};
 }
 function updateSubmissionFeature(state){
  var card=document.querySelector?document.querySelector('#transferEmailFeature'):null;
@@ -368,7 +369,7 @@ function updateSubmissionFeature(state){
 }
 function submissionMailto(tpl){
  // No guessed recipient and no automatic sending or attachments.
- return 'mailto:?subject='+encodeURIComponent(tpl.subject)+'&body='+encodeURIComponent(tpl.body);
+ return global.EducationTransferEmailComponent?global.EducationTransferEmailComponent.mailto(tpl):'mailto:?subject='+encodeURIComponent(tpl.subject)+'&body='+encodeURIComponent(tpl.body);
 }
 /* v3.22.131 — optional, entirely client-side personalization of the official
    message templates (circular §2.2.1 / §2.2.4 / §2.2.5). All values remain
@@ -414,9 +415,11 @@ function personalField(key,label,placeholder,wide){
  var max=key==='protocol'?150:key==='registry'?15:120;
  if(key==='branch'){
   var labels=global.EducationTransferTeacherSpecialtyLabels||{};
-  var options=Object.keys(labels).sort(function(a,b){return a.localeCompare(b,'el');}).map(function(code){
-   return '<option value="'+escape(code)+'"'+(submissionPersonal.branch===code?' selected':'')+'>'+escape(code+' — '+labels[code])+'</option>';
-  }).join('');
+  var shared=global.EducationTransferEmailComponent;
+  var options=shared&&shared.specialtyOptions?shared.specialtyOptions(labels,submissionPersonal.branch):
+   Object.keys(labels).sort(function(a,b){return a.localeCompare(b,'el');}).map(function(code){
+    return '<option value="'+escape(code)+'"'+(submissionPersonal.branch===code?' selected':'')+'>'+escape(code+' — '+labels[code])+'</option>';
+   }).join('');
   return '<label class="transfer-submission-template__field'+(wide?' is-wide':'')+'" for="transferPersonal-branch">'+
    '<span>'+escape(label)+'</span><select id="transferPersonal-branch" name="transfer-personal-branch" data-transfer-personal-field="branch">'+
    '<option value="">— Επιλέξτε ειδικότητα —</option>'+options+'</select></label>';
@@ -428,23 +431,23 @@ function personalField(key,label,placeholder,wide){
 function submissionMessageHtml(data,expanded,allowEmail){
  var tpl=submissionMessageTemplate(data.mode,submissionPersonal);
  return '<section class="transfer-submission-template" aria-label="Υπόδειγμα θέματος και σώματος αποστολής">'+
-  '<h4>Θέμα και σώμα μηνύματος — υπόδειγμα</h4>'+
+  '<h4>'+escape(submissionUiText('templateHeading','Θέμα και σώμα μηνύματος — υπόδειγμα'))+'</h4>'+
   '<p class="transfer-submission-template__note">Το υπόδειγμα ακολουθεί τον επιλεγμένο τύπο αίτησης. '+
   (tpl.general?'Χρησιμοποιείται για email στη ΔΔΕ οργανικής.':'Για τα σχετικά δικαιολογητικά της ΔΔΕ ή την υποβολή στο mydocs, <strong>μόνο όπου προβλέπεται</strong>. Στο mydocs το σώμα μπορεί να εμφανίζεται ως πεδίο «Αιτούμαι».')+'</p>'+
   '<details class="transfer-submission-template__personalize" data-transfer-personalize'+(expanded?' open':'')+'>'+
-  '<summary>Δημιουργία έτοιμου μηνύματος (προαιρετικά)</summary>'+
+  '<summary>'+escape(submissionUiText('personalize','Δημιουργία έτοιμου μηνύματος (προαιρετικά)'))+'</summary>'+
   '<div class="transfer-submission-template__personal-body">'+
   '<p class="transfer-submission-template__private-note">Συμπληρώστε όσα στοιχεία θέλετε από την <strong>οριστικοποιημένη</strong> αίτηση. Τα κενά παραμένουν ως υποδείξεις σε αγκύλες. Τα στοιχεία χρησιμοποιούνται μόνο σε αυτή τη σελίδα, χωρίς αποστολή ή μόνιμη αποθήκευση.</p>'+
   '<div class="transfer-submission-template__fields">'+
   personalField('name','Ονοματεπώνυμο','π.χ. Παπαδόπουλος Νικόλαος',true)+
   personalField('branch','Κλάδος / ειδικότητα','π.χ. ΠΕ03',false)+
   personalField('registry','Αριθμός μητρώου','Α.Μ. εκπαιδευτικού',false)+
-  personalField('protocol','Αριθμός πρωτοκόλλου οριστικοποιημένης αίτησης','Αντιγραφή από teachers.minedu.gov.gr',true)+
+  personalField('protocol','Αριθμός πρωτοκόλλου οριστικοποιημένης αίτησης',''+escape(submissionUiText('copy','Αντιγραφή'))+' από teachers.minedu.gov.gr',true)+
   (tpl.general?'':personalField('home','ΔΔΕ οργανικής','π.χ. ΔΔΕ Κέρκυρας',true))+
-  '</div><button type="button" class="secondary transfer-submission-template__clear" data-transfer-personal-clear>Καθαρισμός πεδίων</button></div></details>'+
-  '<div class="transfer-submission-template__item"><div class="transfer-submission-template__bar"><strong>Θέμα:</strong><button type="button" class="secondary" data-transfer-copy-template="subject" aria-label="Αντιγραφή θέματος">Αντιγραφή</button></div><p class="transfer-submission-template__value" data-transfer-template-value="subject">'+escape(tpl.subject)+'</p></div>'+
-  '<div class="transfer-submission-template__item"><div class="transfer-submission-template__bar"><strong>Σώμα κειμένου:</strong><button type="button" class="secondary" data-transfer-copy-template="body" aria-label="Αντιγραφή σώματος κειμένου">Αντιγραφή</button></div><p class="transfer-submission-template__value" data-transfer-template-value="body">'+escape(tpl.body)+'</p></div>'+
-  (allowEmail?'<p class="transfer-submission-template__email-action"><a class="transfer-email-feature__mail-link" data-transfer-mailto href="'+escape(submissionMailto(tpl))+'">Άνοιγμα στο email μου ↗</a> <span>Ο παραλήπτης δεν συμπληρώνεται αυτόματα· προσθέστε εσείς τα συνημμένα. Δεν πραγματοποιείται αποστολή.</span></p>':'')+
+  '</div><button type="button" class="secondary transfer-submission-template__clear" data-transfer-personal-clear>'+escape(submissionUiText('clear','Καθαρισμός πεδίων'))+'</button></div></details>'+
+  '<div class="transfer-submission-template__item"><div class="transfer-submission-template__bar"><strong>'+escape(submissionUiText('subject','Θέμα:'))+'</strong><button type="button" class="secondary" data-transfer-copy-template="subject" aria-label="'+escape(submissionUiText('copy','Αντιγραφή'))+' θέματος">'+escape(submissionUiText('copy','Αντιγραφή'))+'</button></div><p class="transfer-submission-template__value" data-transfer-template-value="subject">'+escape(tpl.subject)+'</p></div>'+
+  '<div class="transfer-submission-template__item"><div class="transfer-submission-template__bar"><strong>'+escape(submissionUiText('body','Σώμα κειμένου:'))+'</strong><button type="button" class="secondary" data-transfer-copy-template="body" aria-label="'+escape(submissionUiText('copy','Αντιγραφή'))+' σώματος κειμένου">'+escape(submissionUiText('copy','Αντιγραφή'))+'</button></div><p class="transfer-submission-template__value" data-transfer-template-value="body">'+escape(tpl.body)+'</p></div>'+
+  (allowEmail?'<p class="transfer-submission-template__email-action"><a class="transfer-email-feature__mail-link" data-transfer-mailto href="'+escape(submissionMailto(tpl))+'">'+escape(submissionUiText('openMail','Άνοιγμα στο email μου ↗'))+'</a> <span>'+escape(submissionUiText('recipientHint','Ο παραλήπτης δεν συμπληρώνεται αυτόματα· προσθέστε εσείς τα συνημμένα. Δεν πραγματοποιείται αποστολή.'))+'</span></p>':'')+
   '<p class="transfer-submission-template__source">Πηγή: εγκύκλιος μεταθέσεων Δ.Ε. 138014/Ε2/15-10-2026, §'+escape(tpl.circular)+'. Το υπόδειγμα αφορά ηλεκτρονική υποβολή όπου προβλέπεται· ειδικά δικαιολογητικά (π.χ. ορισμένες υγειονομικές γνωματεύσεις) μπορεί να έχουν διαφορετική διαδικασία.</p>'+
   '<p class="transfer-submission-template__feedback" id="transferSubmissionCopyFeedback" role="status" aria-live="polite"></p></section>';
 }
@@ -511,12 +514,21 @@ function copySubmissionTemplate(event){
  var feedback=container.querySelector('#transferSubmissionCopyFeedback');
  if(!value)return;
  var copied=value.textContent;
+ if(global.EducationTransferEmailComponent){
+  global.EducationTransferEmailComponent.copy(copied,{
+    nativeSuccess:submissionUiText('copySuccess','Το κείμενο αντιγράφηκε.'),
+    nativeBrackets:submissionUiText('copyBrackets','Αντιγράφηκε. Συμπληρώστε τα πεδία που απομένουν στις αγκύλες.'),
+    fallbackSuccess:submissionUiText('copySuccess','Το κείμενο αντιγράφηκε.'),
+    fallbackFailure:submissionUiText('copyFallbackFailure','Επιλέξτε το κείμενο και αντιγράψτε το χειροκίνητα.')
+  },feedback);
+  return;
+ }
  if(typeof navigator!=='undefined'&&navigator.clipboard&&navigator.clipboard.writeText){
   navigator.clipboard.writeText(copied).then(function(){
-   if(feedback)feedback.textContent=/\[[^\]]+\]/.test(copied)?'Αντιγράφηκε. Συμπληρώστε τα πεδία που απομένουν στις αγκύλες.':'Το κείμενο αντιγράφηκε.';
-  },function(){if(feedback)feedback.textContent=legacyCopySubmission(copied)?'Το κείμενο αντιγράφηκε.':'Δεν ήταν δυνατή η αντιγραφή. Επιλέξτε το κείμενο χειροκίνητα.';});
+   if(feedback)feedback.textContent=/\[[^\]]+\]/.test(copied)?submissionUiText('copyBrackets','Αντιγράφηκε. Συμπληρώστε τα πεδία που απομένουν στις αγκύλες.'):submissionUiText('copySuccess','Το κείμενο αντιγράφηκε.');
+  },function(){if(feedback)feedback.textContent=legacyCopySubmission(copied)?submissionUiText('copySuccess','Το κείμενο αντιγράφηκε.'):submissionUiText('copyNativeFailure','Δεν ήταν δυνατή η αντιγραφή. Επιλέξτε το κείμενο χειροκίνητα.');});
  }else if(feedback){
-  feedback.textContent=legacyCopySubmission(copied)?'Το κείμενο αντιγράφηκε.':'Επιλέξτε το κείμενο και αντιγράψτε το χειροκίνητα.';
+  feedback.textContent=legacyCopySubmission(copied)?submissionUiText('copySuccess','Το κείμενο αντιγράφηκε.'):submissionUiText('copyFallbackFailure','Επιλέξτε το κείμενο και αντιγράψτε το χειροκίνητα.');
  }
 }
 function renderSubmissionGuidance(rows){
@@ -539,6 +551,10 @@ function renderSubmissionGuidance(rows){
 function openSubmissionComposer(){
  var disclosure=$('transferSubmissionGuidance');
  if(!disclosure)return;
+ if(global.EducationTransferEmailComponent){
+  global.EducationTransferEmailComponent.open(disclosure,$('transferEmailFeatureOpen'),'[data-transfer-personalize]');
+  return;
+ }
  disclosure.open=true;
  var personalize=disclosure.querySelector('[data-transfer-personalize]');
  if(personalize)personalize.open=true;
@@ -602,7 +618,7 @@ function render(){
 function print(){var rows=build(),mode=$('mode').selectedOptions[0].textContent,submission=submissionGuideData(),html='<!doctype html><html lang="el"><meta charset="utf-8"><title>Λίστα δικαιολογητικών μετάθεσης</title><style>body{font:14px Arial;max-width:780px;margin:36px auto;line-height:1.5}li{margin-bottom:14px}small{color:#555;font-size:11px}</style><h1>Έλεγχος δικαιολογητικών μετάθεσης</h1><p>'+escape(mode)+'</p>'+(($('mode').value==='intercultural')?'<h2>Σημειώσεις Διαπολιτισμικών</h2><p><strong>Αλληλεπίδραση με άλλες αιτήσεις.</strong> Σε περίπτωση ικανοποίησης μετάθεσης σε ΕΑΕ/ΚΕΔΑΣΥ, Μουσικό ή Καλλιτεχνικό, δεν εξετάζεται η αίτηση για Διαπολιτισμικό. Αν ικανοποιηθεί σε Διαπολιτισμικό, δεν λαμβάνονται υπόψη άλλες αιτήσεις.</p><p><strong>Μετάθεση προς Γενική μέσα στην ίδια περιοχή.</strong> Εκπαιδευτικός με οργανική σε Διαπολιτισμικό που ζητά σχολείο Γενικής στην ίδια περιοχή υποβάλλει αίτηση από περιοχή σε περιοχή, όχι βελτίωσης.</p>':'')+'<h2>Πού αποστέλλονται τα δικαιολογητικά;</h2><p><strong>'+escape(submission.title)+'</strong></p>'+submission.lines.map(function(t){return '<p>'+escape(t)+'</p>';}).join('')+'<h3>Θέμα και σώμα μηνύματος — υπόδειγμα</h3><p>Αντικαταστήστε τα πεδία στις αγκύλες με τα στοιχεία της οριστικοποιημένης αίτησης.</p><p><strong>Θέμα:</strong> '+escape(submissionMessageTemplate().subject)+'</p><p><strong>Σώμα κειμένου:</strong> '+escape(submissionMessageTemplate().body)+'</p><p><small>Εγκύκλιος 138014/Ε2/15-10-2026, §'+escape(submissionMessageTemplate().circular)+'</small></p>'+'<p><strong>Ενδεικτική λίστα — όχι βεβαίωση υποχρεωτικών εγγράφων.</strong> Επαληθεύστε τα πάντα με την εγκύκλιο της περιόδου και τη ΔΔΕ.</p><ul>'+rows.map(function(d){return '<li>'+(d.disabled?'— Δεν μοριοδοτείται':(documentTaskType(d,submissionChannel(d))==='action'?(checked[d.id]?'☑':'☐'):'ⓘ'))+' <strong>'+escape(d.title)+'</strong><br>'+escape(d.detail).replace(/\n/g,'<br>')+(d.tag && ['family','music-common'].indexOf(d.id)===-1?' <small>('+escape(d.tag)+')</small>':'')+'<br><small>'+escape(submissionChannel(d).text)+'</small>'+'</li>';}).join('')+'</ul></html>';var win=global.open('','_blank');if(win){win.document.write(html);win.document.close();win.focus();win.print();}}
 function init(){var b=$('transferPrintChecklist');if(b)b.addEventListener('click',print);
  var launch=$('transferEmailFeatureOpen');if(launch)launch.addEventListener('click',openSubmissionComposer);
- var disclosure=$('transferSubmissionGuidance');if(disclosure)disclosure.addEventListener('toggle',function(){var btn=$('transferEmailFeatureOpen');if(btn)btn.setAttribute('aria-expanded',disclosure.open?'true':'false');});
+ var disclosure=$('transferSubmissionGuidance');if(disclosure){if(global.EducationTransferEmailComponent)global.EducationTransferEmailComponent.bindState(disclosure,$('transferEmailFeatureOpen'));else disclosure.addEventListener('toggle',function(){var btn=$('transferEmailFeatureOpen');if(btn)btn.setAttribute('aria-expanded',disclosure.open?'true':'false');});}
  document.addEventListener('click',copySubmissionTemplate);document.addEventListener('input',function(e){if(onSubmissionPersonalInput(e))return;if(e.target.closest && e.target.closest('#transferDocumentChecklist'))return;if(e.target.closest && e.target.closest('.edu-page-transfer'))render();});document.addEventListener('change',function(e){if(onSubmissionPersonalInput(e))return;if(e.target.closest && e.target.closest('#transferDocumentChecklist'))return;if(e.target.closest && e.target.closest('.edu-page-transfer'))render();});render();}
 global.EducationTransferDocuments=Object.freeze({init:init,render:render,build:build,submissionChannel:submissionChannel,coServiceInfo:coServiceInfo,submissionGuideData:submissionGuideData,renderSubmissionGuidance:renderSubmissionGuidance,submissionMessageTemplate:submissionMessageTemplate,submissionFeatureState:submissionFeatureState,submissionMailto:submissionMailto});
 })(window);

@@ -18,6 +18,8 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
   <?php require __DIR__ . '/includes/head-pwa.php'; ?>
   <title>Μεταθέσεις μόνιμων εκπαιδευτικών Δ.Ε.</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
+  <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-secondary.css'), ENT_QUOTES, 'UTF-8'); ?>">
+  <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-level-switch.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-transfer">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -32,9 +34,9 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
 
   <!-- Only the grade switch is new on the stabilized Secondary page.
        All Secondary form fields, data and calculations remain unchanged. -->
-  <nav aria-label="Βαθμίδα εκπαίδευσης" style="margin:12px 0 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+  <nav class="transfer-level-switch" aria-label="Επιλογή βαθμίδας">
+    <a href="ypologismos-morion-metathesis-protovathmia.php">Πρωτοβάθμια</a>
     <strong aria-current="page">Δευτεροβάθμια</strong>
-    <a href="ypologismos-morion-metathesis-protovathmia.php" style="display:inline-block;padding:9px 12px;border-radius:8px;border:1px solid #769abd">Πρωτοβάθμια — γενικές μεταθέσεις ↗</a>
   </nav>
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
@@ -484,6 +486,7 @@ window.EducationTransferTeacherSpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-artistic-vacancies.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-intercultural-vacancies.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-email-component.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-documents.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>

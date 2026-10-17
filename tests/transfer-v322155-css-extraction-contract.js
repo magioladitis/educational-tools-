@@ -1,0 +1,27 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');
+function read(filename){return fs.readFileSync(path.join(root,filename),'utf8');}
+const primary=read('ypologismos-morion-metathesis-protovathmia.php');
+const secondary=read('ypologismos-morion-metathesis.php');
+const a=read('assets/transfer-primary.css');
+const b=read('assets/transfer-secondary.css');
+assert.doesNotMatch(primary,/<style\b/i, 'Primary must not embed styles');
+assert.ok(primary.includes("edu_asset_url('assets/transfer-primary.css')"));
+assert.ok(secondary.includes("edu_asset_url('assets/transfer-secondary.css')"));
+assert.ok(secondary.includes('class="transfer-level-switch"'));
+assert.ok(!secondary.includes('style="margin:12px 0 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap"'));
+assert.ok(a.includes('.primary-eae-status[data-status="problem"]'));
+assert.ok(a.includes('.primary-eae-status[data-status="positive"]'));
+assert.ok(a.includes('#primaryMailAction[hidden]'));
+assert.ok(a.includes('@media print'));
+assert.ok(a.includes('#primaryEaeCertificationDossierField[hidden]'));
+assert.ok(secondary.includes("edu_asset_url('assets/transfer-level-switch.css')"));
+assert.ok(primary.includes("edu_asset_url('assets/transfer-level-switch.css')"));
+assert.ok(read('assets/transfer-level-switch.css').includes('.transfer-level-switch > a'));
+assert.ok(b.includes('transfer-level-switch.css'));
+assert.ok(secondary.includes('id="transferGeneralFromEaePanel" style="display:none;'), 'Keep JS-dependent display until separately verified');
+assert.ok(read('includes/transfer-ui.js').includes('.style.display'));
+console.log('PASS transfer v3.22.155: CSS extraction with preserved dynamic display contracts');

@@ -5,6 +5,15 @@
  * Do not route Primary applicants into the Secondary-specific document/eligibility UI.
  */
 require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/teacher-specialties.php';
+// Only the branches relevant to Primary teacher applications, not a list of EAE eligibility.
+$primaryTransferBranchCodes = array('ΠΕ05', 'ΠΕ06', 'ΠΕ07', 'ΠΕ08', 'ΠΕ11', 'ΠΕ60', 'ΠΕ61',
+    'ΠΕ70', 'ΠΕ71', 'ΠΕ73', 'ΠΕ79.01', 'ΠΕ86', 'ΠΕ91.01', 'ΠΕ91.02');
+$primaryTransferSpecialtyLabels = array();
+$registry = teacherSpecialties();
+foreach ($primaryTransferBranchCodes as $code) {
+    if (isset($registry[$code]['label'])) $primaryTransferSpecialtyLabels[$code] = (string) $registry[$code]['label'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="el">
@@ -14,35 +23,8 @@ require_once __DIR__ . '/includes/config.php';
   <?php require __DIR__ . '/includes/head-pwa.php'; ?>
   <title>Μεταθέσεις εκπαιδευτικών Πρωτοβάθμιας — Γενική και ΕΑΕ</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
-  <style>
-    #primaryServiceDurationPanel[hidden], #primaryServicePointsPanel[hidden], #primaryEmailDetails[hidden], #primaryEaeFields[hidden], #primaryGeneralOrganicField[hidden], #primaryEligibility[hidden], #primaryEaeYearsField[hidden], #primaryEaeGeneralYearsField[hidden], #primaryEaeAppointmentYearsField[hidden], #primaryPreviousDossierField[hidden], #primaryMydocsNotice[hidden], #primaryEmailOpen[hidden] { display:none!important; }
-    .primary-transfer-switch { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:12px 0 18px; }
-    .primary-transfer-switch a,.primary-transfer-switch strong { display:inline-flex; padding:8px 12px; border-radius:9px; border:1px solid #9bb2cf; text-decoration:none; }
-    .primary-transfer-switch strong { background:#e8f1fc;color:#17446d; }
-    .primary-transfer-notice {border:1px solid #e2bc6b; background:#fff9ec; padding:12px; border-radius:10px; margin:12px 0; color:#4c390e; }
-    .primary-transfer-info {border:1px solid #a4b7c9; padding:12px; border-radius:10px; margin:12px 0;}
-    .primary-doc-row {border-top:1px solid #d4dce6; padding:12px 0;}
-    .primary-doc-row label {display:flex;gap:10px;align-items:flex-start;}
-    .primary-doc-kind {font-size:.84rem; color:#516477; margin:4px 0 0 27px;}
-    .primary-email-feature {padding:16px; border:1px solid #93b7db; border-radius:12px; margin:16px 0;}
-    .primary-email-feature textarea {min-height:145px; width:100%; font-family:inherit;}
-    .primary-email-feature input {width:100%;}
-    .primary-inline-actions {display:flex; gap:8px;flex-wrap:wrap;margin:10px 0;}
-    .primary-inline-actions button,.primary-inline-actions a {min-height:40px;}
-    .primary-score-section {font-variant-numeric:tabular-nums;}
-    #primaryEaeFields[hidden], #primaryMydocsNotice[hidden], #primaryKedasyGeoNote[hidden], #primaryMydocsLink[hidden] {display:none!important;}
-    .primary-eae-qualifications { display:grid; gap:8px; padding:10px 0; }
-    .primary-eae-qualifications label { display:flex; gap:10px; align-items:flex-start; }
-    .primary-eae-status {border:1px solid #a4b7c9; border-radius:10px; padding:12px; margin:12px 0;}
-    .primary-eae-status[data-status="problem"] {background:#fff1f0;border-color:#b42318;color:#8f2219;}
-    .primary-eae-status[data-status="review"] {background:#fff7e6;border-color:#bb7510;color:#684000;}
-    .primary-eae-status[data-status="positive"] {background:#edf8ef;border-color:#26814c;color:#195b33;}
-    .primary-eae-status ul {margin:6px 0 0 20px; padding:0;}
-    .primary-doc-kind a {text-decoration:underline;}
-    .primary-total {font-size:2rem; font-weight:700;}
-    @media (max-width:410px) {.primary-inline-actions > * {width:100%;text-align:center;}}
-    @media print {.primary-transfer-switch,.primary-inline-actions,.primary-email-feature,.primary-no-print{display:none!important}}
-  </style>
+  <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-primary.css'), ENT_QUOTES, 'UTF-8'); ?>">
+  <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-level-switch.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-transfer">
 <?php require __DIR__ . '/includes/header.php'; ?>
@@ -50,20 +32,28 @@ require_once __DIR__ . '/includes/config.php';
 <?php calculatorContainerStart(array('class'=>'app')); ?>
   <?php calculatorHero(array(
     'title'=>'Μεταθέσεις μόνιμων εκπαιδευτικών Πρωτοβάθμιας',
-    'intro_html'=>'Πιλοτική επέκταση για <strong>γενικές μεταθέσεις και προέλεγχο ΕΑΕ/ΚΕΔΑΣΥ</strong>. Κοινή μοριοδότηση και απομονωμένοι κανόνες Πρωτοβάθμιας.',
-    'badges'=>array('Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026', 'Πιλοτική Γενική + ΕΑΕ/ΚΕΔΑΣΥ')
+    'intro_html'=>'Πιλοτική επέκταση για <strong>γενικές μεταθέσεις, ΕΑΕ/ΚΕΔΑΣΥ και ειδικές δομές ΕΑΕ</strong>. Κοινή μοριοδότηση και απομονωμένοι κανόνες Πρωτοβάθμιας.',
+    'badges'=>array('Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026', 'Πιλοτική Γενική + ΕΑΕ/ΚΕΔΑΣΥ + ειδικές δομές')
   )); ?>
-  <nav class="primary-transfer-switch" aria-label="Επιλογή βαθμίδας">
+  <nav class="transfer-level-switch" aria-label="Επιλογή βαθμίδας">
     <strong aria-current="page">Πρωτοβάθμια</strong>
-    <a href="ypologismos-morion-metathesis.php">Δευτεροβάθμια (πλήρης 3.22.151)</a>
+    <a href="ypologismos-morion-metathesis.php">Δευτεροβάθμια</a>
   </nav>
-  <p class="primary-transfer-notice"><strong>Σταδιακή επέκταση:</strong> υποστηρίζονται γενικές μεταθέσεις και <strong>προκαταρκτικός</strong> έλεγχος μετάθεσης σε περιοχές ΕΑΕ ή ΚΕΔΑΣΥ. Διαπολιτισμικά, Μειονοτικά, αμοιβαίες, ΕΕΕΕΚ, Σχολεία Κωφών/Τυφλών και ειδικές κατηγορίες προτεραιότητας <strong>δεν καλύπτονται ακόμη πλήρως</strong>. Συμβουλευτείτε την εγκύκλιο και τη ΔΠΕ οργανικής.</p>
+  <p class="primary-transfer-notice"><strong>Σταδιακή επέκταση:</strong> υποστηρίζονται γενικές μεταθέσεις και <strong>προκαταρκτικός</strong> έλεγχος για ΕΑΕ, ΚΕΔΑΣΥ, ΕΕΕΕΚ και Σχολεία Κωφών/Τυφλών. Διαπολιτισμικά, Μειονοτικά, αμοιβαίες, όλες οι ειδικές εξαιρέσεις και οι πλήρεις υπηρεσιακές διαδικασίες <strong>δεν καλύπτονται ακόμη</strong>. Συμβουλευτείτε την εγκύκλιο και τη ΔΠΕ οργανικής.</p>
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('title'=>'Α. Διαδικασία και υπηρεσιακός προέλεγχος')); ?>
         <div class="field"><label for="primaryMode">Τύπος αίτησης</label>
-          <select id="primaryMode"><option value="region">Γενική μετάθεση από περιοχή σε περιοχή (Π.Ε.)</option><option value="eae">Μετάθεση σε περιοχή μετάθεσης για ΕΑΕ</option><option value="kedasy">Μετάθεση σε ΚΕΔΑΣΥ (Π.Ε.)</option></select>
+          <select id="primaryMode">
+            <option value="region" data-official-code="001.ΠΕ001">Γενική από περιοχή σε περιοχή [001.ΠΕ001]</option>
+            <option value="eae" data-official-code="001.ΣΜΚΔ001">ΣΜΕΑΕ–ΕΕΕΕΚ [001.ΣΜΚΔ001] — προέλεγχος ΣΜΕΑΕ</option>
+            <option value="kedasy" data-official-code="001.ΣΜΚΔ001.ΚΔΣ">ΚΕΔΑΣΥ [001.ΣΜΚΔ001.ΚΔΣ]</option>
+            <option value="eeeek" data-official-code="001.ΣΜΚΔ001">ΣΜΕΑΕ–ΕΕΕΕΚ [001.ΣΜΚΔ001] — προέλεγχος ΕΕΕΕΚ</option>
+            <option value="deaf" data-official-code="001.ΣΜΕΑ003">ΕΝΓ/Braille [001.ΣΜΕΑ003] — Σχολείο Κωφών</option>
+            <option value="blind" data-official-code="001.ΣΜΕΑ003">ΕΝΓ/Braille [001.ΣΜΕΑ003] — Σχολείο Τυφλών</option>
+          </select>
         </div>
+        <p class="field-hint">Οι κωδικοί εμφανίζονται δίπλα στον τύπο, όπως στο επίσημο σύστημα. Οι ξεχωριστές επιλογές ΕΕΕΕΚ / Κωφών / Τυφλών είναι προέλεγχοι προορισμού, όχι πρόσθετοι αυτοτελείς τύποι ηλεκτρονικών αιτήσεων.</p>
         <div id="primaryGeneralOrganicField" class="field"><label for="primaryOrganic">Υπηρέτηση οργανικής θέσης έως 31/08/2027</label>
           <select id="primaryOrganic">
             <option value="unknown">Δεν γνωρίζω / απαιτείται έλεγχος</option>
@@ -114,6 +104,23 @@ require_once __DIR__ . '/includes/config.php';
             <label for="primaryEaeYears">Αποδεδειγμένα διδακτικά έτη ΕΑΕ για διαδρομή πενταετίας (0–50)</label>
             <input id="primaryEaeYears" type="number" min="0" max="50" step="0.01" placeholder="π.χ. 5">
           </div>
+          <div id="primaryEaeCertificationField" class="field" hidden>
+            <label for="primaryEaeCertification" id="primaryEaeCertificationLabel">Πιστοποιημένη γνώση ΕΝΓ / Braille</label>
+            <select id="primaryEaeCertification">
+              <option value="unknown">Δεν έχει επιβεβαιωθεί η αναγκαία πιστοποίηση</option>
+              <option value="yes">Ναι — διαθέτω αναγνωρισμένη πιστοποίηση</option>
+              <option value="no">Όχι — δεν διαθέτω πιστοποιημένη γνώση</option>
+            </select>
+            <p class="field-hint">Δεν αρκεί απλή βεβαίωση παρακολούθησης. Η αναγνώριση του αποδεικτικού ελέγχεται από την υπηρεσία.</p>
+          </div>
+          <div id="primaryEaeCertificationDossierField" class="field" hidden>
+            <label for="primaryEaeCertificationDossier">Υποβολή αποδεικτικού ΕΝΓ / Braille</label>
+            <select id="primaryEaeCertificationDossier">
+              <option value="unknown">Χρειάζεται έλεγχος αν υπάρχει ήδη το αποδεικτικό στον φάκελο</option>
+              <option value="new">Νέα ή συμπληρωματική υποβολή μέσω mydocs</option>
+              <option value="previous">Το αναγνωρισμένο αποδεικτικό υπάρχει ήδη στον σχετικό φάκελο</option>
+            </select>
+          </div>
           <div class="field" id="primaryPreviousDossierField">
             <label for="primaryEaeDossier">Φάκελος προσόντων ΕΑΕ</label>
             <select id="primaryEaeDossier">
@@ -125,7 +132,7 @@ require_once __DIR__ . '/includes/config.php';
           <div id="primaryEaeEligibility" class="primary-eae-status" role="status" aria-live="polite" data-status="review"></div>
           <details><summary>Προσόντα και έλεγχος: νομική βάση</summary>
             <p>Εγκύκλιος 138023/Ε2/15-10-2026, Μέρος Τρίτο, Κεφάλαιο ΣΤ΄. Η Γενική → ΕΑΕ απαιτεί τριετία από τον διορισμό και υπηρέτηση οργανικής. Ο διορισμός στην ΕΑΕ υπόκειται στη διετία της περιοχής διορισμού. Τα προσόντα τεκμηριώνονται σύμφωνα με το άρθρο 16 ν. 3699/2008.</p>
-            <p>Για ΚΕΔΑΣΥ Πρωτοβάθμιας προβλέπονται ΠΕ60, ΠΕ61, ΠΕ70, ΠΕ71. Ο προέλεγχος δεν αποφασίζει για αναγνώριση τίτλων, συνάφεια, υπολογισμό ημερών ή εξαιρέσεις.</p>
+            <p>Για ΚΕΔΑΣΥ Πρωτοβάθμιας προβλέπονται ΠΕ60, ΠΕ61, ΠΕ70, ΠΕ71· για ΕΕΕΕΚ ΠΕ71 και ΠΕ70 με εξειδίκευση ΕΑΕ. Στα Σχολεία Κωφών απαιτείται πιστοποιημένη ΕΝΓ και στα Σχολεία Τυφλών πιστοποιημένη γραφή Braille (παρ. 3–5). Ο προέλεγχος δεν αποφασίζει για αναγνώριση τίτλων, συνάφεια, υπολογισμό ημερών ή εξαιρέσεις.</p>
           </details>
         </div>
         <details><summary>Σημαντικές προθεσμίες και εξαιρέσεις</summary>
@@ -165,28 +172,42 @@ require_once __DIR__ . '/includes/config.php';
         <div id="primaryChecklist" aria-live="polite"></div>
         <p id="primaryChecklistProgress" role="status" aria-live="polite"></p>
       <?php calculatorCardEnd(); ?>
-      <section class="primary-email-feature" id="primaryEmailFeature">
-        <p id="primaryMydocsNotice" class="primary-transfer-info" hidden></p>
-        <p id="primaryMydocsLink" class="small-note" hidden><a href="https://mydocs.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">mydocs ΥΠΑΙΘΑ ↗</a> — αποκλειστικά για δικαιολογητικά προσόντων ΕΑΕ, εφόσον πρέπει να υποβληθούν.</p>
+      <section class="transfer-email-feature" id="primaryEmailFeature" aria-labelledby="primaryEmailHeading">
         <h3 id="primaryEmailHeading">Έτοιμο email υποβολής δικαιολογητικών</h3>
-        <p id="primaryEmailLead">Η Εργαλειοθήκη συντάσσει θέμα και κείμενο μόνο αν η αίτησή σας περιλαμβάνει ενέργεια αποστολής στη ΔΠΕ οργανικής.</p>
-        <button type="button" id="primaryEmailOpen" aria-expanded="false" aria-controls="primaryEmailDetails">Δημιουργία μηνύματος υποβολής ↓</button>
-        <div id="primaryEmailDetails" hidden>
-          <div class="field-grid">
-            <div class="field"><label for="primaryName">Ονοματεπώνυμο</label><input id="primaryName" type="text" maxlength="100" autocomplete="off"></div>
-            <div class="field"><label for="primarySpecialty">Κλάδος / ειδικότητα</label><input id="primarySpecialty" type="text" maxlength="35" placeholder="π.χ. ΠΕ70" autocomplete="off"></div>
-            <div class="field"><label for="primaryRegistry">Αριθμός μητρώου</label><input id="primaryRegistry" type="text" maxlength="30" autocomplete="off"></div>
-            <div class="field"><label for="primaryProtocol">Αρ. πρωτοκόλλου αίτησης</label><input id="primaryProtocol" type="text" maxlength="90" autocomplete="off"></div>
-            <div class="field"><label for="primaryDpe">ΔΠΕ οργανικής</label><input id="primaryDpe" type="text" maxlength="110" placeholder="π.χ. ΔΠΕ Κέρκυρας" autocomplete="off"></div>
-          </div>
-          <div class="field"><label for="primaryEmailSubject">Θέμα email</label><input id="primaryEmailSubject" readonly type="text"></div>
-          <div class="field"><label for="primaryEmailBody">Κείμενο email</label><textarea id="primaryEmailBody" readonly></textarea></div>
-          <div class="primary-inline-actions">
-            <button type="button" id="primaryCopyEmail" class="secondary">Αντιγραφή θέματος και κειμένου</button>
-            <a id="primaryOpenMail" href="#" style="display:none">Άνοιγμα στο email μου ↗</a>
-          </div>
-          <p class="small-note">Η εφαρμογή <strong>δεν αποστέλλει</strong> email, δεν γνωρίζει τη διεύθυνση της ΔΠΕ σας και δεν επισυνάπτει αρχεία. Ελέγξτε παραλήπτη και συνημμένα πριν την αποστολή.</p>
-        </div>
+        <p id="primaryEmailLead" class="transfer-email-feature__lead">Δημιουργήστε θέμα και σώμα μηνύματος με τη μορφή της εγκυκλίου Πρωτοβάθμιας 138023/Ε2/2026.</p>
+        <button type="button" id="primaryEmailOpen" class="transfer-email-feature__cta" aria-expanded="false" aria-controls="primaryEmailDetails">Δημιουργία μηνύματος υποβολής ↓</button>
+        <p class="transfer-email-feature__helper">Το υπόδειγμα δημιουργείται στη συσκευή σας. Δεν γίνεται αυτόματη αποστολή, επιλογή παραλήπτη ή επισύναψη αρχείων.</p>
+        <p id="primaryMydocsNotice" class="primary-transfer-info" hidden></p>
+        <p id="primaryMydocsLink" class="small-note" hidden><a href="https://mydocs.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">mydocs ΥΠΑΙΘΑ ↗</a> — για προσόντα ΕΑΕ όταν απαιτείται νέος/συμπληρωματικός φάκελος.</p>
+        <details id="primaryEmailDetails" class="edu-disclosure transfer-email-feature__disclosure">
+          <summary class="edu-disclosure__summary"><span>Πού αποστέλλονται τα δικαιολογητικά; — Οδηγίες και υπόδειγμα</span><span aria-hidden="true" class="edu-disclosure__chevron">›</span></summary>
+          <div class="edu-disclosure__body"><div class="transfer-submission-content">
+            <p id="primarySubmissionInstruction" class="small-note">Η διαδρομή email ή mydocs εξαρτάται από το δικαιολογητικό και τον τύπο αίτησης.</p>
+            <section class="transfer-submission-template" aria-label="Υπόδειγμα θέματος και σώματος αποστολής">
+              <h4>Θέμα και σώμα μηνύματος — υπόδειγμα</h4>
+              <p class="transfer-submission-template__note" id="primaryTemplateNote">Η μορφή ενημερώνεται σύμφωνα με την εγκύκλιο Πρωτοβάθμιας.</p>
+              <details class="transfer-submission-template__personalize" id="primaryPersonalize">
+                <summary>Δημιουργία έτοιμου μηνύματος (προαιρετικά)</summary>
+                <div class="transfer-submission-template__personal-body">
+                  <p class="transfer-submission-template__private-note">Συμπληρώστε όσα στοιχεία θέλετε από την <strong>οριστικοποιημένη</strong> αίτηση. Όσα λείπουν διατηρούνται σε αγκύλες. Δεν αποστέλλονται ή αποθηκεύονται.</p>
+                  <div class="transfer-submission-template__fields">
+                    <label class="transfer-submission-template__field is-wide" for="primaryName"><span>Ονοματεπώνυμο</span><input id="primaryName" type="text" maxlength="120" placeholder="π.χ. Παπαδόπουλος Νικόλαος" autocomplete="off"></label>
+                    <label class="transfer-submission-template__field" for="primarySpecialty"><span>Κλάδος / ειδικότητα</span><select id="primarySpecialty" name="transfer-personal-branch"><option value="">— Επιλέξτε ειδικότητα —</option></select></label>
+                    <label class="transfer-submission-template__field" for="primaryRegistry"><span>Αριθμός μητρώου</span><input id="primaryRegistry" type="text" maxlength="15" placeholder="Α.Μ. εκπαιδευτικού" autocomplete="off"></label>
+                    <label class="transfer-submission-template__field is-wide" for="primaryProtocol"><span>Αριθμός πρωτοκόλλου οριστικοποιημένης αίτησης</span><input id="primaryProtocol" type="text" maxlength="150" placeholder="Αντιγραφή από teachers.minedu.gov.gr" autocomplete="off"></label>
+                    <label class="transfer-submission-template__field is-wide" id="primaryDpeField" for="primaryDpe"><span>ΔΠΕ οργανικής</span><input id="primaryDpe" type="text" maxlength="120" placeholder="π.χ. ΔΠΕ Κέρκυρας" autocomplete="off"></label>
+                  </div>
+                  <button type="button" class="secondary transfer-submission-template__clear" id="primaryClearEmail">Καθαρισμός πεδίων</button>
+                </div>
+              </details>
+              <div class="transfer-submission-template__item"><div class="transfer-submission-template__bar"><strong>Θέμα:</strong><button type="button" class="secondary" id="primaryCopySubject">Αντιγραφή</button></div><p class="transfer-submission-template__value" id="primaryEmailSubject"></p></div>
+              <div class="transfer-submission-template__item"><div class="transfer-submission-template__bar"><strong>Σώμα κειμένου:</strong><button type="button" class="secondary" id="primaryCopyBody">Αντιγραφή</button></div><p class="transfer-submission-template__value" id="primaryEmailBody"></p></div>
+              <p class="transfer-submission-template__email-action" id="primaryMailAction"><a class="transfer-email-feature__mail-link" id="primaryOpenMail" href="#">Άνοιγμα στο email μου ↗</a> <span>Ο παραλήπτης δεν συμπληρώνεται αυτόματα· προσθέστε εσείς τα συνημμένα. Δεν πραγματοποιείται αποστολή.</span></p>
+              <p class="transfer-submission-template__source" id="primaryEmailSource">Πηγή: εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026, §2.2.1.</p>
+              <p class="transfer-submission-template__feedback" id="primaryCopyFeedback" role="status" aria-live="polite"></p>
+            </section>
+          </div></div>
+        </details>
       </section>
       <p class="primary-transfer-notice"><strong>Προκαταρκτικός οδηγός:</strong> η Εργαλειοθήκη δεν υποκαθιστά το ΥΠΑΙΘΑ, τη ΔΠΕ ή τη νομοθεσία και δεν ελέγχει ακόμη όλες τις ειδικές κατηγορίες ή υπηρεσιακές εξαιρέσεις. Οι μονάδες στο επίσημο μητρώο υπερισχύουν.</p>
     <?php calculatorMainEnd(); ?>
@@ -205,8 +226,12 @@ require_once __DIR__ . '/includes/config.php';
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>
 <?php require __DIR__ . '/includes/footer.php'; ?>
+<script>
+window.EducationTransferPrimarySpecialtyLabels = Object.freeze(<?php echo json_encode($primaryTransferSpecialtyLabels, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
+</script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-eae.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-email-component.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

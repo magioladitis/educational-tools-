@@ -1,0 +1,41 @@
+/* Shared Primary/Secondary transfer navigation. Same order and behavior on both pages. */
+.edu-page-transfer .transfer-level-switch {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0 18px;
+}
+.edu-page-transfer .transfer-level-switch > a,
+.edu-page-transfer .transfer-level-switch > strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 8px 13px;
+  border: 1px solid #9bb2cf;
+  border-radius: 9px;
+  font-size: inherit;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  color: #17446d;
+}
+.edu-page-transfer .transfer-level-switch > a {
+  background: #fff;
+}
+.edu-page-transfer .transfer-level-switch > a:hover {
+  background: #f1f6fd;
+}
+.edu-page-transfer .transfer-level-switch > a:focus-visible {
+  outline: 3px solid #3467a8;
+  outline-offset: 2px;
+}
+.edu-page-transfer .transfer-level-switch > strong[aria-current="page"] {
+  background: #e8f1fc;
+  font-weight: 700;
+}
+@media print {
+  .edu-page-transfer .transfer-level-switch { display: none !important; }
+}

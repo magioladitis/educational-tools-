@@ -1,0 +1,28 @@
+/* Primary transfer page — extracted unchanged from the v3.22.154 page. */
+    #primaryServiceDurationPanel[hidden], #primaryServicePointsPanel[hidden], #primaryEmailDetails[hidden], #primaryEaeFields[hidden], #primaryGeneralOrganicField[hidden], #primaryEligibility[hidden], #primaryEaeYearsField[hidden], #primaryEaeGeneralYearsField[hidden], #primaryEaeAppointmentYearsField[hidden], #primaryPreviousDossierField[hidden], #primaryEaeCertificationField[hidden], #primaryEaeCertificationDossierField[hidden], #primaryMydocsNotice[hidden], #primaryEmailOpen[hidden] { display:none!important; }
+    .primary-transfer-notice {border:1px solid #e2bc6b; background:#fff9ec; padding:12px; border-radius:10px; margin:12px 0; color:#4c390e; }
+    .primary-transfer-info {border:1px solid #a4b7c9; padding:12px; border-radius:10px; margin:12px 0;}
+    .primary-doc-row {border-top:1px solid #d4dce6; padding:12px 0;}
+    .primary-doc-row label {display:flex;gap:10px;align-items:flex-start;}
+    .primary-doc-kind {font-size:.84rem; color:#516477; margin:4px 0 0 27px;}
+    .primary-email-feature {padding:16px; border:1px solid #93b7db; border-radius:12px; margin:16px 0;}
+    .primary-email-feature textarea {min-height:145px; width:100%; font-family:inherit;}
+    .primary-email-feature input {width:100%;}
+    .primary-inline-actions {display:flex; gap:8px;flex-wrap:wrap;margin:10px 0;}
+    .primary-inline-actions button,.primary-inline-actions a {min-height:40px;}
+    .primary-score-section {font-variant-numeric:tabular-nums;}
+    #primaryEaeFields[hidden], #primaryMydocsNotice[hidden], #primaryKedasyGeoNote[hidden], #primaryMydocsLink[hidden] {display:none!important;}
+    .primary-eae-qualifications { display:grid; gap:8px; padding:10px 0; }
+    .primary-eae-qualifications label { display:flex; gap:10px; align-items:flex-start; }
+    .primary-eae-status {border:1px solid #a4b7c9; border-radius:10px; padding:12px; margin:12px 0;}
+    .primary-eae-status[data-status="problem"] {background:#fff1f0;border-color:#b42318;color:#8f2219;}
+    .primary-eae-status[data-status="review"] {background:#fff7e6;border-color:#bb7510;color:#684000;}
+    .primary-eae-status[data-status="positive"] {background:#edf8ef;border-color:#26814c;color:#195b33;}
+    .primary-eae-status ul {margin:6px 0 0 20px; padding:0;}
+    .primary-doc-kind a {text-decoration:underline;}
+    .primary-total {font-size:2rem; font-weight:700;}
+    @media (max-width:410px) {.primary-inline-actions > * {width:100%;text-align:center;}}
+    @media print {.primary-inline-actions,.primary-email-feature,.primary-no-print{display:none!important}}
+
+/* The actionable email row is displayed only when an email submission is appropriate. */
+#primaryMailAction[hidden], #primaryDpeField[hidden] { display: none !important; }
