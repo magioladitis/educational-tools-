@@ -49,5 +49,6 @@ for(const id of idsCompact){
 }
 assert.ok(!printed.includes('Αξιολόγηση προσόντων χωρίς μόρια'),'obsolete task not printed');
 el('mode').value='region';assert.ok(guide.build().some(x=>x.id==='record'),'general checklist unaffected');
-el('mode').value='smeae';assert.ok(guide.build().some(x=>x.id==='eae-service'),'EAE eligibility unaffected');
+el('mode').value='smeae';assert.ok(!guide.build().some(x=>x.id==='eae-service'),'EAE eligibility handled in dedicated panel, not in checklist');
+assert.ok(guide.build().some(x=>x.id==='eae-masters'),'Qualification evidence remains available in EAE checklist');
 console.log('PASS 5 compact Artistic School cards, removed redundant task, printing and other routes');

@@ -18,7 +18,7 @@ function el(id,value='',checked=false){elements[id]={value:String(value),checked
 let generated='';
 const root={querySelectorAll(){return [];},set innerHTML(v){generated=v;},get innerHTML(){return generated;}};
 const progress={textContent:''};
-const document={getElementById(id){if(id==='transferDocumentChecklist')return root;if(id==='transferDocumentProgress')return progress; assert.ok(elements[id],`missing stub ${id}`);return elements[id];},querySelectorAll(){return [];}};
+const document={getElementById(id){if(id==='transferDocumentChecklist')return root;if(id==='transferDocumentProgress')return progress;if(id==='transferSubmissionGuidanceBody')return {innerHTML:''}; assert.ok(elements[id],`missing stub ${id}`);return elements[id];},querySelectorAll(){return [];}};
 let printed='';const window={open:()=>({document:{write(s){printed=s;},close(){}},focus(){},print(){}})};
 vm.runInNewContext(fs.readFileSync(path.join(dir,'includes/transfer-eligibility.js'),'utf8'),{window,document});
 vm.runInNewContext(code,{window,document});
@@ -34,26 +34,20 @@ rows=guide.build();
 ok(!rows.some(x=>x.id==='service'), 'no extra check with zero years either');
 elements.mode.value='smeae';
 rows=guide.build();
-ok(rows.some(x=>x.id==='eae-service'), 'distinct EAE eligibility still checked');
-ok(rows.some(x=>x.id==='eae-routing'), 'distinct EAE submission channels still checked');
-const routing=rows.find(x=>x.id==='eae-routing');
-ok(!routing.detail.includes('Στον κύκλο'), 'redundant preface removed');
-ok(routing.detail.includes('ΔΔΕ οργανικής') && routing.detail.includes('mydocs.minedu.gov.gr'), 'both submission channels retained');
-ok(routing.detail.includes('κάθε χρόνο'), 'annual new application retained');
+ok(!rows.some(x=>x.id==='eae-service'), 'EAE eligibility checked above, not repeated as a document task');
+ok(!rows.some(x=>x.id==='eae-routing'), 'EAE routing no longer a checklist item');
+const routing=guide.submissionGuideData();
+ok(routing.lines.join(' ').includes('ΔΔΕ οργανικής') && routing.lines.join(' ').includes('mydocs.minedu.gov.gr'), 'both submission channels retained');
+ok(routing.lines.join(' ').includes('κάθε χρόνο'), 'annual new application retained');
 guide.render();
 const card=id=>{const m=generated.match(new RegExp('<article class="([^"]+)" data-doc-card="'+id+'">([\\s\\S]*?)<\\/article>'));assert.ok(m,`rendered ${id}`);return m;};
-for(const id of ['eae-service','eae-routing']){
- const [_,cls,body]=card(id);
- ok(cls.includes('is-compact'),id+' compact');
- ok(!body.includes('edu-transfer-doc__summary'),id+' no repeated preview');
- ok(body.includes('Περισσότερες πληροφορίες'),id+' disclosure kept');
-}
-ok(generated.split('Ελέγξτε την τριετή διδακτική υπηρεσία').length===2,'EAE service text rendered once');
-ok(generated.split('Δικαιολογητικά μοριοδότησης:').length===2,'EAE submission text rendered once');
+ok(!generated.includes('data-doc-card="eae-service"'),'redundant EAE eligibility card removed from rendered checklist');
+ok(!generated.includes('Ελέγξτε την τριετή διδακτική υπηρεσία'),'EAE service precheck copy no longer repeated in checklist');
+ok(!generated.includes('data-doc-card="eae-routing"'),'EAE channel removed from checklist');
 ok(!generated.includes('data-doc-card="service"'),'no extra recognition checkbox');
 ok(progress.textContent.startsWith('Έλεγχοι που σημειώθηκαν:'),'progress maintained');
 elements.mode.value='art';rows=guide.build();
-for(const id of ['art-service','art-submit']){
+for(const id of ['art-service']){
  const d=rows.find(x=>x.id===id);
  ok(d && !d.detail.includes('Για τον κύκλο'),id+' no redundant date preface');
 }

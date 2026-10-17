@@ -1,0 +1,34 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const root=path.resolve(__dirname,'..');
+const code=fs.readFileSync(path.join(root,'includes/transfer-eligibility.js'),'utf8');
+const win={};
+vm.runInNewContext(code,{window:win});
+const eae=win.EducationTransferEligibility.eae;
+let checks=0;
+function eq(a,b,msg){assert.equal(a,b,msg);checks++;}
+function ok(v,msg){assert.ok(v,msg);checks++;}
+eq(eae({origin:'general',qualification:'masters',teachingYears:2.9}).verdict,'not_established','missing three years marked as problem');
+eq(eae({origin:'general',qualification:'masters',teachingYears:3}).verdict,'preliminary_met','meeting three years not red');
+eq(eae({origin:'general',qualification:'none',teachingYears:3}).verdict,'needs_verification','unselected qualification is review, not automatically a confirmed failure');
+eq(eae({origin:'eae',qualification:'masters',teachingYears:0}).verdict,'needs_verification','EAE origin goes to review, not general 3-year rule');
+eq(eae({origin:'general',qualification:'masters',teachingYears:50}).verdict,'preliminary_met','50 years accepted');
+eq(eae({origin:'general',qualification:'masters',teachingYears:50.1}).verdict,'needs_verification','beyond 50 requires correction');
+ok(eae({origin:'general',qualification:'masters',teachingYears:50.1}).advice.some(x=>x.includes('0 έως 50')),'out of bounds advice');
+eq(eae({origin:'general',qualification:'experience',eaeYears:4,teachingYears:10}).verdict,'not_established','five-year EAE experience shortfall is unmet');
+eq(eae({origin:'general',qualification:'masters',teachingYears:4,destination:'kedasy',branch:'pe03'}).verdict,'needs_verification','KEDASY organizational position remains verification');
+eq(eae({origin:'general',qualification:'masters',teachingYears:4,destination:'kedasy',branch:'pe11'}).verdict,'not_established','KEDASY wrong branch is unmet');
+const documents=fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf8');
+ok(!documents.includes("rows.push(entry('eae-warnings'"),'no duplicate EAE warnings in document checklist');
+const page=fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
+ok(/id="transferEaeTeachingYears"[^>]*max="50"/.test(page),'EAE teaching years HTML max 50');
+const ui=fs.readFileSync(path.join(root,'includes/transfer-ui.js'),'utf8');
+ok(ui.includes("target.id === 'transferInterculturalYears' || target.id === 'transferEaeTeachingYears'"),'EAE teaching years clamped while typing and on change');
+ok(ui.includes("advice.classList.toggle('transfer-eligibility-failed'"),'red problem state bound to verdict');
+ok(ui.includes("⚠ Δεν πληρούται βασική προϋπόθεση"),'error includes text and icon (not color alone)');
+const css=fs.readFileSync(path.join(root,'assets/common.css'),'utf8');
+ok(css.includes('#transferEaeAdvice.transfer-eligibility-failed'),'error styling exists');
+console.log('PASS',checks,'EAE feedback / documents / 50-year contract tests');

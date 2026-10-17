@@ -254,7 +254,7 @@
     // Only give an inline message for a genuinely invalid, non-empty value.
     var directValue = String(input.msdDirectPoints || '').trim();
     var directInvalid = input.msdMode === 'direct' && directValue !== '' && !result.msdInputValid;
-    byId('msdDirectStatus').textContent = directInvalid ? 'Μη έγκυρη τιμή: δώστε μη αρνητικό αριθμό με έως δύο δεκαδικά.' : '';
+    byId('msdDirectStatus').textContent = directInvalid ? 'Μη έγκυρη τιμή: δώστε αριθμό από 0 έως 1.000 με έως δύο δεκαδικά (κόμμα ή τελεία).' : '';
     byId('msdDirectPoints').setAttribute('aria-invalid', directInvalid ? 'true' : 'false');
     byId('coServiceResult').textContent = formatPoints(result.coServicePoints);
     byId('familyResult').textContent = formatPoints(result.familyPoints);
@@ -293,6 +293,25 @@
       sinceTransferYears:byId('transferGeneralEaeSinceTransfer').value,
       organicServed:byId('transferGeneralEaeOrganic').checked};
   }
+  // Shared, text-and-icon status renderer: red = established blocker,
+  // yellow = verification needed, green = preliminary pass. Not color alone.
+  function showEligibilityVerdict(element,result,extra) {
+    var verdict=result.verdict||'needs_verification';
+    var notes=Array.isArray(result.advice)?result.advice.slice():[];
+    if(extra)notes.push(extra);
+    if(verdict==='not_established'){
+      element.textContent='⚠ Δεν πληρούται βασική προϋπόθεση'+(notes.length?': '+notes.join(' · '):'.');
+    } else if(verdict==='needs_verification'){
+      element.textContent='ⓘ Χρειάζονται έλεγχοι/στοιχεία'+(notes.length?': '+notes.join(' · '):'.');
+    } else {
+      element.textContent='✓ '+result.status+(extra?' · '+extra:'');
+    }
+    element.setAttribute('data-eligibility-verdict',verdict);
+    element.classList.toggle('transfer-eligibility-failed',verdict==='not_established');
+    element.classList.toggle('transfer-eligibility-review',verdict==='needs_verification');
+    element.classList.toggle('transfer-eligibility-met',verdict==='preliminary_met');
+  }
+
   function syncGeneralReturn(){
     var mode=byId('mode').value;
     var origin=byId('transferGeneralOrigin').value;
@@ -304,11 +323,7 @@
     if(eligibility&&eligibility.returnToGeneral && mode==='region' && origin!=='general'){
       var result=eligibility.returnToGeneral(currentGeneralReturnInput());
       var advice=byId('transferGeneralEaeAdvice');
-      advice.textContent=result.status+(result.advice.length?' '+result.advice.join(' '):'');
-      advice.setAttribute('data-eligibility-verdict',result.verdict);
-      advice.classList.toggle('transfer-eligibility-failed',result.verdict==='not_established');
-      advice.classList.toggle('transfer-eligibility-review',result.verdict==='needs_verification');
-      advice.classList.toggle('transfer-eligibility-met',result.verdict==='preliminary_met');
+      showEligibilityVerdict(advice,result);
     }
   }
   function syncCoService(){
@@ -347,9 +362,12 @@
     Array.prototype.forEach.call(branch.options,function(opt){opt.hidden=kedasy && ['other','pe02','pe03','pe04'].indexOf(opt.value)===-1;});
     if(kedasy && ['other','pe02','pe03','pe04'].indexOf(branch.value)===-1)branch.value='other';
     if(note)note.textContent=sensory?'Επιλέξτε Σχολείο Κωφών (ΕΝΓ) ή Τυφλών (Braille). Απαιτείται επιπλέον η αντίστοιχη πιστοποιημένη γνώση.':kedasy?'Για ΚΕΔΑΣΥ επιτρέπονται μόνο ΠΕ02, ΠΕ03 ή ΠΕ04, εφόσον προβλέπεται αντίστοιχη οργανική θέση και πληρούνται τα προσόντα ΕΑΕ.':smeae?'Η αίτηση αυτή αφορά ΣΜΕΑΕ/ΕΕΕΕΚ· Κωφών/Τυφλών και ΚΕΔΑΣΥ έχουν ξεχωριστούς κωδικούς αίτησης.':'';
-    var pe11Qual=byId('transferEaeQualification').querySelector('option[value="pe11"]');
-    if(pe11Qual)pe11Qual.hidden=kedasy;
-    if(kedasy && byId('transferEaeQualification').value==='pe11')byId('transferEaeQualification').value='none';
+    var pe11Row=byId('transferEaePe11QualificationRow');
+    if(pe11Row)pe11Row.style.display=kedasy?'none':'';
+    if(kedasy){
+      var pe11Check=document.querySelector('[data-eae-qualification="pe11"]');
+      if(pe11Check)pe11Check.checked=false;
+    }
   }
 
   function syncMode() {
@@ -404,8 +422,12 @@
   }
 
   function currentEaeInput() {
+    var qualifications=Array.prototype.map.call(document.querySelectorAll('[data-eae-qualification]:checked'),function(input){return input.getAttribute('data-eae-qualification');});
+    // Retain a legacy field for older consumers without making it an additional UI control.
+    byId('transferEaeQualification').value=qualifications[0]||'none';
     return {origin:byId('transferEaeOrigin').value,area:byId('transferEaeArea').value,destination:byId('transferEaeDestination').value,branch:byId('transferEaeBranch').value,
-      qualification:byId('transferEaeQualification').value,eaeYears:byId('transferEaeExperienceYears').value,
+      qualification:qualifications[0]||'none',qualifications:qualifications,eaeYears:byId('transferEaeExperienceYears').value,
+      sensoryCertification:byId('transferEaeSensoryCertification').value,
       teachingYears:byId('transferEaeTeachingYears').value,newly:byId('transferEaeNewly').checked,
       areaYears:byId('transferEaeAreaYears').value};
   }
@@ -539,8 +561,10 @@
     var preferenceRow=byId('firstPreferenceRow');
     if(preferenceRow)preferenceRow.classList.toggle('hidden',mode==='local'||sameArea||mode==='music'||mode==='art'||mode==='intercultural');
     if(sameArea)byId('firstPreference').checked=false;
-    var origin=byId('transferEaeOrigin').value, route=byId('transferEaeQualification').value;
-    byId('transferEaeExperienceRow').style.display=eae&&route==='experience'?'':'none';
+    var origin=byId('transferEaeOrigin').value;
+    var hasFiveYears=!!document.querySelector('[data-eae-qualification="experience"]:checked');
+    byId('transferEaeExperienceRow').style.display=eae&&hasFiveYears?'':'none';
+    byId('transferEaeSensoryCertificationRow').style.display=eae&&byId('mode').value==='eae_sensory'?'':'none';
     byId('transferEaeGeneralYearsRow').style.display=eae&&origin==='general'?'':'none';
     byId('transferEaeNewlyRow').style.display=eae&&origin==='general'?'':'none';
     byId('transferEaeAreaYearsRow').style.display=eae&&origin==='general'&&byId('transferEaeNewly').checked?'':'none';
@@ -553,12 +577,24 @@
     var elig=global.EducationTransferEligibility;
     if(elig&&eae){
       var result=elig.eae(currentEaeInput());
-      byId('transferEaeAdvice').textContent=result.status+(result.advice.length?' · '+result.advice.join(' '):'');
+      var advice=byId('transferEaeAdvice');
+      var verdict=result.verdict||'needs_verification';
+      // The icon and explicit wording accompany color for color-vision deficiencies.
+      // Avoid repeating the same status headline twice before the actual problem.
+      advice.textContent=verdict==='not_established' ?
+        '⚠ Δεν πληρούται βασική προϋπόθεση: '+result.advice.join(' · ') :
+        verdict==='needs_verification' ?
+          'ⓘ Χρειάζονται έλεγχοι/στοιχεία'+(result.advice.length?': '+result.advice.join(' · '):'.') :
+          '✓ '+result.status;
+      advice.setAttribute('data-eligibility-verdict',verdict);
+      advice.classList.toggle('transfer-eligibility-failed',verdict==='not_established');
+      advice.classList.toggle('transfer-eligibility-review',verdict==='needs_verification');
+      advice.classList.toggle('transfer-eligibility-met',verdict==='preliminary_met');
       syncDossier('eae','transferEaePreviousYear','transferEaeNewDocuments','transferEaeDossierAdvice');
     }
     if(elig&&music){
       var mr=elig.music(currentMusicInput());
-      byId('transferMusicAdvice').textContent=mr.status+(mr.advice.length?' · '+mr.advice.join(' '):'');
+      showEligibilityVerdict(byId('transferMusicAdvice'),mr);
       syncDossier('music','transferMusicPreviousYear','transferMusicNewDocuments','transferMusicDossierAdvice');
     }
     if(elig&&mode==='intercultural'){
@@ -566,16 +602,12 @@
       byId('transferInterculturalYearsRow').style.display=byId('transferInterculturalCurrent').value==='yes'?'':'none';
       var ic=elig.intercultural(currentInterculturalInput());
       var message=byId('transferInterculturalAdvice');
-      message.textContent=ic.status+(ic.advice.length?' · '+ic.advice.join(' '):'')+(ic.languageException?' · Σχολείο με πλειοψηφία μαθητών Ρομά: δεν απαιτείται το πρόσθετο προσόν ξένης γλώσσας προέλευσης.':'');
-      message.setAttribute('data-eligibility-verdict',ic.verdict);
-      message.classList.toggle('transfer-eligibility-failed',ic.verdict==='not_established');
-      message.classList.toggle('transfer-eligibility-review',ic.verdict==='needs_verification');
-      message.classList.toggle('transfer-eligibility-met',ic.verdict==='preliminary_met');
+      showEligibilityVerdict(message,ic,ic.languageException?'Σχολείο με πλειοψηφία μαθητών Ρομά: δεν απαιτείται το πρόσθετο προσόν ξένης γλώσσας προέλευσης.':'');
       syncDossier('intercultural','transferInterculturalPreviousYear','transferInterculturalNewDocuments','transferInterculturalDossierAdvice');
     }
     if(elig&&art){
       var ar=elig.art(currentArtInput());
-      byId('transferArtAdvice').textContent=ar.status+(ar.advice.length?' · '+ar.advice.join(' '):'');
+      showEligibilityVerdict(byId('transferArtAdvice'),ar);
       syncDossier('art','transferArtPreviousYear','transferArtNewDocuments','transferArtDossierAdvice');
     }
   }
@@ -602,6 +634,8 @@
     byId('transferEaeDestination').value='smeae';
     byId('transferEaeBranch').value='other';
     byId('transferEaeQualification').value='none';
+    document.querySelectorAll('[data-eae-qualification]').forEach(function(el){el.checked=false;});
+    byId('transferEaeSensoryCertification').value='unknown';
     byId('transferEaeExperienceYears').value='0';
     byId('transferEaeTeachingYears').value='0';
     byId('transferEaeNewly').checked=false;
@@ -670,7 +704,8 @@
       var target = event.target;
       if (!target) return;
       if (target.id === 'serviceYears' || target.classList.contains('msd-years') || target.classList.contains('service-period-years')) clampInput(target, 50);
-      if (target.id === 'transferInterculturalYears') clampInterculturalYears(target);
+      if (target.id === 'transferInterculturalYears' || target.id === 'transferEaeTeachingYears') clampInterculturalYears(target);
+      if (target.id === 'transferEaeExperienceYears') clampInterculturalYears(target);
       if (target.id === 'transferEaeAreaYears' || target.id === 'transferGeneralEaeAreaYears') clampAreaYears(target);
       if (target.id === 'serviceMonths' || target.classList.contains('msd-months') || target.classList.contains('service-period-months')) clampInput(target, 11);
       if (target.id === 'serviceDays' || target.classList.contains('msd-days') || target.classList.contains('service-period-days')) clampInput(target, 29);
@@ -686,7 +721,8 @@
       var target = event.target;
       if (!target) return;
       if (target.id === 'transferEaeAreaYears' || target.id === 'transferGeneralEaeAreaYears') clampAreaYears(target);
-      if (target.id === 'transferInterculturalYears') clampInterculturalYears(target);
+      if (target.id === 'transferInterculturalYears' || target.id === 'transferEaeTeachingYears') clampInterculturalYears(target);
+      if (target.id === 'transferEaeExperienceYears') clampInterculturalYears(target);
       var row = target.closest ? target.closest('.transfer-service-row') : null;
       if (row && (target.classList.contains('msd-type') || target.classList.contains('msd-category'))) syncRow(row);
       if (target.closest && target.closest('.edu-page-transfer')) {syncGeneralReturn();syncEligibilityDetails();calculate();if(target.id==='transferCoServiceCase' && global.EducationTransferDocuments)global.EducationTransferDocuments.render();}

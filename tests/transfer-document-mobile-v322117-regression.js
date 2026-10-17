@@ -14,7 +14,7 @@ ok(js.includes('data-doc-details=') && js.includes('Περισσότερες π�
 ok(js.includes('openRows[details.getAttribute') && js.includes('data-doc-details'), 'expanded state preserved between form updates');
 ok(js.includes('checked[input.dataset.docId]') && js.includes('progress(root)'), 'checked-state and progress updated');
 ok(js.includes('isCritical(d)') && js.includes('Δεν θεμελιώνεται'), 'important warnings expanded initially');
-ok(js.includes("submission:'16/10–02/11/2026") && js.includes('ΔΕΝ ισοδυναμεί'), 'deadline and finalization warning remain visible');
+ok(page.includes('16/10–02/11/2026') && /η προσωρινή αποθήκευση δεν είναι οριστικοποίηση/i.test(page) && page.includes('PDF της οριστικοποιημένης αίτησης'), 'deadline and finalization warning kept once in global notice');
 ok(js.includes('Διορθώσεις: 23–27/11/2026'), 'correction deadline remains visible');
 ok(js.includes('Νεογέννητα: ειδικές οδηγίες έως 31/12/2026'), 'newborn deadline remains visible');
 ok(js.includes('legalSeparation(d.detail)') && js.includes('edu-transfer-doc__source'), 'legal sources separated without dropping details');

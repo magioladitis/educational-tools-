@@ -136,13 +136,17 @@
     };
   }
 
+  // Τεχνικό όριο ασφαλείας για απευθείας καταχώριση από μητρώο.
+  // Δεν είναι νομικό πλαφόν Μ.Σ.Δ. και δεν αφορά τον υπολογισμό από περιόδους.
+  var MAX_DIRECT_MSD_POINTS = 1000;
+
   // Εισαγωγή Μ.Σ.Δ. από το επίσημο μητρώο (δεκαδικό κόμμα ή τελεία).
   // Δεν μετατρέπουμε σιωπηρά μη έγκυρες τιμές σε μηδέν.
   function parseDirectMsd(raw) {
     var text = String(raw == null ? '' : raw).trim().replace(',', '.');
     if (!/^\d+(?:\.\d{1,2})?$/.test(text)) return { valid: false, points: null };
     var n = Number(text);
-    if (!Number.isFinite(n) || n > Number.MAX_SAFE_INTEGER) return { valid: false, points: null };
+    if (!Number.isFinite(n) || n > MAX_DIRECT_MSD_POINTS) return { valid: false, points: null };
     return { valid: true, points: truncate2(n) };
   }
 
@@ -173,7 +177,7 @@
 
   function calculate(input) {
     input = input || {};
-    var serviceMode = input.serviceMode === 'periods' ? 'periods' : (input.serviceMode === 'direct' ? 'direct' : 'points');
+    var serviceMode = input.serviceMode === 'periods' ? 'periods' : (input.serviceMode === 'points' ? 'points' : 'direct');
     var detailedService = serviceMode === 'periods';
     var directDurationService = serviceMode === 'direct';
     var directPointsService = serviceMode === 'points';

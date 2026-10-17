@@ -24,5 +24,5 @@ raw=php(['xronodiagramma-ypiresiakon-metavolon-export.php'])
 with zipfile.ZipFile(io.BytesIO(raw)) as z:
     sheet=z.read('xl/worksheets/sheet1.xml').decode()
     assert '23–27/11/2026' in sheet and '20/11/2026' in sheet and '9Ρ7Ν46ΝΚΠΔ-5Κ5' in z.read('xl/worksheets/sheet2.xml').decode()
-assert "define('EDU_TOOLS_VERSION', '3.22.139')" in (ROOT/'includes/config.php').read_text() and "CACHE_PREFIX + '3.22.139'" in (ROOT/'service-worker.js').read_text()
+assert "define('EDU_TOOLS_VERSION', '3.22.147')" in (ROOT/'includes/config.php').read_text() and "CACHE_PREFIX + '3.22.147'" in (ROOT/'service-worker.js').read_text()
 print('PASS: Primary transfers 2026–27 timeline / deadlines / levels / source / Excel')

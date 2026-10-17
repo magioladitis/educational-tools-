@@ -37,50 +37,83 @@
   }
   function art(a) {
     a=a||{};
-    var notes=[],branch=a.branch||'general',ex=a.exceptionType||'none';
+    var unmet=[],review=[],branch=a.branch||'general',ex=a.exceptionType||'none';
     var specialized=Object.prototype.hasOwnProperty.call(ART_BRANCHES,branch);
     var register=global.EducationArtisticVacancies;
     if(register&&Object.prototype.hasOwnProperty.call(a,'branchCode')){
-      if(!a.branchCode)notes.push('Επιλέξτε κλάδο με προκηρυγμένο οργανικό κενό 2026–2027.');
-      else if(!register.hasBranch(a.branchCode))notes.push('Δεν έχει προκηρυχθεί οργανικό κενό για τον επιλεγμένο κλάδο.');
-      else if(!a.school)notes.push('Επιλέξτε Καλλιτεχνικό σχολείο με προκηρυγμένο οργανικό κενό στον κλάδο.');
+      if(!a.branchCode)review.push('Επιλέξτε κλάδο με προκηρυγμένο οργανικό κενό 2026–2027.');
+      else if(!register.hasBranch(a.branchCode))unmet.push('Δεν έχει προκηρυχθεί οργανικό κενό για τον επιλεγμένο κλάδο.');
+      else if(!a.school)review.push('Επιλέξτε Καλλιτεχνικό σχολείο με προκηρυγμένο οργανικό κενό στον κλάδο.');
       else {
         var options=register.specializations(a.branchCode,a.school);
-        if(!options.length)notes.push('Το επιλεγμένο σχολείο δεν διαθέτει προκηρυγμένο κενό στον κλάδο.');
-        else if(options.length>1&&a.specialization===null)notes.push('Επιλέξτε την προκηρυγμένη ειδίκευση της θέσης.');
-        else if(a.specialization!==null&&!register.count(a.branchCode,a.school,a.specialization))notes.push('Η συγκεκριμένη ειδίκευση δεν περιλαμβάνεται στα προκηρυγμένα κενά του σχολείου.');
+        if(!options.length)unmet.push('Το επιλεγμένο σχολείο δεν διαθέτει προκηρυγμένο κενό στον κλάδο.');
+        else if(options.length>1&&!a.specialization)review.push('Επιλέξτε την προκηρυγμένη ειδίκευση της θέσης.');
+        else if(a.specialization!==null&&!register.count(a.branchCode,a.school,a.specialization))unmet.push('Η συγκεκριμένη ειδίκευση δεν περιλαμβάνεται στα προκηρυγμένα κενά του σχολείου.');
       }
-      if(a.branchCode===register.musicGroup)notes.push('Προσοχή: η προκήρυξη αναγράφει κοινή κατηγορία Μουσικής ΠΕ79–ΤΕ16. Δεν είναι δύο ανεξάρτητα σύνολα κενών· ελέγξτε την ακριβή επιλεξιμότητα στο επίσημο σύστημα.');
+      if(a.branchCode===register.musicGroup)review.push('Προσοχή: η προκήρυξη αναγράφει κοινή κατηγορία Μουσικής ΠΕ79–ΤΕ16. Δεν είναι δύο ανεξάρτητα σύνολα κενών· ελέγξτε την ακριβή επιλεξιμότητα στο επίσημο σύστημα.');
     }
-    if(!a.organic) notes.push('Ελέγξτε την υπηρέτηση οργανικής θέσης ή τυχόν ειδική νόμιμη εξαίρεση με τη ΔΔΕ.');
-    if(year(a.teachingYears)<5 && ex==='none') notes.push('Η εγκύκλιος 2026–2027 απαιτεί τουλάχιστον 5 έτη διδακτικής εμπειρίας σε σχολεία Δ.Ε. έως 31-08-2027.');
-    if(ex==='direct_music'&&branch!=='pe79') notes.push('Η εξαίρεση απευθείας διορισμού σε Μουσικό αφορά αποκλειστικά εκπαιδευτικούς μουσικής παιδείας.');
-    if(ex==='direct_music'||ex==='primary_transfer') notes.push('Ελέγξτε υπηρεσιακά τη συνδρομή της δηλωμένης εξαίρεσης από την πενταετία.');
-    if(branch==='other') notes.push('Επαληθεύστε τον κλάδο/ειδικότητα και αν περιλαμβάνεται στην ομάδα καλλιτεχνικής παιδείας.');
-    if(specialized&&!a.orientation) notes.push('Επιλέξτε κατεύθυνση/αντικείμενο για πιο συγκεκριμένες οδηγίες τεκμηρίωσης.');
+    if(!a.organic) review.push('Ελέγξτε την υπηρέτηση οργανικής θέσης ή τυχόν ειδική νόμιμη εξαίρεση με τη ΔΔΕ.');
+    if(year(a.teachingYears)<5 && ex==='none') unmet.push('Η εγκύκλιος 2026–2027 απαιτεί τουλάχιστον 5 έτη διδακτικής εμπειρίας σε σχολεία Δ.Ε. έως 31-08-2027.');
+    if(ex==='direct_music'&&branch!=='pe79') unmet.push('Η εξαίρεση απευθείας διορισμού σε Μουσικό αφορά αποκλειστικά εκπαιδευτικούς μουσικής παιδείας.');
+    if(ex==='direct_music'||ex==='primary_transfer') review.push('Ελέγξτε υπηρεσιακά τη συνδρομή της δηλωμένης εξαίρεσης από την πενταετία.');
+    if(branch==='other') review.push('Επαληθεύστε τον κλάδο/ειδικότητα και αν περιλαμβάνεται στην ομάδα καλλιτεχνικής παιδείας.');
+    if(specialized&&!a.orientation) review.push('Επιλέξτε κατεύθυνση/αντικείμενο για πιο συγκεκριμένες οδηγίες τεκμηρίωσης.');
+    var notes=unmet.concat(review);
+    var verdict=unmet.length?'not_established':review.length?'needs_verification':'preliminary_met';
     return {specialized:specialized,branchTitle:ART_BRANCHES[branch]||'', advice:notes,
-      status:notes.length?'Χρειάζονται υπηρεσιακοί έλεγχοι / πρόσθετα στοιχεία':'Ο αρχικός προέλεγχος συμπληρώθηκε — απαιτείται κρίση αρμοδίων οργάνων'};
+      unmetCriteria:unmet,review:review,verdict:verdict,
+      status:verdict==='not_established'?'Δεν πληρούνται όλες οι ελεγχόμενες βασικές προϋποθέσεις με τα δηλωμένα στοιχεία':
+        verdict==='needs_verification'?'Χρειάζονται υπηρεσιακοί έλεγχοι / πρόσθετα στοιχεία':'Ο αρχικός προέλεγχος συμπληρώθηκε — απαιτείται κρίση αρμοδίων οργάνων'};
   }
   function year(v){var n=Number(v);return Number.isFinite(n)?Math.max(0,n):0;}
+  // Ανεξάρτητες επιλογές όπως στο e-Datacenter. Μία έγκυρη διαδρομή αρκεί.
+  // Το legacy `qualification` γίνεται δεκτό για παλιούς callers/tests.
   function eae(a){
     a=a||{};
-    var q=a.qualification||'none', branch=a.branch||'other';
-    var requirements=[];
-    if(!EAE_TITLES[q])requirements.push('Επιλέξτε μία από τις αναγνωριζόμενες διαδρομές εξειδίκευσης ΕΑΕ.');
-    if(q==='pe11'&&branch!=='pe11')requirements.push('Η διαδρομή κύριας ειδικότητας ΤΕΦΑΑ αφορά αποκλειστικά ΠΕ11.');
-    if(q==='experience'&&year(a.eaeYears)<5)requirements.push('Η διαδρομή βασικού πτυχίου + προϋπηρεσίας απαιτεί τουλάχιστον πέντε αποδεδειγμένα έτη στην ΕΑΕ.');
+    var branch=a.branch||'other',selected=Array.isArray(a.qualifications)?a.qualifications.slice():[a.qualification||'none'];
+    var allowed=Object.keys(EAE_TITLES);
+    selected=selected.filter(function(q,i){return allowed.indexOf(q)!==-1&&selected.indexOf(q)===i;});
+    var unmet=[],review=[],valid=[],invalid=[];
+    function eaeYears(){var raw=a.eaeYears;if(raw==null||String(raw).trim()==='')return null;
+      var n=Number(String(raw).replace(',','.'));return Number.isFinite(n)&&n>=0&&n<=50?n:null;}
+    selected.forEach(function(q){
+      if(q==='experience'){
+        var y=eaeYears();
+        if(y===null)review.push('Στην πενταετή διαδρομή συμπληρώστε έγκυρη προϋπηρεσία ΕΑΕ (0–50 έτη).');
+        else if(y<5)invalid.push('Η διαδρομή πτυχίου ΑΕΙ + υπηρεσίας απαιτεί τουλάχιστον πέντε αποδεδειγμένα έτη στην ΕΑΕ.');
+        else valid.push(q);
+      }else if(q==='pe11'){
+        if(branch!=='pe11')invalid.push('Η διαδρομή κύριας ειδικότητας ΤΕΦΑΑ αφορά αποκλειστικά τον κλάδο ΠΕ11.');
+        else valid.push(q);
+      }else valid.push(q);
+    });
+    if(!selected.length)review.push('Επιλέξτε τουλάχιστον ένα από τα πέντε αποδεκτά προσόντα εξειδίκευσης ΕΑΕ.');
+    // An ineligible *extra* qualification is not fatal if another route is valid.
+    if(!valid.length && invalid.length)unmet=unmet.concat(invalid);
+    else if(invalid.length)review=review.concat(invalid.map(function(t){return 'Πρόσθετο δηλωμένο προσόν προς διόρθωση: '+t;}));
     if(a.origin!=='eae'){
-      if(year(a.teachingYears)<3)requirements.push('Για μετάβαση από Γενική/Επαγγελματική σε ΕΑΕ απαιτείται τριετής διδακτική υπηρεσία από τον διορισμό.');
-      if(a.newly&&(!Number.isFinite(Number(a.areaYears))||Number(a.areaYears)<0||Number(a.areaYears)>45))requirements.push('Τα έτη υπηρεσίας στην περιοχή διορισμού πρέπει να είναι από 0 έως 45.');
-      if(a.newly&&year(a.areaYears)<2)requirements.push('Για νεοδιόριστους ελέγχονται δύο έτη στην περιοχή διορισμού, εντός της απαιτούμενης τριετίας.');
-    } else requirements.push('Για μετακίνηση ΕΑΕ → ΕΑΕ ελέγξτε χωριστά υπηρέτηση οργανικής, περιοχή και τυχόν ειδικές υπηρεσιακές υποχρεώσεις.');
-    if(a.destination==='kedasy' && ['pe02','pe03','pe04'].indexOf(branch)===-1)requirements.push('Για ΚΕΔΑΣΥ ελέγχεται κλάδος ΠΕ02, ΠΕ03 ή ΠΕ04 και ύπαρξη αντίστοιχης κενής οργανικής θέσης.');
-    if(a.destination==='kedasy' && ['pe02','pe03','pe04'].indexOf(branch)!==-1)requirements.push('Για ΚΕΔΑΣΥ επιβεβαιώστε την προβλεπόμενη οργανική θέση του κλάδου στο οικείο οργανόγραμμα.');
-    if(a.destination==='deaf')requirements.push('Για Σχολείο Κωφών απαιτείται επιπλέον πιστοποιημένη γνώση Ελληνικής Νοηματικής Γλώσσας.');
-    if(a.destination==='blind')requirements.push('Για Σχολείο Τυφλών απαιτείται επιπλέον πιστοποιημένη γνώση γραφής Braille.');
-    var pending=requirements.length>0;
-    return {selectedQualification:q, qualificationTitle:EAE_TITLES[q]||'', advice:requirements,
-      status:pending?'Χρειάζονται έλεγχοι/στοιχεία':'Δεν εντοπίστηκε προφανές κώλυμα στα δηλωμένα βασικά πεδία — απαιτείται έλεγχος ΔΔΕ'};
+      var rawTeachingYears=Number(a.teachingYears);
+      if(a.teachingYears==null||String(a.teachingYears).trim()===''||!Number.isFinite(rawTeachingYears)||rawTeachingYears<0||rawTeachingYears>50)
+        review.push('Συμπληρώστε έγκυρα διδακτικά έτη από διορισμό, από 0 έως 50.');
+      else if(rawTeachingYears<3)unmet.push('Για μετάβαση από Γενική/Επαγγελματική σε ΕΑΕ απαιτείται τριετής διδακτική υπηρεσία από τον διορισμό.');
+      if(a.newly&&(!Number.isFinite(Number(a.areaYears))||Number(a.areaYears)<0||Number(a.areaYears)>45))review.push('Τα έτη υπηρεσίας στην περιοχή διορισμού πρέπει να είναι από 0 έως 45.');
+      else if(a.newly&&year(a.areaYears)<2)unmet.push('Για νεοδιόριστους ελέγχονται δύο έτη στην περιοχή διορισμού, εντός της απαιτούμενης τριετίας.');
+    }else review.push('Για μετακίνηση ΕΑΕ → ΕΑΕ ελέγξτε χωριστά υπηρέτηση οργανικής, περιοχή και τυχόν ειδικές υπηρεσιακές υποχρεώσεις.');
+    if(a.destination==='kedasy' && ['pe02','pe03','pe04'].indexOf(branch)===-1)unmet.push('Για ΚΕΔΑΣΥ ελέγχεται κλάδος ΠΕ02, ΠΕ03 ή ΠΕ04 και ύπαρξη αντίστοιχης κενής οργανικής θέσης.');
+    if(a.destination==='kedasy' && ['pe02','pe03','pe04'].indexOf(branch)!==-1)review.push('Για ΚΕΔΑΣΥ επιβεβαιώστε την προβλεπόμενη οργανική θέση του κλάδου στο οικείο οργανόγραμμα.');
+    if(a.destination==='deaf'||a.destination==='blind'){
+      var certificate=a.destination==='deaf'?'Ελληνικής Νοηματικής Γλώσσας':'γραφής Braille';
+      if(a.sensoryCertification==='no')unmet.push('Για τη συγκεκριμένη σχολική μονάδα απαιτείται πιστοποιημένη γνώση '+certificate+'. Δηλώθηκε ότι δεν υπάρχει.');
+      else if(a.sensoryCertification==='yes')review.push('Επαληθεύστε τη βεβαίωση πιστοποιημένης γνώσης '+certificate+' και τον αποδεκτό φορέα έκδοσης.');
+      else review.push('Για τη συγκεκριμένη σχολική μονάδα απαιτείται επιπλέον πιστοποιημένη γνώση '+certificate+'.');
+    }
+    var verdict=unmet.length?'not_established':review.length?'needs_verification':'preliminary_met';
+    return {selectedQualification:selected[0]||'none',selectedQualifications:selected,
+      validQualifications:valid,qualificationTitle:selected.map(function(q){return EAE_TITLES[q];}).join(' · '),
+      advice:unmet.concat(review),unmet:unmet,review:review,verdict:verdict,
+      status:verdict==='not_established'?'Δεν πληρούται μία ή περισσότερες βασικές προϋποθέσεις με τα δηλωμένα στοιχεία':
+        verdict==='needs_verification'?'Χρειάζονται έλεγχοι/στοιχεία':
+          'Δεν εντοπίστηκε προφανές κώλυμα στα δηλωμένα βασικά πεδία — απαιτείται έλεγχος ΔΔΕ'};
   }
   // Μετάβαση από ΕΑΕ στη Γενική: διαφορετικός κανόνας για διορισθέντες και μετατεθέντες.
   // Κανόνες κύκλου 2026–2027, εγκύκλιος 138014/Ε2/15-10-2026, σελ. 35, §2.
@@ -163,14 +196,18 @@
   }
   function music(a){
     a=a||{};var type=a.educationType||'general';var exception=a.exceptionType||'none';
-    var notices=[];
-    if(!a.organic)notices.push('Επιβεβαιώστε την υποχρέωση υπηρέτησης οργανικής θέσης και τυχόν ειδική εξαίρεση.');
-    if(year(a.teachingYears)<5&&exception==='none')notices.push('Απαιτείται πενταετής διδακτική εμπειρία στη Δευτεροβάθμια έως την προβλεπόμενη ημερομηνία αναφοράς της εγκυκλίου.');
-    if(exception==='direct_music'&&type!=='specialized')notices.push('Η εξαίρεση απευθείας διορισμού σε Μουσικό αφορά εκπαιδευτικούς μουσικής παιδείας.');
-    if(exception==='direct_music'||exception==='primary_transfer')notices.push('Η δηλωμένη εξαίρεση από την πενταετία χρειάζεται υπηρεσιακή επιβεβαίωση.');
-    if(type==='specialized'&&!MUSIC_SUBJECTS[a.subject])notices.push('Επιλέξτε μουσικό αντικείμενο ώστε να εμφανιστούν τα ειδικά αποδεικτικά.');
-    return {advice:notices,subjectInfo:MUSIC_SUBJECTS[a.subject]||null, type:type,
-      status:notices.length?'Χρειάζονται έλεγχοι/στοιχεία':'Αρχικός έλεγχος συμπληρώθηκε — η κρίση προσόντων γίνεται από τα αρμόδια όργανα'};
+    var unmet=[],review=[];
+    if(!a.organic)review.push('Επιβεβαιώστε την υποχρέωση υπηρέτησης οργανικής θέσης και τυχόν ειδική εξαίρεση.');
+    if(year(a.teachingYears)<5&&exception==='none')unmet.push('Απαιτείται πενταετής διδακτική εμπειρία στη Δευτεροβάθμια έως την προβλεπόμενη ημερομηνία αναφοράς της εγκυκλίου.');
+    if(exception==='direct_music'&&type!=='specialized')unmet.push('Η εξαίρεση απευθείας διορισμού σε Μουσικό αφορά εκπαιδευτικούς μουσικής παιδείας.');
+    if(exception==='direct_music'||exception==='primary_transfer')review.push('Η δηλωμένη εξαίρεση από την πενταετία χρειάζεται υπηρεσιακή επιβεβαίωση.');
+    if(type==='specialized'&&!MUSIC_SUBJECTS[a.subject])review.push('Επιλέξτε μουσικό αντικείμενο ώστε να εμφανιστούν τα ειδικά αποδεικτικά.');
+    var notices=unmet.concat(review);
+    var verdict=unmet.length?'not_established':review.length?'needs_verification':'preliminary_met';
+    return {advice:notices,unmetCriteria:unmet,review:review,verdict:verdict,
+      subjectInfo:MUSIC_SUBJECTS[a.subject]||null,type:type,
+      status:verdict==='not_established'?'Δεν πληρούνται όλες οι ελεγχόμενες βασικές προϋποθέσεις με τα δηλωμένα στοιχεία':
+        verdict==='needs_verification'?'Χρειάζονται έλεγχοι/στοιχεία':'Αρχικός έλεγχος συμπληρώθηκε — η κρίση προσόντων γίνεται από τα αρμόδια όργανα'};
   }
   global.EducationTransferEligibility=Object.freeze({eae:eae,music:music,art:art,intercultural:intercultural,returnToGeneral:returnToGeneral,dossier:dossier,
     BASELINE_CIRCULAR:BASELINE_CIRCULAR,ART_BRANCHES:ART_BRANCHES,

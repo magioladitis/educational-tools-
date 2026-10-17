@@ -4210,6 +4210,10 @@ body.edu-ui.edu-page-transfer .edu-transfer-doc__check { appearance:auto; inline
 body.edu-ui.edu-page-transfer .edu-transfer-doc__main { min-width:0; flex:1 1 auto; }
 body.edu-ui.edu-page-transfer .edu-transfer-doc__title { display:block; font-size:18px; line-height:1.35; font-weight:750; letter-spacing:0; margin:0; cursor:pointer; overflow-wrap:anywhere; }
 body.edu-ui.edu-page-transfer .edu-transfer-doc__category { margin-top:3px; color:var(--edu-muted); font-size:12.5px; font-weight:400; line-height:1.35; }
+/* v3.22.146: submission channel is immediate, low-emphasis text, not an alert or decorative badge. */
+body.edu-ui.edu-page-transfer .edu-transfer-doc__channel { margin-top:5px; color:var(--edu-muted); font-size:12.5px; line-height:1.45; font-weight:500; overflow-wrap:anywhere; }
+body.edu-ui.edu-page-transfer .edu-transfer-doc__channel--special { color:var(--edu-text); font-weight:600; }
+
 body.edu-ui.edu-page-transfer .edu-transfer-doc__summary { margin:7px 0 4px; font-size:15px; line-height:1.5; font-weight:400; color:var(--edu-text); overflow-wrap:anywhere; }
 body.edu-ui.edu-page-transfer .edu-transfer-doc__portal { font-size:13.5px; line-height:1.45; font-weight:600; display:inline-block; overflow-wrap:anywhere; }
 body.edu-ui.edu-page-transfer .edu-transfer-doc__actions:empty { display:none; }
@@ -4304,11 +4308,85 @@ body.edu-ui.edu-page-transfer .transfer-submission-template__clear { margin-top:
 
 /* v3.22.138 — direct service first, compact document-first navigation */
 body.edu-page-transfer .transfer-service-period {margin:12px 0;padding:13px;border:1px solid var(--edu-border,#d8e0e7);border-radius:12px;background:var(--edu-surface,#fbfcfe)}
-body.edu-page-transfer .transfer-docs-jump {margin:13px 0 0;padding:12px 14px;border-radius:10px;border:1px solid var(--edu-border,#cbd5e1);line-height:1.5}
-body.edu-page-transfer .transfer-docs-jump a {font-weight:700;display:inline-block}
-body.edu-page-transfer .transfer-docs-jump .small-note {margin:5px 0 0}
-body.edu-page-transfer .transfer-deadlines {margin:14px 0;padding:13px;border-left:3px solid var(--edu-primary,#526e91);line-height:1.55}
-body.edu-page-transfer .transfer-doc-action-summary {padding:12px 14px;border:1px solid var(--edu-border,#cbd5e1);border-radius:10px;margin-bottom:15px;line-height:1.55}
+/* v3.22.141: closed-by-default deadline disclosure; due date stays visible in the summary. */
+body.edu-ui.edu-page-transfer .edu-disclosure.transfer-deadlines {margin:14px 0;border-left:3px solid var(--edu-primary,#526e91)}
+body.edu-ui.edu-page-transfer .transfer-deadlines .edu-disclosure__body {color:var(--edu-text);line-height:1.55}
+body.edu-ui.edu-page-transfer .transfer-deadlines .edu-disclosure__summary strong {font-weight:800}
+body.edu-page-transfer .transfer-doc-action-summary {padding:10px 12px;border:1px solid var(--edu-border,#cbd5e1);border-radius:10px;margin-bottom:15px;line-height:1.55}
+body.edu-page-transfer .transfer-doc-action-summary[hidden] {display:none!important}
 body.edu-page-transfer .transfer-doc-action-summary p {margin:5px 0 10px}
 body.edu-page-transfer .transfer-docs-warning {font-weight:600}
-@media(max-width:650px) {body.edu-page-transfer .transfer-docs-jump,body.edu-page-transfer .transfer-doc-action-summary {padding:10px 11px}}
+@media(max-width:650px) {body.edu-page-transfer .transfer-doc-action-summary {padding:10px 11px}}
+
+/* v3.22.142 — accessible severity feedback for eligibility checks in EAE / SMEAΕ. */
+.edu-page-transfer #transferEaeAdvice {border-radius:8px;line-height:1.55;overflow-wrap:anywhere}
+.edu-page-transfer #transferEaeAdvice.transfer-eligibility-failed {
+  background:#fff1f2; border:1px solid #fda4af; border-left:4px solid #be123c;
+  color:#881337; font-weight:650;
+}
+.edu-page-transfer #transferEaeAdvice.transfer-eligibility-review {
+  background:#fffbeb; border:1px solid #fcd34d; border-left:4px solid #b45309;
+  color:#78350f;
+}
+.edu-page-transfer #transferEaeAdvice.transfer-eligibility-met {
+  background:#f0fdf4; border:1px solid #86efac; border-left:4px solid #15803d;
+  color:#14532d;
+}
+@media print {
+  .edu-page-transfer #transferEaeAdvice.transfer-eligibility-failed,
+  .edu-page-transfer #transferEaeAdvice.transfer-eligibility-review {
+    border:2px solid #333!important; color:#000!important; background:#fff!important;
+  }
+}
+
+/* v3.22.143 — unified accessible verdict styling for Music, Arts, Intercultural,
+   and EAE-to-General advice; severity is always repeated in icon and text. */
+.edu-page-transfer .transfer-eligibility-message {
+  padding:12px; margin-top:14px; border-radius:8px; line-height:1.55;
+  overflow-wrap:anywhere;
+}
+.edu-page-transfer .transfer-eligibility-message.transfer-eligibility-failed {
+  background:#fff1f2; border:1px solid #fda4af; border-left:4px solid #be123c;
+  color:#881337; font-weight:650;
+}
+.edu-page-transfer .transfer-eligibility-message.transfer-eligibility-review {
+  background:#fffbeb; border:1px solid #fcd34d; border-left:4px solid #b45309;
+  color:#78350f;
+}
+.edu-page-transfer .transfer-eligibility-message.transfer-eligibility-met {
+  background:#f0fdf4; border:1px solid #86efac; border-left:4px solid #15803d;
+  color:#14532d;
+}
+@media print {
+  .edu-page-transfer .transfer-eligibility-message.transfer-eligibility-failed,
+  .edu-page-transfer .transfer-eligibility-message.transfer-eligibility-review {
+    border:2px solid #333!important; background:#fff!important; color:#000!important;
+  }
+}
+
+/* v3.22.144: one accessible EAE qualification checklist, not a second radio selection inside documents. */
+body.edu-ui.edu-page-transfer .transfer-eae-qualifications {
+  border:1px solid var(--edu-border,#b8c5d5); border-radius:10px; padding:12px 14px;
+  margin:0; min-width:0;
+}
+body.edu-ui.edu-page-transfer .transfer-eae-qualifications legend {
+  padding:0 5px; font-size:16px; font-weight:700; color:var(--edu-text,#1e293b);
+}
+body.edu-ui.edu-page-transfer .transfer-eae-qualifications > p.small-note {margin:3px 0 10px;}
+body.edu-ui.edu-page-transfer .transfer-eae-qualification-list {display:grid;gap:5px;}
+body.edu-ui.edu-page-transfer .transfer-eae-qualification-list > label {
+  display:flex;align-items:flex-start;gap:10px; padding:9px 10px;cursor:pointer;
+  font-size:14px;line-height:1.45;font-weight:500;min-width:0;
+  border:1px solid transparent;border-radius:8px;
+}
+body.edu-ui.edu-page-transfer .transfer-eae-qualification-list > label:has(input:checked) {
+  background:#eff6ff; border-color:#bfdbfe;
+}
+body.edu-ui.edu-page-transfer .transfer-eae-qualification-list input[type="checkbox"] {
+  width:18px; height:18px; margin:1px 0 0;flex-shrink:0;
+}
+body.edu-ui.edu-page-transfer .transfer-eae-qualification-list input:focus-visible {outline:2px solid #1d4ed8;outline-offset:2px;}
+@media (max-width:520px) {
+ body.edu-ui.edu-page-transfer .transfer-eae-qualifications {padding:11px 9px;}
+ body.edu-ui.edu-page-transfer .transfer-eae-qualification-list > label {padding:8px 6px;font-size:13.5px;}
+}

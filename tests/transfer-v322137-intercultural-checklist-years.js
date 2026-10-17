@@ -12,7 +12,7 @@ const elg=read('includes/transfer-eligibility.js');
 // Both markup/business logic and typing/paste UX enforce the upper bound.
 assert.match(php,/id="transferInterculturalYears"[^>]*max="50"/);
 assert.match(ui,/function clampInterculturalYears\(el\)[\s\S]*?n > 50\) el.value = '50'/);
-assert.match(ui,/target.id === 'transferInterculturalYears'\) clampInterculturalYears\(target\)/);
+assert.match(ui,/target.id === 'transferInterculturalYears' \|\| target.id === 'transferEaeTeachingYears'\) clampInterculturalYears\(target\)/);
 let ev=vm.runInNewContext(elg+'\nwindow.EducationTransferEligibility;', {window:{},document:{},Number,String,Math,Array,Object});
 let base={organic:'yes',current:'yes',vacancy:'yes',years:'50',languageCase:'usual'};
 assert.equal(ev.intercultural(base).verdict,'preliminary_met');
