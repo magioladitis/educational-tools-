@@ -12,7 +12,7 @@ const ok=(cond,label)=>{assert.ok(cond,label);count++;};
 ok(/label for="eligibleChildren"[^>]*>[^<]*<small>1ο–2ο: 4/.test(page), 'child points in small label hint, not below input');
 ok(!page.includes('<div class="field-hint">4 + 4 + 6 + 7'), 'obsolete child hint removed');
 ok(ui.includes('guidance.innerHTML = \'<strong>Οριστική τοποθέτηση / βελτίωση:</strong>'), 'local heading bold');
-ok(page.includes("'label_id' => 'transferTotalLabel'"), 'result label changeable');
+ok(fs.readFileSync(path.join(root,'includes/components/transfer-score-card.php'),'utf8').includes("'label'=>'transferTotalLabel'"), 'result label changeable');
 ok(ui.includes("missingMsd ? 'προσωρινές μονάδες (χωρίς Μ.Σ.Δ.)' : 'συνολικές μονάδες'"), 'missing MSD labeled provisional');
 ok(ui.includes('global.EducationTransfer.truncate2('), 'subtotal follows calculator truncation');
 ok(ui.includes('ΔΕΝ περιλαμβάνει Μ.Σ.Δ.'), 'warning not mistaken for full total');

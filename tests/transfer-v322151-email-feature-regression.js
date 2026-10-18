@@ -24,7 +24,7 @@ test(php.includes('aria-controls="transferSubmissionGuidance"')&&php.includes('i
 test(css.includes('.transfer-email-feature__cta')&&css.includes('@media(max-width:480px)'), 'responsive CTA styles');
 test(!state([],'region').email&&state([],'region').title.includes('αν χρειαστεί'),'no-attachment mode does not compel sending');
 test(!state([record,family],'region').email, 'official/automatic checks do not trigger email');
-test(state([email],'region').email&&state([email],'region').title.includes('email'),'email evidence enables email composer');
+test(state([email],'region').email&&state([email],'region').title.includes('μηνύματος'),'email evidence enables email composer');
 test(!state([emailBlocked],'region').email,'ineligible evidence does not trigger email');
 test(!state([mydocs],'music').email&&state([mydocs],'music').title.includes('mydocs'),'mydocs cannot masquerade as email');
 test(state([email,mydocs],'smeae').email&&state([email,mydocs],'smeae').title.includes('mydocs'),'mixed route explicitly distinguishes email from mydocs');

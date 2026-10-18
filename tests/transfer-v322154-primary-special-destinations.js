@@ -39,6 +39,6 @@ for(const mode of ['deaf','blind']){
 }
 t(controller.includes("certificate==='yes' && certificateDossier==='new'") && controller.includes("mydocs('eae-certificate-"), 'certificate documents use mydocs only with new dossier');
 t(controller.includes("deaf:'μετάθεση με εξειδίκευση στην ΕΝΓ'")&&controller.includes("blind:'μετάθεση με εξειδίκευση στη γραφή Braille'"),'special destination labels align with official application type');
-t(source.includes('προέλεγχοι προορισμού'),'not falsely claiming official standalone application');
+t(!source.includes('Οι κωδικοί εμφανίζονται δίπλα στον τύπο') && source.includes('value="eeeek"'),'obsolete explanatory copy removed in v3.22.168; prechecks remain');
 t(!source.includes('includes/transfer-eligibility.js')&&!source.includes('includes/transfer-documents.js')&&!source.includes('includes/transfer-ui.js'),'secondary rules isolated');
 console.log('PASS '+count+' primary special destination assertions');

@@ -39,7 +39,7 @@ assert.equal(field.style.display, 'block', 'keep visible for existing case');
 const primary = read('includes/transfer-primary.js');
 const secondary = read('includes/transfer-ui.js');
 for (const [grade, js] of [['Primary', primary], ['Secondary', secondary]]) {
-  assert.match(js, /EducationTransferSocialInput\.bindCoServiceField\(/, grade+' binds shared field control');
+  assert.doesNotMatch(js, /EducationTransferSocialInput\.bindCoServiceField\(/, grade+' does not duplicate shared event binding');
   assert.match(js, /EducationTransferSocialInput\.syncCoServiceField\(/, grade+' uses shared field control');
 }
 assert.match(primary, /if\(blocked\)check\.checked=false/, 'Primary special constraints retained');
@@ -51,4 +51,4 @@ for(const [name, html, field, checkbox] of [['Primary',primaryHtml,'primaryCoSer
   assert.ok(html.includes('id="'+checkbox+'"'), name+' checkbox exists');
   assert.ok(html.includes('transfer-social-input.js'), name+' loads shared handler');
 }
-console.log('PASS shared spouse panel initial/open/close/reopen, both grade connections and independent eligibility');
+console.log('PASS shared spouse panel initial/open/close/reopen, autonomous binding and independent eligibility');

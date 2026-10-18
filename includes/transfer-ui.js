@@ -284,6 +284,13 @@
     var coChoice=byId('transferCoServiceCase').value;
     var coWarning=unconfirmedCoService?(coChoice==='unspecified'||coChoice==='other'?' Η συνυπηρέτηση δεν έχει επιβεβαιωθεί: +0 μέχρι να επιλεγεί επιλέξιμη περίπτωση/να ελεγχθεί από ΔΔΕ.':' Συνυπηρέτηση: 0 μόρια λόγω μη επιλέξιμου εργασιακού καθεστώτος.'):'';
     byId('statusResult').textContent = invalidService ? invalidServiceMessage : result.msdInputValid ? (serviceSummary + ' Οι ειδικές κατηγορίες/προτεραιότητες δεν περιλαμβάνονται στο άθροισμα.'+coWarning) : 'Το εμφανιζόμενο ποσό είναι προσωρινό και ΔΕΝ περιλαμβάνει Μ.Σ.Δ. ' + serviceSummary + ' Εισαγάγετε τον έγκυρο συνολικό αριθμό Μ.Σ.Δ. ή επιλέξτε υπολογισμό από υπηρετήσεις για την τελική βαθμολογία.'+coWarning;
+    if(global.EducationTransferScoreCard)global.EducationTransferScoreCard.render('secondary',{
+      total:byId('totalResult').textContent,label:byId('transferTotalLabel').textContent,
+      service:byId('servicePointsResult').textContent,msd:byId('msdPointsResult').textContent,
+      coservice:byId('coServiceResult').textContent,family:byId('familyResult').textContent,
+      locality:byId('localityResult').textContent,first:byId('firstPreferenceResult').textContent,
+      status:byId('statusResult').textContent
+    });
   }
 
   function currentGeneralReturnInput(){
@@ -699,7 +706,6 @@
     byId('resetBtn').addEventListener('click', reset);
     byId('mode').addEventListener('change', syncMode);
     if(global.EducationTransferDocuments) global.EducationTransferDocuments.init();
-    global.EducationTransferSocialInput.bindCoServiceField(byId('coService'), byId('transferCoServiceCaseField'), byId('transferCoServiceCase'));
 
     document.addEventListener('input', function (event) {
       var target = event.target;

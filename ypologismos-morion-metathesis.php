@@ -380,7 +380,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         <button type="button" class="secondary" id="transferPrintChecklist">Εκτύπωση λίστας δικαιολογητικών</button>
       </section>
       <section class="transfer-email-feature" id="transferEmailFeature" aria-labelledby="transferEmailFeatureTitle">
-        <h3 id="transferEmailFeatureTitle">Έτοιμο email υποβολής δικαιολογητικών</h3>
+        <h3 id="transferEmailFeatureTitle">Προετοιμασία μηνύματος υποβολής δικαιολογητικών</h3>
         <p class="transfer-email-feature__lead" id="transferEmailFeatureLead">Ετοιμάστε θέμα και κείμενο μηνύματος για τα δικαιολογητικά που απαιτούν αποστολή. Ο τρόπος υποβολής προσαρμόζεται στην αίτησή σας.</p>
         <button type="button" id="transferEmailFeatureOpen" class="transfer-email-feature__cta" aria-controls="transferSubmissionGuidance" aria-expanded="false">Δημιουργία μηνύματος υποβολής ↓</button>
         <p class="transfer-email-feature__helper" id="transferEmailFeatureHelper">Το μήνυμα δημιουργείται στη συσκευή σας· δεν αποστέλλεται από την Εργαλειοθήκη.</p>
@@ -398,21 +398,9 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
     <?php calculatorMainEnd(); ?>
 
     <div id="transferScoringResults">
+    <?php require_once __DIR__ . '/includes/components/transfer-score-card.php'; ?>
     <?php calculatorResultsStart(array('aria_live' => 'polite')); ?>
-      <?php calculatorScoreHeader(array(
-        'value' => '0',
-        'value_id' => 'totalResult',
-        'label' => 'συνολικές μονάδες',
-        'label_id' => 'transferTotalLabel',
-        'cap' => 'Ενδεικτική βαθμολογία μετάθεσης'
-      )); ?>
-      <?php calculatorResultRow(array('label' => 'Μόρια προϋπηρεσίας', 'value' => '0', 'value_id' => 'servicePointsResult')); ?>
-      <?php calculatorResultRow(array('label' => 'Μ.Σ.Δ.', 'value' => '0', 'value_id' => 'msdPointsResult')); ?>
-      <?php calculatorResultRow(array('label' => 'Συνυπηρέτηση', 'value' => '0', 'value_id' => 'coServiceResult')); ?>
-      <?php calculatorResultRow(array('label' => 'Οικογενειακοί λόγοι', 'value' => '0', 'value_id' => 'familyResult')); ?>
-      <?php calculatorResultRow(array('label' => 'Εντοπιότητα', 'value' => '0', 'value_id' => 'localityResult')); ?>
-      <?php calculatorResultRow(array('label' => 'Πρώτη προτίμηση', 'value' => '0', 'value_id' => 'firstPreferenceResult')); ?>
-      <?php calculatorResultMessage(array('variant' => 'status', 'id' => 'statusResult', 'html' => 'Πρόσθεσε τα στοιχεία και τις υπηρετήσεις σου.')); ?>
+      <?php transferScoreCard('secondary'); ?>
     <?php calculatorResultsEnd(); ?>
     </div>
   <?php calculatorColumnsEnd(); ?>
@@ -443,6 +431,7 @@ window.EducationTransferTeacherSpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-email-component.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-documents.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-social-input.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-score-card.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

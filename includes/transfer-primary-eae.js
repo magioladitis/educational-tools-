@@ -7,6 +7,7 @@
 }(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
   var permittedKedasy = ['ΠΕ60','ΠΕ61','ΠΕ70','ΠΕ71'];
+  var permittedEeeek = ['ΠΕ70','ΠΕ71'];
   var names = {
     phd:'Διδακτορικό στην ΕΑΕ ή στη Σχολική Ψυχολογία',
     masters:'Μεταπτυχιακό στην ΕΑΕ ή στη Σχολική Ψυχολογία',
@@ -34,6 +35,9 @@
     });
     if(!branch) checks.push('Συμπληρώστε τον κλάδο του εκπαιδευτικού.');
     if(branch==='ΆΛΛΟΣ') checks.push('Απαιτείται επαλήθευση του ακριβούς κλάδου και της προβλεπόμενης οργανικής θέσης.');
+    if(mode==='eeeek' && branch && permittedEeeek.indexOf(branch)===-1){
+      problems.push('Στα ΕΕΕΕΚ Πρωτοβάθμιας προβλέπονται αποκλειστικά ΠΕ71 και ΠΕ70 με εξειδίκευση ΕΑΕ.');
+    }
     if(mode==='kedasy' && branch && permittedKedasy.indexOf(branch)===-1){
       problems.push('Ο κλάδος '+branch+' δεν περιλαμβάνεται στους ΠΕ60, ΠΕ61, ΠΕ70, ΠΕ71 που προβλέπονται για ΚΕΔΑΣΥ Πρωτοβάθμιας.');
     }
@@ -45,7 +49,9 @@
       else positive.push('Δηλώθηκε συμπλήρωση της τριετίας από τον διορισμό.');
       if(data.organic==='no') problems.push('Για μετάβαση από Γενική σε ΕΑΕ απαιτείται και υπηρέτηση της οργανικής θέσης.');
       else if(data.organic!=='yes') checks.push('Επιβεβαιώστε ότι έχει υπηρετηθεί η οργανική θέση.');
-      if(!claimed.length) checks.push('Δεν έχει δηλωθεί ακόμη προσόν εξειδίκευσης στην ΕΑΕ.');
+      if(mode==='eeeek' && branch==='ΠΕ71') {
+        positive.push('Ο κλάδος ΠΕ71 είναι κλάδος Δασκάλων Ειδικής Αγωγής· δεν απαιτείται ξεχωριστή δήλωση μεταπτυχιακού για τον ειδικό έλεγχο ΕΕΕΕΚ.');
+      } else if(!claimed.length) checks.push('Δεν έχει δηλωθεί ακόμη προσόν εξειδίκευσης στην ΕΑΕ.');
       else if(!valid.length) problems.push('Κανένα από τα δηλωμένα προσόντα εξειδίκευσης ΕΑΕ δεν καλύπτει ακόμη την ελεγχόμενη προϋπόθεση.');
       else positive.push('Δηλώθηκε τουλάχιστον μία εναλλακτική διαδρομή εξειδίκευσης ΕΑΕ.');
     } else if(origin==='appointed-eae') {
@@ -66,8 +72,22 @@
     }
     if(quals.pe11 && branch && branch!=='ΠΕ11') checks.push('Η εναλλακτική διαδρομή τίτλου ΤΕΦΑΑ αφορά μόνο τον κλάδο ΠΕ11.');
     if(origin==='general' && valid.length) checks.push('Η νομιμότητα, αναγνώριση και συνάφεια των τίτλων επιβεβαιώνεται από την αρμόδια υπηρεσία.');
+    if(mode==='eeeek') {
+      if(branch==='ΠΕ70' && !valid.length) {
+        if(!claimed.length) checks.push('Για ΠΕ70 στα ΕΕΕΕΚ πρέπει να τεκμηριώνεται εξειδίκευση στην ΕΑΕ· δηλώστε το προσόν ή ελέγξτε τον υπηρεσιακό φάκελο.');
+        else problems.push('Η δηλωμένη εξειδίκευση ΕΑΕ του ΠΕ70 δεν καλύπτει ακόμη την ελεγχόμενη διαδρομή.');
+      }
+      checks.push('Η μετάθεση σε ΕΕΕΕΚ εξαρτάται από την προβλεπόμενη οργανική θέση και την υπηρεσιακή κρίση.');
+    }
+    if(mode==='deaf' || mode==='blind') {
+      var name = mode==='deaf'?'Ελληνικής Νοηματικής Γλώσσας (ΕΝΓ)':'γραφής Braille';
+      if(data.certification==='no') problems.push('Για Σχολείο '+(mode==='deaf'?'Κωφών':'Τυφλών')+' απαιτείται πιστοποιημένη γνώση '+name+'. Η απλή παρακολούθηση δεν αρκεί.');
+      else if(data.certification!=='yes') checks.push('Επιβεβαιώστε την πιστοποιημένη γνώση '+name+' και το αποδεικτικό της.');
+      else positive.push('Δηλώθηκε πιστοποίηση '+name+'· η ισχύς της πρέπει να επαληθευτεί από την υπηρεσία.');
+      checks.push('Η αναγνώριση της πιστοποίησης και η δυνατότητα μετάθεσης σε Σχολείο Κωφών/Τυφλών ελέγχονται από τις αρμόδιες υπηρεσίες.');
+    }
     if(mode==='kedasy') checks.push('Η οργανική θέση, ο κλάδος και η πλήρωση των προϋποθέσεων ΕΑΕ ελέγχονται από τα αρμόδια υπηρεσιακά όργανα.');
     return {status:problems.length?'problem':checks.length?'review':'positive', problems:problems,checks:checks,positive:positive,qualificationValid:valid,claimed:claimed};
   }
-  return {evaluate:evaluate, permittedKedasy:permittedKedasy.slice(), qualificationNames:names, finiteYears:finiteYears};
+  return {evaluate:evaluate, permittedKedasy:permittedKedasy.slice(), permittedEeeek:permittedEeeek.slice(), qualificationNames:names, finiteYears:finiteYears};
 }));

@@ -65,10 +65,10 @@ function fillSpecialtyDropdown(select,catalog,selected){
 }
 /* One authoritative source for common UI wording. Legal text stays in each level. */
 var labels=Object.freeze({
- emailTitle:'Έτοιμο email υποβολής δικαιολογητικών',
+ emailTitle:'Προετοιμασία μηνύματος υποβολής δικαιολογητικών',
  mydocsTitle:'Έτοιμο υπόδειγμα υποβολής μέσω mydocs',
  optionalTitle:'Υπόδειγμα μηνύματος — αν χρειαστεί',
- mixedTitle:'Έτοιμο email και υπόδειγμα mydocs',
+ mixedTitle:'Προετοιμασία email και υποβολής μέσω mydocs',
  emailButton:'Δημιουργία email υποβολής',
  mydocsButton:'Προετοιμασία κειμένου για mydocs',
  optionalButton:'Προβολή προαιρετικού υποδείγματος',

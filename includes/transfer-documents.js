@@ -342,11 +342,11 @@ function submissionFeatureState(rows,mode){
   lead:'Η επιλογή σας απαιτεί ειδική διαδικασία. Ελέγξτε πού υποβάλλονται τα στοιχεία πριν χρησιμοποιήσετε οποιοδήποτε υπόδειγμα.',
   button:'Προβολή ειδικών οδηγιών υποβολής',email:false,specialOnly:true};
  if(email&&mydocs)return {
-  title:submissionUiText('mixedTitle','Έτοιμο email και υπόδειγμα mydocs'),
+  title:submissionUiText('mixedTitle','Προετοιμασία email και υποβολής μέσω mydocs'),
   lead:'Για τη μοριοδότηση ετοιμάζετε email στη ΔΔΕ οργανικής· ο φάκελος προσόντων υποβάλλεται χωριστά στο mydocs μόνο όπου απαιτείται.',
   button:submissionUiText('mixedButton','Προετοιμασία μηνύματος υποβολής'),email:true};
  if(email)return {
-  title:submissionUiText('emailTitle','Έτοιμο email υποβολής δικαιολογητικών'),
+  title:submissionUiText('emailTitle','Προετοιμασία μηνύματος υποβολής δικαιολογητικών'),
   lead:'Δημιουργήστε θέμα και σώμα email για τα αποδεικτικά που πρέπει να αποστείλετε στη ΔΔΕ οργανικής.',
   button:submissionUiText('emailButton','Δημιουργία email υποβολής'),email:true};
  if(mydocs)return {
@@ -433,7 +433,8 @@ function submissionMessageHtml(data,expanded,allowEmail){
  return '<section class="transfer-submission-template" aria-label="Υπόδειγμα θέματος και σώματος αποστολής">'+
   '<h4>'+escape(submissionUiText('templateHeading','Θέμα και σώμα μηνύματος — υπόδειγμα'))+'</h4>'+
   '<p class="transfer-submission-template__note">Το υπόδειγμα ακολουθεί τον επιλεγμένο τύπο αίτησης. '+
-  (tpl.general?'Χρησιμοποιείται για email στη ΔΔΕ οργανικής.':'Για τα σχετικά δικαιολογητικά της ΔΔΕ ή την υποβολή στο mydocs, <strong>μόνο όπου προβλέπεται</strong>. Στο mydocs το σώμα μπορεί να εμφανίζεται ως πεδίο «Αιτούμαι».')+'</p>'+
+  (tpl.general?'Χρησιμοποιείται για email στη ΔΔΕ οργανικής.':'Για τα σχετικά δικαιολογητικά της ΔΔΕ ή την υποβολή στο mydocs, <strong>μόνο όπου προβλέπεται</strong>. Στο mydocs το σώμα μπορεί να εμφανίζεται ως πεδίο «Αιτούμαι».')+
+  (['smeae','eae_sensory','kedasy'].indexOf(tpl.mode)!==-1?' Η §2.2.4 ορίζει τη σειρά των πεδίων και δίνει ενδεικτικό τύπο αίτησης. Ελέγξτε ότι η αναλυτική περιγραφή του τύπου που συμπληρώνεται εδώ συμφωνεί με την οριστικοποιημένη αίτησή σας.':'')+'</p>'+
   '<details class="transfer-submission-template__personalize" data-transfer-personalize'+(expanded?' open':'')+'>'+
   '<summary>'+escape(submissionUiText('personalize','Δημιουργία έτοιμου μηνύματος (προαιρετικά)'))+'</summary>'+
   '<div class="transfer-submission-template__personal-body">'+

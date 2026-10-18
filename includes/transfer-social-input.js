@@ -33,6 +33,23 @@
     });
     syncCoServiceField(checkbox, field, choice);
   }
+  // Bind the shared spouse dropdown independently of the grade controller.
+  // A missing optional Primary vacancy/eligibility asset must not disable this UI.
+  function initializeSocialFields() {
+    [['coService','transferCoServiceCaseField','transferCoServiceCase'],
+     ['primaryCoservice','primaryCoServiceCaseField','primaryCoServiceCase']].forEach(function (ids) {
+      var checkbox=document.getElementById(ids[0]);
+      var field=document.getElementById(ids[1]);
+      var choice=document.getElementById(ids[2]);
+      if (!checkbox || !field || !choice || field.getAttribute('data-social-bound')==='yes') return;
+      bindCoServiceField(checkbox, field, choice);
+      field.setAttribute('data-social-bound','yes');
+    });
+  }
+  if (typeof document !== 'undefined' && document.getElementById) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initializeSocialFields);
+    else initializeSocialFields();
+  }
   global.EducationTransferSocialInput = Object.freeze({
     clampChildren: clampChildren,
     syncCoServiceField: syncCoServiceField,

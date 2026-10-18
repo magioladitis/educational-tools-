@@ -55,7 +55,6 @@ foreach ($primaryTransferBranchCodes as $code) {
             <option value="blind" data-official-code="001.ΣΜΕΑ003">ΕΝΓ/Braille [001.ΣΜΕΑ003] — Σχολείο Τυφλών</option>
           </select>
         </div>
-        <p class="field-hint">Οι κωδικοί εμφανίζονται δίπλα στον τύπο, όπως στο επίσημο σύστημα. Οι ξεχωριστές επιλογές ΕΕΕΕΚ / Κωφών / Τυφλών είναι προέλεγχοι προορισμού, όχι πρόσθετοι αυτοτελείς τύποι ηλεκτρονικών αιτήσεων.</p>
         <?php calculatorDisclosure(array(
           'id' => 'primaryMultipleApplicationsHelp',
           'summary' => 'Μπορώ να υποβάλω περισσότερες από μία αιτήσεις μετάθεσης;',
@@ -229,7 +228,7 @@ SOCIAL_PRIMARY_EXTRAS
         <p id="primaryChecklistProgress" role="status" aria-live="polite"></p>
       <?php calculatorCardEnd(); ?>
       <section class="transfer-email-feature" id="primaryEmailFeature" aria-labelledby="primaryEmailHeading">
-        <h3 id="primaryEmailHeading">Έτοιμο email υποβολής δικαιολογητικών</h3>
+        <h3 id="primaryEmailHeading">Προετοιμασία μηνύματος υποβολής δικαιολογητικών</h3>
         <p id="primaryEmailLead" class="transfer-email-feature__lead">Δημιουργήστε θέμα και σώμα μηνύματος με τη μορφή της εγκυκλίου Πρωτοβάθμιας 138023/Ε2/2026.</p>
         <button type="button" id="primaryEmailOpen" class="transfer-email-feature__cta" aria-expanded="false" aria-controls="primaryEmailDetails">Δημιουργία μηνύματος υποβολής ↓</button>
         <p class="transfer-email-feature__helper">Το υπόδειγμα δημιουργείται στη συσκευή σας. Δεν γίνεται αυτόματη αποστολή, επιλογή παραλήπτη ή επισύναψη αρχείων.</p>
@@ -267,10 +266,11 @@ SOCIAL_PRIMARY_EXTRAS
       </section>
       <p class="primary-transfer-notice"><strong>Προκαταρκτικός οδηγός:</strong> η Εργαλειοθήκη δεν υποκαθιστά το ΥΠΑΙΘΑ, τη ΔΠΕ ή τη νομοθεσία και δεν ελέγχει ακόμη όλες τις ειδικές κατηγορίες ή υπηρεσιακές εξαιρέσεις. Οι μονάδες στο επίσημο μητρώο υπερισχύουν.</p>
     <?php calculatorMainEnd(); ?>
+    <?php require_once __DIR__ . '/includes/components/transfer-score-card.php'; ?>
     <?php calculatorResultsStart(array('aria_live'=>'polite')); ?>
-      <div class="primary-score-section" id="primaryScoreResults"><h2 id="primaryScoreHeading">Ενδεικτική μοριοδότηση</h2><div class="primary-total" id="primaryTotal">—</div>
-        <p id="primaryTotalStatus" role="status" aria-live="polite">Συμπληρώστε τα μόρια από το μητρώο.</p>
-        <div id="primaryBreakdown"></div></div>
+      <div id="primaryScoreResults">
+        <?php transferScoreCard('primary'); ?>
+      </div>
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
 <?php calculatorContainerEnd(); ?>
@@ -291,6 +291,7 @@ window.EducationTransferPrimarySpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-intercultural.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-intercultural-vacancies.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-social-input.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-score-card.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

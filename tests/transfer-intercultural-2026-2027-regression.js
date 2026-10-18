@@ -37,5 +37,5 @@ check('eligibility panel in UI',ui.includes("mode==='intercultural'"));
 check('qualification scoring hidden',ui.includes("input.mode === 'intercultural'"));
 check('intercultural checklist',doc.includes('function interculturalDocuments()'));
 check('intercultural checklist invoked',doc.includes("mode==='intercultural'"));
-check('portal reference',doc.includes('https://mydocs.minedu.gov.gr/'));
+check('portal reference retained in consolidated disclosure',doc.includes('mydocs.minedu.gov.gr') && php.includes('transferSubmissionGuidanceBody'));
 console.log('PASS: 25 intercultural transfer tests');

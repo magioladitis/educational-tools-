@@ -10,7 +10,7 @@ function transferSocialCriteriaCard($grade, $extraHtml = '') {
         throw new InvalidArgumentException('Unknown transfer education grade');
     }
     $primary = $grade === 'primary';
-    $ids = array('eligibleChildren' => 'primaryChildren', 'familyStatusEligible' => 'primaryFamily', 'coService' => 'primaryCoservice', 'transferCoServiceCaseField' => 'primaryCoServiceCaseField', 'transferCoServiceCase' => 'primaryCoServiceCase', 'transferCoServiceAdvice' => 'primaryCoServiceAdvice', 'transferSpecialCaseField' => 'primarySpecialCaseField', 'transferSpecialCase' => 'primarySpecialCase', 'locality' => 'primaryLocality', 'firstPreferenceRow' => 'primaryFirstPreferenceRow', 'firstPreference' => 'primaryFirst', 'modeNote' => 'primaryModeNote');
+    $ids = array('eligibleChildren' => 'primaryChildren', 'familyStatusEligible' => 'primaryFamily', 'coService' => 'primaryCoservice', 'transferCoServiceCaseField' => 'primaryCoServiceCaseField', 'transferCoServiceCase' => 'primaryCoServiceCase', 'transferCoServiceAdvice' => 'primaryCoServiceAdvice', 'transferSpecialCaseField' => 'primarySpecialCaseField', 'transferSpecialCase' => 'primarySpecialCase', 'locality' => 'primaryLocality', 'firstPreferenceRow' => 'primaryFirstPreferenceRow', 'firstPreference' => 'primaryFirst');
     ob_start();
 ?>
         <div class="field-grid">
@@ -19,6 +19,9 @@ function transferSocialCriteriaCard($grade, $extraHtml = '') {
             <input id="eligibleChildren" type="number" min="0" max="20" step="1" value="0" inputmode="numeric">
           </div>
         </div>
+        <?php if ($primary): ?>
+        <div class="check-row"><label><input type="checkbox" id="primaryChildrenExtra"> Χρειάζεται να αποστείλω πρόσθετο αποδεικτικό για τέκνο (ειδική περίπτωση)</label></div>
+        <?php endif; ?>
         <div class="check-row"><label><input id="familyStatusEligible" type="checkbox"> Γάμος/Σύμφωνο Συμβίωσης/Γονέας με επιμέλεια (+4)</label></div>
         <div class="check-row"><label><input id="coService" type="checkbox"> Συνυπηρέτηση στην περιοχή/το δήμο που εξετάζω (+4)</label></div>
         <div class="field" id="transferCoServiceCaseField" style="display:none;margin:10px 0 14px 0;">
@@ -60,13 +63,6 @@ function transferSocialCriteriaCard($grade, $extraHtml = '') {
             $html = str_replace('id="'.$old.'"', 'id="'.$new.'"', $html);
             $html = str_replace('for="'.$old.'"', 'for="'.$new.'"', $html);
         }
-        // Additional evidence toggle is specific to the Primary document workflow;
-        // keep it beside children, not among unrelated social criteria.
-        $html = str_replace(
-            '<div class="check-row"><label><input id="primaryFamily"',
-            '<div class="check-row"><label><input type="checkbox" id="primaryChildrenExtra"> Χρειάζεται να αποστείλω πρόσθετο αποδεικτικό για τέκνο (ειδική περίπτωση)</label></div>' . "\n        " . '<div class="check-row"><label><input id="primaryFamily"',
-            $html
-        );
     }
     calculatorCardStart(array('title' => 'Γ. Κοινωνικά κριτήρια'));
     echo $html;

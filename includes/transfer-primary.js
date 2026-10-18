@@ -229,7 +229,6 @@
     if(firstRow){ firstRow.classList.toggle('hidden',interculturalMode); if(interculturalMode)$('primaryFirst').checked=false; }
     var invalidSpouse=syncPrimaryCoService();
     $('primaryChecklist').closest('section.card').querySelector('h2').textContent=(interculturalMode?'Β.':'Δ.')+' Προσωπική λίστα δικαιολογητικών';
-    $('primaryScoreHeading').textContent=interculturalMode?'Κρίση βάσει προσόντων':'Ενδεικτική μοριοδότηση';
     var mode=$('primaryServiceMode').value;
     $('primaryServicePointsPanel').hidden=mode!=='points';
     $('primaryServiceDurationPanel').hidden=mode!=='direct';
@@ -248,14 +247,35 @@
     if (!$('primaryMsd').value.trim() || (mode==='points' && !$('primaryServicePoints').value.trim())) numericValid=false;
     var result=numericValid?scoring.calculate(raw):null;
     var valid=!!result && result.serviceInputValid && result.msdInputValid;
-    $('primaryTotal').textContent=interculturalMode?'—':valid?format(result.total):'—';
-    $('primaryTotalStatus').textContent=interculturalMode?'Δεν εφαρμόζεται μοριοδότηση. Η μετάθεση εξετάζεται βάσει προσόντων και διαθέσιμων οργανικών κενών.':valid?'Πληροφοριακό αποτέλεσμα — ελέγξτε τα κριτήρια και το επίσημο μητρώο.':'Συμπληρώστε έγκυρα στοιχεία (έως 2 δεκαδικά, Μ.Σ.Δ. έως 1.000 και προϋπηρεσία έως 125).';
-    $('primaryValidation').textContent=interculturalMode?'':!valid?'Δεν εμφανίζεται σύνολο όσο λείπουν ή είναι άκυρα βασικά αριθμητικά πεδία.':'';
-    $('primaryBreakdown').innerHTML=!interculturalMode&&valid?[
-      ['Συνολική υπηρεσία',result.servicePoints],['Μονάδες συνθηκών διαβίωσης',result.msdPoints],
-      ['Συνυπηρέτηση',result.coServicePoints],['Οικογενειακοί λόγοι',result.familyPoints],
-      ['Εντοπιότητα',result.localityPoints],['Πρώτη προτίμηση',result.firstPreferencePoints]
-    ].map(function(x){return '<p>'+escapeText(x[0])+': <strong>'+escapeText(format(x[1]))+'</strong></p>';}).join(''):'';
+    // Same visible score rows as Secondary. Never describe a missing M.S.D. as a final result.
+    var scoreCard=global.EducationTransferScoreCard;
+    if(scoreCard){
+      var f=function(v){return v===null||v===undefined?'—':format(v);};
+      var hasService=mode!=='points'||!!$('primaryServicePoints').value.trim();
+      var hasMsd=!!$('primaryMsd').value.trim();
+      var partial=children!==null && years!==null && months!==null && days!==null;
+      // Calculate a genuinely provisional score only if the other numeric data are valid.
+      var preview=null;
+      if(!interculturalMode && partial && hasService && !hasMsd){
+        var previewRaw=Object.assign({},raw,{msdDirectPoints:'0'});
+        var tmp=scoring.calculate(previewRaw);
+        if(tmp.serviceInputValid && tmp.msdInputValid)preview=tmp;
+      }
+      var show=interculturalMode?null:(valid?result:preview);
+      var total=valid?result.total:preview?(preview.total-preview.msdPoints):null;
+      scoreCard.render('primary',{
+        total:show?f(total):'—',
+        label:valid?'συνολικές μονάδες':preview?'προσωρινές μονάδες (χωρίς Μ.Σ.Δ.)':'μονάδες μετάθεσης',
+        service:show?f(show.servicePoints):'—',msd:valid?f(result.msdPoints):'—',
+        coservice:show?f(show.coServicePoints):'—',family:show?f(show.familyPoints):'—',
+        locality:show?f(show.localityPoints):'—',first:show?f(show.firstPreferencePoints):'—',
+        status:interculturalMode?'Δεν εφαρμόζεται μοριοδότηση· η μετάθεση εξετάζεται βάσει προσόντων και κενών.':
+          valid?'Πληροφοριακό αποτέλεσμα από τα δηλωμένα στοιχεία. Επαληθεύστε τα στο επίσημο μητρώο.':
+          preview?'Το εμφανιζόμενο ποσό είναι προσωρινό και ΔΕΝ περιλαμβάνει Μ.Σ.Δ. Συμπληρώστε τις Μ.Σ.Δ. του μητρώου για την τελική βαθμολογία.':
+          'Συμπληρώστε έγκυρα μόρια προϋπηρεσίας και Μ.Σ.Δ. από το επίσημο μητρώο.'
+      });
+    }
+    $('primaryValidation').textContent=interculturalMode?'':!valid?'Δεν εμφανίζεται τελικό σύνολο όσο λείπουν ή είναι άκυρα βασικά αριθμητικά πεδία.':'';
     var state=$('primaryOrganic').value;
     $('primaryEligibility').textContent=state==='yes'
       ? '✓ Δηλώθηκε συμπλήρωση έτους οργανικής. Ο οριστικός έλεγχος και οι ειδικές εξαιρέσεις ανήκουν στη ΔΠΕ.'
@@ -299,17 +319,18 @@
     var isIntercultural=$('primaryMode').value==='intercultural';
     var special=!email.general;
     var hasMydocs=mydocActions.length>0;
-    $('primaryMydocsLink').hidden=!special;
-    $('primaryMydocsLink').innerHTML='<a href="https://mydocs.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">mydocs ΥΠΑΙΘΑ ↗</a> — για προσόντα '+(isIntercultural?'Διαπολιτισμικών':'ΕΑΕ')+' όταν απαιτείται νέος/συμπληρωματικός φάκελος.';
+    var judicialMydocs=mydocActions.some(function(d){return d.id==='judicial-spouse';});
+    $('primaryMydocsLink').hidden=!(special || judicialMydocs);
+    $('primaryMydocsLink').innerHTML='<a href="https://mydocs.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">mydocs ΥΠΑΙΘΑ ↗</a> — '+(judicialMydocs?'ειδικά δικαιολογητικά συζύγων δικαστικών λειτουργών (§2.2.4).':'για προσόντα '+(isIntercultural?'Διαπολιτισμικών':'ΕΑΕ')+' όταν απαιτείται νέος/συμπληρωματικός φάκελος.');
     $('primaryMydocsNotice').hidden=!hasMydocs;
-    $('primaryMydocsNotice').textContent=hasMydocs?'Έχετε '+mydocActions.length+' δικαιολογητικό/ά προσόντων '+(isIntercultural?'Διαπολιτισμικών':'ΕΑΕ')+' για υποβολή στο mydocs.minedu.gov.gr (όχι με email). Δεν επανυποβάλλονται ήδη κατατεθειμένα στοιχεία.':'';
-    var sharedState=global.EducationTransferEmailComponent?global.EducationTransferEmailComponent.stateCopy(hasActions?'email':hasMydocs?'mydocs':'optional'):null;
-    $('primaryEmailHeading').textContent=sharedState?sharedState.title:hasActions?'Έτοιμο email υποβολής δικαιολογητικών':hasMydocs?'Έτοιμο υπόδειγμα υποβολής μέσω mydocs':'Υπόδειγμα μηνύματος — αν χρειαστεί';
-    $('primaryEmailLead').textContent=isIntercultural?'Τα προσόντα Διαπολιτισμικών υποβάλλονται μέσω mydocs, όταν απαιτείται νέος/συμπληρωματικός φάκελος. Δεν αποστέλλονται δικαιολογητικά μοριοδότησης.':hasActions?'Δημιουργήστε θέμα και σώμα μηνύματος για τα δικαιολογητικά μοριοδότησης που αποστέλλονται στη ΔΠΕ οργανικής.':hasMydocs?'Τα προσόντα ΕΑΕ υποβάλλονται μέσω mydocs όταν απαιτείται νέος ή συμπληρωματικός φάκελος — όχι με email.':'Δεν προκύπτει αυτή τη στιγμή δικαιολογητικό για αποστολή με email. Το υπόδειγμα παραμένει διαθέσιμο για προεπισκόπηση.';
-    $('primaryEmailOpen').textContent=sharedState?sharedState.button:hasActions?'Δημιουργία email υποβολής':hasMydocs?'Προετοιμασία κειμένου για mydocs':'Προβολή προαιρετικού υποδείγματος';
-    $('primarySubmissionInstruction').textContent=isIntercultural?'Διαπολιτισμικά: μόνο τα δικαιολογητικά προσόντων μέσω mydocs, όταν απαιτείται νέος/συμπληρωματικός φάκελος· όχι μοριοδότηση και όχι email.':email.general?'Γενική μετάθεση: δικαιολογητικά μέσω email στη ΔΠΕ οργανικής, εφόσον απαιτούνται.':'ΕΑΕ: τα αποδεικτικά μοριοδότησης αποστέλλονται με email στη ΔΠΕ οργανικής, ενώ τα αποδεικτικά προσόντων υποβάλλονται στο mydocs μόνο όπου απαιτείται νέα/συμπληρωματική υποβολή.';
-    $('primaryTemplateNote').textContent=isIntercultural?'Το θέμα και το σώμα ακολουθούν τη σειρά της §2.2.5 για υποβολή μέσω mydocs.':email.general?'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.1.':'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.5. Στο mydocs το σώμα μπορεί να χρησιμοποιηθεί ως κείμενο «Αιτούμαι».';
-    $('primaryEmailSource').textContent='Πηγή: εγκύκλιος μεταθέσεων Π.Ε. 138023/Ε2/15-10-2026, §'+(email.general?'2.2.1':'2.2.5')+'. Το υπόδειγμα δεν αντικαθιστά ειδικές διαδικασίες ή προηγούμενο φάκελο.';
+    $('primaryMydocsNotice').textContent=judicialMydocs?'Σύζυγοι δικαστικών λειτουργών: βεβαίωση εργασίας και έγγραφο περιφέρειας αρμοδιότητας δικαστηρίου υποβάλλονται μέσω mydocs (§2.2.4). Το πιστοποιητικό οικογενειακής κατάστασης αναζητείται αυτεπάγγελτα.':hasMydocs?'Έχετε '+mydocActions.length+' δικαιολογητικό/ά προσόντων '+(isIntercultural?'Διαπολιτισμικών':'ΕΑΕ')+' για υποβολή στο mydocs.minedu.gov.gr (όχι με email). Δεν επανυποβάλλονται ήδη κατατεθειμένα στοιχεία.':'';
+    var sharedState=global.EducationTransferEmailComponent?global.EducationTransferEmailComponent.stateCopy(hasActions&&hasMydocs?'mixed':hasActions?'email':hasMydocs?'mydocs':'optional'):null;
+    $('primaryEmailHeading').textContent=judicialMydocs&&!hasActions?'Ειδική υποβολή μέσω mydocs — σύζυγοι δικαστικών λειτουργών':sharedState?sharedState.title:hasActions?'Προετοιμασία μηνύματος υποβολής δικαιολογητικών':hasMydocs?'Έτοιμο υπόδειγμα υποβολής μέσω mydocs':'Υπόδειγμα μηνύματος — αν χρειαστεί';
+    $('primaryEmailLead').textContent=judicialMydocs?(hasActions?'Τα συνήθη αποδεικτικά μοριοδότησης αποστέλλονται με email στη ΔΠΕ οργανικής. Τα ειδικά δικαιολογητικά συζύγων δικαστικών λειτουργών υποβάλλονται χωριστά μέσω mydocs, σύμφωνα με τη §2.2.4.':'Τα ειδικά δικαιολογητικά συζύγων δικαστικών λειτουργών υποβάλλονται μέσω mydocs (§2.2.4), χωρίς να ορίζεται υποχρεωτικό θέμα ή σώμα μηνύματος.'):isIntercultural?'Τα προσόντα Διαπολιτισμικών υποβάλλονται μέσω mydocs, όταν απαιτείται νέος/συμπληρωματικός φάκελος. Δεν αποστέλλονται δικαιολογητικά μοριοδότησης.':hasActions?'Δημιουργήστε θέμα και σώμα μηνύματος για τα δικαιολογητικά μοριοδότησης που αποστέλλονται στη ΔΠΕ οργανικής.':hasMydocs?'Τα προσόντα ΕΑΕ υποβάλλονται μέσω mydocs όταν απαιτείται νέος ή συμπληρωματικός φάκελος — όχι με email.':'Δεν προκύπτει αυτή τη στιγμή δικαιολογητικό για αποστολή με email. Το υπόδειγμα παραμένει διαθέσιμο για προεπισκόπηση.';
+    $('primaryEmailOpen').textContent=judicialMydocs&&!hasActions?'Προβολή οδηγιών υποβολής μέσω mydocs':sharedState?sharedState.button:hasActions?'Δημιουργία email υποβολής':hasMydocs?'Προετοιμασία κειμένου για mydocs':'Προβολή προαιρετικού υποδείγματος';
+    $('primarySubmissionInstruction').textContent=judicialMydocs?'Κατά προτεραιότητα μετάθεση συζύγου δικαστικού λειτουργού: ειδικά δικαιολογητικά μόνο μέσω mydocs (§2.2.4). Τυχόν άλλα αποδεικτικά γενικής μοριοδότησης αποστέλλονται χωριστά με email στη ΔΠΕ (§2.2.1), όπου απαιτούνται.':isIntercultural?'Διαπολιτισμικά: μόνο τα δικαιολογητικά προσόντων μέσω mydocs, όταν απαιτείται νέος/συμπληρωματικός φάκελος· όχι μοριοδότηση και όχι email.':email.general?'Γενική μετάθεση: δικαιολογητικά μέσω email στη ΔΠΕ οργανικής, εφόσον απαιτούνται.':'ΕΑΕ: τα αποδεικτικά μοριοδότησης αποστέλλονται με email στη ΔΠΕ οργανικής, ενώ τα αποδεικτικά προσόντων υποβάλλονται στο mydocs μόνο όπου απαιτείται νέα/συμπληρωματική υποβολή.';
+    $('primaryTemplateNote').textContent=judicialMydocs?'Η §2.2.4 δεν ορίζει υποχρεωτικό θέμα ή σώμα για το mydocs. Παρακάτω προβάλλεται μόνο το γενικό υπόδειγμα της §2.2.1, για τυχόν ξεχωριστό email με δικαιολογητικά μοριοδότησης προς τη ΔΠΕ· δεν αποτελεί υποχρεωτική μορφή υποβολής στο mydocs.':isIntercultural?'Το θέμα και το σώμα ακολουθούν τη σειρά της §2.2.5 για υποβολή μέσω mydocs.':email.general?'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.1.':'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.5. Στο mydocs το σώμα μπορεί να χρησιμοποιηθεί ως κείμενο «Αιτούμαι».';
+    $('primaryEmailSource').textContent=judicialMydocs?'Πηγές: εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026, §2.2.4 (ειδική υποβολή mydocs, χωρίς υποχρεωτικό πρότυπο θέματος/σώματος) και §2.2.1 (γενικό υπόδειγμα email μόνο για τυχόν άλλα δικαιολογητικά προς ΔΠΕ).':'Πηγή: εγκύκλιος μεταθέσεων Π.Ε. 138023/Ε2/15-10-2026, §'+(email.general?'2.2.1':'2.2.5')+'. Το υπόδειγμα δεν αντικαθιστά ειδικές διαδικασίες ή προηγούμενο φάκελο.';
     $('primaryDpeField').hidden=email.general;
     $('primaryEmailSubject').textContent=email.subject;
     $('primaryEmailBody').textContent=email.body;
@@ -344,7 +365,6 @@
       update();
     }
   });
-  global.EducationTransferSocialInput.bindCoServiceField($('primaryCoservice'), $('primaryCoServiceCaseField'), $('primaryCoServiceCase'));
   document.querySelectorAll('input,select').forEach(function(el){
     if(el.closest('#primaryEmailDetails'))return;
     el.addEventListener('input',function(){
