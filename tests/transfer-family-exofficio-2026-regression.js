@@ -8,6 +8,7 @@ val('eligibleChildren','0');val('msdMode','direct');val('msdDirectPoints','0');
 for(const id of ['familyStatusEligible','coService','locality'])elements[id]={checked:false};
 const document={getElementById(id){assert.ok(elements[id],`Missing ${id}`);return elements[id]},querySelectorAll(){return []}};
 const window={};
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../includes/transfer-children-documents.js'),'utf8'),{window,document});
 vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../includes/transfer-documents.js'),'utf8'),{window,document});
 const build = window.EducationTransferDocuments.build;
 let checks=0;

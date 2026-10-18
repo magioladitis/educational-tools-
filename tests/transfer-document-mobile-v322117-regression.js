@@ -16,7 +16,7 @@ ok(js.includes('checked[input.dataset.docId]') && js.includes('progress(root)'),
 ok(js.includes('isCritical(d)') && js.includes('Δεν θεμελιώνεται'), 'important warnings expanded initially');
 ok(page.includes('16/10–02/11/2026') && /η προσωρινή αποθήκευση δεν είναι οριστικοποίηση/i.test(page) && page.includes('PDF της οριστικοποιημένης αίτησης'), 'deadline and finalization warning kept once in global notice');
 ok(js.includes('Διορθώσεις: 23–27/11/2026'), 'correction deadline remains visible');
-ok(js.includes('Νεογέννητα: ειδικές οδηγίες έως 31/12/2026'), 'newborn deadline remains visible');
+ok(fs.readFileSync(path.join(root, 'includes/transfer-children-documents.js'),'utf8').includes('31/12/2026'), 'newborn deadline remains visible in shared guide');
 ok(js.includes('legalSeparation(d.detail)') && js.includes('edu-transfer-doc__source'), 'legal sources separated without dropping details');
 ok(css.includes('font-size:15px; line-height:1.5; font-weight:400') && css.includes('.edu-transfer-doc__detail { color:'), 'summary typography is regular weight');
 ok(css.includes('.edu-transfer-doc__source {') && css.includes('font-size:12px; line-height:1.5'), 'in-item sources remain visually secondary');

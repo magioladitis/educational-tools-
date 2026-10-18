@@ -68,8 +68,13 @@
     if (mode!=='intercultural' && (Number($('primaryChildren').value)>0 || $('primaryFamily').checked)) {
       docs.push(info('family','Πιστοποιητικό οικογενειακής κατάστασης','Αυτεπάγγελτα από ΔΠΕ — δεν το προσκομίζετε'));
     }
-    if(mode!=='intercultural' && $('primaryChildrenExtra').checked && Number($('primaryChildren').value)>0) docs.push(action('children','Συμπληρωματικά στοιχεία τέκνων','Email στη ΔΠΕ οργανικής — μόνο όπου δεν επαρκεί η αυτεπάγγελτη αναζήτηση / απαιτείται ειδικό αποδεικτικό'));
-    if(mode!=='intercultural' && $('primaryCoservice').checked && !syncPrimaryCoService()) docs.push(action('coservice','Δικαιολογητικά συνυπηρέτησης','Αποστολή με email στη ΔΠΕ οργανικής — όπου απαιτούνται αποδεικτικά'));
+    if(mode!=='intercultural' && Number($('primaryChildren').value)>0) {
+      docs.push(info('children-guide','Τέκνα — πότε απαιτούνται επιπλέον αποδεικτικά',
+        global.EducationTransferChildrenDocuments ? global.EducationTransferChildrenDocuments.summary() :
+        'Ελέγξτε τις ειδικές περιπτώσεις σπουδών, επιμέλειας, πολυτεκνίας και νεογέννητου σύμφωνα με την εγκύκλιο.'));
+    }
+    if(mode!=='intercultural' && $('primaryChildrenExtra').checked && Number($('primaryChildren').value)>0) docs.push(action('children','Προετοιμασία πρόσθετου αποδεικτικού τέκνου','Email στη ΔΠΕ οργανικής μόνο όπου απαιτείται ειδικό αποδεικτικό (π.χ. φοίτηση ή επιμέλεια) — δείτε τις περιπτώσεις στον οδηγό τέκνων.'));
+    if(mode!=='intercultural' && $('primaryCoservice').checked && !syncPrimaryCoService()) docs.push(action('coservice','Δικαιολογητικά συνυπηρέτησης','Αποστολή με email στη ΔΠΕ οργανικής — όπου απαιτούνται αποδεικτικά. '+(spouseRules[$('primaryCoServiceCase').value]||spouseRules.unspecified).summary));
     if(mode==='region' && $('primarySpecialCase') && $('primarySpecialCase').value!=='none') {
       var special=$('primarySpecialCase').value;
       if(special==='health_committee') docs.push(info('health-committee','Ειδική κατηγορία υγείας — γνωμάτευση υγειονομικής επιτροπής','Κλειστός φυσικός φάκελος προς ΥΠΑΙΘΑ με ένδειξη εμπιστευτικού πρωτοκόλλου· δεν αποστέλλεται με κοινό email. Εγκύκλιος Π.Ε. §2.2.3.'));
@@ -131,7 +136,9 @@
     var checklist=$('primaryChecklist');
     checklist.innerHTML=docs.map(function(d){return '<div class="primary-doc-row" data-primary-doc="'+escapeText(d.id)+'">' +
       (d.action ? '<label><input type="checkbox" data-primary-check="'+escapeText(d.id)+'"'+(checkedDocs[d.id]?' checked':'')+'><strong>'+escapeText(d.title)+'</strong></label>' : '<div><strong>ⓘ '+escapeText(d.title)+'</strong></div>') +
-      '<p class="primary-doc-kind">'+escapeText(d.desc)+'</p></div>';}).join('');
+      '<p class="primary-doc-kind">'+escapeText(d.desc)+'</p>'+
+      (d.id==='coservice' && global.EducationTransferCoServiceResources && global.EducationTransferCoServiceResources.render($('primaryCoServiceCase').value) ? '<details class="primary-coservice-guide"><summary>Από πού εκδίδονται τα δικαιολογητικά;</summary>'+global.EducationTransferCoServiceResources.render($('primaryCoServiceCase').value)+'</details>' : '')+
+      (d.id==='children-guide' && global.EducationTransferChildrenDocuments ? '<details class="primary-children-guide"><summary>Αναλυτικά αποδεικτικά ανά περίπτωση τέκνου</summary>'+global.EducationTransferChildrenDocuments.render('primary')+'</details>' : '')+'</div>';}).join('');
     var actionable=docs.filter(function(d){return d.action;});
     Object.keys(checkedDocs).forEach(function(k){ if (!actionable.some(function(d){return d.id===k;})) delete checkedDocs[k]; });
     var completed=actionable.filter(function(d){return checkedDocs[d.id];}).length;

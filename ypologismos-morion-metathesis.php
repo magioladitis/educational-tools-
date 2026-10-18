@@ -114,7 +114,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         <div id="servicePointsDirectPanel">
           <div class="field">
             <label for="serviceDirectPoints">Μόρια προϋπηρεσίας από το επίσημο μητρώο</label>
-            <input id="serviceDirectPoints" type="text" inputmode="decimal" autocomplete="off" placeholder="π.χ. 21,04" aria-describedby="serviceDirectStatus">
+            <input id="serviceDirectPoints" type="text" inputmode="decimal" maxlength="6" data-transfer-direct-points-cap="125" autocomplete="off" placeholder="π.χ. 21,04" aria-describedby="serviceDirectStatus">
             <div class="field-hint" id="serviceDirectStatus" role="status" aria-live="polite"></div>
           </div>
         </div>
@@ -172,7 +172,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         <div id="msdDirectPanel">
           <div class="field">
             <label for="msdDirectPoints">Συνολικές μονάδες συνθηκών διαβίωσης από το επίσημο μητρώο</label>
-            <input id="msdDirectPoints" type="text" inputmode="decimal" maxlength="7" autocomplete="off" placeholder="π.χ. 48,75" aria-describedby="msdDirectHelp msdDirectStatus">
+            <input id="msdDirectPoints" type="text" inputmode="decimal" maxlength="7" data-transfer-direct-points-cap="1000" autocomplete="off" placeholder="π.χ. 48,75" aria-describedby="msdDirectHelp msdDirectStatus">
             <div class="field-hint" id="msdDirectHelp">Δώστε τον ακριβή αριθμό Μ.Σ.Δ. με έως δύο δεκαδικά (κόμμα ή τελεία). π.χ. 48,75. Οι υπηρετήσεις που συμπληρώθηκαν στην άλλη καρτέλα δεν θα προστεθούν.</div>
             <div class="field-hint" id="msdDirectStatus" role="status" aria-live="polite"></div>
           </div>
@@ -429,6 +429,8 @@ window.EducationTransferTeacherSpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-intercultural-vacancies.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-email-component.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-coservice-resources.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-children-documents.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-documents.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-social-input.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-score-card.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
