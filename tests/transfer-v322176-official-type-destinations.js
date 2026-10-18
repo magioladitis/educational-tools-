@@ -1,0 +1,25 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const root=path.join(__dirname,'..');
+const php=fs.readFileSync(path.join(root,'ypologismos-morion-metathesis-protovathmia.php'),'utf8');
+const pri=fs.readFileSync(path.join(root,'includes/transfer-primary.js'),'utf8');
+const sec=fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf8');
+const opt=[...php.matchAll(/<option value="([a-z]+)" data-official-code="([^"]+)"/g)];
+assert.deepEqual(opt.map(m=>m[1]),['region','eae','sensory','kedasy','intercultural']);
+assert.deepEqual(opt.map(m=>m[2]),['001.ΠΕ001','001.ΣΜΚΔ001','001.ΣΜΕΑ003','001.ΣΜΚΔ001.ΚΔΣ','002.ΔΙΑΠ001']);
+assert(php.includes('id="primaryDestinationField" hidden') && php.includes('id="primaryDestination"'));
+assert(pri.includes("[['eae','ΣΜΕΑΕ'],['eeeek','ΕΕΕΕΚ']]") && pri.includes("[['deaf','Σχολείο Κωφών (ΕΝΓ)'],['blind','Σχολείο Τυφλών (Braille)']]"));
+assert(pri.includes('var mode=primaryEffectiveMode();'));
+assert(pri.includes('var typ=labels[primaryEffectiveMode()]||labels.region;'));
+// Verify official example for Secondary SΜΕΑΕ/ΕΕΕΕΚ in both subject and body.
+const map={};const dom={getElementById:id=>map[id]||(map[id]={value:'region',checked:false}),addEventListener(){}};
+const sandbox={window:{},document:dom};vm.runInNewContext(sec,sandbox);
+const model=sandbox.window.EducationTransferDocuments;
+const input={name:'Δοκιμή Εκπαιδευτικού',branch:'ΠΕ02',protocol:'1/0500305/001.ΔΕΣΚΕ/20-10-2026',registry:'234567',home:'ΔΔΕ Κέρκυρας'};
+const actual=model.submissionMessageTemplate('smeae',input);
+assert.equal(actual.subject,'ΔΕ, μετάθεση στην Ειδική Αγωγή, 1/0500305/001.ΔΕΣΚΕ/20-10-2026, 234567, ΠΕ02');
+assert.equal(actual.body,'Δοκιμή Εκπαιδευτικού, ΠΕ02, μετάθεση στην Ειδική Αγωγή, 1/0500305/001.ΔΕΣΚΕ/20-10-2026, 234567, ΔΔΕ Κέρκυρας');
+assert.equal(actual.circular,'2.2.4');
+for(const mode of ['eae_sensory','kedasy','region','music']) assert.equal(typeof model.submissionMessageTemplate(mode,input).subject,'string');
+console.log('PASS official-type grouping and Secondary EAE email example');

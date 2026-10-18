@@ -8,7 +8,8 @@ const rules=require('../includes/transfer-primary-eae.js');
 let count=0;
 function t(cond,label){ assert.ok(cond,label); count++; }
 const valid={origin:'general',generalYears:4,organic:'yes',qualifications:{masters:true}};
-for(const mode of ['eeeek','deaf','blind']) t(source.includes('value="'+mode+'"'), 'new destination '+mode);
+for(const mode of ['eeeek','deaf','blind']) t(controller.includes("['"+mode+"',") || controller.includes(",'"+mode+"'"), 'retains effective precheck '+mode);
+t(source.includes('id="primaryDestination"')&&source.includes('value="sensory"'),'destinations nested under official type');
 for(const field of ['primaryEaeCertification','primaryEaeCertificationDossier','primaryEaeCertificationField','primaryEaeCertificationDossierField'])t(source.includes('id="'+field+'"'),field);
 for(const branch of ['ΠΕ70','ΠΕ71'])t(rules.permittedEeeek.includes(branch),'EEEΕK branch allowed '+branch);
 for(const branch of ['ΠΕ60','ΠΕ61','ΠΕ06','ΠΕ11','ΠΕ86']){
@@ -39,6 +40,6 @@ for(const mode of ['deaf','blind']){
 }
 t(controller.includes("certificate==='yes' && certificateDossier==='new'") && controller.includes("mydocs('eae-certificate-"), 'certificate documents use mydocs only with new dossier');
 t(controller.includes("deaf:'μετάθεση με εξειδίκευση στην ΕΝΓ'")&&controller.includes("blind:'μετάθεση με εξειδίκευση στη γραφή Braille'"),'special destination labels align with official application type');
-t(!source.includes('Οι κωδικοί εμφανίζονται δίπλα στον τύπο') && source.includes('value="eeeek"'),'obsolete explanatory copy removed in v3.22.168; prechecks remain');
+t(!source.includes('Οι κωδικοί εμφανίζονται δίπλα στον τύπο') && source.includes('value="eae"') && controller.includes("['eeeek','ΕΕΕΕΚ']"),'obsolete explanatory copy removed in v3.22.168; prechecks remain');
 t(!source.includes('includes/transfer-eligibility.js')&&!source.includes('includes/transfer-documents.js')&&!source.includes('includes/transfer-ui.js'),'secondary rules isolated');
 console.log('PASS '+count+' primary special destination assertions');

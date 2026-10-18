@@ -47,13 +47,15 @@ foreach ($primaryTransferBranchCodes as $code) {
         <div class="field"><label for="primaryMode">Τύπος αίτησης</label>
           <select id="primaryMode">
             <option value="region" data-official-code="001.ΠΕ001">Γενική από περιοχή σε περιοχή [001.ΠΕ001]</option>
-            <option value="eae" data-official-code="001.ΣΜΚΔ001">ΣΜΕΑΕ–ΕΕΕΕΚ [001.ΣΜΚΔ001] — προέλεγχος ΣΜΕΑΕ</option>
-            <option value="intercultural" data-official-code="002.ΔΙΑΠ001">Διαπολιτισμικά Σχολεία [002.ΔΙΑΠ001]</option>
+            <option value="eae" data-official-code="001.ΣΜΚΔ001">ΣΜΕΑΕ / ΕΕΕΕΚ [001.ΣΜΚΔ001]</option>
+            <option value="sensory" data-official-code="001.ΣΜΕΑ003">Σχολεία Κωφών / Τυφλών [001.ΣΜΕΑ003]</option>
             <option value="kedasy" data-official-code="001.ΣΜΚΔ001.ΚΔΣ">ΚΕΔΑΣΥ [001.ΣΜΚΔ001.ΚΔΣ]</option>
-            <option value="eeeek" data-official-code="001.ΣΜΚΔ001">ΣΜΕΑΕ–ΕΕΕΕΚ [001.ΣΜΚΔ001] — προέλεγχος ΕΕΕΕΚ</option>
-            <option value="deaf" data-official-code="001.ΣΜΕΑ003">ΕΝΓ/Braille [001.ΣΜΕΑ003] — Σχολείο Κωφών</option>
-            <option value="blind" data-official-code="001.ΣΜΕΑ003">ΕΝΓ/Braille [001.ΣΜΕΑ003] — Σχολείο Τυφλών</option>
+            <option value="intercultural" data-official-code="002.ΔΙΑΠ001">Διαπολιτισμικά Σχολεία [002.ΔΙΑΠ001]</option>
           </select>
+        </div>
+        <div class="field" id="primaryDestinationField" hidden>
+          <label for="primaryDestination">Ειδικός προορισμός για προέλεγχο</label>
+          <select id="primaryDestination"></select>
         </div>
         <?php calculatorDisclosure(array(
           'id' => 'primaryMultipleApplicationsHelp',
@@ -316,6 +318,7 @@ window.EducationTransferPrimarySpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-intercultural-vacancies.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-social-input.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-score-card.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-html-escape.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-periods.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-coservice-resources.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-children-documents.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

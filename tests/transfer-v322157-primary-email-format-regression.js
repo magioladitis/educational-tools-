@@ -21,7 +21,7 @@ function verify(mode,expectedSubject,expectedBody){
   const field={primaryMode:mode,primaryName:'Δοκιμή Όνομα',primarySpecialty:'ΠΕ70',primaryRegistry:'345678',primaryProtocol:'1/123/001.ΠΕ001/01-11-2026',primaryDpe:'ΔΠΕ Κέρκυρας',primaryEaeBranch:'ΠΕ70'};
   const fields=Object.fromEntries(Object.entries(field).map(([k,v])=>[k,{value:v}]));
   const scope={};vm.createContext(scope);
-  vm.runInContext('var $=id=>fields[id];var fields='+JSON.stringify(fields)+';'+fnSource+';result=messageParts([]);',scope);
+  vm.runInContext('var $=id=>fields[id];var fields='+JSON.stringify(fields)+';function primaryEffectiveMode(){return fields.primaryMode.value;}'+fnSource+';result=messageParts([]);',scope);
   assert.equal(scope.result.subject,expectedSubject);
   assert.equal(scope.result.body,expectedBody);
 }

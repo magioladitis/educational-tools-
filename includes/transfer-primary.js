@@ -11,7 +11,28 @@
   var $ = function (id) { return document.getElementById(id); };
   if (!$('primaryMode')) return;
   var checkedDocs = {};
-  function escapeText(s) { return String(s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  // The official application type is selected once; the destination refines the
+  // existing, distinct eligibility checks without creating a second application.
+  function primaryEffectiveMode(){
+    var group=$('primaryMode').value;
+    if(group==='eae' || group==='sensory')return $('primaryDestination').value || (group==='eae'?'eae':'deaf');
+    return group;
+  }
+  function syncPrimaryDestination(){
+    var group=$('primaryMode').value;
+    var field=$('primaryDestinationField'), select=$('primaryDestination');
+    var grouped=group==='eae'||group==='sensory';
+    field.hidden=!grouped;
+    if(!grouped)return;
+    if(select.dataset.group===group)return;
+    var options=group==='eae'?
+      [['eae','ΣΜΕΑΕ'],['eeeek','ΕΕΕΕΚ']]:
+      [['deaf','Σχολείο Κωφών (ΕΝΓ)'],['blind','Σχολείο Τυφλών (Braille)']];
+    select.replaceChildren();
+    options.forEach(function(item){select.add(new Option(item[1],item[0]));});
+    select.dataset.group=group;
+  }
+  var escapeText = global.EducationTransferHtmlEscape.escapeHtml;
   function format(n) { return Number(n || 0).toLocaleString('el-GR', { maximumFractionDigits: 2 }); }
   // Clamp only official, direct point entries while typing/pasting. This prevents
   // an over-limit value from invalidating an otherwise valid score. Keep comma
@@ -63,7 +84,7 @@
     return blocked || review;
   }
   function buildDocuments() {
-    var mode=$('primaryMode').value;
+    var mode=primaryEffectiveMode();
     var docs=mode==='intercultural'?[]:[info('registry','Υπηρεσιακό μητρώο και μονάδες','Έλεγχος στο επίσημο μητρώο — χωρίς αποστολή')];
     if (mode!=='intercultural' && (Number($('primaryChildren').value)>0 || $('primaryFamily').checked)) {
       docs.push(info('family','Πιστοποιητικό οικογενειακής κατάστασης','Αυτεπάγγελτα από ΔΠΕ — δεν το προσκομίζετε'));
@@ -158,7 +179,7 @@
       retraining:$('primaryEaeRetraining').checked,experience:$('primaryEaeExperience').checked,pe11:$('primaryEaePe11').checked};
   }
   function updateEaePrecheck(){
-    var mode=$('primaryMode').value;
+    var mode=primaryEffectiveMode();
     $('primaryEaeFields').hidden=mode==='region'||mode==='intercultural';
     $('primaryGeneralOrganicField').hidden=mode!=='region';
     $('primaryEligibility').hidden=mode!=='region';
@@ -234,6 +255,7 @@
       outcome.problems.concat(outcome.checks).map(function(x){return '<li>'+escapeText(x)+'</li>';}).join('')+'</ul>';
   }
   function update() {
+    syncPrimaryDestination();
     // Official application codes from the Primary Education application list.
     // EEEEK shares the SΜΚΔ application with SΜΕΑΕ; Deaf/Blind shares the language-specialization application.
     // This is a UI reference, NOT an alternate electronic filing path.
@@ -351,7 +373,7 @@
       blind:'μετάθεση με εξειδίκευση στη γραφή Braille',
       intercultural:'μετάθεση σε Διαπολιτισμικό Σχολείο'
     };
-    var typ=labels[$('primaryMode').value]||labels.region;
+    var typ=labels[primaryEffectiveMode()]||labels.region;
     return {
       subject:general?[typ,protocol,registry].join(', '):['ΠΕ',typ,protocol,registry,branch].join(', '),
       body:general?[name,branch,typ,protocol,registry].join(', '):[name,branch,typ,protocol,registry,dpe].join(', '),

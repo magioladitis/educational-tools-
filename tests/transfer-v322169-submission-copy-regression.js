@@ -31,7 +31,7 @@ function testPrimary(mode,docs){
     elements[key]={hidden:false,textContent:'',innerHTML:'',href:''};
   }
   const sandbox={fields:elements,docs,global:{EducationTransferEmailComponent:{stateCopy(channel){return {title:{email:'Προετοιμασία μηνύματος υποβολής δικαιολογητικών',mydocs:'Έτοιμο υπόδειγμα υποβολής μέσω mydocs',mixed:'Προετοιμασία email και υποβολής μέσω mydocs',optional:'Υπόδειγμα μηνύματος — αν χρειαστεί'}[channel],button:channel};},mailto(tpl){return 'mailto:?subject='+encodeURIComponent(tpl.subject)+'&body='+encodeURIComponent(tpl.body);}}}};
-  vm.runInNewContext("var $ = id => fields[id];"+fnSrc+";updateMail(docs);",sandbox);
+  vm.runInNewContext("var $ = id => fields[id];function primaryEffectiveMode(){return fields.primaryMode.value;}"+fnSrc+";updateMail(docs);",sandbox);
   return elements;
 }
 const judicial={id:'judicial-spouse',action:true,channel:'mydocs'};

@@ -26,7 +26,7 @@ test(Object.keys(inter.qualificationNames).length===9,'all nine listed criteria'
 const begin=code.indexOf('  function messageParts(docs) {'),end=code.indexOf('  function updateMail(docs)',begin);
 const fields={primaryMode:'intercultural',primaryName:'Δοκιμή Όνομα',primarySpecialty:'ΠΕ70',primaryRegistry:'345678',primaryProtocol:'1/123/002.ΔΙΑΠ001/01-11-2026',primaryDpe:'ΔΠΕ Κέρκυρας',primaryEaeBranch:'ΠΕ70'};
 const fieldsObj=Object.fromEntries(Object.entries(fields).map(([id,value])=>[id,{value}]));
-const src='var fields='+JSON.stringify(fieldsObj)+';var $=id=>fields[id];'+code.slice(begin,end)+';result=messageParts([]);'
+const src='var fields='+JSON.stringify(fieldsObj)+';var $=id=>fields[id];function primaryEffectiveMode(){return fields.primaryMode.value;}'+code.slice(begin,end)+';result=messageParts([]);'
 const context={};vm.createContext(context);vm.runInContext(src,context);
 assert.equal(context.result.subject,'ΠΕ, μετάθεση σε Διαπολιτισμικό Σχολείο, 1/123/002.ΔΙΑΠ001/01-11-2026, 345678, ΠΕ70');
 assert.equal(context.result.body,'Δοκιμή Όνομα, ΠΕ70, μετάθεση σε Διαπολιτισμικό Σχολείο, 1/123/002.ΔΙΑΠ001/01-11-2026, 345678, ΔΠΕ Κέρκυρας');

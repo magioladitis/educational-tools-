@@ -17,7 +17,7 @@
     abroad_other:'Απόσπαση εξωτερικού — λοιπές χώρες (Γ΄)',
     study_leave:'Άδεια υπηρεσιακής εκπαίδευσης με αποδοχές (Α΄)'};
   var categories=[['A','Α΄ — 1'],['B','Β΄ — 2'],['G','Γ΄ — 3'],['D','Δ΄ — 4'],['E','Ε΄ — 5'],['ST','ΣΤ΄ — 6'],['Z','Ζ΄ — 7'],['H','Η΄ — 8'],['TH','Θ΄ — 9'],['I','Ι΄ — 10'],['IA','ΙΑ΄ — 11'],['IB','ΙΒ΄ — 12'],['IG','ΙΓ΄ — 14']];
-  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var esc = global.EducationTransferHtmlEscape.escapeHtml;
   function options(items){return items.map(function(pair){return '<option value="'+esc(pair[0])+'">'+esc(pair[1])+'</option>';}).join('');}
   function durationFields(prefix,service){return '<div class="field-grid transfer-service-grid">'+
      [['years','Έτη',50],['months','Μήνες',11],['days','Ημέρες (15+ → μήνας)',29]].map(function(x){return '<div class="field"><label for="'+prefix+'-'+x[0]+'">'+x[1]+'</label><input id="'+prefix+'-'+x[0]+'" type="number" inputmode="numeric" min="0" max="'+x[2]+'" step="1" value="0" class="'+(service?'primary-service-':'primary-msd-')+x[0]+'"></div>';}).join('')+'</div>';}

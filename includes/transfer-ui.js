@@ -32,14 +32,22 @@
     ['TH', 'Θ΄ — 9'], ['I', 'Ι΄ — 10'], ['IA', 'ΙΑ΄ — 11'], ['IB', 'ΙΒ΄ — 12'], ['IG', 'ΙΓ΄ — 14']
   ];
 
-  function esc(text) {
-    return String(text).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
+  var esc = global.EducationTransferHtmlEscape.escapeHtml;
 
   function formatPoints(value) {
     return Number(value || 0).toLocaleString('el-GR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+
+  // Direct registry point values must stop at the current UI maximum as the
+  // user types or pastes, rather than invalidating the complete score. Keep
+  // intermediate decimals and the original comma/point when within range.
+  // Only the two explicitly marked direct-entry fields use this guard.
+  function capTransferDirectPoints(el) {
+    if (!el || !el.getAttribute) return;
+    var max = Number(el.getAttribute('data-transfer-direct-points-cap'));
+    if (!Number.isFinite(max) || max <= 0) return;
+    var raw = String(el.value).trim().replace(',', '.');
+    if (/^\d+(?:\.\d*)?$/.test(raw) && Number(raw) > max) el.value = String(max);
   }
 
   function clampInput(el, max) {
@@ -710,6 +718,7 @@
     document.addEventListener('input', function (event) {
       var target = event.target;
       if (!target) return;
+      if (target.id === 'serviceDirectPoints' || target.id === 'msdDirectPoints') capTransferDirectPoints(target);
       if (target.id === 'serviceYears' || target.classList.contains('msd-years') || target.classList.contains('service-period-years')) clampInput(target, 50);
       if (target.id === 'transferInterculturalYears' || target.id === 'transferEaeTeachingYears') clampInterculturalYears(target);
       if (target.id === 'transferEaeExperienceYears') clampInterculturalYears(target);
@@ -727,6 +736,7 @@
     document.addEventListener('change', function (event) {
       var target = event.target;
       if (!target) return;
+      if (target.id === 'serviceDirectPoints' || target.id === 'msdDirectPoints') capTransferDirectPoints(target);
       if (target.id === 'transferEaeAreaYears' || target.id === 'transferGeneralEaeAreaYears') clampAreaYears(target);
       if (target.id === 'transferInterculturalYears' || target.id === 'transferEaeTeachingYears') clampInterculturalYears(target);
       if (target.id === 'transferEaeExperienceYears') clampInterculturalYears(target);
