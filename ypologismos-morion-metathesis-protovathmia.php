@@ -293,6 +293,7 @@ SOCIAL_PRIMARY_EXTRAS
     <?php calculatorResultsStart(array('aria_live'=>'polite')); ?>
       <div id="primaryScoreResults">
         <?php transferScoreCard('primary'); ?>
+        <p id="primaryRuntimeWarning" class="primary-runtime-warning" role="alert" hidden></p>
       </div>
     <?php calculatorResultsEnd(); ?>
   <?php calculatorColumnsEnd(); ?>
@@ -317,5 +318,18 @@ window.EducationTransferPrimarySpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-score-card.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-periods.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script>
+// Explicitly diagnose missing/blocked JavaScript instead of leaving all scores as dashes.
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    if(window.EducationTransferPrimaryReady===true)return;
+    var warning=document.getElementById('primaryRuntimeWarning');
+    if(warning){
+      warning.hidden=false;
+      warning.textContent='Ο υπολογιστής δεν ξεκίνησε. Ελέγξτε ότι έχουν ανέβει όλα τα αρχεία includes/transfer-*.js της ίδιας έκδοσης και κάντε πλήρη ανανέωση (Ctrl+F5). Τα εμφανιζόμενα «—» δεν είναι αποτέλεσμα μοριοδότησης.';
+    }
+  },500);
+});
+</script>
 </body>
 </html>

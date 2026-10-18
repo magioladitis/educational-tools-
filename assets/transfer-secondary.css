@@ -1,2 +1,18 @@
 /* Secondary-specific transfer styles. Shared level switch is in transfer-level-switch.css. */
 /* Leave JS-dependent inline display rules unchanged until separately verified. */
+
+/* The scoring card is wrapped in #transferScoringResults. Stick the grid item,
+ * not its child: a sticky child is otherwise constrained by the short wrapper. */
+@media (min-width:901px) {
+  body.edu-ui.edu-page-transfer #transferScoringResults {
+    position:sticky;
+    top:16px;
+    align-self:start;
+  }
+  body.edu-ui.edu-page-transfer #transferScoringResults > .results {
+    position:static;
+  }
+}
+@media print {
+  body.edu-ui.edu-page-transfer #transferScoringResults {position:static;}
+}

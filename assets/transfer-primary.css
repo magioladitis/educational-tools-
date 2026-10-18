@@ -51,3 +51,7 @@
   .primary-score-mobile p{font-size:.9rem;margin:8px 0}
   .primary-score-mobile a{font-size:.9rem;font-weight:650}
 }
+
+/* Visible, accessible runtime failures. Hidden after successful initialization. */
+#primaryRuntimeWarning[hidden]{display:none!important}
+.primary-runtime-warning{border:1px solid #cc6b1c;background:#fff3e2;color:#693a07;border-radius:10px;padding:12px;line-height:1.5;font-weight:600;margin:10px 0}

@@ -5,7 +5,9 @@
   var eae = global.EducationTransferPrimaryEae;
   var intercultural = global.EducationTransferPrimaryIntercultural;
   var interVacancies = global.EducationTransferPrimaryInterculturalVacancies;
-  if (!scoring || !eae || !intercultural || !interVacancies) return;
+  // Scoring must not silently stop if an unrelated eligibility/vacancy asset fails to load.
+  // Primary's ordinary transfer scoring is independent of EAE and intercultural data.
+  if (!scoring) return;
   var $ = function (id) { return document.getElementById(id); };
   if (!$('primaryMode')) return;
   var checkedDocs = {};
@@ -41,7 +43,9 @@
     if(blocked)check.checked=false;
     check.disabled=blocked;
     var field=$('primaryCoServiceCaseField');
-    global.EducationTransferSocialInput.syncCoServiceField(check, field, choice);
+    if(global.EducationTransferSocialInput && global.EducationTransferSocialInput.syncCoServiceField)
+      global.EducationTransferSocialInput.syncCoServiceField(check, field, choice);
+    else {field.style.display=check.checked || choice.value!=='unspecified'?'block':'none';}
     var note=$('primaryCoServiceAdvice');
     if(note)note.textContent=(check.checked || choice.value!=='unspecified')?(data.summary + (review?' Τα +4 μόρια δεν προστίθενται μέχρι επαλήθευσης.':'')):'';
     check.setAttribute('aria-describedby',blocked||review?'primaryCoServiceAdvice':'');
@@ -217,8 +221,14 @@
     // Official application codes from the Primary Education application list.
     // EEEEK shares the SΜΚΔ application with SΜΕΑΕ; Deaf/Blind shares the language-specialization application.
     // This is a UI reference, NOT an alternate electronic filing path.
-    updateEaePrecheck();
-    updateIntercultural();
+    var sectionError='';
+    try {updateEaePrecheck();} catch(err) {
+      sectionError='Ο έλεγχος Ειδικής Αγωγής δεν φορτώθηκε σωστά. Επαναφορτώστε τη σελίδα.';
+    }
+    try {updateIntercultural();} catch(err) {
+      if($('primaryMode').value==='intercultural')
+        sectionError='Ο έλεγχος Διαπολιτισμικών δεν φορτώθηκε σωστά. Επαναφορτώστε τη σελίδα.';
+    }
     var interculturalMode=$('primaryMode').value==='intercultural';
     $('primaryScoringCard').hidden=interculturalMode;
     $('primarySocialCriteriaCard').hidden=interculturalMode;
@@ -266,17 +276,24 @@
     var complete=serviceValid&&msdValid;
     var sum=social?scoring.truncate2(knownSocial+(serviceValid?result.servicePoints:0)+(msdValid?result.msdPoints:0)):null;
     var scoreCard=global.EducationTransferScoreCard;
-    if(scoreCard){
+    {
       var f=function(v){return v===null||v===undefined?'—':format(v);};
       var msg=interculturalMode?'Δεν εφαρμόζεται αριθμητική κατάταξη για τη διαδικασία Διαπολιτισμικών.':
         !validSocial||!validDuration?'Διορθώστε τα μη έγκυρα αριθμητικά πεδία.':
         complete?'Ενδεικτική συνολική βαθμολογία. Επαληθεύστε κάθε υπηρεσία και τις επίσημες Μ.Σ.Δ. στο μητρώο.':
         'Μερικό άθροισμα μόνο από τα γνωστά κριτήρια. '+(!serviceValid?'Η προϋπηρεσία δεν έχει προσμετρηθεί. ':'')+(!msdValid?'Οι Μ.Σ.Δ. δεν έχουν προσμετρηθεί. ':'')+'Άγνωστα πεδία δεν λογίζονται ως μηδέν.';
       var label=complete?'συνολικές μονάδες':'γνωστές μονάδες (μερικό άθροισμα)';
-      scoreCard.render('primary',{total:f(sum),label:label,
+      var scores={total:f(sum),label:label,
         service:serviceValid?f(result.servicePoints):'—',msd:msdValid?f(result.msdPoints):'—',
         coservice:social?f(social.coServicePoints):'—',family:social?f(social.familyPoints):'—',
-        locality:social?f(social.localityPoints):'—',first:social?f(social.firstPreferencePoints):'—',status:msg});
+        locality:social?f(social.localityPoints):'—',first:social?f(social.firstPreferencePoints):'—',status:msg};
+      if(scoreCard && typeof scoreCard.render==='function')scoreCard.render('primary',scores);
+      else { // The shared presentation asset is optional; never suppress a valid calculation.
+        var ids={total:'primaryTotal',label:'primaryTotalLabel',service:'primaryServiceResult',
+          msd:'primaryMsdResult',coservice:'primaryCoserviceResult',family:'primaryFamilyResult',
+          locality:'primaryLocalityResult',first:'primaryFirstResult',status:'primaryTotalStatus'};
+        Object.keys(ids).forEach(function(k){var node=$(ids[k]);if(node)node.textContent=scores[k];});
+      }
       $('primaryMobileTotal').textContent=f(sum);
       $('primaryMobileLabel').textContent=label;
       $('primaryMobileStatus').textContent=msg;
@@ -290,7 +307,13 @@
       : state==='no'
         ? '⚠ Η μη συμπλήρωση έτους οργανικής απαιτεί ειδικό υπηρεσιακό έλεγχο· ενδέχεται να ισχύουν νόμιμες εξαιρέσεις. Μην θεωρείτε την αίτηση αυτομάτως επιλέξιμη.'
         : 'ⓘ Ελέγξτε την υπηρεσία στην οργανική έως 31/08/2027 και τις ενδεχόμενες εξαιρέσεις της εγκυκλίου.';
-    updateCheckList(buildDocuments());
+    // A dossier/composer fault must not erase an already calculated score.
+    try {updateCheckList(buildDocuments());}catch(err){
+      if(!sectionError)sectionError='Δεν φορτώθηκαν όλες οι οδηγίες δικαιολογητικών. Επαναφορτώστε τη σελίδα.';
+    }
+    var warning=$('primaryRuntimeWarning');
+    if(warning){warning.hidden=!sectionError;warning.textContent=sectionError;}
+    global.EducationTransferPrimaryReady=true;
   }
   // Section 2.2.1 (general) and 2.2.5 (EAE) prescribe distinct, exact
   // comma-separated subject/body field orders. The secondary composer uses
@@ -376,7 +399,8 @@
   document.querySelectorAll('input,select').forEach(function(el){
     if(el.closest('#primaryEmailDetails'))return;
     el.addEventListener('input',function(){
-      if(el.id==='primaryChildren') global.EducationTransferSocialInput.clampChildren(el);
+      if(el.id==='primaryChildren'&&global.EducationTransferSocialInput)
+        global.EducationTransferSocialInput.clampChildren(el);
       update();
     });
     el.addEventListener('change',update);
