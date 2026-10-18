@@ -32,7 +32,7 @@ eq(r.verdict,'not_established','arts invalid direct-music exception');
 r=el.art({branch:'general',organic:true,teachingYears:0,exceptionType:'primary_transfer'});
 eq(r.verdict,'needs_verification','arts exception is review');
 const page=fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
-ok(page.includes("'summary' => 'Οδηγίες'"),'instructions accordion label');
+ok(page.includes("transferServiceHelp('secondary', 'service')") && fs.readFileSync(path.join(root,'includes/components/transfer-service-help.php'),'utf8').includes("'summary' => 'Οδηγίες'"),'instructions accordion label (shared component)');
 ok(!page.includes('<p class="field-hint">Η προϋπηρεσία και οι Μ.Σ.Δ.'),'previous always-visible first note removed');
 ok(!page.includes('<div class="field-hint" id="serviceDirectHelp">'),'previous always-visible second note removed');
 ok(page.includes('class="transfer-eligibility-message"'),'shared colored status classes in PHP');

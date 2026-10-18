@@ -25,6 +25,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 <?php require_once __DIR__ . '/includes/components/transfer-social-criteria.php'; ?>
+<?php require_once __DIR__ . '/includes/components/transfer-service-help.php'; ?>
 
 <?php calculatorContainerStart(array('class' => 'app')); ?>
   <?php calculatorHero(array(
@@ -99,17 +100,13 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         </section>
         <div id="transferNumericalInputs">
         <div class="field" style="margin-bottom:12px">
-          <label for="serviceMode">Τρόπος καταχώρισης μορίων προϋπηρεσίας / συνολικής αναγνωρισμένης υπηρεσίας</label>
+          <label for="serviceMode">Καταχώριση συνολικής υπηρεσίας</label>
           <select id="serviceMode">
             <option value="points" selected>Απευθείας καταχώριση μορίων προϋπηρεσίας (προεπιλογή)</option>
             <option value="direct">Απευθείας καταχώριση ετών, μηνών, ημερών</option>
             <option value="periods">Υπολογισμός από επιμέρους περιόδους υπηρεσίας</option>
           </select>
-          <?php calculatorDisclosure(array(
-            'id' => 'serviceRegistryHelp',
-            'summary' => 'Οδηγίες',
-            'html' => '<p>Η προϋπηρεσία και οι Μ.Σ.Δ. καταχωρίζονται ξεχωριστά, όπως και στο επίσημο σύστημα. Επιλέγεται <strong>ένας</strong> τρόπος καταχώρισης για την προϋπηρεσία — οι τιμές δεν προστίθενται μεταξύ τους.</p><p id="serviceDirectHelp">Για απευθείας καταχώριση μορίων, δώστε τον ακριβή αριθμό με έως δύο δεκαδικά (κόμμα ή τελεία), π.χ. <strong>21,04</strong>.</p><p>Μπορείτε να δείτε τα καταχωρισμένα <strong>μόρια συνολικής υπηρεσίας</strong> και τις υπηρετήσεις σας στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a> (σύνδεση με λογαριασμό ΠΣΔ).</p>'
-          )); ?>
+          <?php transferServiceHelp('secondary', 'service'); ?>
         </div>
         <div id="servicePointsDirectPanel">
           <div class="field">
@@ -151,11 +148,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
             <option value="direct" selected>Απευθείας καταχώριση συνολικών μορίων Μ.Σ.Δ.</option>
             <option value="periods">Υπολογισμός από τις υπηρετήσεις μου</option>
           </select>
-          <?php calculatorDisclosure(array(
-            'id' => 'msdRegistryHelp',
-            'summary' => 'Πού βλέπω τις υπηρετήσεις μου;',
-            'html' => 'Μπορείτε να δείτε τις υπηρετήσεις και τα ήδη καταχωρισμένα μόρια μετάθεσης στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a> (σύνδεση με λογαριασμό ΠΣΔ).'
-          )); ?>
+          <?php transferServiceHelp('secondary', 'msd'); ?>
         </div>
         <div id="msdPeriodsPanel" style="display:none">
           <p class="small-note">Προσθέστε μία γραμμή για κάθε διαφορετική υπηρέτηση/κατηγορία. Οι ημέρες ≥15 λογίζονται ως πλήρης μήνας. Σε παράλληλη υπηρεσία μοιράστε τις ημέρες ανά εβδομάδα (άθροισμα έως 5/5 <em>στην ίδια χρονική περίοδο</em>). Μην προσθέτετε δύο πλήρεις πενθήμερες υπηρετήσεις για τις ίδιες ημέρες. Αν την ίδια ημέρα υπηρετήσατε σε δύο σχολεία, λαμβάνεται υπόψη το σχολείο με τις περισσότερες μονάδες. Για σύνθετα επικαλυπτόμενα διαστήματα προτιμήστε τα επίσημα συνολικά Μ.Σ.Δ. του Μητρώου.</p>
@@ -172,8 +165,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         <div id="msdDirectPanel">
           <div class="field">
             <label for="msdDirectPoints">Συνολικές μονάδες συνθηκών διαβίωσης από το επίσημο μητρώο</label>
-            <input id="msdDirectPoints" type="text" inputmode="decimal" maxlength="7" data-transfer-direct-points-cap="1000" autocomplete="off" placeholder="π.χ. 48,75" aria-describedby="msdDirectHelp msdDirectStatus">
-            <div class="field-hint" id="msdDirectHelp">Δώστε τον ακριβή αριθμό Μ.Σ.Δ. με έως δύο δεκαδικά (κόμμα ή τελεία). π.χ. 48,75. Οι υπηρετήσεις που συμπληρώθηκαν στην άλλη καρτέλα δεν θα προστεθούν.</div>
+            <input id="msdDirectPoints" type="text" inputmode="decimal" maxlength="7" data-transfer-direct-points-cap="1000" autocomplete="off" placeholder="π.χ. 48,75" aria-describedby="msdDirectStatus">
             <div class="field-hint" id="msdDirectStatus" role="status" aria-live="polite"></div>
           </div>
         </div>

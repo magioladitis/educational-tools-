@@ -12,7 +12,9 @@ function test(condition, explanation) {assert.ok(condition, explanation); tests+
 test(/id="primaryServicePoints"[^>]*data-primary-points-cap="125"/.test(html), 'Service field has UI maximum 125');
 test(/id="primaryMsd"[^>]*data-primary-points-cap="1000"/.test(html), 'MSD field has UI maximum 1000');
 test(!html.includes('Τεχνικό όριο προστασίας 1.000 μορίων, όχι νομοθετικό.'), 'Remove technical limit message from UI');
-test(html.includes('Έως δύο δεκαδικά.'), 'Retain decimal precision guidance');
+const help = fs.readFileSync(path.join(root, 'includes/components/transfer-service-help.php'), 'utf8');
+test(!html.includes('<div class="field-hint">Έως δύο δεκαδικά.</div>'), 'No redundant inline MSD precision hint');
+test(help.includes('έως δύο δεκαδικά'), 'Precision guidance remains available inside the collapsed help');
 test(js.includes('function capPrimaryDirectPoints(el)'), 'Primary controller has a capped input helper');
 test(js.includes('capPrimaryDirectPoints(el);'), 'Helper invoked by event handlers');
 test(/el\.value=String\(max\)/.test(js), 'Over-limit entry clamps rather than going blank');

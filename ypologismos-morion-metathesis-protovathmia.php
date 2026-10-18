@@ -30,6 +30,7 @@ foreach ($primaryTransferBranchCodes as $code) {
 <?php require __DIR__ . '/includes/header.php'; ?>
 <?php require_once __DIR__ . '/includes/components/calculator-layout.php'; ?>
 <?php require_once __DIR__ . '/includes/components/transfer-social-criteria.php'; ?>
+<?php require_once __DIR__ . '/includes/components/transfer-service-help.php'; ?>
 <?php calculatorContainerStart(array('class'=>'app')); ?>
   <?php calculatorHero(array(
     'title'=>'Μεταθέσεις μόνιμων εκπαιδευτικών Πρωτοβάθμιας',
@@ -43,7 +44,7 @@ foreach ($primaryTransferBranchCodes as $code) {
   <p class="small-note primary-transfer-guidance"><strong>Σημαντικό:</strong> Οι υπολογισμοί και οι προέλεγχοι είναι συμβουλευτικοί. Για την τελική επιβεβαίωση προϋποθέσεων, μορίων και δικαιολογητικών ισχύουν η εγκύκλιος 2026–2027 και ο έλεγχος της ΔΠΕ οργανικής.</p>
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
-      <?php calculatorCardStart(array('title'=>'Α. Διαδικασία και υπηρεσιακός προέλεγχος')); ?>
+      <?php calculatorCardStart(array('title'=>'Α. Τύπος διαδικασίας και υπηρεσιακά στοιχεία')); ?>
         <div class="field"><label for="primaryMode">Τύπος αίτησης</label>
           <select id="primaryMode">
             <option value="region" data-official-code="001.ΠΕ001">Γενική από περιοχή σε περιοχή [001.ΠΕ001]</option>
@@ -279,6 +280,7 @@ foreach ($primaryTransferBranchCodes as $code) {
         <div class="field"><label for="primaryServiceMode">Καταχώριση συνολικής υπηρεσίας</label>
           <select id="primaryServiceMode"><option value="points">Ακριβή μόρια από επίσημο μητρώο</option><option value="direct">Έτη, μήνες, ημέρες (ενιαίο σύνολο)</option><option value="periods">Υπολογισμός από επιμέρους περιόδους υπηρεσίας</option></select>
         </div>
+          <?php transferServiceHelp('primary', 'service'); ?>
         <div id="primaryServicePointsPanel" class="field"><label for="primaryServicePoints">Μόρια συνολικής υπηρεσίας</label>
           <input id="primaryServicePoints" type="text" inputmode="decimal" maxlength="6" data-primary-points-cap="125" placeholder="π.χ. 21,04" autocomplete="off">
         </div>
@@ -296,10 +298,10 @@ foreach ($primaryTransferBranchCodes as $code) {
         <div class="field"><label for="primaryMsdMode">Τρόπος καταχώρισης Μ.Σ.Δ.</label>
           <select id="primaryMsdMode"><option value="direct">Ακριβείς συνολικές Μ.Σ.Δ. από το μητρώο</option><option value="periods">Υπολογισμός από επιμέρους υπηρετήσεις</option></select>
         </div>
+          <?php transferServiceHelp('primary', 'msd'); ?>
         <div id="primaryMsdDirectPanel">
         <div class="field"><label for="primaryMsd">Συνολικές Μ.Σ.Δ. από το επίσημο μητρώο</label>
           <input id="primaryMsd" type="text" inputmode="decimal" maxlength="7" data-primary-points-cap="1000" autocomplete="off" placeholder="π.χ. 48,75">
-          <div class="field-hint">Έως δύο δεκαδικά.</div>
         </div>
         </div>
         <div id="primaryMsdPeriodsPanel" hidden>
