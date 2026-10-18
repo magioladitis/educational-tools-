@@ -222,6 +222,9 @@
     var interculturalMode=$('primaryMode').value==='intercultural';
     $('primaryScoringCard').hidden=interculturalMode;
     $('primarySocialCriteriaCard').hidden=interculturalMode;
+    $('primaryInterculturalScoreNote').hidden=!interculturalMode;
+    $('primaryScoreMobile').hidden=interculturalMode;
+    $('primaryScoreResults').parentElement.hidden=interculturalMode;
     var special=$('primarySpecialCaseField');
     if(special){ special.style.display=$('primaryMode').value==='region'?'':'none';
       if($('primaryMode').value!=='region')$('primarySpecialCase').value='none'; }
@@ -230,52 +233,57 @@
     var invalidSpouse=syncPrimaryCoService();
     $('primaryChecklist').closest('section.card').querySelector('h2').textContent=(interculturalMode?'Β.':'Δ.')+' Προσωπική λίστα δικαιολογητικών';
     var mode=$('primaryServiceMode').value;
-    $('primaryServicePointsPanel').hidden=mode!=='points';
-    $('primaryServiceDurationPanel').hidden=mode!=='direct';
-    var children=numeric($('primaryChildren'),20),years=numeric($('primaryYears'),50), months=numeric($('primaryMonths'),11), days=numeric($('primaryDays'),29);
+    var periods=global.EducationTransferPrimaryPeriods;
+    if(periods)periods.sync();
+    else { $('primaryServicePointsPanel').hidden=mode!=='points';$('primaryServiceDurationPanel').hidden=mode!=='direct'; }
+    var children=numeric($('primaryChildren'),20),years=numeric($('primaryYears'),50),months=numeric($('primaryMonths'),11),days=numeric($('primaryDays'),29);
     var childField=$('primaryChildren');
     var childOutOfRange=children===null;
     childField.setAttribute('aria-invalid',String(childOutOfRange));
-    if (children === 0) { $('primaryChildrenExtra').checked = false; $('primaryChildrenExtra').disabled = true; }
-    else $('primaryChildrenExtra').disabled = false;
-    var numericValid=[children,years,months,days].every(function(v){return v!==null;});
+    if(children===0){$('primaryChildrenExtra').checked=false;$('primaryChildrenExtra').disabled=true;}
+    else $('primaryChildrenExtra').disabled=false;
     var raw={mode:'region',serviceMode:mode,serviceDirectPoints:$('primaryServicePoints').value,
-      serviceYears:years,serviceMonths:months,serviceDays:days,msdMode:'direct',msdDirectPoints:$('primaryMsd').value,
-      eligibleChildren:children,familyStatusEligible:$('primaryFamily').checked,coService:$('primaryCoservice').checked && !invalidSpouse,
-      locality:$('primaryLocality').checked,firstPreference:$('primaryFirst').checked};
-    // No empty-as-zero interpretation for official-register inputs.
-    if (!$('primaryMsd').value.trim() || (mode==='points' && !$('primaryServicePoints').value.trim())) numericValid=false;
-    var result=numericValid?scoring.calculate(raw):null;
-    var valid=!!result && result.serviceInputValid && result.msdInputValid;
-    // Same visible score rows as Secondary. Never describe a missing M.S.D. as a final result.
+      serviceYears:years,serviceMonths:months,serviceDays:days,
+      msdMode:$('primaryMsdMode').value,msdDirectPoints:$('primaryMsd').value,
+      eligibleChildren:children===null?0:children,familyStatusEligible:$('primaryFamily').checked,
+      coService:$('primaryCoservice').checked && !invalidSpouse,locality:$('primaryLocality').checked,firstPreference:$('primaryFirst').checked};
+    var serviceMissing=mode==='points'&&!String(raw.serviceDirectPoints).trim();
+    var msdMissing=raw.msdMode==='direct'&&!String(raw.msdDirectPoints).trim();
+    var servicePeriods=null,msdPeriods=null;
+    if(mode==='periods'&&periods){servicePeriods=periods.readService();raw.servicePeriods=servicePeriods.periods;}
+    if(raw.msdMode==='periods'&&periods){msdPeriods=periods.readMsd();raw.msdPeriods=msdPeriods.periods;}
+    var validSocial=children!==null;
+    var validDuration=mode!=='direct'||(years!==null&&months!==null&&days!==null);
+    // Invalid inputs never silently become zeros. Missing official totals remain unknown.
+    var result=validSocial&&validDuration?scoring.calculate(raw):null;
+    var serviceValid=!!result&&result.serviceInputValid&&!serviceMissing&&(!servicePeriods||servicePeriods.valid);
+    var msdValid=!!result&&result.msdInputValid&&!msdMissing&&(!msdPeriods||msdPeriods.valid);
+    var social=validSocial?scoring.calculate({mode:'region',serviceMode:'points',serviceDirectPoints:'0',
+      msdMode:'direct',msdDirectPoints:'0',eligibleChildren:children,
+      familyStatusEligible:raw.familyStatusEligible,coService:raw.coService,locality:raw.locality,
+      firstPreference:raw.firstPreference}):null;
+    var knownSocial=social?scoring.truncate2(social.coServicePoints+social.familyPoints+social.localityPoints+social.firstPreferencePoints):null;
+    var complete=serviceValid&&msdValid;
+    var sum=social?scoring.truncate2(knownSocial+(serviceValid?result.servicePoints:0)+(msdValid?result.msdPoints:0)):null;
     var scoreCard=global.EducationTransferScoreCard;
     if(scoreCard){
       var f=function(v){return v===null||v===undefined?'—':format(v);};
-      var hasService=mode!=='points'||!!$('primaryServicePoints').value.trim();
-      var hasMsd=!!$('primaryMsd').value.trim();
-      var partial=children!==null && years!==null && months!==null && days!==null;
-      // Calculate a genuinely provisional score only if the other numeric data are valid.
-      var preview=null;
-      if(!interculturalMode && partial && hasService && !hasMsd){
-        var previewRaw=Object.assign({},raw,{msdDirectPoints:'0'});
-        var tmp=scoring.calculate(previewRaw);
-        if(tmp.serviceInputValid && tmp.msdInputValid)preview=tmp;
-      }
-      var show=interculturalMode?null:(valid?result:preview);
-      var total=valid?result.total:preview?(preview.total-preview.msdPoints):null;
-      scoreCard.render('primary',{
-        total:show?f(total):'—',
-        label:valid?'συνολικές μονάδες':preview?'προσωρινές μονάδες (χωρίς Μ.Σ.Δ.)':'μονάδες μετάθεσης',
-        service:show?f(show.servicePoints):'—',msd:valid?f(result.msdPoints):'—',
-        coservice:show?f(show.coServicePoints):'—',family:show?f(show.familyPoints):'—',
-        locality:show?f(show.localityPoints):'—',first:show?f(show.firstPreferencePoints):'—',
-        status:interculturalMode?'Δεν εφαρμόζεται μοριοδότηση· η μετάθεση εξετάζεται βάσει προσόντων και κενών.':
-          valid?'Πληροφοριακό αποτέλεσμα από τα δηλωμένα στοιχεία. Επαληθεύστε τα στο επίσημο μητρώο.':
-          preview?'Το εμφανιζόμενο ποσό είναι προσωρινό και ΔΕΝ περιλαμβάνει Μ.Σ.Δ. Συμπληρώστε τις Μ.Σ.Δ. του μητρώου για την τελική βαθμολογία.':
-          'Συμπληρώστε έγκυρα μόρια προϋπηρεσίας και Μ.Σ.Δ. από το επίσημο μητρώο.'
-      });
+      var msg=interculturalMode?'Δεν εφαρμόζεται αριθμητική κατάταξη για τη διαδικασία Διαπολιτισμικών.':
+        !validSocial||!validDuration?'Διορθώστε τα μη έγκυρα αριθμητικά πεδία.':
+        complete?'Ενδεικτική συνολική βαθμολογία. Επαληθεύστε κάθε υπηρεσία και τις επίσημες Μ.Σ.Δ. στο μητρώο.':
+        'Μερικό άθροισμα μόνο από τα γνωστά κριτήρια. '+(!serviceValid?'Η προϋπηρεσία δεν έχει προσμετρηθεί. ':'')+(!msdValid?'Οι Μ.Σ.Δ. δεν έχουν προσμετρηθεί. ':'')+'Άγνωστα πεδία δεν λογίζονται ως μηδέν.';
+      var label=complete?'συνολικές μονάδες':'γνωστές μονάδες (μερικό άθροισμα)';
+      scoreCard.render('primary',{total:f(sum),label:label,
+        service:serviceValid?f(result.servicePoints):'—',msd:msdValid?f(result.msdPoints):'—',
+        coservice:social?f(social.coServicePoints):'—',family:social?f(social.familyPoints):'—',
+        locality:social?f(social.localityPoints):'—',first:social?f(social.firstPreferencePoints):'—',status:msg});
+      $('primaryMobileTotal').textContent=f(sum);
+      $('primaryMobileLabel').textContent=label;
+      $('primaryMobileStatus').textContent=msg;
     }
-    $('primaryValidation').textContent=interculturalMode?'':!valid?'Δεν εμφανίζεται τελικό σύνολο όσο λείπουν ή είναι άκυρα βασικά αριθμητικά πεδία.':'';
+    $('primaryValidation').textContent=interculturalMode?'':!validSocial||!validDuration?
+      'Μη έγκυρα αριθμητικά στοιχεία. Διορθώστε τα για να εμφανιστεί ο υπολογισμός.':
+      complete?'':!serviceValid||!msdValid?'Η βαθμολογία είναι μερική: συμπληρώστε τις ελλείπουσες ή μη έγκυρες καταχωρίσεις.':'';
     var state=$('primaryOrganic').value;
     $('primaryEligibility').textContent=state==='yes'
       ? '✓ Δηλώθηκε συμπλήρωση έτους οργανικής. Ο οριστικός έλεγχος και οι ειδικές εξαιρέσεις ανήκουν στη ΔΠΕ.'
@@ -373,6 +381,7 @@
     });
     el.addEventListener('change',update);
   });
+  if(global.EducationTransferPrimaryPeriods)global.EducationTransferPrimaryPeriods.bind(update);
   if(global.EducationTransferEmailComponent&&global.EducationTransferEmailComponent.fillSpecialtyDropdown){
     global.EducationTransferEmailComponent.fillSpecialtyDropdown(
       $('primarySpecialty'),global.EducationTransferPrimarySpecialtyLabels||{},'');

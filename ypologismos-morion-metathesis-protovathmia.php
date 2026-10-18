@@ -194,11 +194,16 @@ foreach ($primaryTransferBranchCodes as $code) {
           <p>Ανάκληση αίτησης έως 31/12/2026. Οι αμοιβαίες μεταθέσεις ακολουθούν ξεχωριστή προθεσμία 15 ημερών από την ανακοίνωση των μεταθέσεων. Εξαιρέσεις για νεογέννητα και ειδικές κατηγορίες περιγράφονται στην εγκύκλιο.</p>
         </details>
       <?php calculatorCardEnd(); ?>
+      <div id="primaryScoreMobile" class="primary-score-mobile" role="status" aria-live="polite" aria-label="Σύνοψη μορίων">
+        <strong id="primaryMobileTotal">0</strong> <span id="primaryMobileLabel">γνωστές μονάδες (μερικό άθροισμα)</span>
+        <p id="primaryMobileStatus">Για πλήρη βαθμολογία καταχωρίστε προϋπηρεσία και Μ.Σ.Δ.</p>
+        <a href="#primaryScoreResults">Αναλυτικά μόρια ↓</a>
+      </div>
       <div id="primaryScoringCard">
       <?php calculatorCardStart(array('title'=>'Β. Μονάδες μετάθεσης')); ?>
         <p class="small-note">Τα μόρια προϋπηρεσίας και οι Μ.Σ.Δ. καταχωρίζονται χωριστά όπως στο <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">επίσημο μητρώο</a>. Δεν αθροίζονται διπλά οι υπηρετήσεις.</p>
         <div class="field"><label for="primaryServiceMode">Καταχώριση συνολικής υπηρεσίας</label>
-          <select id="primaryServiceMode"><option value="points">Ακριβή μόρια από επίσημο μητρώο</option><option value="direct">Έτη, μήνες, ημέρες</option></select>
+          <select id="primaryServiceMode"><option value="points">Ακριβή μόρια από επίσημο μητρώο</option><option value="direct">Έτη, μήνες, ημέρες (ενιαίο σύνολο)</option><option value="periods">Υπολογισμός από επιμέρους περιόδους υπηρεσίας</option></select>
         </div>
         <div id="primaryServicePointsPanel" class="field"><label for="primaryServicePoints">Μόρια συνολικής υπηρεσίας</label>
           <input id="primaryServicePoints" type="text" inputmode="decimal" maxlength="6" placeholder="π.χ. 21,04" autocomplete="off">
@@ -208,13 +213,31 @@ foreach ($primaryTransferBranchCodes as $code) {
           <div class="field"><label for="primaryMonths">Μήνες</label><input id="primaryMonths" type="number" min="0" max="11" step="1" value="0"></div>
           <div class="field"><label for="primaryDays">Ημέρες</label><input id="primaryDays" type="number" min="0" max="29" step="1" value="0"></div>
         </div>
+        <div id="primaryServicePeriodsPanel" hidden>
+          <p class="field-hint">Προσθέστε μόνο αναγνωρισμένες περιόδους χωρίς χρονική επικάλυψη. Τα υπόλοιπα ημερών αθροίζονται πριν εφαρμοστεί ο κανόνας των 15 ημερών. Ελέγξτε τις περιόδους στο υπηρεσιακό μητρώο.</p>
+          <div id="primaryServicePeriodsRows"></div>
+          <button type="button" class="add-row" id="primaryAddServicePeriod">+ Προσθήκη περιόδου υπηρεσίας</button>
+          <p id="primaryServicePeriodStatus" class="field-hint" role="status" aria-live="polite"></p>
+        </div>
+        <div class="field"><label for="primaryMsdMode">Τρόπος καταχώρισης Μ.Σ.Δ.</label>
+          <select id="primaryMsdMode"><option value="direct">Ακριβείς συνολικές Μ.Σ.Δ. από το μητρώο</option><option value="periods">Υπολογισμός από επιμέρους υπηρετήσεις</option></select>
+        </div>
+        <div id="primaryMsdDirectPanel">
         <div class="field"><label for="primaryMsd">Συνολικές Μ.Σ.Δ. από το επίσημο μητρώο</label>
           <input id="primaryMsd" type="text" inputmode="decimal" maxlength="7" autocomplete="off" placeholder="π.χ. 48,75">
           <div class="field-hint">Έως δύο δεκαδικά. Τεχνικό όριο προστασίας 1.000 μορίων, όχι νομοθετικό.</div>
         </div>
+        </div>
+        <div id="primaryMsdPeriodsPanel" hidden>
+          <p class="field-hint">Για κάθε υπηρέτηση δηλώστε την κατηγορία σχολείου Π.Ε. (Α΄–ΙΓ΄), τη διάρκεια και τις ημέρες ανά εβδομάδα. Οι παράλληλες υπηρετήσεις σε σχολεία της ίδιας περιόδου επιμερίζονται έως 5/5 συνολικά. Ο διπλασιασμός Ι΄–ΙΓ΄ επιλέγεται μόνο αν έχει επιβεβαιωθεί το δικαίωμα διετούς συνεχούς πραγματικής υπηρεσίας.</p>
+          <div id="primaryMsdPeriodsRows"></div>
+          <button type="button" class="add-row" id="primaryAddMsdPeriod">+ Προσθήκη υπηρέτησης Μ.Σ.Δ.</button>
+          <p id="primaryMsdPeriodStatus" class="field-hint" role="status" aria-live="polite"></p>
+        </div>
         <p id="primaryValidation" role="status" aria-live="polite" class="field-hint"></p>
       <?php calculatorCardEnd(); ?>
       </div>
+      <p id="primaryInterculturalScoreNote" class="primary-transfer-info" hidden>Στα Διαπολιτισμικά δεν εμφανίζεται συγκριτική αριθμητική μοριοδότηση: ο έλεγχος αφορά τα απαιτούμενα προσόντα, τις προϋποθέσεις και τα διαθέσιμα οργανικά κενά.</p>
       <div id="primarySocialCriteriaCard">
         <?php transferSocialCriteriaCard('primary', <<<'SOCIAL_PRIMARY_EXTRAS'
 
@@ -292,6 +315,7 @@ window.EducationTransferPrimarySpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-intercultural-vacancies.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-social-input.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-score-card.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-periods.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

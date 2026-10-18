@@ -171,7 +171,12 @@
     var remainingDays = totalDays % 30;
     if (remainingDays >= 15) totalMonths += 1;
     if (totalMonths > 600) valid = false;
-    return { valid: valid, duration: normalizeDuration(Math.floor(totalMonths/12),totalMonths%12,remainingDays),
+    // The >=15-day adjustment is already included in totalMonths. Do not
+    // round remainingDays a second time in the returned display duration.
+    var normalized = normalizeDuration(Math.floor(totalMonths/12),totalMonths%12,0);
+    normalized.roundedDays = remainingDays >= 15 ? remainingDays : 0;
+    normalized.ignoredDays = remainingDays < 15 ? remainingDays : 0;
+    return { valid: valid, duration: normalized,
       years: Math.floor(totalMonths/12), months: totalMonths%12, days: 0, totalMonths: totalMonths };
   }
 

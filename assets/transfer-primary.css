@@ -34,3 +34,20 @@
 /* Do not draw an empty service-eligibility notice before JS populates it. */
 #primaryEligibility:empty { display:none; }
 #primaryChildrenHint[data-invalid="true"] {color:#a32318; font-weight:700;}
+
+/* Primary phase A/B: editable periods and visible partial score on small screens. */
+#primaryServicePeriodsPanel[hidden],#primaryMsdPeriodsPanel[hidden],#primaryMsdDirectPanel[hidden],
+#primaryScoreMobile[hidden],#primaryInterculturalScoreNote[hidden],.card.results[hidden],
+.primary-msd-double-field[hidden],.primary-category-field[hidden] {display:none!important}
+#primaryServicePeriodsPanel,#primaryMsdPeriodsPanel {margin-top:12px}
+#primaryServicePeriodsRows .transfer-service-period,#primaryMsdPeriodsRows .transfer-service-row {max-width:100%;min-width:0}
+#primaryServicePeriodsRows input,#primaryMsdPeriodsRows input,#primaryMsdPeriodsRows select {max-width:100%;box-sizing:border-box}
+#primaryServicePeriodsRows [aria-invalid="true"],#primaryMsdPeriodsRows [aria-invalid="true"] {border:2px solid #b42318}
+.primary-msd-double-field {display:flex;gap:8px;align-items:start;margin:12px 0}
+.primary-score-mobile {display:none}
+@media(max-width:720px){
+  .primary-score-mobile {display:block;margin:12px 0;padding:15px;border:1px solid var(--edu-border,#cbd5e1);border-radius:12px;background:var(--edu-surface,#f8fafc);font-variant-numeric:tabular-nums}
+  .primary-score-mobile strong{font-size:1.8rem;display:inline-block;margin-right:5px}
+  .primary-score-mobile p{font-size:.9rem;margin:8px 0}
+  .primary-score-mobile a{font-size:.9rem;font-weight:650}
+}
