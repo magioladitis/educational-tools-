@@ -55,3 +55,6 @@
 /* Visible, accessible runtime failures. Hidden after successful initialization. */
 #primaryRuntimeWarning[hidden]{display:none!important}
 .primary-runtime-warning{border:1px solid #cc6b1c;background:#fff3e2;color:#693a07;border-radius:10px;padding:12px;line-height:1.5;font-weight:600;margin:10px 0}
+
+/* v3.22.182: concise, unobtrusive scope guidance replaces obsolete pilot warning. */
+.primary-transfer-guidance {margin:10px 0 16px; line-height:1.5; color:var(--edu-text-muted,#475569);}

@@ -10,9 +10,9 @@ assert(js.includes('function updateReturnFromEae()'),'return evaluation must be 
 assert(js.includes("y<2?"),'return transferred EAE requires >=2');
 assert(js.includes("y<5||a<2?"),'appointed EAE requires 5 + 2');
 assert(js.includes("organic!=='yes'?"),'transferred needs organic service');
-assert(js.includes("if(interculturalMode||isPlacement())$('primaryFirst').checked=false"),'no first-preference area points on within-area placement');
+assert(js.includes("if(hideFirst)$('primaryFirst').checked=false"),'no first-preference area points on local placement');
 assert(js.includes("'placement-general':'Βελτίωση / Οριστική τοποθέτηση Γενικής Εκπαίδευσης'"),'new type in message template');
 assert(js.includes("'placement-eae':'Βελτίωση / Οριστική τοποθέτηση Ειδικής Αγωγής'"),'new EAE type in message template');
-assert(js.includes("if(mode!=='region' && !isPlacement())"),'placement must not enter EAE qualifications flow');
+assert(js.includes("if(mode!=='region' && mode!=='minority' && !isPlacement())"),'placement/minority must not enter EAE qualifications flow');
 assert(!php.includes('value="mutual"'),'do not add Primary mutual transfer');
 console.log('PASS Primary placement and EAE return controls isolated; no mutual transfer');

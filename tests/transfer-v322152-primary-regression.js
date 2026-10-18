@@ -1,5 +1,5 @@
 'use strict';
-/* Keep the Primary pilot strictly isolated from the stable Secondary calculator. */
+/* Keep Primary rules isolated while sharing the stable Secondary scoring engine. */
 const assert=require('assert');
 const fs=require('fs');
 const path=require('path');
@@ -19,7 +19,7 @@ assert(!primary.includes('includes/transfer-documents.js'),'Never load Secondary
 assert(!primary.includes('includes/transfer-eligibility.js'),'Never load Secondary eligibility rules in Primary');
 assert(!primary.includes('includes/transfer-ui.js'),'Never load Secondary controller in Primary');
 assert(!js.includes('document.cookie')&&!js.includes('fetch('),'No external submission or personal-data storage');
-assert(primary.includes('Πιλοτική') && primary.includes('ΕΑΕ/ΚΕΔΑΣΥ'),'Primary pilot scope is explicit');
+assert(primary.includes('ΕΑΕ/ΚΕΔΑΣΥ') && primary.includes('Μειονοτικά ΠΕ73'),'Primary supported scope is explicit');
 assert(js.includes('primaryChildrenExtra'),'No automatic email obligation for every child');
 assert(js.includes('primaryEmailDetails'),'Accessible composer');
 assert(js.includes('mailto:?subject='),'mailto without invented recipient');

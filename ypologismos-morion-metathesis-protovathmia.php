@@ -1,6 +1,6 @@
 <?php
 /**
- * Pilot for general transfers and isolated EAE/KEDASY prechecks in Primary Education (2026–2027).
+ * Primary transfer toolkit with advisory eligibility checks (2026–2027).
  * Isolated UI/rules; shares the proven EducationTransfer scoring module.
  * Do not route Primary applicants into the Secondary-specific document/eligibility UI.
  */
@@ -21,7 +21,7 @@ foreach ($primaryTransferBranchCodes as $code) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php require __DIR__ . '/includes/head-pwa.php'; ?>
-  <title>Μεταθέσεις εκπαιδευτικών Πρωτοβάθμιας — Γενική, ΕΑΕ και Διαπολιτισμικά</title>
+  <title>Μεταθέσεις εκπαιδευτικών Πρωτοβάθμιας — Γενική, ΕΑΕ, Διαπολιτισμικά και ΠΕ73</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-primary.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-level-switch.css'), ENT_QUOTES, 'UTF-8'); ?>">
@@ -33,14 +33,14 @@ foreach ($primaryTransferBranchCodes as $code) {
 <?php calculatorContainerStart(array('class'=>'app')); ?>
   <?php calculatorHero(array(
     'title'=>'Μεταθέσεις μόνιμων εκπαιδευτικών Πρωτοβάθμιας',
-    'intro_html'=>'Πιλοτική επέκταση για <strong>γενικές μεταθέσεις, ΕΑΕ/ΚΕΔΑΣΥ και Διαπολιτισμικά</strong>. Κοινός υπολογισμός όπου προβλέπεται μοριοδότηση και απομονωμένοι κανόνες Πρωτοβάθμιας.',
-    'badges'=>array('Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026', 'Πιλοτική Γενική + ΕΑΕ/ΚΕΔΑΣΥ + Διαπολιτισμικά')
+    'intro_html'=>'Υπολογισμός μορίων και οδηγός δικαιολογητικών για <strong>γενικές μεταθέσεις, ΕΑΕ/ΚΕΔΑΣΥ, Διαπολιτισμικά, Μειονοτικά ΠΕ73</strong> και βελτίωση ή οριστική τοποθέτηση.',
+    'badges'=>array('Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026', 'Μεταθέσεις και τοποθετήσεις 2026–2027')
   )); ?>
   <nav class="transfer-level-switch" aria-label="Επιλογή βαθμίδας">
     <strong aria-current="page">Πρωτοβάθμια</strong>
     <a href="ypologismos-morion-metathesis.php">Δευτεροβάθμια</a>
   </nav>
-  <p class="primary-transfer-notice"><strong>Σταδιακή επέκταση:</strong> υποστηρίζονται γενικές μεταθέσεις, βασικός οδηγός βελτίωσης/οριστικής τοποθέτησης και <strong>προκαταρκτικός</strong> έλεγχος για ΕΑΕ, ΚΕΔΑΣΥ, ΕΕΕΕΚ και Σχολεία Κωφών/Τυφλών. Μειονοτικά, αμοιβαίες, όλες οι ειδικές εξαιρέσεις και οι πλήρεις υπηρεσιακές διαδικασίες <strong>δεν καλύπτονται ακόμη</strong>. Συμβουλευτείτε την εγκύκλιο και τη ΔΠΕ οργανικής.</p>
+  <p class="small-note primary-transfer-guidance"><strong>Σημαντικό:</strong> Οι υπολογισμοί και οι προέλεγχοι είναι συμβουλευτικοί. Για την τελική επιβεβαίωση προϋποθέσεων, μορίων και δικαιολογητικών ισχύουν η εγκύκλιος 2026–2027 και ο έλεγχος της ΔΠΕ οργανικής.</p>
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('title'=>'Α. Διαδικασία και υπηρεσιακός προέλεγχος')); ?>
@@ -51,6 +51,7 @@ foreach ($primaryTransferBranchCodes as $code) {
             <option value="sensory" data-official-code="001.ΣΜΕΑ003">Σχολεία Κωφών / Τυφλών [001.ΣΜΕΑ003]</option>
             <option value="kedasy" data-official-code="001.ΣΜΚΔ001.ΚΔΣ">ΚΕΔΑΣΥ [001.ΣΜΚΔ001.ΚΔΣ]</option>
             <option value="intercultural" data-official-code="002.ΔΙΑΠ001">Διαπολιτισμικά Σχολεία [002.ΔΙΑΠ001]</option>
+            <option value="minority">Μειονοτικά Σχολεία — κλάδος ΠΕ73 (Θράκη)</option>
             <option value="placement-general" data-official-code="003.ΠΕΒ01">Βελτίωση / Οριστική τοποθέτηση Γενικής [003.ΠΕΒ01]</option>
             <option value="placement-eae" data-official-code="003.ΠΕΒ01.ΕΙΔ">Βελτίωση / Οριστική τοποθέτηση ΕΑΕ [003.ΠΕΒ01.ΕΙΔ]</option>
           </select>
@@ -65,9 +66,42 @@ foreach ($primaryTransferBranchCodes as $code) {
           'html' => '<p><strong>Ναι</strong>, εφόσον πληροίτε τις προϋποθέσεις κάθε διαδικασίας. Μπορείτε να υποβάλετε χωριστές αιτήσεις, για παράδειγμα για ΕΑΕ/ΚΕΔΑΣΥ, Διαπολιτισμικά ή μετάθεση από περιοχή σε περιοχή.</p>'
             . '<p>Οι μεταθέσεις εξετάζονται με τη σειρά: <strong>ΚΕΔΑΣΥ και περιοχές ΕΑΕ → Διαπολιτισμικά → από περιοχή σε περιοχή → αμοιβαίες</strong>. Αν ικανοποιηθεί αίτηση προηγούμενης κατηγορίας, η αίτηση επόμενης κατηγορίας δεν εξετάζεται.</p>'
             . '<p><strong>Προσοχή:</strong> Η οριστική τοποθέτηση/βελτίωση είναι διαφορετικός τύπος αίτησης. Εκπαιδευτικοί με οργανική σε ΕΑΕ ή Διαπολιτισμικό Σχολείο που ζητούν μετάθεση σε σχολείο Γενικής της ίδιας περιοχής υποβάλλουν αίτηση <strong>«από περιοχή σε περιοχή»</strong> και όχι βελτίωσης, με τις προβλεπόμενες υπηρεσιακές προϋποθέσεις.</p>'
-            . '<p><strong>Αμοιβαίες μεταθέσεις:</strong> πρόκειται για χωριστή διαδικασία, με αίτηση μέσα σε <strong>15 ημέρες από την ανακοίνωση των μεταθέσεων</strong>. Τα Μειονοτικά Σχολεία ΠΕ73 έχουν ιδιαίτερη διαδικασία, η οποία δεν καλύπτεται ακόμη από την παρούσα φόρμα.</p>'
+            . '<p><strong>Αμοιβαίες μεταθέσεις:</strong> πρόκειται για χωριστή διαδικασία, με αίτηση μέσα σε <strong>15 ημέρες από την ανακοίνωση των μεταθέσεων</strong>. Τα Μειονοτικά Σχολεία ΠΕ73 έχουν ιδιαίτερη διαδικασία, η οποία καλύπτεται με χωριστό ενδεικτικό προέλεγχο. Η εφαρμογή δεν πιστοποιεί κενές οργανικές θέσεις ή τον τύπο ηλεκτρονικής αίτησης.</p>'
             . '<p class="small-note">Πηγή: <a href="https://www.minedu.gov.gr/site/71034-15-10-26-metatheseis-ekpaideutikon-protobathmias-ekpaideuses-scholikou-etous-2026-2027" target="_blank" rel="noopener noreferrer">Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026 ↗</a>, Μέρος Α΄ Κεφ. Α΄ §1.1 και Μέρος Γ΄ Κεφ. Δ΄ §4, Κεφ. Ζ΄ §9.</p>'
         )); ?>
+        <section id="primaryMinorityFields" class="primary-transfer-notice" hidden aria-label="Προέλεγχος μεταθέσεων μειονοτικού προγράμματος ΠΕ73">
+          <h3>Μειονοτικά Σχολεία — κλάδος ΠΕ73</h3>
+          <p>Πρόκειται <strong>μόνο για το μειονοτικό πρόγραμμα</strong> των Μειονοτικών Σχολείων Θράκης. Δεν είναι η γενική διαδικασία εκπαιδευτικών του ελληνόγλωσσου προγράμματος.</p>
+          <div class="field"><label for="primaryMinorityBranch">Υπηρεσιακός κλάδος / πρόγραμμα</label>
+            <select id="primaryMinorityBranch">
+              <option value="unknown">Δεν έχει επιβεβαιωθεί</option>
+              <option value="pe73">ΠΕ73 — Μειονοτικό πρόγραμμα μειονοτικών σχολείων</option>
+              <option value="other">Άλλος κλάδος ή ελληνόγλωσσο πρόγραμμα</option>
+            </select>
+          </div>
+          <div class="field"><label for="primaryMinorityRoute">Διαδικασία</label>
+            <select id="primaryMinorityRoute">
+              <option value="between">Μετάθεση μεταξύ περιοχών μετάθεσης Θράκης</option>
+              <option value="within">Βελτίωση θέσης μέσα στον νομό οργανικής</option>
+            </select>
+          </div>
+          <div class="field"><label for="primaryMinorityOrigin">Περιφερειακή Ενότητα οργανικής θέσης</label>
+            <select id="primaryMinorityOrigin">
+              <option value="">Επιλέξτε Περιφερειακή Ενότητα</option>
+              <option value="xanthi">Ξάνθη</option><option value="rodopi">Ροδόπη</option><option value="evros">Έβρος</option>
+            </select>
+          </div>
+          <div id="primaryMinorityDestinationField" class="field">
+            <label for="primaryMinorityDestination">Περιφερειακή Ενότητα προορισμού</label>
+            <select id="primaryMinorityDestination">
+              <option value="">Επιλέξτε Περιφερειακή Ενότητα</option>
+              <option value="xanthi">Ξάνθη</option><option value="rodopi">Ροδόπη</option><option value="evros">Έβρος</option>
+            </select>
+          </div>
+          <p id="primaryMinorityLocalityNote" class="small-note" hidden><strong>Βελτίωση εντός νομού:</strong> τα μόρια εντοπιότητας και συνυπηρέτησης εξαρτώνται από τον συγκεκριμένο δήμο και σχολείο. Δεν αποδίδονται μόρια πρώτης προτίμησης περιοχής. Η αριθμητική βαθμολογία είναι ενδεικτική.</p>
+          <p id="primaryMinorityStatus" class="primary-eae-status" data-status="review" role="status" aria-live="polite"></p>
+          <p class="small-note"><strong>Αρμοδιότητα:</strong> για μετάθεση από νομό σε νομό ΑΠΥΣΠΕ Ανατολικής Μακεδονίας–Θράκης· για βελτίωση εντός νομού το αρμόδιο ΠΥΣΠΕ. Δεν επινοείται ηλεκτρονικός κωδικός αίτησης: επιβεβαιώστε τον τύπο που εμφανίζεται στην <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">επίσημη εφαρμογή ↗</a>. Πηγή: εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026, Μέρος Τρίτο, Κεφ. Ε΄.</p>
+        </section>
         <div id="primaryGeneralOrganicField" class="field"><label for="primaryOrganic">Υπηρέτηση οργανικής θέσης έως 31/08/2027</label>
           <select id="primaryOrganic">
             <option value="unknown">Δεν γνωρίζω / απαιτείται έλεγχος</option>
@@ -328,6 +362,7 @@ window.EducationTransferPrimarySpecialtyLabels = Object.freeze(<?php echo json_e
 </script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-eae.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-minority.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-email-component.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-intercultural.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-intercultural-vacancies.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

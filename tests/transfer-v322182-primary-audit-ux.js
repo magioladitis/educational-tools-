@@ -1,0 +1,16 @@
+'use strict';
+const fs=require('node:fs'), assert=require('node:assert/strict'), path=require('node:path');
+const dir=path.resolve(__dirname,'..');
+const php=fs.readFileSync(path.join(dir,'ypologismos-morion-metathesis-protovathmia.php'),'utf8');
+const js=fs.readFileSync(path.join(dir,'includes/transfer-primary.js'),'utf8');
+const secondary=fs.readFileSync(path.join(dir,'ypologismos-morion-metathesis.php'),'utf8');
+assert(php.includes('primary-transfer-guidance'), 'Short source-and-limits advisory visible');
+assert(php.includes('Οι υπολογισμοί και οι προέλεγχοι είναι συμβουλευτικοί.'), 'Transparent advisory');
+assert(!php.includes('Σταδιακή επέκταση'), 'Old obsolete extension paragraph removed');
+assert(!php.includes('Πιλοτική'), 'No blanket pilot label to undermine completed branches');
+assert(php.includes('Μειονοτικά ΠΕ73') && php.includes('οριστική τοποθέτηση'), 'Current scope displayed');
+assert(js.includes("var localPlacement=isPlacement() || isMinorityWithin();"), 'No awarded points for spouse at disposal in local placement');
+assert(js.includes('teacherAtDisposal && localPlacement'), 'Case-specific blocker');
+assert(js.includes("var municipalDisposal=teacherAtDisposal && $('primaryMode').value==='kedasy';"), 'Existing KEDASY restriction preserved');
+assert(secondary.includes('includes/transfer-calculations.js'), 'Secondary unchanged calculator');
+console.log('PASS v3.22.182 primary scope, compliance and social-points guard');

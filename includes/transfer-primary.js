@@ -5,6 +5,7 @@
   var eae = global.EducationTransferPrimaryEae;
   var intercultural = global.EducationTransferPrimaryIntercultural;
   var interVacancies = global.EducationTransferPrimaryInterculturalVacancies;
+  var minority = global.EducationTransferPrimaryMinority;
   // Scoring must not silently stop if an unrelated eligibility/vacancy asset fails to load.
   // Primary's ordinary transfer scoring is independent of EAE and intercultural data.
   if (!scoring) return;
@@ -67,8 +68,14 @@
     var data=spouseRules[choice.value]||spouseRules.unspecified;
     // A spouse merely placed at the disposal of a service has no established
     // organic municipality for the KEDASY-specific municipal criterion.
-    var municipalDisposal=choice.value==='teacher_disposal' && $('primaryMode').value==='kedasy';
-    if(municipalDisposal)data={summary:'Στα ΚΕΔΑΣΥ η συνυπηρέτηση εξετάζεται στον δήμο του ΚΕΔΑΣΥ. Η διάθεση σε ΠΥΣΠΕ/ΠΥΣΔΕ δεν τεκμηριώνει οργανική θέση στον συγκεκριμένο δήμο.',blocked:true};
+    var teacherAtDisposal=choice.value==='teacher_disposal';
+    var localPlacement=isPlacement() || isMinorityWithin();
+    var municipalDisposal=teacherAtDisposal && $('primaryMode').value==='kedasy';
+    // Circular 138023/E2, Part III, Chapter B, clarification 9:
+    // being at the disposal of a PYSPE/PYSDE does not provide co-service points
+    // for improvement or final placement; only area-to-area transfers qualify.
+    if(teacherAtDisposal && localPlacement)data={summary:'Στην οριστική τοποθέτηση ή βελτίωση δεν αποδίδονται μόρια συνυπηρέτησης όταν ο/η σύζυγος βρίσκεται στη διάθεση ΠΥΣΠΕ/ΠΥΣΔΕ. Η εξαίρεση αφορά μετάθεση από περιοχή σε περιοχή (εγκύκλιος Π.Ε., Μέρος Γ΄ Κεφ. Β΄, διευκρίνιση 9).',blocked:true};
+    else if(municipalDisposal)data={summary:'Στα ΚΕΔΑΣΥ η συνυπηρέτηση εξετάζεται στον δήμο του ΚΕΔΑΣΥ. Η διάθεση σε ΠΥΣΠΕ/ΠΥΣΔΕ δεν τεκμηριώνει οργανική θέση στον συγκεκριμένο δήμο.',blocked:true};
     var blocked=!!data.blocked, review=!!data.review;
     if(blocked)check.checked=false;
     check.disabled=blocked;
@@ -84,6 +91,8 @@
     return blocked || review;
   }
   function isPlacement(){return $('primaryMode').value==='placement-general'||$('primaryMode').value==='placement-eae';}
+  function isMinority(){return $('primaryMode').value==='minority';}
+  function isMinorityWithin(){return isMinority() && $('primaryMinorityRoute').value==='within';}
   function updateReturnFromEae(){
     var active=$('primaryMode').value==='region',panel=$('primaryReturnFromEae'),path=$('primaryReturnPath').value;
     panel.hidden=!active;
@@ -111,6 +120,11 @@
   function buildDocuments() {
     var mode=primaryEffectiveMode();
     var docs=mode==='intercultural'?[]:[info('registry','Υπηρεσιακό μητρώο και μονάδες','Έλεγχος στο επίσημο μητρώο — χωρίς αποστολή')];
+    if(isMinority()){
+      var procedure=isMinorityWithin()?'βελτίωση εντός νομού':'μετάθεση μεταξύ περιοχών Θράκης';
+      docs.push(info('minority-procedure','ΠΕ73 — '+procedure,
+        'Ειδικός προέλεγχος του μειονοτικού προγράμματος. '+(isMinorityWithin()?'Για βελτίωση εντός νομού αρμόδιο είναι το οικείο ΠΥΣΠΕ.':'Για μετάθεση από νομό σε νομό αρμόδιο είναι το ΑΠΥΣΠΕ Ανατολικής Μακεδονίας–Θράκης.')+' Δεν τεκμαίρεται οργανικό κενό ή κωδικός στο ηλεκτρονικό σύστημα.'));
+    }
     if(isPlacement())docs.push(info('placement-procedure','Οριστική τοποθέτηση / βελτίωση — στάδια',
       'Αρχική ηλεκτρονική αίτηση έως 02/11/2026 χωρίς προτιμήσεις σχολείων. Η τοπική ΔΠΕ θα ανακοινώσει μεταγενέστερα τα οργανικά κενά και τις προτιμήσεις· ενημερωτικός προέλεγχος, όχι πιστοποίηση δικαιώματος.'));
     if($('primaryMode').value==='region' && $('primaryReturnPath').value!=='none')docs.push(info('return-eae-general','Επιστροφή από ΕΑΕ στη Γενική',
@@ -125,7 +139,7 @@
     }
     if(mode!=='intercultural' && $('primaryChildrenExtra').checked && Number($('primaryChildren').value)>0) docs.push(action('children','Προετοιμασία πρόσθετου αποδεικτικού τέκνου','Email στη ΔΠΕ οργανικής μόνο όπου απαιτείται ειδικό αποδεικτικό (π.χ. φοίτηση ή επιμέλεια) — δείτε τις περιπτώσεις στον οδηγό τέκνων.'));
     if(mode!=='intercultural' && $('primaryCoservice').checked && !syncPrimaryCoService()) docs.push(action('coservice','Δικαιολογητικά συνυπηρέτησης','Αποστολή με email στη ΔΠΕ οργανικής — όπου απαιτούνται αποδεικτικά. '+(spouseRules[$('primaryCoServiceCase').value]||spouseRules.unspecified).summary));
-    if(mode==='region' && $('primarySpecialCase') && $('primarySpecialCase').value!=='none') {
+    if((mode==='region' || (mode==='minority' && !isMinorityWithin())) && $('primarySpecialCase') && $('primarySpecialCase').value!=='none') {
       var special=$('primarySpecialCase').value;
       if(special==='health_committee') docs.push(info('health-committee','Ειδική κατηγορία υγείας — γνωμάτευση υγειονομικής επιτροπής','Κλειστός φυσικός φάκελος προς ΥΠΑΙΘΑ με ένδειξη εμπιστευτικού πρωτοκόλλου· δεν αποστέλλεται με κοινό email. Εγκύκλιος Π.Ε. §2.2.3.'));
       if(special==='health_kepa') docs.push(info('health-kepa','Ειδική κατηγορία υγείας — ΚΕΠΑ','Καταχώριση Αριθμού Επιτροπής και Αριθμού Μητρώου ΚΕΠΑ στο επίσημο σύστημα, χωρίς αποστολή γνωμάτευσης. Εγκύκλιος Π.Ε. §2.2.3.'));
@@ -140,7 +154,7 @@
       if($('primaryInterInclusion').value==='yes' && $('primaryInterEaeQualification').value==='yes')docs.push(info('inter-inclusion-eae','Προσόντα ΕΑΕ για Τμήμα Ένταξης','Επαληθεύστε εάν ο σχετικός φάκελος ΕΑΕ απαιτεί συμπλήρωση.'));
       return docs;
     }
-    if(mode!=='region' && !isPlacement()) {
+    if(mode!=='region' && mode!=='minority' && !isPlacement()) {
       var origin=$('primaryEaeOrigin').value;
       var dossier=$('primaryEaeDossier').value;
       var options=[['phd','primaryEaePhd'],['masters','primaryEaeMasters'],['retraining','primaryEaeRetraining'],['experience','primaryEaeExperience'],['pe11','primaryEaePe11']];
@@ -207,15 +221,15 @@
   }
   function updateEaePrecheck(){
     var mode=primaryEffectiveMode();
-    $('primaryEaeFields').hidden=mode==='region'||mode==='intercultural'||isPlacement();
-    $('primaryGeneralOrganicField').hidden=mode!=='region';
-    $('primaryEligibility').hidden=mode!=='region';
+    $('primaryEaeFields').hidden=mode==='region'||mode==='minority'||mode==='intercultural'||isPlacement();
+    $('primaryGeneralOrganicField').hidden=mode!=='region' && mode!=='minority';
+    $('primaryEligibility').hidden=mode!=='region' && mode!=='minority';
     $('primaryKedasyGeoNote').hidden=mode!=='kedasy';
     var isCertificate=mode==='deaf'||mode==='blind';
     $('primaryEaeCertificationField').hidden=!isCertificate;
     $('primaryEaeCertificationDossierField').hidden=!isCertificate || $('primaryEaeCertification').value!=='yes';
     $('primaryEaeCertificationLabel').textContent=mode==='deaf'?'Πιστοποιημένη γνώση Ελληνικής Νοηματικής Γλώσσας (ΕΝΓ)':'Πιστοποιημένη γνώση γραφής Braille';
-    if(mode==='region'||mode==='intercultural'||isPlacement())return;
+    if(mode==='region'||mode==='minority'||mode==='intercultural'||isPlacement())return;
     var origin=$('primaryEaeOrigin').value;
     $('primaryEaeGeneralYearsField').hidden=origin!=='general';
     $('primaryEaeAppointmentYearsField').hidden=origin!=='appointed-eae';
@@ -281,10 +295,32 @@
     $('primaryInterStatus').innerHTML='<strong>'+escapeText(label[outcome.status])+'</strong><ul>'+
       outcome.problems.concat(outcome.checks).map(function(x){return '<li>'+escapeText(x)+'</li>';}).join('')+'</ul>';
   }
+  function updateMinority(){
+    var active=isMinority(), panel=$('primaryMinorityFields');
+    panel.hidden=!active;
+    if(!active)return;
+    var route=$('primaryMinorityRoute').value;
+    $('primaryMinorityDestinationField').hidden=route==='within';
+    $('primaryMinorityLocalityNote').hidden=route!=='within';
+    if(!minority || !minority.evaluate){
+      $('primaryMinorityStatus').textContent='Ο προέλεγχος ΠΕ73 δεν φορτώθηκε. Επαναφορτώστε τη σελίδα.';
+      $('primaryMinorityStatus').dataset.status='review';
+      return;
+    }
+    var outcome=minority.evaluate({branch:$('primaryMinorityBranch').value,route:route,
+      origin:$('primaryMinorityOrigin').value,destination:$('primaryMinorityDestination').value,
+      organic:$('primaryOrganic').value});
+    $('primaryMinorityStatus').dataset.status=outcome.status;
+    var lead=outcome.status==='problem'?'⚠ Χρειάζεται αλλαγή ή υπηρεσιακή διευκρίνιση':
+      outcome.status==='positive'?'✓ Συμβατή βασική διαδρομή (ενδεικτικός προέλεγχος)':'ⓘ Χρειάζεται συμπλήρωση / επαλήθευση';
+    $('primaryMinorityStatus').innerHTML='<strong>'+escapeText(lead)+'</strong><ul>'+
+      outcome.issues.concat(outcome.notes).map(function(line){return '<li>'+escapeText(line)+'</li>';}).join('')+'</ul>';
+  }
   function update() {
     syncPrimaryDestination();
     $('primaryPlacementNotice').hidden=!isPlacement();
     updateReturnFromEae();
+    updateMinority();
     // Official application codes from the Primary Education application list.
     // EEEEK shares the SΜΚΔ application with SΜΕΑΕ; Deaf/Blind shares the language-specialization application.
     // This is a UI reference, NOT an alternate electronic filing path.
@@ -303,10 +339,21 @@
     $('primaryScoreMobile').hidden=interculturalMode;
     $('primaryScoreResults').parentElement.hidden=interculturalMode;
     var special=$('primarySpecialCaseField');
-    if(special){ special.style.display=$('primaryMode').value==='region'?'':'none';
-      if($('primaryMode').value!=='region')$('primarySpecialCase').value='none'; }
+    if(special){ var allowSpecial=$('primaryMode').value==='region'||(isMinority()&&!isMinorityWithin());
+      special.style.display=allowSpecial?'':'none';
+      if(!allowSpecial)$('primarySpecialCase').value='none'; }
     var firstRow=$('primaryFirstPreferenceRow');
-    if(firstRow){ firstRow.classList.toggle('hidden',interculturalMode||isPlacement()); if(interculturalMode||isPlacement())$('primaryFirst').checked=false; }
+    if(firstRow){ var hideFirst=interculturalMode||isPlacement()||isMinorityWithin(); firstRow.classList.toggle('hidden',hideFirst); if(hideFirst)$('primaryFirst').checked=false; }
+    var specialityChoice=$('primarySpecialty');
+    if(specialityChoice){
+      if(isMinority()){
+        if(!specialityChoice.disabled)specialityChoice.dataset.beforeMinority=specialityChoice.value;
+        specialityChoice.value='ΠΕ73'; specialityChoice.disabled=true;
+      }else if(specialityChoice.disabled){
+        specialityChoice.disabled=false; specialityChoice.value=specialityChoice.dataset.beforeMinority||'';
+        delete specialityChoice.dataset.beforeMinority;
+      }
+    }
     var invalidSpouse=syncPrimaryCoService();
     $('primaryChecklist').closest('section.card').querySelector('h2').textContent=(interculturalMode?'Β.':'Δ.')+' Προσωπική λίστα δικαιολογητικών';
     var mode=$('primaryServiceMode').value;
@@ -387,9 +434,9 @@
   // the same visual component, but PRIMARY legal wording is defined here.
   function messageParts(docs) {
     var actions=docs.filter(function(d){return d.action && d.channel==='email';});
-    var general=$('primaryMode').value==='region'||/^placement-/.test($('primaryMode').value);
+    var general=$('primaryMode').value==='region'||$('primaryMode').value==='minority'||/^placement-/.test($('primaryMode').value);
     var name=$('primaryName').value.trim()||'[Ονοματεπώνυμο]';
-    var branch=$('primarySpecialty').value.trim()||($('primaryMode').value!=='region'&&$('primaryEaeBranch').value)||'[Κλάδος/ειδικότητα]';
+    var branch=$('primaryMode').value==='minority'?'ΠΕ73':$('primarySpecialty').value.trim()||($('primaryMode').value!=='region'&&$('primaryEaeBranch').value)||'[Κλάδος/ειδικότητα]';
     var registry=$('primaryRegistry').value.trim()||'[Αριθμός μητρώου]';
     var protocol=$('primaryProtocol').value.trim()||'[Αριθμός πρωτοκόλλου οριστικοποιημένης αίτησης]';
     var dpe=$('primaryDpe').value.trim()||'[ΔΠΕ οργανικής]';
@@ -405,6 +452,7 @@
       intercultural:'μετάθεση σε Διαπολιτισμικό Σχολείο'
     };
     var typ=labels[primaryEffectiveMode()]||labels.region;
+    if($('primaryMode').value==='minority')typ=$('primaryMinorityRoute').value==='within'?'Βελτίωση θέσης ΠΕ73 μειονοτικού προγράμματος':'Μετάθεση ΠΕ73 μειονοτικού προγράμματος από περιοχή σε περιοχή';
     return {
       subject:general?[typ,protocol,registry].join(', '):['ΠΕ',typ,protocol,registry,branch].join(', '),
       body:general?[name,branch,typ,protocol,registry].join(', '):[name,branch,typ,protocol,registry,dpe].join(', '),
@@ -417,6 +465,7 @@
     var hasActions=email.actions.length>0;
     var mydocActions=docs.filter(function(d){return d.action && d.channel==='mydocs';});
     var isIntercultural=$('primaryMode').value==='intercultural';
+    var isMinorityPath=$('primaryMode').value==='minority';
     var special=!email.general;
     var hasMydocs=mydocActions.length>0;
     var judicialMydocs=mydocActions.some(function(d){return d.id==='judicial-spouse';});
@@ -428,9 +477,9 @@
     $('primaryEmailHeading').textContent=judicialMydocs&&!hasActions?'Ειδική υποβολή μέσω mydocs — σύζυγοι δικαστικών λειτουργών':sharedState?sharedState.title:hasActions?'Προετοιμασία μηνύματος υποβολής δικαιολογητικών':hasMydocs?'Έτοιμο υπόδειγμα υποβολής μέσω mydocs':'Υπόδειγμα μηνύματος — αν χρειαστεί';
     $('primaryEmailLead').textContent=judicialMydocs?(hasActions?'Τα συνήθη αποδεικτικά μοριοδότησης αποστέλλονται με email στη ΔΠΕ οργανικής. Τα ειδικά δικαιολογητικά συζύγων δικαστικών λειτουργών υποβάλλονται χωριστά μέσω mydocs, σύμφωνα με τη §2.2.4.':'Τα ειδικά δικαιολογητικά συζύγων δικαστικών λειτουργών υποβάλλονται μέσω mydocs (§2.2.4), χωρίς να ορίζεται υποχρεωτικό θέμα ή σώμα μηνύματος.'):isIntercultural?'Τα προσόντα Διαπολιτισμικών υποβάλλονται μέσω mydocs, όταν απαιτείται νέος/συμπληρωματικός φάκελος. Δεν αποστέλλονται δικαιολογητικά μοριοδότησης.':hasActions?'Δημιουργήστε θέμα και σώμα μηνύματος για τα δικαιολογητικά μοριοδότησης που αποστέλλονται στη ΔΠΕ οργανικής.':hasMydocs?'Τα προσόντα ΕΑΕ υποβάλλονται μέσω mydocs όταν απαιτείται νέος ή συμπληρωματικός φάκελος — όχι με email.':'Δεν προκύπτει αυτή τη στιγμή δικαιολογητικό για αποστολή με email. Το υπόδειγμα παραμένει διαθέσιμο για προεπισκόπηση.';
     $('primaryEmailOpen').textContent=judicialMydocs&&!hasActions?'Προβολή οδηγιών υποβολής μέσω mydocs':sharedState?sharedState.button:hasActions?'Δημιουργία email υποβολής':hasMydocs?'Προετοιμασία κειμένου για mydocs':'Προβολή προαιρετικού υποδείγματος';
-    $('primarySubmissionInstruction').textContent=judicialMydocs?'Κατά προτεραιότητα μετάθεση συζύγου δικαστικού λειτουργού: ειδικά δικαιολογητικά μόνο μέσω mydocs (§2.2.4). Τυχόν άλλα αποδεικτικά γενικής μοριοδότησης αποστέλλονται χωριστά με email στη ΔΠΕ (§2.2.1), όπου απαιτούνται.':isIntercultural?'Διαπολιτισμικά: μόνο τα δικαιολογητικά προσόντων μέσω mydocs, όταν απαιτείται νέος/συμπληρωματικός φάκελος· όχι μοριοδότηση και όχι email.':email.general?/^placement-/.test($('primaryMode').value)?'Βελτίωση/οριστική τοποθέτηση: δικαιολογητικά που απαιτούν αποστολή υποβάλλονται με email στη ΔΠΕ οργανικής. Οι σχολικές προτιμήσεις θα δηλωθούν μεταγενέστερα.':'Γενική μετάθεση: δικαιολογητικά μέσω email στη ΔΠΕ οργανικής, εφόσον απαιτούνται.':'ΕΑΕ: τα αποδεικτικά μοριοδότησης αποστέλλονται με email στη ΔΠΕ οργανικής, ενώ τα αποδεικτικά προσόντων υποβάλλονται στο mydocs μόνο όπου απαιτείται νέα/συμπληρωματική υποβολή.';
-    $('primaryTemplateNote').textContent=judicialMydocs?'Η §2.2.4 δεν ορίζει υποχρεωτικό θέμα ή σώμα για το mydocs. Παρακάτω προβάλλεται μόνο το γενικό υπόδειγμα της §2.2.1, για τυχόν ξεχωριστό email με δικαιολογητικά μοριοδότησης προς τη ΔΠΕ· δεν αποτελεί υποχρεωτική μορφή υποβολής στο mydocs.':isIntercultural?'Το θέμα και το σώμα ακολουθούν τη σειρά της §2.2.5 για υποβολή μέσω mydocs.':email.general?/^placement-/.test($('primaryMode').value)?'Ενδεικτικό θέμα/σώμα για τυχόν email προς ΔΠΕ με βάση τη δομή της §2.2.1· ελέγξτε την εκάστοτε τοπική οδηγία για τη βελτίωση ή οριστική τοποθέτηση.':'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.1.':'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.5. Στο mydocs το σώμα μπορεί να χρησιμοποιηθεί ως κείμενο «Αιτούμαι».';
-    $('primaryEmailSource').textContent=judicialMydocs?'Πηγές: εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026, §2.2.4 (ειδική υποβολή mydocs, χωρίς υποχρεωτικό πρότυπο θέματος/σώματος) και §2.2.1 (γενικό υπόδειγμα email μόνο για τυχόν άλλα δικαιολογητικά προς ΔΠΕ).':'Πηγή: εγκύκλιος μεταθέσεων Π.Ε. 138023/Ε2/15-10-2026, §'+(email.general?'2.2.1':'2.2.5')+'. Το υπόδειγμα δεν αντικαθιστά ειδικές διαδικασίες ή προηγούμενο φάκελο.';
+    $('primarySubmissionInstruction').textContent=isMinorityPath?'Μειονοτικό πρόγραμμα ΠΕ73: η αίτηση υποβάλλεται στο επίσημο teachers.minedu.gov.gr και τυχόν αποδεικτικά γενικής μοριοδότησης αποστέλλονται στη ΔΠΕ οργανικής όπου απαιτείται. Αρμόδιο συμβούλιο: '+(isMinorityWithin()?'ΠΥΣΠΕ (βελτίωση εντός νομού).':$('primaryMinorityDestination').value===$('primaryMinorityOrigin').value?'απαιτείται επιβεβαίωση από τη ΔΠΕ για περιοχές του ίδιου νομού.':'ΑΠΥΣΠΕ Ανατολικής Μακεδονίας–Θράκης (από νομό σε νομό).'):judicialMydocs?'Κατά προτεραιότητα μετάθεση συζύγου δικαστικού λειτουργού: ειδικά δικαιολογητικά μόνο μέσω mydocs (§2.2.4). Τυχόν άλλα αποδεικτικά γενικής μοριοδότησης αποστέλλονται χωριστά με email στη ΔΠΕ (§2.2.1), όπου απαιτούνται.':isIntercultural?'Διαπολιτισμικά: μόνο τα δικαιολογητικά προσόντων μέσω mydocs, όταν απαιτείται νέος/συμπληρωματικός φάκελος· όχι μοριοδότηση και όχι email.':email.general?/^placement-/.test($('primaryMode').value)?'Βελτίωση/οριστική τοποθέτηση: δικαιολογητικά που απαιτούν αποστολή υποβάλλονται με email στη ΔΠΕ οργανικής. Οι σχολικές προτιμήσεις θα δηλωθούν μεταγενέστερα.':'Γενική μετάθεση: δικαιολογητικά μέσω email στη ΔΠΕ οργανικής, εφόσον απαιτούνται.':'ΕΑΕ: τα αποδεικτικά μοριοδότησης αποστέλλονται με email στη ΔΠΕ οργανικής, ενώ τα αποδεικτικά προσόντων υποβάλλονται στο mydocs μόνο όπου απαιτείται νέα/συμπληρωματική υποβολή.';
+    $('primaryTemplateNote').textContent=isMinorityPath?'Ενδεικτικό θέμα/σώμα για τυχόν email δικαιολογητικών προς ΔΠΕ με τη σειρά της §2.2.1. Το Κεφ. Ε΄ δεν προβλέπει ειδικό κωδικό αίτησης: χρησιμοποιήστε τον ακριβή τύπο από το επίσημο σύστημα.':judicialMydocs?'Η §2.2.4 δεν ορίζει υποχρεωτικό θέμα ή σώμα για το mydocs. Παρακάτω προβάλλεται μόνο το γενικό υπόδειγμα της §2.2.1, για τυχόν ξεχωριστό email με δικαιολογητικά μοριοδότησης προς τη ΔΠΕ· δεν αποτελεί υποχρεωτική μορφή υποβολής στο mydocs.':isIntercultural?'Το θέμα και το σώμα ακολουθούν τη σειρά της §2.2.5 για υποβολή μέσω mydocs.':email.general?/^placement-/.test($('primaryMode').value)?'Ενδεικτικό θέμα/σώμα για τυχόν email προς ΔΠΕ με βάση τη δομή της §2.2.1· ελέγξτε την εκάστοτε τοπική οδηγία για τη βελτίωση ή οριστική τοποθέτηση.':'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.1.':'Το θέμα και το σώμα τηρούν ακριβώς τη σειρά πεδίων της §2.2.5. Στο mydocs το σώμα μπορεί να χρησιμοποιηθεί ως κείμενο «Αιτούμαι».';
+    $('primaryEmailSource').textContent=isMinorityPath?'Πηγή: εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026, Μέρος Γ΄ Κεφ. Ε΄ (ΠΕ73) και Μέρος Α΄ §2.2.1 (γενικό υπόδειγμα email). Η μορφή του ηλεκτρονικού τύπου αίτησης επαληθεύεται στο teachers.minedu.gov.gr.':judicialMydocs?'Πηγές: εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026, §2.2.4 (ειδική υποβολή mydocs, χωρίς υποχρεωτικό πρότυπο θέματος/σώματος) και §2.2.1 (γενικό υπόδειγμα email μόνο για τυχόν άλλα δικαιολογητικά προς ΔΠΕ).':'Πηγή: εγκύκλιος μεταθέσεων Π.Ε. 138023/Ε2/15-10-2026, §'+(email.general?'2.2.1':'2.2.5')+'. Το υπόδειγμα δεν αντικαθιστά ειδικές διαδικασίες ή προηγούμενο φάκελο.';
     $('primaryDpeField').hidden=email.general;
     $('primaryEmailSubject').textContent=email.subject;
     $('primaryEmailBody').textContent=email.body;
