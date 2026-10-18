@@ -21,6 +21,7 @@ let html='';
 const checklist={querySelectorAll(){return [];},set innerHTML(x){html=x;},get innerHTML(){return html;}};
 const document={getElementById(id){return id==='transferDocumentChecklist'?checklist:el(id);},querySelectorAll(){return [];}};
 const window={};
+vm.runInNewContext(fs.readFileSync(path.join(root,'includes/transfer-checklist.js'),'utf8'),{window,document});
 vm.runInNewContext(js,{window,document});
 const guide=window.EducationTransferDocuments;
 for(const [mode,id,statusId] of [['smeae','eae-dossier','transferEaeDossierAdvice'],['music','music-dossier','transferMusicDossierAdvice'],['art','art-dossier','transferArtDossierAdvice'],['intercultural','intercultural-dossier','transferInterculturalDossierAdvice']]){

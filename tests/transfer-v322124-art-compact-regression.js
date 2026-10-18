@@ -21,6 +21,7 @@ const rootNode={querySelectorAll:()=>[],get innerHTML(){return html;},set innerH
 const document={getElementById(id){if(id==='transferDocumentChecklist')return rootNode;if(id==='transferSubmissionGuidanceBody')return {innerHTML:''};if(id==='transferDocumentProgress')return {textContent:''};return el(id);},querySelectorAll(){return [];},addEventListener(){}};
 const window={open:()=>({document:{write(s){printed=s;},close(){}},focus(){},print(){}})};
 vm.runInNewContext(fs.readFileSync(path.join(root,'includes/transfer-eligibility.js'),'utf8'),{document,window});
+vm.runInNewContext(fs.readFileSync(path.join(root,'includes/transfer-checklist.js'),'utf8'),{window,document});
 vm.runInNewContext(code,{document,window});
 const guide=window.EducationTransferDocuments;
 const idsCompact=['art-cv','art-inventory','art-degrees','art-publications'];

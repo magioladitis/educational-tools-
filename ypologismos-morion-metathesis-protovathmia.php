@@ -40,7 +40,7 @@ foreach ($primaryTransferBranchCodes as $code) {
     <strong aria-current="page">Πρωτοβάθμια</strong>
     <a href="ypologismos-morion-metathesis.php">Δευτεροβάθμια</a>
   </nav>
-  <p class="primary-transfer-notice"><strong>Σταδιακή επέκταση:</strong> υποστηρίζονται γενικές μεταθέσεις και <strong>προκαταρκτικός</strong> έλεγχος για ΕΑΕ, ΚΕΔΑΣΥ, ΕΕΕΕΚ και Σχολεία Κωφών/Τυφλών. Μειονοτικά, αμοιβαίες, όλες οι ειδικές εξαιρέσεις και οι πλήρεις υπηρεσιακές διαδικασίες <strong>δεν καλύπτονται ακόμη</strong>. Συμβουλευτείτε την εγκύκλιο και τη ΔΠΕ οργανικής.</p>
+  <p class="primary-transfer-notice"><strong>Σταδιακή επέκταση:</strong> υποστηρίζονται γενικές μεταθέσεις, βασικός οδηγός βελτίωσης/οριστικής τοποθέτησης και <strong>προκαταρκτικός</strong> έλεγχος για ΕΑΕ, ΚΕΔΑΣΥ, ΕΕΕΕΚ και Σχολεία Κωφών/Τυφλών. Μειονοτικά, αμοιβαίες, όλες οι ειδικές εξαιρέσεις και οι πλήρεις υπηρεσιακές διαδικασίες <strong>δεν καλύπτονται ακόμη</strong>. Συμβουλευτείτε την εγκύκλιο και τη ΔΠΕ οργανικής.</p>
   <?php calculatorColumnsStart(); ?>
     <?php calculatorMainStart(); ?>
       <?php calculatorCardStart(array('title'=>'Α. Διαδικασία και υπηρεσιακός προέλεγχος')); ?>
@@ -51,6 +51,8 @@ foreach ($primaryTransferBranchCodes as $code) {
             <option value="sensory" data-official-code="001.ΣΜΕΑ003">Σχολεία Κωφών / Τυφλών [001.ΣΜΕΑ003]</option>
             <option value="kedasy" data-official-code="001.ΣΜΚΔ001.ΚΔΣ">ΚΕΔΑΣΥ [001.ΣΜΚΔ001.ΚΔΣ]</option>
             <option value="intercultural" data-official-code="002.ΔΙΑΠ001">Διαπολιτισμικά Σχολεία [002.ΔΙΑΠ001]</option>
+            <option value="placement-general" data-official-code="003.ΠΕΒ01">Βελτίωση / Οριστική τοποθέτηση Γενικής [003.ΠΕΒ01]</option>
+            <option value="placement-eae" data-official-code="003.ΠΕΒ01.ΕΙΔ">Βελτίωση / Οριστική τοποθέτηση ΕΑΕ [003.ΠΕΒ01.ΕΙΔ]</option>
           </select>
         </div>
         <div class="field" id="primaryDestinationField" hidden>
@@ -74,6 +76,17 @@ foreach ($primaryTransferBranchCodes as $code) {
           </select>
         </div>
         <p id="primaryEligibility" class="primary-transfer-info" role="status" aria-live="polite"></p>
+        <section id="primaryReturnFromEae" class="primary-transfer-notice" hidden aria-label="Έλεγχος επιστροφής από ΕΑΕ στη Γενική">
+          <h3>Επιστροφή από ΕΑΕ στη Γενική Εκπαίδευση</h3>
+          <div class="field"><label for="primaryReturnPath">Υπηρεσιακή προέλευση</label>
+            <select id="primaryReturnPath"><option value="none">Δεν ζητώ επιστροφή από ΕΑΕ</option><option value="transferred">Διορίστηκα στη Γενική και μετατέθηκα σε ΕΑΕ</option><option value="appointed">Διορίστηκα αρχικά στην ΕΑΕ</option></select>
+          </div>
+          <div id="primaryReturnYearsField" class="field" hidden><label for="primaryReturnYears">Διδακτικά έτη υπηρεσίας στην ΕΑΕ από την αντίστοιχη μετάθεση / τον διορισμό</label><input type="number" id="primaryReturnYears" min="0" max="50" step="0.01" placeholder="π.χ. 5"></div>
+          <div id="primaryReturnAreaYearsField" class="field" hidden><label for="primaryReturnAreaYears">Από αυτά, έτη στην περιοχή αρχικού διορισμού ΕΑΕ</label><input type="number" id="primaryReturnAreaYears" min="0" max="50" step="0.01" placeholder="π.χ. 2"></div>
+          <p id="primaryReturnStatus" class="primary-transfer-info" role="status" aria-live="polite"></p>
+          <p class="small-note">Εγκύκλιος Π.Ε. 138023/Ε2/2026, Μέρος Τρίτο, κεφ. ΣΤ΄ §2: απαιτείται διετία από μετάθεση σε ΕΑΕ και υπηρέτηση οργανικής ή πενταετία στην ΕΑΕ (με διετία στην περιοχή διορισμού) για αρχικό διορισμό στην ΕΑΕ. Ακόμη και για σχολείο Γενικής στην ίδια περιοχή, ακολουθείται αίτηση από περιοχή σε περιοχή.</p>
+        </section>
+        <p id="primaryPlacementNotice" class="primary-transfer-notice" hidden>Βελτίωση / οριστική τοποθέτηση: κατά την προθεσμία 16/10–02/11/2026 υποβάλλεται η αίτηση <strong>χωρίς προτιμήσεις σχολείων</strong>. Οι προτιμήσεις δηλώνονται σε μεταγενέστερο στάδιο που ανακοινώνεται από τη ΔΠΕ. Η εντοπιότητα και η συνυπηρέτηση επαληθεύονται για τον συγκεκριμένο προορισμό· η συνολική βαθμολογία είναι ενδεικτική. Το πεδίο «πρώτη προτίμηση περιοχής» δεν εφαρμόζεται εδώ.</p>
         <div id="primaryEaeFields" hidden>
           <h3>Β.1 Προέλεγχος δικαιώματος μετάθεσης στην ΕΑΕ</h3>
           <div class="field"><label for="primaryEaeBranch">Κλάδος εκπαιδευτικού</label>
@@ -251,6 +264,8 @@ SOCIAL_PRIMARY_EXTRAS
         <p class="small-note">Οι υπηρεσιακοί και αυτεπάγγελτοι έλεγχοι εμφανίζονται ενημερωτικά· checkbox έχουν μόνο ενέργειες προετοιμασίας. Οι τίτλοι ΕΑΕ και τα προσόντα Διαπολιτισμικών υποβάλλονται μέσω mydocs μόνο όταν απαιτείται νέος ή συμπληρωματικός φάκελος.</p>
         <div id="primaryChecklist" aria-live="polite"></div>
         <p id="primaryChecklistProgress" role="status" aria-live="polite"></p>
+        <button type="button" class="secondary" id="primaryPrintChecklist">Εκτύπωση λίστας δικαιολογητικών</button>
+        <p id="primaryPrintFeedback" role="status" aria-live="polite" class="small-note"></p>
       <?php calculatorCardEnd(); ?>
       <section class="transfer-email-feature" id="primaryEmailFeature" aria-labelledby="primaryEmailHeading">
         <h3 id="primaryEmailHeading">Προετοιμασία μηνύματος υποβολής δικαιολογητικών</h3>
@@ -322,6 +337,8 @@ window.EducationTransferPrimarySpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-periods.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-coservice-resources.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-children-documents.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-checklist.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-checklist-print.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script>
 // Explicitly diagnose missing/blocked JavaScript instead of leaving all scores as dashes.

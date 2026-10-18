@@ -12,7 +12,7 @@ ok(page.includes('id="transferDocumentProgress"') && page.includes('aria-live="p
 ok(!page.includes('id="transferDocumentChecklist" aria-live="polite"'), 'the full list is not an unnecessary live region');
 ok(js.includes('data-doc-details=') && js.includes('Περισσότερες πληροφορίες'), 'native disclosure per document');
 ok(js.includes('openRows[details.getAttribute') && js.includes('data-doc-details'), 'expanded state preserved between form updates');
-ok(js.includes('checked[input.dataset.docId]') && js.includes('progress(root)'), 'checked-state and progress updated');
+ok(js.includes('checklistState.set(input.dataset.docId,input.checked)') && js.includes('progress(rows)'), 'checked-state and progress updated');
 ok(js.includes('isCritical(d)') && js.includes('Δεν θεμελιώνεται'), 'important warnings expanded initially');
 ok(page.includes('16/10–02/11/2026') && /η προσωρινή αποθήκευση δεν είναι οριστικοποίηση/i.test(page) && page.includes('PDF της οριστικοποιημένης αίτησης'), 'deadline and finalization warning kept once in global notice');
 ok(js.includes('Διορθώσεις: 23–27/11/2026'), 'correction deadline remains visible');

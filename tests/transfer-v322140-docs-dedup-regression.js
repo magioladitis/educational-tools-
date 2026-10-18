@@ -32,5 +32,5 @@ el('transferSpecialCase').value='health_committee';
 ok(api.build().some(x=>x.id==='health-committee'),'special health procedure preserved');
 el('transferSpecialCase').value='health_kepa';
 ok(api.build().some(x=>x.id==='health-kepa'),'KEPA special procedure preserved');
-ok(docs.includes('var rows=build(),mode=') && docs.includes('rows.map(function(d){return'),'printing uses deduplicated build rows');
+ok(docs.includes('function print(){var rows=build();') && docs.includes('rows:rows.map(function(d){') && docs.includes('function printLegacy(rows){'),'printing uses deduplicated build rows through shared printer, with legacy fallback');
 console.log('PASS',checks,'transfer v3.22.140 documents dedup regression checks');

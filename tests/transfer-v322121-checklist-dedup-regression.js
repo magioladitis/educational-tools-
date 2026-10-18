@@ -21,6 +21,7 @@ const progress={textContent:''};
 const document={getElementById(id){if(id==='transferDocumentChecklist')return root;if(id==='transferDocumentProgress')return progress;if(id==='transferSubmissionGuidanceBody')return {innerHTML:''}; assert.ok(elements[id],`missing stub ${id}`);return elements[id];},querySelectorAll(){return [];}};
 let printed='';const window={open:()=>({document:{write(s){printed=s;},close(){}},focus(){},print(){}})};
 vm.runInNewContext(fs.readFileSync(path.join(dir,'includes/transfer-eligibility.js'),'utf8'),{window,document});
+vm.runInNewContext(fs.readFileSync(path.join(dir,'includes/transfer-checklist.js'),'utf8'),{window,document});
 vm.runInNewContext(code,{window,document});
 const guide=window.EducationTransferDocuments;
 let t=0;function ok(test,name){assert.ok(test,name);t++;}

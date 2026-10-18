@@ -21,7 +21,7 @@ check(ui.includes('checkbox.disabled=blocked') && ui.includes('if(blocked)checkb
 check(docs.includes('Δικαιολογητικά συνυπηρέτησης'),'new document heading');
 check(docs.includes('spouseDoc.disabled=info.blocked'),'disabled doc based on status');
 check(docs.includes('edu-transfer-doc__info-icon'),'non-actionable blocked doc uses informational icon instead of checkbox');
-check(docs.includes('if(input.disabled)return;active++'),'progress excludes disabled docs');
+check(docs.includes("documentTaskType(d,submissionChannel(d))==='action'") && fs.readFileSync(path.join(root,'includes/transfer-checklist.js'),'utf8').includes('!isAction(row)'), 'shared progress excludes disabled and informational docs');
 check(docs.includes('d.disabled?\'— Δεν μοριοδοτείται\''),'print label for unavailable');
 let elements={};
 function put(id,value,checked){elements[id]={value:value||'',checked:!!checked};}

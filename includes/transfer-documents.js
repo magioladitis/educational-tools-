@@ -12,7 +12,7 @@ var EAE_SOURCE='Εγκύκλιος 138014/Ε2/15-10-2026, κεφάλαιο Δ΄,
 var MUSIC_SOURCE='Εγκύκλιος 138014/Ε2/15-10-2026, κεφάλαιο Ε΄, σελ. 39–41.';
 var ART_SOURCE='Εγκύκλιος 138014/Ε2/15-10-2026, κεφάλαιο ΣΤ΄, σελ. 41–43.';
 var IC_SOURCE='Εγκύκλιος 138014/Ε2/15-10-2026, κεφάλαιο Ζ΄, σελ. 43–45.';
-var checked={};
+var checklistState=global.EducationTransferChecklist ? global.EducationTransferChecklist.create() : null;
 var FAMILY_SOURCE='Πηγή: εγκύκλιος 138014/Ε2/15-10-2026, Μέρος Δεύτερο, κεφ. Β΄, ενότητες Β. Συνυπηρέτηση (σελ. 18–20) και Γ. Οικογενειακοί λόγοι (σελ. 20–21).';
 /* The categories below are the 2026-27 secondary-education circular, not a blanket list of rights. */
 var COSERVICE_CASES={
@@ -245,12 +245,10 @@ function documentTaskType(doc,channel){
  // Email/mydocs/special routes require some preparation or application input.
  return 'action';
 }
-function progress(root){
- var rows=root.querySelectorAll('[data-doc-id]');
- var complete=0,active=0;
- rows.forEach(function(input){if(input.disabled)return;active++;if(input.checked)complete++;});
+function progress(rows){
+ var counts=checklistState.reconcile(rows,function(d){return documentTaskType(d,submissionChannel(d))==='action';});
  var target=$('transferDocumentProgress');
- if(target)target.textContent=active?'Δικαιολογητικά/ενέργειες που ετοιμάστηκαν: '+complete+' από '+active+'.':'Δεν προκύπτουν δικαιολογητικά προς προετοιμασία από τις επιλογές σας.';
+ if(target)target.textContent=checklistState.progressText(counts,'secondary');
 }
 /* v3.22.123 — one disclosure, not a checklist task, for all submission routes. */
 var SUBMISSION_GUIDANCE={
@@ -561,6 +559,7 @@ function render(){
   openRows[details.getAttribute('data-doc-details')]=details.open;
  });
  var rows=build();
+ checklistState.reconcile(rows,function(d){return documentTaskType(d,submissionChannel(d))==='action';});
  renderSubmissionGuidance(rows);
  var summary=optionalElement('transferDocumentActionSummary');
  if(summary){
@@ -579,10 +578,9 @@ function render(){
   // v3.22.124: avoid duplicate previews for all five standard Artistic School supporting documents.
   var compact=d.id==='locality' || ['family','record','music-common','eae-doctorate','eae-masters','eae-two-year','eae-5year','eae-pe11','art-cv','art-inventory','art-degrees','art-publications','ic-foreign'].indexOf(d.id)!==-1;
   var taskType=documentTaskType(d,channel),actionable=taskType==='action';
-  if(!actionable)delete checked[d.id];
-  return '<article class="edu-transfer-doc'+(actionable&&checked[d.id]?' is-complete':'')+(warning?' has-warning':'')+(compact?' is-compact':'')+(d.disabled?' is-unavailable':'')+(!actionable?' is-informational':'')+'" data-doc-card="'+id+'">'+
+  return '<article class="edu-transfer-doc'+(actionable&&checklistState.isComplete(d.id)?' is-complete':'')+(warning?' has-warning':'')+(compact?' is-compact':'')+(d.disabled?' is-unavailable':'')+(!actionable?' is-informational':'')+'" data-doc-card="'+id+'">'+
    '<div class="edu-transfer-doc__head">'+
-    (actionable?'<input class="edu-transfer-doc__check" type="checkbox" id="transferDocCheck-'+id+'" data-doc-id="'+id+'" '+(checked[d.id]?'checked':'')+' aria-label="Ετοιμάστηκε: '+heading+'">':'<span class="edu-transfer-doc__info-icon" aria-hidden="true">ⓘ</span>')+
+    (actionable?'<input class="edu-transfer-doc__check" type="checkbox" id="transferDocCheck-'+id+'" data-doc-id="'+id+'" '+(checklistState.isComplete(d.id)?'checked':'')+' aria-label="Ετοιμάστηκε: '+heading+'">':'<span class="edu-transfer-doc__info-icon" aria-hidden="true">ⓘ</span>')+
     '<div class="edu-transfer-doc__main">'+
      (actionable?'<label class="edu-transfer-doc__title" for="transferDocCheck-'+id+'">'+heading+'</label>':'<div class="edu-transfer-doc__title">'+heading+'</div>')+
      '<div class="edu-transfer-doc__channel edu-transfer-doc__channel--'+escape(channel.kind)+'">'+escape(channel.text)+'</div>'+
@@ -600,17 +598,48 @@ function render(){
    '</div></article>';
  }).join('');
  root.querySelectorAll('[data-doc-id]').forEach(function(input){input.addEventListener('change',function(){
-  checked[input.dataset.docId]=input.checked;
+  checklistState.set(input.dataset.docId,input.checked);
   var card=input.closest('[data-doc-card]');if(card)card.classList.toggle('is-complete',input.checked);
-  progress(root);
+  progress(rows);
  });});
  root.querySelectorAll('details[data-doc-details]').forEach(function(details){details.addEventListener('toggle',function(){
   openRows[details.getAttribute('data-doc-details')]=details.open;
  });});
- progress(root);
+ progress(rows);
 }
 
-function print(){var rows=build(),mode=$('mode').selectedOptions[0].textContent,submission=submissionGuideData(),html='<!doctype html><html lang="el"><meta charset="utf-8"><title>Λίστα δικαιολογητικών μετάθεσης</title><style>body{font:14px Arial;max-width:780px;margin:36px auto;line-height:1.5}li{margin-bottom:14px}small{color:#555;font-size:11px}</style><h1>Έλεγχος δικαιολογητικών μετάθεσης</h1><p>'+escape(mode)+'</p>'+(($('mode').value==='intercultural')?'<h2>Σημειώσεις Διαπολιτισμικών</h2><p><strong>Αλληλεπίδραση με άλλες αιτήσεις.</strong> Σε περίπτωση ικανοποίησης μετάθεσης σε ΕΑΕ/ΚΕΔΑΣΥ, Μουσικό ή Καλλιτεχνικό, δεν εξετάζεται η αίτηση για Διαπολιτισμικό. Αν ικανοποιηθεί σε Διαπολιτισμικό, δεν λαμβάνονται υπόψη άλλες αιτήσεις.</p><p><strong>Μετάθεση προς Γενική μέσα στην ίδια περιοχή.</strong> Εκπαιδευτικός με οργανική σε Διαπολιτισμικό που ζητά σχολείο Γενικής στην ίδια περιοχή υποβάλλει αίτηση από περιοχή σε περιοχή, όχι βελτίωσης.</p>':'')+'<h2>Πού αποστέλλονται τα δικαιολογητικά;</h2><p><strong>'+escape(submission.title)+'</strong></p>'+submission.lines.map(function(t){return '<p>'+escape(t)+'</p>';}).join('')+'<h3>Θέμα και σώμα μηνύματος — υπόδειγμα</h3><p>Αντικαταστήστε τα πεδία στις αγκύλες με τα στοιχεία της οριστικοποιημένης αίτησης.</p><p><strong>Θέμα:</strong> '+escape(submissionMessageTemplate().subject)+'</p><p><strong>Σώμα κειμένου:</strong> '+escape(submissionMessageTemplate().body)+'</p><p><small>Εγκύκλιος 138014/Ε2/15-10-2026, §'+escape(submissionMessageTemplate().circular)+'</small></p>'+'<p><strong>Ενδεικτική λίστα — όχι βεβαίωση υποχρεωτικών εγγράφων.</strong> Επαληθεύστε τα πάντα με την εγκύκλιο της περιόδου και τη ΔΔΕ.</p><ul>'+rows.map(function(d){return '<li>'+(d.disabled?'— Δεν μοριοδοτείται':(documentTaskType(d,submissionChannel(d))==='action'?(checked[d.id]?'☑':'☐'):'ⓘ'))+' <strong>'+escape(d.title)+'</strong><br>'+escape(d.detail).replace(/\n/g,'<br>')+(d.id==='coservice' && global.EducationTransferCoServiceResources ? '<p>'+escape(global.EducationTransferCoServiceResources.printText((optionalElement('transferCoServiceCase')||{value:'unspecified'}).value))+'</p>' : '')+(d.tag && ['family','music-common'].indexOf(d.id)===-1?' <small>('+escape(d.tag)+')</small>':'')+'<br><small>'+escape(submissionChannel(d).text)+'</small>'+'</li>';}).join('')+'</ul></html>';var win=global.open('','_blank');if(win){win.document.write(html);win.document.close();win.focus();win.print();}}
+function print(){var rows=build();
+ if(global.EducationTransferChecklistPrint){
+  var mode=$('mode').selectedOptions[0].textContent;
+  var submission=submissionGuideData(),template=submissionMessageTemplate();
+  var sections=[];
+  if($('mode').value==='intercultural')sections.push({title:'Σημειώσεις Διαπολιτισμικών',lines:[
+    'Αλληλεπίδραση με άλλες αιτήσεις: Αν ικανοποιηθεί μετάθεση σε ΕΑΕ/ΚΕΔΑΣΥ, Μουσικό ή Καλλιτεχνικό, δεν εξετάζεται η αίτηση για Διαπολιτισμικό. Αν ικανοποιηθεί σε Διαπολιτισμικό, δεν λαμβάνονται υπόψη άλλες αιτήσεις.',
+    'Μετάθεση προς Γενική μέσα στην ίδια περιοχή: Με οργανική σε Διαπολιτισμικό επιλέγεται αίτηση από περιοχή σε περιοχή, όχι βελτίωσης.'
+  ]});
+  sections.push({title:'Πού αποστέλλονται τα δικαιολογητικά;',lines:[submission.title].concat(submission.lines)});
+  sections.push({title:'Θέμα και σώμα μηνύματος — υπόδειγμα',lines:[
+    'Αντικαταστήστε τα πεδία στις αγκύλες με τα στοιχεία της οριστικοποιημένης αίτησης.',
+    'Θέμα: '+template.subject,'Σώμα: '+template.body,
+    'Εγκύκλιος 138014/Ε2/15-10-2026, §'+template.circular
+  ]});
+  global.EducationTransferChecklistPrint.print({
+    grade:'Δευτεροβάθμια Εκπαίδευση',mode:mode,sections:sections,
+    rows:rows.map(function(d){
+      var channel=submissionChannel(d);
+      var extra=d.id==='coservice' && global.EducationTransferCoServiceResources?
+        global.EducationTransferCoServiceResources.printText((optionalElement('transferCoServiceCase')||{value:'unspecified'}).value):'';
+      return {title:d.title,detail:d.detail,extra:extra,channel:channel.text+
+        (d.tag && ['family','music-common'].indexOf(d.id)===-1?' ('+d.tag+')':''),
+        disabled:!!d.disabled,action:documentTaskType(d,channel)==='action',done:checklistState.isComplete(d.id)};
+    }),
+    notice:'Ενδεικτική λίστα — όχι βεβαίωση υποχρεωτικών εγγράφων. Επαληθεύστε τα πάντα με την εγκύκλιο της περιόδου και τη ΔΔΕ.'
+  });
+  return;
+ }
+ return printLegacy(rows);
+}
+function printLegacy(rows){var mode=$('mode').selectedOptions[0].textContent,submission=submissionGuideData(),html='<!doctype html><html lang="el"><meta charset="utf-8"><title>Λίστα δικαιολογητικών μετάθεσης</title><style>body{font:14px Arial;max-width:780px;margin:36px auto;line-height:1.5}li{margin-bottom:14px}small{color:#555;font-size:11px}</style><h1>Έλεγχος δικαιολογητικών μετάθεσης</h1><p>'+escape(mode)+'</p>'+(($('mode').value==='intercultural')?'<h2>Σημειώσεις Διαπολιτισμικών</h2><p><strong>Αλληλεπίδραση με άλλες αιτήσεις.</strong> Σε περίπτωση ικανοποίησης μετάθεσης σε ΕΑΕ/ΚΕΔΑΣΥ, Μουσικό ή Καλλιτεχνικό, δεν εξετάζεται η αίτηση για Διαπολιτισμικό. Αν ικανοποιηθεί σε Διαπολιτισμικό, δεν λαμβάνονται υπόψη άλλες αιτήσεις.</p><p><strong>Μετάθεση προς Γενική μέσα στην ίδια περιοχή.</strong> Εκπαιδευτικός με οργανική σε Διαπολιτισμικό που ζητά σχολείο Γενικής στην ίδια περιοχή υποβάλλει αίτηση από περιοχή σε περιοχή, όχι βελτίωσης.</p>':'')+'<h2>Πού αποστέλλονται τα δικαιολογητικά;</h2><p><strong>'+escape(submission.title)+'</strong></p>'+submission.lines.map(function(t){return '<p>'+escape(t)+'</p>';}).join('')+'<h3>Θέμα και σώμα μηνύματος — υπόδειγμα</h3><p>Αντικαταστήστε τα πεδία στις αγκύλες με τα στοιχεία της οριστικοποιημένης αίτησης.</p><p><strong>Θέμα:</strong> '+escape(submissionMessageTemplate().subject)+'</p><p><strong>Σώμα κειμένου:</strong> '+escape(submissionMessageTemplate().body)+'</p><p><small>Εγκύκλιος 138014/Ε2/15-10-2026, §'+escape(submissionMessageTemplate().circular)+'</small></p>'+'<p><strong>Ενδεικτική λίστα — όχι βεβαίωση υποχρεωτικών εγγράφων.</strong> Επαληθεύστε τα πάντα με την εγκύκλιο της περιόδου και τη ΔΔΕ.</p><ul>'+rows.map(function(d){return '<li>'+(d.disabled?'— Δεν μοριοδοτείται':(documentTaskType(d,submissionChannel(d))==='action'?(checklistState.isComplete(d.id)?'☑':'☐'):'ⓘ'))+' <strong>'+escape(d.title)+'</strong><br>'+escape(d.detail).replace(/\n/g,'<br>')+(d.id==='coservice' && global.EducationTransferCoServiceResources ? '<p>'+escape(global.EducationTransferCoServiceResources.printText((optionalElement('transferCoServiceCase')||{value:'unspecified'}).value))+'</p>' : '')+(d.tag && ['family','music-common'].indexOf(d.id)===-1?' <small>('+escape(d.tag)+')</small>':'')+'<br><small>'+escape(submissionChannel(d).text)+'</small>'+'</li>';}).join('')+'</ul></html>';var win=global.open('','_blank');if(win){win.document.write(html);win.document.close();win.focus();win.print();}}
 function init(){var b=$('transferPrintChecklist');if(b)b.addEventListener('click',print);
  var launch=$('transferEmailFeatureOpen');if(launch)launch.addEventListener('click',openSubmissionComposer);
  var disclosure=$('transferSubmissionGuidance');if(disclosure){if(global.EducationTransferEmailComponent)global.EducationTransferEmailComponent.bindState(disclosure,$('transferEmailFeatureOpen'));else disclosure.addEventListener('toggle',function(){var btn=$('transferEmailFeatureOpen');if(btn)btn.setAttribute('aria-expanded',disclosure.open?'true':'false');});}

@@ -30,6 +30,6 @@ check(guide.submissionChannel({id:'children-specific',tag:''}).kind==='email','c
 check(code.includes("if(doc.disabled || channel.kind==='automatic')return 'info'"),'informational entries excluded from actions');
 check(code.includes("if(channel.kind==='check')return 'verify'"),'verification entries excluded from actions');
 check(code.includes('edu-transfer-doc__info-icon'),'no-checkbox marker exists');
-check(code.includes("'Δικαιολογητικά/ενέργειες που ετοιμάστηκαν:"),'counter explicitly reports preparations');
+check(fs.readFileSync(path.join(root,'includes/transfer-checklist.js'),'utf8').includes('Δικαιολογητικά/ενέργειες που ετοιμάστηκαν:'),'shared counter explicitly reports preparations');
 check(code.includes("documentTaskType(d,submissionChannel(d))==='action'"),'print differentiates user actions and information');
 console.log('PASS '+count+' v3.22.150 actionable-checklist/dedup checks');
