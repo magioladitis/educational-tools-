@@ -58,3 +58,15 @@
 
 /* v3.22.182: concise, unobtrusive scope guidance replaces obsolete pilot warning. */
 .primary-transfer-guidance {margin:10px 0 16px; line-height:1.5; color:var(--edu-text-muted,#475569);}
+
+/* v3.22.189: align Primary service/MSD helper typography and row layout with Secondary. */
+body.edu-page-transfer #primaryScoringCard .field-hint {
+  font-size:13px; line-height:1.5; color:var(--edu-muted,#64748b); font-weight:400;
+}
+body.edu-page-transfer #primaryScoringCard .transfer-service-actions .field-hint {
+  flex:1 1 220px; min-width:0; margin:0;
+}
+body.edu-page-transfer #primaryScoringCard .transfer-service-grid .field { min-width:0; }
+body.edu-page-transfer #primaryScoringCard .transfer-service-grid label small {
+  font-size:12px; font-weight:400; color:var(--edu-muted,#64748b);
+}

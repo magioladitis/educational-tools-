@@ -10,8 +10,8 @@ function read(p){return fs.readFileSync(path.join(root,p),'utf8');}
 function render(page){return execFileSync('php',[path.join(root,page)],{encoding:'utf8'});}
 function normalizedSecondarySection(html){
   const start=html.indexOf('<div id="transferSocialCriteriaCard">');
-  const end=html.indexOf('<section id="transferEaePanel"',start);
-  assert.ok(start!==-1 && end>start,'social section is present before EAE');
+  const end=html.indexOf('<div class="actions edu-actions"',start);
+  assert.ok(start!==-1 && end>start,'social section is present before form actions');
   return html.slice(start,end).replace(/>\s+</g,'><').replace(/\s+/g,' ').trim();
 }
 let checks=0;function check(value,name){assert.ok(value,name);checks++;}

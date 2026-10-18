@@ -1,0 +1,25 @@
+'use strict';
+// Primary/Secondary MSD visual alignment: small help, one row grid and short controls.
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.join(__dirname, '..');
+const read = f => fs.readFileSync(path.join(root, f), 'utf8');
+const primary = read('ypologismos-morion-metathesis-protovathmia.php');
+const secondary = read('ypologismos-morion-metathesis.php');
+const periods = read('includes/transfer-primary-periods.js');
+const css = read('assets/transfer-primary.css');
+assert.match(primary, /id="primaryAddMsdPeriod">\+ Προσθήκη υπηρέτησης<\/button>/);
+assert.match(secondary, /id="addMsdRow"[^>]*>\+ Προσθήκη υπηρέτησης<\/button>/);
+assert.match(primary, /id="primaryMsdPeriodsPanel"[^>]*>[\s\S]*?<p class="small-note">/);
+assert.match(primary, /id="primaryServicePeriodsPanel"[^>]*>[\s\S]*?<p class="small-note">/);
+assert.match(periods, /Υπηρέτηση #/);
+assert.match(periods, /durationFields\(prefix,false,true\)/);
+assert.match(periods, /transfer-weekdays-field/);
+assert.match(periods, /transfer-service-actions/);
+assert.match(periods, /primary-msd-row-note/);
+assert.match(periods, /readService:readService,readMsd:readMsd,sync:sync,bind:bind/);
+assert.match(css, /#primaryScoringCard \.field-hint/);
+assert.match(css, /font-size:13px/);
+assert.doesNotMatch(primary, /\+ Προσθήκη υπηρέτησης Μ\.Σ\.Δ\./);
+console.log('PASS v3.22.189 Primary MSD compact row layout, shorter label, small helper typography');

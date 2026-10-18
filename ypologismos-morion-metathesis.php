@@ -98,86 +98,10 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           <div id="transferGeneralEaeAdvice" role="status" aria-live="polite" aria-atomic="true" class="transfer-eligibility-message small-note"></div>
           <p class="small-note">Νομική βάση: εγκύκλιος <strong>138014/Ε2/15-10-2026</strong>, Μέρος Δεύτερο, Κεφ. Δ΄ (σελ. 35), άρθρο 48 §3 ν. 4415/2016 και άρθρο 62 §5α ν. 4589/2019. Ο προέλεγχος δεν πιστοποιεί δικαίωμα μετάθεσης ούτε καλύπτει όλες τις εξαιρέσεις.</p>
         </section>
-        <div id="transferNumericalInputs">
-        <div class="field" style="margin-bottom:12px">
-          <label for="serviceMode">Καταχώριση συνολικής υπηρεσίας</label>
-          <select id="serviceMode">
-            <option value="points" selected>Απευθείας καταχώριση μορίων προϋπηρεσίας (προεπιλογή)</option>
-            <option value="direct">Απευθείας καταχώριση ετών, μηνών, ημερών</option>
-            <option value="periods">Υπολογισμός από επιμέρους περιόδους υπηρεσίας</option>
-          </select>
-          <?php transferServiceHelp('secondary', 'service'); ?>
-        </div>
-        <div id="servicePointsDirectPanel">
-          <div class="field">
-            <label for="serviceDirectPoints">Μόρια προϋπηρεσίας από το επίσημο μητρώο</label>
-            <input id="serviceDirectPoints" type="text" inputmode="decimal" maxlength="6" data-transfer-direct-points-cap="125" autocomplete="off" placeholder="π.χ. 21,04" aria-describedby="serviceDirectStatus">
-            <div class="field-hint" id="serviceDirectStatus" role="status" aria-live="polite"></div>
-          </div>
-        </div>
-        <div id="serviceDirectPanel" style="display:none">
-        <div class="field-grid">
-          <div class="field">
-            <label for="serviceYears">Συνολική αναγνωρισμένη υπηρεσία — έτη</label>
-            <input id="serviceYears" type="number" min="0" max="50" step="1" value="0" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label for="serviceMonths">Επιπλέον μήνες</label>
-            <input id="serviceMonths" type="number" min="0" max="11" step="1" value="0" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label for="serviceDays">Επιπλέον ημέρες <small>15+ → 1 μήνας</small></label>
-            <input id="serviceDays" type="number" min="0" max="29" step="1" value="0" inputmode="numeric">
-          </div>
-        </div>
-        </div>
-        <div id="servicePeriodsPanel" style="display:none">
-          <p class="small-note">Προσθέστε τις <strong>διακριτές, μη επικαλυπτόμενες</strong> περιόδους που αναγνωρίζονται για συνολική υπηρεσία. Μην καταχωρίζετε ξανά παράλληλη υπηρέτηση για τις ίδιες ημερομηνίες. Επιβεβαιώστε το αποτέλεσμα από το υπηρεσιακό μητρώο.</p>
-          <div id="servicePeriodRows"></div>
-          <button type="button" class="add-row" id="addServicePeriod">+ Προσθήκη περιόδου υπηρεσίας</button>
-          <p id="servicePeriodStatus" class="field-hint" role="status" aria-live="polite"></p>
-        </div>
-        </div>
       <?php calculatorCardEnd(); ?>
-
-      <div id="transferMsdCard">
-      <?php calculatorCardStart(array('title' => 'Β. Μονάδες Συνθηκών Διαβίωσης (Μ.Σ.Δ.)')); ?>
-        <div class="field" style="margin-bottom:14px">
-          <label for="msdMode">Τρόπος καταχώρισης Μ.Σ.Δ.</label>
-          <select id="msdMode">
-            <option value="direct" selected>Απευθείας καταχώριση συνολικών μορίων Μ.Σ.Δ.</option>
-            <option value="periods">Υπολογισμός από τις υπηρετήσεις μου</option>
-          </select>
-          <?php transferServiceHelp('secondary', 'msd'); ?>
-        </div>
-        <div id="msdPeriodsPanel" style="display:none">
-          <p class="small-note">Προσθέστε μία γραμμή για κάθε διαφορετική υπηρέτηση/κατηγορία. Οι ημέρες ≥15 λογίζονται ως πλήρης μήνας. Σε παράλληλη υπηρεσία μοιράστε τις ημέρες ανά εβδομάδα (άθροισμα έως 5/5 <em>στην ίδια χρονική περίοδο</em>). Μην προσθέτετε δύο πλήρεις πενθήμερες υπηρετήσεις για τις ίδιες ημέρες. Αν την ίδια ημέρα υπηρετήσατε σε δύο σχολεία, λαμβάνεται υπόψη το σχολείο με τις περισσότερες μονάδες. Για σύνθετα επικαλυπτόμενα διαστήματα προτιμήστε τα επίσημα συνολικά Μ.Σ.Δ. του Μητρώου.</p>
-          <div id="msdRows"></div>
-          <button class="add-row" id="addMsdRow" type="button">+ Προσθήκη υπηρέτησης</button>
-
-        <?php calculatorDisclosure(array(
-          'summary' => 'Πότε διπλασιάζονται οι Μ.Σ.Δ. απομακρυσμένων σχολείων;',
-          'html' => '<strong>Διπλασιασμός απομακρυσμένων:</strong> από το 2018–2019 αφορά πραγματική υπηρεσία σε σχολεία κατηγοριών Ι΄, ΙΑ΄, ΙΒ΄ και ΙΓ΄, όταν έχει συμπληρωθεί τουλάχιστον διετής συνεχόμενη υπηρεσία. Στον υπολογιστή ενεργοποίησέ τον μόνο όταν το δικαίωμα έχει πράγματι θεμελιωθεί.',
-          'open' => true,
-          'attrs' => array('data-mobile-collapsed' => 'true')
-        )); ?>
-        </div>
-        <div id="msdDirectPanel">
-          <div class="field">
-            <label for="msdDirectPoints">Συνολικές μονάδες συνθηκών διαβίωσης από το επίσημο μητρώο</label>
-            <input id="msdDirectPoints" type="text" inputmode="decimal" maxlength="7" data-transfer-direct-points-cap="1000" autocomplete="off" placeholder="π.χ. 48,75" aria-describedby="msdDirectStatus">
-            <div class="field-hint" id="msdDirectStatus" role="status" aria-live="polite"></div>
-          </div>
-        </div>
-      <?php calculatorCardEnd(); ?>
-      </div>
-
-      <div id="transferSocialCriteriaCard">
-        <?php transferSocialCriteriaCard('secondary'); ?>
-      </div>
 
       <section id="transferEaePanel" class="calculator-card" style="display:none; padding:18px; border:1px solid #b8c5d5; border-radius:12px; margin-bottom:16px;">
-        <h2>Β.1 Θεμελίωση δικαιώματος μετάθεσης στην ΕΑΕ</h2>
+        <h2>Προέλεγχος δικαιώματος μετάθεσης στην ΕΑΕ</h2>
         <p class="small-note">Δηλώστε τα προσόντα ΕΑΕ που διαθέτετε. Αρκεί μία αποδεκτή διαδρομή εξειδίκευσης· το δικαίωμα εξετάζεται <strong>συνδυαστικά</strong> με την προέλευση, τον χρόνο υπηρεσίας και τον τύπο θέσης. Οι ενδείξεις αποτελούν προέλεγχο, όχι διοικητική απόφαση.</p>
         <div class="field-grid">
           <div class="field"><label for="transferEaeOrigin">Από ποια εκπαίδευση ζητείται η μετάθεση;</label>
@@ -351,6 +275,83 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         <p class="small-note"><strong>Μετάθεση προς Γενική μέσα στην ίδια περιοχή.</strong> Εκπαιδευτικός με οργανική σε Διαπολιτισμικό που ζητά σχολείο Γενικής στην ίδια περιοχή υποβάλλει αίτηση «από περιοχή σε περιοχή» και όχι βελτίωσης.</p>
       </aside>
 
+      <div id="transferMsdCard">
+      <?php calculatorCardStart(array('title' => 'Β. Μονάδες μετάθεσης')); ?>
+        <div id="transferNumericalInputs">
+        <div class="field" style="margin-bottom:12px">
+          <label for="serviceMode">Καταχώριση συνολικής υπηρεσίας</label>
+          <select id="serviceMode">
+            <option value="points" selected>Απευθείας καταχώριση μορίων προϋπηρεσίας (προεπιλογή)</option>
+            <option value="direct">Απευθείας καταχώριση ετών, μηνών, ημερών</option>
+            <option value="periods">Υπολογισμός από επιμέρους περιόδους υπηρεσίας</option>
+          </select>
+          <?php transferServiceHelp('secondary', 'service'); ?>
+        </div>
+        <div id="servicePointsDirectPanel">
+          <div class="field">
+            <label for="serviceDirectPoints">Μόρια συνολικής υπηρεσίας</label>
+            <input id="serviceDirectPoints" type="text" inputmode="decimal" maxlength="6" data-transfer-direct-points-cap="125" autocomplete="off" placeholder="π.χ. 21,04" aria-describedby="serviceDirectStatus">
+            <div class="field-hint" id="serviceDirectStatus" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+        <div id="serviceDirectPanel" style="display:none">
+        <div class="field-grid">
+          <div class="field">
+            <label for="serviceYears">Συνολική αναγνωρισμένη υπηρεσία — έτη</label>
+            <input id="serviceYears" type="number" min="0" max="50" step="1" value="0" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="serviceMonths">Επιπλέον μήνες</label>
+            <input id="serviceMonths" type="number" min="0" max="11" step="1" value="0" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="serviceDays">Επιπλέον ημέρες <small>15+ → 1 μήνας</small></label>
+            <input id="serviceDays" type="number" min="0" max="29" step="1" value="0" inputmode="numeric">
+          </div>
+        </div>
+        </div>
+        <div id="servicePeriodsPanel" style="display:none">
+          <p class="small-note">Προσθέστε τις <strong>διακριτές, μη επικαλυπτόμενες</strong> περιόδους που αναγνωρίζονται για συνολική υπηρεσία. Μην καταχωρίζετε ξανά παράλληλη υπηρέτηση για τις ίδιες ημερομηνίες. Επιβεβαιώστε το αποτέλεσμα από το υπηρεσιακό μητρώο.</p>
+          <div id="servicePeriodRows"></div>
+          <button type="button" class="add-row" id="addServicePeriod">+ Προσθήκη περιόδου υπηρεσίας</button>
+          <p id="servicePeriodStatus" class="field-hint" role="status" aria-live="polite"></p>
+        </div>
+        </div>
+
+        <div class="field" style="margin-bottom:14px">
+          <label for="msdMode">Τρόπος καταχώρισης Μ.Σ.Δ.</label>
+          <select id="msdMode">
+            <option value="direct" selected>Απευθείας καταχώριση συνολικών μορίων Μ.Σ.Δ.</option>
+            <option value="periods">Υπολογισμός από τις υπηρετήσεις μου</option>
+          </select>
+          <?php transferServiceHelp('secondary', 'msd'); ?>
+        </div>
+        <div id="msdPeriodsPanel" style="display:none">
+          <p class="small-note">Προσθέστε μία γραμμή για κάθε διαφορετική υπηρέτηση/κατηγορία. Οι ημέρες ≥15 λογίζονται ως πλήρης μήνας. Σε παράλληλη υπηρεσία μοιράστε τις ημέρες ανά εβδομάδα (άθροισμα έως 5/5 <em>στην ίδια χρονική περίοδο</em>). Μην προσθέτετε δύο πλήρεις πενθήμερες υπηρετήσεις για τις ίδιες ημέρες. Αν την ίδια ημέρα υπηρετήσατε σε δύο σχολεία, λαμβάνεται υπόψη το σχολείο με τις περισσότερες μονάδες. Για σύνθετα επικαλυπτόμενα διαστήματα προτιμήστε τα επίσημα συνολικά Μ.Σ.Δ. του Μητρώου.</p>
+          <div id="msdRows"></div>
+          <button class="add-row" id="addMsdRow" type="button">+ Προσθήκη υπηρέτησης</button>
+
+        <?php calculatorDisclosure(array(
+          'summary' => 'Πότε διπλασιάζονται οι Μ.Σ.Δ. απομακρυσμένων σχολείων;',
+          'html' => '<strong>Διπλασιασμός απομακρυσμένων:</strong> από το 2018–2019 αφορά πραγματική υπηρεσία σε σχολεία κατηγοριών Ι΄, ΙΑ΄, ΙΒ΄ και ΙΓ΄, όταν έχει συμπληρωθεί τουλάχιστον διετής συνεχόμενη υπηρεσία. Στον υπολογιστή ενεργοποίησέ τον μόνο όταν το δικαίωμα έχει πράγματι θεμελιωθεί.',
+          'open' => true,
+          'attrs' => array('data-mobile-collapsed' => 'true')
+        )); ?>
+        </div>
+        <div id="msdDirectPanel">
+          <div class="field">
+            <label for="msdDirectPoints">Συνολικές μονάδες συνθηκών διαβίωσης από το επίσημο μητρώο</label>
+            <input id="msdDirectPoints" type="text" inputmode="decimal" maxlength="7" data-transfer-direct-points-cap="1000" autocomplete="off" placeholder="π.χ. 48,75" aria-describedby="msdDirectStatus">
+            <div class="field-hint" id="msdDirectStatus" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+      <?php calculatorCardEnd(); ?>
+      </div>
+
+      <div id="transferSocialCriteriaCard">
+        <?php transferSocialCriteriaCard('secondary'); ?>
+      </div>
+
       <?php calculatorActions(array(
         array('id' => 'resetBtn', 'class' => 'secondary', 'label' => 'Καθαρισμός')
       )); ?>
@@ -364,7 +365,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
       )); ?>
 
       <section id="transferDocumentsPanel" style="padding:16px; border:1px solid #b8c5d5; border-radius:12px; margin:16px 0;">
-        <h2 style="margin-top:0">Δ. Σύμβουλος δικαιολογητικών — Τι πρέπει να ετοιμάσω;</h2>
+        <h2 style="margin-top:0">Δ. Προσωπική λίστα δικαιολογητικών</h2>
         <div id="transferDocumentActionSummary" class="transfer-doc-action-summary" role="note" hidden></div>
         <p class="small-note">Η λίστα προσαρμόζεται στις επιλογές σας. Μόνο οι ενέργειες που πρέπει να ετοιμάσετε έχουν checkbox· οι υπηρεσιακοί έλεγχοι και τα αυτεπαγγέλτως αναζητούμενα εμφανίζονται ενημερωτικά.</p>
         <p id="transferDocumentProgress" class="edu-transfer-doc__progress" role="status" aria-live="polite" aria-atomic="true"></p>

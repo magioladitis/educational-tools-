@@ -290,7 +290,7 @@ foreach ($primaryTransferBranchCodes as $code) {
           <div class="field"><label for="primaryDays">Ημέρες</label><input id="primaryDays" type="number" min="0" max="29" step="1" value="0"></div>
         </div>
         <div id="primaryServicePeriodsPanel" hidden>
-          <p class="field-hint">Προσθέστε μόνο αναγνωρισμένες περιόδους χωρίς χρονική επικάλυψη. Τα υπόλοιπα ημερών αθροίζονται πριν εφαρμοστεί ο κανόνας των 15 ημερών. Ελέγξτε τις περιόδους στο υπηρεσιακό μητρώο.</p>
+          <p class="small-note">Προσθέστε μόνο αναγνωρισμένες περιόδους χωρίς χρονική επικάλυψη. Τα υπόλοιπα ημερών αθροίζονται πριν εφαρμοστεί ο κανόνας των 15 ημερών. Ελέγξτε τις περιόδους στο υπηρεσιακό μητρώο.</p>
           <div id="primaryServicePeriodsRows"></div>
           <button type="button" class="add-row" id="primaryAddServicePeriod">+ Προσθήκη περιόδου υπηρεσίας</button>
           <p id="primaryServicePeriodStatus" class="field-hint" role="status" aria-live="polite"></p>
@@ -305,9 +305,9 @@ foreach ($primaryTransferBranchCodes as $code) {
         </div>
         </div>
         <div id="primaryMsdPeriodsPanel" hidden>
-          <p class="field-hint">Για κάθε υπηρέτηση δηλώστε την κατηγορία σχολείου Π.Ε. (Α΄–ΙΓ΄), τη διάρκεια και τις ημέρες ανά εβδομάδα. Οι παράλληλες υπηρετήσεις σε σχολεία της ίδιας περιόδου επιμερίζονται έως 5/5 συνολικά. Ο διπλασιασμός Ι΄–ΙΓ΄ επιλέγεται μόνο αν έχει επιβεβαιωθεί το δικαίωμα διετούς συνεχούς πραγματικής υπηρεσίας.</p>
+          <p class="small-note">Για κάθε υπηρέτηση δηλώστε την κατηγορία σχολείου Π.Ε. (Α΄–ΙΓ΄), τη διάρκεια και τις ημέρες ανά εβδομάδα. Οι παράλληλες υπηρετήσεις σε σχολεία της ίδιας περιόδου επιμερίζονται έως 5/5 συνολικά. Ο διπλασιασμός Ι΄–ΙΓ΄ επιλέγεται μόνο αν έχει επιβεβαιωθεί το δικαίωμα διετούς συνεχούς πραγματικής υπηρεσίας.</p>
           <div id="primaryMsdPeriodsRows"></div>
-          <button type="button" class="add-row" id="primaryAddMsdPeriod">+ Προσθήκη υπηρέτησης Μ.Σ.Δ.</button>
+          <button type="button" class="add-row" id="primaryAddMsdPeriod">+ Προσθήκη υπηρέτησης</button>
           <p id="primaryMsdPeriodStatus" class="field-hint" role="status" aria-live="polite"></p>
         </div>
         <p id="primaryValidation" role="status" aria-live="polite" class="field-hint"></p>

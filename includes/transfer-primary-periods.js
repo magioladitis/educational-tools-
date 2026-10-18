@@ -19,8 +19,12 @@
   var categories=[['A','Α΄ — 1'],['B','Β΄ — 2'],['G','Γ΄ — 3'],['D','Δ΄ — 4'],['E','Ε΄ — 5'],['ST','ΣΤ΄ — 6'],['Z','Ζ΄ — 7'],['H','Η΄ — 8'],['TH','Θ΄ — 9'],['I','Ι΄ — 10'],['IA','ΙΑ΄ — 11'],['IB','ΙΒ΄ — 12'],['IG','ΙΓ΄ — 14']];
   var esc = global.EducationTransferHtmlEscape.escapeHtml;
   function options(items){return items.map(function(pair){return '<option value="'+esc(pair[0])+'">'+esc(pair[1])+'</option>';}).join('');}
-  function durationFields(prefix,service){return '<div class="field-grid transfer-service-grid">'+
-     [['years','Έτη',50],['months','Μήνες',11],['days','Ημέρες (15+ → μήνας)',29]].map(function(x){return '<div class="field"><label for="'+prefix+'-'+x[0]+'">'+x[1]+'</label><input id="'+prefix+'-'+x[0]+'" type="number" inputmode="numeric" min="0" max="'+x[2]+'" step="1" value="0" class="'+(service?'primary-service-':'primary-msd-')+x[0]+'"></div>';}).join('')+'</div>';}
+  function durationFields(prefix,service,bare){
+    var fields=[['years','Έτη',50],['months','Μήνες',11],['days','Ημέρες',29]].map(function(x){
+      return '<div class="field"><label for="'+prefix+'-'+x[0]+'">'+x[1]+'</label><input id="'+prefix+'-'+x[0]+'" type="number" inputmode="numeric" min="0" max="'+x[2]+'" step="1" value="0" class="'+(service?'primary-service-':'primary-msd-')+x[0]+'"></div>';
+    }).join('');
+    return bare?fields:'<div class="field-grid transfer-service-grid">'+fields+'</div>';
+  }
   function addService(){
     var n=++counters.service,prefix='primary-service-period-'+n;
     var row=root.createElement('section');row.className='transfer-service-period primary-service-period';
@@ -31,12 +35,13 @@
   function addMsd(){
     var n=++counters.msd,prefix='primary-msd-period-'+n;
     var row=root.createElement('section');row.className='transfer-service-row primary-msd-period';
-    row.innerHTML='<div class="transfer-service-row-head"><strong>Υπηρέτηση Μ.Σ.Δ. #'+n+'</strong><span class="transfer-row-score">0 μόρια Μ.Σ.Δ.</span></div>'+
+    row.innerHTML='<div class="transfer-service-row-head"><strong>Υπηρέτηση #'+n+'</strong><span class="transfer-row-score">0 μόρια Μ.Σ.Δ.</span></div>'+
       '<div class="field-grid transfer-service-grid"><div class="field transfer-type-field"><label for="'+prefix+'-type">Είδος υπηρέτησης</label><select id="'+prefix+'-type" class="primary-msd-type">'+options(Object.keys(types).map(function(k){return [k,types[k]];}))+'</select></div>'+
-      '<div class="field primary-category-field"><label for="'+prefix+'-category">Κατηγορία / πλησιέστερο σχολείο Π.Ε.</label><select class="primary-msd-category" id="'+prefix+'-category">'+options(categories)+'</select></div></div>'+durationFields(prefix,false)+
-      '<div class="field"><label for="'+prefix+'-weekdays">Ημέρες ανά εβδομάδα (έως 5/5)</label><input type="number" class="primary-msd-weekdays" id="'+prefix+'-weekdays" min="0.01" max="5" step="0.01" value="5" inputmode="decimal"></div>'+
-      '<label class="check-row primary-msd-double-field"><input type="checkbox" class="primary-msd-remote-double"> Επιβεβαιωμένος διπλασιασμός Ι΄–ΙΓ΄ (δύο συνεχόμενα διδακτικά έτη)</label>'+
-      '<p class="field-hint primary-msd-row-note"></p><div class="transfer-service-actions"><button type="button" class="remove-row" data-primary-remove="msd">Αφαίρεση</button></div>';
+      '<div class="field primary-category-field"><label for="'+prefix+'-category">Κατηγορία / πλησιέστερο σχολείο Π.Ε.</label><select class="primary-msd-category" id="'+prefix+'-category">'+options(categories)+'</select></div>'+
+      durationFields(prefix,false,true)+
+      '<div class="field transfer-weekdays-field"><label for="'+prefix+'-weekdays">Ημέρες / εβδομάδα <small>έως 5/5</small></label><input type="number" class="primary-msd-weekdays" id="'+prefix+'-weekdays" min="0.01" max="5" step="0.01" value="5" inputmode="decimal"></div></div>'+
+      '<label class="check-row transfer-remote-row primary-msd-double-field"><input type="checkbox" class="primary-msd-remote-double"> Επιβεβαιωμένος διπλασιασμός Ι΄–ΙΓ΄ (δύο συνεχόμενα διδακτικά έτη)</label>'+
+      '<div class="transfer-service-actions"><span class="field-hint primary-msd-row-note"></span><button type="button" class="remove-row" data-primary-remove="msd">Αφαίρεση</button></div>';
     $('primaryMsdPeriodsRows').appendChild(row);syncRow(row);
   }
   function syncRow(row){
