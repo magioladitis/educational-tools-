@@ -121,6 +121,31 @@ foreach ($primaryTransferBranchCodes as $code) {
           <p class="small-note">Εγκύκλιος Π.Ε. 138023/Ε2/2026, Μέρος Τρίτο, κεφ. ΣΤ΄ §2: απαιτείται διετία από μετάθεση σε ΕΑΕ και υπηρέτηση οργανικής ή πενταετία στην ΕΑΕ (με διετία στην περιοχή διορισμού) για αρχικό διορισμό στην ΕΑΕ. Ακόμη και για σχολείο Γενικής στην ίδια περιοχή, ακολουθείται αίτηση από περιοχή σε περιοχή.</p>
         </section>
         <p id="primaryPlacementNotice" class="primary-transfer-notice" hidden>Βελτίωση / οριστική τοποθέτηση: κατά την προθεσμία 16/10–02/11/2026 υποβάλλεται η αίτηση <strong>χωρίς προτιμήσεις σχολείων</strong>. Οι προτιμήσεις δηλώνονται σε μεταγενέστερο στάδιο που ανακοινώνεται από τη ΔΠΕ. Η εντοπιότητα και η συνυπηρέτηση επαληθεύονται για τον συγκεκριμένο προορισμό· η συνολική βαθμολογία είναι ενδεικτική. Το πεδίο «πρώτη προτίμηση περιοχής» δεν εφαρμόζεται εδώ.</p>
+        <section id="primaryEaeRouteFields" class="primary-transfer-notice" hidden aria-label="Ειδικός προέλεγχος διαδρομής ΕΑΕ">
+          <h3>Διαδρομή μετάθεσης ΕΑΕ — σωστός τύπος αίτησης</h3>
+          <div class="field"><label for="primaryEaeMoveRoute">Από πού προς πού ζητάτε μετακίνηση;</label>
+            <select id="primaryEaeMoveRoute">
+              <option value="unknown">Επιλέξτε υπηρεσιακή διαδρομή</option>
+              <option value="general-same">Γενική → ΕΑΕ, ίδια περιοχή μετάθεσης</option>
+              <option value="general-other">Γενική → ΕΑΕ, άλλη περιοχή μετάθεσης</option>
+              <option value="special-same">ΣΜΕΑΕ/ΕΕΕΕΚ/ΤΕ → ΣΜΕΑΕ/ΕΕΕΕΚ/ΤΕ, ίδια περιοχή</option>
+              <option value="special-other">Δομή ΕΑΕ → δομή ΕΑΕ, άλλη περιοχή</option>
+              <option value="kedasy-to-kedasy">ΚΕΔΑΣΥ → ΚΕΔΑΣΥ, ίδια ή άλλη Περιφερειακή Διεύθυνση</option>
+              <option value="deaf-exchange">ΣΜΕΑΕ ↔ Σχολείο Κωφών/Τυφλών, ίδια ή άλλη περιοχή</option>
+              <option value="other">Άλλη / σύνθετη διαδρομή (έλεγχος ΔΠΕ)</option>
+            </select>
+          </div>
+          <div class="field"><label for="primaryEaeDisability80">Ειδική εξαίρεση λόγω αναπηρίας ιδίου ≥80% εφ’ όρου ζωής</label>
+            <select id="primaryEaeDisability80">
+              <option value="none">Δεν ζητώ την εξαίρεση αυτή</option>
+              <option value="lifetime80">Εξετάζω την εξαίρεση με το προβλεπόμενο πιστοποιητικό</option>
+              <option value="review">Χρειάζομαι διευκρίνιση για την ειδική κατηγορία</option>
+            </select>
+            <p class="field-hint">Η επιλογή παρέχει οδηγίες, δεν διαπιστώνει αναπηρία ή δικαίωμα προτεραιότητας. Δεν αποθηκεύεται στην εφαρμογή.</p>
+          </div>
+          <div id="primaryEaeRouteStatus" class="primary-eae-status" role="status" aria-live="polite" data-status="review"></div>
+          <p class="small-note">Εγκύκλιος Π.Ε. 138023/Ε2/2026, Μέρος Τρίτο, Κεφ. ΣΤ΄ §7 και Κεφ. Γ΄: οι μετακινήσεις εντός περιοχής δεν ακολουθούν όλες τον ίδιο τύπο αίτησης.</p>
+        </section>
         <div id="primaryEaeFields" hidden>
           <h3>Β.1 Προέλεγχος δικαιώματος μετάθεσης στην ΕΑΕ</h3>
           <div class="field"><label for="primaryEaeBranch">Κλάδος εκπαιδευτικού</label>
@@ -362,6 +387,7 @@ window.EducationTransferPrimarySpecialtyLabels = Object.freeze(<?php echo json_e
 </script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-eae.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-eae-routes.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-minority.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-email-component.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-intercultural.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

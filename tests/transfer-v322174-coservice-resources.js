@@ -23,7 +23,7 @@ for(const key of ['unspecified','public_organic','teacher_organic','substitute_t
 const secondary=fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf8');
 const primary=fs.readFileSync(path.join(root,'includes/transfer-primary.js'),'utf8');
 assert.match(secondary,/global\.EducationTransferCoServiceResources\.render/);
-assert.match(primary,/global\.EducationTransferCoServiceResources\.render/);
+assert.match(primary,/resources\.render\(choice\)/,'Primary renders common resources through a local reference');
 for(const file of ['ypologismos-morion-metathesis.php','ypologismos-morion-metathesis-protovathmia.php']){
  const php=fs.readFileSync(path.join(root,file),'utf8');
  assert.match(php,/transfer-coservice-resources\.js/);

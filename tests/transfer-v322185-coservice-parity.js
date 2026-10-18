@@ -1,0 +1,32 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const root=path.resolve(__dirname,'..');
+const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
+const sandbox={window:{}};
+vm.runInNewContext(read('includes/transfer-coservice-resources.js'),sandbox);
+const resources=sandbox.window.EducationTransferCoServiceResources;
+const cases=['unspecified','public_organic','teacher_organic','teacher_disposal','private_employee','self_employed','remote_employee','lawyer','private_doctor','substitute_teacher','public_contract','other'];
+assert.deepEqual(Array.from(resources.caseKeys()),cases);
+for(const type of cases){
+ const detail=resources.legalDetail(type);assert.ok(detail.length>70,type);
+ const primary=resources.legalSource('primary',type),secondary=resources.legalSource('secondary',type);
+ assert.match(primary,/138023\/Ε2/);assert.match(secondary,/138014\/Ε2/);
+ assert.ok(!primary.includes('Δ.Ε.)')&&!secondary.includes('Π.Ε.)'),type);
+}
+assert.match(resources.legalDetail('private_employee'),/ασφαλιστικού φορέα/);
+assert.match(resources.legalDetail('remote_employee'),/ΕΡΓΑΝΗ/);
+assert.match(resources.legalDetail('teacher_disposal'),/βελτίωση/);
+assert.match(resources.legalDetail('private_doctor'),/διετία/);
+assert.match(resources.legalDetail('lawyer'),/Δικηγορικού Συλλόγου/);
+for(const type of ['substitute_teacher','public_contract'])assert.match(resources.legalDetail(type),/Δεν αποδίδονται/);
+for(const type of ['private_employee','self_employed','private_doctor','remote_employee'])assert.match(resources.render(type),/e-ΕΦΚΑ/);
+assert.equal(resources.render('lawyer'),'');
+const primary=read('includes/transfer-primary.js'),secondary=read('includes/transfer-documents.js');
+assert.match(primary,/resources\.legalDetail\(choice\)/);
+assert.match(primary,/resources\.legalSource\('primary',choice\)/);
+assert.match(primary,/info\('coservice','Συνυπηρέτηση/);
+assert.match(secondary,/shared\.legalDetail\(value\)/);
+assert.match(secondary,/legalSource\('secondary',caseValue\)/);
+for(const type of cases)assert.ok(!secondary.includes(type+":{summary:") || !new RegExp(type+":\\{summary:[^\\n]*detail:").test(secondary),'Duplicate evidence '+type);
+console.log('PASS v3.22.185 common co-service evidence across 12 statuses and both grades');

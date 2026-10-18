@@ -9,7 +9,7 @@ function run(data){return inter.evaluate(Object.assign({organic:'yes',current:'n
 test(php.includes('value="intercultural" data-official-code="002.ΔΙΑΠ001"'),'official 002 code in dropdown');
 test(php.includes('id="primaryInterculturalFields"'),'independent inter section');
 test(php.includes('id="primaryScoringCard"')&&code.includes("$('primaryScoringCard').hidden=interculturalMode"),'intercultural no points interface');
-test(code.includes("'intercultural'?[]")&&code.includes("mode!=='intercultural' && $('primaryCoservice')"),'no scoring documents');
+test(code.includes("'intercultural'?[]")&&code.includes("if(mode!=='intercultural'){\n      var selectedCoService"),'no scoring documents');
 test(!php.includes('includes/transfer-documents.js')&&!php.includes('includes/transfer-eligibility.js'),'no Secondary rules');
 test(php.includes('Δεν προσκομίζεται βιογραφικό σημείωμα'),'no CV explicitly');
 test(code.includes('isIntercultural')&&code.includes("$('primaryMailAction').hidden=!hasActions || isIntercultural"),'do not email inter documents');

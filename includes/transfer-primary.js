@@ -3,6 +3,7 @@
   'use strict';
   var scoring = global.EducationTransfer;
   var eae = global.EducationTransferPrimaryEae;
+  var eaeRoutes = global.EducationTransferPrimaryEaeRoutes;
   var intercultural = global.EducationTransferPrimaryIntercultural;
   var interVacancies = global.EducationTransferPrimaryInterculturalVacancies;
   var minority = global.EducationTransferPrimaryMinority;
@@ -117,9 +118,38 @@
     }
     $('primaryReturnStatus').textContent=status;
   }
+  function updateEaeRoute(){
+    var mode=primaryEffectiveMode();
+    var active=['eae','eeeek','deaf','blind','kedasy','placement-eae'].indexOf(mode)!==-1;
+    var section=$('primaryEaeRouteFields'),status=$('primaryEaeRouteStatus');
+    section.hidden=!active;
+    if(!active)return;
+    if(!eaeRoutes || typeof eaeRoutes.check!=='function'){
+      status.textContent='Δεν φορτώθηκαν οι ειδικές οδηγίες διαδρομών ΕΑΕ. Ελέγξτε την εγκύκλιο ή επαναφορτώστε τη σελίδα.';
+      status.setAttribute('data-status','review');return;
+    }
+    var result=eaeRoutes.check({mode:mode,route:$('primaryEaeMoveRoute').value,
+      disability:$('primaryEaeDisability80').value});
+    status.setAttribute('data-status',result.status);
+    status.replaceChildren();
+    result.messages.forEach(function(message){var line=document.createElement('p');line.textContent=message;status.appendChild(line);});
+  }
   function buildDocuments() {
     var mode=primaryEffectiveMode();
     var docs=mode==='intercultural'?[]:[info('registry','Υπηρεσιακό μητρώο και μονάδες','Έλεγχος στο επίσημο μητρώο — χωρίς αποστολή')];
+    if(['eae','eeeek','deaf','blind','kedasy','placement-eae'].indexOf(mode)!==-1){
+      var route=$('primaryEaeMoveRoute').value,disability=$('primaryEaeDisability80').value;
+      if(route!=='unknown' && eaeRoutes){
+        var routing=eaeRoutes.check({mode:mode,route:route,disability:disability});
+        docs.push(info('eae-route-procedure','Διαδρομή αίτησης ΕΑΕ',routing.messages[0]||'Ελέγξτε τον προβλεπόμενο τύπο αίτησης.'));
+      }
+      if(disability==='lifetime80'){
+        docs.push(info('eae-disability80-exception','Αναπηρία ιδίου ≥80% εφ’ όρου ζωής — ειδική διαδικασία',
+          mode==='kedasy'?'Η κατ’ εξαίρεση μετάθεση δεν εφαρμόζεται στα ΚΕΔΑΣΥ.':
+          mode==='placement-eae'?'Η βελτίωση/τοποθέτηση εξετάζεται με τα κριτήρια ειδικής κατηγορίας στις διαθέσιμες κενές θέσεις.':
+          'Η κατ’ εξαίρεση μετάθεση αφορά περιοχές ΕΑΕ, με επίσημη πιστοποίηση και τις προβλεπόμενες διαδικασίες. Δεν τεκμαίρεται από την επιλογή.'));
+      }
+    }
     if(isMinority()){
       var procedure=isMinorityWithin()?'βελτίωση εντός νομού':'μετάθεση μεταξύ περιοχών Θράκης';
       docs.push(info('minority-procedure','ΠΕ73 — '+procedure,
@@ -138,7 +168,15 @@
         'Ελέγξτε τις ειδικές περιπτώσεις σπουδών, επιμέλειας, πολυτεκνίας και νεογέννητου σύμφωνα με την εγκύκλιο.'));
     }
     if(mode!=='intercultural' && $('primaryChildrenExtra').checked && Number($('primaryChildren').value)>0) docs.push(action('children','Προετοιμασία πρόσθετου αποδεικτικού τέκνου','Email στη ΔΠΕ οργανικής μόνο όπου απαιτείται ειδικό αποδεικτικό (π.χ. φοίτηση ή επιμέλεια) — δείτε τις περιπτώσεις στον οδηγό τέκνων.'));
-    if(mode!=='intercultural' && $('primaryCoservice').checked && !syncPrimaryCoService()) docs.push(action('coservice','Δικαιολογητικά συνυπηρέτησης','Αποστολή με email στη ΔΠΕ οργανικής — όπου απαιτούνται αποδεικτικά. '+(spouseRules[$('primaryCoServiceCase').value]||spouseRules.unspecified).summary));
+    if(mode!=='intercultural'){
+      var selectedCoService=$('primaryCoServiceCase').value;
+      var restrictedCoService=syncPrimaryCoService();
+      if($('primaryCoservice').checked && !restrictedCoService){
+        docs.push(action('coservice','Δικαιολογητικά συνυπηρέτησης','Αποστολή με email στη ΔΠΕ οργανικής — όπου απαιτούνται αποδεικτικά. '+(spouseRules[selectedCoService]||spouseRules.unspecified).summary));
+      } else if(selectedCoService!=='unspecified' && restrictedCoService){
+        docs.push(info('coservice','Συνυπηρέτηση — διευκρινίσεις χωρίς αποστολή δικαιολογητικών','Πληροφοριακός έλεγχος: '+$('primaryCoServiceAdvice').textContent));
+      }
+    }
     if((mode==='region' || (mode==='minority' && !isMinorityWithin())) && $('primarySpecialCase') && $('primarySpecialCase').value!=='none') {
       var special=$('primarySpecialCase').value;
       if(special==='health_committee') docs.push(info('health-committee','Ειδική κατηγορία υγείας — γνωμάτευση υγειονομικής επιτροπής','Κλειστός φυσικός φάκελος προς ΥΠΑΙΘΑ με ένδειξη εμπιστευτικού πρωτοκόλλου· δεν αποστέλλεται με κοινό email. Εγκύκλιος Π.Ε. §2.2.3.'));
@@ -202,7 +240,15 @@
     checklist.innerHTML=docs.map(function(d){return '<div class="primary-doc-row" data-primary-doc="'+escapeText(d.id)+'">' +
       (d.action ? '<label><input type="checkbox" data-primary-check="'+escapeText(d.id)+'"'+(checklistState.isComplete(d.id)?' checked':'')+'><strong>'+escapeText(d.title)+'</strong></label>' : '<div><strong>ⓘ '+escapeText(d.title)+'</strong></div>') +
       '<p class="primary-doc-kind">'+escapeText(d.desc)+'</p>'+
-      (d.id==='coservice' && global.EducationTransferCoServiceResources && global.EducationTransferCoServiceResources.render($('primaryCoServiceCase').value) ? '<details class="primary-coservice-guide"><summary>Από πού εκδίδονται τα δικαιολογητικά;</summary>'+global.EducationTransferCoServiceResources.render($('primaryCoServiceCase').value)+'</details>' : '')+
+      (d.id==='coservice' && global.EducationTransferCoServiceResources ? (function(){
+        var resources=global.EducationTransferCoServiceResources,choice=$('primaryCoServiceCase').value;
+        var legal=resources.legalDetail ? resources.legalDetail(choice) : '';
+        var practical=resources.render(choice);
+        if(!legal && !practical)return '';
+        return '<details class="primary-coservice-guide"><summary>'+(legal?'Περισσότερες πληροφορίες':'Από πού εκδίδονται τα δικαιολογητικά;')+'</summary>'+
+          (legal?'<p>'+escapeText(legal)+'</p><p>'+escapeText(resources.evidenceRecency())+'</p><p class="primary-coservice-source">'+escapeText(resources.legalSource('primary',choice))+'</p>':'')+
+          practical+'</details>';
+      })() : '')+
       (d.id==='children-guide' && global.EducationTransferChildrenDocuments ? '<details class="primary-children-guide"><summary>Αναλυτικά αποδεικτικά ανά περίπτωση τέκνου</summary>'+global.EducationTransferChildrenDocuments.render('primary')+'</details>' : '')+'</div>';}).join('');
     $('primaryChecklistProgress').textContent=checklistState.progressText(counts,'primary');
     updateMail(docs);
@@ -220,6 +266,7 @@
       retraining:$('primaryEaeRetraining').checked,experience:$('primaryEaeExperience').checked,pe11:$('primaryEaePe11').checked};
   }
   function updateEaePrecheck(){
+    updateEaeRoute();
     var mode=primaryEffectiveMode();
     $('primaryEaeFields').hidden=mode==='region'||mode==='minority'||mode==='intercultural'||isPlacement();
     $('primaryGeneralOrganicField').hidden=mode!=='region' && mode!=='minority';
@@ -238,7 +285,8 @@
     var data={mode:mode,branch:$('primaryEaeBranch').value,origin:origin,
       organic:$('primaryEaeOrganic').value,generalYears:$('primaryEaeGeneralYears').value,
       appointmentAreaYears:$('primaryEaeAppointmentYears').value,eaeYears:$('primaryEaeYears').value,
-      qualifications:qualifications(),certification:$('primaryEaeCertification').value};
+      qualifications:qualifications(),certification:$('primaryEaeCertification').value,
+      exception80:$('primaryEaeDisability80').value==='lifetime80' && mode!=='kedasy'};
     var outcome=eae.evaluate(data);
     var labels={problem:'⚠ Δεν πληρούται ελεγχόμενη προϋπόθεση',review:'ⓘ Απαιτούνται στοιχεία ή υπηρεσιακή επαλήθευση',positive:'✓ Θετικός προκαταρκτικός έλεγχος'};
     $('primaryEaeEligibility').setAttribute('data-status',outcome.status);
@@ -540,7 +588,9 @@
       if(d.id==='children-guide' && global.EducationTransferChildrenDocuments){
         extra=global.EducationTransferChildrenDocuments.detail('primary');
       } else if(d.id==='coservice' && global.EducationTransferCoServiceResources){
-        extra=global.EducationTransferCoServiceResources.printText($('primaryCoServiceCase').value);
+        var resources=global.EducationTransferCoServiceResources,choice=$('primaryCoServiceCase').value;
+        var legal=resources.legalDetail ? resources.legalDetail(choice) : '';
+        extra=[legal,resources.evidenceRecency(),resources.legalSource('primary',choice),resources.printText(choice)].filter(Boolean).join('\n');
       }
       return {title:d.title,detail:d.desc,channel:d.channel==='email'?'Email προς ΔΠΕ οργανικής — όπου απαιτείται':
         d.channel==='mydocs'?'Υποβολή μέσω mydocs — εφόσον απαιτείται':'Ενημερωτικό / υπηρεσιακός έλεγχος',

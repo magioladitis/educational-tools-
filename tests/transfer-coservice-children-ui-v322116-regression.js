@@ -4,6 +4,7 @@ const root=path.join(__dirname,'..');
 const p=require('node:child_process').execFileSync('php',[path.join(root,'ypologismos-morion-metathesis.php')],{encoding:'utf8'}) + '\n' + fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
 const u=fs.readFileSync(path.join(root,'includes/transfer-ui.js'),'utf8');
 const d=fs.readFileSync(path.join(root,'includes/transfer-documents.js'),'utf8');
+const guide=fs.readFileSync(path.join(root,'includes/transfer-coservice-resources.js'),'utf8');
 let n=0;function ok(x,s){assert.ok(x,s);n++;}
 ok(p.includes('id="transferGeneralOriginField"'),'independent origin selector');
 ok(p.includes('id="transferGeneralFromEaePanel" style="display:none;'),'specialized panel hidden server-side');
@@ -16,13 +17,13 @@ ok(cd.includes('01/01/2009')&&cd.includes('01/01/2002'),'correct year-of-transfe
 ok(cd.includes('βεβαίωση σπουδών')&&cd.includes('τελευταίο εξάμηνο/έτος'),'student certificate requirements');
 ok(cd.includes('ΣΑΕΚ/Κολλέγια')&&cd.includes('επίσημη ελληνική μετάφραση'),'exclusions/foreign docs');
 ok(cd.includes('ΑΝΑΠΗΡΙΑ ΤΕΚΝΟΥ')&&cd.includes('δεν αποδεικνύουν αυτομάτως'),'disabled child criteria separated');
-ok(d.includes('ΔΕΝ αντικαθιστούν')&&d.includes('ασφαλιστικού φορέα'),'myAADE not alone');
-ok(d.includes('μηχανογραφικά δελτία ασφάλισης')&&d.includes('ΑΠΔ'),'private worker alternatives');
+ok(guide.includes('δεν υποκαθιστά')&&guide.includes('ασφαλιστικού φορέα'),'myAADE not alone');
+ok(guide.includes('μηχανογραφικά δελτία')&&guide.includes('ΑΠΔ'),'private worker alternatives');
 ok(u.includes("!syncCoService() && byId('coService').checked"),'blocked statuses excluded from scoring');
 let elements={};function put(id,value,checked){elements[id]={value:value??'',checked:!!checked};}
 put('mode','local');put('serviceYears','0');put('serviceMonths','0');put('serviceDays','0');put('eligibleChildren','2');put('msdMode','direct');put('msdDirectPoints','0');put('familyStatusEligible','',false);put('coService','',true);put('locality','',false);put('transferCoServiceCase','teacher_disposal');
 const document={getElementById(id){if(!elements[id])throw new Error('Missing '+id);return elements[id];},querySelectorAll(){return []}};
-const window={};vm.runInNewContext(cd,{window,document});vm.runInNewContext(d,{window,document});const doc=window.EducationTransferDocuments;
+const window={};vm.runInNewContext(cd,{window,document});vm.runInNewContext(guide,{window,document});vm.runInNewContext(d,{window,document});const doc=window.EducationTransferDocuments;
 ok(doc.coServiceInfo('substitute_teacher','region').blocked,'substitute blocked');
 ok(doc.coServiceInfo('public_contract','region').blocked,'public contract without organic blocked');
 ok(doc.coServiceInfo('teacher_disposal','local').blocked,'disposal/local blocked');
@@ -33,5 +34,5 @@ let rows=doc.build();let child=rows.find(r=>r.id==='children-specific');let spou
 ok(child&&child.detail.includes('επιμέλειας'),'children special guide');
 ok(spouse&&spouse.tag.includes('Δεν θεμελιώνεται'),'special spouse clearly denied');
 elements.mode.value='region';rows=doc.build();spouse=rows.find(r=>r.id==='coservice');ok(spouse&&!spouse.tag.includes('Δεν θεμελιώνεται'),'region eligible exception');
-elements.transferCoServiceCase.value='private_employee';rows=doc.build();spouse=rows.find(r=>r.id==='coservice');ok(spouse.detail.includes('δύο τελευταία χρόνια'),'private employee two-year rule');
+elements.transferCoServiceCase.value='private_employee';rows=doc.build();spouse=rows.find(r=>r.id==='coservice');ok(spouse.detail.includes('συμπληρωμένη διετία'),'private employee two-year rule');
 console.log('PASS '+n+' co-service / children / EAE UX checks');
