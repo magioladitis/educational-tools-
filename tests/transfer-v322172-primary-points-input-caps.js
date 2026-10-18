@@ -1,0 +1,24 @@
+'use strict';
+const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
+const root = path.resolve(__dirname, '..');
+const html = fs.readFileSync(path.join(root, 'ypologismos-morion-metathesis-protovathmia.php'), 'utf8');
+const js = fs.readFileSync(path.join(root, 'includes/transfer-primary.js'), 'utf8');
+const scoring = require('../includes/transfer-calculations.js');
+const secondary = fs.readFileSync(path.join(root, 'ypologismos-morion-metathesis.php'), 'utf8');
+let tests = 0;
+function test(condition, explanation) {assert.ok(condition, explanation); tests++;}
+test(/id="primaryServicePoints"[^>]*data-primary-points-cap="125"/.test(html), 'Service field has UI maximum 125');
+test(/id="primaryMsd"[^>]*data-primary-points-cap="1000"/.test(html), 'MSD field has UI maximum 1000');
+test(!html.includes('Τεχνικό όριο προστασίας 1.000 μορίων, όχι νομοθετικό.'), 'Remove technical limit message from UI');
+test(html.includes('Έως δύο δεκαδικά.'), 'Retain decimal precision guidance');
+test(js.includes('function capPrimaryDirectPoints(el)'), 'Primary controller has a capped input helper');
+test(js.includes('capPrimaryDirectPoints(el);'), 'Helper invoked by event handlers');
+test(/el\.value=String\(max\)/.test(js), 'Over-limit entry clamps rather than going blank');
+test(scoring.parseDirectServicePoints('125').valid, 'Service maximum remains valid');
+test(!scoring.parseDirectServicePoints('126').valid, 'Core still rejects invalid above-limit values from non-UI callers');
+test(scoring.parseDirectMsd('1000').valid, 'MSD maximum remains valid');
+test(!scoring.parseDirectMsd('1001').valid, 'Core still rejects invalid above-limit values from non-UI callers');
+test(secondary.includes('EducationTransfer'), 'Secondary calculator remains available and unmodified');
+console.log('PASS',tests,'v3.22.172 primary capped-input checks');

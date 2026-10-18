@@ -206,7 +206,7 @@ foreach ($primaryTransferBranchCodes as $code) {
           <select id="primaryServiceMode"><option value="points">Ακριβή μόρια από επίσημο μητρώο</option><option value="direct">Έτη, μήνες, ημέρες (ενιαίο σύνολο)</option><option value="periods">Υπολογισμός από επιμέρους περιόδους υπηρεσίας</option></select>
         </div>
         <div id="primaryServicePointsPanel" class="field"><label for="primaryServicePoints">Μόρια συνολικής υπηρεσίας</label>
-          <input id="primaryServicePoints" type="text" inputmode="decimal" maxlength="6" placeholder="π.χ. 21,04" autocomplete="off">
+          <input id="primaryServicePoints" type="text" inputmode="decimal" maxlength="6" data-primary-points-cap="125" placeholder="π.χ. 21,04" autocomplete="off">
         </div>
         <div id="primaryServiceDurationPanel" class="field-grid" hidden>
           <div class="field"><label for="primaryYears">Έτη</label><input id="primaryYears" type="number" min="0" max="50" step="1" value="0"></div>
@@ -224,8 +224,8 @@ foreach ($primaryTransferBranchCodes as $code) {
         </div>
         <div id="primaryMsdDirectPanel">
         <div class="field"><label for="primaryMsd">Συνολικές Μ.Σ.Δ. από το επίσημο μητρώο</label>
-          <input id="primaryMsd" type="text" inputmode="decimal" maxlength="7" autocomplete="off" placeholder="π.χ. 48,75">
-          <div class="field-hint">Έως δύο δεκαδικά. Τεχνικό όριο προστασίας 1.000 μορίων, όχι νομοθετικό.</div>
+          <input id="primaryMsd" type="text" inputmode="decimal" maxlength="7" data-primary-points-cap="1000" autocomplete="off" placeholder="π.χ. 48,75">
+          <div class="field-hint">Έως δύο δεκαδικά.</div>
         </div>
         </div>
         <div id="primaryMsdPeriodsPanel" hidden>

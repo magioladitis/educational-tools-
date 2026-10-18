@@ -13,6 +13,15 @@
   var checkedDocs = {};
   function escapeText(s) { return String(s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
   function format(n) { return Number(n || 0).toLocaleString('el-GR', { maximumFractionDigits: 2 }); }
+  // Clamp only official, direct point entries while typing/pasting. This prevents
+  // an over-limit value from invalidating an otherwise valid score. Keep comma
+  // decimals and intermediate input (e.g. '12,') as entered.
+  function capPrimaryDirectPoints(el) {
+    var max=Number(el.getAttribute('data-primary-points-cap'));
+    if(!Number.isFinite(max) || max<=0)return;
+    var raw=String(el.value).trim().replace(',', '.');
+    if(/^\d+(?:\.\d*)?$/.test(raw) && Number(raw)>max)el.value=String(max);
+  }
   function action(id,title,desc) { return {id:id, title:title,desc:desc,channel:'email',action:true}; }
   function info(id,title,desc) { return {id:id, title:title,desc:desc,channel:'check',action:false}; }
   function mydocs(id,title,desc) { return {id:id, title:title,desc:desc,channel:'mydocs',action:true}; }
@@ -399,11 +408,12 @@
   document.querySelectorAll('input,select').forEach(function(el){
     if(el.closest('#primaryEmailDetails'))return;
     el.addEventListener('input',function(){
+      capPrimaryDirectPoints(el);
       if(el.id==='primaryChildren'&&global.EducationTransferSocialInput)
         global.EducationTransferSocialInput.clampChildren(el);
       update();
     });
-    el.addEventListener('change',update);
+    el.addEventListener('change',function(){capPrimaryDirectPoints(el);update();});
   });
   if(global.EducationTransferPrimaryPeriods)global.EducationTransferPrimaryPeriods.bind(update);
   if(global.EducationTransferEmailComponent&&global.EducationTransferEmailComponent.fillSpecialtyDropdown){
