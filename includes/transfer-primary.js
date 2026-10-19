@@ -183,7 +183,7 @@
       if(special==='health_kepa') docs.push(info('health-kepa','Ειδική κατηγορία υγείας — ΚΕΠΑ','Καταχώριση Αριθμού Επιτροπής και Αριθμού Μητρώου ΚΕΠΑ στο επίσημο σύστημα, χωρίς αποστολή γνωμάτευσης. Εγκύκλιος Π.Ε. §2.2.3.'));
       if(special==='judicial_spouse') docs.push(mydocs('judicial-spouse','Σύζυγος δικαστικού λειτουργού — κατά προτεραιότητα','Μέσω mydocs: βεβαίωση εργασίας και έγγραφο περιφέρειας αρμοδιότητας του δικαστηρίου. Πιστοποιητικό οικογενειακής κατάστασης αυτεπάγγελτα. Εγκύκλιος Π.Ε. §2.2.4.'));
     }
-    if(mode!=='intercultural' && $('primaryLocality').checked) docs.push(info('locality','Εντοπιότητα','Αυτεπάγγελτη αναζήτηση πιστοποιητικού δημοτικότητας/γέννησης από ΔΠΕ, όπου περιέχεται η ημερομηνία κτήσης δημοτικότητας· επιβεβαιώστε τα στοιχεία'));
+    if(mode!=='intercultural' && $('primaryLocality').checked) docs.push(info('locality','Εντοπιότητα',global.EducationTransferLocalityResources ? global.EducationTransferLocalityResources.summary('primary') : 'Ελέγξτε τη διετία δημοτικότητας και τα επίσημα στοιχεία σας.'));
     if(mode==='intercultural'){
       var existing=$('primaryInterDossier').value;
       var chosenQuals=interQualifications();
@@ -249,6 +249,7 @@
           (legal?'<p>'+escapeText(legal)+'</p><p>'+escapeText(resources.evidenceRecency())+'</p><p class="primary-coservice-source">'+escapeText(resources.legalSource('primary',choice))+'</p>':'')+
           practical+'</details>';
       })() : '')+
+      (d.id==='locality' && global.EducationTransferLocalityResources ? '<details class="primary-coservice-guide"><summary>Περισσότερες πληροφορίες</summary><p>'+escapeText(global.EducationTransferLocalityResources.detail('primary')).replace(/\n/g,'<br>')+'</p><p class="primary-coservice-source">Πηγή: '+escapeText(global.EducationTransferLocalityResources.source('primary'))+'</p></details>' : '')+
       (d.id==='children-guide' && global.EducationTransferChildrenDocuments ? '<details class="primary-children-guide"><summary>Αναλυτικά αποδεικτικά ανά περίπτωση τέκνου</summary>'+global.EducationTransferChildrenDocuments.render('primary')+'</details>' : '')+'</div>';}).join('');
     $('primaryChecklistProgress').textContent=checklistState.progressText(counts,'primary');
     updateMail(docs);
@@ -587,6 +588,8 @@
       var extra='';
       if(d.id==='children-guide' && global.EducationTransferChildrenDocuments){
         extra=global.EducationTransferChildrenDocuments.detail('primary');
+      } else if(d.id==='locality' && global.EducationTransferLocalityResources){
+        extra=global.EducationTransferLocalityResources.detail('primary')+'\nΠηγή: '+global.EducationTransferLocalityResources.source('primary');
       } else if(d.id==='coservice' && global.EducationTransferCoServiceResources){
         var resources=global.EducationTransferCoServiceResources,choice=$('primaryCoServiceCase').value;
         var legal=resources.legalDetail ? resources.legalDetail(choice) : '';

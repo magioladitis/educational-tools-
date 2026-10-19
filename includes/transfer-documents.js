@@ -161,7 +161,7 @@ function build(){
    spouseDoc.disabled=info.blocked || caseValue==='other';
    a.push(spouseDoc);
   }
-  if($('locality').checked) a.push(entry('locality','Εντοπιότητα','Ελέγξτε βεβαίωση δημοτικότητας, χρόνο κτήσης της και αντιστοίχιση με τη ζητούμενη περιοχή ή τον δήμο.','Πιθανό δικαιολογητικό'));
+  if($('locality').checked) a.push(entry('locality','Εντοπιότητα',global.EducationTransferLocalityResources ? global.EducationTransferLocalityResources.detail('secondary')+' Νομική βάση: '+global.EducationTransferLocalityResources.source('secondary') : 'Ελέγξτε τη διετία δημοτικότητας και το πιστοποιητικό γέννησης ή οικογενειακής κατάστασης.','Πιθανό δικαιολογητικό'));
   // No separate MSD row: the record item above includes this check for either entry mode.
  }
  // The EAE-to-General eligibility verdict is already displayed above the checklist.
