@@ -4427,11 +4427,7 @@ body.edu-ui.edu-page-transfer .transfer-submission-special-note { border-left:3p
 .transfer-coservice-resources ul {padding-left:20px;margin:7px 0 9px;}
 .transfer-coservice-resources li {margin:5px 0;}
 .transfer-coservice-resources__note {font-size:0.88rem;}
-.primary-coservice-guide {margin:9px 0;}
-.primary-coservice-guide > summary {cursor:pointer;font-weight:600;color:var(--edu-primary-dark,#225ba3);padding:9px 0;min-height:40px;}
-
+/* Both transfer grades use .edu-transfer-doc__disclosure for personal evidence details. */
 /* v3.22.175: shared child evidence guidance */
-.primary-children-guide { margin-top: .6rem; }
-.primary-children-guide summary { cursor: pointer; font-weight: 600; }
 .transfer-children-guide { line-height: 1.5; padding-top: .5rem; }
 .transfer-children-guide p { margin: .4rem 0 .7rem; }

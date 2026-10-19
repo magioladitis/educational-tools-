@@ -2,9 +2,7 @@
     #primaryServiceDurationPanel[hidden], #primaryServicePointsPanel[hidden], #primaryEmailDetails[hidden], #primaryEaeFields[hidden], #primaryGeneralOrganicField[hidden], #primaryEligibility[hidden], #primaryEaeYearsField[hidden], #primaryEaeGeneralYearsField[hidden], #primaryEaeAppointmentYearsField[hidden], #primaryPreviousDossierField[hidden], #primaryEaeCertificationField[hidden], #primaryEaeCertificationDossierField[hidden], #primaryMydocsNotice[hidden], #primaryEmailOpen[hidden] { display:none!important; }
     .primary-transfer-notice {border:1px solid #e2bc6b; background:#fff9ec; padding:12px; border-radius:10px; margin:12px 0; color:#4c390e; }
     .primary-transfer-info {border:1px solid #a4b7c9; padding:12px; border-radius:10px; margin:12px 0;}
-    .primary-doc-row {border-top:1px solid #d4dce6; padding:12px 0;}
-    .primary-doc-row label {display:flex;gap:10px;align-items:flex-start;}
-    .primary-doc-kind {font-size:.84rem; color:#516477; margin:4px 0 0 27px;}
+    /* Checklist rows now reuse the shared Secondary/Primary .edu-transfer-doc styles. */
     .primary-email-feature {padding:16px; border:1px solid #93b7db; border-radius:12px; margin:16px 0;}
     .primary-email-feature textarea {min-height:145px; width:100%; font-family:inherit;}
     .primary-email-feature input {width:100%;}

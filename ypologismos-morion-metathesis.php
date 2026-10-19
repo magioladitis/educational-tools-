@@ -364,7 +364,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           . '<p><strong>Αμοιβαίες μεταθέσεις:</strong> αίτηση εντός 15 ημερών από την ανακοίνωση των μεταθέσεων.</p>'
       )); ?>
 
-      <section id="transferDocumentsPanel" style="padding:16px; border:1px solid #b8c5d5; border-radius:12px; margin:16px 0;">
+      <section id="transferDocumentsPanel" class="card">
         <h2 style="margin-top:0">Δ. Προσωπική λίστα δικαιολογητικών</h2>
         <div id="transferDocumentActionSummary" class="transfer-doc-action-summary" role="note" hidden></div>
         <p class="small-note">Η λίστα προσαρμόζεται στις επιλογές σας. Μόνο οι ενέργειες που πρέπει να ετοιμάσετε έχουν checkbox· οι υπηρεσιακοί έλεγχοι και τα αυτεπαγγέλτως αναζητούμενα εμφανίζονται ενημερωτικά.</p>

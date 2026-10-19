@@ -234,26 +234,46 @@
     }
     return docs;
   }
+  // The two grades share the same disclosure/card visual primitives. Their
+  // evidence, channel and submission rules remain grade-specific.
+  var primaryOpenDetails = {};
   function updateCheckList(docs) {
     var checklist=$('primaryChecklist');
     var counts=checklistState.reconcile(docs,function(d){return d.action;});
-    checklist.innerHTML=docs.map(function(d){return '<div class="primary-doc-row" data-primary-doc="'+escapeText(d.id)+'">' +
-      (d.action ? '<label><input type="checkbox" data-primary-check="'+escapeText(d.id)+'"'+(checklistState.isComplete(d.id)?' checked':'')+'><strong>'+escapeText(d.title)+'</strong></label>' : '<div><strong>ⓘ '+escapeText(d.title)+'</strong></div>') +
-      '<p class="primary-doc-kind">'+escapeText(d.desc)+'</p>'+
-      (d.id==='coservice' && global.EducationTransferCoServiceResources ? (function(){
+    checklist.innerHTML=docs.map(function(d){
+      var id=escapeText(d.id),title=escapeText(d.title);
+      var extra='';
+      if(d.id==='registry') {
+        extra='<p>Ελέγξτε την αναγνωρισμένη συνολική υπηρεσία, τις καταχωρισμένες υπηρετήσεις και τις μονάδες συνθηκών διαβίωσης στο επίσημο Μητρώο πριν οριστικοποιήσετε την αίτηση.</p>'+
+          '<p><a class="edu-transfer-doc__portal" href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">Άνοιγμα teachers.minedu.gov.gr ↗</a></p>';
+      } else if(d.id==='family') {
+        extra='<p>Το πιστοποιητικό οικογενειακής κατάστασης αναζητείται αυτεπαγγέλτως από την αρμόδια ΔΠΕ, σύμφωνα με την εγκύκλιο Πρωτοβάθμιας. Δεν απαιτείται να το στείλετε αυτοτελώς, εκτός εάν σας ζητηθεί ειδικά.</p>';
+      } else if(d.id==='coservice' && global.EducationTransferCoServiceResources) {
         var resources=global.EducationTransferCoServiceResources,choice=$('primaryCoServiceCase').value;
         var legal=resources.legalDetail ? resources.legalDetail(choice) : '';
         var practical=resources.render(choice);
-        if(!legal && !practical)return '';
-        return '<details class="primary-coservice-guide"><summary>'+(legal?'Περισσότερες πληροφορίες':'Από πού εκδίδονται τα δικαιολογητικά;')+'</summary>'+
-          (legal?'<p>'+escapeText(legal)+'</p><p>'+escapeText(resources.evidenceRecency())+'</p><p class="primary-coservice-source">'+escapeText(resources.legalSource('primary',choice))+'</p>':'')+
-          practical+'</details>';
-      })() : '')+
-      (d.id==='locality' && global.EducationTransferLocalityResources ? '<details class="primary-coservice-guide"><summary>Περισσότερες πληροφορίες</summary><p>'+escapeText(global.EducationTransferLocalityResources.detail('primary')).replace(/\n/g,'<br>')+'</p><p class="primary-coservice-source">Πηγή: '+escapeText(global.EducationTransferLocalityResources.source('primary'))+'</p></details>' : '')+
-      (d.id==='children-guide' && global.EducationTransferChildrenDocuments ? '<details class="primary-children-guide"><summary>Αναλυτικά αποδεικτικά ανά περίπτωση τέκνου</summary>'+global.EducationTransferChildrenDocuments.render('primary')+'</details>' : '')+'</div>';}).join('');
+        if(legal || practical)extra=(legal?'<p>'+escapeText(legal)+'</p><p>'+escapeText(resources.evidenceRecency())+'</p><p class="edu-transfer-doc__source">'+escapeText(resources.legalSource('primary',choice))+'</p>':'')+practical;
+      } else if(d.id==='locality' && global.EducationTransferLocalityResources) {
+        extra='<p>'+escapeText(global.EducationTransferLocalityResources.detail('primary')).replace(/\n/g,'<br>')+'</p><p class="edu-transfer-doc__source">Πηγή: '+escapeText(global.EducationTransferLocalityResources.source('primary'))+'</p>';
+      } else if(d.id==='children-guide' && global.EducationTransferChildrenDocuments) {
+        extra=global.EducationTransferChildrenDocuments.render('primary');
+      }
+      var detailHtml=extra?'<details class="edu-transfer-doc__disclosure" data-primary-details="'+id+'"'+(primaryOpenDetails[d.id]?' open':'')+'><summary>Περισσότερες πληροφορίες</summary><div class="edu-transfer-doc__body">'+extra+'</div></details>':'';
+      return '<article class="primary-doc-row edu-transfer-doc'+(!d.action?' is-informational':'')+'" data-primary-doc="'+id+'">'+
+        '<div class="edu-transfer-doc__head">'+
+          (d.action?'<input class="edu-transfer-doc__check" type="checkbox" id="primaryDocCheck-'+id+'" data-primary-check="'+id+'"'+(checklistState.isComplete(d.id)?' checked':'')+' aria-label="Ετοιμάστηκε: '+title+'">':'<span class="edu-transfer-doc__info-icon" aria-hidden="true">ⓘ</span>')+
+          '<div class="edu-transfer-doc__main">'+
+            (d.action?'<label class="edu-transfer-doc__title" for="primaryDocCheck-'+id+'">'+title+'</label>':'<div class="edu-transfer-doc__title">'+title+'</div>')+
+            '<p class="edu-transfer-doc__channel">'+escapeText(d.desc)+'</p>'+detailHtml+
+          '</div></div></article>';
+    }).join('');
+    checklist.querySelectorAll('details[data-primary-details]').forEach(function(details){
+      details.addEventListener('toggle',function(){primaryOpenDetails[details.getAttribute('data-primary-details')]=details.open;});
+    });
     $('primaryChecklistProgress').textContent=checklistState.progressText(counts,'primary');
     updateMail(docs);
   }
+
   function numeric(el,max){
     var raw=el.value;
     if(raw==='')return 0;

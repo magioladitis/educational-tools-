@@ -1,0 +1,31 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const get=p=>fs.readFileSync(path.join(root,p),'utf8');
+const secondary=get('ypologismos-morion-metathesis.php');
+const primary=get('ypologismos-morion-metathesis-protovathmia.php');
+const primJS=get('includes/transfer-primary.js');
+const secJS=get('includes/transfer-documents.js');
+const common=get('assets/common.css');
+assert.match(secondary,/<section id="transferDocumentsPanel" class="card">/,'Secondary checklist is a standard white calculator card');
+assert.match(primary,/calculatorCardStart\(array\('title'=>'Δ\. Προσωπική λίστα δικαιολογητικών'\)\)/,'Primary checklist remains standard white card');
+for(const js of [primJS,secJS]){
+ assert.match(js,/edu-transfer-doc__disclosure/,'same summary/disclosure primitive');
+ assert.match(js,/edu-transfer-doc__body/,'same body styles');
+ assert.match(js,/edu-transfer-doc__title/,'same checklist title styles');
+ assert.match(js,/edu-transfer-doc__info-icon/,'same informational item styles');
+}
+assert.match(primJS,/data-primary-check=/,'Primary actionable checkboxes preserved');
+assert.match(primJS,/checklistState\.progressText\(counts,'primary'\)/,'Primary progress preserved');
+assert.match(primJS,/primaryOpenDetails\[details\.getAttribute\('data-primary-details'\)\]/,'Disclosure openness preserved on update');
+assert.match(primJS,/d\.id==='coservice' && global\.EducationTransferCoServiceResources/);
+assert.match(primJS,/d\.id==='locality' && global\.EducationTransferLocalityResources/);
+assert.match(primJS,/d\.id==='children-guide' && global\.EducationTransferChildrenDocuments/);
+assert.match(primJS,/d\.id==='registry'/,'Registry explanations available');
+assert.match(primJS,/d\.id==='family'/,'Family document explanations available');
+assert.match(common,/\.edu-transfer-doc__disclosure > summary/,'Shared disclosure styles');
+assert.doesNotMatch(primJS,/primary-coservice-guide|primary-children-guide/,'Legacy disclosure styles removed');
+assert.doesNotMatch(secondary,/<section id="transferDocumentsPanel" style=/,'No ad hoc nonwhite secondary checklist panel');
+console.log('PASS v3.22.191 shared white document cards and common collapsible evidence UI');
