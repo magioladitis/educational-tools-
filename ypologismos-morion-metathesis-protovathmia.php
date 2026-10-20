@@ -116,10 +116,19 @@ foreach ($primaryTransferBranchCodes as $code) {
           <div class="field"><label for="primaryReturnPath">Υπηρεσιακή προέλευση</label>
             <select id="primaryReturnPath"><option value="none">Δεν ζητώ επιστροφή από ΕΑΕ</option><option value="transferred">Διορίστηκα στη Γενική και μετατέθηκα σε ΕΑΕ</option><option value="appointed">Διορίστηκα αρχικά στην ΕΑΕ</option></select>
           </div>
+          <div id="primaryReturnBranchField" class="field" hidden><label for="primaryReturnBranch">Υπηρεσιακός κλάδος — υποχρεωτικός για τον ειδικό προέλεγχο</label>
+            <select id="primaryReturnBranch">
+              <option value="">Επιλέξτε κλάδο</option>
+              <?php foreach ($primaryTransferSpecialtyLabels as $code => $label): ?>
+              <option value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($code . ' — ' . $label, ENT_QUOTES, 'UTF-8'); ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
           <div id="primaryReturnYearsField" class="field" hidden><label for="primaryReturnYears">Διδακτικά έτη υπηρεσίας στην ΕΑΕ από την αντίστοιχη μετάθεση / τον διορισμό</label><input type="number" id="primaryReturnYears" min="0" max="50" step="0.01" placeholder="π.χ. 5"></div>
           <div id="primaryReturnAreaYearsField" class="field" hidden><label for="primaryReturnAreaYears">Από αυτά, έτη στην περιοχή αρχικού διορισμού ΕΑΕ</label><input type="number" id="primaryReturnAreaYears" min="0" max="50" step="0.01" placeholder="π.χ. 2"></div>
-          <p id="primaryReturnStatus" class="primary-transfer-info" role="status" aria-live="polite"></p>
-          <p class="small-note">Εγκύκλιος Π.Ε. 138023/Ε2/2026, Μέρος Τρίτο, κεφ. ΣΤ΄ §2: απαιτείται διετία από μετάθεση σε ΕΑΕ και υπηρέτηση οργανικής ή πενταετία στην ΕΑΕ (με διετία στην περιοχή διορισμού) για αρχικό διορισμό στην ΕΑΕ. Ακόμη και για σχολείο Γενικής στην ίδια περιοχή, ακολουθείται αίτηση από περιοχή σε περιοχή.</p>
+          <p id="primaryReturnStatus" class="primary-eae-status" data-status="review" role="status" aria-live="polite"></p>
+          <p class="small-note"><strong>ΠΕ61 / ΠΕ71:</strong> Οι αυτοτελείς κλάδοι Νηπιαγωγών και Δασκάλων ΕΑΕ δεν υπάγονται στη διαδικασία μετάθεσης προς τη Γενική· η πενταετία δεν μετατρέπει τον κλάδο σε ΠΕ60 / ΠΕ70.</p>
+          <p class="small-note">Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026, Μέρος Πρώτο, κεφ. Β΄ §1.5.1 και Μέρος Τρίτο, κεφ. ΣΤ΄ §2: για τις λοιπές επιλέξιμες περιπτώσεις απαιτείται διετία από μετάθεση σε ΕΑΕ και υπηρέτηση οργανικής ή πενταετία στην ΕΑΕ (με διετία στην περιοχή διορισμού) για αρχικό διορισμό στην ΕΑΕ. Ακόμη και για σχολείο Γενικής στην ίδια περιοχή, ακολουθείται αίτηση από περιοχή σε περιοχή. <a href="https://www.minedu.gov.gr/site/71034-15-10-26-metatheseis-ekpaideutikon-protobathmias-ekpaideuses-scholikou-etous-2026-2027" target="_blank" rel="noopener noreferrer">Επίσημη εγκύκλιος ↗</a></p>
         </section>
         <p id="primaryPlacementNotice" class="primary-transfer-notice" hidden>Βελτίωση / οριστική τοποθέτηση: κατά την προθεσμία 16/10–02/11/2026 υποβάλλεται η αίτηση <strong>χωρίς προτιμήσεις σχολείων</strong>. Οι προτιμήσεις δηλώνονται σε μεταγενέστερο στάδιο που ανακοινώνεται από τη ΔΠΕ. Η εντοπιότητα και η συνυπηρέτηση επαληθεύονται για τον συγκεκριμένο προορισμό· η συνολική βαθμολογία είναι ενδεικτική. Το πεδίο «πρώτη προτίμηση περιοχής» δεν εφαρμόζεται εδώ.</p>
         <section id="primaryEaeRouteFields" class="primary-transfer-notice" hidden aria-label="Ειδικός προέλεγχος διαδρομής ΕΑΕ">
@@ -380,6 +389,7 @@ SOCIAL_PRIMARY_EXTRAS
   <p>Επίσημη βάση: εγκύκλιος μεταθέσεων Πρωτοβάθμιας <strong>138023/Ε2/15-10-2026</strong> (ΑΔΑ: 9Ρ7Ν46ΝΚΠΔ-5Κ5). Για τη γενική διαδικασία, τα δικαιολογητικά μοριοδότησης που απαιτούν αποστολή διαβιβάζονται με email στη ΔΠΕ οργανικής.</p>
   <?php sourceCardLinksStart(); ?>
     <?php sourceCardLink('https://www.minedu.gov.gr/site/71034-15-10-26-metatheseis-ekpaideutikon-protobathmias-ekpaideuses-scholikou-etous-2026-2027','ΥΠΑΙΘΑ — Εγκύκλιος Πρωτοβάθμιας 2026–2027 ↗'); ?>
+    <?php sourceCardLink('https://diavgeia.gov.gr/doc/9Ρ7Ν46ΝΚΠΔ-5Κ5','Διαύγεια — Εγκύκλιος Π.Ε. · ΑΔΑ 9Ρ7Ν46ΝΚΠΔ-5Κ5 ↗'); ?>
     <?php sourceCardLink('https://teachers.minedu.gov.gr/','Επίσημο μητρώο εκπαιδευτικών / αιτήσεις ↗'); ?>
   <?php sourceCardLinksEnd(); ?>
 <?php sourceCardEnd(); ?>

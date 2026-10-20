@@ -100,6 +100,19 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         </section>
       <?php calculatorCardEnd(); ?>
 
+<style>
+#transferEaePanel.kedasy-awaits-branch #transferEaeQualificationsFieldset,
+#transferEaePanel.kedasy-awaits-branch #transferEaeRouteNote,
+#transferEaePanel.kedasy-awaits-branch #transferEaeExperienceRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaeGeneralYearsRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaeSensoryCertificationRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaeNewlyRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaeAreaYearsRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaePreviousYearFieldGrid,
+#transferEaePanel.kedasy-awaits-branch #transferEaeNewDocumentsRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaeDossierAdvice,
+#transferEaePanel.kedasy-awaits-branch #transferEaeAdvice { display:none!important; }
+</style>
       <section id="transferEaePanel" class="calculator-card" style="display:none; padding:18px; border:1px solid #b8c5d5; border-radius:12px; margin-bottom:16px;">
         <h2>Προέλεγχος δικαιώματος μετάθεσης στην ΕΑΕ</h2>
         <p class="small-note">Δηλώστε τα προσόντα ΕΑΕ που διαθέτετε. Αρκεί μία αποδεκτή διαδρομή εξειδίκευσης· το δικαίωμα εξετάζεται <strong>συνδυαστικά</strong> με την προέλευση, τον χρόνο υπηρεσίας και τον τύπο θέσης. Οι ενδείξεις αποτελούν προέλεγχο, όχι διοικητική απόφαση.</p>
@@ -119,6 +132,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           <div class="field"><label for="transferEaeBranch">Κλάδος</label>
             <select id="transferEaeBranch"><option value="other">Άλλος κλάδος Δ.Ε. / δεν έχω επιλέξει</option><option value="pe02">ΠΕ02 Φιλολόγων</option><option value="pe03">ΠΕ03 Μαθηματικών</option><option value="pe04">ΠΕ04 Φυσικών Επιστημών</option><option value="pe11">ΠΕ11 Φυσικής Αγωγής</option></select>
           </div>
+          <p id="transferEaeKedasyChooseBranch" class="small-note" role="status" aria-live="polite" hidden style="grid-column:1/-1">Επιλέξτε πρώτα κλάδο ΠΕ02, ΠΕ03 ή ΠΕ04 για να εμφανιστούν οι υπόλοιπες προϋποθέσεις μετάθεσης σε ΚΕΔΑΣΥ.</p>
           <fieldset class="transfer-eae-qualifications" id="transferEaeQualificationsFieldset" style="grid-column:1/-1">
             <legend>Προσόντα εξειδίκευσης στην ΕΑΕ</legend>
             <p class="small-note">Επιλέξτε <strong>όσα προσόντα διαθέτετε</strong>. Για τη θεμελίωση αρκεί μία αποδεκτή διαδρομή· η υπηρεσία ελέγχει την αναγνώριση και τη συνάφεια.</p>
@@ -146,12 +160,12 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         </div>
         <div id="transferEaeNewlyRow" class="check-row"><label><input type="checkbox" id="transferEaeNewly"> Νεοδιόριστος: χρειάζεται έλεγχος διετίας στην περιοχή διορισμού</label></div>
         <div class="field" id="transferEaeAreaYearsRow" style="display:none; margin-top:10px"><label for="transferEaeAreaYears">Έτη υπηρεσίας στην περιοχή διορισμού</label><input id="transferEaeAreaYears" type="number" min="0" max="45" step="0.1" inputmode="decimal" value="0"></div>
-        <div class="field-grid" style="margin-top:14px">
+        <div class="field-grid" id="transferEaePreviousYearFieldGrid" style="margin-top:14px">
           <div class="field"><label for="transferEaePreviousYear">Έχετε αποστείλει ηλεκτρονικό φάκελο ΕΑΕ σε προηγούμενο κύκλο;</label>
             <select id="transferEaePreviousYear"><option value="none">Όχι / δεν γνωρίζω</option><option value="2025">Ναι, το 2025</option><option value="2026">Ναι, το 2026</option><option value="other">Ναι, σε άλλο έτος</option></select>
           </div>
         </div>
-        <div class="check-row"><label><input type="checkbox" id="transferEaeNewDocuments"> Έχω νέα στοιχεία ή δικαιολογητικά στον φάκελο ΕΑΕ που δεν είχαν υποβληθεί.</label></div>
+        <div class="check-row" id="transferEaeNewDocumentsRow"><label><input type="checkbox" id="transferEaeNewDocuments"> Έχω νέα στοιχεία ή δικαιολογητικά στον φάκελο ΕΑΕ που δεν είχαν υποβληθεί.</label></div>
         <div id="transferEaeDossierAdvice" role="status" aria-live="polite" class="small-note" style="margin:10px 0"></div>
         <div id="transferEaeAdvice" role="status" aria-live="polite" aria-atomic="true" class="transfer-eligibility-review" style="padding:12px; margin-top:14px;"></div>
         <p class="small-note">Νομική βάση: εγκύκλιος 138014/Ε2/15-10-2026, Μέρος Δεύτερο, κεφάλαιο Δ΄ (σελ. 34–38). Προσόντα, πενταετής διαδρομή και ειδικοί όροι υπόκεινται σε υπηρεσιακό έλεγχο.</p>

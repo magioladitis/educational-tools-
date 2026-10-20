@@ -68,3 +68,8 @@ body.edu-page-transfer #primaryScoringCard .transfer-service-grid .field { min-w
 body.edu-page-transfer #primaryScoringCard .transfer-service-grid label small {
   font-size:12px; font-weight:400; color:var(--edu-muted,#64748b);
 }
+
+/* 3.22.192: the return-to-General decision must not show an empty status box. */
+#primaryReturnStatus:empty {display:none!important;}
+#primaryReturnFromEae[hidden], #primaryReturnBranchField[hidden],
+#primaryReturnYearsField[hidden], #primaryReturnAreaYearsField[hidden] {display:none!important;}

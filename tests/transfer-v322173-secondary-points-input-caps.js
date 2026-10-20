@@ -1,0 +1,21 @@
+/* Secondary direct points input clamps at existing scoring parser maxima. */
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.join(__dirname,'..');
+const page=fs.readFileSync(path.join(root,'ypologismos-morion-metathesis.php'),'utf8');
+const controller=fs.readFileSync(path.join(root,'includes/transfer-ui.js'),'utf8');
+const primary=fs.readFileSync(path.join(root,'includes/transfer-primary.js'),'utf8');
+const scoring=require('../includes/transfer-calculations.js');
+assert.match(page,/id="serviceDirectPoints"[^>]*data-transfer-direct-points-cap="125"/);
+assert.match(page,/id="msdDirectPoints"[^>]*data-transfer-direct-points-cap="1000"/);
+assert.match(controller,/function capTransferDirectPoints\(el\)/);
+assert.equal((controller.match(/capTransferDirectPoints\(target\)/g)||[]).length,2);
+assert.match(controller,/el\.value = String\(max\)/);
+assert.ok(scoring.parseDirectServicePoints('125').valid);
+assert.equal(scoring.parseDirectServicePoints('125.01').valid,false);
+assert.ok(scoring.parseDirectMsd('1000').valid);
+assert.equal(scoring.parseDirectMsd('1000.01').valid,false);
+assert.match(primary,/function capPrimaryDirectPoints\(el\)/);
+console.log('PASS v3.22.173 secondary caps — parser and UI contracts');

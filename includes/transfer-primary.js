@@ -96,10 +96,26 @@
   function isMinorityWithin(){return isMinority() && $('primaryMinorityRoute').value==='within';}
   function updateReturnFromEae(){
     var active=$('primaryMode').value==='region',panel=$('primaryReturnFromEae'),path=$('primaryReturnPath').value;
+    var branch=$('primaryReturnBranch').value,blocked=branch==='ΠΕ61'||branch==='ΠΕ71';
+    var statusNode=$('primaryReturnStatus');
     panel.hidden=!active;
-    $('primaryReturnYearsField').hidden=!active||path==='none';
-    $('primaryReturnAreaYearsField').hidden=!active||path!=='appointed';
-    if(!active||path==='none'){$('primaryReturnStatus').textContent='';return;}
+    $('primaryReturnBranchField').hidden=!active||path==='none';
+    $('primaryReturnYearsField').hidden=!active||path==='none'||blocked;
+    $('primaryReturnAreaYearsField').hidden=!active||path!=='appointed'||blocked;
+    if(!active||path==='none'){
+      statusNode.textContent='';statusNode.dataset.status='review';return;
+    }
+    // The 5-year EAE appointment rule cannot convert an exclusive EAE branch
+    // (PE61 or PE71) into the distinct General Education branch (PE60 or PE70).
+    // Primary circular 138023/E2/15-10-2026, Part I B §1.5.1.
+    if(blocked){
+      statusNode.textContent='⚠ Ο κλάδος '+branch+' είναι αυτοτελής κλάδος Ειδικής Αγωγής. Δεν προβλέπεται μετάθεση στη Γενική μέσω αυτής της διαδικασίας, ανεξάρτητα από τα έτη υπηρεσίας. Η πενταετία δεν επιτρέπει αλλαγή κλάδου σε ΠΕ60/ΠΕ70.';
+      statusNode.dataset.status='problem';return;
+    }
+    if(!branch){
+      statusNode.textContent='ⓘ Επιλέξτε τον υπηρεσιακό κλάδο για να ελεγχθεί η δυνατότητα επιστροφής από την ΕΑΕ στη Γενική.';
+      statusNode.dataset.status='review';return;
+    }
     var yRaw=$('primaryReturnYears').value.trim(),aRaw=$('primaryReturnAreaYears').value.trim();
     var y=yRaw===''?NaN:Number(yRaw), a=aRaw===''?NaN:Number(aRaw);
     var yrOK=Number.isFinite(y)&&y>=0&&y<=50;
@@ -116,7 +132,8 @@
         y<5||a<2?'⚠ Δεν συμπληρώνονται η πενταετία ΕΑΕ και η διετία περιοχής διορισμού.':
         '✓ Θετική ένδειξη πενταετίας και διετίας περιοχής διορισμού, με τελικό έλεγχο από τη ΔΠΕ.';
     }
-    $('primaryReturnStatus').textContent=status;
+    statusNode.textContent=status;
+    statusNode.dataset.status=status.startsWith('⚠')?'problem':status.startsWith('✓')?'positive':'review';
   }
   function updateEaeRoute(){
     var mode=primaryEffectiveMode();
@@ -157,8 +174,15 @@
     }
     if(isPlacement())docs.push(info('placement-procedure','Οριστική τοποθέτηση / βελτίωση — στάδια',
       'Αρχική ηλεκτρονική αίτηση έως 02/11/2026 χωρίς προτιμήσεις σχολείων. Η τοπική ΔΠΕ θα ανακοινώσει μεταγενέστερα τα οργανικά κενά και τις προτιμήσεις· ενημερωτικός προέλεγχος, όχι πιστοποίηση δικαιώματος.'));
-    if($('primaryMode').value==='region' && $('primaryReturnPath').value!=='none')docs.push(info('return-eae-general','Επιστροφή από ΕΑΕ στη Γενική',
-      'Η αίτηση παραμένει από περιοχή σε περιοχή, ακόμη και αν ο προορισμός είναι σχολείο Γενικής της ίδιας περιοχής. Δείτε τον ειδικό προέλεγχο διετίας ή πενταετίας και την υπηρέτηση οργανικής.'));
+    if($('primaryMode').value==='region' && $('primaryReturnPath').value!=='none'){
+      var returnBranch=$('primaryReturnBranch').value;
+      var exclusive=returnBranch==='ΠΕ61'||returnBranch==='ΠΕ71';
+      docs.push(info('return-eae-general','Επιστροφή από ΕΑΕ στη Γενική',
+        exclusive?'Ο κλάδος '+returnBranch+' δεν υπάγεται στη διαδικασία μετάθεσης ΕΑΕ → Γενική. Η πενταετία δεν επιτρέπει αλλαγή σε ΠΕ60/ΠΕ70. Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026, Μέρος Α΄ Κεφ. Β΄ §1.5.1.':
+        'Η αίτηση παραμένει από περιοχή σε περιοχή, ακόμη και αν ο προορισμός είναι σχολείο Γενικής της ίδιας περιοχής. '+
+        (!returnBranch?'Πρέπει πρώτα να επιλεγεί υπηρεσιακός κλάδος. ':'')+
+        'Δείτε τον ειδικό προέλεγχο διετίας ή πενταετίας και την υπηρέτηση οργανικής.'));
+    }
     if (mode!=='intercultural' && (Number($('primaryChildren').value)>0 || $('primaryFamily').checked)) {
       docs.push(info('family','Πιστοποιητικό οικογενειακής κατάστασης','Αυτεπάγγελτα από ΔΠΕ — δεν το προσκομίζετε'));
     }
@@ -637,12 +661,16 @@
   document.querySelectorAll('input,select').forEach(function(el){
     if(el.closest('#primaryEmailDetails'))return;
     el.addEventListener('input',function(){
+      if(el.id==='primaryReturnBranch')$('primarySpecialty').value=el.value;
       capPrimaryDirectPoints(el);
       if(el.id==='primaryChildren'&&global.EducationTransferSocialInput)
         global.EducationTransferSocialInput.clampChildren(el);
       update();
     });
-    el.addEventListener('change',function(){capPrimaryDirectPoints(el);update();});
+    el.addEventListener('change',function(){
+      if(el.id==='primaryReturnBranch')$('primarySpecialty').value=el.value;
+      capPrimaryDirectPoints(el);update();
+    });
   });
   if(global.EducationTransferPrimaryPeriods)global.EducationTransferPrimaryPeriods.bind(update);
   if(global.EducationTransferEmailComponent&&global.EducationTransferEmailComponent.fillSpecialtyDropdown){
@@ -650,7 +678,18 @@
       $('primarySpecialty'),global.EducationTransferPrimarySpecialtyLabels||{},'');
   }
   ['primaryName','primarySpecialty','primaryRegistry','primaryProtocol','primaryDpe'].forEach(function(id){
-    $(id).addEventListener('input',function(){updateMail(buildDocuments());});
+    $(id).addEventListener('input',function(){
+      if(id==='primarySpecialty'){
+        $('primaryReturnBranch').value=this.value;
+        update();
+      }else updateMail(buildDocuments());
+    });
+    // Native select controls dispatch change; make sure the shared specialty
+    // and the return-path eligibility can never silently disagree.
+    if(id==='primarySpecialty')$(id).addEventListener('change',function(){
+      $('primaryReturnBranch').value=this.value;
+      update();
+    });
   });
   $('primaryEmailOpen').addEventListener('click',function(){
     if(global.EducationTransferEmailComponent){
@@ -669,7 +708,8 @@
   });
   $('primaryClearEmail').addEventListener('click',function(){
     ['primaryName','primarySpecialty','primaryRegistry','primaryProtocol','primaryDpe'].forEach(function(id){$(id).value='';});
-    $('primaryCopyFeedback').textContent='';updateMail(buildDocuments());
+    $('primaryReturnBranch').value='';
+    $('primaryCopyFeedback').textContent='';update();
   });
   $('primaryCopySubject').addEventListener('click',function(){copyPart('Subject');});
   $('primaryCopyBody').addEventListener('click',function(){copyPart('Body');});

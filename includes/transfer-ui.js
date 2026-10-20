@@ -376,6 +376,10 @@
     if(field)field.style.display=sensory?'':'none';
     Array.prototype.forEach.call(branch.options,function(opt){opt.hidden=kedasy && ['other','pe02','pe03','pe04'].indexOf(opt.value)===-1;});
     if(kedasy && ['other','pe02','pe03','pe04'].indexOf(branch.value)===-1)branch.value='other';
+    var waitingForKedasyBranch=kedasy && ['pe02','pe03','pe04'].indexOf(branch.value)===-1;
+    var eaePanel=byId('transferEaePanel'),branchPrompt=byId('transferEaeKedasyChooseBranch');
+    if(eaePanel)eaePanel.classList.toggle('kedasy-awaits-branch',waitingForKedasyBranch);
+    if(branchPrompt)branchPrompt.hidden=!waitingForKedasyBranch;
     if(note)note.textContent=sensory?'Επιλέξτε Σχολείο Κωφών (ΕΝΓ) ή Τυφλών (Braille). Απαιτείται επιπλέον η αντίστοιχη πιστοποιημένη γνώση.':kedasy?'Για ΚΕΔΑΣΥ επιτρέπονται μόνο ΠΕ02, ΠΕ03 ή ΠΕ04, εφόσον προβλέπεται αντίστοιχη οργανική θέση και πληρούνται τα προσόντα ΕΑΕ.':smeae?'Η αίτηση αυτή αφορά ΣΜΕΑΕ/ΕΕΕΕΚ· Κωφών/Τυφλών και ΚΕΔΑΣΥ έχουν ξεχωριστούς κωδικούς αίτησης.':'';
     var pe11Row=byId('transferEaePe11QualificationRow');
     if(pe11Row)pe11Row.style.display=kedasy?'none':'';
@@ -572,6 +576,7 @@
   }
   function syncEligibilityDetails() {
     var mode=byId('mode').value, eae=isEaeMode(mode),music=mode==='music';
+    syncEaeApplicationRoute(mode);
     var sameArea=eae&&byId('transferEaeArea').value==='same';
     var preferenceRow=byId('firstPreferenceRow');
     if(preferenceRow)preferenceRow.classList.toggle('hidden',mode==='local'||sameArea||mode==='music'||mode==='art'||mode==='intercultural');
