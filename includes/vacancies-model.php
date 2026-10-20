@@ -168,14 +168,15 @@ function vacanciesSaveSubmission($roundId, $schoolId, $status, $rows, $schoolNot
     }
 }
 
-function vacanciesDashboardStats($roundId)
+function vacanciesDashboardStats($roundId, $scope = 'general')
 {
     $roundId = (int) $roundId;
+    $scope = $scope === 'special' ? 'special' : 'general';
     if ($roundId <= 0) return array();
     $base = vacanciesQueryOne("SELECT COUNT(*) AS schools_total FROM vacancy_schools WHERE active=1");
-    $submitted = vacanciesQueryOne("SELECT COUNT(DISTINCT school_id) AS schools_submitted FROM vacancy_submissions WHERE round_id=".$roundId." AND education_scope='general' AND status='submitted'");
-    $latestSql = "SELECT s.school_id, MAX(s.revision_no) rev FROM vacancy_submissions s WHERE s.round_id=".$roundId." AND s.education_scope='general' AND s.status='submitted' GROUP BY s.school_id";
-    $totals = vacanciesQueryOne("SELECT COALESCE(SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END),0) vacancies, COALESCE(SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END),0) surpluses, COALESCE(SUM(CASE WHEN e.balance_type='vacancy' AND e.change_reason='new_section' THEN e.hours ELSE 0 END),0) new_section_hours FROM vacancy_submissions s JOIN (".$latestSql.") latest ON latest.school_id=s.school_id AND latest.rev=s.revision_no LEFT JOIN vacancy_entries e ON e.submission_id=s.id WHERE s.round_id=".$roundId." AND s.education_scope='general' AND s.status='submitted'");
+    $submitted = vacanciesQueryOne("SELECT COUNT(DISTINCT school_id) AS schools_submitted FROM vacancy_submissions WHERE round_id=".$roundId." AND education_scope='".$scope."' AND status='submitted'");
+    $latestSql = "SELECT s.school_id, MAX(s.revision_no) rev FROM vacancy_submissions s WHERE s.round_id=".$roundId." AND s.education_scope='".$scope."' AND s.status='submitted' GROUP BY s.school_id";
+    $totals = vacanciesQueryOne("SELECT COALESCE(SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END),0) vacancies, COALESCE(SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END),0) surpluses, COALESCE(SUM(CASE WHEN e.balance_type='vacancy' AND e.change_reason='new_section' THEN e.hours ELSE 0 END),0) new_section_hours FROM vacancy_submissions s JOIN (".$latestSql.") latest ON latest.school_id=s.school_id AND latest.rev=s.revision_no LEFT JOIN vacancy_entries e ON e.submission_id=s.id WHERE s.round_id=".$roundId." AND s.education_scope='".$scope."' AND s.status='submitted'");
     return array(
         'schools_total' => $base ? (int) $base['schools_total'] : 0,
         'schools_submitted' => $submitted ? (int) $submitted['schools_submitted'] : 0,
@@ -185,27 +186,30 @@ function vacanciesDashboardStats($roundId)
     );
 }
 
-function vacanciesDashboardSchools($roundId)
+function vacanciesDashboardSchools($roundId, $scope = 'general')
 {
     $roundId = (int) $roundId;
-    $sql = "SELECT sc.id, sc.name, sc.ministry_code, sub.status, sub.submitted_at, sub.revision_no, sub.school_note, COALESCE(SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END),0) vacancies, COALESCE(SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END),0) surpluses FROM vacancy_schools sc LEFT JOIN (SELECT s1.* FROM vacancy_submissions s1 JOIN (SELECT school_id, MAX(revision_no) rev FROM vacancy_submissions WHERE round_id=".$roundId." AND education_scope='general' GROUP BY school_id) x ON x.school_id=s1.school_id AND x.rev=s1.revision_no WHERE s1.round_id=".$roundId." AND s1.education_scope='general') sub ON sub.school_id=sc.id LEFT JOIN vacancy_entries e ON e.submission_id=sub.id WHERE sc.active=1 GROUP BY sc.id, sc.name, sc.ministry_code, sub.status, sub.submitted_at, sub.revision_no, sub.school_note ORDER BY CASE WHEN sub.status='submitted' THEN 0 WHEN sub.status='draft' THEN 1 ELSE 2 END, sc.name";
+    $scope = $scope === 'special' ? 'special' : 'general';
+    $sql = "SELECT sc.id, sc.name, sc.ministry_code, sub.status, sub.submitted_at, sub.revision_no, sub.school_note, COALESCE(SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END),0) vacancies, COALESCE(SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END),0) surpluses FROM vacancy_schools sc LEFT JOIN (SELECT s1.* FROM vacancy_submissions s1 JOIN (SELECT school_id, MAX(revision_no) rev FROM vacancy_submissions WHERE round_id=".$roundId." AND education_scope='".$scope."' GROUP BY school_id) x ON x.school_id=s1.school_id AND x.rev=s1.revision_no WHERE s1.round_id=".$roundId." AND s1.education_scope='".$scope."') sub ON sub.school_id=sc.id LEFT JOIN vacancy_entries e ON e.submission_id=sub.id WHERE sc.active=1" . ($scope === 'special' ? " AND sub.id IS NOT NULL" : "") . " GROUP BY sc.id, sc.name, sc.ministry_code, sub.status, sub.submitted_at, sub.revision_no, sub.school_note ORDER BY CASE WHEN sub.status='submitted' THEN 0 WHEN sub.status='draft' THEN 1 ELSE 2 END, sc.name";
     return vacanciesQueryAll($sql);
 }
 
-function vacanciesDashboardSpecialties($roundId)
+function vacanciesDashboardSpecialties($roundId, $scope = 'general')
 {
     $roundId = (int) $roundId;
-    $latestSql = "SELECT s.school_id, MAX(s.revision_no) rev FROM vacancy_submissions s WHERE s.round_id=".$roundId." AND s.education_scope='general' AND s.status='submitted' GROUP BY s.school_id";
-    return vacanciesQueryAll("SELECT sp.code, sp.label, SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END) vacancies, SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END) surpluses FROM vacancy_submissions s JOIN (".$latestSql.") latest ON latest.school_id=s.school_id AND latest.rev=s.revision_no JOIN vacancy_entries e ON e.submission_id=s.id JOIN vacancy_specialties sp ON sp.id=e.specialty_id WHERE s.round_id=".$roundId." AND s.education_scope='general' AND s.status='submitted' GROUP BY sp.id, sp.code, sp.label HAVING vacancies>0 OR surpluses>0 ORDER BY vacancies DESC, sp.code");
+    $scope = $scope === 'special' ? 'special' : 'general';
+    $latestSql = "SELECT s.school_id, MAX(s.revision_no) rev FROM vacancy_submissions s WHERE s.round_id=".$roundId." AND s.education_scope='".$scope."' AND s.status='submitted' GROUP BY s.school_id";
+    return vacanciesQueryAll("SELECT sp.code, sp.label, SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END) vacancies, SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END) surpluses FROM vacancy_submissions s JOIN (".$latestSql.") latest ON latest.school_id=s.school_id AND latest.rev=s.revision_no JOIN vacancy_entries e ON e.submission_id=s.id JOIN vacancy_specialties sp ON sp.id=e.specialty_id WHERE s.round_id=".$roundId." AND s.education_scope='".$scope."' AND s.status='submitted' GROUP BY sp.id, sp.code, sp.label HAVING vacancies>0 OR surpluses>0 ORDER BY vacancies DESC, sp.code");
 }
 
-function vacanciesDashboardAllocation($roundId)
+function vacanciesDashboardAllocation($roundId, $scope = 'general')
 {
     $roundId = (int) $roundId;
+    $scope = $scope === 'special' ? 'special' : 'general';
     $result = array('specialties' => array(), 'schools' => array());
     if ($roundId <= 0) return $result;
 
-    $latestSql = "SELECT school_id, MAX(revision_no) rev FROM vacancy_submissions WHERE round_id=".$roundId." AND education_scope='general' AND status='submitted' GROUP BY school_id";
+    $latestSql = "SELECT school_id, MAX(revision_no) rev FROM vacancy_submissions WHERE round_id=".$roundId." AND education_scope='".$scope."' AND status='submitted' GROUP BY school_id";
     // Older vacancy databases may predate the optional `address` column.
     // Keep allocation/coverage usable without requiring a schema migration.
     $addressSelect = "'' AS school_address";
@@ -220,7 +224,7 @@ function vacanciesDashboardAllocation($roundId)
         "JOIN vacancy_schools sc ON sc.id=s.school_id " .
         "JOIN vacancy_entries e ON e.submission_id=s.id " .
         "JOIN vacancy_specialties sp ON sp.id=e.specialty_id " .
-        "WHERE s.round_id=".$roundId." AND s.education_scope='general' AND s.status='submitted' " .
+        "WHERE s.round_id=".$roundId." AND s.education_scope='".$scope."' AND s.status='submitted' " .
         "ORDER BY sp.sort_order, sp.code, e.balance_type, e.hours DESC, sc.name"
     );
 
@@ -360,21 +364,22 @@ function vacanciesPreviousRound($round)
     return vacanciesQueryOne("SELECT id, title, reference_date, school_year, status FROM vacancy_rounds WHERE reference_date<'".$date."' AND id<>".$id." ORDER BY reference_date DESC, id DESC LIMIT 1");
 }
 
-function vacanciesLatestSubmittedTotalsBySchool($roundId)
+function vacanciesLatestSubmittedTotalsBySchool($roundId, $scope = 'general')
 {
     $roundId = (int) $roundId;
+    $scope = $scope === 'special' ? 'special' : 'general';
     if ($roundId <= 0) return array();
-    $latestSql = "SELECT school_id, MAX(revision_no) rev FROM vacancy_submissions WHERE round_id=".$roundId." AND education_scope='general' AND status='submitted' GROUP BY school_id";
-    $rows = vacanciesQueryAll("SELECT sc.id school_id, sc.name, COALESCE(SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END),0) vacancies, COALESCE(SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END),0) surpluses, COALESCE(SUM(CASE WHEN e.balance_type='vacancy' AND e.change_reason='new_section' THEN e.hours ELSE 0 END),0) new_section_hours FROM vacancy_submissions s JOIN (".$latestSql.") x ON x.school_id=s.school_id AND x.rev=s.revision_no JOIN vacancy_schools sc ON sc.id=s.school_id LEFT JOIN vacancy_entries e ON e.submission_id=s.id WHERE s.round_id=".$roundId." AND s.education_scope='general' AND s.status='submitted' GROUP BY sc.id, sc.name ORDER BY sc.name");
+    $latestSql = "SELECT school_id, MAX(revision_no) rev FROM vacancy_submissions WHERE round_id=".$roundId." AND education_scope='".$scope."' AND status='submitted' GROUP BY school_id";
+    $rows = vacanciesQueryAll("SELECT sc.id school_id, sc.name, COALESCE(SUM(CASE WHEN e.balance_type='vacancy' THEN e.hours ELSE 0 END),0) vacancies, COALESCE(SUM(CASE WHEN e.balance_type='surplus' THEN e.hours ELSE 0 END),0) surpluses, COALESCE(SUM(CASE WHEN e.balance_type='vacancy' AND e.change_reason='new_section' THEN e.hours ELSE 0 END),0) new_section_hours FROM vacancy_submissions s JOIN (".$latestSql.") x ON x.school_id=s.school_id AND x.rev=s.revision_no JOIN vacancy_schools sc ON sc.id=s.school_id LEFT JOIN vacancy_entries e ON e.submission_id=s.id WHERE s.round_id=".$roundId." AND s.education_scope='".$scope."' AND s.status='submitted' GROUP BY sc.id, sc.name ORDER BY sc.name");
     $out = array();
     foreach ($rows as $row) $out[(int) $row['school_id']] = $row;
     return $out;
 }
 
-function vacanciesCompareRounds($currentRoundId, $previousRoundId)
+function vacanciesCompareRounds($currentRoundId, $previousRoundId, $scope = 'general')
 {
-    $current = vacanciesLatestSubmittedTotalsBySchool($currentRoundId);
-    $previous = vacanciesLatestSubmittedTotalsBySchool($previousRoundId);
+    $current = vacanciesLatestSubmittedTotalsBySchool($currentRoundId, $scope);
+    $previous = vacanciesLatestSubmittedTotalsBySchool($previousRoundId, $scope);
     $result = array(
         'schools' => 0,
         'previous_vacancies' => 0,

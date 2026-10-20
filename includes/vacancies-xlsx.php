@@ -225,20 +225,33 @@ function vacanciesXlsxZipBinary($files)
     return $local . $central . $end;
 }
 
-function vacanciesXlsxBuild($data)
+/** Dynamic workbook writer supporting multiple sheets without Composer/ZipArchive. */
+function vacanciesXlsxBuildWorkbook($round, $sheetSpecs)
 {
-    $created = gmdate('Y-m-d\\TH:i:s\\Z');
-    $files = array(
-        '[Content_Types].xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>',
-        '_rels/.rels' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>',
-        'docProps/core.xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>'.vacanciesXlsxEscape($data['round']['title']).'</dc:title><dc:creator>Καταγραφή κενών σχολικών μονάδων</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">'.$created.'</dcterms:created></cp:coreProperties>',
-        'docProps/app.xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Καταγραφή κενών σχολικών μονάδων</Application></Properties>',
-        'xl/workbook.xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="ΣΥΝ" sheetId="1" r:id="rId1"/><sheet name="Παρατηρήσεις" sheetId="2" r:id="rId2"/></sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>',
-        'xl/_rels/workbook.xml.rels' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>',
-        'xl/styles.xml' => vacanciesXlsxStylesXml(),
-        'xl/worksheets/sheet1.xml' => vacanciesXlsxMatrixSheetXml($data),
-        'xl/worksheets/sheet2.xml' => vacanciesXlsxNotesSheetXml($data),
-    );
+    if (!$round || !$sheetSpecs) return array(false, 'Δεν υπάρχουν δεδομένα για εξαγωγή.');
+    $created = gmdate('Y-m-d\TH:i:s\Z');
+    $types = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>';
+    $workbookSheets = '';
+    $sheetRels = '';
+    $files = array();
+    $idx = 1;
+    foreach ($sheetSpecs as $spec) {
+        $name = vacanciesXlsxEscape($spec['name']);
+        $worksheet = 'xl/worksheets/sheet'.$idx.'.xml';
+        $types .= '<Override PartName="/'.$worksheet.'" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
+        $workbookSheets .= '<sheet name="'.$name.'" sheetId="'.$idx.'" r:id="rId'.$idx.'"/>';
+        $sheetRels .= '<Relationship Id="rId'.$idx.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'.$idx.'.xml"/>';
+        $files[$worksheet] = $spec['xml'];
+        $idx++;
+    }
+    $types .= '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>';
+    $files['[Content_Types].xml'] = $types;
+    $files['_rels/.rels'] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>';
+    $files['docProps/core.xml'] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>'.vacanciesXlsxEscape($round['title']).'</dc:title><dc:creator>Καταγραφή κενών σχολικών μονάδων</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">'.$created.'</dcterms:created></cp:coreProperties>';
+    $files['docProps/app.xml'] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Καταγραφή κενών σχολικών μονάδων</Application></Properties>';
+    $files['xl/workbook.xml'] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'.$workbookSheets.'</sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>';
+    $files['xl/_rels/workbook.xml.rels'] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'.$sheetRels.'<Relationship Id="rId'.$idx.'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
+    $files['xl/styles.xml'] = vacanciesXlsxStylesXml();
 
     if (class_exists('ZipArchive')) {
         $tmp = tempnam(sys_get_temp_dir(), 'vacxlsx_');
@@ -255,8 +268,30 @@ function vacanciesXlsxBuild($data)
         if ($binary === false) return array(false, 'Δεν διαβάστηκε το προσωρινό αρχείο Excel.');
         return array(true, $binary);
     }
-
     return array(true, vacanciesXlsxZipBinary($files));
+}
+
+/** Legacy standalone export: matrix + school notes. */
+function vacanciesXlsxBuild($data)
+{
+    return vacanciesXlsxBuildWorkbook($data['round'], array(
+        array('name'=>'ΣΥΝ', 'xml'=>vacanciesXlsxMatrixSheetXml($data)),
+        array('name'=>'Παρατηρήσεις', 'xml'=>vacanciesXlsxNotesSheetXml($data))
+    ));
+}
+
+/** Standard admin export: first General, second EAE, notes separate by scope. */
+function vacanciesXlsxBuildCombined($general, $special)
+{
+    if (!$general || !$special || (int)$general['round']['id'] !== (int)$special['round']['id']) {
+        return array(false, 'Η Γενική και η ΕΑΕ πρέπει να ανήκουν στον ίδιο γύρο.');
+    }
+    return vacanciesXlsxBuildWorkbook($general['round'], array(
+        array('name'=>'Γενική', 'xml'=>vacanciesXlsxMatrixSheetXml($general)),
+        array('name'=>'ΕΑΕ', 'xml'=>vacanciesXlsxMatrixSheetXml($special)),
+        array('name'=>'Παρατηρήσεις Γενικής', 'xml'=>vacanciesXlsxNotesSheetXml($general)),
+        array('name'=>'Παρατηρήσεις ΕΑΕ', 'xml'=>vacanciesXlsxNotesSheetXml($special))
+    ));
 }
 
 /** Numeric cell that preserves decimal hours for coverage-preview exports. */

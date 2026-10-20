@@ -14,8 +14,9 @@ if (vacanciesActorNeedsPasswordChange()) {
 }
 
 $roundId = isset($_GET['round']) ? (int) $_GET['round'] : 0;
-$scope = isset($_GET['scope']) && $_GET['scope'] === 'special' ? 'special' : 'general';
-$data = vacanciesExportMatrixData($roundId, $scope);
+$scope = isset($_GET['scope']) && in_array($_GET['scope'], array('general','special'), true) ? $_GET['scope'] : 'both';
+$data = vacanciesExportMatrixData($roundId, $scope === 'both' ? 'general' : $scope);
+$specialData = $scope === 'both' ? vacanciesExportMatrixData($roundId, 'special') : null;
 if (!$data) {
     http_response_code(404);
     header('Content-Type: text/plain; charset=UTF-8');
@@ -23,7 +24,9 @@ if (!$data) {
     exit;
 }
 
-list($ok, $payload) = vacanciesXlsxBuild($data);
+list($ok, $payload) = $scope === 'both'
+    ? vacanciesXlsxBuildCombined($data, $specialData)
+    : vacanciesXlsxBuild($data);
 if (!$ok) {
     http_response_code(500);
     header('Content-Type: text/plain; charset=UTF-8');
@@ -32,7 +35,7 @@ if (!$ok) {
 }
 
 $date = preg_replace('/[^0-9-]/', '', (string) $data['round']['reference_date']);
-$scopePart = $scope === 'special' ? '-eidiki' : '';
+$scopePart = $scope === 'both' ? '-geniki-eae' : ($scope === 'special' ? '-eidiki' : '');
 $filename = 'kena-'.$date.$scopePart.'.xlsx';
 while (ob_get_level() > 0) @ob_end_clean();
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

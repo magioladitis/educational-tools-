@@ -43,16 +43,19 @@ $rounds = vacanciesRounds();
 $roundId = isset($_GET['round']) ? (int) $_GET['round'] : 0;
 if ($roundId <= 0 && isset($rounds[0])) $roundId = (int) $rounds[0]['id'];
 $round = vacanciesRound($roundId);
-$stats = $round ? vacanciesDashboardStats($roundId) : array();
-$schools = $round ? vacanciesDashboardSchools($roundId) : array();
-$allocation = $round ? vacanciesDashboardAllocation($roundId) : array('specialties' => array(), 'schools' => array());
+$scope = isset($_GET['scope']) && $_GET['scope'] === 'special' ? 'special' : 'general';
+$generalStats = $round ? vacanciesDashboardStats($roundId, 'general') : array();
+$specialStats = $round ? vacanciesDashboardStats($roundId, 'special') : array();
+$stats = $scope === 'special' ? $specialStats : $generalStats;
+$schools = $round ? vacanciesDashboardSchools($roundId, $scope) : array();
+$allocation = $round ? vacanciesDashboardAllocation($roundId, $scope) : array('specialties' => array(), 'schools' => array());
 $schoolAllocationById = array();
 foreach ($allocation['schools'] as $schoolAllocationRow) {
     $schoolAllocationById[(int) $schoolAllocationRow['id']] = $schoolAllocationRow;
 }
 $reasonOptions = vacanciesReasonOptions();
 $previousRound = $round ? vacanciesPreviousRound($round) : null;
-$comparison = ($round && $previousRound) ? vacanciesCompareRounds($roundId, (int) $previousRound['id']) : null;
+$comparison = ($round && $previousRound) ? vacanciesCompareRounds($roundId, (int) $previousRound['id'], $scope) : null;
 $config = vacanciesConfig();
 $defaultSchoolYear = ($config && isset($config['default_school_year'])) ? (string) $config['default_school_year'] : '2026-2027';
 $roundStatusLabels = array(
@@ -99,6 +102,7 @@ $roundStatusLabels = array(
   <section class="card vacancy-round-picker">
     <div class="vacancy-round-toolbar">
       <form method="get" action="kena-sxoleion-admin.php">
+        <input type="hidden" name="scope" value="<?php echo vacanciesH($scope); ?>">
         <div class="field"><label for="round">Γύρος καταγραφής</label><select id="round" name="round" data-auto-submit="true">
         <?php foreach ($rounds as $r) {
           $roundStatusLabel = isset($roundStatusLabels[$r['status']]) ? $roundStatusLabels[$r['status']] : $r['status'];
@@ -106,14 +110,29 @@ $roundStatusLabels = array(
         </select></div>
       </form>
       <?php if ($round) { ?>
-        <a class="vacancy-export-button" href="kena-sxoleion-export.php?round=<?php echo (int)$round['id']; ?>&amp;scope=general">Εξαγωγή Excel</a>
+        <a class="vacancy-export-button" href="kena-sxoleion-export.php?round=<?php echo (int)$round['id']; ?>">Εξαγωγή Excel (Γενική + ΕΑΕ)</a>
       <?php } ?>
     </div>
-    <?php if ($round) { ?><p class="vacancy-export-help">Μορφή συμβατή με το παλιό συγκεντρωτικό: γραμμές ειδικοτήτων, στήλες σχολείων, αρνητικό = κενό, θετικό = πλεόνασμα. Κενό κελί = δεν υπέβαλε.</p><?php } ?>
+    <?php if ($round) { ?><p class="vacancy-export-help">Το Excel περιλαμβάνει ξεχωριστές καρτέλες «Γενική» και «ΕΑΕ», καθώς και τις αντίστοιχες παρατηρήσεις. Αρνητικό = κενό, θετικό = πλεόνασμα. Κενό κελί = δεν υπέβαλε στη συγκεκριμένη κατηγορία.</p><?php } ?>
   </section>
 
-  <section class="card vacancy-round-admin">
-    <div class="section-head"><div><h2>Διαχείριση γύρων</h2></div></div>
+  <?php if ($round) { ?>
+  <nav class="vacancy-scope-nav" aria-label="Κατηγορία εκπαίδευσης">
+    <a class="vacancy-scope-tab<?php echo $scope === 'general' ? ' is-active' : ''; ?>" <?php if ($scope === 'general') { ?>aria-current="page"<?php } ?> href="kena-sxoleion-admin.php?round=<?php echo (int)$roundId; ?>&amp;scope=general">
+      <span>Γενική Εκπαίδευση</span><small><?php echo (int)$generalStats['vacancies']; ?> ώρες κενών</small>
+    </a>
+    <a class="vacancy-scope-tab<?php echo $scope === 'special' ? ' is-active' : ''; ?>" <?php if ($scope === 'special') { ?>aria-current="page"<?php } ?> href="kena-sxoleion-admin.php?round=<?php echo (int)$roundId; ?>&amp;scope=special">
+      <span>Ειδική Αγωγή (ΕΑΕ)</span><small><?php echo (int)$specialStats['vacancies']; ?> ώρες κενών</small>
+    </a>
+  </nav>
+  <?php } ?>
+
+  <details class="card vacancy-round-admin"<?php echo $adminMessage !== '' && $adminMessageType === 'danger' ? ' open' : ''; ?>>
+    <summary class="vacancy-round-admin-toggle">
+      <span class="vacancy-round-admin-title">Διαχείριση γύρων</span>
+      <span class="vacancy-round-admin-hint">Νέος γύρος / αλλαγή κατάστασης</span>
+      <span class="vacancy-round-admin-chevron" aria-hidden="true"></span>
+    </summary>
     <div class="vacancy-admin-grid">
       <form method="post" action="kena-sxoleion-admin.php">
         <input type="hidden" name="csrf" value="<?php echo vacanciesH(vacanciesCsrfToken()); ?>">
@@ -124,7 +143,7 @@ $roundStatusLabels = array(
         <button class="primary" type="submit">Δημιουργία και άνοιγμα</button>
       </form>
       <?php if ($round) { ?>
-      <form method="post" action="kena-sxoleion-admin.php?round=<?php echo (int)$round['id']; ?>">
+      <form method="post" action="kena-sxoleion-admin.php?round=<?php echo (int)$round['id']; ?>&amp;scope=<?php echo vacanciesH($scope); ?>">
         <input type="hidden" name="csrf" value="<?php echo vacanciesH(vacanciesCsrfToken()); ?>">
         <input type="hidden" name="admin_action" value="round_status">
         <input type="hidden" name="round_id" value="<?php echo (int)$round['id']; ?>">
@@ -134,13 +153,15 @@ $roundStatusLabels = array(
       </form>
       <?php } ?>
     </div>
-  </section>
+  </details>
 
   <?php if (!$round) { ?>
     <section class="card vacancy-status vacancy-status--info"><h2>Δεν υπάρχουν γύροι καταγραφής</h2></section>
   <?php } else { ?>
     <section class="vacancy-kpis">
-      <article><span>Υποβολές</span><strong><?php echo (int)$stats['schools_submitted']; ?>/<?php echo (int)$stats['schools_total']; ?></strong><small><?php echo (int)$stats['schools_total']-(int)$stats['schools_submitted']; ?> εκκρεμούν</small></article>
+      <article><span><?php echo $scope === 'special' ? 'Υποβολές ΕΑΕ' : 'Υποβολές Γενικής'; ?></span>
+        <?php if ($scope === 'special') { ?><strong><?php echo (int)$stats['schools_submitted']; ?></strong><small>οριστικές καταγραφές ΕΑΕ</small>
+        <?php } else { ?><strong><?php echo (int)$stats['schools_submitted']; ?>/<?php echo (int)$stats['schools_total']; ?></strong><small><?php echo (int)$stats['schools_total']-(int)$stats['schools_submitted']; ?> εκκρεμούν</small><?php } ?></article>
       <article><span>Κενά</span><strong><?php echo (int)$stats['vacancies']; ?></strong><small>ώρες</small></article>
       <article><span>Πλεονάσματα</span><strong><?php echo (int)$stats['surpluses']; ?></strong><small>ώρες</small></article>
       <article><span>Νέα τμήματα</span><strong><?php echo (int)$stats['new_section_hours']; ?></strong><small>ώρες νέων αναγκών</small></article>
@@ -168,7 +189,7 @@ $roundStatusLabels = array(
     <?php } ?>
 
     <section class="card vacancy-allocation">
-      <div class="section-head"><div><h2>Σύνολα ανά ειδικότητα</h2><p>Μία ενιαία εικόνα κενών και πλεονασμάτων. Πάτησε στην ειδικότητα για να δεις αμέσως ποια σχολεία χρειάζονται ή διαθέτουν ώρες.</p></div></div>
+      <div class="section-head"><div><h2>Σύνολα ανά ειδικότητα — <?php echo $scope === 'special' ? 'Ειδική Αγωγή' : 'Γενική Εκπαίδευση'; ?></h2><p>Μία ενιαία εικόνα κενών και πλεονασμάτων. Πάτησε στην ειδικότητα για να δεις αμέσως ποια σχολεία χρειάζονται ή διαθέτουν ώρες.</p></div></div>
       <?php if (empty($allocation['specialties'])) { ?>
         <div class="vacancy-empty">Δεν υπάρχουν ακόμη οριστικές υποβολές με κενά ή πλεονάσματα.</div>
       <?php } else { ?>
@@ -226,7 +247,7 @@ $roundStatusLabels = array(
     </section>
 
     <section class="card vacancy-schools-unified">
-      <div class="section-head"><div><h2>Κατάσταση σχολικών μονάδων</h2><p>Η κατάσταση και η ανάλυση ανά ειδικότητα βρίσκονται πλέον μαζί. Πάτησε στο όνομα του σχολείου για λεπτομέρειες. Οι «Παρατηρήσεις» παραμένουν διαθέσιμες ξεχωριστά.</p></div></div>
+      <div class="section-head"><div><h2>Κατάσταση σχολικών μονάδων — <?php echo $scope === 'special' ? 'ΕΑΕ' : 'Γενική'; ?></h2><p>Οι καταχωρίσεις εμφανίζονται μόνο για την επιλεγμένη κατηγορία εκπαίδευσης. Πάτησε στο όνομα του σχολείου για λεπτομέρειες και παρατηρήσεις.</p></div></div>
       <div class="table-wrap"><table class="vacancy-table vacancy-drill-table vacancy-school-status-table">
         <thead><tr><th>Σχολείο</th><th>Κατάσταση</th><th>Κενά</th><th>Πλεονάσματα</th><th>Αναθ.</th><th>Υποβολή</th><th>Παρατηρήσεις</th></tr></thead>
         <tbody>

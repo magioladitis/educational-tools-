@@ -279,3 +279,41 @@ body.edu-vacancies .vacancy-top-action--logout:hover{background:#fff1f2;color:#8
 .vacancy-coverage-reconciliation{margin:14px 0 18px;}
 .vacancy-coverage-reconciliation h3{margin:0 0 10px;font-size:1rem;}
 @media(max-width:700px){.vacancy-coverage-source-options{flex-direction:column;align-items:flex-start;}}
+
+/* Dashboard education scopes: distinct, accessible sections. */
+.vacancy-scope-nav{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0 24px}
+.vacancy-scope-tab{display:flex;flex:1 1 220px;flex-direction:column;gap:4px;padding:14px 18px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;color:#334155;text-decoration:none;font-weight:700;transition:background .15s,border-color .15s}
+.vacancy-scope-tab small{font-size:.82em;font-weight:500;color:#64748b}
+.vacancy-scope-tab.is-active{background:#e0f2fe;border-color:#0284c7;color:#075985;box-shadow:inset 0 0 0 1px #0284c7}
+.vacancy-scope-tab:focus-visible{outline:3px solid #0284c7;outline-offset:3px}
+.vacancy-scope-tab:hover{border-color:#0284c7}
+
+
+/* v3.22.196 — Collapsible management of rounds (admin dashboard only) */
+body.edu-vacancies details.vacancy-round-admin > summary.vacancy-round-admin-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  min-height: 34px;
+}
+body.edu-vacancies details.vacancy-round-admin > summary.vacancy-round-admin-toggle::-webkit-details-marker { display: none; }
+body.edu-vacancies .vacancy-round-admin-title { color: #1d4ed8; font-weight: 800; font-size: 1.2rem; }
+body.edu-vacancies .vacancy-round-admin-hint { color: #64748b; font-size: .9rem; margin-left: auto; }
+body.edu-vacancies .vacancy-round-admin-chevron {
+  flex: 0 0 auto; width: 10px; height: 10px;
+  border-right: 2px solid #475569; border-bottom: 2px solid #475569;
+  transform: rotate(45deg); transition: transform .16s ease;
+  margin: -5px 4px 0 4px;
+}
+body.edu-vacancies details.vacancy-round-admin[open] .vacancy-round-admin-chevron { transform: rotate(225deg); margin-top: 5px; }
+body.edu-vacancies details.vacancy-round-admin[open] > .vacancy-admin-grid { margin-top: 18px; }
+body.edu-vacancies details.vacancy-round-admin > summary.vacancy-round-admin-toggle:focus-visible {
+  outline: 2px solid #2563eb; outline-offset: 5px; border-radius: 5px;
+}
+@media(max-width:620px) {
+  body.edu-vacancies .vacancy-round-admin-hint { display: none; }
+  body.edu-vacancies .vacancy-round-admin-chevron { margin-left: auto; }
+}
