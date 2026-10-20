@@ -19,7 +19,7 @@
   'title' => 'Μόρια Μητρώου ΣΔΕ',
   'intro' => 'Ενιαίος υπολογιστής για ωρομίσθιο Εκπαιδευτικό Προσωπικό, Συμβούλους Ψυχολόγους και Συμβούλους Σταδιοδρομίας στα Σχολεία Δεύτερης Ευκαιρίας.',
   'meta_class' => 'hero-meta',
-  'badges' => array('3 κατηγορίες υποψηφίων', 'Βασική βαθμολογία έως 40', 'Κοινωνικές προσαυξήσεις', 'Live υπολογισμός', 'ΦΕΚ Β΄ 3224/25.06.2025')
+  'badges' => array('3 κατηγορίες υποψηφίων', 'Βασική βαθμολογία έως 40', 'Κοινωνικές προσαυξήσεις', 'Live υπολογισμός', 'ΦΕΚ Β΄ 3224/2025 + 3700/2025')
 )); ?>
 
 <?php calculatorColumnsStart(); ?>
@@ -62,6 +62,20 @@ foreach ($sdeRegistrySpecialties as $code) {
       </div>
     </div>
     <div id="eligibilityInline"></div>
+    <section id="sdeQualificationGuide" class="note edu-mt-13 hidden" aria-live="polite" aria-labelledby="sdeQualificationGuideTitle">
+      <h3 id="sdeQualificationGuideTitle">Πώς μπορώ να αποκτήσω τα απαιτούμενα προσόντα;</h3>
+      <p class="small">Τα παρακάτω προσαρμόζονται στις απαντήσεις σου. Αφορούν τα <strong>υποχρεωτικά προσόντα ένταξης</strong>, όχι τα επιπλέον μόρια επιλογής.</p>
+      <ul class="criteria-list">
+        <li id="sdeGuideCareerDegree" class="hidden"><strong>Πτυχίο ΑΕΙ:</strong> απαιτείται πτυχίο ΑΕΙ ή ισότιμος αναγνωρισμένος τίτλος. Κανένα σεμινάριο δεν αντικαθιστά την προϋπόθεση αυτή.</li>
+        <li id="sdeGuideCareerQualification" class="hidden"><strong>Εξειδίκευση στη Συμβουλευτική Σταδιοδρομίας:</strong> απόκτησε ένα από τα τέσσερα προβλεπόμενα προσόντα: συναφές μεταπτυχιακό, συναφές διδακτορικό, ΠΕΣΥΠ ΑΣΠΑΙΤΕ/ΣΕΛΕΤΕ ή <em>βεβαίωση πιστοποίησης επάρκειας</em> Συμβούλου Σταδιοδρομίας/Επαγγελματικού Προσανατολισμού από τον ΕΟΠΠΕΠ. Η απλή παρακολούθηση σεμιναρίου ή η βεβαίωση συμμετοχής σε πρόγραμμα δεν αρκεί. <a href="https://www.eoppep.gr/category/anakoinoseis-syep/" target="_blank" rel="noopener noreferrer">Ανακοινώσεις ΕΟΠΠΕΠ για τη ΣυΕΠ ↗</a></li>
+        <li id="sdeGuidePsychDegree" class="hidden"><strong>Πτυχίο Ψυχολογίας:</strong> χρειάζεται ο προβλεπόμενος τίτλος Ψυχολογίας ή αναγνωρισμένος ισότιμος/αντίστοιχος τίτλος. Πτυχίο άλλης ειδικότητας μαζί με απλό σεμινάριο Ψυχολογίας δεν αρκεί.</li>
+        <li id="sdeGuidePsychLicense" class="hidden"><strong>Επαγγελματική άδεια:</strong> μετά το απαιτούμενο πτυχίο, προχώρησε στη διαδικασία αναγγελίας/βεβαίωσης άσκησης επαγγέλματος Ψυχολόγου μέσω της αρμόδιας υπηρεσίας. <a href="https://www.gov.gr/ipiresies/ugeia-kai-pronoia/epaggelmaties-ugeias/anaggelia-askeses-epaggelmatos-psukhologou" target="_blank" rel="noopener noreferrer">Διαδικασία στο gov.gr ↗</a></li>
+        <li id="sdeGuidePsychFpp" class="hidden"><strong>Ειδική περίπτωση ΦΠΨ πριν από το 1993:</strong> απαιτείται επιπλέον μεταπτυχιακό στην Ψυχολογία.</li>
+        <li id="sdeGuideReady" class="hidden"><strong>Βασικές προϋποθέσεις:</strong> σύμφωνα με όσα δήλωσες, φαίνεται να καλύπτονται. Συγκέντρωσε και έλεγξε τα αντίστοιχα δικαιολογητικά πριν υποβάλεις αίτηση.</li>
+      </ul>
+      <p class="small"><strong>Διαδικασία ΣΔΕ:</strong> πρώτα αίτηση ένταξης ή επικαιροποίησης στο Μητρώο και, όταν εκδοθεί σχετική πρόσκληση, αίτηση επιλογής και ανάθεσης έργου. Οι προθεσμίες των δύο σταδίων 2026–2027 έχουν λήξει· οι σύνδεσμοι παρατίθενται για ενημέρωση. <a href="https://www.inedivim.gr/announcements_procla/%CF%80%CF%81%CF%8C%CF%83%CE%BA%CE%BB%CE%B7%CF%83%CE%B7-%CE%B5%CE%BA%CE%B4%CE%AE%CE%BB%CF%89%CF%83%CE%B7%CF%82-%CE%B5%CE%BD%CE%B4%CE%B9%CE%B1%CF%86%CE%AD%CF%81%CE%BF%CE%BD%CF%84%CE%BF%CF%82-%CF%85-2/" target="_blank" rel="noopener noreferrer">Πρόσκληση 1ου σταδίου ↗</a> · <a href="https://mitrwosde.inedivim.gr/" target="_blank" rel="noopener noreferrer">Μητρώο ΣΔΕ ↗</a></p>
+      <p class="small"><strong>Διευκρίνιση:</strong> η πιστοποίηση εκπαιδευτικής επάρκειας <em>Εκπαιδευτή Ενηλίκων</em> δεν είναι η ίδια με την πιστοποίηση επάρκειας <em>Συμβούλου Σταδιοδρομίας</em> του ΕΟΠΠΕΠ.</p>
+    </section>
   <?php calculatorCardEnd(); ?>
 
   <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '2. Εκπαίδευση', 'subtitle_html' => 'Τυπικά προσόντα έως 18 μόρια + επιμόρφωση έως 4 μόρια.', 'cap_html' => 'έως 22')); ?>
@@ -97,7 +111,7 @@ foreach ($sdeRegistrySpecialties as $code) {
       <div class="field"><label for="expSdeMonths" id="expSdeMonthsLabel">Εμπειρία στα ΣΔΕ — μήνες</label><input id="expSdeMonths" type="number" min="0" max="600" step="1" value="0"></div>
       <div class="field"><label for="expAdultCounsellingMonths" id="expAdultCounsellingLabel">Συμβουλευτικές υπηρεσίες σε ενήλικες — μήνες</label><input id="expAdultCounsellingMonths" type="number" min="0" max="600" step="1" value="0"></div>
     </div>
-    <div id="careerInconsistency" class="warning hidden"><strong>Σημείωση για το ΦΕΚ:</strong> στο άρθρο 12 §2.1 το λεκτικό αναφέρει «μέγιστο αριθμό μορίων 12», αλλά η στήλη του πίνακα δίνει 7 και η συνολική κατηγορία Επαγγελματικής Εμπειρίας είναι 13, ενώ το §2.2 δίνει 6. Ο υπολογιστής χρησιμοποιεί πλαφόν <strong>7</strong>, ως τη μοναδική τιμή που συμφωνεί εσωτερικά με το άθροισμα 13.</div>
+    <div id="careerCorrectionNotice" class="note hidden"><strong>Διορθωμένο όριο — άρθρο 12 §2.1:</strong> η διόρθωση σφάλματος του <strong>ΦΕΚ Β΄ 3700/15.07.2025</strong> αντικατέστησε το αρχικό «12» με <strong>7 μόρια</strong> για την εμπειρία στα ΣΔΕ. Η διόρθωση διατηρεί εκ παραδρομής τη λέξη «Ψυχολόγου», αλλά παραπέμπει ρητά στο άρθρο 12, που αφορά τους Συμβούλους Σταδιοδρομίας.</div>
   <?php calculatorCardEnd(); ?>
 
   <?php calculatorCardStart(array('header_variant' => 'section-head', 'title_html' => '4. Άλλα προσόντα', 'subtitle_html' => 'Δύο ξένες γλώσσες και γνώσεις Η/Υ.', 'cap_html' => 'έως 5')); ?>
@@ -154,11 +168,20 @@ foreach ($sdeRegistrySpecialties as $code) {
 <?php calculatorColumnsEnd(); ?>
 
 <?php sourceCardStart(); ?>
-  <p><strong>Υ.Α. 75975/Κ1 — ΦΕΚ Β΄ 3224/25.06.2025</strong>, «Κανονισμός Διαχείρισης του Μητρώου Ωρομίσθιου Εκπαιδευτικού Προσωπικού, Συμβούλων Σταδιοδρομίας και Συμβούλων Ψυχολόγων στα Σχολεία Δεύτερης Ευκαιρίας (Σ.Δ.Ε.) — Καθορισμός της διαδικασίας και των κριτηρίων επιλογής και μοριοδότησης».</p>
+  <p><strong>Υ.Α. 75975/Κ1 — ΦΕΚ Β΄ 3224/25.06.2025, όπως διορθώθηκε με ΦΕΚ Β΄ 3700/15.07.2025.</strong> Κανονισμός Μητρώου ωρομίσθιου προσωπικού και συμβούλων ΣΔΕ.</p>
   <p><strong>Άρθρο 3:</strong> προϋποθέσεις ένταξης και κλάδοι εκπαιδευτικού προσωπικού. <strong>Άρθρα 10–12:</strong> μοριοδότηση Εκπαιδευτικού Προσωπικού, Συμβούλων Ψυχολόγων και Συμβούλων Σταδιοδρομίας. <strong>Άρθρο 14:</strong> προτεραιότητα πιστοποιημένων Εκπαιδευτών Ενηλίκων ΕΟΠΠΕΠ.</p>
-  <p><strong>Πρόσκληση Μητρώου ΣΔΕ 2025–2026, Κεφάλαιο Γ §§8–9:</strong> οι ΠΕ06 δεν μοριοδοτούνται στο πεδίο ξένης γλώσσας για την άριστη γνώση της Αγγλικής· οι ΠΕ86 που χρησιμοποιούν πτυχίο Πληροφορικής ως βασικό πτυχίο ένταξης δεν αξιολογούνται στο πεδίο «Γνώση Χειρισμού Η/Υ».</p>
-  <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://gsvetlly.minedu.gov.gr/publications/docs2023/DELTIA_TYPOU/2025/%CE%91%CE%A0%CE%9F%CE%A6%CE%91%CE%A3%CE%97_%CE%93%CE%99%CE%91_%CE%A3%CE%94%CE%95_%CE%A6%CE%95%CE%9A_3224%CE%92-25.06.2025.pdf', 'Υ.Α. 75975/Κ1 — ΦΕΚ Β΄ 3224/2025 (ΥΠΑΙΘΑ) ↗'); ?><?php sourceCardLink('https://gsvetlly.minedu.gov.gr/nea-anakoinoseis/512-prosklese-ekdeloses-endiapherontos-ypoboles-aiteses-entaxes-kai-epikairopoieses-prosthekes-stoicheion-sto-metroo-oromisthiou-ekpaideutikou-prosopikou-symboulon-stadiodromias-kai-symboulon-psychologon-ton-scholeion-deuteres-eukairias-metroo-s-d-e-1o-stadio', 'Πρόσκληση Μητρώου ΣΔΕ 2025–2026 — ΥΠΑΙΘΑ ↗'); ?><?php sourceCardLinksEnd(); ?>
-  <?php sourceCardDisclaimerStart(); ?>Ο υπολογισμός είναι ενημερωτικός. Ειδικά για την ασυμφωνία του άρθρου 12 §2.1, το εργαλείο χρησιμοποιεί το πλαφόν 7 μορίων που συμφωνεί με τη στήλη του πίνακα και με το συνολικό όριο των 13 μορίων της κατηγορίας.<?php sourceCardDisclaimerEnd(); ?>
+  <p><strong>Πρόσκληση ΣΔΕ 2026–2027 (ΑΠ 600/2355/13042/08-05-2026):</strong> 1ο στάδιο ένταξης/επικαιροποίησης στο Μητρώο και 2ο στάδιο αίτησης επιλογής. Οι αναγραφόμενες προθεσμίες του 2026 έχουν ολοκληρωθεί.</p>
+  <p><strong>Ιστορική διευκρίνιση της πρόσκλησης 2025–2026, Κεφάλαιο Γ §§8–9:</strong> εξαίρεση ΠΕ06 για την Αγγλική και ΠΕ86 για γνώση Η/Υ όταν το αντίστοιχο πτυχίο είναι το βασικό πτυχίο ένταξης. Ελέγχεται πάντοτε και η εκάστοτε πρόσκληση για πρόσθετες ειδικές οδηγίες.</p>
+  <?php sourceCardLinksStart(); ?>
+    <?php sourceCardLink('https://gsvetlly.minedu.gov.gr/publications/docs2023/DELTIA_TYPOU/2025/%CE%91%CE%A0%CE%9F%CE%A6%CE%91%CE%A3%CE%97_%CE%93%CE%99%CE%91_%CE%A3%CE%94%CE%95_%CE%A6%CE%95%CE%9A_3224%CE%92-25.06.2025.pdf', 'Υ.Α. 75975/Κ1 — ΦΕΚ Β΄ 3224/2025 ↗'); ?>
+    <?php sourceCardLink('https://api.et.gr/apiFEK/2/2025/3700/pdf', 'Διόρθωση σφάλματος — ΦΕΚ Β΄ 3700/2025 ↗'); ?>
+    <?php sourceCardLink('https://www.inedivim.gr/announcements_procla/%CF%80%CF%81%CF%8C%CF%83%CE%BA%CE%BB%CE%B7%CF%83%CE%B7-%CE%B5%CE%BA%CE%B4%CE%AE%CE%BB%CF%89%CF%83%CE%B7%CF%82-%CE%B5%CE%BD%CE%B4%CE%B9%CE%B1%CF%86%CE%AD%CF%81%CE%BF%CE%BD%CF%84%CE%BF%CF%82-%CF%85-2/', 'Πρόσκληση 2026–2027 — 1ο στάδιο (ΙΝΕΔΙΒΙΜ) ↗'); ?>
+    <?php sourceCardLink('https://www.inedivim.gr/announcements_procla/%CF%80%CF%81%CF%8C%CF%83%CE%BA%CE%BB%CE%B7%CF%83%CE%B7-%CE%B5%CE%BA%CE%B4%CE%AE%CE%BB%CF%89%CF%83%CE%B7%CF%82-%CE%B5%CE%BD%CE%B4%CE%B9%CE%B1%CF%86%CE%AD%CF%81%CE%BF%CE%BD%CF%84%CE%BF%CF%82-%CF%85-3/', 'Πρόσκληση 2026–2027 — 2ο στάδιο (ΙΝΕΔΙΒΙΜ) ↗'); ?>
+    <?php sourceCardLink('https://gsvetlly.minedu.gov.gr/nea-anakoinoseis/512-prosklese-ekdeloses-endiapherontos-ypoboles-aiteses-entaxes-kai-epikairopoieses-prosthekes-stoicheion-sto-metroo-oromisthiou-ekpaideutikou-prosopikou-symboulon-stadiodromias-kai-symboulon-psychologon-ton-scholeion-deuteres-eukairias-metroo-s-d-e-1o-stadio', 'Πρόσκληση 2025–2026 — ειδικές διευκρινίσεις ↗'); ?>
+    <?php sourceCardLink('https://www.eoppep.gr/category/anakoinoseis-syep/', 'ΕΟΠΠΕΠ — Συμβουλευτική Σταδιοδρομίας ↗'); ?>
+    <?php sourceCardLink('https://www.gov.gr/ipiresies/ugeia-kai-pronoia/epaggelmaties-ugeias/anaggelia-askeses-epaggelmatos-psukhologou', 'gov.gr — αναγγελία άσκησης επαγγέλματος Ψυχολόγου ↗'); ?>
+  <?php sourceCardLinksEnd(); ?>
+  <?php sourceCardDisclaimerStart(); ?>Ενημερωτικός προέλεγχος χωρίς ισχύ επίσημης αξιολόγησης. Η βεβαίωση δικαιώματος ένταξης και η αποδοχή δικαιολογητικών ανήκουν στο ΙΝΕΔΙΒΙΜ. Η διόρθωση του ΦΕΚ Β΄ 3700/2025 θεμελιώνει το πλαφόν των 7 μορίων του άρθρου 12 §2.1.<?php sourceCardDisclaimerEnd(); ?>
 <?php sourceCardEnd(); ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
