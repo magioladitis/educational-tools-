@@ -7,8 +7,8 @@ assert "transferServiceHelp('secondary', 'msd')" in php
 assert "'summary' => 'Πού βλέπω τις υπηρετήσεις μου;'" in help_php
 assert "'msdRegistryHelp'" in help_php
 assert "'open' => true" not in help_php
-assert 'Δώστε τον ακριβή αριθμό Μ.Σ.Δ.' in php
-assert 'π.χ. 48,75. Οι υπηρετήσεις' in php
+assert 'id="msdDirectPoints"' in php
+assert '48,75' in php and 'υπηρετήσεις' in php
 assert 'Πληκτρολογήστε τον ακριβή αριθμό Μ.Σ.Δ.' not in php
 assert "Συμπληρώστε έναν μη αρνητικό αριθμό με έως δύο δεκαδικά, π.χ. 48,75." not in js
 assert "var directInvalid =" in js

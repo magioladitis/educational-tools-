@@ -16,3 +16,27 @@
 @media print {
   body.edu-ui.edu-page-transfer #transferScoringResults {position:static;}
 }
+
+/* Consolidated 3.22.198: formerly page-local CSS */
+#transferEaePanel.kedasy-awaits-branch #transferEaeQualificationsFieldset,
+#transferEaePanel.kedasy-awaits-branch #transferEaeRouteNote,
+#transferEaePanel.kedasy-awaits-branch #transferEaeExperienceRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaeGeneralYearsRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaeSensoryCertificationRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaeNewlyRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaeAreaYearsRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaePreviousYearFieldGrid,
+#transferEaePanel.kedasy-awaits-branch #transferEaeNewDocumentsRow,
+#transferEaePanel.kedasy-awaits-branch #transferEaeDossierAdvice,
+#transferEaePanel.kedasy-awaits-branch #transferEaeAdvice { display:none!important; }
+.transfer-extracted-1 {grid-column:1/-1; padding:12px; border:1px solid #b8c5d5; border-radius:8px;}
+.transfer-extracted-2 {margin:14px 0;}
+.transfer-extracted-3 {margin:0 0 8px;}
+.transfer-extracted-4 {grid-column:1/-1;}
+.transfer-extracted-5 {margin-top:14px;}
+.transfer-extracted-6 {margin:10px 0;}
+.transfer-extracted-7 {padding:12px; margin-top:14px;}
+.transfer-extracted-8 {margin:18px 0 6px;}
+.transfer-extracted-9 {margin-bottom:12px;}
+.transfer-extracted-10 {margin-bottom:14px;}
+.transfer-extracted-11 {margin-top:0;}

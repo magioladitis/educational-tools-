@@ -57,7 +57,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
               <option value="kedasy">ΚΕΔΑΣΥ [001.ΔΕΣΚΕ.ΚΔΣ]</option>
             </select>
           </div>
-          <div class="field" id="transferModeGuidance" role="status" aria-live="polite" style="grid-column:1/-1; padding:12px; border:1px solid #b8c5d5; border-radius:8px;" >Επιλέξτε τύπο διαδικασίας για τις αντίστοιχες οδηγίες.</div>
+          <div class="transfer-extracted-1 field" id="transferModeGuidance" role="status" aria-live="polite" >Επιλέξτε τύπο διαδικασίας για τις αντίστοιχες οδηγίες.</div>
         </div>
         <?php calculatorDisclosure(array(
           'id' => 'transferMultipleApplicationsHelp',
@@ -68,7 +68,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
             . '<p><strong>Αμοιβαίες μεταθέσεις:</strong> αποτελούν χωριστή διαδικασία. Η αίτηση γίνεται εντός <strong>15 ημερών από την ανακοίνωση των μεταθέσεων</strong> και δεν αποτελεί μέρος του αριθμητικού προελέγχου της παρούσας φόρμας. Ελέγξτε τις ειδικές προϋποθέσεις, την ίδια ειδικότητα και την υπηρεσιακή επιβεβαίωση στην εγκύκλιο.</p>'
             . '<p class="small-note">Πηγή: <a href="https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027" target="_blank" rel="noopener noreferrer">Εγκύκλιος Δ.Ε. 138014/Ε2/15-10-2026 ↗</a>, Μέρος Τρίτο, Κεφ. Η΄, παρ. 5–6.</p>'
         )); ?>
-        <div id="transferGeneralOriginField" class="field" style="margin:14px 0;">
+        <div id="transferGeneralOriginField" class="transfer-extracted-2 field">
           <label for="transferGeneralOrigin">Υπηρεσιακή προέλευση</label>
           <select id="transferGeneralOrigin">
             <option value="general">Υπηρετώ στη Γενική / Επαγγελματική Εκπαίδευση</option>
@@ -78,7 +78,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           </select>
         </div>
         <section id="transferGeneralFromEaePanel" style="display:none;padding:14px; margin:14px 0; border:1px solid #b8c5d5; border-radius:10px;" aria-label="Ειδικός έλεγχος επιστροφής από ΕΑΕ στη Γενική Εκπαίδευση">
-          <h3 style="margin:0 0 8px">Ειδικός έλεγχος επιστροφής από ΕΑΕ στη Γενική Εκπαίδευση</h3>
+          <h3 class="transfer-extracted-3">Ειδικός έλεγχος επιστροφής από ΕΑΕ στη Γενική Εκπαίδευση</h3>
           <p class="small-note">Αφορά μόνο όσους <strong>διορίστηκαν στην ΕΑΕ</strong> ή <strong>μετατέθηκαν στην ΕΑΕ από τη Γενική</strong>. Οι προϋποθέσεις είναι διαφορετικές· δεν ισχύει πενταετία για όλους.</p>
           <div id="transferGeneralEaeAppointed" style="display:none">
             <div class="field-grid">
@@ -100,19 +100,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         </section>
       <?php calculatorCardEnd(); ?>
 
-<style>
-#transferEaePanel.kedasy-awaits-branch #transferEaeQualificationsFieldset,
-#transferEaePanel.kedasy-awaits-branch #transferEaeRouteNote,
-#transferEaePanel.kedasy-awaits-branch #transferEaeExperienceRow,
-#transferEaePanel.kedasy-awaits-branch #transferEaeGeneralYearsRow,
-#transferEaePanel.kedasy-awaits-branch #transferEaeSensoryCertificationRow,
-#transferEaePanel.kedasy-awaits-branch #transferEaeNewlyRow,
-#transferEaePanel.kedasy-awaits-branch #transferEaeAreaYearsRow,
-#transferEaePanel.kedasy-awaits-branch #transferEaePreviousYearFieldGrid,
-#transferEaePanel.kedasy-awaits-branch #transferEaeNewDocumentsRow,
-#transferEaePanel.kedasy-awaits-branch #transferEaeDossierAdvice,
-#transferEaePanel.kedasy-awaits-branch #transferEaeAdvice { display:none!important; }
-</style>
+
       <section id="transferEaePanel" class="calculator-card" style="display:none; padding:18px; border:1px solid #b8c5d5; border-radius:12px; margin-bottom:16px;">
         <h2>Προέλεγχος δικαιώματος μετάθεσης στην ΕΑΕ</h2>
         <p class="small-note">Δηλώστε τα προσόντα ΕΑΕ που διαθέτετε. Αρκεί μία αποδεκτή διαδρομή εξειδίκευσης· το δικαίωμα εξετάζεται <strong>συνδυαστικά</strong> με την προέλευση, τον χρόνο υπηρεσίας και τον τύπο θέσης. Οι ενδείξεις αποτελούν προέλεγχο, όχι διοικητική απόφαση.</p>
@@ -132,8 +120,8 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           <div class="field"><label for="transferEaeBranch">Κλάδος</label>
             <select id="transferEaeBranch"><option value="other">Άλλος κλάδος Δ.Ε. / δεν έχω επιλέξει</option><option value="pe02">ΠΕ02 Φιλολόγων</option><option value="pe03">ΠΕ03 Μαθηματικών</option><option value="pe04">ΠΕ04 Φυσικών Επιστημών</option><option value="pe11">ΠΕ11 Φυσικής Αγωγής</option></select>
           </div>
-          <p id="transferEaeKedasyChooseBranch" class="small-note" role="status" aria-live="polite" hidden style="grid-column:1/-1">Επιλέξτε πρώτα κλάδο ΠΕ02, ΠΕ03 ή ΠΕ04 για να εμφανιστούν οι υπόλοιπες προϋποθέσεις μετάθεσης σε ΚΕΔΑΣΥ.</p>
-          <fieldset class="transfer-eae-qualifications" id="transferEaeQualificationsFieldset" style="grid-column:1/-1">
+          <p id="transferEaeKedasyChooseBranch" class="transfer-extracted-4 small-note" role="status" aria-live="polite" hidden>Επιλέξτε πρώτα κλάδο ΠΕ02, ΠΕ03 ή ΠΕ04 για να εμφανιστούν οι υπόλοιπες προϋποθέσεις μετάθεσης σε ΚΕΔΑΣΥ.</p>
+          <fieldset class="transfer-extracted-4 transfer-eae-qualifications" id="transferEaeQualificationsFieldset">
             <legend>Προσόντα εξειδίκευσης στην ΕΑΕ</legend>
             <p class="small-note">Επιλέξτε <strong>όσα προσόντα διαθέτετε</strong>. Για τη θεμελίωση αρκεί μία αποδεκτή διαδρομή· η υπηρεσία ελέγχει την αναγνώριση και τη συνάφεια.</p>
             <div class="transfer-eae-qualification-list">
@@ -145,7 +133,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
             </div>
             <select id="transferEaeQualification" hidden aria-hidden="true" tabindex="-1"><option value="none">Καμία επιλογή</option><option value="doctorate">Διδακτορικό</option><option value="masters">Μεταπτυχιακό</option><option value="two_year">Διετής μετεκπαίδευση</option><option value="experience">Πενταετής υπηρεσία</option><option value="pe11">ΠΕ11</option></select>
           </fieldset>
-          <p class="small-note" id="transferEaeRouteNote" style="grid-column:1/-1"></p>
+          <p class="transfer-extracted-4 small-note" id="transferEaeRouteNote"></p>
           <div class="field" id="transferEaeExperienceRow" style="display:none"><label for="transferEaeExperienceYears">Αποδεδειγμένα έτη προϋπηρεσίας στην ΕΑΕ (διαδρομή πενταετίας)</label><input id="transferEaeExperienceYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0"></div>
           <div class="field" id="transferEaeGeneralYearsRow"><label for="transferEaeTeachingYears">Διδακτικά έτη από διορισμό (Γενική → ΕΑΕ) <small>Έως 50 έτη</small></label><input id="transferEaeTeachingYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0"></div>
         </div>
@@ -160,14 +148,14 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         </div>
         <div id="transferEaeNewlyRow" class="check-row"><label><input type="checkbox" id="transferEaeNewly"> Νεοδιόριστος: χρειάζεται έλεγχος διετίας στην περιοχή διορισμού</label></div>
         <div class="field" id="transferEaeAreaYearsRow" style="display:none; margin-top:10px"><label for="transferEaeAreaYears">Έτη υπηρεσίας στην περιοχή διορισμού</label><input id="transferEaeAreaYears" type="number" min="0" max="45" step="0.1" inputmode="decimal" value="0"></div>
-        <div class="field-grid" id="transferEaePreviousYearFieldGrid" style="margin-top:14px">
+        <div class="transfer-extracted-5 field-grid" id="transferEaePreviousYearFieldGrid">
           <div class="field"><label for="transferEaePreviousYear">Έχετε αποστείλει ηλεκτρονικό φάκελο ΕΑΕ σε προηγούμενο κύκλο;</label>
             <select id="transferEaePreviousYear"><option value="none">Όχι / δεν γνωρίζω</option><option value="2025">Ναι, το 2025</option><option value="2026">Ναι, το 2026</option><option value="other">Ναι, σε άλλο έτος</option></select>
           </div>
         </div>
         <div class="check-row" id="transferEaeNewDocumentsRow"><label><input type="checkbox" id="transferEaeNewDocuments"> Έχω νέα στοιχεία ή δικαιολογητικά στον φάκελο ΕΑΕ που δεν είχαν υποβληθεί.</label></div>
-        <div id="transferEaeDossierAdvice" role="status" aria-live="polite" class="small-note" style="margin:10px 0"></div>
-        <div id="transferEaeAdvice" role="status" aria-live="polite" aria-atomic="true" class="transfer-eligibility-review" style="padding:12px; margin-top:14px;"></div>
+        <div id="transferEaeDossierAdvice" role="status" aria-live="polite" class="transfer-extracted-6 small-note"></div>
+        <div id="transferEaeAdvice" role="status" aria-live="polite" aria-atomic="true" class="transfer-extracted-7 transfer-eligibility-review"></div>
         <p class="small-note">Νομική βάση: εγκύκλιος 138014/Ε2/15-10-2026, Μέρος Δεύτερο, κεφάλαιο Δ΄ (σελ. 34–38). Προσόντα, πενταετής διαδρομή και ειδικοί όροι υπόκεινται σε υπηρεσιακό έλεγχο.</p>
       </section>
 
@@ -194,10 +182,10 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
               <option value="other">Άλλο μουσικό αντικείμενο — έλεγχος ειδικότητας</option>
             </select>
           </div>
-          <div class="field-grid" style="margin-top:14px"><div class="field"><label for="transferMusicPreviousYear">Έχει υποβληθεί προηγούμενος ηλεκτρονικός φάκελος για Μουσικά;</label>
+          <div class="transfer-extracted-5 field-grid"><div class="field"><label for="transferMusicPreviousYear">Έχει υποβληθεί προηγούμενος ηλεκτρονικός φάκελος για Μουσικά;</label>
             <select id="transferMusicPreviousYear"><option value="none">Όχι / δεν γνωρίζω</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="other">Άλλο έτος</option></select></div></div>
           <div class="check-row"><label><input id="transferMusicNewDocuments" type="checkbox"> Υπάρχουν νέα στοιχεία/δικαιολογητικά για τον φάκελο Μουσικών.</label></div>
-          <div id="transferMusicDossierAdvice" role="status" aria-live="polite" class="small-note" style="margin:10px 0"></div>
+          <div id="transferMusicDossierAdvice" role="status" aria-live="polite" class="transfer-extracted-6 small-note"></div>
           <div id="transferMusicAdvice" role="status" aria-live="polite" aria-atomic="true" class="transfer-eligibility-message"></div>
         </div>
         <div id="transferArtEligibility" style="display:none">
@@ -231,13 +219,13 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           </div>
           <p class="small-note" id="transferArtAvailabilitySummary" role="status" aria-live="polite">Επιλέξτε κλάδο και σχολείο από τις 65 προκηρυγμένες θέσεις Δ.Ε. 2026–2027.</p>
           <div class="check-row"><label><input id="transferArtOrganic" type="checkbox"> Έχω υπηρετήσει την οργανική μου θέση (ή υπάρχει ειδική εξαίρεση προς υπηρεσιακό έλεγχο)</label></div>
-          <div class="field-grid" style="margin-top:14px"><div class="field"><label for="transferArtPreviousYear">Προηγούμενος ηλεκτρονικός φάκελος για Καλλιτεχνικά</label>
+          <div class="transfer-extracted-5 field-grid"><div class="field"><label for="transferArtPreviousYear">Προηγούμενος ηλεκτρονικός φάκελος για Καλλιτεχνικά</label>
             <select id="transferArtPreviousYear"><option value="none">Όχι / δεν γνωρίζω</option>
               <option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option>
               <option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="other">Άλλο έτος</option>
             </select></div></div>
           <div class="check-row"><label><input id="transferArtNewDocuments" type="checkbox"> Έχω νέα στοιχεία ή δικαιολογητικά που δεν είχαν συμπεριληφθεί στον παλαιότερο φάκελο.</label></div>
-          <div id="transferArtDossierAdvice" role="status" aria-live="polite" class="small-note" style="margin:10px 0"></div>
+          <div id="transferArtDossierAdvice" role="status" aria-live="polite" class="transfer-extracted-6 small-note"></div>
           <div id="transferArtAdvice" role="status" aria-live="polite" aria-atomic="true" class="transfer-eligibility-message"></div>
           <p class="small-note">Βάση αναφοράς: εγκύκλιος 138014/Ε2/15-10-2026, Κεφ. ΣΤ΄ (σελ. 41–43). Οι όροι πενταετίας/οργανικής εξετάζονται έως 31/08/2027. Ο τελικός έλεγχος γίνεται από τα αρμόδια όργανα.</p>
         </div>
@@ -263,7 +251,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           </div>
           <p id="transferInterculturalAvailabilitySummary" class="small-note" role="status" aria-live="polite">Επιλέξτε κλάδο και σχολείο από τις προκηρυγμένες οργανικές θέσεις Δ.Ε. 2026–2027.</p>
           <div class="check-row"><label><input id="transferInterculturalNewDocuments" type="checkbox"> Έχω νέα στοιχεία/δικαιολογητικά που δεν περιλαμβάνονται στον προηγούμενο φάκελο.</label></div>
-          <h3 style="margin:18px 0 6px">Πρόσθετα προσόντα — κατά σειρά προτεραιότητας της εγκυκλίου</h3>
+          <h3 class="transfer-extracted-8">Πρόσθετα προσόντα — κατά σειρά προτεραιότητας της εγκυκλίου</h3>
           <p class="small-note">Σημειώστε μόνο όσα πράγματι διαθέτετε. Η σειρά αφορά την περιγραφή της εγκυκλίου, <strong>όχι αριθμητική βαθμολόγηση</strong>. Η γλωσσική εξαίρεση αφορά σχολεία με πλειοψηφία μαθητών Ρομά.</p>
           <div id="transferInterculturalQualifications">
             <div class="check-row"><label><input type="checkbox" data-intercultural-qual="origin_language"> α) Επαρκής γνώση της ξένης γλώσσας προέλευσης της πλειονότητας των μαθητών</label></div>
@@ -277,14 +265,14 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
             <div class="check-row"><label><input type="checkbox" data-intercultural-qual="seminars"> θ) Επιμορφωτικά σεμινάρια Διαπολιτισμικής Εκπαίδευσης από προβλεπόμενους φορείς</label></div>
           </div>
           <div id="transferInterculturalAdvice" role="status" aria-live="polite" aria-atomic="true" class="transfer-eligibility-message"></div>
-          <div id="transferInterculturalDossierAdvice" role="status" aria-live="polite" class="small-note" style="margin:10px 0"></div>
+          <div id="transferInterculturalDossierAdvice" role="status" aria-live="polite" class="transfer-extracted-6 small-note"></div>
           <p class="small-note">Πηγή φίλτρου: «ΟΡΓΑΝΙΚΑ ΚΕΝΑ ΔΙΑΠΟΛΙΤΙΣΜΙΚΑ ΔΕ 2026–2027», 23 κενά σε 13 κλάδους/ειδικότητες. Ελέγξτε πριν από την υποβολή τυχόν νεότερες επίσημες ανακοινώσεις. Οργανικές κενές θέσεις ανά κλάδο/ειδικότητα: <a href="https://teachers.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">teachers.minedu.gov.gr ↗</a>. Αίτηση στο ίδιο σύστημα· όταν χρειάζεται νέος φάκελος, δικαιολογητικά μόνο μέσω <a href="https://mydocs.minedu.gov.gr/" target="_blank" rel="noopener noreferrer">mydocs.minedu.gov.gr ↗</a>, σε μία αποστολή.</p>
         </div>
         <p class="small-note" id="transferQualificationFootnote">Ο έλεγχος δεν αντικαθιστά την εξέταση από το αρμόδιο υπηρεσιακό συμβούλιο ή την Επιστημονική Επιτροπή Μουσικής Παιδείας. Εγκύκλιος 2026–2027, Κεφ. Ε΄, σελ. 39–41.</p>
       </section>
 
       <aside id="transferInterculturalNotes" class="calculator-card" style="display:none; padding:16px; border:1px solid #b8c5d5; border-radius:12px; margin:14px 0" aria-label="Σημειώσεις Διαπολιτισμικής Εκπαίδευσης">
-        <h3 style="margin:0 0 8px">Χρήσιμες σημειώσεις για Διαπολιτισμικά</h3>
+        <h3 class="transfer-extracted-3">Χρήσιμες σημειώσεις για Διαπολιτισμικά</h3>
         <p class="small-note"><strong>Αλληλεπίδραση με άλλες αιτήσεις.</strong> Σε περίπτωση ικανοποίησης μετάθεσης σε ΕΑΕ/ΚΕΔΑΣΥ, Μουσικό ή Καλλιτεχνικό Σχολείο, δεν εξετάζεται η αίτηση για Διαπολιτισμικό. Αν ικανοποιηθεί αίτηση σε Διαπολιτισμικό, δεν λαμβάνονται υπόψη οι άλλες αιτήσεις.</p>
         <p class="small-note"><strong>Μετάθεση προς Γενική μέσα στην ίδια περιοχή.</strong> Εκπαιδευτικός με οργανική σε Διαπολιτισμικό που ζητά σχολείο Γενικής στην ίδια περιοχή υποβάλλει αίτηση «από περιοχή σε περιοχή» και όχι βελτίωσης.</p>
       </aside>
@@ -292,7 +280,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
       <div id="transferMsdCard">
       <?php calculatorCardStart(array('title' => 'Β. Μονάδες μετάθεσης')); ?>
         <div id="transferNumericalInputs">
-        <div class="field" style="margin-bottom:12px">
+        <div class="transfer-extracted-9 field">
           <label for="serviceMode">Καταχώριση συνολικής υπηρεσίας</label>
           <select id="serviceMode">
             <option value="points" selected>Απευθείας καταχώριση μορίων προϋπηρεσίας (προεπιλογή)</option>
@@ -332,7 +320,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
         </div>
         </div>
 
-        <div class="field" style="margin-bottom:14px">
+        <div class="transfer-extracted-10 field">
           <label for="msdMode">Τρόπος καταχώρισης Μ.Σ.Δ.</label>
           <select id="msdMode">
             <option value="direct" selected>Απευθείας καταχώριση συνολικών μορίων Μ.Σ.Δ.</option>
@@ -379,7 +367,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
       )); ?>
 
       <section id="transferDocumentsPanel" class="card">
-        <h2 style="margin-top:0">Δ. Προσωπική λίστα δικαιολογητικών</h2>
+        <h2 class="transfer-extracted-11">Δ. Προσωπική λίστα δικαιολογητικών</h2>
         <div id="transferDocumentActionSummary" class="transfer-doc-action-summary" role="note" hidden></div>
         <p class="small-note">Η λίστα προσαρμόζεται στις επιλογές σας. Μόνο οι ενέργειες που πρέπει να ετοιμάσετε έχουν checkbox· οι υπηρεσιακοί έλεγχοι και τα αυτεπαγγέλτως αναζητούμενα εμφανίζονται ενημερωτικά.</p>
         <p id="transferDocumentProgress" class="edu-transfer-doc__progress" role="status" aria-live="polite" aria-atomic="true"></p>
