@@ -25,12 +25,14 @@
     pe9102:'ΠΕ91.02 — Δραματικής Τέχνης'});
   function dossier(a) {
     a=a||{};
-    var years=a.kind==='eae'?BASELINE_CIRCULAR.eaePriorYears:BASELINE_CIRCULAR.artsPriorYears;
+    var acceptedKinds=['eae','art','music','intercultural'];
+    var supported=acceptedKinds.indexOf(a.kind)!==-1;
+    var years=a.kind==='eae'?BASELINE_CIRCULAR.eaePriorYears:(supported?BASELINE_CIRCULAR.artsPriorYears:[]);
     var matched=years.indexOf(String(a.year||''))!==-1;
     var changed=!!a.newElements;
     return {matched:matched,needsNewDocuments:changed,
       skipResubmission:matched&&!changed,
-      status: matched&&!changed?'Προηγούμενος φάκελος — δεν απαιτείται εκ νέου αποστολή σύμφωνα με την εγκύκλιο 2026–2027.':
+      status: !supported?'Μη αναγνωρισμένος τύπος φακέλου — απαιτείται ειδικός έλεγχος της διαδικασίας.':matched&&!changed?'Προηγούμενος φάκελος — δεν απαιτείται εκ νέου αποστολή σύμφωνα με την εγκύκλιο 2026–2027.':
         matched?'Υπάρχει προηγούμενος φάκελος, αλλά τα νέα στοιχεία/δικαιολογητικά πρέπει να σταλούν με την προβλεπόμενη διαδικασία.':
         'Ελέγξτε την αρχική υποβολή του φακέλου προσόντων σύμφωνα με την εγκύκλιο 2026–2027.',
       limitation:'Αφορά τον φάκελο προσόντων/βιογραφικού, όχι την ετήσια αίτηση, ούτε τυχόν νέα δικαιολογητικά μοριοδότησης. Ισχύει μόνο για ήδη αποσταλμένο φάκελο στη συγκεκριμένη κατηγορία σχολείου ή στην ΕΑΕ, όχι για διαφορετικό τύπο αίτησης.'};
