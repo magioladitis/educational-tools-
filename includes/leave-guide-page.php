@@ -152,6 +152,10 @@ if ($audience !== '' && is_file($comparisonMapFile)) {
       <span class="leave-card__chevron" aria-hidden="true">›</span>
     </summary>
     <div class="leave-card__body">
+      <?php if ($audience === 'substitute'): ?>
+      <p class="leave-service-disclaimer"><strong>Προσοχή στην προσμέτρηση:</strong> Οι ενδείξεις «Πραγματική υπηρεσία»/«Δεν προσμετράται» αφορούν τη γενική ταξινόμηση του οδηγού και δεν πιστοποιούν αυτομάτως διδακτική προϋπηρεσία για πίνακες ΑΣΕΠ ή χρόνο ασφάλισης. Οι διακρίσεις εξετάζονται ανά είδος άδειας και ισχύουσα διάταξη.</p>
+      <?php endif; ?>
+      <?php if (!empty($leave['service_clarification'])): ?><p class="leave-service-disclaimer"><?php echo $h($leave['service_clarification']); ?></p><?php endif; ?>
       <div class="leave-info-grid">
         <section>
           <h3>Προϋποθέσεις / βασικές πληροφορίες</h3>

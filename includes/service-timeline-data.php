@@ -32,7 +32,7 @@ return array(
             'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2', 'url' => 'https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027'),
-                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΦ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΦ46ΝΚΠΔ-63Κ?inline=true'),
+                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΖ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΖ46ΝΚΠΔ-63Κ?inline=true'),
             ),
             'historical_sources' => array(
                 array('year' => '2020-2021', 'label' => 'ΥΠΑΙΘ — Εγκύκλιος μεταθέσεων Δ.Ε. 2020-2021', 'url' => 'https://www.minedu.gov.gr/publications/docs2020/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D_%CE%94%CE%95_2020-2021.pdf'),
@@ -57,7 +57,7 @@ return array(
             'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2', 'url' => 'https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027'),
-                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΦ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΦ46ΝΚΠΔ-63Κ?inline=true'),
+                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΖ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΖ46ΝΚΠΔ-63Κ?inline=true'),
             ),
             'historical_sources' => array(
                 array('year' => '2025-2026', 'label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2025–2026', 'url' => 'https://www.minedu.gov.gr/site/64533-metatheseis-ekpaideftikon-defterovathmias-ekpaidefsis-sxolikoy-etous-2025-2026'),
@@ -82,7 +82,7 @@ return array(
             'verified_history_indices' => array(),
             'sources' => array(
                 array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2', 'url' => 'https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027'),
-                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΦ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΦ46ΝΚΠΔ-63Κ?inline=true'),
+                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΖ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΖ46ΝΚΠΔ-63Κ?inline=true'),
             ),
             'note' => 'Οι ΔΔΕ παραλαμβάνουν τις οριστικοποιημένες αιτήσεις στο e-Datacenter μέχρι 20/11/2026· πρόκειται για υπηρεσιακή ενέργεια, όχι παράταση της περιόδου αιτήσεων.',
         ),
@@ -98,7 +98,7 @@ return array(
             'verified_history_indices' => array(),
             'sources' => array(
                 array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2', 'url' => 'https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027'),
-                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΦ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΦ46ΝΚΠΔ-63Κ?inline=true'),
+                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΖ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΖ46ΝΚΠΔ-63Κ?inline=true'),
             ),
             'note' => 'Μετά την ανάρτηση πινάκων στις 23/11/2026, οι εκπαιδευτικοί ζητούν διορθώσεις/συμπληρώσεις μέχρι 27/11/2026. Μόνο για μεταθέσεις από περιοχή σε περιοχή, όχι βελτιώσεις/οριστικές τοποθετήσεις.',
         ),
@@ -114,7 +114,7 @@ return array(
             'verified_history_indices' => array(),
             'sources' => array(
                 array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2', 'url' => 'https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027'),
-                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΦ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΦ46ΝΚΠΔ-63Κ?inline=true'),
+                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΖ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΖ46ΝΚΠΔ-63Κ?inline=true'),
             ),
             'note' => 'Από 18/12/2026 οι ΔΔΕ δεν τροποποιούν καταχωρισμένες αιτήσεις· τυχόν αναγκαίες αλλαγές διεκπεραιώνονται από την αρμόδια υπηρεσία ΥΠΑΙΘΑ.',
         ),
@@ -310,7 +310,7 @@ return array(
             'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2', 'url' => 'https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027'),
-                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΦ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΦ46ΝΚΠΔ-63Κ?inline=true'),
+                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΖ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΖ46ΝΚΠΔ-63Κ?inline=true'),
             ),
             'historical_sources' => array(
                 array('year' => '2025-2026', 'label' => 'ΔΔΕ Α΄ Αθήνας — Πίνακες μορίων μεταθέσεων 24/11/2025', 'url' => 'https://www.dide-a-ath.mysch.gr/index.php/tmima-c-prosopikou/3215-pinakes-morion-metathesis-kai-odigies-enstaseon-2'),
@@ -354,7 +354,7 @@ return array(
             'verified_history_indices' => array(0,1,2,3,4,5,6),
             'sources' => array(
                 array('label' => 'ΥΠΑΙΘΑ — Εγκύκλιος μεταθέσεων Δ.Ε. 2026–2027 · 138014/Ε2', 'url' => 'https://www.minedu.gov.gr/site/71035-15-10-26-metatheseis-ekpaideutikon-deuterobathmias-ekpaideuses-scholikou-etous-2026-2027'),
-                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΦ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΦ46ΝΚΠΔ-63Κ?inline=true'),
+                array('label' => 'Διαύγεια — ΑΔΑ ΨΚΩΖ46ΝΚΠΔ-63Κ', 'url' => 'https://diavgeia.gov.gr/doc/ΨΚΩΖ46ΝΚΠΔ-63Κ?inline=true'),
             ),
             'historical_sources' => array(
                 array('year' => '2019-2020', 'label' => 'ΥΠΑΙΘ — Εγκύκλιος μεταθέσεων Δ.Ε. 2019–2020, παρ. 1.2', 'url' => 'https://www.minedu.gov.gr/publications/docs2019/%CE%95%CE%93%CE%9A%CE%A5%CE%9A%CE%9B%CE%99%CE%9F%CE%A3_%CE%9C%CE%95%CE%A4%CE%91%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D_%CE%94%CE%95_2019-2020_%CE%A9%CE%9B%CE%9B%CE%A446%CE%9C%CE%A4%CE%9B%CE%97-9%CE%97%CE%9A.pdf'),
@@ -1228,6 +1228,11 @@ return array(
                 ),
             ),
             'historical_sources' => array(
+                array(
+                    'year' => '2025-2026',
+                    'label' => 'ΠΥΣΔΕ Έβρου — ρητή αναφορά στην εγκύκλιο 74045/Ε2/05-06-2026 (δευτερογενής τεκμηρίωση, όχι πρωτογενές PDF)',
+                    'url' => 'https://pysdeevrouenimerosi.blogspot.com/2026/06/65-66-20o-12-06-26-21-15-06-26-2025-26.html',
+                ),
                 array(
                     'year' => '2019-2020',
                     'label' => 'ΥΠΑΙΘ — επίσημη απόφαση που παραπέμπει στην 85351/Ε2/03-07-2020 «Λειτουργικά κενά εκπαιδευτικού προσωπικού Δ.Ε.»',

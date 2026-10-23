@@ -72,6 +72,8 @@ function leaveComparisonSide($leave, $sources, $audience, $h) {
         <ul><?php foreach ($docs as $item): ?><li><?php echo $h($item); ?></li><?php endforeach; ?></ul>
       </section>
 
+      <?php if ($audience === 'substitute'): ?><p class="leave-service-disclaimer">Η γενική ένδειξη υπηρεσίας δεν πιστοποιεί αυτομάτως διδακτική προϋπηρεσία ΑΣΕΠ ή χρόνο ασφάλισης.</p><?php endif; ?>
+      <?php if (!empty($leave['service_clarification'])): ?><p class="leave-service-disclaimer"><?php echo $h($leave['service_clarification']); ?></p><?php endif; ?>
       <div class="leave-legal"><strong>Νομική παραπομπή:</strong> <?php echo $h($leave['legal']); ?></div>
       <?php leaveComparisonSourceLinks($leave, $sources, $h); ?>
     </article>
