@@ -643,7 +643,7 @@ function teachingTimetableEnrichRows($rows)
         $courseId = isset($row['course_id']) ? $row['course_id'] : '';
         if (isset($eneegylGapIds[$courseId])) {
             $rows[$index]['assignment_link_status'] = 'regulatory_gap';
-            $rows[$index]['assignment_link_note'] = 'Το μάθημα υπάρχει στο ωρολόγιο ΦΕΚ Β΄ 2149/2026, χωρίς αντίστοιχη γραμμή στον πίνακα αναθέσεων Β΄/Γ΄ του ΦΕΚ Β΄ 3216/2026. Δεν δανειζόμαστε ανάθεση από τη Δ΄ τάξη ή από άλλο κανονιστικό context.';
+            $rows[$index]['assignment_link_note'] = 'Το μάθημα προβλέπεται στη Γ΄ Λυκείου από το ωρολόγιο ΦΕΚ Β΄ 2149/2026, αλλά δεν ταυτοποιείται ρητή αντίστοιχη ανάθεση στον κοινό πίνακα τομέων Β΄/Γ΄ του ΦΕΚ Β΄ 3216/2026. Η τροποποίηση Β΄ 5733/2026 αφορά άλλες αναθέσεις και δεν επιλύει την αντιστοίχιση. Απαιτείται διευκρίνιση ΥΠΑΙΘΑ· δεν μεταφέρουμε αναθέσεις από Δ΄ τάξη ή από συναφή μαθήματα.';
         }
 
         $gapMetadata = teachingTimetableConfirmedRegulatoryGapMetadataForRow($rows[$index]);
