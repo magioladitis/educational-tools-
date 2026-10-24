@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/includes/config.php'; ?>
+<?php require_once __DIR__ . '/includes/components/source-card.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -27,10 +28,16 @@
 <div class="leadership-actions"><button type="button" id="checkEligibility">Έλεγχος γενικών προϋποθέσεων</button><button type="button" id="resetEligibility" class="leadership-secondary">Καθαρισμός</button><button type="button" id="printEligibility" class="leadership-secondary">Εκτύπωση αποτελέσματος</button></div>
 </section>
 <section id="eligibilityResult" class="leadership-panel" aria-live="polite" aria-labelledby="resultTitle"><h2 id="resultTitle">Β. Αποτέλεσμα προελέγχου</h2><p>Συμπλήρωσε τα στοιχεία και επίλεξε «Έλεγχος γενικών προϋποθέσεων».</p></section>
-<section class="leadership-panel"><h2>Γ. Νομική τεκμηρίωση και όρια</h2>
-<p>Ο αρχικός έλεγχος εξετάζει τον γενικό κανόνα των 12 ετών εκπαιδευτικής υπηρεσίας, 8 ετών διδακτικής (4 στην οικεία βαθμίδα) και ΤΠΕ Α΄. Δεν κρίνει ειδικούς κλάδους, καταλληλότητα για συγκεκριμένη σχολική μονάδα, εναλλακτικά καθεστώτα επαναπροκήρυξης, εκκρεμή κωλύματα ή πρόσθετα προσόντα.</p>
-<ul><li><a href="https://api.et.gr/apiFEK/1/2021/136/pdf" target="_blank" rel="noopener noreferrer">Ν. 4823/2021, ΦΕΚ Α΄ 136 — άρθρο 31</a></li><li><a href="https://api.et.gr/apiFEK/2/2022/6141/pdf" target="_blank" rel="noopener noreferrer">ΥΑ Φ.361.22/6/149788/Ε3/2022, ΦΕΚ Β΄ 6141</a></li><li><a href="https://mitos.gov.gr/index.php/ΔΔ:Επιλογή_και_Τοποθέτηση_Διευθυντών_Σχολικών_Μονάδων" target="_blank" rel="noopener noreferrer">Εθνικό Μητρώο Διοικητικών Διαδικασιών — Μίτος</a></li></ul>
-<p class="leadership-note">Ειδικοί τύποι σχολείων, κλάδοι, όρια συνταξιοδότησης, πειθαρχικά ή υπηρεσιακά κωλύματα και η περίπτωση επαναπροκήρυξης απαιτούν ξεχωριστό έλεγχο με την ισχύουσα πρόσκληση. Θετικό αποτέλεσμα σημαίνει μόνο ότι δεν εντοπίστηκε έλλειψη στους βασικούς αριθμητικούς κανόνες.</p>
-</section></main>
+<?php sourceCardStart(array('title' => 'Πηγές / Νομική βάση', 'title_id' => 'leadershipSourcesTitle')); ?>
+<p><strong>Γενικός προέλεγχος:</strong> Ελέγχονται μόνο οι βασικές προϋποθέσεις εκπαιδευτικής και διδακτικής υπηρεσίας, υπηρεσίας στην οικεία βαθμίδα και γνώσης ΤΠΕ. Οι ειδικοί τύποι σχολείων και οι περιπτώσεις επαναπροκήρυξης απαιτούν χωριστή εξέταση.</p>
+<?php sourceCardLinksStart(); ?>
+<?php sourceCardLink('https://api.et.gr/apiFEK/1/2021/136/pdf', 'Ν. 4823/2021 — ΦΕΚ Α΄ 136, άρθρο 31 ↗'); ?>
+<?php sourceCardLink('https://api.et.gr/apiFEK/2/2022/6141/pdf', 'Υ.Α. Φ.361.22/6/149788/Ε3/2022 — ΦΕΚ Β΄ 6141 ↗'); ?>
+<?php sourceCardLink('https://mitos.gov.gr/index.php/ΔΔ:Επιλογή_και_Τοποθέτηση_Διευθυντών_Σχολικών_Μονάδων', 'Μίτος — Επιλογή και τοποθέτηση Διευθυντών Σχολικών Μονάδων ↗'); ?>
+<?php sourceCardLinksEnd(); ?>
+<?php sourceCardDisclaimerStart(); ?>
+Το αποτέλεσμα είναι ενδεικτικό και δεν πιστοποιεί δικαίωμα υποψηφιότητας. Ο κλάδος, η σχολική μονάδα, τα κωλύματα, οι ειδικές εξαιρέσεις και οι όροι της τρέχουσας προκήρυξης ελέγχονται από την αρμόδια υπηρεσία.
+<?php sourceCardDisclaimerEnd(); ?>
+<?php sourceCardEnd(); ?></main>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/leadership-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
 </body></html>
