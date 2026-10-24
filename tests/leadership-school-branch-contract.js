@@ -1,0 +1,15 @@
+const assert=require('assert');
+const {evaluate}=require('../includes/leadership-eligibility.js');
+const base={education:14,teaching:10,sameLevel:5,ict:'yes',levelMatch:'yes',administrative:'clear',specialQualification:'confirmed'};
+const check=(school,branch,branchLevel)=>evaluate({...base,school,branch,branchLevel}).checks.find(x=>x.label.startsWith('Κλάδος')).status;
+assert.equal(check('kindergarten','PE60','primary'),'pass');
+assert.equal(check('kindergarten','PE70','primary'),'fail');
+assert.equal(check('gym','PE03','secondary'),'pass');
+assert.equal(check('gel','PE86','secondary'),'pass');
+assert.equal(check('epal','PE70','primary'),'fail');
+assert.equal(check('ek','PE86','secondary'),'pass');
+assert.equal(check('ek','PE03','secondary'),'fail');
+assert.equal(check('primary_school','PE70','primary'),'pass');
+assert.equal(check('special_secondary','PE86','secondary'),'unknown');
+assert.notEqual(evaluate({...base,school:'special_secondary',branch:'PE86',branchLevel:'secondary'}).status,'basic_pass');
+console.log('10/10 leadership branch scenarios PASS');

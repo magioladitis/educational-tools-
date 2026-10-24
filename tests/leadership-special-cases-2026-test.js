@@ -1,0 +1,14 @@
+const assert=require('assert');
+const {evaluate}=require('../includes/leadership-eligibility.js');
+const base={school:'special_primary',branch:'PE71',branchLevel:'primary',specialLevel:'primary',eaeEligible:'yes',specialYears:'4',supportYears:'',sensoryType:'unknown',sensoryProof:'unknown',reannouncement:'normal',specialQualification:'confirmed',education:'16',teaching:'10',sameLevel:'6',ict:'yes',levelMatch:'yes',administrative:'clear'};
+const get=(d,label)=>evaluate({...base,...d}).checks.find(x=>x.label.includes(label));
+assert.strictEqual(get({},'4 έτη στον προβλεπόμενο').status,'pass');
+assert.strictEqual(get({specialYears:'3'},'4 έτη στον προβλεπόμενο').status,'fail');
+assert.strictEqual(get({eaeEligible:'no'},'Εξειδίκευση').status,'fail');
+assert.strictEqual(get({branch:'EEP',branchLevel:'eep',supportYears:'8'},'8 έτη υποστηρικτικής').status,'pass');
+assert.strictEqual(get({branch:'EEP',branchLevel:'eep',supportYears:'7'},'8 έτη υποστηρικτικής').status,'fail');
+assert.strictEqual(get({school:'deaf_blind',specialLevel:'primary',sensoryType:'deaf',sensoryProof:'certified'},'Πιστοποιημένη ΕΝΓ').status,'pass');
+assert.strictEqual(get({school:'deaf_blind',specialLevel:'primary',sensoryType:'blind',sensoryProof:'unknown'},'Πιστοποιημένη ΕΝΓ').status,'unknown');
+assert.strictEqual(evaluate({...base,reannouncement:'repeat'}).status,'review');
+assert.strictEqual(evaluate({...base,school:'special_secondary',branch:'PE03',branchLevel:'secondary',specialYears:'5'}).checks.find(x=>x.label.includes('Κλάδος ειδικής')).status,'pass');
+console.log('PASS: 9 special leadership scenarios');

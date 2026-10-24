@@ -25,6 +25,7 @@ if (!function_exists('renderDirectoryToolCard')) {
         $title = isset($tool['title']) ? (string) $tool['title'] : '';
         $description = isset($tool['description']) ? (string) $tool['description'] : '';
         $isNew = !empty($tool['new']);
+        $isBeta = !empty($tool['beta']);
         ?>
 <a
   class="tool-card"
@@ -33,7 +34,7 @@ if (!function_exists('renderDirectoryToolCard')) {
   data-search="<?php echo $h($search); ?>"
   href="<?php echo $h($href); ?>"
 >
-  <?php if ($isNew) { ?><span class="new-badge">ΝΕΟ</span><?php } ?>
+  <?php if ($isBeta) { ?><span class="new-badge" title="Δοκιμαστική έκδοση">BETA</span><?php } elseif ($isNew) { ?><span class="new-badge">ΝΕΟ</span><?php } ?>
   <div class="card-top">
     <span class="tool-number"><?php echo $number; ?></span>
     <?php if ($tag !== '') { ?>

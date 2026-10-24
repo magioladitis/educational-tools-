@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict');
 const {evaluate}=require('../includes/leadership-eligibility.js');
-const base={education:'12',teaching:'8',sameLevel:'4',ict:'yes',levelMatch:'yes',school:'general',administrative:'clear'};
+const base={education:'12',teaching:'8',sameLevel:'4',ict:'yes',levelMatch:'yes',school:'gym',branch:'PE03',branchLevel:'secondary',specialQualification:'confirmed',administrative:'clear'};
 assert.equal(evaluate(base).status,'basic_pass');
 assert.equal(evaluate({...base,education:'11.99'}).status,'not_met');
 assert.equal(evaluate({...base,teaching:'7.99'}).status,'not_met');
