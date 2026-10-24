@@ -35,6 +35,18 @@ return array(
     ),
     'tools' => array(
         array(
+            'number' => 100,
+            'href' => 'elegxos-proypotheseon-diefthynti.php',
+            'group' => 'ypiresiaka',
+            'categories' => 'διευθυντές θέσεις ευθύνης προϋποθέσεις υπηρεσία στελέχη',
+            'search' => 'διευθυντής σχολείου διευθυντές σχολικών μονάδων επιλογή δικαίωμα υποψηφιότητας στελέχη 4823 2021',
+            'tag' => 'Θέσεις ευθύνης',
+            'tag_class' => 'green',
+            'new' => true,
+            'title' => 'Προϋποθέσεις υποψηφιότητας Διευθυντή Σχολείου',
+            'description' => 'Προκαταρκτικός έλεγχος γενικών προϋποθέσεων, με επισήμανση ειδικών ελέγχων και νομικές πηγές.'
+        ),
+        array(
             'number' => 1,
             'href' => 'dikaioma-symmetoxis.php',
             'group' => 'asep-anaplirotes',

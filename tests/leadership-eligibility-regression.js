@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict');
+const {evaluate}=require('../includes/leadership-eligibility.js');
+const base={education:'12',teaching:'8',sameLevel:'4',ict:'yes',levelMatch:'yes',school:'general',administrative:'clear'};
+assert.equal(evaluate(base).status,'basic_pass');
+assert.equal(evaluate({...base,education:'11.99'}).status,'not_met');
+assert.equal(evaluate({...base,teaching:'7.99'}).status,'not_met');
+assert.equal(evaluate({...base,sameLevel:'3.99'}).status,'not_met');
+assert.equal(evaluate({...base,ict:'no'}).status,'not_met');
+assert.equal(evaluate({...base,ict:'unknown'}).status,'review');
+assert.equal(evaluate({...base,school:'special'}).status,'review');
+assert.equal(evaluate({...base,administrative:'issue'}).status,'review');
+assert.equal(evaluate({...base,sameLevel:'9'}).status,'review');
+assert.equal(evaluate({...base,education:''}).status,'review');
+console.log('PASS: leadership eligibility 10 scenarios');
