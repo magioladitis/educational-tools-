@@ -147,9 +147,14 @@
   }
 
   function installAccessibilityLandmarks() {
-    var main = document.querySelector('main, [role="main"], .app, .page-shell');
-    if (main && !main.id) main.id = 'main-content';
-    else if (main && main.id !== 'main-content' && !document.getElementById('main-content')) main.id = 'main-content';
+    // Older calculators use a div.app / div.app-box instead of a semantic main.
+    // Provide one real skip-link destination without editing every calculator.
+    var main = document.querySelector('main, [role="main"], .app, .app-box, .edu-tool-shell, .page-shell');
+    if (!main) return;
+    if (!main.id && !document.getElementById('main-content')) main.id = 'main-content';
+    else if (main.id !== 'main-content' && !document.getElementById('main-content')) main.id = 'main-content';
+    if (main.tagName !== 'MAIN' && !main.hasAttribute('role')) main.setAttribute('role', 'main');
+    if (!main.hasAttribute('tabindex')) main.setAttribute('tabindex', '-1');
   }
 
   function prefersReducedMotion() {

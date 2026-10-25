@@ -52,4 +52,5 @@
 <?php sourceCardDisclaimerEnd(); ?>
 <?php sourceCardEnd(); ?></main>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/leadership-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body></html>

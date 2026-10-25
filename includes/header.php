@@ -24,6 +24,7 @@ $eduCurrentToolHref = $eduCurrentTool && isset($eduCurrentTool['href']) ? (strin
 $eduCurrentToolTitle = $eduCurrentTool && isset($eduCurrentTool['title']) ? (string) $eduCurrentTool['title'] : '';
 // Aggregate only recognized tools; no visitor identifiers are collected.
 $eduAnalyticsAllowed = $eduCurrentTool
+    && empty($_SERVER['HTTP_X_EDU_OFFLINE_PREFETCH'])
     && empty($_COOKIE['edu_analytics_off'])
     && (!isset($_SERVER['HTTP_DNT']) || (string)$_SERVER['HTTP_DNT'] !== '1')
     && (!isset($_SERVER['HTTP_SEC_GPC']) || (string)$_SERVER['HTTP_SEC_GPC'] !== '1');

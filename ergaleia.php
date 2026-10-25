@@ -86,6 +86,24 @@ $h = function ($value) use ($flags) {
     </div>
   </section>
 
+  <section aria-label="Αναζήτηση και φίλτρα εργαλείων" class="toolbar" id="tools-directory" data-initial-filter="<?php echo $h($initialGroup); ?>">
+    <div class="toolbar-heading">
+      <div>
+        <span class="section-kicker">ΚΑΤΑΛΟΓΟΣ</span>
+        <h2>Βρες το εργαλείο που χρειάζεσαι</h2>
+      </div>
+      <a class="deadline-shortcut" href="prothesmies.php">📅 Προθεσμίες</a>
+    </div>
+    <div class="search-wrap">
+      <input aria-label="Αναζήτηση εργαλείου" autocomplete="off" id="toolSearch" placeholder="Αναζήτηση π.χ. μόρια, παράβολο, ωράριο, απόσπαση..." type="search">
+    </div>
+    <div class="active-category-filter" id="activeCategoryFilter" role="status" aria-live="polite" hidden>
+      <span id="activeCategoryText"></span>
+      <button class="active-category-filter__clear" id="clearCategoryFilter" type="button">Καθαρισμός</button>
+    </div>
+    <div aria-live="polite" class="results-line" id="resultsLine" role="status"></div>
+  </section>
+
   <section class="directory-section" id="tool-categories" aria-labelledby="toolCategoriesTitle">
     <div class="directory-section__heading">
       <div>
@@ -115,24 +133,6 @@ $h = function ($value) use ($flags) {
     </div>
   </section>
 
-  <section aria-label="Αναζήτηση και φίλτρα εργαλείων" class="toolbar" id="tools-directory" data-initial-filter="<?php echo $h($initialGroup); ?>">
-    <div class="toolbar-heading">
-      <div>
-        <span class="section-kicker">ΚΑΤΑΛΟΓΟΣ</span>
-        <h2>Βρες το εργαλείο που χρειάζεσαι</h2>
-      </div>
-      <a class="deadline-shortcut" href="prothesmies.php">📅 Προθεσμίες</a>
-    </div>
-    <div class="search-wrap">
-      <input aria-label="Αναζήτηση εργαλείου" autocomplete="off" id="toolSearch" placeholder="Αναζήτηση π.χ. μόρια, παράβολο, ωράριο, απόσπαση..." type="search">
-    </div>
-    <div class="active-category-filter" id="activeCategoryFilter" role="status" aria-live="polite" hidden>
-      <span id="activeCategoryText"></span>
-      <button class="active-category-filter__clear" id="clearCategoryFilter" type="button">Καθαρισμός</button>
-    </div>
-    <div aria-live="polite" class="results-line" id="resultsLine" role="status"></div>
-  </section>
-
   <div class="tool-groups" id="toolGroups">
     <?php foreach ($groups as $groupSlug => $groupConfig) {
         $title = isset($groupConfig['title']) ? $groupConfig['title'] : $groupSlug;
@@ -154,8 +154,16 @@ $h = function ($value) use ($flags) {
   </div>
 
   <div aria-hidden="true" class="no-results" id="noResults">
-    Δεν βρέθηκε εργαλείο που να ταιριάζει στην αναζήτησή σου.
+    <p>Δεν βρέθηκε εργαλείο με αυτά τα κριτήρια.</p>
+    <button type="button" id="resetToolDirectory">Εμφάνιση όλων των εργαλείων</button>
   </div>
+
+  <section class="edu-offline-manager" aria-labelledby="eduOfflineHeading">
+    <h2 id="eduOfflineHeading">Χρήση εργαλείων χωρίς Internet</h2>
+    <p>Αποθήκευσε τις δημόσιες σελίδες και τους απαραίτητους πόρους για πρόσβαση εκτός σύνδεσης. Οι εφαρμογές σύνδεσης χρήστη και οι λειτουργίες διακομιστή εξαιρούνται.</p>
+    <button type="button" id="eduOfflineSaveAll">Αποθήκευση εργαλείων για offline χρήση</button>
+    <p class="edu-offline-manager__status" id="eduOfflineManagerStatus" role="status" aria-live="polite">Έλεγχος αποθηκευμένων εργαλείων…</p>
+  </section>
 
   <section class="info-grid info-grid-single">
     <div class="notice">
@@ -166,6 +174,7 @@ $h = function ($value) use ($flags) {
 </main>
 
 <script src="<?php echo $h(edu_asset_url('assets/tools-directory.js')); ?>"></script>
+<script defer src="<?php echo $h(edu_asset_url('assets/offline-manager.js')); ?>"></script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
 <script src="<?php echo $h(edu_asset_url('assets/common.js')); ?>"></script>
 </body>

@@ -428,6 +428,5 @@ window.addEventListener('load',function(){
   },500);
 });
 </script>
-<script src="<?php echo htmlspecialchars(edu_asset_url('assets/offline-status.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

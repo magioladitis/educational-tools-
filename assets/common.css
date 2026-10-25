@@ -4431,3 +4431,15 @@ body.edu-ui.edu-page-transfer .transfer-submission-special-note { border-left:3p
 /* v3.22.175: shared child evidence guidance */
 .transfer-children-guide { line-height: 1.5; padding-top: .5rem; }
 .transfer-children-guide p { margin: .4rem 0 .7rem; }
+
+/* v3.22.204 — UX audit: search-first task discovery and one-click recovery. */
+body.edu-ui.edu-tools-directory.edu-directory-filtering #tool-categories {display:none!important;}
+body.edu-ui.edu-tools-directory #noResults p {margin:0 0 12px;}
+body.edu-ui.edu-tools-directory #resetToolDirectory {
+  min-height:44px; padding:10px 15px; border-radius:10px;
+  border:1px solid var(--blue); background:var(--blue-soft);
+  color:var(--blue-dark); font:inherit; font-weight:700; cursor:pointer;
+}
+body.edu-ui.edu-tools-directory #resetToolDirectory:focus-visible {
+  outline:3px solid var(--blue); outline-offset:2px;
+}

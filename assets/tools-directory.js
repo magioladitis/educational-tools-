@@ -9,7 +9,11 @@
   var clearCategoryButton = document.getElementById('clearCategoryFilter');
   var resultsLine = document.getElementById('resultsLine');
   var noResults = document.getElementById('noResults');
+  var resetDirectory = document.getElementById('resetToolDirectory');
   var activeFilter = toolbar && toolbar.getAttribute('data-initial-filter') ? toolbar.getAttribute('data-initial-filter') : 'all';
+  // Offline catalogue snapshots ignore query strings; recover known filters from the URL.
+  var urlGroup = new URLSearchParams(window.location.search).get('group');
+  if (['asep-anaplirotes', 'eidiki-agogi', 'metakiniseis', 'ypiresiaka', 'eidikes-domes'].indexOf(urlGroup) !== -1) activeFilter = urlGroup;
 
   function normalizeGreek(text) {
     return (text || '')
@@ -39,6 +43,8 @@
     if (!searchInput || !resultsLine || !noResults) return;
 
     var query = normalizeGreek(searchInput.value.trim());
+    // Put the matching tools immediately below search while filtering.
+    document.body.classList.toggle('edu-directory-filtering', !!query || activeFilter !== 'all');
     var visible = 0;
 
     cards.forEach(function (card) {
@@ -96,6 +102,12 @@
       if (searchInput) searchInput.focus();
     });
   }
+
+  if (resetDirectory) resetDirectory.addEventListener('click', function () {
+    if (searchInput) searchInput.value = '';
+    setFilter('all', false);
+    if (searchInput) searchInput.focus();
+  });
 
   if (searchInput) searchInput.addEventListener('input', updateCards);
   updateCards();

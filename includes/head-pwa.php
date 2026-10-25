@@ -15,6 +15,8 @@ $eduHeadPwaH = static function ($value) use ($eduHeadPwaFlags) {
 };
 ?>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="<?php echo $eduHeadPwaH(edu_asset_url('assets/offline-status.css')); ?>">
+<script defer src="<?php echo $eduHeadPwaH(edu_asset_url('assets/offline-status.js')); ?>"></script>
 <meta name="theme-color" content="#1f6feb">
 <link rel="icon" href="<?php echo $eduHeadPwaH(edu_asset_url('favicon.ico')); ?>" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $eduHeadPwaH(edu_asset_url('assets/icons/favicon-32.png')); ?>">

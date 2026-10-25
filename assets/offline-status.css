@@ -1,0 +1,16 @@
+/* Same compact offline information treatment in every tool and breakpoint. */
+.edu-offline-notice{position:sticky;top:0;z-index:9999;background:#fff0c2;border-bottom:2px solid #ae6c08;color:#513a02;font:600 14px/1.45 system-ui,sans-serif;padding:7px 16px;text-align:center}
+.edu-offline-notice[hidden]{display:none!important}
+.edu-offline-notice details{margin:0 auto;max-width:900px}
+.edu-offline-notice summary{cursor:pointer;list-style:none}
+.edu-offline-notice summary::-webkit-details-marker{display:none}
+.edu-offline-notice summary::after{content:'  ⓘ';font-weight:700}
+.edu-offline-notice details[open] summary::after{content:'  ▴'}
+.edu-offline-notice p{font-size:13px;font-weight:400;margin:5px auto 3px;max-width:760px}
+.edu-offline-manager{border:1px solid #b3c9e5;border-radius:14px;background:#eef5ff;padding:14px 18px;margin:18px 0;color:#1c4268}
+.edu-offline-manager h2{font-size:1.1rem;margin:0 0 4px}
+.edu-offline-manager p{margin:6px 0}
+.edu-offline-manager button{font:inherit;font-weight:650;color:white;border:0;border-radius:8px;background:#225fa8;padding:9px 15px;margin:7px 0;cursor:pointer}
+.edu-offline-manager button:disabled{opacity:.57;cursor:default}
+.edu-offline-manager__status{font-size:.9rem;min-height:1.3em}
+@media(max-width:650px){.edu-offline-notice{padding:6px 10px;font-size:12px}.edu-offline-manager{padding:12px}}
