@@ -16,7 +16,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php require __DIR__ . '/includes/head-pwa.php'; ?>
-  <title>Μεταθέσεις μόνιμων εκπαιδευτικών Δ.Ε.</title>
+  <title>Μεταθέσεις μόνιμων εκπαιδευτικών</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-secondary.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-level-switch.css'), ENT_QUOTES, 'UTF-8'); ?>">
@@ -29,7 +29,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
 
 <?php calculatorContainerStart(array('class' => 'app')); ?>
   <?php calculatorHero(array(
-    'title' => 'Μεταθέσεις μόνιμων εκπαιδευτικών Δ.Ε.',
+    'title' => 'Μεταθέσεις μόνιμων εκπαιδευτικών',
     'intro_html' => 'Εργαλείο για εκπαιδευτικούς <strong>Δευτεροβάθμιας Εκπαίδευσης</strong>: ενδεικτική μοριοδότηση όπου εφαρμόζεται και προσωποποιημένος κατάλογος ελέγχου δικαιολογητικών ανά τύπο μετάθεσης.',
     'badges' => array('Βάση: εγκύκλιος 2026–2027 (138014/Ε2)', 'Μ.Σ.Δ.', 'Δυσπρόσιτα / ειδικές υπηρετήσεις')
   )); ?>

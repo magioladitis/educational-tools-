@@ -21,7 +21,7 @@ foreach ($primaryTransferBranchCodes as $code) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php require __DIR__ . '/includes/head-pwa.php'; ?>
-  <title>Μεταθέσεις εκπαιδευτικών Πρωτοβάθμιας — Γενική, ΕΑΕ, Διαπολιτισμικά και ΠΕ73</title>
+  <title>Μεταθέσεις μόνιμων εκπαιδευτικών</title>
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-primary.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-level-switch.css'), ENT_QUOTES, 'UTF-8'); ?>">
@@ -33,7 +33,7 @@ foreach ($primaryTransferBranchCodes as $code) {
 <?php require_once __DIR__ . '/includes/components/transfer-service-help.php'; ?>
 <?php calculatorContainerStart(array('class'=>'app')); ?>
   <?php calculatorHero(array(
-    'title'=>'Μεταθέσεις μόνιμων εκπαιδευτικών Πρωτοβάθμιας',
+    'title'=>'Μεταθέσεις μόνιμων εκπαιδευτικών',
     'intro_html'=>'Υπολογισμός μορίων και οδηγός δικαιολογητικών για <strong>γενικές μεταθέσεις, ΕΑΕ/ΚΕΔΑΣΥ, Διαπολιτισμικά, Μειονοτικά ΠΕ73</strong> και βελτίωση ή οριστική τοποθέτηση.',
     'badges'=>array('Εγκύκλιος Π.Ε. 138023/Ε2/15-10-2026', 'Μεταθέσεις και τοποθετήσεις 2026–2027')
   )); ?>
