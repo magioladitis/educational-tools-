@@ -2,8 +2,8 @@
 'use strict';
 
 const CACHE_PREFIX = 'edu-tools-static-';
-const CACHE_NAME = CACHE_PREFIX + '3.22.199';
-const PAGE_CACHE = 'edu-tools-pages-3.22.199';
+const CACHE_NAME = CACHE_PREFIX + '3.22.202';
+const PAGE_CACHE = 'edu-tools-pages-3.22.202';
 const PAGE_CACHE_PREFIX = 'edu-tools-pages-';
 const OFFLINE_PAGES = new Set([
   '/ergaleia.php',
@@ -11,6 +11,53 @@ const OFFLINE_PAGES = new Set([
   '/ypologismos-morion-metathesis-protovathmia.php'
 ]);
 const STATIC_ASSET_RE = /\.(?:css|js|png|svg|ico|webp|jpg|jpeg|gif|woff2?|webmanifest)$/i;
+
+// Warm the other transfer level and its static dependencies while online.
+// These are anonymous, allowlisted public pages only; no POST or private responses.
+function cacheablePage(response) {
+  return response && response.ok && response.type === 'basic' &&
+    !response.headers.has('set-cookie') &&
+    !/(private|no-store)/i.test(response.headers.get('cache-control') || '');
+}
+
+function warmTransferPair(visitedUrl) {
+  const otherName = visitedUrl.pathname.endsWith('ypologismos-morion-metathesis.php')
+    ? 'ypologismos-morion-metathesis-protovathmia.php'
+    : 'ypologismos-morion-metathesis.php';
+  const otherUrl = new URL(otherName, visitedUrl.href);
+  return fetch(new Request(otherUrl.href, { credentials: 'omit', redirect: 'follow' }))
+    .then(function (response) {
+      if (!cacheablePage(response)) return;
+      const clone = response.clone();
+      return response.text().then(function (html) {
+        return caches.open(PAGE_CACHE).then(function (pageCache) {
+          return pageCache.put(otherUrl.href, clone).then(function () {
+            const urls = new Set();
+            const tags = html.match(/<(?:script|link)\b[^>]*>/gi) || [];
+            tags.forEach(function (tag) {
+              const value = tag.match(/\b(?:src|href)\s*=\s*(["'])(.*?)\1/i);
+              if (!value) return;
+              const asset = new URL(value[2], otherUrl.href);
+              if (asset.origin === otherUrl.origin && STATIC_ASSET_RE.test(asset.pathname)) {
+                urls.add(asset.href);
+              }
+            });
+            return caches.open(CACHE_NAME).then(function (assetCache) {
+              return Promise.all(Array.from(urls).map(function (url) {
+                return fetch(new Request(url, { credentials: 'omit' }))
+                  .then(function (r) {
+                    if (r.ok && r.type === 'basic' &&
+                        !/(private|no-store)/i.test(r.headers.get('cache-control') || '')) {
+                      return assetCache.put(url, r);
+                    }
+                  }).catch(function () {});
+              }));
+            });
+          });
+        });
+      });
+    }).catch(function () {});
+}
 
 self.addEventListener('install', function () {
   self.skipWaiting();
@@ -53,6 +100,11 @@ self.addEventListener('fetch', function (event) {
           const snapshot = response.clone();
           event.waitUntil(caches.open(PAGE_CACHE).then(function (cache) {
             return cache.put(request, snapshot);
+          }).then(function () {
+            // Prime the other level on each online visit to either transfer page.
+            if (/ypologismos-morion-metathesis(?:-protovathmia)?\.php$/.test(url.pathname)) {
+              return warmTransferPair(url);
+            }
           }));
         }
         return response;
