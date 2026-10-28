@@ -8,7 +8,7 @@ legacy = (ROOT / 'includes' / 'home-deadlines.php').read_text(encoding='utf-8')
 
 checks = [
     ('central tools page no longer loads deadline data', "includes/deadlines.php" not in home and "includes/home-deadlines.php" not in home),
-    ('central tools page links to separate deadlines page', 'href="prothesmies.php"' in home),
+    ('shared navigation links to separate deadlines page', 'href="prothesmies.php"' in (ROOT / 'includes' / 'header.php').read_text(encoding='utf-8')),
     ('separate deadlines page loads deadline data', "require __DIR__ . '/includes/deadlines.php'" in page),
     ('separate deadlines page renders deadline config', 'renderDeadlineCard($deadlineConfig);' in page),
     ('deadline data remains outside presentation page', 'return array(' in data),

@@ -16,7 +16,7 @@ for role in ('proofType','namedPostgraduateSearch','namedSpecialProgramSearch','
     assert re.search(r'<(?:select|input)\b(?=[^>]*data-role="'+role+r'")(?=[^>]*aria-label=)[^>]*>',ped),role
 for name in ('nomiki-epikairotita.php','elegxos-proypotheseon-diefthynti.php'):
     assert 'assets/common.js' in (root/name).read_text()
-version="'3.22.204'"
+version="'3.22.205'"
 for name in ('includes/config.php','service-worker.js','assets/offline-registry.js'):
     assert version in (root/name).read_text(),name
 print('PASS: search-first directory, recovery, accessible landmarks and labels, shared UX, release cache')

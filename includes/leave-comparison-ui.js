@@ -15,6 +15,15 @@
   }
 
   var initialId = select.value;
+  // The PHP renders the requested comparison online. Offline the service
+  // worker serves the saved, query-free HTML, so restore the selected leave
+  // from the URL when (and only when) it exists in the public payload.
+  try {
+    var requestedId = new URL(window.location.href).searchParams.get('leave');
+    if (requestedId && Object.prototype.hasOwnProperty.call(payload, requestedId)) {
+      initialId = requestedId;
+    }
+  } catch (error) { /* Keep the server/default selection. */ }
   var orderedIds = Object.keys(payload);
   var results = {};
 

@@ -2769,13 +2769,11 @@ body.edu-ui.edu-tools-directory .edu-personal-tool__arrow{
   flex:0 0 auto;color:var(--edu-primary);font-size:18px;font-weight:800
 }
 body.edu-ui.edu-tools-directory .directory-section__heading,
-body.edu-ui.edu-tools-directory .toolbar-heading,
 body.edu-ui.edu-tools-directory .tool-group__heading{
   display:flex;align-items:flex-end;justify-content:space-between;gap:18px
 }
 body.edu-ui.edu-tools-directory .directory-section__heading{margin-bottom:14px}
 body.edu-ui.edu-tools-directory .directory-section__heading h2,
-body.edu-ui.edu-tools-directory .toolbar-heading h2,
 body.edu-ui.edu-tools-directory .tool-group__heading h2{margin:0;color:var(--text)}
 body.edu-ui.edu-tools-directory .directory-section__heading h2{font-size:26px}
 body.edu-ui.edu-tools-directory .directory-section__heading p{
@@ -2813,13 +2811,6 @@ body.edu-ui.edu-tools-directory .category-card__count{
   white-space:nowrap;padding:5px 8px;border-radius:999px;background:#f5f7fa;color:#667085;font-size:12px;font-weight:800
 }
 body.edu-ui.edu-tools-directory .toolbar{scroll-margin-top:16px}
-body.edu-ui.edu-tools-directory .toolbar-heading{align-items:center;margin-bottom:12px}
-body.edu-ui.edu-tools-directory .toolbar-heading h2{font-size:22px}
-body.edu-ui.edu-tools-directory .deadline-shortcut{
-  flex:0 0 auto;padding:8px 11px;border:1px solid #d6e4ff;border-radius:9px;background:var(--blue-soft);
-  color:var(--blue-dark);text-decoration:none;font-size:13px;font-weight:800
-}
-body.edu-ui.edu-tools-directory .deadline-shortcut:hover{background:#dfeaff;text-decoration:none}
 body.edu-ui.edu-tools-directory .active-category-filter{
   display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:9px 11px;
   border:1px solid #d6e4ff;border-radius:10px;background:#f7faff;color:var(--blue-dark);font-size:13.5px;font-weight:800
@@ -2861,15 +2852,12 @@ body.edu-ui.edu-tools-directory .tool-group .tools-grid{margin-top:0}
   body.edu-ui.edu-tools-directory .tool-card p{font-size:14px;line-height:1.45;margin-bottom:11px}
   body.edu-ui.edu-tools-directory .tool-card .button-like{margin-top:2px}
   body.edu-ui.edu-tools-directory .toolbar{padding:14px}
-  body.edu-ui.edu-tools-directory .deadline-shortcut{min-height:44px;display:inline-flex;align-items:center}
   body.edu-ui.edu-tools-directory .active-category-filter__clear{min-height:44px}
   body.edu-ui.edu-tools-directory .directory-section__heading,
-  body.edu-ui.edu-tools-directory .toolbar-heading,
   body.edu-ui.edu-tools-directory .tool-group__heading{align-items:flex-start;flex-direction:column;gap:7px}
   body.edu-ui.edu-tools-directory .directory-section__heading p{text-align:left}
   body.edu-ui.edu-tools-directory .category-card{grid-template-columns:auto minmax(0,1fr);padding:15px}
   body.edu-ui.edu-tools-directory .category-card__count{grid-column:2;justify-self:start}
-  body.edu-ui.edu-tools-directory .deadline-shortcut{align-self:flex-start}
 }
 
 /* --------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 'use strict';
 importScripts('assets/offline-registry.js');
 
-const REVISION = '3.22.204';
+const REVISION = '3.22.207';
 const STATIC_PREFIX = 'edu-tools-static-';
 const PAGE_PREFIX = 'edu-tools-pages-';
 const CACHE_NAME = STATIC_PREFIX + REVISION;
@@ -40,6 +40,22 @@ function fetchAnonymous(url) {
   }));
 }
 function pageURL(name) { return new URL(name, scopeURL).href; }
+
+// Only these non-personal, presentation-only query strings can reuse a public
+// offline snapshot. Leave comparisons are selected client-side from the
+// existing public comparison data; query-bearing responses are never cached.
+function allowedPageQuery(rel, url) {
+  if (!url.search) return true;
+  if (rel === 'ergaleia.php') {
+    return /^\?group=(?:asep-anaplirotes|eidiki-agogi|metakiniseis|ypiresiaka|eidikes-domes)$/.test(url.search);
+  }
+  if (rel === 'adeies-sygkrisi.php') {
+    // The UI's public comparison IDs are ASCII slugs, e.g. ?leave=kanoniki.
+    // Reject extra parameters, duplicates and encoded/unexpected values.
+    return /^\?leave=[a-z0-9][a-z0-9-]{0,63}$/.test(url.search);
+  }
+  return false;
+}
 
 function assetUrlsFromHTML(html, baseUrl) {
   const urls = new Set();
@@ -149,14 +165,15 @@ self.addEventListener('fetch', function (event) {
   if (rel === null) return;
 
   if (request.mode === 'navigate') {
-    // Only safe, public PHP pages. Never cache arbitrary queries or fragments.
-    // The catalogue's known ?group= links may reuse its base snapshot offline.
-    const directoryFilter = rel === 'ergaleia.php' &&
-      /^\?group=(?:asep-anaplirotes|eidiki-agogi|metakiniseis|ypiresiaka|eidikes-domes)$/.test(url.search);
-    if (!publicPages.has(rel) || (url.search && !directoryFilter)) return;
+    // Only explicitly whitelisted public pages and presentation-only query
+    // strings. Offline responses always come from the canonical base URL.
+    if (!publicPages.has(rel) || !allowedPageQuery(rel, url)) return;
 
     event.respondWith(fetch(request).then(function (response) {
-      if (response && response.ok && !url.search) {
+      // A comparison deep link is still a public read-only page: snapshot
+      // its canonical URL so that a later offline reload works with ?leave=.
+      // Other query-bearing responses remain network-only by default.
+      if (response && response.ok && (!url.search || (rel === 'adeies-sygkrisi.php' && allowedPageQuery(rel, url)))) {
         event.waitUntil(savePublicPage(rel).then(function () {
           if (transferPair.indexOf(rel) !== -1) {
             return savePublicPage(transferPair[rel === transferPair[0] ? 1 : 0]);

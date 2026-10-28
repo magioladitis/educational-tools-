@@ -540,7 +540,7 @@ function renderSubmissionGuidance(rows){
   return '<p>'+escape(line).replace(/(teachers\.minedu\.gov\.gr|mydocs\.minedu\.gov\.gr)/g,function(host){
    return '<a href="https://'+host+'/" target="_blank" rel="noopener noreferrer">'+host+' ↗</a>';
   })+'</p>';
- }).join('')+specialNote+(feature.specialOnly?'':submissionMessageHtml(data,expanded,feature.email));
+ }).join('')+((rows||build()).some(function(d){return submissionChannel(d).kind==='mydocs';})?'<p class="transfer-submission-template__note">Στο MyDocs επιλέξτε <strong>«Υποβολή (γεν. αίτηση)»</strong> από το αριστερό μενού. Όρια συνημμένων: έως <strong>10 MB ανά αρχείο</strong> και έως <strong>50 MB συνολικά ανά αίτηση</strong>.</p>':'')+specialNote+(feature.specialOnly?'':submissionMessageHtml(data,expanded,feature.email));
 }
 function openSubmissionComposer(){
  var disclosure=$('transferSubmissionGuidance');

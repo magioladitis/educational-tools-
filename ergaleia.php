@@ -86,14 +86,8 @@ $h = function ($value) use ($flags) {
     </div>
   </section>
 
-  <section aria-label="Αναζήτηση και φίλτρα εργαλείων" class="toolbar" id="tools-directory" data-initial-filter="<?php echo $h($initialGroup); ?>">
-    <div class="toolbar-heading">
-      <div>
-        <span class="section-kicker">ΚΑΤΑΛΟΓΟΣ</span>
-        <h2>Βρες το εργαλείο που χρειάζεσαι</h2>
-      </div>
-      <a class="deadline-shortcut" href="prothesmies.php">📅 Προθεσμίες</a>
-    </div>
+  <section aria-labelledby="toolSearchHeading" class="toolbar" id="tools-directory" data-initial-filter="<?php echo $h($initialGroup); ?>">
+    <h2 class="edu-tools-sr-only" id="toolSearchHeading">Αναζήτηση εργαλείων</h2>
     <div class="search-wrap">
       <input aria-label="Αναζήτηση εργαλείου" autocomplete="off" id="toolSearch" placeholder="Αναζήτηση π.χ. μόρια, παράβολο, ωράριο, απόσπαση..." type="search">
     </div>
