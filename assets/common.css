@@ -3915,7 +3915,7 @@ body.edu-page-service-timeline .timeline-hero-meta {display:flex;flex-wrap:wrap;
 body.edu-page-service-timeline .timeline-hero-meta span {padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.14);font-size:12.5px;font-weight:800;}
 body.edu-page-service-timeline .timeline-now {display:flex;justify-content:space-between;gap:22px;align-items:center;margin-bottom:14px;border-left:4px solid #d97706;}
 body.edu-page-service-timeline .timeline-now h2 {margin:4px 0 5px;font-size:21px;}
-body.edu-page-service-timeline .timeline-now p {margin:0;color:var(--edu-muted);line-height:1.55;max-width:850px;}
+body.edu-page-service-timeline .timeline-now p {margin:0;color:var(--edu-muted);font-size:14px;line-height:1.55;max-width:850px;}
 body.edu-page-service-timeline .timeline-eyebrow {color:#9a4d00;}
 body.edu-page-service-timeline .timeline-deadlines-link {flex:0 0 auto;display:inline-flex;align-items:center;min-height:42px;padding:9px 13px;border:1px solid #fed7aa;border-radius:11px;background:#fff7ed;color:#9a3412;text-decoration:none;font-weight:800;}
 body.edu-page-service-timeline .timeline-controls {display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:8px;padding:14px 16px;}
