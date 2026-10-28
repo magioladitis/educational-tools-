@@ -64,6 +64,13 @@ renderDeadlineCard(array(
             'id' => 'asepTeAcademic',
             'specialty_id' => 'specialty'
         )); ?>
+        <div id="te16Guidance" class="info-note edu-mt-14 hidden" aria-live="polite" aria-hidden="true">
+          <strong>Οδηγία της προκήρυξης για τον ΤΕ16</strong>
+          <p>Για διορισμό ή πρόσληψη σε σχολεία Γενικής Εκπαίδευσης, δήλωσε τον <strong>κωδικό θέσης 319</strong> και τον <strong>κωδικό τίτλου 419</strong>.</p>
+          <p>Για δυνατότητα διορισμού ή πρόσληψης και σε Μουσικά Σχολεία, δήλωσε επιπλέον τον ή τους κωδικούς θέσης/τίτλου των μουσικών ειδικεύσεων που διαθέτεις.</p>
+          <p>Οι κωδικοί πρέπει να καταχωριστούν στα αντίστοιχα πεδία της αίτησης. Η προκήρυξη επισημαίνει ότι προσόντα που δεν δηλώνονται στους σωστούς κωδικούς μπορεί να μη ληφθούν υπόψη, ακόμη κι αν κατατεθούν τα σχετικά δικαιολογητικά.</p>
+          <a href="https://info.asep.gr/sites/default/files/2024-07/1%CE%93%CE%A4-2024%20%CE%A0%CE%99%CE%9D%CE%91%CE%9A%CE%91%CE%A3%20%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D.pdf" target="_blank" rel="noopener noreferrer">Επίσημος πίνακας κωδικών θέσεων και τίτλων στο ΑΣΕΠ ↗</a>
+        </div>
       <?php calculatorCardEnd(); ?>
 
       <?php
@@ -166,7 +173,12 @@ renderAsepSocialCriteria(array(
 
   <?php sourceCardStart(); ?>
     <p><strong>Πηγή:</strong> Προκήρυξη ΑΣΕΠ 1ΓΤ/2024, ΦΕΚ Α.Σ.Ε.Π. <strong>25/10.07.2024</strong> και <strong>28/16.07.2024</strong>, Κεφάλαιο Γ΄ «Κριτήρια Κατάταξης». Η διαδικασία έχει ολοκληρωθεί με τελικούς αξιολογικούς πίνακες στις <strong>18/06/2025</strong>.</p>
-    <?php sourceCardLinksStart(); ?><?php sourceCardLink('https://info.asep.gr/node/73068', '1ΓΤ/2024 — ΑΣΕΠ ↗'); ?><?php sourceCardLinksEnd(); ?>
+    <?php sourceCardLinksStart(); ?>
+      <?php sourceCardLink('https://info.asep.gr/node/73068', 'Προκήρυξη 1ΓΤ/2024 — ΑΣΕΠ ↗'); ?>
+      <?php sourceCardLink('https://search.et.gr/el/fek/?fekId=767896', 'ΦΕΚ 25/10.07.2024 — Εθνικό Τυπογραφείο ↗'); ?>
+      <?php sourceCardLink('https://info.asep.gr/sites/default/files/2024-08/%CE%A4%CE%A1%CE%9F%CE%A0%CE%9F%CE%A0%CE%9F%CE%99%CE%97%CE%A4%CE%99%CE%9A%CE%9F_%CE%A6%CE%95%CE%9A_28_1%CE%93%CE%A4_%202024_2%CE%93%CE%94_2024_16_07_2024.pdf', 'Τροποποίηση — ΦΕΚ 28/16.07.2024 ↗'); ?>
+      <?php sourceCardLink('https://info.asep.gr/sites/default/files/2024-07/1%CE%93%CE%A4-2024%20%CE%A0%CE%99%CE%9D%CE%91%CE%9A%CE%91%CE%A3%20%CE%98%CE%95%CE%A3%CE%95%CE%A9%CE%9D.pdf', 'Πίνακας κωδικών θέσεων/τίτλων ↗'); ?>
+    <?php sourceCardLinksEnd(); ?>
     <?php sourceCardDisclaimerStart(); ?>Το εργαλείο είναι ενημερωτικό. Η τελική μοριοδότηση προκύπτει από τον έλεγχο της αίτησης και των δικαιολογητικών από τα αρμόδια όργανα.<?php sourceCardDisclaimerEnd(); ?>
   <?php sourceCardEnd(); ?>
 

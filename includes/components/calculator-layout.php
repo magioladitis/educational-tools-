@@ -469,7 +469,14 @@ if (!function_exists('calculatorActions')) {
             if (isset($button['id'])) $buttonAttrs['id'] = $button['id'];
             if (isset($button['class'])) $buttonAttrs['class'] = $button['class'];
             if (!isset($buttonAttrs['type'])) $buttonAttrs['type'] = 'button';
-            $label = isset($button['html']) ? (string)$button['html'] : calculatorLayoutEscape(isset($button['label']) ? $button['label'] : '');
+            $action = isset($button['action']) ? strtolower(trim((string)$button['action'])) : '';
+            $buttonId = isset($buttonAttrs['id']) ? (string)$buttonAttrs['id'] : '';
+            $isClearAction = in_array($action, array('clear', 'reset'), true)
+                || ($buttonId !== '' && stripos($buttonId, 'reset') !== false);
+            // One canonical label for form-clearing actions across shared calculators.
+            $label = $isClearAction
+                ? calculatorLayoutEscape('Καθαρισμός')
+                : (isset($button['html']) ? (string)$button['html'] : calculatorLayoutEscape(isset($button['label']) ? $button['label'] : ''));
             echo '<button' . calculatorLayoutAttributes($buttonAttrs) . '>' . $label . '</button>';
         }
         echo '</div>';

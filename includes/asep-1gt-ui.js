@@ -30,12 +30,24 @@
     AsepTeAcademic.trainingSummary('asepTeAcademic'),'','Ενδεικτικός υπολογισμός βάσει της Προκήρυξης ΑΣΕΠ 1ΓΤ/2024.'
   ].filter((x,i,a)=>x!==''||a[i-1]!=='').join('\n');}
 
-  document.addEventListener('input',calc);document.addEventListener('change',calc);
+  function syncTe16Guidance(){
+    const panel=$('te16Guidance');
+    if(!panel)return;
+    const active=$('specialty').value==='te16';
+    panel.classList.toggle('hidden',!active);
+    panel.setAttribute('aria-hidden',active?'false':'true');
+  }
+
+  document.addEventListener('input',calc);
+  document.addEventListener('change',event=>{
+    if(event.target&&event.target.id==='specialty')syncTe16Guidance();
+    calc();
+  });
   $('resetBtn').addEventListener('click',()=>{
     document.querySelectorAll('input[type="number"]').forEach(el=>el.value='0');$('degreeGrade').value='';
     document.querySelectorAll('input[type="text"]').forEach(el=>el.value='');document.querySelectorAll('input[type="checkbox"],input[type="radio"]').forEach(el=>el.checked=false);
-    $('specialty').value='te01';AsepServiceController.reset('asepService',{silent:true});AsepTeAcademic.reset('asepTeAcademic',{silent:true});AsepPedagogicalProof.reset('pedagogical');calc();
+    $('specialty').value='te01';syncTe16Guidance();AsepServiceController.reset('asepService',{silent:true});AsepTeAcademic.reset('asepTeAcademic',{silent:true});AsepPedagogicalProof.reset('pedagogical');calc();
   });
   $('copyBtn').addEventListener('click',async()=>{const text=summary(calc());try{await navigator.clipboard.writeText(text);const old=$('copyBtn').textContent;$('copyBtn').textContent='Αντιγράφηκε ✓';setTimeout(()=>$('copyBtn').textContent=old,1400);}catch(e){alert(text);}});
-  AsepTeAcademic.sync('asepTeAcademic');calc();
+  syncTe16Guidance();AsepTeAcademic.sync('asepTeAcademic');calc();
 })();
