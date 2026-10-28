@@ -426,6 +426,7 @@ function submissionMessageHtml(data,expanded,allowEmail){
  return '<section class="transfer-submission-template" aria-label="Υπόδειγμα θέματος και σώματος αποστολής">'+
   '<h4>'+escape(submissionUiText('templateHeading','Θέμα και σώμα μηνύματος — υπόδειγμα'))+'</h4>'+
   '<p class="transfer-submission-template__note">Το υπόδειγμα ακολουθεί τον επιλεγμένο τύπο αίτησης. '+
+  'Η αίτηση μετάθεσης οριστικοποιείται στο teachers.minedu.gov.gr. Email αποστέλλεται μόνο αν υπάρχουν δικαιολογητικά που προβλέπεται να σταλούν με email. '+
   (tpl.general?'Χρησιμοποιείται για email στη ΔΔΕ οργανικής.':'Για τα σχετικά δικαιολογητικά της ΔΔΕ ή την υποβολή στο mydocs, <strong>μόνο όπου προβλέπεται</strong>. Στο mydocs το σώμα μπορεί να εμφανίζεται ως πεδίο «Αιτούμαι».')+
   (['smeae','eae_sensory','kedasy'].indexOf(tpl.mode)!==-1?' Η §2.2.4 ορίζει τη σειρά των πεδίων και δίνει ενδεικτικό τύπο αίτησης. Ελέγξτε ότι η αναλυτική περιγραφή του τύπου που συμπληρώνεται εδώ συμφωνεί με την οριστικοποιημένη αίτησή σας.':'')+'</p>'+
   '<details class="transfer-submission-template__personalize" data-transfer-personalize'+(expanded?' open':'')+'>'+

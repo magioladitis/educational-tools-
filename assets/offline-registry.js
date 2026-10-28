@@ -3,7 +3,7 @@
  * Never add login, admin, API, POST, personal or database-dependent pages.
  */
 self.EDU_OFFLINE_REGISTRY = Object.freeze({
-  version: '3.22.207',
+  version: '3.22.208',
   pages: Object.freeze([
     "ergaleia.php",
     "ypologismos-morion-metathesis-protovathmia.php",
