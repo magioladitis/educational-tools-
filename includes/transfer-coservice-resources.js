@@ -9,7 +9,8 @@ var URL={
  insurance:'https://www.e-efka.gov.gr/el/elektronikes-yperesies/atomikos-logariasmos-asphalises',
  history:'https://www.e-efka.gov.gr/en/node/4553',
  request:'https://www.e-efka.gov.gr/el/elektronikes-yperesies/e-ephka-kleisimo-ranteboy-elektroniko-aitema-exypereteses',
- aade:'https://www.gov.gr/upourgeia/oloi-foreis/anexartete-arkhe-demosion-esodon-aade/enarxe-atomikes-epikheireses'
+ aade:'https://www.gov.gr/upourgeia/oloi-foreis/anexartete-arkhe-demosion-esodon-aade/enarxe-atomikes-epikheireses',
+ examples:'https://dide.ach.sch.gr/2026/10/15/%CE%B5%CE%B3%CE%BA%CF%8D%CE%BA%CE%BB%CE%B9%CE%BF%CE%B9-%CE%BC%CE%B5%CF%84%CE%B1%CE%B8%CE%AD%CF%83%CE%B5%CF%89%CE%BD-%CE%BA%CE%B1%CE%B9-%CE%B2%CE%B5%CE%BB%CF%84%CE%B9%CF%8E%CF%83%CE%B5%CF%89%CE%BD/'
 };
 function a(url,label){return '<a href="'+url+'" target="_blank" rel="noopener noreferrer">'+label+' ↗</a>';}
 function forCase(type){
@@ -31,9 +32,20 @@ function forCase(type){
  };
  return null;
 }
+var REQUEST_TEMPLATE='Παρακαλώ να μου χορηγηθεί βεβαίωση ασφαλιστικού φορέα για την απόδειξη συνυπηρέτησης στο πλαίσιο αίτησης μετάθεσης του/της συζύγου μου, εκπαιδευτικού.\n\nΠαρακαλώ να αναγράφονται, εφόσον προκύπτουν από τα στοιχεία του φορέα σας, οι περίοδοι ασφάλισής μου και ο τόπος απασχόλησης ή επαγγελματικής δραστηριότητάς μου κατά την απαιτούμενη διετία.\n\nΗ βεβαίωση προορίζεται για την αρμόδια Διεύθυνση Εκπαίδευσης.';
+function esc(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function extraGuide(type){
+ if(['private_employee','remote_employee','self_employed','private_doctor'].indexOf(type)===-1)return '';
+ var employed=type==='private_employee'||type==='remote_employee';
+ return '<details class="transfer-coservice-resources__howto"><summary>Πώς αποκτώ την κατάλληλη βεβαίωση;</summary><ol>'+
+ (employed?'<li>Εκδώστε τη διαθέσιμη βεβαίωση προϋπηρεσίας μισθωτών και εξετάστε τα ασφαλιστικά στοιχεία.':'<li>Ελέγξτε το ιστορικό ασφάλισης και τα διαθέσιμα στοιχεία επαγγελματικής έδρας.')+
+ '</li><li>Ελέγξτε αν αποδεικνύονται <strong>και η απαιτούμενη διετία και ο τόπος εργασίας/δραστηριότητας</strong>. Μόνο οι ημέρες ασφάλισης ενδέχεται να μην επαρκούν.</li><li>Αν δεν προκύπτουν τα απαιτούμενα, ζητήστε μέσω του e-ΕΦΚΑ ειδική βεβαίωση για συνυπηρέτηση σε μετάθεση εκπαιδευτικού.</li><li>Αν ο φορέας δεν τη χορηγεί, συμβουλευτείτε τα εναλλακτικά δικαιολογητικά της εγκυκλίου και επικοινωνήστε με τη ΔΠΕ/ΔΔΕ.</li></ol>'+
+ '<details><summary>Υπόδειγμα κειμένου αιτήματος προς e-ΕΦΚΑ</summary><p class="transfer-coservice-resources__request">'+esc(REQUEST_TEMPLATE)+'</p><p><small>Προσαρμόστε τα στοιχεία πριν την υποβολή. Το κείμενο δεν αποτελεί επίσημο έντυπο.</small></p></details>'+
+ '<p>'+a(URL.examples,'ΔΔΕ Αχαΐας: ενδεικτικά υποδείγματα ΕΦΚΑ και αυτοαπασχολουμένων')+' (στα συνημμένα της ανάρτησης· δεν υποκαθιστούν την εγκύκλιο).</p></details>';
+}
 function render(type){
  var c=forCase(type);if(!c)return '';
- return '<section class="transfer-coservice-resources" aria-label="Πρακτικός οδηγός δικαιολογητικών συνυπηρέτησης"><p><strong>'+c.title+'</strong></p><ul>'+c.lines.map(function(v){return '<li>'+v+'</li>';}).join('')+'</ul><p class="transfer-coservice-resources__note"><strong>Πριν την υποβολή:</strong> πρέπει να προκύπτουν ασφαλιστική ιδιότητα, τόπος εργασίας/δραστηριότητας και διετία όπου απαιτείται. Τα έγγραφα συνυπηρέτησης πρέπει κατά κανόνα να έχουν εκδοθεί εντός τελευταίου τριμήνου. Ελέγξτε με τη ΔΠΕ/ΔΔΕ την επάρκεια του φακέλου.</p></section>';
+ return '<section class="transfer-coservice-resources" aria-label="Πρακτικός οδηγός δικαιολογητικών συνυπηρέτησης"><p><strong>'+c.title+'</strong></p><ul>'+c.lines.map(function(v){return '<li>'+v+'</li>';}).join('')+'</ul>'+extraGuide(type)+'<p class="transfer-coservice-resources__note"><strong>Πριν την υποβολή:</strong> πρέπει να προκύπτουν ασφαλιστική ιδιότητα, τόπος εργασίας/δραστηριότητας και διετία όπου απαιτείται. Τα έγγραφα συνυπηρέτησης πρέπει κατά κανόνα να έχουν εκδοθεί εντός τελευταίου τριμήνου. Ελέγξτε με τη ΔΠΕ/ΔΔΕ την επάρκεια του φακέλου.</p></section>';
 }
 /* All co-service categories use one authoritative evidence text for both
  * education levels.  The numerical qualification/eligibility stays in each
@@ -81,7 +93,7 @@ function evidenceRecency(){
 function caseKeys(){return Object.keys(COMMON_EVIDENCE);}
 function printText(type){
  var c=forCase(type);if(!c)return '';
- return c.title+' — Επίσημες υπηρεσίες: '+(type==='private_employee'||type==='remote_employee'?[URL.employed,URL.insurance,URL.request].join(' · '):[URL.history,URL.request,URL.aade].join(' · '))+' . Οι ψηφιακές πληροφορίες δεν αντικαθιστούν υποχρεωτική βεβαίωση ασφαλιστικού φορέα.';
+ return c.title+' — Επίσημες υπηρεσίες: '+(type==='private_employee'||type==='remote_employee'?[URL.employed,URL.insurance,URL.request].join(' · '):[URL.history,URL.request,URL.aade].join(' · '))+' · Παραδείγματα δικαιολογητικών: '+URL.examples+' . Οι ψηφιακές πληροφορίες δεν αντικαθιστούν υποχρεωτική βεβαίωση ασφαλιστικού φορέα.';
 }
 global.EducationTransferCoServiceResources=Object.freeze({render:render,printText:printText,legalDetail:legalDetail,legalSource:legalSource,evidenceRecency:evidenceRecency,caseKeys:caseKeys});
 })(window);

@@ -4431,3 +4431,6 @@ body.edu-ui.edu-tools-directory #resetToolDirectory {
 body.edu-ui.edu-tools-directory #resetToolDirectory:focus-visible {
   outline:3px solid var(--blue); outline-offset:2px;
 }
+
+/* Co-service request template: preserve paragraphs without inline styles. */
+.transfer-coservice-resources__request { white-space: pre-line; }

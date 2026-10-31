@@ -135,7 +135,8 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           </fieldset>
           <p class="transfer-extracted-4 small-note" id="transferEaeRouteNote"></p>
           <div class="field" id="transferEaeExperienceRow" style="display:none"><label for="transferEaeExperienceYears">Αποδεδειγμένα έτη προϋπηρεσίας στην ΕΑΕ (διαδρομή πενταετίας)</label><input id="transferEaeExperienceYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0"></div>
-          <div class="field" id="transferEaeGeneralYearsRow"><label for="transferEaeTeachingYears">Διδακτικά έτη από διορισμό (Γενική → ΕΑΕ) <small>Έως 50 έτη</small></label><input id="transferEaeTeachingYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0"></div>
+          <div class="field" id="transferEaeGeneralYearsRow"><label for="transferEaeTeachingYears">Διδακτικά έτη από διορισμό (Γενική → ΕΑΕ) <small>Έως 50 έτη</small></label><input id="transferEaeTeachingYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0">
+            <p class="small-note">Στην τριετή διδακτική υπηρεσία από τον διορισμό στη Γενική Εκπαίδευση μπορεί να συνυπολογίζεται και χρόνος διδασκαλίας με απόσπαση στην ΕΑΕ. Η υπηρέτηση οργανικής θέσης ελέγχεται χωριστά, όπου απαιτείται.</p></div>
         </div>
         <div class="field" id="transferEaeSensoryCertificationRow" style="display:none;margin-top:12px">
           <label for="transferEaeSensoryCertification">Πιστοποιημένη γνώση ΕΝΓ ή Braille (ανάλογα με τη σχολική μονάδα)</label>

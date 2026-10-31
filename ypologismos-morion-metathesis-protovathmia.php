@@ -179,6 +179,7 @@ foreach ($primaryTransferBranchCodes as $code) {
           <div id="primaryEaeGeneralYearsField" class="field" hidden>
             <label for="primaryEaeGeneralYears">Διδακτικά έτη από διορισμό στη Γενική (0–50)</label>
             <input id="primaryEaeGeneralYears" type="number" min="0" max="50" step="0.01" placeholder="π.χ. 3">
+            <p class="small-note">Στην τριετή διδακτική υπηρεσία από τον διορισμό στη Γενική Εκπαίδευση μπορεί να συνυπολογίζεται και χρόνος διδασκαλίας με απόσπαση στην ΕΑΕ. Η υπηρέτηση οργανικής θέσης ελέγχεται χωριστά, όπου απαιτείται.</p>
           </div>
           <div id="primaryEaeAppointmentYearsField" class="field" hidden>
             <label for="primaryEaeAppointmentYears">Έτη στην περιοχή διορισμού ΕΑΕ (0–50)</label>
