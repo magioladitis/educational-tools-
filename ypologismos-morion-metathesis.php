@@ -20,6 +20,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-secondary.css'), ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-level-switch.css'), ENT_QUOTES, 'UTF-8'); ?>">
+  <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/transfer-music-vacancies.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body class="edu-ui edu-calc-standard edu-page-transfer">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
@@ -167,6 +168,24 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           <div class="field" id="transferEducationTypeField"><label for="transferEducationType">Κατηγορία αντικειμένου</label><select id="transferEducationType"><option value="general">Γενική παιδεία / κοινός κλάδος</option><option value="specialized">Μουσική / καλλιτεχνική ειδίκευση</option></select></div>
         </div>
         <div id="transferMusicEligibility" style="display:none">
+          <section id="musicVacancies" class="music-vacancies" aria-labelledby="musicVacanciesTitle">
+            <h3 id="musicVacanciesTitle">Οργανικά κενά Μουσικών Σχολείων 2026–2027</h3>
+            <p class="small-note">Βρείτε σχολεία με κενά στον κλάδο ή στη μουσική ειδίκευσή σας.</p>
+            <div class="field-grid">
+              <div class="field"><label for="musicVacancyBranch">Κλάδος / ειδικότητα</label><select id="musicVacancyBranch"><option value="">Όλοι οι κλάδοι</option></select></div>
+              <div class="field"><label for="musicVacancySpecialty">Μουσική ειδίκευση</label><select id="musicVacancySpecialty"><option value="">Όλες οι ειδικεύσεις</option></select></div>
+              <div class="field"><label for="musicVacancySearch">Αναζήτηση σχολείου ή περιοχής</label><input id="musicVacancySearch" type="search" placeholder="π.χ. Κέρκυρα" autocomplete="off"></div>
+            </div>
+            <div class="music-vacancies__actions"><button type="button" id="musicVacancyClear" class="secondary">Καθαρισμός</button><a href="assets/data/organika-kena-mousika-2026-2027.xlsx" download>Λήψη αρχικού Excel</a></div>
+            <p id="musicVacancySummary" role="status" aria-live="polite" aria-atomic="true"></p>
+            <div class="music-vacancies__scroll" tabindex="0" role="region" aria-label="Πίνακας οργανικών κενών Μουσικών Σχολείων">
+              <table><caption class="music-vacancies__caption">Οργανικά κενά ανά σχολείο, κλάδο και ειδίκευση</caption><thead><tr><th scope="col">Σχολείο</th><th scope="col">Διεύθυνση Εκπαίδευσης</th><th scope="col">Κλάδος</th><th scope="col">Ειδίκευση</th><th scope="col">Κενά</th></tr></thead><tbody id="musicVacancyRows"></tbody></table>
+            </div>
+            <p id="musicVacancyEmpty" hidden>Δεν βρέθηκαν κενά με αυτά τα φίλτρα. Δοκιμάστε άλλη αναζήτηση ή πατήστε «Καθαρισμός».</p>
+            <p class="small-note">Πηγή: πίνακας «Οργανικά Κενά Μουσικών Σχολείων 2026–2027» (313 εγγραφές, 431 κενά σε 55 σχολεία). Ελέγξτε τυχόν νεότερες επίσημες ανακοινώσεις πριν από την υποβολή. Η αναζήτηση κενών δεν αποτελεί έλεγχο δικαιώματος μετάθεσης.</p>
+            <noscript><p>Για την αναζήτηση χρειάζεται JavaScript. Μπορείτε να κατεβάσετε τον πίνακα από τον σύνδεσμο Excel.</p></noscript>
+          </section>
+
           <div class="field-grid">
             <div class="field"><label for="transferMusicTeachingYears">Έτη διδακτικής εμπειρίας σε σχολεία Δευτεροβάθμιας</label><input id="transferMusicTeachingYears" type="number" min="0" max="50" step="0.1" inputmode="decimal" value="0"></div>
             <div class="field"><label for="transferMusicException">Εξαίρεση από την πενταετία</label><select id="transferMusicException"><option value="none">Δεν επικαλούμαι εξαίρεση</option><option value="direct_music">Εκπαιδευτικός μουσικής παιδείας με απευθείας διορισμό σε Μουσικό</option><option value="primary_transfer">Μετάταξη από Πρωτοβάθμια σε Μουσικό ή Καλλιτεχνικό</option></select></div>
@@ -435,5 +454,7 @@ window.EducationTransferTeacherSpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-social-input.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-score-card.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-music-vacancies-data.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-music-vacancies-ui.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

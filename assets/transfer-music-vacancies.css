@@ -1,0 +1,23 @@
+.music-vacancies { margin: 18px 0; padding: 16px; border: 1px solid #b8c5d5; border-radius: 12px; min-width: 0; }
+.music-vacancies h3 { margin-top: 0; }
+.music-vacancies .field-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+.music-vacancies .field { min-width: 0; }
+.music-vacancies input, .music-vacancies select { width: 100%; max-width: 100%; box-sizing: border-box; }
+.music-vacancies__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+.music-vacancies__scroll { max-height: 420px; overflow: auto; border: 1px solid #b8c5d5; border-radius: 8px; }
+.music-vacancies table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.music-vacancies th, .music-vacancies td { padding: 10px; text-align: left; vertical-align: top; border-bottom: 1px solid #cbd5e1; overflow-wrap: anywhere; }
+.music-vacancies th { position: sticky; top: 0; background: #eaf1f8; color: #172b4d; z-index: 1; }
+.music-vacancies td:last-child { text-align: center; font-weight: 700; }
+.music-vacancies__caption { text-align: left; padding: 8px; }
+.music-vacancies [hidden] { display: none !important; }
+@media (max-width: 640px) {
+  .music-vacancies { padding: 12px; }
+  .music-vacancies table { min-width: 650px; }
+}
+@media print {
+  .music-vacancies__scroll { max-height: none; overflow: visible; }
+  .music-vacancies table { min-width: 0; }
+  .music-vacancies th { position: static; }
+  .music-vacancies__actions { display: none; }
+}
