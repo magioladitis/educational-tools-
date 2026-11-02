@@ -67,11 +67,11 @@
     if(profile === 'pe' && RULES.peAutoMainSpecialties.indexOf(specialty) !== -1){
       mainReasons.push(specialty + ': βασικός κλάδος Ε.Α.Ε.');
     }
-    if(bool(main.phd)) mainReasons.push(MAIN_REASONS.phd);
-    if(bool(main.msc)) mainReasons.push(MAIN_REASONS.msc);
-    if(bool(main.retraining)) mainReasons.push(MAIN_REASONS.retraining);
-    if(bool(main.fiveYear)) mainReasons.push(MAIN_REASONS.fiveYear);
-    if(profile === 'pe' && specialty === RULES.pe11Specialty && bool(main.pe11)) mainReasons.push(MAIN_REASONS.pe11);
+    global.EaeQualifications.keys.forEach(function(key){
+      if(bool(main[key]) && global.EaeQualifications.assess(key,{
+        requireYears:false, pe11Allowed:profile==='pe' && specialty===RULES.pe11Specialty
+      }).status==='valid') mainReasons.push(MAIN_REASONS[key]);
+    });
 
     const auxReasons = [];
     const eaeMonths = Math.min(global.EducationCore.MAX_SERVICE_MONTHS, number(aux.eaeMonths));

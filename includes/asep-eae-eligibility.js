@@ -12,10 +12,8 @@
     if(profile === 'te' || profile === 'de'){
       const select = root.querySelector('[data-eae-main-select]');
       const selected = value(select);
-      if(selected === 'phd') result.phd = true;
-      else if(selected === 'msc') result.msc = true;
-      else if(selected === 'retraining') result.retraining = true;
-      else if(selected === 'aei5years' || selected === 'fiveYear') result.fiveYear = true;
+      const key = global.EaeQualifications.canonical(selected);
+      if(key && Object.prototype.hasOwnProperty.call(result,key)) result[key] = true;
       return result;
     }
     root.querySelectorAll('[data-eae-main]').forEach(function(el){

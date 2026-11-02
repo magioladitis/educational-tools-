@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/includes/components/eae-qualifications.php';
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/teacher-specialties.php';
 $eae3Specialties = array(
@@ -69,11 +70,7 @@ renderDeadlineCard(array(
 
 <div id="eaeEligibility" data-eae-profile="pe" data-specialty-id="specialty" data-social-id="socialCriteria">
 <h3>Προσόντα για ΚΥΡΙΟ – Αξιολογικό Πίνακα Β΄</h3>
-<div class="check"><input type="checkbox" id="phdEae" data-eae-main="phd"><label for="phdEae">Διδακτορικό στην Ε.Α.Ε. ή στη Σχολική Ψυχολογία<small>Αποτελεί κριτήριο ένταξης στον κύριο πίνακα και μοριοδοτείται ως διδακτορικό.</small></label></div>
-<div class="check"><input type="checkbox" id="masterEae" data-eae-main="msc"><label for="masterEae">Μεταπτυχιακό στην Ε.Α.Ε. ή στη Σχολική Ψυχολογία<small>Αποτελεί κριτήριο ένταξης στον κύριο πίνακα και μοριοδοτείται ως μεταπτυχιακό.</small></label></div>
-<div class="check"><input type="checkbox" id="didaskaleio" data-eae-main="retraining"><label for="didaskaleio">Πτυχίο διετούς μετεκπαίδευσης στην Ε.Α.Ε. (Διδασκαλείο)<small>Κριτήριο ένταξης. Η προκήρυξη δεν ορίζει χωριστή πρόσθετη μοριοδότηση γι’ αυτό το πτυχίο στον πίνακα κριτηρίων.</small></label></div>
-<div class="check"><input type="checkbox" id="fiveYearEae" data-eae-main="fiveYear"><label for="fiveYearEae">Τουλάχιστον πενταετής αποδεδειγμένη προϋπηρεσία στην Ε.Α.Ε.<small>Χρησιμοποιείται για τον έλεγχο ένταξης. Τους μήνες προϋπηρεσίας τους δηλώνεις χωριστά παρακάτω για τη μοριοδότηση.</small></label></div>
-<div class="check hidden" id="pe11QualWrap"><input type="checkbox" id="pe11Qual" data-eae-main="pe11"><label for="pe11Qual">ΠΕ11 με προβλεπόμενη κύρια ειδικότητα Ε.Α.Ε. / Ειδικής Φυσικής Αγωγής κ.λπ.<small>Κριτήριο ένταξης και +8 μόρια.</small></label></div>
+<?php renderEaeQualifications('asep-pe'); ?>
 
 <h3>Προσόντα για ΕΠΙΚΟΥΡΙΚΟ πίνακα</h3>
 <div class="check"><input type="checkbox" id="seminar400" data-eae-aux="seminar400"><label for="seminar400">Σεμινάριο εξειδίκευσης Ε.Α.Ε. ≥400 ωρών και ≥7 μηνών<small>Κριτήριο ένταξης στον επικουρικό. Καλύπτει παράλληλα και το γενικό κριτήριο επιμόρφωσης ≥300 ωρών / ≥7 μηνών (+2).</small></label></div>
@@ -204,6 +201,7 @@ renderEaeSensoryPriority(array(
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-digital-tutoring.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/social-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-social-criteria.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/eae-qualifications.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/eae-table-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-eae-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

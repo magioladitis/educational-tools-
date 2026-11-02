@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/includes/components/eae-qualifications.php';
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/teacher-specialties.php';
 // Shared specialty labels, supplied by the existing site-wide PHP registry.
@@ -125,13 +126,7 @@ foreach (teacherSpecialties() as $specialtyCode => $specialtyData) {
           <fieldset class="transfer-extracted-4 transfer-eae-qualifications" id="transferEaeQualificationsFieldset">
             <legend>Προσόντα εξειδίκευσης στην ΕΑΕ</legend>
             <p class="small-note">Επιλέξτε <strong>όσα προσόντα διαθέτετε</strong>. Για τη θεμελίωση αρκεί μία αποδεκτή διαδρομή· η υπηρεσία ελέγχει την αναγνώριση και τη συνάφεια.</p>
-            <div class="transfer-eae-qualification-list">
-              <label><input type="checkbox" data-eae-qualification="doctorate"> Διδακτορικό στην ΕΑΕ ή στη Σχολική Ψυχολογία</label>
-              <label><input type="checkbox" data-eae-qualification="masters"> Μεταπτυχιακό στην ΕΑΕ ή στη Σχολική Ψυχολογία</label>
-              <label><input type="checkbox" data-eae-qualification="two_year"> Πτυχίο διετούς μετεκπαίδευσης στην ΕΑΕ των Διδασκαλείων</label>
-              <label><input type="checkbox" data-eae-qualification="experience"> Πτυχίο ΑΕΙ με τουλάχιστον πενταετή αποδεδειγμένη προϋπηρεσία στην ΕΑΕ</label>
-              <label id="transferEaePe11QualificationRow"><input type="checkbox" data-eae-qualification="pe11"> ΠΕ11: πτυχίο ΤΕΦΑΑ με προβλεπόμενη κύρια ειδικότητα Ειδικής/Προσαρμοσμένης Φυσικής Αγωγής</label>
-            </div>
+            <?php renderEaeQualifications('transfer-secondary'); ?>
             <select id="transferEaeQualification" hidden aria-hidden="true" tabindex="-1"><option value="none">Καμία επιλογή</option><option value="doctorate">Διδακτορικό</option><option value="masters">Μεταπτυχιακό</option><option value="two_year">Διετής μετεκπαίδευση</option><option value="experience">Πενταετής υπηρεσία</option><option value="pe11">ΠΕ11</option></select>
           </fieldset>
           <p class="transfer-extracted-4 small-note" id="transferEaeRouteNote"></p>
@@ -443,6 +438,7 @@ window.EducationTransferTeacherSpecialtyLabels = Object.freeze(<?php echo json_e
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-artistic-vacancies.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-intercultural-vacancies.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-html-escape.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/eae-qualifications.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-email-component.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-coservice-resources.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

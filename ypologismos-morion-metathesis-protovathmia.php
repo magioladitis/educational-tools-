@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/includes/components/eae-qualifications.php';
 /**
  * Primary transfer toolkit with advisory eligibility checks (2026–2027).
  * Isolated UI/rules; shares the proven EducationTransfer scoring module.
@@ -189,11 +190,7 @@ foreach ($primaryTransferBranchCodes as $code) {
             <select id="primaryEaeOrganic"><option value="unknown">Χρειάζεται επαλήθευση</option><option value="yes">Ναι</option><option value="no">Όχι</option></select>
           </div>
           <fieldset class="primary-eae-qualifications"><legend><strong>Προσόντα εξειδίκευσης ΕΑΕ</strong> — σημειώστε όσα διαθέτετε</legend>
-            <label><input type="checkbox" id="primaryEaePhd"> Διδακτορικό στην ΕΑΕ / Σχολική Ψυχολογία</label>
-            <label><input type="checkbox" id="primaryEaeMasters"> Μεταπτυχιακό στην ΕΑΕ / Σχολική Ψυχολογία</label>
-            <label><input type="checkbox" id="primaryEaeRetraining"> Διετής μετεκπαίδευση στην ΕΑΕ των Διδασκαλείων</label>
-            <label><input type="checkbox" id="primaryEaeExperience"> Πτυχίο ΑΕΙ + αποδεδειγμένη πενταετής υπηρεσία στην ΕΑΕ</label>
-            <label><input type="checkbox" id="primaryEaePe11"> Πτυχίο ΤΕΦΑΑ με προβλεπόμενη κύρια ειδικότητα ΕΑΕ (ΠΕ11)</label>
+            <?php renderEaeQualifications('transfer-primary'); ?>
           </fieldset>
           <div id="primaryEaeYearsField" class="field" hidden>
             <label for="primaryEaeYears">Αποδεδειγμένα διδακτικά έτη ΕΑΕ για διαδρομή πενταετίας (0–50)</label>
@@ -399,6 +396,7 @@ SOCIAL_PRIMARY_EXTRAS
 window.EducationTransferPrimarySpecialtyLabels = Object.freeze(<?php echo json_encode($primaryTransferSpecialtyLabels, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
 </script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/eae-qualifications.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-eae.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-eae-routes.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/transfer-primary-minority.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

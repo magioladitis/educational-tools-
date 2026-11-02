@@ -1,4 +1,5 @@
-<?php require_once __DIR__ . '/includes/config.php'; ?>
+<?php
+require_once __DIR__ . '/includes/components/eae-qualifications.php'; require_once __DIR__ . '/includes/config.php'; ?>
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -73,13 +74,7 @@
   <div id="eaeEligibility" data-eae-profile="de" data-specialty-id="specialty" data-social-id="socialCriteria">
     <div class="field">
       <label for="mainCriterion">Κριτήριο ένταξης στον Αξιολογικό Πίνακα Β΄ (Κύριος)</label>
-      <select id="mainCriterion" data-eae-main-select>
-        <option value="none">Δεν διαθέτω κάποιο από τα παρακάτω</option>
-        <option value="phd">Διδακτορικό στην Ε.Α.Ε. ή Σχολική Ψυχολογία, με βασικές σπουδές σε Α.Ε.Ι.</option>
-        <option value="msc">Μεταπτυχιακό στην Ε.Α.Ε. ή Σχολική Ψυχολογία, με βασικές σπουδές σε Α.Ε.Ι.</option>
-        <option value="retraining">Πτυχίο διετούς μετεκπαίδευσης στην Ε.Α.Ε. Διδασκαλείου, με βασικές σπουδές σε Α.Ε.Ι.</option>
-        <option value="aei5years">Πτυχίο Α.Ε.Ι. και τουλάχιστον 5 έτη αποδεδειγμένης προϋπηρεσίας στην Ε.Α.Ε.</option>
-      </select>
+      <?php renderEaeQualifications('asep-de'); ?>
     </div>
 
     <h3>Κριτήρια Επικουρικού Πίνακα</h3>
@@ -212,6 +207,7 @@
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-service-controller.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/social-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-social-criteria.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/eae-qualifications.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/eae-table-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/asep-eae-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/language-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>

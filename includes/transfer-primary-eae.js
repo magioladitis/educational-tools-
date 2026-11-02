@@ -1,10 +1,11 @@
 /* Primary EAE/KEDASY transfer precheck, 2026-27. No dependency on Secondary rules. */
 (function (root, factory) {
   'use strict';
-  var api = factory();
+  var shared = typeof module === 'object' && module.exports ? require('./eae-qualifications.js') : root.EaeQualifications;
+  var api = factory(shared);
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.EducationTransferPrimaryEae = api;
-}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+}(typeof globalThis !== 'undefined' ? globalThis : this, function (shared) {
   'use strict';
   var permittedKedasy = ['ΠΕ60','ΠΕ61','ΠΕ70','ΠΕ71'];
   var permittedEeeek = ['ΠΕ70','ΠΕ71'];
@@ -29,9 +30,7 @@
     var quals=data.qualifications||{};
     var claimed=Object.keys(names).filter(function(k){return !!quals[k];});
     var valid=claimed.filter(function(k){
-      if(k==='experience') return finiteYears(data.eaeYears)!==null && finiteYears(data.eaeYears)>=5;
-      if(k==='pe11') return branch==='ΠΕ11';
-      return true;
+      return shared.assess(k,{requireYears:true,years:finiteYears(data.eaeYears),pe11Allowed:branch==='ΠΕ11'}).status==='valid';
     });
     if(!branch) checks.push('Συμπληρώστε τον κλάδο του εκπαιδευτικού.');
     if(branch==='ΆΛΛΟΣ') checks.push('Απαιτείται επαλήθευση του ακριβούς κλάδου και της προβλεπόμενης οργανικής θέσης.');

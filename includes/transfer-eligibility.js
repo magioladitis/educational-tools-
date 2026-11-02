@@ -76,16 +76,14 @@
     var allowed=Object.keys(EAE_TITLES);
     selected=selected.filter(function(q,i){return allowed.indexOf(q)!==-1&&selected.indexOf(q)===i;});
     var unmet=[],review=[],valid=[],invalid=[];
-    function eaeYears(){var raw=a.eaeYears;if(raw==null||String(raw).trim()==='')return null;
-      var n=Number(String(raw).replace(',','.'));return Number.isFinite(n)&&n>=0&&n<=50?n:null;}
     selected.forEach(function(q){
       if(q==='experience'){
-        var y=eaeYears();
-        if(y===null)review.push('Στην πενταετή διαδρομή συμπληρώστε έγκυρη προϋπηρεσία ΕΑΕ (0–50 έτη).');
-        else if(y<5)invalid.push('Η διαδρομή πτυχίου ΑΕΙ + υπηρεσίας απαιτεί τουλάχιστον πέντε αποδεδειγμένα έτη στην ΕΑΕ.');
+        var result=global.EaeQualifications.assess(q,{requireYears:true,years:a.eaeYears,pe11Allowed:branch==='pe11'});
+        if(result.status==='missing')review.push('Στην πενταετή διαδρομή συμπληρώστε έγκυρη προϋπηρεσία ΕΑΕ (0–50 έτη).');
+        else if(result.status==='invalid')invalid.push('Η διαδρομή πτυχίου ΑΕΙ + υπηρεσίας απαιτεί τουλάχιστον πέντε αποδεδειγμένα έτη στην ΕΑΕ.');
         else valid.push(q);
       }else if(q==='pe11'){
-        if(branch!=='pe11')invalid.push('Η διαδρομή κύριας ειδικότητας ΤΕΦΑΑ αφορά αποκλειστικά τον κλάδο ΠΕ11.');
+        if(global.EaeQualifications.assess(q,{pe11Allowed:branch==='pe11'}).status!=='valid')invalid.push('Η διαδρομή κύριας ειδικότητας ΤΕΦΑΑ αφορά αποκλειστικά τον κλάδο ΠΕ11.');
         else valid.push(q);
       }else valid.push(q);
     });
