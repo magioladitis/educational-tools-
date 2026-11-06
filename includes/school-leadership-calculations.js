@@ -7,10 +7,16 @@
   'use strict';
   function number(v, max) { var n = Number(v); return Number.isFinite(n) ? Math.min(max === undefined ? 10000 : max, Math.max(0, n)) : 0; }
   function count(v, max) { return Math.floor(number(v, max)); }
+  function normalizeTitleCount(value) {
+    if (String(value).trim() === '') return '';
+    var n = Number(value);
+    if (!Number.isFinite(n)) return 0;
+    return Math.min(10, Math.max(0, Math.floor(n)));
+  }
   function months(v) { return Math.floor(number(v, 720) / 3) / 4; }
   function rounded(n) { return Math.round((n + Number.EPSILON) * 10000) / 10000; }
   function degree(related, other, first, second) {
-    related = count(related, 2); other = count(other, 2);
+    related = count(normalizeTitleCount(related), 2); other = count(normalizeTitleCount(other), 2);
     return related ? first + (related + other > 1 ? second : 0) : (other ? second : 0);
   }
   var works = [
@@ -93,5 +99,5 @@
       details:{titles:titles,training:rounded(training),languages:languagePoints,books:rounded(books),articles:rounded(articles),higher:higher,
         teaching:rounded(teaching),trainer:rounded(trainer),research:research,teachingGroup:rounded(teachingGroup),guidance:rounded(guidance),admin:rounded(admin),school:rounded(school)}};
   }
-  return {calculate:calculate,evaluation:evaluation,works:works};
+  return {calculate:calculate,evaluation:evaluation,works:works,normalizeTitleCount:normalizeTitleCount};
 }));

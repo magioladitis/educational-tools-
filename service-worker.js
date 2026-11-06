@@ -2,7 +2,7 @@
 'use strict';
 importScripts('assets/offline-registry.js');
 
-const REVISION = '3.22.215';
+const REVISION = '3.22.216';
 const STATIC_PREFIX = 'edu-tools-static-';
 const PAGE_PREFIX = 'edu-tools-pages-';
 const CACHE_NAME = STATIC_PREFIX + REVISION;

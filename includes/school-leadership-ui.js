@@ -4,6 +4,15 @@
   if (!form || !window.SchoolLeadership) return;
   var result = document.getElementById('sl-result');
   var calculated = false;
+  var titleNames = ['phdRelated','phdOther','masterRelated','masterOther'];
+  function normalizeTitleInput(input) {
+    if (!input || titleNames.indexOf(input.name) < 0) return;
+    var normalized = window.SchoolLeadership.normalizeTitleCount(input.value);
+    if (input.value !== String(normalized)) input.value = normalized;
+  }
+  function normalizeTitles() {
+    titleNames.forEach(function(name) {normalizeTitleInput(form.elements.namedItem(name));});
+  }
   function value(name) {return form.elements.namedItem(name).value;}
   function showEvaluation() {
     var general = value('mode') === 'general';
@@ -61,9 +70,10 @@
     frag.appendChild(element('p','Βάση: ν. 4823/2021, άρθρα 33 και 35· για την πρώτη επιλογή άρθρο 232 §5. Ο έλεγχος προϋποθέσεων υποψηφιότητας γίνεται χωριστά.'));
     result.replaceChildren(frag);
   }
-  form.addEventListener('submit',function(e) {e.preventDefault();calculated=true;showEvaluation();render();});
-  form.addEventListener('input',function() {if(calculated)render();});
-  form.addEventListener('change',function() {showEvaluation();if(calculated)render();});
+  form.addEventListener('submit',function(e) {e.preventDefault();normalizeTitles();calculated=true;showEvaluation();render();});
+  form.addEventListener('input',function(e) {normalizeTitleInput(e.target);if(calculated)render();});
+  form.addEventListener('change',function(e) {normalizeTitleInput(e.target);showEvaluation();if(calculated)render();});
+  form.addEventListener('focusout',function(e) {normalizeTitleInput(e.target);if(calculated)render();});
   form.addEventListener('reset',function() {
     calculated=false;
     setTimeout(function() {showEvaluation();result.replaceChildren(element('h3','Αποτέλεσμα μοριοδότησης'),element('p','Συμπλήρωσε τα προσόντα και επίλεξε «Υπολογισμός μορίων».'));},0);
@@ -71,5 +81,6 @@
   document.getElementById('sl-print').addEventListener('click',function() {
     form.querySelectorAll('details').forEach(function(el) {el.open=true;});window.print();
   });
+  normalizeTitles();
   showEvaluation();
 }());
