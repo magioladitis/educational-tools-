@@ -35,6 +35,18 @@ return array(
     ),
     'tools' => array(
         array(
+            'number' => 38,
+            'href' => 'dikaioma-enischytikis-didaskalias.php',
+            'group' => 'asep-anaplirotes',
+            'categories' => 'ΑΣΕΠ αναπληρωτές ενισχυτική ΕΔΕΜ Γυμνάσιο ΟΠΣΥΔ',
+            'search' => 'ενισχυτική διδασκαλία ειδικά μαθήματα εδεμ δικαίωμα αίτηση ΟΠΣΥΔ ΤΕ16 ΠΕ85',
+            'tag' => 'Ενισχυτική Διδασκαλία',
+            'tag_class' => 'green',
+            'new' => true,
+            'title' => 'Μπορώ να κάνω αίτηση στην Ενισχυτική Διδασκαλία;',
+            'description' => 'Έλεγχος κλάδου και πινάκων για Γυμνάσιο ή ΕΔΕΜ 2026–2027, ειδικές περιπτώσεις και σύντομος οδηγός αίτησης στο ΟΠΣΥΔ.'
+        ),
+        array(
             'number' => 100,
             'href' => 'elegxos-proypotheseon-diefthynti.php',
             'group' => 'ypiresiaka',
