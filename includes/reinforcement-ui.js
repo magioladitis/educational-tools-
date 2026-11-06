@@ -28,7 +28,10 @@
     filterOptions('board',branchSelected?choices.boards.concat(['none','unknown']):[],branchSelected?'Επίλεξε πίνακα':'Επίλεξε πρώτα κλάδο',branchSelected);
     filterOptions('subject',choices.subjects,branchSelected?'Επίλεξε μάθημα':'Επίλεξε πρώτα κλάδο',val('program')==='edem'&&branchSelected);
     toggle('reinforcement-edem',val('program')==='edem');
-    form.elements.namedItem('subject').disabled=val('program')!=='edem'||!branchSelected;
+    var subject=form.elements.namedItem('subject');
+    var singleSubject=val('program')==='edem'&&choices.subjects.length===1;
+    if(singleSubject)subject.value=choices.subjects[0];
+    subject.disabled=val('program')!=='edem'||!branchSelected||singleSubject;
     toggle('reinforcement-chemical',val('program')==='gym'&&val('branch')==='PE85');
     toggle('reinforcement-music',val('program')==='edem'&&val('branch')==='TE16');
     document.querySelectorAll('[data-reinforcement-program]').forEach(function(e){e.hidden=e.dataset.reinforcementProgram!==val('program');});
@@ -44,8 +47,10 @@
   }
   function render(){
     var data={};new FormData(form).forEach(function(v,k){data[k]=v;});
+    // Disabled selects are omitted by FormData; retain the automatically selected subject.
+    data.subject=val('subject');
     var r=api.evaluate(data),frag=document.createDocumentFragment();
-    result.className='reinforcement-result '+r.status;
+    result.className='result-message '+({basic_pass:'edu-message--success',review:'edu-message--warning',not_met:'edu-message--danger'}[r.status]);
     frag.appendChild(el('h2',{basic_pass:'Με βάση τις απαντήσεις σου, καλύπτεις τις ελεγχόμενες προϋποθέσεις αίτησης',review:'Χρειάζεται επιβεβαίωση στοιχείων',not_met:'Δεν καλύπτεται κάποια από τις ελεγχόμενες προϋποθέσεις'}[r.status]));
     if(r.reasons.length){var list=document.createElement('ul');r.reasons.forEach(function(x){list.appendChild(el('li',x));});frag.appendChild(list);}
     r.notes.forEach(function(x){frag.appendChild(el('p',x));});
@@ -54,6 +59,6 @@
   }
   form.addEventListener('submit',function(e){e.preventDefault();checked=true;sync();render();});
   form.addEventListener('change',function(){sync();if(checked)render();});
-  form.addEventListener('reset',function(){checked=false;setTimeout(function(){sync();result.className='reinforcement-result';result.replaceChildren(el('p','Συμπλήρωσε τις επιλογές σου και πάτησε «Έλεγχος δυνατότητας αίτησης».'));},0);});
+  form.addEventListener('reset',function(){checked=false;setTimeout(function(){sync();result.className='result-message edu-message--info';result.replaceChildren(el('p','Συμπλήρωσε τις επιλογές σου και πάτησε «Έλεγχος δυνατότητας αίτησης».'));},0);});
   sync();setInterval(period,60000);
 }());
