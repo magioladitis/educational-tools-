@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <?php require __DIR__ . '/includes/head-pwa.php'; ?>
-<title>Έλεγχος προϋποθέσεων Διευθυντή Σχολικής Μονάδας | Εργαλειοθήκη Εκπαιδευτικού</title>
+<title>Προϋποθέσεις και μόρια Διευθυντή Σχολικής Μονάδας | Εργαλειοθήκη Εκπαιδευτικού</title>
 <meta name="description" content="Ενδεικτικός έλεγχος γενικών προϋποθέσεων επιλογής Διευθυντών Σχολικών Μονάδων.">
 <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/common.css'), ENT_QUOTES, 'UTF-8'); ?>">
 <link rel="stylesheet" href="<?php echo htmlspecialchars(edu_asset_url('assets/leadership-eligibility.css'), ENT_QUOTES, 'UTF-8'); ?>">
@@ -13,7 +13,7 @@
 <body class="edu-ui edu-calc-standard edu-leadership">
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 <main class="page-shell leadership-shell">
-<section class="hero"><span class="hero-kicker">ΣΧΟΛΙΚΗ ΜΟΝΑΔΑ · ΘΕΣΕΙΣ ΕΥΘΥΝΗΣ · BETA</span><h1>Έλεγχος προϋποθέσεων Διευθυντή Σχολικής Μονάδας</h1><p>Προκαταρκτικός έλεγχος βασικών τυπικών προϋποθέσεων. Δεν υπολογίζει μόρια επιλογής και δεν υποκαθιστά την προκήρυξη ή την κρίση του αρμόδιου Συμβουλίου.</p><div class="hero-meta"><span>Ν. 4823/2021, άρθρο 31</span><span>Ανά σχολικό τύπο και κλάδο</span><span>Χωρίς αποθήκευση στοιχείων</span></div></section>
+<section class="hero"><span class="hero-kicker">ΣΧΟΛΙΚΗ ΜΟΝΑΔΑ · ΘΕΣΕΙΣ ΕΥΘΥΝΗΣ · BETA</span><h1>Προϋποθέσεις και μόρια Διευθυντή Σχολικής Μονάδας</h1><p>Προκαταρκτικός έλεγχος βασικών τυπικών προϋποθέσεων. Ακολουθεί χωριστός υπολογισμός μορίων επιλογής. Τα αποτελέσματα δεν υποκαθιστούν την προκήρυξη ή την κρίση του αρμόδιου Συμβουλίου.</p><div class="hero-meta"><span>Ν. 4823/2021, άρθρα 31, 33, 35</span><span>Ανά σχολικό τύπο και κλάδο</span><span>Χωρίς αποθήκευση στοιχείων</span></div></section>
 <section class="leadership-panel" aria-labelledby="formTitle"><h2 id="formTitle">Α. Στοιχεία υποψηφιότητας</h2>
 <div class="leadership-fields">
 
@@ -38,19 +38,26 @@
 <div class="leadership-actions"><button type="button" id="checkEligibility">Έλεγχος γενικών προϋποθέσεων</button><button type="button" id="resetEligibility" class="leadership-secondary">Καθαρισμός</button><button type="button" id="printEligibility" class="leadership-secondary">Εκτύπωση αποτελέσματος</button></div>
 </section>
 <section id="eligibilityResult" class="leadership-panel" aria-live="polite" aria-labelledby="resultTitle"><h2 id="resultTitle">Β. Αποτέλεσμα προελέγχου</h2><p>Συμπλήρωσε τα στοιχεία και επίλεξε «Έλεγχος γενικών προϋποθέσεων».</p></section>
+<?php require __DIR__ . '/includes/components/school-leadership-points.php'; ?>
 <?php sourceCardStart(array('title' => 'Πηγές / Νομική βάση', 'title_id' => 'leadershipSourcesTitle')); ?>
 <p><strong>Γενικός προέλεγχος:</strong> Ελέγχονται μόνο οι βασικές προϋποθέσεις εκπαιδευτικής και διδακτικής υπηρεσίας, υπηρεσίας στην οικεία βαθμίδα και γνώσης ΤΠΕ. Ο έλεγχος κλάδου αφορά μόνο τις ρητά καλυπτόμενες περιπτώσεις. Για ΣΜΕΑΕ εξετάζονται χωριστά ο τύπος σχολείου, τα προσόντα ΕΑΕ, η ειδική υπηρεσία και οι προϋποθέσεις ΕΕΠ. Τα Πρότυπα/Πειραματικά και οι επαναπροκηρύξεις απαιτούν πρόσθετη εξέταση.</p>
 <?php sourceCardLinksStart(); ?>
-<?php sourceCardLink('https://api.et.gr/apiFEK/1/2021/136/pdf', 'Ν. 4823/2021 — ΦΕΚ Α΄ 136, άρθρο 31 ↗'); ?>
+<?php sourceCardLink('https://api.et.gr/apiFEK/1/2021/136/pdf', 'Ν. 4823/2021 — ΦΕΚ Α΄ 136, άρθρα 31, 33, 35, 232 ↗'); ?>
 <?php sourceCardLink('https://api.et.gr/apiFEK/2/2022/6141/pdf', 'Υ.Α. Φ.361.22/6/149788/Ε3/2022 — ΦΕΚ Β΄ 6141 ↗'); ?>
 <?php sourceCardLink('https://api.et.gr/apiFEK/2/2023/4843/pdf', 'Υ.Α. τροποποίησης διαδικασίας επαναπροκήρυξης — ΦΕΚ Β΄ 4843/2023 ↗'); ?>
 <?php sourceCardLink('https://www.e-nomothesia.gr/index.php/nomos-4823-2021-phek-136a-3-8-2021.html', 'Ν. 4823/2021 — άρθρο 31, ειδικότερες προϋποθέσεις ανά τύπο σχολείου ↗'); ?>
 <?php sourceCardLink('https://mitos.gov.gr/index.php/ΔΔ:Επιλογή_και_Τοποθέτηση_Διευθυντών_Σχολικών_Μονάδων', 'Μίτος — Επιλογή και τοποθέτηση Διευθυντών Σχολικών Μονάδων ↗'); ?>
+<?php sourceCardLink('https://dide.ira.sch.gr/wp-content/uploads/2025/09/nomos_4823_2021.pdf', 'ΔΔΕ Ηρακλείου — κωδικοποιημένο κείμενο ν. 4823/2021 (2025) ↗'); ?>
+<?php sourceCardLink('https://api.et.gr/apiFEK/1/2022/141/pdf', 'Ν. 4957/2022, άρθρο 374 — εξέταση ξένης γλώσσας ↗'); ?>
+<?php sourceCardLink('https://api.et.gr/apiFEK/1/2024/118/pdf', 'Ν. 5128/2024, άρθρα 12 και 15 — συγγραφικό έργο και αναγνώριση τίτλων ↗'); ?>
+<p>Μοριοδότηση: 28 μόρια επιστημονική–παιδαγωγική συγκρότηση + 27 εμπειρία + 25 αξιολόγηση + 20 συνέντευξη. Στην πρώτη επιλογή (άρθρο 232 §5): έως 75, χωρίς αξιολόγηση. Η εφαρμογή της μεταβατικής ρύθμισης επιλέγεται βάσει της συγκεκριμένης προκήρυξης. Έλεγχος πηγών: 06/11/2026.</p>
 <?php sourceCardLinksEnd(); ?>
 <?php sourceCardDisclaimerStart(); ?>
 Το αποτέλεσμα είναι ενδεικτικό και δεν πιστοποιεί δικαίωμα υποψηφιότητας. Ο κλάδος, η σχολική μονάδα, τα κωλύματα, οι ειδικές εξαιρέσεις και οι όροι της τρέχουσας προκήρυξης ελέγχονται από την αρμόδια υπηρεσία.
 <?php sourceCardDisclaimerEnd(); ?>
 <?php sourceCardEnd(); ?></main>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/school-leadership-calculations.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+<script src="<?php echo htmlspecialchars(edu_asset_url('includes/school-leadership-ui.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('includes/leadership-eligibility.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
 <script src="<?php echo htmlspecialchars(edu_asset_url('assets/common.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body></html>
