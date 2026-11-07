@@ -5,6 +5,8 @@
  * guides never drift apart when a source URL is corrected.
  */
 return array(
+    'ypes_elected_municipal_2026' => array('label' => 'ΥΠΕΣ — Δήμοι · Εγκύκλιος 10/2026 · 36761/01-07-2026', 'url' => 'https://www.ypes.gr/wp-content/uploads/2026/07/eggr36761-egk10-20260701.pdf'),
+    'ypes_elected_regional_2026' => array('label' => 'ΥΠΕΣ — Περιφέρειες · Εγκύκλιος 11/2026 · 36852/02-07-2026', 'url' => 'https://www.ypes.gr/wp-content/uploads/2026/07/eggr36852-egk11-20260702.pdf'),
     'minedu_guide_page' => array('label' => 'ΥΠΑΙΘΑ — Άδειες Αναπληρωτών Εκπαιδευτικών (16-12-2021)', 'url' => 'https://www.minedu.gov.gr/anaplirotesp?catid=1982%3Aanaplirotes-adeies&id=51022%3A16-12-21-adeies-anapliroton-ekpaideftikon&view=article'),
     'minedu_guide_pdf' => array('label' => 'ΥΠΑΙΘΑ — Συγκεντρωτικός πίνακας αδειών αναπληρωτών (PDF)', 'url' => 'https://www.minedu.gov.gr/publications/docs2021/adeies_anaplirotwn_ekpaideutikwn.pdf'),
     'minedu_permanent_page' => array('label' => 'ΥΠΑΙΘΑ — Άδειες Μόνιμων Εκπαιδευτικών (16-12-2021)', 'url' => 'https://www.minedu.gov.gr/ekpaideftikoi-eep-evp/16-12-21-adeies-monimon-ekpaideftikon'),

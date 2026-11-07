@@ -101,7 +101,6 @@ if ($audience !== '' && is_file($comparisonMapFile)) {
 <section class="leave-finder" aria-labelledby="leaveFinderTitle">
   <div class="leave-finder__heading">
     <div>
-      <span class="section-kicker">ΓΡΗΓΟΡΗ ΑΝΑΖΗΤΗΣΗ</span>
       <h2 id="leaveFinderTitle">Βρες την άδεια που σε αφορά</h2>
     </div>
     <span class="leave-count" id="leaveCount"><?php echo count($leaves); ?> άδειες</span>
@@ -133,10 +132,13 @@ if ($audience !== '' && is_file($comparisonMapFile)) {
 <?php foreach ($leaves as $leave):
     $payBadge = leaveGuideBadge(isset($leave['pay']) ? $leave['pay'] : 'mixed', 'pay');
     $serviceBadge = leaveGuideBadge(isset($leave['service']) ? $leave['service'] : 'mixed', 'service');
+    if (!empty($leave['pay_label'])) $payBadge[0] = $leave['pay_label'];
+    $cases = isset($leave['cases']) && is_array($leave['cases']) ? $leave['cases'] : array();
     $conditions = isset($leave['conditions']) && is_array($leave['conditions']) ? $leave['conditions'] : array();
     $docs = isset($leave['docs']) && is_array($leave['docs']) ? $leave['docs'] : array();
     $leaveSources = isset($leave['sources']) && is_array($leave['sources']) ? $leave['sources'] : array();
     $searchText = $leave['title'] . ' ' . $leave['duration'] . ' ' . $leave['legal'] . ' ' . implode(' ', $conditions);
+    foreach ($cases as $case) $searchText .= ' ' . implode(' ', $case);
 ?>
   <details class="leave-card" id="leave-<?php echo $h($leave['id']); ?>" data-leave-id="<?php echo $h($leave['id']); ?>" data-leave-category="<?php echo $h($leave['category']); ?>" data-leave-search="<?php echo $h($searchText); ?>">
     <summary>
@@ -156,6 +158,20 @@ if ($audience !== '' && is_file($comparisonMapFile)) {
       <p class="leave-service-disclaimer"><strong>Προσοχή στην προσμέτρηση:</strong> Οι ενδείξεις «Πραγματική υπηρεσία»/«Δεν προσμετράται» αφορούν τη γενική ταξινόμηση του οδηγού και δεν πιστοποιούν αυτομάτως διδακτική προϋπηρεσία για πίνακες ΑΣΕΠ ή χρόνο ασφάλισης. Οι διακρίσεις εξετάζονται ανά είδος άδειας και ισχύουσα διάταξη.</p>
       <?php endif; ?>
       <?php if (!empty($leave['service_clarification'])): ?><p class="leave-service-disclaimer"><?php echo $h($leave['service_clarification']); ?></p><?php endif; ?>
+      <?php if (!empty($cases)): ?>
+      <section class="leave-cases" aria-label="Περιπτώσεις ανά αιρετό αξίωμα">
+        <h3>Περιπτώσεις ανά αιρετό αξίωμα</h3>
+        <table class="leave-cases__table">
+          <caption>Μόνιμοι εκπαιδευτικοί / ΕΕΠ–ΕΒΠ</caption>
+          <thead><tr><th scope="col">Αιρετό αξίωμα</th><th scope="col">Διάρκεια / διευκόλυνση</th></tr></thead>
+          <tbody>
+          <?php foreach ($cases as $case): ?>
+            <tr><th scope="row"><?php echo $h($case[0]); ?></th><td><?php echo $h($case[1]); ?></td></tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </section>
+      <?php endif; ?>
       <div class="leave-info-grid">
         <section>
           <h3>Προϋποθέσεις / βασικές πληροφορίες</h3>

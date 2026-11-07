@@ -437,3 +437,18 @@ body.edu-ui.edu-page-leave-hub .leave-hub__card--compare { grid-column: 1 / -1; 
   body.edu-ui.edu-page-leave-comparison .leave-compare__side-head { min-height: 0; }
   body.edu-ui.edu-page-leave-hub .leave-hub__card--compare { grid-column: auto; }
 }
+
+/* Elected local-government officials: tables inside the existing leave cards. */
+body.edu-ui.edu-page-leave-guide .leave-cases { margin-bottom: 18px; min-width: 0; }
+body.edu-ui.edu-page-leave-guide .leave-cases__table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+body.edu-ui.edu-page-leave-guide .leave-cases__table caption { text-align: left; color: var(--edu-muted); padding: 0 0 10px; }
+body.edu-ui.edu-page-leave-guide .leave-cases__table th,
+body.edu-ui.edu-page-leave-guide .leave-cases__table td { text-align: left; vertical-align: top; padding: 12px; border-bottom: 1px solid var(--edu-border); overflow-wrap: anywhere; }
+body.edu-ui.edu-page-leave-guide .leave-cases__table thead th { background: #f3f7ff; color: var(--edu-accent, #174ea6); }
+body.edu-ui.edu-page-leave-guide .leave-cases__table th:first-child { width: 58%; }
+body.edu-ui.edu-page-leave-guide .leave-cases__table tbody th { font-weight: 500; }
+body.edu-ui.edu-page-leave-guide .leave-cases__table td { font-weight: 700; color: var(--edu-accent, #174ea6); }
+@media (max-width: 480px) {
+  body.edu-ui.edu-page-leave-guide .leave-cases__table th,
+  body.edu-ui.edu-page-leave-guide .leave-cases__table td { padding: 10px 6px; }
+}
