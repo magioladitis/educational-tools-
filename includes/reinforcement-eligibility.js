@@ -8,6 +8,8 @@
   var boards={gym:['2GE'],edem:['2GE','3EA-main','3EA-aux']};
   var gym={PE02:'Νεοελληνική Γλώσσα και Γραμματεία / Αρχαία Ελληνική Γλώσσα και Γραμματεία',PE03:'Μαθηματικά','PE04.01':'Φυσική','PE04.02':'Χημεία',PE85:'Χημεία',PE06:'Αγγλικά'};
   var edem={PE05:['french'],PE07:['german'],PE34:['italian'],PE40:['spanish'],'PE79.01':['music'],PE08:['free'],'PE89.01':['free','linear'],PE81:['linear'],TE16:['music']};
+  // Keep accepting the earlier affirmative answer from existing callers.
+  var eligibleCitizenship=['yes','greek','eu','northern-epirus','cyprus','other-diaspora'];
   function options(program,branch){
     var branches=program==='gym'?Object.keys(gym):program==='edem'?Object.keys(edem):[];
     if(branches.indexOf(branch)<0)return{branches:branches,boards:[],subjects:[]};
@@ -46,7 +48,7 @@
     if(d.ageEligible==='no')no.push('Δήλωσες ότι δεν καλύπτεις τα ηλικιακά όρια της πρόσκλησης (κατώτατο 21ο, ανώτατο 67ο έτος, με τον ειδικό τρόπο υπολογισμού).');
     else if(d.ageEligible!=='yes')pending.push('Επιβεβαίωσε τα ηλικιακά όρια και τον τρόπο υπολογισμού τους.');
     if(d.citizenshipEligible==='no')no.push('Δήλωσες ότι δεν ανήκεις στις κατηγορίες ιθαγένειας / δικαιώματος συμμετοχής που καλεί η πρόσκληση.');
-    else if(d.citizenshipEligible!=='yes')pending.push('Επιβεβαίωσε την ιθαγένεια ή άλλη προβλεπόμενη κατηγορία δικαιώματος συμμετοχής.');
+    else if(eligibleCitizenship.indexOf(d.citizenshipEligible)<0)pending.push('Επιβεβαίωσε την ιθαγένεια ή άλλη προβλεπόμενη κατηγορία δικαιώματος συμμετοχής.');
     if(d.dutiesEligible==='no')no.push('Δήλωσες ότι δεν πληρούται η νόμιμη προϋπόθεση για την εκτέλεση των καθηκόντων της θέσης.');
     else if(d.dutiesEligible!=='yes')pending.push('Εκκρεμεί επιβεβαίωση της προϋπόθεσης εκτέλεσης καθηκόντων (άρθρο 7 ν.3528/2007).');
     if(d.applicationImpediment==='yes')no.push('Δήλωσες ότι συντρέχει κάποιο από τα κωλύματα υποβολής αίτησης που αναφέρονται στην αναπτυσσόμενη λίστα.');
