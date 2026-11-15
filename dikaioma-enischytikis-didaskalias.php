@@ -2,17 +2,12 @@
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/components/source-card.php';
 require_once __DIR__ . '/includes/components/calculator-layout.php';
-$reinforcementSources = array(
-    'gym' => 'https://www.minedu.gov.gr/site/71122-06-11-26-ypobole-aiteseon-ypopsephion-didaskonton-sten-enischytike-didaskalia-gymnasiou-2026-2027',
-    'edem' => 'https://www.minedu.gov.gr/site/71123-ypobole-aiteseon-ypopsephion-didaskonton-sten-enischytike-didaskalia-eidikon-mathematon-2026-2027'
-);
+$reinforcementAllocations = require __DIR__ . '/includes/reinforcement-allocations.php';
 $reinforcementDeadlines = array();
 $reinforcementDeadlineConfig = require __DIR__ . '/includes/deadlines.php';
 foreach ($reinforcementDeadlineConfig['items'] as $reinforcementItem) {
-    foreach ($reinforcementSources as $reinforcementProgram => $reinforcementURL) {
-        if (isset($reinforcementItem['source_url']) && $reinforcementItem['source_url'] === $reinforcementURL) {
-            $reinforcementDeadlines[$reinforcementProgram] = $reinforcementItem;
-        }
+    if (isset($reinforcementItem['reinforcement_program'])) {
+        $reinforcementDeadlines[$reinforcementItem['reinforcement_program']] = $reinforcementItem;
     }
 }
 function reinforcementSelect($name, $label, $options, $note = '', $details = '') {
@@ -44,11 +39,12 @@ function reinforcementSelect($name, $label, $options, $note = '', $details = '')
 )); ?>
 <?php calculatorCardStart(array('title'=>'Έλεγχος δυνατότητας αίτησης', 'title_attrs'=>array('id'=>'reinforcement-form-title'), 'attrs'=>array('aria-labelledby'=>'reinforcement-form-title'))); ?>
 <p id="reinforcement-period" class="info-note" role="status">Επίλεξε πρόγραμμα για να δεις την προθεσμία.</p>
-<?php foreach ($reinforcementSources as $reinforcementProgram => $reinforcementURL):
-    $reinforcementItem = isset($reinforcementDeadlines[$reinforcementProgram]) ? $reinforcementDeadlines[$reinforcementProgram] : array(); ?>
-<div hidden data-reinforcement-program="<?php echo $reinforcementProgram; ?>" data-start="<?php echo htmlspecialchars(isset($reinforcementItem['start']) ? $reinforcementItem['start'] : '', ENT_QUOTES, 'UTF-8'); ?>" data-end="<?php echo htmlspecialchars(isset($reinforcementItem['end_exclusive']) ? $reinforcementItem['end_exclusive'] : '', ENT_QUOTES, 'UTF-8'); ?>">
-<a href="<?php echo htmlspecialchars($reinforcementURL, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">Επίσημη πρόσκληση <?php echo $reinforcementProgram === 'gym' ? 'Γυμνασίου' : 'ΕΔΕΜ'; ?> ↗</a>
-</div><?php endforeach; ?>
+<?php foreach ($reinforcementDeadlines as $program => $deadline): ?>
+<div hidden data-reinforcement-program="<?php echo calculatorLayoutEscape($program); ?>" data-start="<?php echo calculatorLayoutEscape($deadline['start']); ?>" data-end="<?php echo calculatorLayoutEscape($deadline['end_exclusive']); ?>">
+<a href="<?php echo calculatorLayoutEscape($deadline['source_url']); ?>" target="_blank" rel="noopener noreferrer">Τροποποιημένη πρόσκληση <?php echo calculatorLayoutEscape($reinforcementAllocations[$program]['genitive']); ?> ↗</a>
+</div>
+<?php endforeach; ?>
+<p><a href="#reinforcement-allocations">Δες τις ΔΔΕ και τις θέσεις ανά κλάδο ↓</a></p>
 <noscript><p>Ενεργοποίησε JavaScript για τον διαδραστικό έλεγχο. Οι επίσημες πηγές και οι οδηγίες αίτησης παραμένουν διαθέσιμες παρακάτω.</p></noscript>
 <form id="reinforcement-form"><div class="field-grid">
 <?php
@@ -79,6 +75,44 @@ reinforcementSelect('service','Έλεγξες τυχόν κώλυμα ανάλη
 </div><?php calculatorActions(array(array('label'=>'Έλεγχος δυνατότητας αίτησης','class'=>'edu-btn-primary','attrs'=>array('type'=>'submit')),array('label'=>'Καθαρισμός','action'=>'reset','class'=>'secondary','attrs'=>array('type'=>'reset')))); ?></form>
 <section id="reinforcement-result" class="result-message edu-message--info" role="status" aria-live="polite" aria-atomic="true"><p>Συμπλήρωσε τις επιλογές σου και πάτησε «Έλεγχος δυνατότητας αίτησης».</p></section>
 <?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(array(
+    'title' => 'Περιοχές και θέσεις ανά κλάδο',
+    'title_attrs' => array('id' => 'reinforcement-allocations'),
+    'attrs' => array('aria-labelledby' => 'reinforcement-allocations')
+)); ?>
+<p>Οι πίνακες δείχνουν τον αριθμό εκπαιδευτικών ανά Διεύθυνση Δευτεροβάθμιας Εκπαίδευσης (ΔΔΕ). Τα σχολικά κέντρα (ΣΚΑΕ) αναγράφονται στα συνημμένα του ΥΠΑΙΘΑ.</p>
+<?php foreach ($reinforcementAllocations as $allocation): ?>
+    <?php calculatorDisclosureStart(array('summary' => $allocation['label'])); ?>
+    <p><a href="<?php echo calculatorLayoutEscape($allocation['table_url']); ?>" target="_blank" rel="noopener noreferrer">Πλήρης πίνακας <?php echo calculatorLayoutEscape($allocation['genitive']); ?> με τα ΣΚΑΕ (PDF) ↗</a></p>
+    <p><?php echo calculatorLayoutEscape($allocation['note']); ?></p>
+    <div class="table-wrap reinforcement-allocation-table" tabindex="0" role="region" aria-label="<?php echo calculatorLayoutEscape('Κατανομή εκπαιδευτικών: ' . $allocation['label']); ?>">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">ΔΔΕ</th>
+                    <?php foreach ($allocation['columns'] as $column): ?>
+                        <th scope="col"><?php echo calculatorLayoutEscape($column); ?></th>
+                    <?php endforeach; ?>
+                </tr>
+            </thead>
+            <?php foreach ($allocation['regions'] as $region => $districts): ?>
+                <tbody>
+                    <tr><th scope="rowgroup" colspan="<?php echo count($allocation['columns']) + 1; ?>"><?php echo calculatorLayoutEscape($region); ?></th></tr>
+                    <?php foreach ($districts as $district => $counts): ?>
+                        <tr>
+                            <th scope="row"><?php echo calculatorLayoutEscape($district); ?></th>
+                            <?php foreach ($counts as $count): ?>
+                                <td><?php echo $count; ?></td>
+                            <?php endforeach; ?>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            <?php endforeach; ?>
+        </table>
+    </div>
+    <?php calculatorDisclosureEnd(); ?>
+<?php endforeach; ?>
+<?php calculatorCardEnd(); ?>
 <?php calculatorCardStart(array('title'=>'Πώς κάνω την αίτηση;', 'title_attrs'=>array('id'=>'reinforcement-steps'), 'attrs'=>array('aria-labelledby'=>'reinforcement-steps'))); ?>
 <ol><li>Επιβεβαίωσε τον κλάδο και την ένταξή σου στον προβλεπόμενο πίνακα ΑΣΕΠ.</li><li>Διάβασε την αντίστοιχη πρόσκληση και τον συνημμένο πίνακα κατανομής εκπαιδευτικών ανά ΔΔΕ και κλάδο.</li><li>Συνδέσου στο ΟΠΣΥΔ μέσα στην προθεσμία και επίλεξε τη χωριστή αίτηση για το πρόγραμμα που σε ενδιαφέρει.</li><li>Επίλεξε <strong>μία (1) Διεύθυνση Δευτεροβάθμιας Εκπαίδευσης</strong>, στην οποία επιθυμείς να εργαστείς.</li><li>Έλεγξε τα δηλωμένα στοιχεία και ολοκλήρωσε την υποβολή. Κράτησε αντίγραφο ή αποδεικτικό της καταχωρισμένης αίτησης.</li><li>Παρακολούθησε τις ανακοινώσεις της επιλεγμένης ΔΔΕ για τις επόμενες ενέργειες, τις προτιμήσεις ΣΚΑΕ και τις τοποθετήσεις.</li></ol>
 <p><a href="https://opsyd.sch.gr/" target="_blank" rel="noopener noreferrer">Μετάβαση στο ΟΠΣΥΔ ↗</a></p><p><a href="prothesmies.php">Όλες οι προθεσμίες →</a></p>
@@ -96,8 +130,18 @@ reinforcementSelect('service','Έλεγξες τυχόν κώλυμα ανάλη
 <?php calculatorDisclosure(array('summary'=>'Πώς υπολογίζονται τα μόρια για την πρόσληψη;','html'=>'<p>Δεν προβλέπεται εδώ νέος ανεξάρτητος υπολογισμός μορίων. Η επιλογή γίνεται με βάση τη σειρά κατάταξης στον οικείο πίνακα ΑΣΕΠ και τους κανόνες της πρόσκλησης.</p>')); ?>
 <?php calculatorCardEnd(); ?>
 <?php sourceCardStart(array('title'=>'Πηγές / Προσκλήσεις 2026–2027')); ?>
-<p>Έλεγχος πηγών: 06/11/2026. Προσκλήσεις 151710/Δ2/06-11-2026 (Γυμνάσιο, ΑΔΑ 911Β46ΝΚΠΔ-0ΒΝ) και 151737/ΓΔ4/06-11-2026 (ΕΔΕΜ, ΑΔΑ 9Φ8846ΝΚΠΔ-ΙΟ0). Οι συνημμένοι πίνακες κατανομής διατίθενται στις ανακοινώσεις.</p>
-<?php sourceCardLinksStart(); foreach ($reinforcementSources as $reinforcementProgram => $reinforcementURL) sourceCardLink($reinforcementURL, $reinforcementProgram === 'gym' ? 'ΥΠΑΙΘΑ — Γυμνάσιο: πρόσκληση και πίνακας κατανομής ↗' : 'ΥΠΑΙΘΑ — ΕΔΕΜ: πρόσκληση και πίνακας κατανομής ↗'); sourceCardLink('https://www.minedu.gov.gr/panelladikes-eksetaseis-pistopoiitika/anakoinwseis-ell-ex?catid=1183&id=70628:13-08-26&view=article', 'ΥΠΑΙΘΑ — Πρόσκληση αναπληρωτών 107933/Ε1/13-08-2026 (απενεργοποίηση αιτήσεων) ↗'); sourceCardLinksEnd(); ?>
+<p>Οι τροποποιήσεις της 11/11/2026 παρέτειναν την προθεσμία και ενημέρωσαν την κατανομή στην Αττική.</p>
+<?php
+sourceCardLinksStart();
+foreach ($reinforcementAllocations as $program => $allocation) {
+    sourceCardLink($allocation['invitation_url'], 'ΥΠΑΙΘΑ — Αρχική πρόσκληση ' . $allocation['genitive'] . ' ↗');
+    if (isset($reinforcementDeadlines[$program])) {
+        sourceCardLink($reinforcementDeadlines[$program]['source_url'], $reinforcementDeadlines[$program]['source_label']);
+    }
+}
+sourceCardLink('https://www.minedu.gov.gr/panelladikes-eksetaseis-pistopoiitika/anakoinwseis-ell-ex?catid=1183&id=70628:13-08-26&view=article', 'ΥΠΑΙΘΑ — Πρόσκληση αναπληρωτών 107933/Ε1/13-08-2026 (απενεργοποίηση αιτήσεων) ↗');
+sourceCardLinksEnd();
+?>
 <p>Για τα κωλύματα διορισμού λαμβάνονται υπόψη και τα άρθρα 3–4 του ν.5225/2025: <a href="https://www.ypes.gr/wp-content/uploads/2025/09/n5225-FEKA152-20250100152.pdf" target="_blank" rel="noopener noreferrer">Υπουργείο Εσωτερικών — ΦΕΚ Α΄152/2025 ↗</a>.</p>
 <?php sourceCardDisclaimerStart(); ?>Ενδεικτικός έλεγχος των δηλωμένων στοιχείων. Η υπηρεσία ελέγχει την πραγματική ένταξη στους πίνακες, τα δικαιολογητικά, τις γενικές προϋποθέσεις και τα κωλύματα. Δεν αποθηκεύονται ούτε αποστέλλονται οι απαντήσεις σου.<?php sourceCardDisclaimerEnd(); sourceCardEnd(); ?>
 </main>

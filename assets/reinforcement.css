@@ -2,3 +2,11 @@
 body.edu-page-reinforcement [hidden]{display:none!important}
 body.edu-page-reinforcement select:disabled{opacity:.6;cursor:not-allowed}
 @media print{body.edu-page-reinforcement .edu-actions{display:none!important}}
+
+.reinforcement-allocation-table { overflow-x: auto; }
+.reinforcement-allocation-table table { width: 100%; border-collapse: collapse; }
+.reinforcement-allocation-table th,
+.reinforcement-allocation-table td { padding: .5rem .65rem; border-bottom: 1px solid var(--line, #c4cdd6); }
+.reinforcement-allocation-table th { white-space: nowrap; }
+.reinforcement-allocation-table td { text-align: right; }
+.reinforcement-allocation-table th:first-child { text-align: left; }
