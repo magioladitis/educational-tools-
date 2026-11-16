@@ -18,6 +18,7 @@ function reinforcementSelect($name, $label, $options, $note = '', $details = '',
     }
     echo '</select>';
     if ($note !== '') echo '<small class="help" id="reinforcement-note-' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($note, ENT_QUOTES, 'UTF-8') . '</small>';
+    if ($name === 'citizenshipEligible') echo '<p class="help" id="reinforcement-citizenship-description" role="status" hidden>Η κατηγορία αφορά ομογενείς από Κωνσταντινούπολη, Ίμβρο, Τένεδο ή Αίγυπτο.</p>';
     if ($details !== '') calculatorDisclosure(array('summary'=>$detailsTitle, 'html'=>$details));
     echo '</div>';
 }
@@ -40,11 +41,8 @@ function reinforcementSelect($name, $label, $options, $note = '', $details = '',
 <?php calculatorCardStart(array('title'=>'Έλεγχος δυνατότητας αίτησης', 'title_attrs'=>array('id'=>'reinforcement-form-title'), 'attrs'=>array('aria-labelledby'=>'reinforcement-form-title'))); ?>
 <p id="reinforcement-period" class="info-note" role="status">Επίλεξε πρόγραμμα για να δεις την προθεσμία.</p>
 <?php foreach ($reinforcementDeadlines as $program => $deadline): ?>
-<div hidden data-reinforcement-program="<?php echo calculatorLayoutEscape($program); ?>" data-start="<?php echo calculatorLayoutEscape($deadline['start']); ?>" data-end="<?php echo calculatorLayoutEscape($deadline['end_exclusive']); ?>">
-<a href="<?php echo calculatorLayoutEscape($deadline['source_url']); ?>" target="_blank" rel="noopener noreferrer">Τροποποιημένη πρόσκληση <?php echo calculatorLayoutEscape($reinforcementAllocations[$program]['genitive']); ?> ↗</a>
-</div>
+<div hidden data-reinforcement-program="<?php echo calculatorLayoutEscape($program); ?>" data-start="<?php echo calculatorLayoutEscape($deadline['start']); ?>" data-end="<?php echo calculatorLayoutEscape($deadline['end_exclusive']); ?>"></div>
 <?php endforeach; ?>
-<p><a href="#reinforcement-allocations">Δες τις ΔΔΕ και τις θέσεις ανά κλάδο ↓</a></p>
 <noscript><p>Ενεργοποίησε JavaScript για τον διαδραστικό έλεγχο. Οι επίσημες πηγές και οι οδηγίες αίτησης παραμένουν διαθέσιμες παρακάτω.</p></noscript>
 <form id="reinforcement-form"><div class="field-grid">
 <?php
@@ -64,13 +62,13 @@ reinforcementSelect('ageEligible','Καλύπτεις τα ηλικιακά όρ
 reinforcementSelect('citizenshipEligible', 'Ποια κατηγορία ιθαγένειας ή δικαιώματος συμμετοχής σε αφορά;', array(
     '' => 'Επίλεξε κατηγορία',
     'greek' => 'Έλληνας/Ελληνίδα πολίτης',
-    'eu' => 'Πολίτης άλλου κράτους μέλους της ΕΕ',
-    'northern-epirus' => 'Ομογενής από τη Βόρεια Ήπειρο',
+    'eu' => 'Πολίτης άλλης χώρας ΕΕ',
+    'northern-epirus' => 'Ομογενής Βόρειας Ηπείρου',
     'cyprus' => 'Ομογενής από την Κύπρο',
-    'other-diaspora' => 'Ομογενής από Κωνσταντινούπολη, Ίμβρο, Τένεδο ή Αίγυπτο',
-    'no' => 'Δεν ανήκω σε καμία από τις παραπάνω κατηγορίες',
-    'unknown' => 'Δεν είμαι βέβαιος/η ή εκκρεμεί δικαιολογητικό'
-), '', '<p>Για πολίτες άλλων κρατών μελών της ΕΕ ισχύουν οι περιορισμοί του άρθρου 1 §1 του ν. 2431/1996. Για τις κατηγορίες ομογενών απαιτείται η προβλεπόμενη απόδειξη της ιδιότητας κατά το ν.δ. 3832/1958.</p>');
+    'other-diaspora' => 'Λοιποί ομογενείς',
+    'no' => 'Καμία από τις παραπάνω',
+    'unknown' => 'Δεν είμαι βέβαιος/η'
+), '', '<p>Η επιλογή «Λοιποί ομογενείς» αφορά ομογενείς από Κωνσταντινούπολη, Ίμβρο, Τένεδο ή Αίγυπτο.</p><p>Για πολίτες άλλων κρατών μελών της ΕΕ ισχύουν οι περιορισμοί του άρθρου 1 §1 του ν. 2431/1996. Για τις κατηγορίες ομογενών απαιτείται η προβλεπόμενη απόδειξη της ιδιότητας κατά το ν.δ. 3832/1958. Αν εκκρεμεί δικαιολογητικό, επίλεξε «Δεν είμαι βέβαιος/η».</p>');
 reinforcementSelect(
     'dutiesEligible',
     'Πληροίς τη νόμιμη προϋπόθεση υγείας που επιτρέπει την εκτέλεση των καθηκόντων της θέσης;',
@@ -96,17 +94,54 @@ reinforcementSelect('service','Έλεγξες τυχόν κώλυμα ανάλη
 <section id="reinforcement-result" class="result-message edu-message--info" role="status" aria-live="polite" aria-atomic="true"><p>Συμπλήρωσε τις επιλογές σου και πάτησε «Έλεγχος δυνατότητας αίτησης».</p></section>
 <?php calculatorCardEnd(); ?>
 <?php calculatorCardStart(array(
+    'title' => 'Μετά την αίτηση',
+    'title_attrs' => array('id' => 'reinforcement-next-steps'),
+    'attrs' => array('aria-labelledby' => 'reinforcement-next-steps')
+)); ?>
+<p>Το χρονοδιάγραμμα ισχύει για την Ενισχυτική Διδασκαλία Γυμνασίου και για τα Ειδικά Μαθήματα (ΕΔΕΜ).</p>
+<ol>
+    <li><strong>Τρίτη 17/11/2026, έως τις 13:00.</strong> Η ΔΔΕ αναρτά τους πίνακες κατάταξης και την κατανομή κλάδων και ωρών ανά ΣΚΑΕ. Ενημερώνει τους αρχικά επιλεγέντες και τους στέλνει ηλεκτρονικά τη δήλωση τοποθέτησης.</li>
+    <li><strong>Παρασκευή 20/11/2026, έως τις 13:00.</strong> Αν έχεις επιλεγεί, απάντησε στη ΔΔΕ όπου υπέβαλες την αίτηση αν αποδέχεσαι την πρόσληψη. Αν την αποδέχεσαι, στείλε ηλεκτρονικά και τη συμπληρωμένη υπεύθυνη δήλωση τοποθέτησης σε ΣΚΑΕ.</li>
+    <li><strong>Δευτέρα 23/11/2026, έως τις 13:00.</strong> Η ΔΔΕ αναρτά τις τοποθετήσεις με βάση τη σειρά κατάταξης και τις δηλώσεις προτίμησης.</li>
+    <li><strong>Τρίτη 24/11/2026, στις 12:00.</strong> Αν έχεις προσληφθεί και τοποθετηθεί, παρουσιάσου αυτοπροσώπως στην οικεία ΔΔΕ για την υπογραφή της σύμβασης.</li>
+    <li><strong>Τετάρτη 25/11/2026.</strong> Παρουσιάσου στο ΣΚΑΕ όπου τοποθετήθηκες για την έναρξη των μαθημάτων. Για τις ΔΔΕ που αργούν στις 25/11, η έναρξη μεταφέρεται στην <strong>Πέμπτη 26/11/2026</strong>.</li>
+</ol>
+<p>Η διδασκαλία ολοκληρώνεται με τη λήξη των μαθημάτων, πριν από τις εξετάσεις. Η διδακτική ώρα διαρκεί 45 λεπτά και το διάλειμμα 5 λεπτά. Στην ΕΔΕΜ κάθε μάθημα διδάσκεται 2 ώρες την εβδομάδα, με 3 ώρες για το Ελεύθερο Σχέδιο και 3 για το Γραμμικό Σχέδιο.</p>
+<p><a href="https://diavgeia.gov.gr/doc/ΨΚΓΙ46ΝΚΠΔ-Τ8Ε?inline=true" target="_blank" rel="noopener noreferrer">Γυμνάσιο — εγκύκλιος 155689/Δ2/16-11-2026 ↗</a><br>
+<a href="https://diavgeia.gov.gr/doc/9ΩΘΧ46ΝΚΠΔ-Γ3Ξ?inline=true" target="_blank" rel="noopener noreferrer">ΕΔΕΜ — έγγραφο 155734/ΓΔ4/16-11-2026 ↗</a></p>
+<?php calculatorCardEnd(); ?>
+<?php calculatorCardStart(array(
     'title' => 'Περιοχές και θέσεις ανά κλάδο',
     'title_attrs' => array('id' => 'reinforcement-allocations'),
     'attrs' => array('aria-labelledby' => 'reinforcement-allocations')
 )); ?>
 <p>Οι πίνακες δείχνουν τον αριθμό εκπαιδευτικών ανά Διεύθυνση Δευτεροβάθμιας Εκπαίδευσης (ΔΔΕ). Τα σχολικά κέντρα (ΣΚΑΕ) αναγράφονται στα συνημμένα του ΥΠΑΙΘΑ.</p>
-<?php foreach ($reinforcementAllocations as $allocation): ?>
-    <?php calculatorDisclosureStart(array('summary' => $allocation['label'])); ?>
+<?php foreach ($reinforcementAllocations as $program => $allocation):
+    $pickerId = 'reinforcement-district-' . $program;
+    $panelId = 'reinforcement-table-' . $program;
+?>
+    <?php calculatorDisclosureStart(array('summary' => $allocation['label'], 'attrs' => array('data-reinforcement-allocation' => $program))); ?>
     <p><a href="<?php echo calculatorLayoutEscape($allocation['table_url']); ?>" target="_blank" rel="noopener noreferrer">Πλήρης πίνακας <?php echo calculatorLayoutEscape($allocation['genitive']); ?> με τα ΣΚΑΕ (PDF) ↗</a></p>
     <p><?php echo calculatorLayoutEscape($allocation['note']); ?></p>
-    <div class="table-wrap reinforcement-allocation-table" tabindex="0" role="region" aria-label="<?php echo calculatorLayoutEscape('Κατανομή εκπαιδευτικών: ' . $allocation['label']); ?>">
-        <table>
+    <div class="reinforcement-allocation-controls" data-table-collapsed hidden>
+        <label for="<?php echo calculatorLayoutEscape($pickerId); ?>">Διεύθυνση Δευτεροβάθμιας Εκπαίδευσης</label>
+        <select id="<?php echo calculatorLayoutEscape($pickerId); ?>" data-reinforcement-district>
+            <option value="">Επίλεξε ΔΔΕ</option>
+            <?php $districtIndex = 0; foreach ($allocation['regions'] as $region => $districts): ?>
+                <optgroup label="<?php echo calculatorLayoutEscape($region); ?>">
+                    <?php foreach ($districts as $district => $counts): ?>
+                        <option value="<?php echo ++$districtIndex; ?>"><?php echo calculatorLayoutEscape($district); ?></option>
+                    <?php endforeach; ?>
+                </optgroup>
+            <?php endforeach; ?>
+        </select>
+        <div class="reinforcement-district-result" data-reinforcement-district-result aria-live="polite" aria-atomic="true"></div>
+        <button type="button" class="secondary" aria-expanded="false" aria-controls="<?php echo calculatorLayoutEscape($panelId); ?>">Εμφάνιση πλήρους πίνακα</button>
+    </div>
+    <div id="<?php echo calculatorLayoutEscape($panelId); ?>" class="reinforcement-allocation-panel">
+      <p class="reinforcement-table-hint" hidden>Σύρε οριζόντια για περισσότερες στήλες →</p>
+      <div class="table-wrap reinforcement-allocation-table" tabindex="0" role="region" aria-label="<?php echo calculatorLayoutEscape('Κατανομή εκπαιδευτικών: ' . $allocation['label']); ?>">
+        <table data-edu-mobile-table="off">
             <thead>
                 <tr>
                     <th scope="col">ΔΔΕ</th>
@@ -129,6 +164,7 @@ reinforcementSelect('service','Έλεγξες τυχόν κώλυμα ανάλη
                 </tbody>
             <?php endforeach; ?>
         </table>
+      </div>
     </div>
     <?php calculatorDisclosureEnd(); ?>
 <?php endforeach; ?>

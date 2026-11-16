@@ -3,6 +3,7 @@
   var form=document.getElementById('reinforcement-form'),api=window.ReinforcementEligibility;
   if(!form||!api)return;
   var result=document.getElementById('reinforcement-result'),checked=false;
+  var citizenshipDescription=document.getElementById('reinforcement-citizenship-description');
   var optionCache={};
   ['branch','board','subject'].forEach(function(name){
     optionCache[name]=Array.from(form.elements.namedItem(name).options).map(function(o){return{value:o.value,text:o.textContent};});
@@ -34,7 +35,7 @@
     subject.disabled=val('program')!=='edem'||!branchSelected||singleSubject;
     toggle('reinforcement-chemical',val('program')==='gym'&&val('branch')==='PE85');
     toggle('reinforcement-music',val('program')==='edem'&&val('branch')==='TE16');
-    document.querySelectorAll('[data-reinforcement-program]').forEach(function(e){e.hidden=e.dataset.reinforcementProgram!==val('program');});
+    if(citizenshipDescription)citizenshipDescription.hidden=val('citizenshipEligible')!=='other-diaspora';
     period();
   }
   function period(){
@@ -61,4 +62,47 @@
   form.addEventListener('change',function(){sync();if(checked)render();});
   form.addEventListener('reset',function(){checked=false;setTimeout(function(){sync();result.className='result-message edu-message--info';result.replaceChildren(el('p','Συμπλήρωσε τις επιλογές σου και πάτησε «Έλεγχος δυνατότητας αίτησης».'));},0);});
   sync();setInterval(period,60000);
+
+  document.querySelectorAll('[data-reinforcement-allocation]').forEach(function (allocation) {
+    var controls = allocation.querySelector('.reinforcement-allocation-controls');
+    var picker = allocation.querySelector('[data-reinforcement-district]');
+    var districtResult = allocation.querySelector('[data-reinforcement-district-result]');
+    var toggleTable = controls.querySelector('button');
+    var tableWrapper = allocation.querySelector('.reinforcement-allocation-table');
+    var table = tableWrapper.querySelector('table');
+    var hint = allocation.querySelector('.reinforcement-table-hint');
+    var headers = Array.from(table.tHead.rows[0].cells).slice(1);
+    var rows = table.querySelectorAll('tbody th[scope="row"]');
+
+    function showDistrict() {
+      var district = rows[Number(picker.value) - 1];
+      districtResult.replaceChildren();
+      if (!district) return;
+
+      var list = document.createElement('dl');
+      headers.forEach(function (header, index) {
+        list.appendChild(el('dt', header.textContent));
+        list.appendChild(el('dd', district.parentNode.cells[index + 1].textContent));
+      });
+      districtResult.replaceChildren(el('strong', district.textContent), list);
+    }
+
+    function updateTableHint() {
+      hint.hidden = tableWrapper.clientWidth === 0 || tableWrapper.scrollWidth <= tableWrapper.clientWidth;
+    }
+
+    picker.addEventListener('change', showDistrict);
+    toggleTable.addEventListener('click', function () {
+      var expanded = controls.hasAttribute('data-table-collapsed');
+      controls.toggleAttribute('data-table-collapsed', !expanded);
+      toggleTable.setAttribute('aria-expanded', String(expanded));
+      toggleTable.textContent = expanded ? 'Απόκρυψη πλήρους πίνακα' : 'Εμφάνιση πλήρους πίνακα';
+      updateTableHint();
+    });
+    allocation.addEventListener('toggle', updateTableHint);
+    window.addEventListener('resize', updateTableHint);
+    controls.hidden = false;
+    showDistrict();
+    updateTableHint();
+  });
 }());

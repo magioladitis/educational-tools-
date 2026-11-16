@@ -3,10 +3,29 @@ body.edu-page-reinforcement [hidden]{display:none!important}
 body.edu-page-reinforcement select:disabled{opacity:.6;cursor:not-allowed}
 @media print{body.edu-page-reinforcement .edu-actions{display:none!important}}
 
-.reinforcement-allocation-table { overflow-x: auto; }
+.reinforcement-allocation-table { max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
 .reinforcement-allocation-table table { width: 100%; border-collapse: collapse; }
 .reinforcement-allocation-table th,
 .reinforcement-allocation-table td { padding: .5rem .65rem; border-bottom: 1px solid var(--line, #c4cdd6); }
 .reinforcement-allocation-table th { white-space: nowrap; }
 .reinforcement-allocation-table td { text-align: right; }
 .reinforcement-allocation-table th:first-child { text-align: left; }
+.reinforcement-table-hint { margin: .5rem 0; color: var(--edu-muted); font-size: .875rem; }
+.reinforcement-allocation-controls { display: none; }
+
+@media screen and (max-width: 800px) {
+  .reinforcement-allocation-controls { display: block; margin: 1rem 0; }
+  .reinforcement-allocation-controls[data-table-collapsed]:not([hidden]) + .reinforcement-allocation-panel {
+    display: none;
+  }
+  body.edu-page-reinforcement .reinforcement-allocation-controls select { font-size: 16px; min-height: 44px; }
+  .reinforcement-allocation-controls button { min-height: 44px; margin-top: .75rem; }
+  .reinforcement-district-result:not(:empty) { margin-top: .75rem; }
+  .reinforcement-district-result dl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: .25rem .75rem;
+    margin: .5rem 0 0;
+  }
+  .reinforcement-district-result dd { margin: 0; text-align: right; }
+}
