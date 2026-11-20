@@ -47,7 +47,7 @@ function pageURL(name) { return new URL(name, scopeURL).href; }
 function allowedPageQuery(rel, url) {
   if (!url.search) return true;
   if (rel === 'ergaleia.php') {
-    return /^\?group=(?:asep-anaplirotes|eidiki-agogi|metakiniseis|ypiresiaka|eidikes-domes)$/.test(url.search);
+    return /^\?group=(?:asep-anaplirotes|eidiki-agogi|metakiniseis|ypiresiaka|eidikes-domes|epimorfosi-pistopoiisi)$/.test(url.search);
   }
   if (rel === 'adeies-sygkrisi.php') {
     // The UI's public comparison IDs are ASCII slugs, e.g. ?leave=kanoniki.

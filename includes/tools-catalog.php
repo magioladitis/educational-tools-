@@ -32,8 +32,25 @@ return array(
             'short' => '★',
             'tone' => 'purple'
         ),
+        'epimorfosi-pistopoiisi' => array(
+            'title' => 'Επιμόρφωση & Πιστοποίηση',
+            'short' => 'ΤΠΕ',
+            'tone' => 'teal'
+        ),
     ),
     'tools' => array(
+        array(
+            'number' => 39,
+            'href' => 'exaskisi-pistopoiisis-b1-tpe.php',
+            'group' => 'epimorfosi-pistopoiisi',
+            'categories' => 'επιμόρφωση πιστοποίηση ΤΠΕ μαθηματικά',
+            'search' => 'πιστοποίηση Β1 B1 Β1.3 B1.3 ΤΠΕ Μαθηματικά ΠΕ03 κουίζ τυχαίες ερωτήσεις εξάσκηση GeoGebra',
+            'tag' => 'Πιστοποίηση Β1.3 ΤΠΕ',
+            'tag_class' => 'green',
+            'new' => true,
+            'title' => 'Εξάσκηση Πιστοποίησης Β1 ΤΠΕ – Μαθηματικά',
+            'description' => 'Κάνε εξάσκηση ή δοκιμαστικό τεστ με 43 ερωτήσεις, εξηγήσεις απαντήσεων και επανάληψη λαθών.'
+        ),
         array(
             'number' => 38,
             'href' => 'dikaioma-enischytikis-didaskalias.php',

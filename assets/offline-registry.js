@@ -7,6 +7,7 @@ self.EDU_OFFLINE_REGISTRY = Object.freeze({
   pages: Object.freeze([
     "ergaleia.php",
     "dikaioma-enischytikis-didaskalias.php",
+    "exaskisi-pistopoiisis-b1-tpe.php",
     "ypologismos-morion-metathesis-protovathmia.php",
     "prothesmies.php",
     "adeies-monimon.php",

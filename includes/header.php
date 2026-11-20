@@ -118,6 +118,7 @@ $eduHeaderEscape = function ($value) use ($eduHeaderFlags) {
             <a href="ergaleia.php?group=metakiniseis#tools-directory">Αποσπάσεις, Μεταθέσεις &amp; Τοποθετήσεις</a>
             <a href="ergaleia.php?group=ypiresiaka#tools-directory">Σχολική Μονάδα &amp; Υπηρεσιακά</a>
             <a href="ergaleia.php?group=eidikes-domes#tools-directory">Ειδικές Δομές &amp; Διαδικασίες</a>
+            <a href="ergaleia.php?group=epimorfosi-pistopoiisi#tools-directory">Επιμόρφωση &amp; Πιστοποίηση</a>
           </div>
         </div>
       </details>
