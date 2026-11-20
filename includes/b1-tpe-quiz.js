@@ -5,6 +5,7 @@ const greek = new Intl.NumberFormat('el-GR');
 let progressData = { attempts: 0, best: null, mistakes: [] };
 let settings = { mode: 'practice', topic: 'all', count: '10' };
 let session = null;
+let clockInterval;
 
 try {
   const saved = JSON.parse(localStorage.getItem(storageKey));
@@ -30,6 +31,7 @@ function button(text, className, action) {
 }
 
 function show(element, canGoHome) {
+  window.clearInterval(clockInterval);
   app.replaceChildren(element);
   home.hidden = !canGoHome;
   window.scrollTo(0, 0);
@@ -57,6 +59,17 @@ function percentage(value) {
   return greek.format(Math.round(value * 100)) + '%';
 }
 
+function elapsedSeconds() {
+  return Math.max(0, Math.floor((Date.now() - session.startedAt) / 1000));
+}
+
+function formatDuration(seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor(seconds / 60) % 60;
+  const parts = hours ? [hours, minutes, seconds % 60] : [minutes, seconds % 60];
+  return parts.map(part => String(part).padStart(2, '0')).join(':');
+}
+
 function showSetup() {
   session = null;
   show(document.querySelector('#setup').content.cloneNode(true), false);
@@ -75,7 +88,7 @@ function showSetup() {
   topicSelect.value = settings.topic;
   function updateCounts(preferred) {
     const total = poolFor(topicSelect.value).length;
-    const counts = [5, 10, 15, 20, 30].filter(count => count < total);
+    const counts = [5, 10, 15, 20, 30, 48].filter(count => count < total);
     countSelect.replaceChildren(...counts.map(count => new Option(count, count)), new Option('Όλες (' + total + ')', 'all'));
     countSelect.value = preferred;
     if (countSelect.selectedIndex < 0) countSelect.value = 'all';
@@ -85,6 +98,11 @@ function showSetup() {
   topicSelect.addEventListener('change', () => updateCounts(countSelect.value));
   document.querySelector('#runs').textContent = progressData.attempts;
   document.querySelector('#best').textContent = progressData.best === null ? '–' : percentage(progressData.best);
+  const lastDuration = document.querySelector('#last-duration');
+  if (Number.isInteger(progressData.lastDurationSeconds) && progressData.lastDurationSeconds >= 0) {
+    lastDuration.textContent = 'Χρόνος τελευταίας προσπάθειας · ' + formatDuration(progressData.lastDurationSeconds);
+    lastDuration.hidden = false;
+  }
   document.querySelector('#bank-count').textContent = bank.length;
   const mistakes = mistakesPool();
   document.querySelector('#retry-info').textContent = mistakes.length
@@ -113,6 +131,7 @@ function start(pool, mode, retry, count = pool.length) {
     position: 0,
     mode,
     retry,
+    startedAt: Date.now(),
     finished: false
   };
   showQuestion();
@@ -130,7 +149,14 @@ function showQuestion(focusFeedback = false) {
   const isLast = position + 1 === questions.length;
   const frame = node('section', null, 'frame quiz-frame');
   const meta = node('div', null, 'quiz-meta');
-  meta.append(node('span', modeName()), node('span', 'Ερώτηση ' + (position + 1) + ' από ' + questions.length));
+  const clock = node('span', null, 'quiz-clock');
+  clock.setAttribute('role', 'timer');
+  clock.setAttribute('aria-live', 'off');
+  const updateClock = () => {
+    clock.textContent = 'Χρόνος · ' + formatDuration(elapsedSeconds());
+  };
+  updateClock();
+  meta.append(node('span', modeName()), node('span', 'Ερώτηση ' + (position + 1) + ' από ' + questions.length), clock);
   const bar = node('progress');
   bar.max = questions.length;
   bar.value = questions.filter(item => practice ? item.checked : item.answer !== null).length;
@@ -208,6 +234,7 @@ function showQuestion(focusFeedback = false) {
   card.append(node('span', topics[question.topic].name, 'pill'), prompt, form);
   frame.append(meta, bar, card);
   show(frame, true);
+  clockInterval = window.setInterval(updateClock, 1000);
   if (focusFeedback) feedback?.focus();
 }
 
@@ -220,6 +247,7 @@ function finishExam() {
 function finish() {
   if (session.finished) return;
   session.finished = true;
+  const duration = elapsedSeconds();
   const questions = session.questions;
   const correct = questions.filter(question => question.answer === question.correct).length;
   const score = correct / questions.length;
@@ -231,7 +259,8 @@ function finish() {
   progressData = {
     attempts: progressData.attempts + 1,
     best: Math.max(progressData.best ?? 0, score),
-    mistakes: [...mistakes]
+    mistakes: [...mistakes],
+    lastDurationSeconds: duration
   };
   try {
     localStorage.setItem(storageKey, JSON.stringify(progressData));
@@ -256,7 +285,8 @@ function finish() {
   actions.append(button('Νέα προσπάθεια', 'primary', showSetup));
   const missed = questions.filter(question => question.answer !== question.correct);
   if (missed.length) actions.append(button('Επανάληψη λαθών', 'secondary', () => start(missed, 'practice', true)));
-  results.append(node('span', modeName(), 'pill'), node('h1', 'Αποτελέσματα'), scoreLine, breakdown, actions);
+  const durationLine = node('p', 'Χρόνος ολοκλήρωσης · ' + formatDuration(duration), 'quiz-duration');
+  results.append(node('span', modeName(), 'pill'), node('h1', 'Αποτελέσματα'), scoreLine, durationLine, breakdown, actions);
   const review = node('section', null, 'card review');
   const list = node('div');
   const filter = node('label', null, 'review-filter');

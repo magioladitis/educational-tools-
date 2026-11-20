@@ -55,9 +55,10 @@ $quizAsset = static function ($path) {
         <div><strong id="runs">0</strong><span>Προσπάθειες</span></div>
         <div><strong id="best">–</strong><span>Καλύτερο σκορ</span></div>
       </div>
+      <p class="muted last-duration" id="last-duration" hidden></p>
       <div class="retry"><h3>Επανάληψη λαθών</h3><p class="muted" id="retry-info"></p><button type="button" class="secondary" id="retry">Εξάσκηση στα λάθη</button></div>
     </aside>
-    <section class="card bank-card"><h2>Τράπεζα ερωτήσεων <span class="pill" id="bank-count"></span></h2><div id="topics" class="topics"></div><p class="muted sources">Βασίζεται στα δείγματα του ΙΤΥΕ «Διόφαντος» (Ιούλιος 2026) και στο κουίζ των 10 ερωτήσεων, με πρόσθετες ασκήσεις.</p></section>
+    <section class="card bank-card"><h2>Τράπεζα ερωτήσεων <span class="pill" id="bank-count"></span></h2><div id="topics" class="topics"></div><p class="muted sources">Ερωτήσεις από τα δείγματα του ΙΤΥΕ «Διόφαντος» (Ιούλιος 2026) και 10 ερωτήσεις από την «Επιμορφωτική Συνάντηση Μαθηματικών για την Προετοιμασία στις Εξετάσεις Πιστοποίησης Β1 ΤΠΕ – 20/11/2026», μαζί με πρόσθετες ασκήσεις. Οι 15 νεότερες βασίζονται στο Υλικό Αναφοράς Β1.3 (Μάρτιος 2024).</p></section>
   </div>
 </template>
 <script src="<?= $quizAsset('assets/common.js') ?>"></script>

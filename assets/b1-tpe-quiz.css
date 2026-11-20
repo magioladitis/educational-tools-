@@ -51,6 +51,7 @@ select{appearance:none;display:block;width:100%;margin-top:.4rem;min-height:46px
 .stats strong,.stats span{display:block}
 .stats strong{font-size:1.8rem;line-height:1.1;color:#164e42;margin-bottom:.32rem}
 .stats span{font-size:.84rem;color:var(--muted)}
+.last-duration{margin-top:.75rem;font-variant-numeric:tabular-nums}
 .retry{border-top:1px solid var(--line);margin-top:1.2rem;padding-top:1rem}
 .retry h3{font-size:1rem;margin-bottom:.2rem}
 .retry button{margin-top:.8rem}
@@ -61,6 +62,7 @@ select{appearance:none;display:block;width:100%;margin-top:.4rem;min-height:46px
 .topic-line b{color:var(--green)}
 .quiz-frame{max-width:880px;margin-block:1.8rem}
 .quiz-meta{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;font-weight:700;color:#255f51;margin-bottom:.45rem}
+.quiz-clock{font-variant-numeric:tabular-nums;white-space:nowrap}
 progress{width:100%;height:8px;border:0;border-radius:10px;display:block;overflow:hidden;appearance:none;background:#dce8e1;margin-bottom:1rem}
 progress::-webkit-progress-bar{background:#dce8e1}
 progress::-webkit-progress-value{background:#26856c}
@@ -84,6 +86,7 @@ progress::-moz-progress-bar{background:#26856c}
 .score{display:flex;align-items:center;gap:1rem;margin-top:1rem}
 .score strong{font-size:clamp(2.1rem,6vw,3.5rem);line-height:1;color:var(--green);white-space:nowrap}
 .score span{color:var(--muted)}
+.quiz-duration{margin-top:.6rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .breakdown{display:grid;gap:.35rem;margin-top:1.25rem}
 .breakdown div{display:flex;justify-content:space-between;gap:.6rem;padding:.42rem .6rem;background:var(--paper);border-radius:7px;font-size:.9rem}
 .review{margin-top:1.15rem}
