@@ -1,4 +1,9 @@
 # Educational Tools — PWA/browser metadata support.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^$ ergaleia.php [L]
+</IfModule>
+
 <IfModule mod_mime.c>
   AddType application/manifest+json .webmanifest
   AddType application/javascript .js

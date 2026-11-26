@@ -49,15 +49,83 @@ $h = function ($value) use ($flags) {
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <?php require __DIR__ . '/includes/head-pwa.php'; ?>
+  <style>
+    /* Keep the directory readable while the shared stylesheet downloads. */
+    :where(.edu-tools-directory) {
+      margin: 0;
+      background: #f4f7fb;
+      color: #18202b;
+      font: 16px/1.55 Arial, Helvetica, sans-serif;
+    }
+    :where(.edu-tools-directory a) { color: #174ea6; }
+    :where(.edu-tools-global-header__inner, .edu-tools-directory .page-shell) {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 22px;
+    }
+    :where(.edu-tools-global-nav, .edu-tools-directory .category-grid) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    :where(.edu-tools-directory .hero) {
+      background: linear-gradient(135deg, #174ea6, #1f6feb);
+      color: #fff;
+      border-radius: 22px;
+      padding: clamp(20px, 4vw, 42px);
+    }
+    :where(.edu-tools-directory .hero h1) {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 5vw, 44px);
+      line-height: 1.12;
+    }
+    :where(.edu-tools-directory .toolbar) { margin-top: 24px; }
+    :where(.edu-tools-directory #toolSearch) {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      font: inherit;
+    }
+    :where(.edu-tools-directory .tool-card) { display: block; }
+    :where(.edu-tools-directory .no-results[aria-hidden="true"]) { display: none; }
+    :where(.edu-tools-directory .edu-tools-sr-only, .edu-tools-directory .edu-skip-link:not(:focus)) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+  </style>
+  <?php
+  // Defer the offline notice stylesheet on the directory only.
+  ob_start();
+  require __DIR__ . '/includes/head-pwa.php';
+  $eduDirectoryPwaHead = ob_get_clean();
+  $eduOfflineStatusLink = '<link rel="stylesheet" href="' . $h(edu_asset_url('assets/offline-status.css')) . '">';
+  $eduDeferredOfflineStatusLink = substr($eduOfflineStatusLink, 0, -1) . ' media="print" onload="this.media=\'all\'">';
+  echo str_replace(
+      $eduOfflineStatusLink,
+      $eduDeferredOfflineStatusLink . '<noscript>' . $eduOfflineStatusLink . '</noscript>',
+      $eduDirectoryPwaHead
+  );
+  ?>
   <meta content="Εργαλειοθήκη Εκπαιδευτικού: δωρεάν εργαλεία για ΑΣΕΠ, αναπληρωτές, ειδική αγωγή, αποσπάσεις, μεταθέσεις, σχολική μονάδα, ΣΔΕ και ΣΑΕΚ." name="description">
   <title>Εργαλειοθήκη Εκπαιδευτικού</title>
-  <link href="<?php echo $h(edu_asset_url('assets/common.css')); ?>" rel="stylesheet">
+  <?php $eduDirectoryStyles = $h(edu_asset_url('assets/common.css')); ?>
+  <link rel="stylesheet" href="<?php echo $eduDirectoryStyles; ?>" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="<?php echo $eduDirectoryStyles; ?>"></noscript>
 </head>
 <body class="edu-ui edu-tools-directory">
-<?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php
+// Keep the shared menu and script order while letting the directory paint first.
+ob_start();
+require_once __DIR__ . '/includes/header.php';
+$eduDirectoryHeader = ob_get_clean();
+$eduCalculatorScript = '~<script(?=\s+src="includes/(?:specialty-code-normalization|education-core|education-print)\.js(?:\?[^"]*)?"\s*></script>)~';
+echo preg_replace($eduCalculatorScript, '<script defer', $eduDirectoryHeader) ?? $eduDirectoryHeader;
+?>
 
-<main class="page-shell">
+<main class="page-shell" id="main-content">
   <section class="hero">
     <span class="hero-kicker">ΔΩΡΕΑΝ ΕΡΓΑΛΕΙΑ ΓΙΑ ΕΚΠΑΙΔΕΥΤΙΚΟΥΣ</span>
     <h1>Εργαλειοθήκη Εκπαιδευτικού</h1>
@@ -167,9 +235,9 @@ $h = function ($value) use ($flags) {
   </section>
 </main>
 
-<script src="<?php echo $h(edu_asset_url('assets/tools-directory.js')); ?>"></script>
+<script defer src="<?php echo $h(edu_asset_url('assets/tools-directory.js')); ?>"></script>
 <script defer src="<?php echo $h(edu_asset_url('assets/offline-manager.js')); ?>"></script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-<script src="<?php echo $h(edu_asset_url('assets/common.js')); ?>"></script>
+<script defer src="<?php echo $h(edu_asset_url('assets/common.js')); ?>"></script>
 </body>
 </html>
