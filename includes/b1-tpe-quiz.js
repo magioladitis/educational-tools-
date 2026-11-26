@@ -23,6 +23,20 @@ function node(tag, text, className) {
   return element;
 }
 
+function sourceNote(question) {
+  const note = node('p', null, 'muted');
+  if (question.sourceUrl) {
+    const link = node('a', question.source);
+    link.href = question.sourceUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    note.append(link);
+  } else {
+    note.textContent = question.source;
+  }
+  return note;
+}
+
 function button(text, className, action) {
   const element = node('button', text, className);
   element.type = 'button';
@@ -199,7 +213,7 @@ function showQuestion(focusFeedback = false) {
     const correct = question.answer === question.correct;
     feedback = node('div', null, correct ? 'feedback' : 'feedback wrong');
     feedback.tabIndex = -1;
-    feedback.append(node('strong', correct ? 'Σωστή απάντηση' : 'Λάθος απάντηση'), node('p', question.explanation), node('p', question.source, 'muted'));
+    feedback.append(node('strong', correct ? 'Σωστή απάντηση' : 'Λάθος απάντηση'), node('p', question.explanation), sourceNote(question));
     form.append(feedback);
   }
   if (!practice && position > 0) {
@@ -306,7 +320,7 @@ function finish() {
         node('p', 'Η απάντησή σου — ' + (question.options[question.answer] ?? 'Καμία απάντηση.')),
         node('p', 'Σωστή απάντηση — ' + question.options[question.correct]),
         node('p', question.explanation),
-        node('p', question.source, 'muted')
+        sourceNote(question)
       );
       list.append(details);
     });
