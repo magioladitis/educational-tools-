@@ -14,6 +14,7 @@ $quizAsset = static function ($path) {
 <title>Εξάσκηση Β1 ΤΠΕ – Μαθηματικά | Εργαλειοθήκη Εκπαιδευτικού</title>
 <link rel="stylesheet" href="<?= $quizAsset('assets/common.css') ?>">
 <link rel="stylesheet" href="<?= $quizAsset('assets/b1-tpe-quiz.css') ?>">
+<link rel="preload" as="image" href="assets/b1-tpe-cc-by-sa.png">
 <script src="<?= $quizAsset('includes/b1-tpe-question-bank.js') ?>" defer></script>
 <script src="<?= $quizAsset('includes/b1-tpe-quiz.js') ?>" defer></script>
 </head>

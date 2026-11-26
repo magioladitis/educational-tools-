@@ -23,6 +23,16 @@ function node(tag, text, className) {
   return element;
 }
 
+function appendQuestionImage(container, question) {
+  if (!question.image) return;
+  const image = node('img', null, 'question-image');
+  image.src = question.image.src;
+  image.alt = question.image.alt;
+  image.width = 405;
+  image.height = 101;
+  container.append(image);
+}
+
 function sourceNote(question) {
   const note = node('p', null, 'muted');
   if (question.sourceUrl) {
@@ -245,7 +255,9 @@ function showQuestion(focusFeedback = false) {
     session.position++;
     showQuestion();
   });
-  card.append(node('span', topics[question.topic].name, 'pill'), prompt, form);
+  card.append(node('span', topics[question.topic].name, 'pill'), prompt);
+  appendQuestionImage(card, question);
+  card.append(form);
   frame.append(meta, bar, card);
   show(frame, true);
   clockInterval = window.setInterval(updateClock, 1000);
@@ -316,7 +328,10 @@ function finish() {
       const status = correctAnswer ? 'Σωστή' : question.answer === null ? 'Αναπάντητη' : 'Λάθος';
       details.append(
         node('summary', (index + 1) + '. ' + status + ' · ' + topics[question.topic].name, correctAnswer ? 'good' : 'bad'),
-        node('p', question.prompt),
+        node('p', question.prompt)
+      );
+      appendQuestionImage(details, question);
+      details.append(
         node('p', 'Η απάντησή σου — ' + (question.options[question.answer] ?? 'Καμία απάντηση.')),
         node('p', 'Σωστή απάντηση — ' + question.options[question.correct]),
         node('p', question.explanation),

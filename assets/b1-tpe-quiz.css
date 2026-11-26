@@ -70,6 +70,7 @@ progress::-moz-progress-bar{background:#26856c}
 .quiz-card{padding:clamp(1.05rem,4vw,2rem)}
 .results h1{font-size:clamp(1.7rem,4.2vw,2.5rem);margin-top:.55rem}
 .question{white-space:pre-line;font-size:clamp(1.06rem,2.5vw,1.25rem);font-weight:650;margin-top:1rem;line-height:1.46}
+.question-image{display:block;max-width:100%;height:auto;margin-top:.75rem}
 .option-list{display:grid;gap:.6rem;margin-top:1rem}
 .option{display:flex;align-items:center;gap:.7rem;border-radius:11px;padding:.72rem .8rem;border:1px solid #c8d9d1;min-height:49px;cursor:pointer}
 .option:has(input:checked){background:#eef8f3;border-color:#4c8977}
